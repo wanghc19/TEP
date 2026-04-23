@@ -2,6 +2,7 @@ format long;
 clear;
 
 % Diagnostic Script: Refined Singular Value Dip Search for Fixed Beta
+% Based on demoeigen3.m, first it do a coarse scan, then refines ONCE on the subinterval [k_{j-1}, k_{j+1}] around the coarse minimum k_j. 
 
 % --- 1. Parameter Setup ---
 ntot = 60;                        % Single boundary point count for dip refinement

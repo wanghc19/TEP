@@ -2,6 +2,7 @@ format long;
 clear;
 
 % Diagnostic Script: Recursive Singular Value Dip Refinement for Fixed Beta
+% Based on demoeigen3_refine_dip.m, but refine recursively.
 % ellipse: ntot = 150, sigma_min = 8.958144500080e-09 at k = 2.6535116121356430
 % star: ntot = 150, 3.243565254004e-07 at k = 2.1301287071711603
 

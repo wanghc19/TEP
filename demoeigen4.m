@@ -2,6 +2,14 @@ format long;
 clear;
 
 % Diagnostic Script: Recursive Singular Value Dip Refinement for Fixed Beta
+% 
+% Introduce LOCAL_qpgreen_mfs_pairmat to vetorize LOCAL_construct_A.
+% At step 1.5 we perform a consistency check to ensure the optimized construction of A matches the original direct 
+% % construction, and compare the elapsed times for both methods.
+%
+% At step 3 we scan the k on the given interval 'initial_interval', note that this interval is chosen to contain
+% one dip.
+%
 % ellipse: ntot = 150, sigma_min = 8.958144500080e-09 at k = 2.6535116121356430
 % star: ntot = 150, 3.243565254004e-07 at k = 2.1301287071711603
 
@@ -29,7 +37,7 @@ max_refine_level = 4;
 initial_interval = [2.64525090, 2.65989423]; % for ellipse
 % initial_interval = [2.12983082, 2.13084070]; % for star
 
-% Consistency check for the optimized construction of A
+% --1.5 Consistency check for the optimized construction of A--
 flag_check_construct_A = true;
 check_construct_A_ntot = 60;
 check_construct_A_k = 0.73 * beta;
@@ -37,7 +45,7 @@ if flag_check_construct_A
   LOCAL_check_construct_A_optimized(check_construct_A_ntot, flag_geom, iprec, ...
     check_construct_A_k, nref, pars1, pars2);
 end
-% return
+return
 % Start the recursive refinement process
 
 fprintf('Running recursive singular value scan (beta = %.8f, ntot = %d)\n', beta, ntot);
