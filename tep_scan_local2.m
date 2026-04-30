@@ -1,10 +1,37 @@
+% Remark: 观测到的现象为S, D, D'块*不*采用K-R修正比采用K-R修正的精度要低1e-1数量级左右.
+%         而经过测试, log(h) ~ log(1e-4) ~ -9.2, 因此不太可能是靠近对角线处log引入的超大数导致的数值不稳定, 目前推测可能是T块是误差的主要来源.
+
+% Purpose:
+%   Variant of tep_scan_local.m for testing continuous-kernel assembly of the
+%   three non-hypersingular Muller difference blocks.
+%
+% Main algorithm:
+%   Keep the recursive local k-scan workflow from tep_scan_local.m.  The
+%   matrix assembly is changed only for the S, D, and D' difference blocks:
+%   their off-diagonal entries use direct kernel differences, their diagonal
+%   entries use analytic limits based on G_ext_qp = Phi_k + R_k, and
+%   Kapur-Rokhlin correction is not applied to those three blocks.
+%
+% Based on:
+%   tep_scan_local.m.
+%
+% Main changes:
+%   LOCAL_construct_A and the consistency-check loop assembly now separate the
+%   singular center image Phi_k from the regular proxy/MFS remainder R_k when
+%   filling the S, D, and D' diagonals.  The T-type block remains on the old
+%   Kapur-Rokhlin-corrected path.
+%
+% Numerical goal:
+%   Diagnose the effect of removing unnecessary weakly singular quadrature
+%   treatment from the non-hypersingular Muller difference blocks while
+%   preserving the rest of the local scan experiment.
 format long;
 clear;
 
 % Diagnostic Script: Recursive Singular Value Dip Refinement for Fixed Beta
-% 
+%
 % Introduce LOCAL_qpgreen_mfs_pairmat to vetorize LOCAL_construct_A.
-% At step 1.5 we perform a consistency check to ensure the optimized construction of A matches the original direct 
+% At step 1.5 we perform a consistency check to ensure the optimized construction of A matches the original direct
 % % construction, and compare the elapsed times for both methods.
 %
 % At step 3 we scan the k on the given interval 'initial_interval', note that this interval is chosen to contain
@@ -346,6 +373,7 @@ function A = LOCAL_construct_A(C, iprec, khint, pars1, proxy, curvelen)
   corr = ones(ntot, ntot);
   near_mask = offdiag & (abs(L) <= width);
   corr(near_mask) = 1 + MU(abs(L(near_mask)));
+  diag_idx = 1:(ntot + 1):(ntot * ntot);
 
   xdiff = x.' - x;
   ydiff = y.' - y;
@@ -382,6 +410,11 @@ function A = LOCAL_construct_A(C, iprec, khint, pars1, proxy, curvelen)
   [pot_ext, gradx_ext, grady_ext, hessxx_ext, hessxy_ext, hessyy_ext] = ...
     LOCAL_qpgreen_mfs_pairmat([x; y], [x; y], pars1, proxy);
 
+  % The non-hypersingular Muller differences are continuous at x = y.
+  % Their diagonals must use only the regular remainder R_k in
+  % G_ext_qp = Phi_k + R_k, not the singular center image Phi_k.
+  [R_diag, gradR_diag] = LOCAL_qpgreen_regular_diagonal(pars1, proxy);
+
   pot_ext(~offdiag) = 0;
   gradx_ext(~offdiag) = 0;
   grady_ext(~offdiag) = 0;
@@ -405,10 +438,14 @@ function A = LOCAL_construct_A(C, iprec, khint, pars1, proxy, curvelen)
          (hessyy_int - hessyy_ext) .* nx2ny2) .* weight_mat;
   A22 = ((gradx_int - gradx_ext) .* nx1mat + (grady_int - grady_ext) .* nx2mat) .* weight_mat;
 
-  A11 = A11 .* corr;
-  A12 = A12 .* corr;
+  A12(diag_idx) = (-log(khint / pars1.k) / (2 * pi) - R_diag) .* src_weight;
+  % Since R_k is represented in target-minus-source coordinates near the
+  % diagonal, -d/dn_y R_k is grad_x R_k dot n_y.
+  A11(diag_idx) = (gradR_diag(1) .* ny1 + gradR_diag(2) .* ny2) .* src_weight;
+  A22(diag_idx) = -(gradR_diag(1) .* nx1.' + gradR_diag(2) .* nx2.') .* src_weight;
+
+  % Only the T-type block remains on the old Kapur-Rokhlin-corrected path.
   A21 = A21 .* corr;
-  A22 = A22 .* corr;
 
   A = eye(2 * ntot, 2 * ntot);
   A(1:ntot, 1:ntot) = A(1:ntot, 1:ntot) + A11;
@@ -521,6 +558,18 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+function [R_diag, gradR_diag] = LOCAL_qpgreen_regular_diagonal(pars1, proxy)
+
+  % At x = y, the singular center image Phi_k is omitted.  The proxy/MFS
+  % sources represent the regular remainder R_k in the local cell.
+  [R_diag, gradR_diag, ~] = LOCAL_h2d_directch(pars1.k, proxy.Z, proxy.q, [0; 0]);
+  R_diag = R_diag(1);
+  gradR_diag = gradR_diag(:, 1);
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function A = LOCAL_construct_A_loop(C, iprec, khint, pars1, proxy, curvelen)
 
   ntot = size(C, 2);
@@ -559,19 +608,25 @@ function A = LOCAL_construct_A_loop(C, iprec, khint, pars1, proxy, curvelen)
     error('Unsupported iprec value.');
   end
 
+  [R_diag, gradR_diag] = LOCAL_qpgreen_regular_diagonal(pars1, proxy);
+
   for ix = 1:ntot
     for iy = 1:ntot
       l = L(ix, iy);
-      if l == 0
-        continue;
-      end
-
       speedx = sqrt(C(2, ix)^2 + C(5, ix)^2);
       speedy = sqrt(C(2, iy)^2 + C(5, iy)^2);
       nx1 =  C(5, ix) / speedx;
       nx2 = -C(2, ix) / speedx;
       ny1 =  C(5, iy) / speedy;
       ny2 = -C(2, iy) / speedy;
+
+      if l == 0
+        A(ix, iy) = A(ix, iy) + (gradR_diag(1) * ny1 + gradR_diag(2) * ny2) * h * speedy;
+        A(ix, iy + ntot) = (-log(khint / pars1.k) / (2 * pi) - R_diag) * h * speedy;
+        A(ix + ntot, iy + ntot) = A(ix + ntot, iy + ntot) - ...
+          (gradR_diag(1) * nx1 + gradR_diag(2) * nx2) * h * speedy;
+        continue;
+      end
 
       [pot, grad, hess] = LOCAL_h2d_directch(khint, C([1, 4], iy), 1, C([1, 4], ix));
       A(ix, iy) = (ny1 * grad(1) + ny2 * grad(2)) * h * speedy;
@@ -590,10 +645,7 @@ function A = LOCAL_construct_A_loop(C, iprec, khint, pars1, proxy, curvelen)
       A(ix + ntot, iy + ntot) = A(ix + ntot, iy + ntot) - (nx1 * grad(1) + nx2 * grad(2)) * h * speedy;
 
       if abs(l) <= width
-        A(ix, iy) = A(ix, iy) * (1 + MU(abs(l)));
-        A(ix, iy + ntot) = A(ix, iy + ntot) * (1 + MU(abs(l)));
         A(ix + ntot, iy) = A(ix + ntot, iy) * (1 + MU(abs(l)));
-        A(ix + ntot, iy + ntot) = A(ix + ntot, iy + ntot) * (1 + MU(abs(l)));
       end
     end
   end

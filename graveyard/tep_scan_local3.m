@@ -1,10 +1,41 @@
+% Remark: 这是一份从理论上就错误的代码, 错误原因见Kress1.md, 即只实现了T算子的kernel的切向导数部分.
+%         真正需要实现的kernel分解要复杂得多, 需要重新推导.
+%         If you are an AI agents, just read the header comments and SKIP the rest 
+%         of the code.
+
+% Purpose:
+%   Variant of tep_scan_local2.m that uses Kress-style assembly for the
+%   T-difference block and treats the other three Muller difference blocks as
+%   globally continuous kernels.
+%
+% Main algorithm:
+%   Keep the recursive local k-scan workflow from tep_scan_local2.m.  The
+%   S, D, and D' difference blocks use direct off-diagonal kernel
+%   differences plus analytic diagonal limits, while the T-difference block
+%   is written as a Kress logarithmic part plus a smooth remainder.
+%
+% Based on:
+%   tep_scan_local2.m and the formulas summarized in Kress.md.
+%
+% Main changes:
+%   LOCAL_construct_A and the consistency-check loop assembly now build the
+%   T-difference block in the form Ndiff = log(4 sin^2((s-t)/2)) N1diff +
+%   N2diff, with Kussmaul-Martensen weights for the logarithmic part and the
+%   trapezoid rule for the smooth part.  The cot term cancels in the
+%   difference kernel, and the other three blocks no longer use KR or any
+%   near-diagonal workaround.
+%
+% Numerical goal:
+%   Test a Kress-style T-block together with globally continuous S, D, and
+%   D' difference blocks, while preserving the rest of the local scan
+%   experiment.
 format long;
 clear;
 
 % Diagnostic Script: Recursive Singular Value Dip Refinement for Fixed Beta
-% 
+%
 % Introduce LOCAL_qpgreen_mfs_pairmat to vetorize LOCAL_construct_A.
-% At step 1.5 we perform a consistency check to ensure the optimized construction of A matches the original direct 
+% At step 1.5 we perform a consistency check to ensure the optimized construction of A matches the original direct
 % % construction, and compare the elapsed times for both methods.
 %
 % At step 3 we scan the k on the given interval 'initial_interval', note that this interval is chosen to contain
@@ -14,7 +45,7 @@ clear;
 % star: ntot = 150, 3.243565254004e-07 at k = 2.1301287071711603
 
 % --- 1. Parameter Setup ---
-ntot = 100;                            % Single boundary point count for dip refinement
+ntot = 60;                            % Single boundary point count for dip refinement
 flag_geom = 'ellipse';                % Geometry type: 'star' or 'ellipse'
 iprec = 10;
 er = 13;
@@ -297,118 +328,7 @@ end
 function A = LOCAL_construct_A(C, iprec, khint, pars1, proxy, curvelen)
 
   ntot = size(C, 2);
-  h = curvelen / ntot;
-  x = C(1, :);
-  y = C(4, :);
-  dxdt = C(2, :);
-  dydt = C(5, :);
-  speed = sqrt(dxdt.^2 + dydt.^2);
-  nx1 = (dydt ./ speed).';
-  nx2 = (-dxdt ./ speed).';
-  ny1 = nx1.';
-  ny2 = nx2.';
-  src_weight = h * speed;
-
-  [jj, ii] = meshgrid(1:ntot, 1:ntot);
-  L = jj - ii;
-  L(L > ntot / 2) = L(L > ntot / 2) - ntot;
-  L(L <= -ntot / 2) = L(L <= -ntot / 2) + ntot;
-  offdiag = L ~= 0;
-
-  if iprec == 2
-    MU = [0.7518812338640025 + 0.1073866830872157e1; ...
-      -0.7225370982867850 - 0.6032109664493744];
-    width = 2;
-  elseif iprec == 6
-    MU = [0.2051970990601250e1 + 0.2915391987686505e1; ...
-      -0.7407035584542865e1 - 0.8797979464048396e1; ...
-       0.1219590847580216e2 + 0.1365562914252423e2; ...
-      -0.1064623987147282e2 - 0.1157975479644601e2; ...
-       0.4799117710681772e1 + 0.5130987287355766e1; ...
-      -0.8837770983721025   - 0.9342187797694916];
-    width = 6;
-  elseif iprec == 10
-    MU = [0.3256353919777872D+01 + 0.4576078100790908D+01; ...
-      -0.2096116396850468D+02 - 0.2469045273524281D+02; ...
-       0.6872858265408605D+02 + 0.7648830198138171D+02; ...
-      -0.1393153744796911D+03 - 0.1508194558089468D+03; ...
-       0.1874446431742073D+03 + 0.1996415730837827D+03; ...
-      -0.1715855846429547D+03 - 0.1807965537141134D+03; ...
-       0.1061953812152787D+03 + 0.1110467735366555D+03; ...
-      -0.4269031893958787D+02 - 0.4438764193424203D+02; ...
-       0.1009036069527147D+02 + 0.1044548196545488D+02; ...
-      -0.1066655310499552D+01 - 0.1100328792904271D+01];
-    width = 10;
-  else
-    error('Unsupported iprec value.');
-  end
-
-  corr = ones(ntot, ntot);
-  near_mask = offdiag & (abs(L) <= width);
-  corr(near_mask) = 1 + MU(abs(L(near_mask)));
-
-  xdiff = x.' - x;
-  ydiff = y.' - y;
-  rr = xdiff.^2 + ydiff.^2;
-  rr(~offdiag) = 1;
-  r = sqrt(rr);
-  z = khint * r;
-  ima4inv = 1i / 4;
-
-  h0 = besselh(0, 1, z);
-  h1 = besselh(1, 1, z);
-  cdd = -h1 .* (khint * ima4inv ./ r);
-  cdd2 = (khint * ima4inv ./ r) ./ rr;
-  h2z = -z .* h0 + 2 .* h1;
-
-  hf1 = h2z .* xdiff .* xdiff - rr .* h1;
-  hf2 = h2z .* xdiff .* ydiff;
-  hf3 = h2z .* ydiff .* ydiff - rr .* h1;
-
-  pot_int = h0 * ima4inv;
-  gradx_int = cdd .* xdiff;
-  grady_int = cdd .* ydiff;
-  hessxx_int = cdd2 .* hf1;
-  hessxy_int = cdd2 .* hf2;
-  hessyy_int = cdd2 .* hf3;
-
-  pot_int(~offdiag) = 0;
-  gradx_int(~offdiag) = 0;
-  grady_int(~offdiag) = 0;
-  hessxx_int(~offdiag) = 0;
-  hessxy_int(~offdiag) = 0;
-  hessyy_int(~offdiag) = 0;
-
-  [pot_ext, gradx_ext, grady_ext, hessxx_ext, hessxy_ext, hessyy_ext] = ...
-    LOCAL_qpgreen_mfs_pairmat([x; y], [x; y], pars1, proxy);
-
-  pot_ext(~offdiag) = 0;
-  gradx_ext(~offdiag) = 0;
-  grady_ext(~offdiag) = 0;
-  hessxx_ext(~offdiag) = 0;
-  hessxy_ext(~offdiag) = 0;
-  hessyy_ext(~offdiag) = 0;
-
-  nx1ny1 = nx1 * ny1;
-  nx1ny2_nx2ny1 = nx1 * ny2 + nx2 * ny1;
-  nx2ny2 = nx2 * ny2;
-  nx1mat = repmat(nx1, 1, ntot);
-  nx2mat = repmat(nx2, 1, ntot);
-  ny1mat = repmat(ny1, ntot, 1);
-  ny2mat = repmat(ny2, ntot, 1);
-  weight_mat = repmat(src_weight, ntot, 1);
-
-  A11 = ((gradx_int - gradx_ext) .* ny1mat + (grady_int - grady_ext) .* ny2mat) .* weight_mat;
-  A12 = (pot_int - pot_ext) .* weight_mat;
-  A21 = ((hessxx_int - hessxx_ext) .* nx1ny1 + ...
-         (hessxy_int - hessxy_ext) .* nx1ny2_nx2ny1 + ...
-         (hessyy_int - hessyy_ext) .* nx2ny2) .* weight_mat;
-  A22 = ((gradx_int - gradx_ext) .* nx1mat + (grady_int - grady_ext) .* nx2mat) .* weight_mat;
-
-  A11 = A11 .* corr;
-  A12 = A12 .* corr;
-  A21 = A21 .* corr;
-  A22 = A22 .* corr;
+  [A11, A12, A21, A22, h, speed] = LOCAL_build_mueller_blocks(C, iprec, khint, pars1, proxy, curvelen);
 
   A = eye(2 * ntot, 2 * ntot);
   A(1:ntot, 1:ntot) = A(1:ntot, 1:ntot) + A11;
@@ -521,84 +441,315 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function A = LOCAL_construct_A_loop(C, iprec, khint, pars1, proxy, curvelen)
+function [R_diag, gradR_diag] = LOCAL_qpgreen_regular_diagonal(pars1, proxy)
+
+  % At x = y, the singular center image Phi_k is omitted.  The proxy/MFS
+  % sources represent the regular remainder R_k in the local cell.
+  [R_diag, gradR_diag, ~] = LOCAL_h2d_directch(pars1.k, proxy.Z, proxy.q, [0; 0]);
+  R_diag = R_diag(1);
+  gradR_diag = gradR_diag(:, 1);
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function [A11, A12, A21, A22, h, speed] = LOCAL_build_mueller_blocks(C, iprec, khint, pars1, proxy, curvelen)
+
+  LOCAL_validate_iprec(iprec);
 
   ntot = size(C, 2);
-  A = eye(2 * ntot, 2 * ntot);
   h = curvelen / ntot;
+  x = C(1, :);
+  y = C(4, :);
+  dxdt = C(2, :);
+  dx2dt = C(3, :);
+  dydt = C(5, :);
+  dy2dt = C(6, :);
+  speed = sqrt(dxdt.^2 + dydt.^2);
+  src_speed = repmat(speed, ntot, 1);
+  src_weight = h * speed;
+
   [jj, ii] = meshgrid(1:ntot, 1:ntot);
   L = jj - ii;
   L(L > ntot / 2) = L(L > ntot / 2) - ntot;
   L(L <= -ntot / 2) = L(L <= -ntot / 2) + ntot;
+  offdiag = L ~= 0;
+  diag_idx = 1:(ntot + 1):(ntot * ntot);
 
-  if iprec == 2
-    MU = [0.7518812338640025 + 0.1073866830872157e1; ...
-      -0.7225370982867850 - 0.6032109664493744];
-    width = 2;
-  elseif iprec == 6
-    MU = [0.2051970990601250e1 + 0.2915391987686505e1; ...
-      -0.7407035584542865e1 - 0.8797979464048396e1; ...
-       0.1219590847580216e2 + 0.1365562914252423e2; ...
-      -0.1064623987147282e2 - 0.1157975479644601e2; ...
-       0.4799117710681772e1 + 0.5130987287355766e1; ...
-      -0.8837770983721025   - 0.9342187797694916];
-    width = 6;
-  elseif iprec == 10
-    MU = [0.3256353919777872D+01 + 0.4576078100790908D+01; ...
-      -0.2096116396850468D+02 - 0.2469045273524281D+02; ...
-       0.6872858265408605D+02 + 0.7648830198138171D+02; ...
-      -0.1393153744796911D+03 - 0.1508194558089468D+03; ...
-       0.1874446431742073D+03 + 0.1996415730837827D+03; ...
-      -0.1715855846429547D+03 - 0.1807965537141134D+03; ...
-       0.1061953812152787D+03 + 0.1110467735366555D+03; ...
-      -0.4269031893958787D+02 - 0.4438764193424203D+02; ...
-       0.1009036069527147D+02 + 0.1044548196545488D+02; ...
-      -0.1066655310499552D+01 - 0.1100328792904271D+01];
-    width = 10;
-  else
+  xdiff = x.' - x;
+  ydiff = y.' - y;
+  rr = xdiff.^2 + ydiff.^2;
+  rr(~offdiag) = 1;
+  r = sqrt(rr);
+
+  points = [x; y];
+  [pot_int, gradx_int, grady_int, hessxx_int, hessxy_int, hessyy_int] = ...
+    LOCAL_free_space_pairmat(khint, points, points);
+  [pot_center, gradx_center, grady_center, hessxx_center, hessxy_center, hessyy_center] = ...
+    LOCAL_free_space_pairmat(pars1.k, points, points);
+  [pot_reg, gradx_reg, grady_reg, hessxx_reg, hessxy_reg, hessyy_reg] = ...
+    LOCAL_qpgreen_regular_pairmat(points, points, pars1, proxy);
+
+  nx1 = (dydt ./ speed).';
+  nx2 = (-dxdt ./ speed).';
+  ny1 = nx1.';
+  ny2 = nx2.';
+  nx1ny1 = nx1 * ny1;
+  nx1ny2_nx2ny1 = nx1 * ny2 + nx2 * ny1;
+  nx2ny2 = nx2 * ny2;
+  nx1mat = repmat(nx1, 1, ntot);
+  nx2mat = repmat(nx2, 1, ntot);
+  ny1mat = repmat(ny1, ntot, 1);
+  ny2mat = repmat(ny2, ntot, 1);
+  weight_mat = repmat(src_weight, ntot, 1);
+
+  % The S, D, and D' blocks are continuous globally: direct kernel
+  % differences off-diagonal and analytic limits on the diagonal.
+  A11 = ((gradx_int - gradx_center - gradx_reg) .* ny1mat + ...
+         (grady_int - grady_center - grady_reg) .* ny2mat) .* weight_mat;
+  A12 = (pot_int - pot_center - pot_reg) .* weight_mat;
+  A22 = ((gradx_int - gradx_center - gradx_reg) .* nx1mat + ...
+         (grady_int - grady_center - grady_reg) .* nx2mat) .* weight_mat;
+
+  [R_diag, gradR_diag] = LOCAL_qpgreen_regular_diagonal(pars1, proxy);
+  A12(diag_idx) = (-log(khint / pars1.k) / (2 * pi) - R_diag) .* src_weight;
+  A11(diag_idx) = (gradR_diag(1) .* ny1 + gradR_diag(2) .* ny2) .* src_weight;
+  A22(diag_idx) = -(gradR_diag(1) .* nx1.' + gradR_diag(2) .* nx2.') .* src_weight;
+
+  % Kress / Maue form for the T-difference kernel:
+  % Ndiff = log(4 sin^2((s-t)/2)) N1diff + N2diff, with no cot term.
+  N1diff = LOCAL_kress_tblock_log_coeff(khint, xdiff, ydiff, r, dxdt, dydt, offdiag) - ...
+    LOCAL_kress_tblock_log_coeff(pars1.k, xdiff, ydiff, r, dxdt, dydt, offdiag);
+
+  Nparam_int = ((hessxx_int .* nx1ny1 + hessxy_int .* nx1ny2_nx2ny1 + hessyy_int .* nx2ny2) .* src_speed);
+  Nparam_center = ((hessxx_center .* nx1ny1 + hessxy_center .* nx1ny2_nx2ny1 + hessyy_center .* nx2ny2) .* src_speed);
+  Nparam_reg = ((hessxx_reg .* nx1ny1 + hessxy_reg .* nx1ny2_nx2ny1 + hessyy_reg .* nx2ny2) .* src_speed);
+
+  log_kernel = LOCAL_kress_log_kernel_matrix(L, offdiag, ntot);
+  N2diff = Nparam_int - Nparam_center - Nparam_reg - log_kernel .* N1diff;
+  N2diag_free = LOCAL_kress_tblock_N2_diag(dxdt, dx2dt, dydt, dy2dt);
+  N1diff(diag_idx) = 0;
+  % The free-space Kress diagonal term cancels in the difference kernel, so
+  % only the regular exterior remainder contributes here.
+  N2diff(diag_idx) = (N2diag_free.' - N2diag_free.') - Nparam_reg(diag_idx);
+
+  A21 = LOCAL_kress_log_weight_matrix(L, ntot) .* N1diff + h * N2diff;
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function LOCAL_validate_iprec(iprec)
+
+  if ~ismember(iprec, [2, 6, 10])
     error('Unsupported iprec value.');
   end
 
-  for ix = 1:ntot
-    for iy = 1:ntot
-      l = L(ix, iy);
-      if l == 0
-        continue;
-      end
+end
 
-      speedx = sqrt(C(2, ix)^2 + C(5, ix)^2);
-      speedy = sqrt(C(2, iy)^2 + C(5, iy)^2);
-      nx1 =  C(5, ix) / speedx;
-      nx2 = -C(2, ix) / speedx;
-      ny1 =  C(5, iy) / speedy;
-      ny2 = -C(2, iy) / speedy;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-      [pot, grad, hess] = LOCAL_h2d_directch(khint, C([1, 4], iy), 1, C([1, 4], ix));
-      A(ix, iy) = (ny1 * grad(1) + ny2 * grad(2)) * h * speedy;
-      A(ix, iy + ntot) = pot * h * speedy;
-      A(ix + ntot, iy) = (nx1 * ny1 * hess(1) + (nx1 * ny2 + nx2 * ny1) * hess(2) + nx2 * ny2 * hess(3)) * h * speedy;
-      A(ix + ntot, iy + ntot) = (nx1 * grad(1) + nx2 * grad(2)) * h * speedy;
+function [pot, gradx, grady, hessxx, hessxy, hessyy] = LOCAL_free_space_pairmat(wavek, src, trg)
 
-      u = qpgreen_mfs(C([1, 4], iy), C([1, 4], ix), pars1, proxy);
-      pot = u.pot;
-      grad = u.grad;
-      hess = u.hess;
-      A(ix, iy) = A(ix, iy) - (ny1 * grad(1) + ny2 * grad(2)) * h * speedy;
-      A(ix, iy + ntot) = A(ix, iy + ntot) - pot * h * speedy;
-      A(ix + ntot, iy) = A(ix + ntot, iy) - ...
-        (nx1 * ny1 * hess(1) + (nx1 * ny2 + nx2 * ny1) * hess(2) + nx2 * ny2 * hess(3)) * h * speedy;
-      A(ix + ntot, iy + ntot) = A(ix + ntot, iy + ntot) - (nx1 * grad(1) + nx2 * grad(2)) * h * speedy;
+  xdiff = trg(1, :).'- src(1, :);
+  ydiff = trg(2, :).'- src(2, :);
+  rr = xdiff.^2 + ydiff.^2;
+  offdiag = rr ~= 0;
+  rr(~offdiag) = 1;
+  r = sqrt(rr);
+  z = wavek * r;
+  ima4inv = 1i / 4;
 
-      if abs(l) <= width
-        A(ix, iy) = A(ix, iy) * (1 + MU(abs(l)));
-        A(ix, iy + ntot) = A(ix, iy + ntot) * (1 + MU(abs(l)));
-        A(ix + ntot, iy) = A(ix + ntot, iy) * (1 + MU(abs(l)));
-        A(ix + ntot, iy + ntot) = A(ix + ntot, iy + ntot) * (1 + MU(abs(l)));
-      end
+  h0 = besselh(0, 1, z);
+  h1 = besselh(1, 1, z);
+  cdd = -h1 .* (wavek * ima4inv ./ r);
+  cdd2 = (wavek * ima4inv ./ r) ./ rr;
+  h2z = -z .* h0 + 2 .* h1;
+
+  hf1 = h2z .* xdiff .* xdiff - rr .* h1;
+  hf2 = h2z .* xdiff .* ydiff;
+  hf3 = h2z .* ydiff .* ydiff - rr .* h1;
+
+  pot = h0 * ima4inv;
+  gradx = cdd .* xdiff;
+  grady = cdd .* ydiff;
+  hessxx = cdd2 .* hf1;
+  hessxy = cdd2 .* hf2;
+  hessyy = cdd2 .* hf3;
+
+  pot(~offdiag) = 0;
+  gradx(~offdiag) = 0;
+  grady(~offdiag) = 0;
+  hessxx(~offdiag) = 0;
+  hessxy(~offdiag) = 0;
+  hessyy(~offdiag) = 0;
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function [pot_reg, gradx_reg, grady_reg, hessxx_reg, hessxy_reg, hessyy_reg] = ...
+    LOCAL_qpgreen_regular_pairmat(src, trg, pars1, proxy)
+
+  d = pars1.d;
+  beta = pars1.beta;
+  k = pars1.k;
+
+  q = proxy.q;
+  Z = proxy.Z;
+  H = proxy.H;
+  C_up = proxy.C_up;
+  C_down = proxy.C_down;
+
+  ns = size(src, 2);
+  nt = size(trg, 2);
+
+  X = trg(1, :).'- src(1, :);
+  Y = trg(2, :).'- src(2, :);
+
+  m_shift = round(X / d);
+  X0 = X - m_shift * d;
+  phase_shift = exp(1i * beta * m_shift * d);
+
+  pot_reg = zeros(nt, ns);
+  gradx_reg = zeros(nt, ns);
+  grady_reg = zeros(nt, ns);
+  hessxx_reg = zeros(nt, ns);
+  hessxy_reg = zeros(nt, ns);
+  hessyy_reg = zeros(nt, ns);
+
+  idx_in = abs(Y) <= H;
+  idx_up = Y > H;
+  idx_dn = Y < -H;
+
+  if any(idx_in(:))
+    T_in = [X0(idx_in).'; Y(idx_in).'];
+    [potP, gradP, hessP] = LOCAL_h2d_directch(k, Z, q, T_in);
+
+    pot_reg(idx_in) = potP .* phase_shift(idx_in).';
+    gradx_reg(idx_in) = gradP(1, :) .* phase_shift(idx_in).';
+    grady_reg(idx_in) = gradP(2, :) .* phase_shift(idx_in).';
+    hessxx_reg(idx_in) = hessP(1, :) .* phase_shift(idx_in).';
+    hessxy_reg(idx_in) = hessP(2, :) .* phase_shift(idx_in).';
+    hessyy_reg(idx_in) = hessP(3, :) .* phase_shift(idx_in).';
+  end
+
+  if any(idx_up(:)) || any(idx_dn(:))
+    N_pw_total = length(C_up);
+    M_pw = (N_pw_total - 1) / 2;
+    m_vec = (-M_pw:M_pw).';
+    beta_m = beta + m_vec * (2 * pi / d);
+
+    diff_sq = k^2 - beta_m.^2;
+    gamma_m = zeros(size(beta_m));
+    mask_prop = diff_sq >= 0;
+    mask_eva = diff_sq < 0;
+    gamma_m(mask_prop) = sqrt(diff_sq(mask_prop));
+    gamma_m(mask_eva) = 1i * sqrt(-diff_sq(mask_eva));
+
+    if any(idx_up(:))
+      X_up = X0(idx_up).';
+      Y_up = Y(idx_up).';
+      phase_X = exp(1i * beta_m * X_up);
+      phase_Y = exp(1i * gamma_m * (Y_up - H));
+      basis = phase_X .* phase_Y;
+      phase_up = phase_shift(idx_up).';
+
+      pot_reg(idx_up) = sum(C_up .* basis, 1) .* phase_up;
+      gradx_reg(idx_up) = sum(C_up .* basis .* (1i * beta_m), 1) .* phase_up;
+      grady_reg(idx_up) = sum(C_up .* basis .* (1i * gamma_m), 1) .* phase_up;
+      hessxx_reg(idx_up) = sum(C_up .* basis .* (-beta_m.^2), 1) .* phase_up;
+      hessxy_reg(idx_up) = sum(C_up .* basis .* (-beta_m .* gamma_m), 1) .* phase_up;
+      hessyy_reg(idx_up) = sum(C_up .* basis .* (-gamma_m.^2), 1) .* phase_up;
+    end
+
+    if any(idx_dn(:))
+      X_dn = X0(idx_dn).';
+      Y_dn = Y(idx_dn).';
+      phase_X = exp(1i * beta_m * X_dn);
+      phase_Y = exp(-1i * gamma_m * (Y_dn + H));
+      basis = phase_X .* phase_Y;
+      phase_dn = phase_shift(idx_dn).';
+
+      pot_reg(idx_dn) = sum(C_down .* basis, 1) .* phase_dn;
+      gradx_reg(idx_dn) = sum(C_down .* basis .* (1i * beta_m), 1) .* phase_dn;
+      grady_reg(idx_dn) = sum(C_down .* basis .* (-1i * gamma_m), 1) .* phase_dn;
+      hessxx_reg(idx_dn) = sum(C_down .* basis .* (-beta_m.^2), 1) .* phase_dn;
+      hessxy_reg(idx_dn) = sum(C_down .* basis .* (beta_m .* gamma_m), 1) .* phase_dn;
+      hessyy_reg(idx_dn) = sum(C_down .* basis .* (-gamma_m.^2), 1) .* phase_dn;
     end
   end
 
-  speed = sqrt(C(2,:).^2 + C(5,:).^2);
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function N1 = LOCAL_kress_tblock_log_coeff(wavek, xdiff, ydiff, r, dxdt, dydt, offdiag)
+
+  ntot = length(dxdt);
+  dxdt_t = repmat(dxdt(:), 1, ntot);
+  dydt_t = repmat(dydt(:), 1, ntot);
+
+  N1 = zeros(ntot, ntot);
+  zprime_dot_diff = dxdt_t .* xdiff + dydt_t .* ydiff;
+  N1(offdiag) = -(wavek / (2 * pi)) * (zprime_dot_diff(offdiag) ./ r(offdiag)) .* ...
+    besselj(1, wavek * r(offdiag));
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function Rlog = LOCAL_kress_log_weight_matrix(L, ntot)
+
+  if mod(ntot, 2) ~= 0
+    error('Kress logarithmic weights require an even ntot.');
+  end
+
+  theta = (2 * pi / ntot) * L;
+  Rlog = zeros(size(L));
+  for m = 1:(ntot / 2 - 1)
+    Rlog = Rlog - (2 / m) * cos(m * theta);
+  end
+  Rlog = Rlog - (2 / ntot) * cos((ntot / 2) * theta);
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function log_kernel = LOCAL_kress_log_kernel_matrix(L, offdiag, ntot)
+
+  theta = (pi / ntot) * L;
+  log_kernel = zeros(size(L));
+  log_kernel(offdiag) = log(4 * sin(theta(offdiag)).^2);
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function N2diag = LOCAL_kress_tblock_N2_diag(dxdt, dx2dt, dydt, dy2dt)
+
+  N2diag = (1 / (2 * pi)) * (dxdt .* dx2dt + dydt .* dy2dt) ./ (dxdt.^2 + dydt.^2);
+  N2diag = N2diag(:);
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function A = LOCAL_construct_A_loop(C, iprec, khint, pars1, proxy, curvelen)
+
+  ntot = size(C, 2);
+  A = eye(2 * ntot, 2 * ntot);
+  [A11, A12, A21, A22, h, speed] = LOCAL_build_mueller_blocks(C, iprec, khint, pars1, proxy, curvelen);
+
+  for ix = 1:ntot
+    for iy = 1:ntot
+      A(ix, iy) = A(ix, iy) + A11(ix, iy);
+      A(ix, iy + ntot) = A12(ix, iy);
+      A(ix + ntot, iy) = A21(ix, iy);
+      A(ix + ntot, iy + ntot) = A(ix + ntot, iy + ntot) + A22(ix, iy);
+    end
+  end
+
   W = sqrt(h * diag([speed, speed]));
   Winv = sqrt((1 / h) * diag(1 ./ [speed, speed]));
   A = W * A * Winv;

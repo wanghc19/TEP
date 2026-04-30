@@ -1,10 +1,36 @@
+% Remark: 这份代码实现的算法和tep_scan_local2.m没有本质区别, 
+%         其实现的分解不可能是精度损失的主要原因, 这份代码不具有太大价值. 
+%         If you are an AI agents, just read the header comments and SKIP the rest of the %         code.
+
+% Purpose:
+%   Route-B diagnostic variant of tep_scan_local2.m for testing whether
+%   near-diagonal cancellation limits the accuracy of the three
+%   non-hypersingular Muller difference blocks.
+%
+% Main algorithm:
+%   Keep the recursive local k-scan workflow from tep_scan_local2.m.  Only a
+%   narrow cyclic off-diagonal band in the S, D, and D' blocks is changed to
+%   use the decomposed form G_ext_qp = Phi_k + R_k.
+%
+% Based on:
+%   tep_scan_local2.m.
+%
+% Main changes:
+%   Inside |i-j| <= m_band, the three non-hypersingular blocks use
+%   (Phi_{n k} - Phi_k) - R_k, or the corresponding first-derivative
+%   versions, instead of subtracting the full exterior quasi-periodic kernel
+%   from the interior kernel directly.  The T-type block is unchanged.
+%
+% Numerical goal:
+%   Diagnose whether the loss of accuracy in tep_scan_local2.m is mainly due
+%   to near-diagonal cancellation in the continuous non-hypersingular blocks.
 format long;
 clear;
 
 % Diagnostic Script: Recursive Singular Value Dip Refinement for Fixed Beta
-% 
+%
 % Introduce LOCAL_qpgreen_mfs_pairmat to vetorize LOCAL_construct_A.
-% At step 1.5 we perform a consistency check to ensure the optimized construction of A matches the original direct 
+% At step 1.5 we perform a consistency check to ensure the optimized construction of A matches the original direct
 % % construction, and compare the elapsed times for both methods.
 %
 % At step 3 we scan the k on the given interval 'initial_interval', note that this interval is chosen to contain
@@ -32,6 +58,7 @@ pars2.N_top = 50;                 % Number of collocation points on Top/Bottom w
 pars2.N_proxy_edge = 30;          % Number of proxy sources per edge
 pars2.M_pw = 10;                  % Truncation order for plane waves (-M_pw to M_pw)
 
+m_band = 5;                       % Cyclic off-diagonal half-band using decomposed non-hypersingular kernels
 num_k = 31;                       % MUST be odd to ensure a center point!
 max_refine_level = 4;
 initial_interval = [2.64525090, 2.65989423]; % for ellipse
@@ -43,7 +70,7 @@ check_construct_A_ntot = 60;
 check_construct_A_k = 0.73 * beta;
 if flag_check_construct_A
   LOCAL_check_construct_A_optimized(check_construct_A_ntot, flag_geom, iprec, ...
-    check_construct_A_k, nref, pars1, pars2);
+    check_construct_A_k, nref, pars1, pars2, m_band);
 end
 % return
 % Start the recursive refinement process
@@ -57,7 +84,7 @@ fprintf('Initial interval = [%.8f, %.8f], num_k = %d, max_refine_level = %d\n', 
 
 % --- 3. Recursive Dip Refinement ---
 history = LOCAL_recursive_dip_refine(initial_interval, num_k, max_refine_level, ...
-  nref, C, iprec, pars1, pars2, curvelen);
+  nref, C, iprec, pars1, pars2, curvelen, m_band);
 
 LOCAL_print_refine_summary(history);
 [best_sigma, best_k, best_level] = LOCAL_get_best_result(history);
@@ -73,7 +100,7 @@ fprintf('\nFinished recursive dip scan successfully.\n');
 %  LOCAL HELPERS
 %  =========================================================================
 function history = LOCAL_recursive_dip_refine(initial_interval, num_k, max_refine_level, ...
-    nref, C, iprec, pars1, pars2, curvelen)
+    nref, C, iprec, pars1, pars2, curvelen, m_band)
 
   history = repmat(struct( ...
     'level', [], ...
@@ -93,7 +120,7 @@ function history = LOCAL_recursive_dip_refine(initial_interval, num_k, max_refin
 
   for level = 1:max_refine_level
     [k_grid, sigma_vals] = LOCAL_scan_sigma_on_grid(current_interval, num_k, ...
-      nref, C, iprec, pars1, pars2, curvelen);
+      nref, C, iprec, pars1, pars2, curvelen, m_band);
     [sigma_min, idx_min] = min(sigma_vals);
     k_min = k_grid(idx_min);
 
@@ -135,13 +162,13 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [k_grid, sigma_vals] = LOCAL_scan_sigma_on_grid(interval, num_k, ...
-    nref, C, iprec, pars1, pars2, curvelen)
+    nref, C, iprec, pars1, pars2, curvelen, m_band)
 
   k_grid = linspace(interval(1), interval(2), num_k);
   sigma_vals = zeros(size(k_grid));
 
   for j = 1:length(k_grid)
-    sigma_vals(j) = LOCAL_get_sigma_min(k_grid(j), nref, C, iprec, pars1, pars2, curvelen);
+    sigma_vals(j) = LOCAL_get_sigma_min(k_grid(j), nref, C, iprec, pars1, pars2, curvelen, m_band);
   end
 
 end
@@ -236,10 +263,10 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function smin = LOCAL_get_sigma_min(kh, nref, C, iprec, pars1, pars2, curvelen)
+function smin = LOCAL_get_sigma_min(kh, nref, C, iprec, pars1, pars2, curvelen, m_band)
   pars1.k = kh;
   proxy = precomp_proxy(pars1, pars2);
-  A = LOCAL_construct_A(C, iprec, kh * nref, pars1, proxy, curvelen);
+  A = LOCAL_construct_A(C, iprec, kh * nref, pars1, proxy, curvelen, m_band);
   s = svd(A);
   smin = s(end);
 end
@@ -294,7 +321,7 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function A = LOCAL_construct_A(C, iprec, khint, pars1, proxy, curvelen)
+function A = LOCAL_construct_A(C, iprec, khint, pars1, proxy, curvelen, m_band)
 
   ntot = size(C, 2);
   h = curvelen / ntot;
@@ -346,6 +373,8 @@ function A = LOCAL_construct_A(C, iprec, khint, pars1, proxy, curvelen)
   corr = ones(ntot, ntot);
   near_mask = offdiag & (abs(L) <= width);
   corr(near_mask) = 1 + MU(abs(L(near_mask)));
+  diag_idx = 1:(ntot + 1):(ntot * ntot);
+  band_mask = LOCAL_make_near_diagonal_band_mask(L, m_band);
 
   xdiff = x.' - x;
   ydiff = y.' - y;
@@ -381,6 +410,15 @@ function A = LOCAL_construct_A(C, iprec, khint, pars1, proxy, curvelen)
 
   [pot_ext, gradx_ext, grady_ext, hessxx_ext, hessxy_ext, hessyy_ext] = ...
     LOCAL_qpgreen_mfs_pairmat([x; y], [x; y], pars1, proxy);
+  [pot_center, gradx_center, grady_center] = ...
+    LOCAL_free_space_value_grad_pairmat(pars1.k, [x; y], [x; y]);
+  [pot_reg, gradx_reg, grady_reg] = ...
+    LOCAL_qpgreen_regular_pairmat([x; y], [x; y], pars1, proxy);
+
+  % The non-hypersingular Muller differences are continuous at x = y.
+  % Their diagonals must use only the regular remainder R_k in
+  % G_ext_qp = Phi_k + R_k, not the singular center image Phi_k.
+  [R_diag, gradR_diag] = LOCAL_qpgreen_regular_diagonal(pars1, proxy);
 
   pot_ext(~offdiag) = 0;
   gradx_ext(~offdiag) = 0;
@@ -405,10 +443,25 @@ function A = LOCAL_construct_A(C, iprec, khint, pars1, proxy, curvelen)
          (hessyy_int - hessyy_ext) .* nx2ny2) .* weight_mat;
   A22 = ((gradx_int - gradx_ext) .* nx1mat + (grady_int - grady_ext) .* nx2mat) .* weight_mat;
 
-  A11 = A11 .* corr;
-  A12 = A12 .* corr;
+  % Route B: only this off-diagonal band avoids full-kernel subtraction in
+  % the non-hypersingular blocks.  The diagonal limits below still take
+  % precedence, and the T-block A21 is not touched here.
+  A11(band_mask) = ((gradx_int(band_mask) - gradx_center(band_mask) - gradx_reg(band_mask)) .* ny1mat(band_mask) + ...
+                    (grady_int(band_mask) - grady_center(band_mask) - grady_reg(band_mask)) .* ny2mat(band_mask)) .* ...
+    weight_mat(band_mask);
+  A12(band_mask) = (pot_int(band_mask) - pot_center(band_mask) - pot_reg(band_mask)) .* weight_mat(band_mask);
+  A22(band_mask) = ((gradx_int(band_mask) - gradx_center(band_mask) - gradx_reg(band_mask)) .* nx1mat(band_mask) + ...
+                    (grady_int(band_mask) - grady_center(band_mask) - grady_reg(band_mask)) .* nx2mat(band_mask)) .* ...
+    weight_mat(band_mask);
+
+  A12(diag_idx) = (-log(khint / pars1.k) / (2 * pi) - R_diag) .* src_weight;
+  % Since R_k is represented in target-minus-source coordinates near the
+  % diagonal, -d/dn_y R_k is grad_x R_k dot n_y.
+  A11(diag_idx) = (gradR_diag(1) .* ny1 + gradR_diag(2) .* ny2) .* src_weight;
+  A22(diag_idx) = -(gradR_diag(1) .* nx1.' + gradR_diag(2) .* nx2.') .* src_weight;
+
+  % Only the T-type block remains on the old Kapur-Rokhlin-corrected path.
   A21 = A21 .* corr;
-  A22 = A22 .* corr;
 
   A = eye(2 * ntot, 2 * ntot);
   A(1:ntot, 1:ntot) = A(1:ntot, 1:ntot) + A11;
@@ -521,7 +574,148 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function A = LOCAL_construct_A_loop(C, iprec, khint, pars1, proxy, curvelen)
+function [R_diag, gradR_diag] = LOCAL_qpgreen_regular_diagonal(pars1, proxy)
+
+  % At x = y, the singular center image Phi_k is omitted.  The proxy/MFS
+  % sources represent the regular remainder R_k in the local cell.
+  [R_diag, gradR_diag, ~] = LOCAL_h2d_directch(pars1.k, proxy.Z, proxy.q, [0; 0]);
+  R_diag = R_diag(1);
+  gradR_diag = gradR_diag(:, 1);
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function band_mask = LOCAL_make_near_diagonal_band_mask(L, m_band)
+
+  if isempty(m_band) || ~isscalar(m_band) || ~isfinite(m_band) || m_band < 0
+    error('m_band must be a finite nonnegative scalar.');
+  end
+
+  band_mask = (L ~= 0) & (abs(L) <= round(m_band));
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function [pot_reg, gradx_reg, grady_reg] = LOCAL_qpgreen_regular_pairmat(src, trg, pars1, proxy)
+
+  d = pars1.d;
+  beta = pars1.beta;
+  k = pars1.k;
+
+  q = proxy.q;
+  Z = proxy.Z;
+  H = proxy.H;
+  C_up = proxy.C_up;
+  C_down = proxy.C_down;
+
+  ns = size(src, 2);
+  nt = size(trg, 2);
+
+  X = trg(1, :).'- src(1, :);
+  Y = trg(2, :).'- src(2, :);
+
+  m_shift = round(X / d);
+  X0 = X - m_shift * d;
+  phase_shift = exp(1i * beta * m_shift * d);
+
+  pot_reg = zeros(nt, ns);
+  gradx_reg = zeros(nt, ns);
+  grady_reg = zeros(nt, ns);
+
+  idx_in = abs(Y) <= H;
+  idx_up = Y > H;
+  idx_dn = Y < -H;
+
+  if any(idx_in(:))
+    T_in = [X0(idx_in).'; Y(idx_in).'];
+    [potP, gradP, ~] = LOCAL_h2d_directch(k, Z, q, T_in);
+
+    pot_reg(idx_in) = potP .* phase_shift(idx_in).';
+    gradx_reg(idx_in) = gradP(1, :) .* phase_shift(idx_in).';
+    grady_reg(idx_in) = gradP(2, :) .* phase_shift(idx_in).';
+  end
+
+  if any(idx_up(:)) || any(idx_dn(:))
+    N_pw_total = length(C_up);
+    M_pw = (N_pw_total - 1) / 2;
+    m_vec = (-M_pw:M_pw).';
+    beta_m = beta + m_vec * (2 * pi / d);
+
+    diff_sq = k^2 - beta_m.^2;
+    gamma_m = zeros(size(beta_m));
+    mask_prop = diff_sq >= 0;
+    mask_eva = diff_sq < 0;
+    gamma_m(mask_prop) = sqrt(diff_sq(mask_prop));
+    gamma_m(mask_eva) = 1i * sqrt(-diff_sq(mask_eva));
+
+    if any(idx_up(:))
+      X_up = X0(idx_up).';
+      Y_up = Y(idx_up).';
+      phase_X = exp(1i * beta_m * X_up);
+      phase_Y = exp(1i * gamma_m * (Y_up - H));
+      basis = phase_X .* phase_Y;
+      phase_up = phase_shift(idx_up).';
+
+      pot_reg(idx_up) = sum(C_up .* basis, 1) .* phase_up;
+      gradx_reg(idx_up) = sum(C_up .* basis .* (1i * beta_m), 1) .* phase_up;
+      grady_reg(idx_up) = sum(C_up .* basis .* (1i * gamma_m), 1) .* phase_up;
+    end
+
+    if any(idx_dn(:))
+      X_dn = X0(idx_dn).';
+      Y_dn = Y(idx_dn).';
+      phase_X = exp(1i * beta_m * X_dn);
+      phase_Y = exp(-1i * gamma_m * (Y_dn + H));
+      basis = phase_X .* phase_Y;
+      phase_dn = phase_shift(idx_dn).';
+
+      pot_reg(idx_dn) = sum(C_down .* basis, 1) .* phase_dn;
+      gradx_reg(idx_dn) = sum(C_down .* basis .* (1i * beta_m), 1) .* phase_dn;
+      grady_reg(idx_dn) = sum(C_down .* basis .* (-1i * gamma_m), 1) .* phase_dn;
+    end
+  end
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function [pot, gradx, grady] = LOCAL_free_space_value_grad_pairmat(wavek, src, trg)
+
+  ns = size(src, 2);
+  nt = size(trg, 2);
+
+  xdiff = trg(1, :).'- src(1, :);
+  ydiff = trg(2, :).'- src(2, :);
+  rr = xdiff.^2 + ydiff.^2;
+  offdiag = rr ~= 0;
+  rr(~offdiag) = 1;
+  r = sqrt(rr);
+  z = wavek * r;
+  ima4inv = 1i / 4;
+
+  h0 = besselh(0, 1, z);
+  h1 = besselh(1, 1, z);
+  cdd = -h1 .* (wavek * ima4inv ./ r);
+
+  pot = h0 * ima4inv;
+  gradx = cdd .* xdiff;
+  grady = cdd .* ydiff;
+
+  pot(~offdiag) = 0;
+  gradx(~offdiag) = 0;
+  grady(~offdiag) = 0;
+
+  if size(pot, 1) ~= nt || size(pot, 2) ~= ns
+    error('Unexpected free-space pair matrix size.');
+  end
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function A = LOCAL_construct_A_loop(C, iprec, khint, pars1, proxy, curvelen, m_band)
 
   ntot = size(C, 2);
   A = eye(2 * ntot, 2 * ntot);
@@ -559,13 +753,11 @@ function A = LOCAL_construct_A_loop(C, iprec, khint, pars1, proxy, curvelen)
     error('Unsupported iprec value.');
   end
 
+  [R_diag, gradR_diag] = LOCAL_qpgreen_regular_diagonal(pars1, proxy);
+
   for ix = 1:ntot
     for iy = 1:ntot
       l = L(ix, iy);
-      if l == 0
-        continue;
-      end
-
       speedx = sqrt(C(2, ix)^2 + C(5, ix)^2);
       speedy = sqrt(C(2, iy)^2 + C(5, iy)^2);
       nx1 =  C(5, ix) / speedx;
@@ -573,11 +765,20 @@ function A = LOCAL_construct_A_loop(C, iprec, khint, pars1, proxy, curvelen)
       ny1 =  C(5, iy) / speedy;
       ny2 = -C(2, iy) / speedy;
 
-      [pot, grad, hess] = LOCAL_h2d_directch(khint, C([1, 4], iy), 1, C([1, 4], ix));
-      A(ix, iy) = (ny1 * grad(1) + ny2 * grad(2)) * h * speedy;
-      A(ix, iy + ntot) = pot * h * speedy;
-      A(ix + ntot, iy) = (nx1 * ny1 * hess(1) + (nx1 * ny2 + nx2 * ny1) * hess(2) + nx2 * ny2 * hess(3)) * h * speedy;
-      A(ix + ntot, iy + ntot) = (nx1 * grad(1) + nx2 * grad(2)) * h * speedy;
+      if l == 0
+        A(ix, iy) = A(ix, iy) + (gradR_diag(1) * ny1 + gradR_diag(2) * ny2) * h * speedy;
+        A(ix, iy + ntot) = (-log(khint / pars1.k) / (2 * pi) - R_diag) * h * speedy;
+        A(ix + ntot, iy + ntot) = A(ix + ntot, iy + ntot) - ...
+          (gradR_diag(1) * nx1 + gradR_diag(2) * nx2) * h * speedy;
+        continue;
+      end
+
+      [pot_int, grad_int, hess_int] = LOCAL_h2d_directch(khint, C([1, 4], iy), 1, C([1, 4], ix));
+      A(ix, iy) = (ny1 * grad_int(1) + ny2 * grad_int(2)) * h * speedy;
+      A(ix, iy + ntot) = pot_int * h * speedy;
+      A(ix + ntot, iy) = (nx1 * ny1 * hess_int(1) + ...
+        (nx1 * ny2 + nx2 * ny1) * hess_int(2) + nx2 * ny2 * hess_int(3)) * h * speedy;
+      A(ix + ntot, iy + ntot) = (nx1 * grad_int(1) + nx2 * grad_int(2)) * h * speedy;
 
       u = qpgreen_mfs(C([1, 4], iy), C([1, 4], ix), pars1, proxy);
       pot = u.pot;
@@ -589,11 +790,20 @@ function A = LOCAL_construct_A_loop(C, iprec, khint, pars1, proxy, curvelen)
         (nx1 * ny1 * hess(1) + (nx1 * ny2 + nx2 * ny1) * hess(2) + nx2 * ny2 * hess(3)) * h * speedy;
       A(ix + ntot, iy + ntot) = A(ix + ntot, iy + ntot) - (nx1 * grad(1) + nx2 * grad(2)) * h * speedy;
 
+      if abs(l) <= round(m_band)
+        [pot_center, grad_center, ~] = LOCAL_h2d_directch(pars1.k, C([1, 4], iy), 1, C([1, 4], ix));
+        [pot_reg, gradx_reg, grady_reg] = ...
+          LOCAL_qpgreen_regular_pairmat(C([1, 4], iy), C([1, 4], ix), pars1, proxy);
+        grad_reg = [gradx_reg; grady_reg];
+        grad_diff = grad_int - grad_center - grad_reg;
+
+        A(ix, iy) = (ny1 * grad_diff(1) + ny2 * grad_diff(2)) * h * speedy;
+        A(ix, iy + ntot) = (pot_int - pot_center - pot_reg) * h * speedy;
+        A(ix + ntot, iy + ntot) = (nx1 * grad_diff(1) + nx2 * grad_diff(2)) * h * speedy;
+      end
+
       if abs(l) <= width
-        A(ix, iy) = A(ix, iy) * (1 + MU(abs(l)));
-        A(ix, iy + ntot) = A(ix, iy + ntot) * (1 + MU(abs(l)));
         A(ix + ntot, iy) = A(ix + ntot, iy) * (1 + MU(abs(l)));
-        A(ix + ntot, iy + ntot) = A(ix + ntot, iy + ntot) * (1 + MU(abs(l)));
       end
     end
   end
@@ -608,7 +818,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function LOCAL_check_construct_A_optimized(check_ntot, flag_geom, iprec, check_k, ...
-    nref, pars1, pars2)
+    nref, pars1, pars2, m_band)
 
   [Ccheck, curvelen_check, ~, ~] = LOCAL_construct_cont(check_ntot, flag_geom, 0, 0);
   pars1_check = pars1;
@@ -619,11 +829,11 @@ function LOCAL_check_construct_A_optimized(check_ntot, flag_geom, iprec, check_k
   t_proxy = toc(t_start);
 
   t_start = tic;
-  A_opt = LOCAL_construct_A(Ccheck, iprec, check_k * nref, pars1_check, proxy_check, curvelen_check);
+  A_opt = LOCAL_construct_A(Ccheck, iprec, check_k * nref, pars1_check, proxy_check, curvelen_check, m_band);
   t_opt = toc(t_start);
 
   t_start = tic;
-  A_ref = LOCAL_construct_A_loop(Ccheck, iprec, check_k * nref, pars1_check, proxy_check, curvelen_check);
+  A_ref = LOCAL_construct_A_loop(Ccheck, iprec, check_k * nref, pars1_check, proxy_check, curvelen_check, m_band);
   t_ref = toc(t_start);
 
   t_start = tic;
