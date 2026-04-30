@@ -13,7 +13,7 @@
 % Based on:
 %   archive/demobie1.m for the boundary geometry and point-source test idea,
 %   quad_note.md for the Kress split and Nystrom convention, and
-%   quad_demo_7_1_kress.m for LOCAL_quad_kress_rvec.
+%   quad_demo_7_1_kress.m for quad.quad_kress_rvec.
 %
 % Main changes:
 %   This standalone script uses the physical combined-field representation
@@ -256,7 +256,7 @@ function [A, split_res] = LOCAL_build_cfie_kress(ntot, k, eta)
 
   geom = LOCAL_boundary_geom(ntot);
   [K1, K2, split_res] = LOCAL_cfie_kress_split(geom, k, eta);
-  rvec = LOCAL_quad_kress_rvec(ntot);
+  rvec = quad.quad_kress_rvec(ntot);
   offset_idx = mod((0:ntot-1) - (0:ntot-1).', ntot) + 1;
   R = rvec(offset_idx);
   A = R .* K1 + geom.h * K2;
@@ -474,27 +474,6 @@ function gamma = LOCAL_kr_gamma(order)
     ];
   else
     error('Unsupported Kapur-Rokhlin order %d. Use 6 or 10.', order);
-  end
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-function rvec = LOCAL_quad_kress_rvec(N)
-
-  if mod(N, 2) ~= 0
-    error('Kress Nystrom method requires N to be even.');
-  end
-
-  rvec = zeros(1, N);
-  mvec = 0:(N - 1);
-  for m = mvec
-    accum = 0;
-    for n = 1:(N / 2 - 1)
-      accum = accum + (1 / n) * cos(2 * pi * n * m / N);
-    end
-    accum = accum + (1 / N) * cos(pi * m);
-    rvec(m + 1) = -(4 * pi / N) * accum;
   end
 
 end

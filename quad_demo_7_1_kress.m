@@ -85,26 +85,6 @@ fprintf('\nSection 7.1 Kress demo setup completed.\n');
 %% =========================================================================
 %  LOCAL HELPERS
 %  =========================================================================
-function rvec = LOCAL_quad_kress_rvec(N)
-
-  if mod(N, 2) ~= 0
-    error('Kress Nyström method requires N to be even.');
-  end
-
-  rvec = zeros(1, N);
-  mvec = 0:(N - 1);
-  for m = mvec
-    accum = 0;
-    for n = 1:(N / 2 - 1)
-      accum = accum + (1 / n) * cos(2 * pi * n * m / N);
-    end
-    accum = accum + (1 / N) * cos(pi * m);
-    rvec(m + 1) = -(4 * pi / N) * accum;
-  end
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [x, u, A] = LOCAL_quad_solve_7_1_kress(N)
 
@@ -115,7 +95,7 @@ function [x, u, A] = LOCAL_quad_solve_7_1_kress(N)
   h = 2 * pi / N;
   x = (2 * pi / N) * (1:N).';
 
-  rvec = LOCAL_quad_kress_rvec(N);
+  rvec = quad.quad_kress_rvec(N);
   offset_idx = mod((0:N-1) - (0:N-1).', N) + 1;
   R = rvec(offset_idx);
 

@@ -96,13 +96,13 @@ function results = LOCAL_run_kpert_experiment(flag_geom, iprec, nref, pars1, par
   ncases = length(ntot_list);
   ndelta = length(delta_list);
 
-  geometry_cache = LOCAL_build_geometry_cache(ntot_list, flag_geom);
+  geometry_cache = geom.build_geometry_cache(ntot_list, flag_geom);
   k_eval_mat = repmat(k_star + delta_list, ncases, 1);
   sigma_mat = NaN(ncases, ndelta);
 
   for i = 1:ncases
     ntot = ntot_list(i);
-    [C, curvelen] = LOCAL_get_geometry_from_cache(ntot, geometry_cache);
+    [C, curvelen] = geom.get_geometry_from_cache(ntot, geometry_cache);
 
     fprintf('\nEvaluating ntot = %d (%d perturbations)\n', ntot, ndelta);
     for j = 1:ndelta
@@ -245,93 +245,13 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function geometry_cache = LOCAL_build_geometry_cache(ntot_list, flag_geom)
-
-  ntot_unique = unique(ntot_list, 'stable');
-  geometry_cache = struct('ntot', cell(length(ntot_unique), 1), ...
-    'C', cell(length(ntot_unique), 1), ...
-    'curvelen', cell(length(ntot_unique), 1));
-
-  for j = 1:length(ntot_unique)
-    [C, curvelen, ~, ~] = LOCAL_construct_cont(ntot_unique(j), flag_geom, 0, 0);
-    geometry_cache(j).ntot = ntot_unique(j);
-    geometry_cache(j).C = C;
-    geometry_cache(j).curvelen = curvelen;
-  end
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-function [C, curvelen] = LOCAL_get_geometry_from_cache(ntot, geometry_cache)
-
-  idx = find([geometry_cache.ntot] == ntot, 1, 'first');
-  if isempty(idx)
-    error('Geometry for ntot = %d was not found in the cache.', ntot);
-  end
-
-  C = geometry_cache(idx).C;
-  curvelen = geometry_cache(idx).curvelen;
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 function smin = LOCAL_get_sigma_min(kh, nref, C, iprec, pars1, pars2, curvelen)
 
   pars1.k = kh;
-  proxy = precomp_proxy(pars1, pars2);
+  proxy = kernel.precomp_proxy(pars1, pars2);
   A = LOCAL_construct_A(C, iprec, kh * nref, pars1, proxy, curvelen);
   s = svd(A);
   smin = s(end);
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-function [C, curvelen, xxint, xxext] = LOCAL_construct_cont(ntot, flag_geom, nint, next)
-
-  if strcmp(flag_geom, 'star')
-    r = 0.3;
-    k = 5;
-    tt = linspace(0, 2 * pi * (1 - 1 / ntot), ntot);
-    C = zeros(6, ntot);
-    C(1,:) =   1.5 * cos(tt) + (r / 2) *            cos((k + 1) * tt) + (r / 2) *            cos((k - 1) * tt);
-    C(2,:) = - 1.5 * sin(tt) - (r / 2) * (k + 1) * sin((k + 1) * tt) - (r / 2) * (k - 1) * sin((k - 1) * tt);
-    C(3,:) = - 1.5 * cos(tt) - (r / 2) * (k + 1) * (k + 1) * cos((k + 1) * tt) - (r / 2) * (k - 1) * (k - 1) * cos((k - 1) * tt);
-    C(4,:) =       sin(tt) + (r / 2) *            sin((k + 1) * tt) - (r / 2) *            sin((k - 1) * tt);
-    C(5,:) =       cos(tt) + (r / 2) * (k + 1) * cos((k + 1) * tt) - (r / 2) * (k - 1) * cos((k - 1) * tt);
-    C(6,:) = -     sin(tt) - (r / 2) * (k + 1) * (k + 1) * sin((k + 1) * tt) + (r / 2) * (k - 1) * (k - 1) * sin((k - 1) * tt);
-    C = C .* 0.2;
-    curvelen = 2 * pi;
-    rmin = sqrt(min(C(1,:).^2 + C(4,:).^2));
-    rmax = sqrt(max(C(1,:).^2 + C(4,:).^2));
-    ttint = 2 * pi * rand(1, nint);
-    xxint = 0.6 * [rmin * cos(ttint); rmin * sin(ttint)];
-    ttext = 2 * pi * rand(1, next);
-    xxext = 1.6 * [rmax * cos(ttext); rmax * sin(ttext)];
-  elseif strcmp(flag_geom, 'ellipse')
-    a = 0.4;
-    b = 0.4;
-    tt = linspace(0, 2 * pi * (1 - 1 / ntot), ntot);
-    C = zeros(6, ntot);
-    C(1,:) =  a * cos(tt);
-    C(2,:) = -a * sin(tt);
-    C(3,:) = -a * cos(tt);
-    C(4,:) =  b * sin(tt);
-    C(5,:) =  b * cos(tt);
-    C(6,:) = -b * sin(tt);
-    curvelen = 2 * pi;
-
-    rmin = sqrt(min(C(1,:).^2 + C(4,:).^2));
-    rmax = sqrt(max(C(1,:).^2 + C(4,:).^2));
-    ttint = 2 * pi * rand(1, nint);
-    xxint = 0.6 * [rmin * cos(ttint); rmin * sin(ttint)];
-    ttext = 2 * pi * rand(1, next);
-    xxext = 1.4 * [rmax * cos(ttext); rmax * sin(ttext)];
-  else
-    error('This option for the geometry is not implemented.');
-  end
 
 end
 
@@ -423,7 +343,7 @@ function A = LOCAL_construct_A(C, iprec, khint, pars1, proxy, curvelen)
   hessyy_int(~offdiag) = 0;
 
   [pot_ext, gradx_ext, grady_ext, hessxx_ext, hessxy_ext, hessyy_ext] = ...
-    LOCAL_qpgreen_mfs_pairmat([x; y], [x; y], pars1, proxy);
+    kernel.qpgreen_mfs_pairmat([x; y], [x; y], pars1, proxy);
 
   pot_ext(~offdiag) = 0;
   gradx_ext(~offdiag) = 0;
@@ -467,142 +387,3 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [pot_ext, gradx_ext, grady_ext, hessxx_ext, hessxy_ext, hessyy_ext] = ...
-    LOCAL_qpgreen_mfs_pairmat(src, trg, pars1, proxy)
-
-  d = pars1.d;
-  beta = pars1.beta;
-  k = pars1.k;
-
-  q = proxy.q;
-  Z = proxy.Z;
-  H = proxy.H;
-  C_up = proxy.C_up;
-  C_down = proxy.C_down;
-
-  ns = size(src, 2);
-  nt = size(trg, 2);
-
-  X = trg(1, :).'- src(1, :);
-  Y = trg(2, :).'- src(2, :);
-
-  m_shift = round(X / d);
-  X0 = X - m_shift * d;
-  phase_shift = exp(1i * beta * m_shift * d);
-
-  pot_ext = zeros(nt, ns);
-  gradx_ext = zeros(nt, ns);
-  grady_ext = zeros(nt, ns);
-  hessxx_ext = zeros(nt, ns);
-  hessxy_ext = zeros(nt, ns);
-  hessyy_ext = zeros(nt, ns);
-
-  idx_in = abs(Y) <= H;
-  idx_up = Y > H;
-  idx_dn = Y < -H;
-
-  if any(idx_in(:))
-    T_in = [X0(idx_in).'; Y(idx_in).'];
-    [pot0, grad0, hess0] = LOCAL_h2d_directch(k, [0; 0], 1, T_in);
-    [potP, gradP, hessP] = LOCAL_h2d_directch(k, Z, q, T_in);
-
-    pot_ext(idx_in) = (pot0 + potP) .* phase_shift(idx_in).';
-    gradx_ext(idx_in) = (grad0(1, :) + gradP(1, :)) .* phase_shift(idx_in).';
-    grady_ext(idx_in) = (grad0(2, :) + gradP(2, :)) .* phase_shift(idx_in).';
-    hessxx_ext(idx_in) = (hess0(1, :) + hessP(1, :)) .* phase_shift(idx_in).';
-    hessxy_ext(idx_in) = (hess0(2, :) + hessP(2, :)) .* phase_shift(idx_in).';
-    hessyy_ext(idx_in) = (hess0(3, :) + hessP(3, :)) .* phase_shift(idx_in).';
-  end
-
-  if any(idx_up(:)) || any(idx_dn(:))
-    N_pw_total = length(C_up);
-    M_pw = (N_pw_total - 1) / 2;
-    m_vec = (-M_pw:M_pw).';
-    beta_m = beta + m_vec * (2 * pi / d);
-
-    diff_sq = k^2 - beta_m.^2;
-    gamma_m = zeros(size(beta_m));
-    mask_prop = diff_sq >= 0;
-    mask_eva = diff_sq < 0;
-    gamma_m(mask_prop) = sqrt(diff_sq(mask_prop));
-    gamma_m(mask_eva) = 1i * sqrt(-diff_sq(mask_eva));
-
-    if any(idx_up(:))
-      X_up = X0(idx_up).';
-      Y_up = Y(idx_up).';
-      phase_X = exp(1i * beta_m * X_up);
-      phase_Y = exp(1i * gamma_m * (Y_up - H));
-      basis = phase_X .* phase_Y;
-      phase_up = phase_shift(idx_up).';
-
-      pot_ext(idx_up) = sum(C_up .* basis, 1) .* phase_up;
-      gradx_ext(idx_up) = sum(C_up .* basis .* (1i * beta_m), 1) .* phase_up;
-      grady_ext(idx_up) = sum(C_up .* basis .* (1i * gamma_m), 1) .* phase_up;
-      hessxx_ext(idx_up) = sum(C_up .* basis .* (-beta_m.^2), 1) .* phase_up;
-      hessxy_ext(idx_up) = sum(C_up .* basis .* (-beta_m .* gamma_m), 1) .* phase_up;
-      hessyy_ext(idx_up) = sum(C_up .* basis .* (-gamma_m.^2), 1) .* phase_up;
-    end
-
-    if any(idx_dn(:))
-      X_dn = X0(idx_dn).';
-      Y_dn = Y(idx_dn).';
-      phase_X = exp(1i * beta_m * X_dn);
-      phase_Y = exp(-1i * gamma_m * (Y_dn + H));
-      basis = phase_X .* phase_Y;
-      phase_dn = phase_shift(idx_dn).';
-
-      pot_ext(idx_dn) = sum(C_down .* basis, 1) .* phase_dn;
-      gradx_ext(idx_dn) = sum(C_down .* basis .* (1i * beta_m), 1) .* phase_dn;
-      grady_ext(idx_dn) = sum(C_down .* basis .* (-1i * gamma_m), 1) .* phase_dn;
-      hessxx_ext(idx_dn) = sum(C_down .* basis .* (-beta_m.^2), 1) .* phase_dn;
-      hessxy_ext(idx_dn) = sum(C_down .* basis .* (beta_m .* gamma_m), 1) .* phase_dn;
-      hessyy_ext(idx_dn) = sum(C_down .* basis .* (-gamma_m.^2), 1) .* phase_dn;
-    end
-  end
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-function [pot, grad, hess] = LOCAL_h2d_directch(wavek, sources, charge, targ)
-
-  ns = size(sources, 2);
-  nt = size(targ, 2);
-  charge = reshape(charge, 1, []);
-  if length(charge) ~= ns
-    error('charge must have one entry per source.');
-  end
-
-  ima4inv = 1i / 4;
-  xdiff = bsxfun(@minus, targ(1, :).', sources(1, :));
-  ydiff = bsxfun(@minus, targ(2, :).', sources(2, :));
-  rr = xdiff.^2 + ydiff.^2;
-  r = sqrt(rr);
-  z = wavek * r;
-
-  h0 = besselh(0, z);
-  h1 = besselh(1, z);
-  cdd = -h1 .* (wavek * ima4inv ./ r);
-  cdd2 = (wavek * ima4inv ./ r) ./ rr;
-  h2z = -z .* h0 + 2 * h1;
-  hf1 = h2z .* xdiff .* xdiff - rr .* h1;
-  hf2 = h2z .* xdiff .* ydiff;
-  hf3 = h2z .* ydiff .* ydiff - rr .* h1;
-
-  weighted_h0 = bsxfun(@times, h0, charge);
-  weighted_cdd = bsxfun(@times, cdd, charge);
-  weighted_cdd2 = bsxfun(@times, cdd2, charge);
-
-  pot = ima4inv * sum(weighted_h0, 2).';
-  grad = zeros(2, nt);
-  grad(1, :) = sum(weighted_cdd .* xdiff, 2).';
-  grad(2, :) = sum(weighted_cdd .* ydiff, 2).';
-
-  hess = zeros(3, nt);
-  hess(1, :) = sum(weighted_cdd2 .* hf1, 2).';
-  hess(2, :) = sum(weighted_cdd2 .* hf2, 2).';
-  hess(3, :) = sum(weighted_cdd2 .* hf3, 2).';
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

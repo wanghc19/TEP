@@ -32,6 +32,10 @@ This repository contains MATLAB code for numerical experiments on periodic waveg
 - Parameter comments should explain purpose and usage, not merely repeat the variable name.
 - When introducing a new parameter, add or update nearby comments so that a reader can understand how to use it.
 
+- When documenting mathematical logic, operator structure, or matrix assembly, do not rely on prose alone.
+- Explicitly include the key mathematical formulas in LaTeX-style notation whenever this helps clarify the implementation.
+- In particular, for important kernels, block operators, jump relations, or assembled matrix formulas, prefer writing the defining formula explicitly rather than only describing it in words.
+
 - For MATLAB `.m` files, place the file header comment block before the main code.
 
 ## When editing code

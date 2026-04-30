@@ -1,22 +1,32 @@
 function u = qpgreen_mfs(src, trg, pars1, pars2)
-% QPGREEN_MFS Evaluates the Quasi-Periodic Green's function, Gradient, and 
-% Hessian using the Augmented Method of Fundamental Solutions (Proxy + PWE).
+% QPGREEN_MFS Evaluate the quasi-periodic Green function by augmented MFS.
 %
-% Inputs:
-%   src: Source coordinates (2 x 1)
-%   trg: Target coordinates (2 x nt)
-%   pars1: Struct with fields d, beta, k
-%   pars2: Struct with MFS coefficients (q, Z, H, C_up, C_down)
+% Purpose:
+%   Evaluates the quasi-periodic Green's function, gradient, and Hessian
+%   using proxy sources inside the proxy box and plane-wave expansions above
+%   and below it.
 %
-% Outputs:
-%   u: Struct containing pot (1xnt), grad (2xnt), hess (3xnt)
+% Input:
+%   src   - Source coordinate as a 2-by-1 vector.
+%   trg   - Target coordinates as a 2-by-nt array.
+%   pars1 - Physical parameter struct with fields d, beta, and k.
+%   pars2 - Proxy/plane-wave coefficient struct with fields q, Z, H,
+%           C_up, and C_down.
+%
+% Output:
+%   u - Struct with fields pot (1-by-nt), grad (2-by-nt), and hess
+%       (3-by-nt) at the target points.
+%
+% Notes:
+%   This package version calls kernel.h2d_directch for free-space Helmholtz
+%   evaluations instead of keeping a duplicated local kernel helper.
 
   d = pars1.d;        % Periodicity along x
   beta = pars1.beta;  % Bloch wavevector
   k = pars1.k;        % Free space wavenumber
 
-  q = pars2.q;        % Proxy source strengths (assumed column vector)
-  Z = pars2.Z;        % Proxy source locations (assumed N_proxy x 2)
+  q = pars2.q;        % Proxy source strengths
+  Z = pars2.Z;        % Proxy source locations as a 2-by-N_proxy array
   H = pars2.H;        % Height of the fundamental domain
   C_up = pars2.C_up;      % Plane wave coefficients for top boundary
   C_down = pars2.C_down;  % Plane wave coefficients for bottom boundary
@@ -53,10 +63,10 @@ function u = qpgreen_mfs(src, trg, pars1, pars2)
     T_in = [X0(idx_in); Y(idx_in)];
     
     % Primary source located at (0,0) in the relative coordinate system
-    [pot0, grad0, hess0] = LOCAL_h2d_directch(k, [0; 0], 1, T_in);
+    [pot0, grad0, hess0] = kernel.h2d_directch(k, [0; 0], 1, T_in);
     
     % Proxy sources
-    [potP, gradP, hessP] = LOCAL_h2d_directch(k, Z, q, T_in);
+    [potP, gradP, hessP] = kernel.h2d_directch(k, Z, q, T_in);
     
     % Sum primary and proxy fields, then apply the Bloch phase
     u.pot(idx_in)      = (pot0 + potP) .* phase_shift(idx_in);
@@ -131,70 +141,3 @@ function u = qpgreen_mfs(src, trg, pars1, pars2)
   end
 
 end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [pot, grad, hess] = LOCAL_h2d_directch(wavek, sources, charge, targ)
-% LOCAL_H2D_DIRECTCH Evaluates the 2D Helmholtz Green's function, 
-% its gradient, and Hessian for a set of sources and targets.
-%
-% Inputs:
-%   wavek   - Wavenumber (scalar)
-%   sources - Source coordinates (2 x ns)
-%   charge  - Source strengths/coefficients (1 x ns)
-%   targ    - Target coordinates (2 x nt)
-%
-% Outputs:
-%   pot  - Potential (1 x nt)
-%   grad - Gradient[du/dx; du/dy] (2 x nt)
-%   hess - Hessian[d2u/dx2; d2u/dxdy; d2u/dy2] (3 x nt)
-
-  % Constant prefactor
-  ima4inv = 1i / 4;
-
-  % --- 1. Compute distance matrices using Implicit Expansion ---
-  % Reshape targ to (nt x 1) and sources to (1 x ns).
-  % The resulting difference matrices will be (nt x ns).
-  xdiff = targ(1, :).' - sources(1, :);
-  ydiff = targ(2, :).' - sources(2, :);
-
-  rr = xdiff.^2 + ydiff.^2;
-  r  = sqrt(rr);
-  z  = wavek * r;
-
-  % --- 2. Evaluate Bessel functions ---
-  % besselh operates efficiently on the entire (nt x ns) matrix at once
-  h0 = besselh(0, 1, z);
-  h1 = besselh(1, 1, z);
-
-  % --- 3. Compute intermediate geometric/derivative terms ---
-  % All these are (nt x ns) matrices
-  cdd  = -h1 .* (wavek * ima4inv ./ r);
-  cdd2 = (wavek * ima4inv ./ r) ./ rr;
-  h2z  = -z .* h0 + 2 .* h1;
-
-  hf1 = h2z .* (xdiff.^2) - rr .* h1;
-  hf2 = h2z .* xdiff .* ydiff;
-  hf3 = h2z .* (ydiff.^2) - rr .* h1;
-
-  % --- 4. Apply charges and sum over all sources ---
-  % We multiply element-wise by 'charge' (1 x ns) which broadcasts automatically.
-  % sum(..., 2) sums across the columns (sources), resulting in (nt x 1).
-  % Finally, we transpose (.') to match the requested output shapes.
-
-  % Potential (1 x nt)
-  pot = sum(h0 .* ima4inv .* charge, 2).';
-
-  % Gradient (2 x nt)
-  grad_x = sum(cdd .* xdiff .* charge, 2).';
-  grad_y = sum(cdd .* ydiff .* charge, 2).';
-  grad =[grad_x; grad_y];
-
-  % Hessian (3 x nt)
-  hess_xx = sum(cdd2 .* hf1 .* charge, 2).';
-  hess_xy = sum(cdd2 .* hf2 .* charge, 2).';
-  hess_yy = sum(cdd2 .* hf3 .* charge, 2).';
-  hess = [hess_xx; hess_xy; hess_yy];
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
