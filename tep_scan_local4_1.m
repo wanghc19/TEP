@@ -398,11 +398,6 @@ end
 
 function A12 = LOCAL_assemble_Sdiff_kress(C, kin, kout, pot_qp, R_diag, curvelen)
 
-  persistent printed_diagnostic;
-  if isempty(printed_diagnostic)
-    printed_diagnostic = false;
-  end
-
   ntot = size(C, 2);
   if mod(ntot, 2) ~= 0
     error('Kress Sdiff assembly requires an even number of boundary nodes.');
@@ -420,8 +415,8 @@ function A12 = LOCAL_assemble_Sdiff_kress(C, kin, kout, pot_qp, R_diag, curvelen
   geom_data.speed = sqrt(sum(geom_data.zp.^2, 2));
 
   R = LOCAL_kress_matrix(ntot);
-  [M1_in, M2_in, ~, ~, M_res_in] = LOCAL_tdiff_kernel_splits(kin, t, geom_data);
-  [M1_out, M2_out, ~, ~, M_res_out] = LOCAL_tdiff_kernel_splits(kout, t, geom_data);
+  [M1_in, M2_in] = kernel.kress_mn_splits(kin, t, geom_data);
+  [M1_out, M2_out] = kernel.kress_mn_splits(kout, t, geom_data);
 
   delta_M1 = M1_in - M1_out;
   delta_M2 = M2_in - M2_out;
@@ -429,13 +424,6 @@ function A12 = LOCAL_assemble_Sdiff_kress(C, kin, kout, pot_qp, R_diag, curvelen
 
   A12_proxy = LOCAL_assemble_S_proxy(C, kout, pot_qp, R_diag, h);
   A12 = A12_free + A12_proxy;
-
-  if ~printed_diagnostic
-    fprintf('S-block Kress split diagnostics at N = %d:\n', ntot);
-    fprintf('  M split residual, kin        : %.10e\n', M_res_in);
-    fprintf('  M split residual, kout       : %.10e\n\n', M_res_out);
-    printed_diagnostic = true;
-  end
 
 end
 
@@ -498,8 +486,8 @@ function Tdiff_free = LOCAL_assemble_Tdiff_free(t, D, geom_data, k1, k2)
   R = LOCAL_kress_matrix(ntot);
   G = (geom_data.zp * geom_data.zp.') ./ (geom_data.speed * geom_data.speed.');
 
-  [M1_k1, M2_k1, N1_k1, N2_k1] = LOCAL_tdiff_kernel_splits(k1, t, geom_data);
-  [M1_k2, M2_k2, N1_k2, N2_k2] = LOCAL_tdiff_kernel_splits(k2, t, geom_data);
+  [M1_k1, M2_k1, N1_k1, N2_k1] = kernel.kress_mn_splits(k1, t, geom_data);
+  [M1_k2, M2_k2, N1_k2, N2_k2] = kernel.kress_mn_splits(k2, t, geom_data);
 
   delta_M1 = k1^2 * M1_k1 - k2^2 * M1_k2;
   delta_M2 = k1^2 * M2_k1 - k2^2 * M2_k2;
@@ -520,52 +508,6 @@ function R = LOCAL_kress_matrix(ntot)
   rvec = quad.quad_kress_rvec(ntot);
   offset_idx = mod((0:ntot - 1) - (0:ntot - 1).', ntot) + 1;
   R = rvec(offset_idx);
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-function [M1, M2, N1, N2, M_res] = LOCAL_tdiff_kernel_splits(k, t, geom_data)
-
-  eulerc = 0.57721566490153286060;
-  ntot = length(t);
-  offdiag = ~eye(ntot);
-
-  dx = geom_data.z(:,1) - geom_data.z(:,1).';
-  dy = geom_data.z(:,2) - geom_data.z(:,2).';
-  rho = sqrt(dx.^2 + dy.^2);
-  rho_safe = rho;
-  rho_safe(~offdiag) = 1;
-
-  tdiff = t - t.';
-  logterm = log(4 * sin(0.5 * tdiff).^2);
-  cotterm = cot(0.5 * tdiff);
-
-  speed_src = repmat(geom_data.speed.', ntot, 1);
-  zp_dot_diff = bsxfun(@times, geom_data.zp(:,1), dx) ...
-    + bsxfun(@times, geom_data.zp(:,2), dy);
-  zp_dot_zpp = geom_data.zp(:,1) .* geom_data.zpp(:,1) ...
-    + geom_data.zp(:,2) .* geom_data.zpp(:,2);
-
-  M_full = 1i / 4 * besselh(0, 1, k * rho_safe) .* speed_src;
-  M1 = -1 / (4 * pi) * besselj(0, k * rho_safe) .* speed_src;
-  M2 = zeros(ntot, ntot);
-  M2(offdiag) = M_full(offdiag) - M1(offdiag) .* logterm(offdiag);
-  M1(~offdiag) = -1 / (4 * pi) * geom_data.speed;
-  M2(~offdiag) = 0.5 * (1i / 2 - eulerc / pi ...
-    - 1 / (2 * pi) * log((k^2 / 4) * geom_data.speed.^2)) ...
-    .* geom_data.speed;
-
-  ratio = zp_dot_diff ./ rho_safe;
-  N_full = -1i * k / 4 * ratio .* besselh(1, 1, k * rho_safe);
-  N1 = k / (4 * pi) * ratio .* besselj(1, k * rho_safe);
-  N2 = zeros(ntot, ntot);
-  N2(offdiag) = N_full(offdiag) - 1 / (4 * pi) * cotterm(offdiag) ...
-    - N1(offdiag) .* logterm(offdiag);
-  N1(~offdiag) = 0;
-  N2(~offdiag) = 1 / (4 * pi) * zp_dot_zpp ./ (geom_data.speed.^2);
-  M_res = max(abs(M_full(offdiag) ...
-    - M1(offdiag) .* logterm(offdiag) - M2(offdiag)));
 
 end
 

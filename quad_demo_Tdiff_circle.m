@@ -90,7 +90,7 @@ function quad_demo_Tdiff_circle
         'Circle speed check failed at N = %d: %.3e.', N, speed_err);
     end
 
-    [Tdiff, split_res] = LOCAL_assemble_Tdiff(t, D, geom_data, k1, k2);
+    Tdiff = LOCAL_assemble_Tdiff(t, D, geom_data, k1, k2);
 
     for idx_mode = 1:length(modes)
       mode = modes(idx_mode);
@@ -106,10 +106,6 @@ function quad_demo_Tdiff_circle
       nyquist = (-1).^(0:N - 1).';
       fprintf('Diagnostics at N = %d:\n', N);
       fprintf('  speed max error              : %.10e\n', speed_err);
-      fprintf('  M split residual, k1         : %.10e\n', split_res.M_k1);
-      fprintf('  M split residual, k2         : %.10e\n', split_res.M_k2);
-      fprintf('  N split residual, k1         : %.10e\n', split_res.N_k1);
-      fprintf('  N split residual, k2         : %.10e\n', split_res.N_k2);
       fprintf('  Nyquist cosine D-norm        : %.10e\n\n', norm(D * nyquist, inf));
     end
   end
@@ -171,7 +167,7 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [Tdiff, split_res] = LOCAL_assemble_Tdiff(t, D, geom_data, k1, k2)
+function Tdiff = LOCAL_assemble_Tdiff(t, D, geom_data, k1, k2)
 
   N = length(t);
   h = 2 * pi / N;
@@ -179,10 +175,8 @@ function [Tdiff, split_res] = LOCAL_assemble_Tdiff(t, D, geom_data, k1, k2)
   R = LOCAL_kress_matrix(N);
   G = (geom_data.zp * geom_data.zp.') ./ (geom_data.speed * geom_data.speed.');
 
-  [M1_k1, M2_k1, N1_k1, N2_k1, res_M_k1, res_N_k1] = ...
-    LOCAL_kernel_splits(k1, t, geom_data);
-  [M1_k2, M2_k2, N1_k2, N2_k2, res_M_k2, res_N_k2] = ...
-    LOCAL_kernel_splits(k2, t, geom_data);
+  [M1_k1, M2_k1, N1_k1, N2_k1] = kernel.kress_mn_splits(k1, t, geom_data);
+  [M1_k2, M2_k2, N1_k2, N2_k2] = kernel.kress_mn_splits(k2, t, geom_data);
 
   delta_M1 = k1^2 * M1_k1 - k2^2 * M1_k2;
   delta_M2 = k1^2 * M2_k1 - k2^2 * M2_k2;
@@ -195,11 +189,6 @@ function [Tdiff, split_res] = LOCAL_assemble_Tdiff(t, D, geom_data, k1, k2)
 
   Tdiff = A + B * D;
 
-  split_res.M_k1 = res_M_k1;
-  split_res.M_k2 = res_M_k2;
-  split_res.N_k1 = res_N_k1;
-  split_res.N_k2 = res_N_k2;
-
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -209,55 +198,6 @@ function R = LOCAL_kress_matrix(N)
   rvec = quad.quad_kress_rvec(N);
   offset_idx = mod((0:N - 1) - (0:N - 1).', N) + 1;
   R = rvec(offset_idx);
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-function [M1, M2, N1, N2, M_res, N_res] = LOCAL_kernel_splits(k, t, geom_data)
-
-  eulerc = 0.57721566490153286060;
-  N = length(t);
-  offdiag = ~eye(N);
-
-  dx = geom_data.z(:,1) - geom_data.z(:,1).';
-  dy = geom_data.z(:,2) - geom_data.z(:,2).';
-  rho = sqrt(dx.^2 + dy.^2);
-  rho_safe = rho;
-  rho_safe(~offdiag) = 1;
-
-  tdiff = t - t.';
-  logterm = log(4 * sin(0.5 * tdiff).^2);
-  cotterm = cot(0.5 * tdiff);
-
-  speed_src = repmat(geom_data.speed.', N, 1);
-  zp_dot_diff = bsxfun(@times, geom_data.zp(:,1), dx) ...
-    + bsxfun(@times, geom_data.zp(:,2), dy);
-  zp_dot_zpp = geom_data.zp(:,1) .* geom_data.zpp(:,1) ...
-    + geom_data.zp(:,2) .* geom_data.zpp(:,2);
-
-  M_full = 1i / 4 * besselh(0, 1, k * rho_safe) .* speed_src;
-  M1 = -1 / (4 * pi) * besselj(0, k * rho_safe) .* speed_src;
-  M2 = zeros(N, N);
-  M2(offdiag) = M_full(offdiag) - M1(offdiag) .* logterm(offdiag);
-  M1(~offdiag) = -1 / (4 * pi) * geom_data.speed;
-  M2(~offdiag) = 0.5 * (1i / 2 - eulerc / pi ...
-    - 1 / (2 * pi) * log((k^2 / 4) * geom_data.speed.^2)) ...
-    .* geom_data.speed;
-
-  ratio = zp_dot_diff ./ rho_safe;
-  N_full = -1i * k / 4 * ratio .* besselh(1, 1, k * rho_safe);
-  N1 = k / (4 * pi) * ratio .* besselj(1, k * rho_safe);
-  N2 = zeros(N, N);
-  N2(offdiag) = N_full(offdiag) - 1 / (4 * pi) * cotterm(offdiag) ...
-    - N1(offdiag) .* logterm(offdiag);
-  N1(~offdiag) = 0;
-  N2(~offdiag) = 1 / (4 * pi) * zp_dot_zpp ./ (geom_data.speed.^2);
-
-  M_res = max(abs(M_full(offdiag) ...
-    - M1(offdiag) .* logterm(offdiag) - M2(offdiag)));
-  N_res = max(abs(N_full(offdiag) - 1 / (4 * pi) * cotterm(offdiag) ...
-    - N1(offdiag) .* logterm(offdiag) - N2(offdiag)));
 
 end
 

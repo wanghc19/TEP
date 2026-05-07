@@ -107,15 +107,6 @@ if R_target <= 1.25 * boundary_rmax
   warning('The target radius may not be safely outside the obstacle.');
 end
 
-N_diag = 64;
-[~, split_diag] = LOCAL_build_cfie_kress(N_diag, k, eta);
-fprintf('\nKress split diagnostic at ntot = %d:\n', N_diag);
-fprintf('  max off-diagonal L split residual: %.16e\n', split_diag.L);
-fprintf('  max off-diagonal M split residual: %.16e\n', split_diag.M);
-if split_diag.L > 1e-10 || split_diag.M > 1e-10
-  warning('Kress split residuals are larger than expected; inspect the split formulas.');
-end
-
 nN = length(N_list);
 err_kress = NaN(nN, 1);
 err_kr6 = NaN(nN, 1);
@@ -255,11 +246,11 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [A, split_res] = LOCAL_build_cfie_kress(ntot, k, eta)
+function A = LOCAL_build_cfie_kress(ntot, k, eta)
 % Build the Kress product-quadrature matrix for K = L + i eta M.
 
   geom = LOCAL_boundary_geom(ntot);
-  [K1, K2, split_res] = LOCAL_cfie_kress_split(geom, k, eta);
+  [K1, K2] = kernel.cfie_kress_split(geom, k, eta);
   rvec = quad.quad_kress_rvec(ntot);
   offset_idx = mod((0:ntot-1) - (0:ntot-1).', ntot) + 1;
   R = rvec(offset_idx);
@@ -342,63 +333,6 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [K1, K2, split_res] = LOCAL_cfie_kress_split(geom, k, eta)
-% Split K = L+i eta M into K1*log(4 sin^2((t-tau)/2)) + K2.
-
-  ntot = length(geom.t);
-  [L, M, rho, log_term] = LOCAL_cfie_full_parts(geom, k);
-  diag_mask = eye(ntot) == 1;
-  off_mask = ~diag_mask;
-
-  xp = geom.zp(:,1).';
-  yp = geom.zp(:,2).';
-  xt = geom.z(:,1);
-  yt = geom.z(:,2);
-  xs = geom.z(:,1).';
-  ys = geom.z(:,2).';
-
-  L1 = zeros(ntot, ntot);
-  L2 = zeros(ntot, ntot);
-  M1 = zeros(ntot, ntot);
-  M2 = zeros(ntot, ntot);
-  rho_safe = rho;
-  rho_safe(diag_mask) = 1;
-
-  L1_full = k / (2 * pi) ...
-    * (yp .* (xt - xs) - xp .* (yt - ys)) ...
-    ./ rho_safe .* besselj(1, k * rho_safe);
-  L1(off_mask) = L1_full(off_mask);
-  M1(off_mask) = -1 / (2 * pi) * besselj(0, k * rho(off_mask)) ...
-    .* LOCAL_expand_source_row(geom.speed, ntot, off_mask);
-
-  L2(off_mask) = L(off_mask) - L1(off_mask) .* log_term(off_mask);
-  M2(off_mask) = M(off_mask) - M1(off_mask) .* log_term(off_mask);
-
-  Ldiag = 1 / (2 * pi) ...
-    * (geom.zp(:,1) .* geom.zpp(:,2) - geom.zp(:,2) .* geom.zpp(:,1)) ...
-    ./ (geom.speed.^2);
-  M1diag = -1 / (2 * pi) * geom.speed;
-  euler_const = 0.57721566490153286060;
-  M2diag = (1i / 2 - euler_const / pi ...
-    - 1 / (2 * pi) * log(k^2 / 4 * geom.speed.^2)) .* geom.speed;
-
-  L1(diag_mask) = 0;
-  L2(diag_mask) = Ldiag;
-  M1(diag_mask) = M1diag;
-  M2(diag_mask) = M2diag;
-
-  split_res.L = max(abs(L(off_mask) ...
-    - (L1(off_mask) .* log_term(off_mask) + L2(off_mask))));
-  split_res.M = max(abs(M(off_mask) ...
-    - (M1(off_mask) .* log_term(off_mask) + M2(off_mask))));
-
-  K1 = L1 + 1i * eta * M1;
-  K2 = L2 + 1i * eta * M2;
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 function [L, M, rho, log_term] = LOCAL_cfie_full_parts(geom, k)
 % Build the full L and M parameter kernels away from the diagonal.
 
@@ -437,19 +371,6 @@ function [L, M, rho, log_term] = LOCAL_cfie_full_parts(geom, k)
   log_term(diag_mask) = 0;
 
 end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-function values = LOCAL_expand_source_row(source_values, ntot, mask)
-% Return source-indexed row values sampled at the true entries of mask.
-
-  source_row = source_values(:).';
-  source_mat = source_row(ones(ntot, 1), :);
-  values = source_mat(mask);
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function gamma = LOCAL_kr_gamma(order)
 % Return periodic Kapur-Rokhlin merged weights gamma_l + gamma_-l.

@@ -31,10 +31,10 @@ iprec = 10;                        % Kept for interface compatibility with local
 er = 13;                           % Refractive-index squared ratio used by existing TEP scripts
 nref = sqrt(er);                   % Interior wavenumber factor k_in = nref * k_out
 d = 1.0;                           % Period length in the x direction
-beta = 2.08;                       % Fixed Bloch phase for this global scan
+beta = pi/d;                       % Fixed Bloch phase for this global scan
 
-kmin = 0.20;                       % Left endpoint of the scanned k interval
-kmax = 5.00;                       % Right endpoint of the scanned k interval
+kmin = 0.01*beta;                  % Left endpoint of the scanned k interval
+kmax = 0.99*beta;                  % Right endpoint of the scanned k interval
 k_interval = [kmin, kmax];         % User-editable global scan interval
 
 ntot_coarse = 40;                  % Cheap discretization for detecting global dips
@@ -48,12 +48,12 @@ min_refine_level = 6;              % Do not stop before this many refinement lev
 max_refine_level = 8;              % Maximum local refinement levels per candidate
 tol_rel_improve = 1e-8;            % Optional stopping tolerance after min_refine_level
 
-candidate_keep_factor = 50;        % Keep local dips no larger than this times the best dip
+candidate_keep_factor = 100;        % Keep local dips no larger than this times the best dip
 candidate_abs_thresh = inf;        % Optional loose absolute threshold for coarse candidates
 max_candidates = 20;               % Maximum number of candidates passed to refinement
-merge_tol = 1e-9;                  % Merge final candidates closer than this in k
+merge_tol = 1e-11;                  % Merge final candidates closer than this in k
 
-flag_plot_global = false;          % Optional fixed-beta scan plot
+flag_plot_global = true;          % Optional fixed-beta scan plot
 result_file = 'tep_scan_global2_results.mat';
 
 pars1.beta = beta;
@@ -626,8 +626,8 @@ function [A11, A22] = LOCAL_assemble_D_blocks_kress(C, kin, kout, ...
   geom_data.speed = speed.';
 
   R = LOCAL_kress_matrix(ntot);
-  [L1_in, L2_in, Ls1_in, Ls2_in] = LOCAL_double_layer_splits(kin, t, geom_data);
-  [L1_out, L2_out, Ls1_out, Ls2_out] = LOCAL_double_layer_splits(kout, t, geom_data);
+  [L1_in, L2_in, Ls1_in, Ls2_in] = kernel.kress_l_splits(kin, t, geom_data);
+  [L1_out, L2_out, Ls1_out, Ls2_out] = kernel.kress_l_splits(kout, t, geom_data);
 
   A11_free = R .* (L1_out - L1_in) + h * (L2_out - L2_in);
   A22_free = R .* (Ls1_in - Ls1_out) + h * (Ls2_in - Ls2_out);
@@ -654,53 +654,6 @@ function [A11, A22] = LOCAL_assemble_D_blocks_kress(C, kin, kout, ...
 
   A11 = A11_free + A11_proxy;
   A22 = A22_free + A22_proxy;
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-function [L1, L2, Ls1, Ls2] = LOCAL_double_layer_splits(k, t, geom_data)
-
-  ntot = length(t);
-  offdiag = ~eye(ntot);
-
-  dx = geom_data.z(:,1) - geom_data.z(:,1).';
-  dy = geom_data.z(:,2) - geom_data.z(:,2).';
-  rho = sqrt(dx.^2 + dy.^2);
-  rho_safe = rho;
-  rho_safe(~offdiag) = 1;
-
-  tdiff = t - t.';
-  logterm = log(4 * sin(0.5 * tdiff).^2);
-
-  src_nu_x = geom_data.zp(:,2).';
-  src_nu_y = -geom_data.zp(:,1).';
-  q_src = bsxfun(@times, dx, src_nu_x) + bsxfun(@times, dy, src_nu_y);
-
-  nx = geom_data.zp(:,2) ./ geom_data.speed;
-  ny = -geom_data.zp(:,1) ./ geom_data.speed;
-  speed_src = repmat(geom_data.speed.', ntot, 1);
-  q_tgt = (bsxfun(@times, nx, dx) + bsxfun(@times, ny, dy)) .* speed_src;
-
-  ratio_src = q_src ./ rho_safe;
-  ratio_tgt = q_tgt ./ rho_safe;
-  L_full = 1i * k / 4 * ratio_src .* besselh(1, 1, k * rho_safe);
-  Ls_full = -1i * k / 4 * ratio_tgt .* besselh(1, 1, k * rho_safe);
-
-  L1 = -k / (4 * pi) * ratio_src .* besselj(1, k * rho_safe);
-  Ls1 = k / (4 * pi) * ratio_tgt .* besselj(1, k * rho_safe);
-  L2 = zeros(ntot, ntot);
-  Ls2 = zeros(ntot, ntot);
-  L2(offdiag) = L_full(offdiag) - L1(offdiag) .* logterm(offdiag);
-  Ls2(offdiag) = Ls_full(offdiag) - Ls1(offdiag) .* logterm(offdiag);
-
-  chi = (geom_data.zp(:,1) .* geom_data.zpp(:,2) ...
-    - geom_data.zp(:,2) .* geom_data.zpp(:,1)) ./ (geom_data.speed.^2);
-  diag_limit = -1 / (4 * pi) * chi;
-  L1(~offdiag) = 0;
-  Ls1(~offdiag) = 0;
-  L2(~offdiag) = diag_limit;
-  Ls2(~offdiag) = diag_limit;
 
 end
 
@@ -742,8 +695,8 @@ function A12 = LOCAL_assemble_Sdiff_kress(C, kin, kout, pot_qp, R_diag, curvelen
   geom_data.speed = sqrt(sum(geom_data.zp.^2, 2));
 
   R = LOCAL_kress_matrix(ntot);
-  [M1_in, M2_in] = LOCAL_tdiff_kernel_splits(kin, t, geom_data);
-  [M1_out, M2_out] = LOCAL_tdiff_kernel_splits(kout, t, geom_data);
+  [M1_in, M2_in] = kernel.kress_mn_splits(kin, t, geom_data);
+  [M1_out, M2_out] = kernel.kress_mn_splits(kout, t, geom_data);
 
   A12_free = R .* (M1_in - M1_out) + h * (M2_in - M2_out);
   A12_proxy = LOCAL_assemble_S_proxy(C, kout, pot_qp, R_diag, h);
@@ -810,8 +763,8 @@ function Tdiff_free = LOCAL_assemble_Tdiff_free(t, D, geom_data, k1, k2)
   R = LOCAL_kress_matrix(ntot);
   G = (geom_data.zp * geom_data.zp.') ./ (geom_data.speed * geom_data.speed.');
 
-  [M1_k1, M2_k1, N1_k1, N2_k1] = LOCAL_tdiff_kernel_splits(k1, t, geom_data);
-  [M1_k2, M2_k2, N1_k2, N2_k2] = LOCAL_tdiff_kernel_splits(k2, t, geom_data);
+  [M1_k1, M2_k1, N1_k1, N2_k1] = kernel.kress_mn_splits(k1, t, geom_data);
+  [M1_k2, M2_k2, N1_k2, N2_k2] = kernel.kress_mn_splits(k2, t, geom_data);
 
   delta_M1 = k1^2 * M1_k1 - k2^2 * M1_k2;
   delta_M2 = k1^2 * M2_k1 - k2^2 * M2_k2;
@@ -832,50 +785,6 @@ function R = LOCAL_kress_matrix(ntot)
   rvec = quad.quad_kress_rvec(ntot);
   offset_idx = mod((0:ntot - 1) - (0:ntot - 1).', ntot) + 1;
   R = rvec(offset_idx);
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-function [M1, M2, N1, N2] = LOCAL_tdiff_kernel_splits(k, t, geom_data)
-
-  eulerc = 0.57721566490153286060;
-  ntot = length(t);
-  offdiag = ~eye(ntot);
-
-  dx = geom_data.z(:,1) - geom_data.z(:,1).';
-  dy = geom_data.z(:,2) - geom_data.z(:,2).';
-  rho = sqrt(dx.^2 + dy.^2);
-  rho_safe = rho;
-  rho_safe(~offdiag) = 1;
-
-  tdiff = t - t.';
-  logterm = log(4 * sin(0.5 * tdiff).^2);
-  cotterm = cot(0.5 * tdiff);
-
-  speed_src = repmat(geom_data.speed.', ntot, 1);
-  zp_dot_diff = bsxfun(@times, geom_data.zp(:,1), dx) ...
-    + bsxfun(@times, geom_data.zp(:,2), dy);
-  zp_dot_zpp = geom_data.zp(:,1) .* geom_data.zpp(:,1) ...
-    + geom_data.zp(:,2) .* geom_data.zpp(:,2);
-
-  M_full = 1i / 4 * besselh(0, 1, k * rho_safe) .* speed_src;
-  M1 = -1 / (4 * pi) * besselj(0, k * rho_safe) .* speed_src;
-  M2 = zeros(ntot, ntot);
-  M2(offdiag) = M_full(offdiag) - M1(offdiag) .* logterm(offdiag);
-  M1(~offdiag) = -1 / (4 * pi) * geom_data.speed;
-  M2(~offdiag) = 0.5 * (1i / 2 - eulerc / pi ...
-    - 1 / (2 * pi) * log((k^2 / 4) * geom_data.speed.^2)) ...
-    .* geom_data.speed;
-
-  ratio = zp_dot_diff ./ rho_safe;
-  N_full = -1i * k / 4 * ratio .* besselh(1, 1, k * rho_safe);
-  N1 = k / (4 * pi) * ratio .* besselj(1, k * rho_safe);
-  N2 = zeros(ntot, ntot);
-  N2(offdiag) = N_full(offdiag) - 1 / (4 * pi) * cotterm(offdiag) ...
-    - N1(offdiag) .* logterm(offdiag);
-  N1(~offdiag) = 0;
-  N2(~offdiag) = 1 / (4 * pi) * zp_dot_zpp ./ (geom_data.speed.^2);
 
 end
 
