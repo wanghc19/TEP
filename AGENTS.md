@@ -46,14 +46,28 @@ This repository contains MATLAB code for numerical experiments on periodic waveg
 
 ## Validation
 - Do not run MATLAB automatically.
-- After making code changes, stop and let the user run MATLAB manually.
-- Do not claim the code was executed unless it actually was.
-- Instead, report:
+- After making code changes, stop and let the user run MATLAB manually for final validation.
+- Do not claim MATLAB code was executed unless it actually was.
+- Codex may use Octave for rough sanity checks when helpful.
+- Prefer non-interactive Octave execution when possible, for example via:
+  - `conda run -n octave octave --eval "..."`
+  - `conda run -n octave octave script_name.m`
+- If interactive Octave is needed, use:
+  - `conda activate octave`
+  - `octave --no-line-editing`
+- When creating substantial new MATLAB `.m` files that include local helper functions, prefer writing them as function files rather than script files, since Octave handles this more reliably.
+- In particular, do not rely on script files with trailing local functions for Octave-based validation; use a main function with subfunctions instead.
+- Do not rely on Octave GUI features or plotting during validation.
+- Treat Octave results only as rough compatibility / sanity checks, not as final numerical validation.
+
+- After edits, report:
   1. what changed
   2. which file/functions were modified
-  3. the exact MATLAB command(s) the user should run manually to validate the change
-  4. what outcome is expected if the change is correct
-- If static inspection suggests possible issues, mention them explicitly.
+  3. any Octave command(s) that were run and their results
+  4. the exact MATLAB command(s) the user should run manually to validate the change
+  5. what outcome is expected if the change is correct
+
+- If static inspection or Octave-based checking suggests possible issues, mention them explicitly.
 
 ## Output contract
 - Modify files in place.

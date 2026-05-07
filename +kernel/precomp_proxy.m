@@ -142,7 +142,12 @@ A(idx_B_d, col_pw_B) = -PW_B_der;
 % --- 6. Solve the System ---
 % Using backslash for the overdetermined least-squares system
 % coeffs = A \ b;
-coeffs = lsqminnorm(A, b); 
+% coeffs = lsqminnorm(A, b); 
+if exist('lsqminnorm', 'file')
+  coeffs = lsqminnorm(A, b);
+else
+  coeffs = pinv(A) * b;
+end
 
 % --- 7. Extract Proxy Coefficients ---
 proxy.q = coeffs(1:N_proxy).';

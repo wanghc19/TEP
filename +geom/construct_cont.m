@@ -1,4 +1,4 @@
-function [C, curvelen, xxint, xxext] = construct_cont(ntot, flag_geom, nint, next)
+function [C, curvelen, xxint, xxext] = construct_cont(ntot, flag_geom, nint, next, varargin)
 % CONSTRUCT_CONT Build the TEP contour and optional interior/exterior points.
 %
 % Purpose:
@@ -7,9 +7,12 @@ function [C, curvelen, xxint, xxext] = construct_cont(ntot, flag_geom, nint, nex
 %
 % Input:
 %   ntot      - Number of periodic contour samples.
-%   flag_geom - Geometry selector; supported values are 'star' and 'ellipse'.
+%   flag_geom - Geometry selector; supported values are 'star', 'ellipse',
+%               and 'circle'.
 %   nint      - Number of random interior sample points to generate.
 %   next      - Number of random exterior sample points to generate.
+%   varargin  - Optional geometry parameters. For flag_geom = 'circle',
+%               varargin{1} may specify the radius a; the default is a = 1.
 %
 % Output:
 %   C        - 6-by-ntot contour array containing position and derivatives:
@@ -62,6 +65,30 @@ function [C, curvelen, xxint, xxext] = construct_cont(ntot, flag_geom, nint, nex
     xxint = 0.6 * [rmin * cos(ttint); rmin * sin(ttint)];
     ttext = 2 * pi * rand(1, next);
     xxext = 1.4 * [rmax * cos(ttext); rmax * sin(ttext)];
+  elseif strcmp(flag_geom, 'circle')
+    a = 1.0;
+    if ~isempty(varargin)
+      a = varargin{1};
+      if ~isscalar(a) || ~isnumeric(a) || ~isreal(a) || ~isfinite(a) || a <= 0
+        error('geom:construct_cont:InvalidCircleRadius', ...
+          'Circle radius must be a positive real scalar.');
+      end
+    end
+
+    tt = linspace(0, 2 * pi * (1 - 1 / ntot), ntot);
+    C = zeros(6, ntot);
+    C(1,:) =  a * cos(tt);
+    C(2,:) = -a * sin(tt);
+    C(3,:) = -a * cos(tt);
+    C(4,:) =  a * sin(tt);
+    C(5,:) =  a * cos(tt);
+    C(6,:) = -a * sin(tt);
+    curvelen = 2 * pi;
+
+    ttint = 2 * pi * rand(1, nint);
+    xxint = 0.6 * a * [cos(ttint); sin(ttint)];
+    ttext = 2 * pi * rand(1, next);
+    xxext = 1.4 * a * [cos(ttext); sin(ttext)];
   else
     error('This option for the geometry is not implemented.');
   end

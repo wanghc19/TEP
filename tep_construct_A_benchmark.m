@@ -1,3 +1,4 @@
+function tep_construct_A_benchmark
 % Purpose:
 %   Benchmark the optimized vectorized matrix assembly against the loop-based
 %   reference assembly for the TEP Muller system.
@@ -6,14 +7,17 @@
 %   Build one boundary discretization, precompute the quasi-periodic proxy
 %   coefficients, assemble the matrix with the optimized path, assemble the
 %   same matrix with the loop reference path, compute singular values for both
-%   matrices, and report timing plus consistency differences.
+%   matrices, and report timing plus consistency differences.  Both assembly
+%   paths use the same tep_scan_local.m off-diagonal formula and the same
+%   diagonal correction so that the comparison controls all variables except
+%   vectorized versus loop-based evaluation.
 %
 % Based on:
 %   The former LOCAL_construct_A_loop and LOCAL_check_construct_A_optimized
 %   helpers in tep_scan_local.m, tep_scan_local2.m, and tep_scan_global.m.
-%   This file uses tep_scan_local2.m as the canonical source because that
-%   script contains the newer diagonal treatment for the non-hypersingular
-%   Muller difference blocks.
+%   This file uses tep_scan_local.m as the canonical off-diagonal assembly
+%   source, with an explicit diagonal correction applied identically in both
+%   optimized and loop-based paths.
 %
 % Main changes:
 %   Matrix-assembly benchmarking is separated from the production scan
@@ -23,9 +27,9 @@
 %
 % Numerical goal:
 %   Measure the speedup from vectorized matrix assembly, quantify the cost of
-%   proxy precomputation and SVD, and verify that the optimized and loop-based
-%   assemblies agree up to normal floating-point roundoff for the selected
-%   benchmark parameters.
+%   proxy precomputation and SVD, and verify under controlled variables that
+%   the optimized and loop-based assemblies agree up to normal floating-point
+%   roundoff for the selected benchmark parameters.
 format long;
 clear;
 
@@ -51,6 +55,8 @@ pars2.M_pw = 10;                    % Plane-wave truncation order (-M_pw to M_pw
 
 LOCAL_check_construct_A_optimized(benchmark_ntot, flag_geom, iprec, ...
   benchmark_k, nref, pars1, pars2);
+
+end
 
 %% =========================================================================
 %  LOCAL HELPERS
@@ -91,6 +97,7 @@ function LOCAL_check_construct_A_optimized(check_ntot, flag_geom, iprec, check_k
 
   fprintf('Construct_A benchmark and consistency check:\n');
   fprintf('  geometry = %s, ntot = %d, k = %.8f\n', flag_geom, check_ntot, check_k);
+  fprintf('  assembly formula        = tep_scan_local off-diagonal + shared diagonal correction\n');
   fprintf('  precomp_proxy time      = %.6f s\n', t_proxy);
   fprintf('  optimized assembly time = %.6f s\n', t_opt);
   fprintf('  loop assembly time      = %.6f s\n', t_ref);
@@ -194,9 +201,8 @@ function A = LOCAL_construct_A(C, iprec, khint, pars1, proxy, curvelen)
   [pot_ext, gradx_ext, grady_ext, hessxx_ext, hessxy_ext, hessyy_ext] = ...
     kernel.qpgreen_mfs_pairmat([x; y], [x; y], pars1, proxy);
 
-  % The non-hypersingular Muller differences are continuous at x = y.
-  % Their diagonals must use only the regular remainder R_k in
-  % G_ext_qp = Phi_k + R_k, not the singular center image Phi_k.
+  % The diagonal correction is applied in both optimized and loop paths so
+  % that this benchmark changes only the implementation strategy.
   [R_diag, gradR_diag] = LOCAL_qpgreen_regular_diagonal(pars1, proxy);
 
   pot_ext(~offdiag) = 0;
@@ -228,8 +234,11 @@ function A = LOCAL_construct_A(C, iprec, khint, pars1, proxy, curvelen)
   A11(diag_idx) = (gradR_diag(1) .* ny1 + gradR_diag(2) .* ny2) .* src_weight;
   A22(diag_idx) = -(gradR_diag(1) .* nx1.' + gradR_diag(2) .* nx2.') .* src_weight;
 
-  % Only the T-type block remains on the old Kapur-Rokhlin-corrected path.
+  % The off-diagonal correction follows the tep_scan_local.m assembly path.
+  A11 = A11 .* corr;
+  A12 = A12 .* corr;
   A21 = A21 .* corr;
+  A22 = A22 .* corr;
 
   A = eye(2 * ntot, 2 * ntot);
   A(1:ntot, 1:ntot) = A(1:ntot, 1:ntot) + A11;
@@ -332,7 +341,10 @@ function A = LOCAL_construct_A_loop(C, iprec, khint, pars1, proxy, curvelen)
       A(ix + ntot, iy + ntot) = A(ix + ntot, iy + ntot) - (nx1 * grad(1) + nx2 * grad(2)) * h * speedy;
 
       if abs(l) <= width
+        A(ix, iy) = A(ix, iy) * (1 + MU(abs(l)));
+        A(ix, iy + ntot) = A(ix, iy + ntot) * (1 + MU(abs(l)));
         A(ix + ntot, iy) = A(ix + ntot, iy) * (1 + MU(abs(l)));
+        A(ix + ntot, iy + ntot) = A(ix + ntot, iy + ntot) * (1 + MU(abs(l)));
       end
     end
   end

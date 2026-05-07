@@ -1,3 +1,5 @@
+function cfie_kress_vs_kr
+
 % Purpose:
 %   Compare Kress product quadrature and Kapur-Rokhlin corrected trapezoid
 %   quadrature for an exterior Dirichlet Helmholtz CFIE point-source test.
@@ -187,6 +189,8 @@ legend('Kress', 'KR6', 'KR10', 'Location', 'southwest');
 if save_figures
   saveas(fig, 'cfie_kress_vs_kr.png');
   fprintf('\nSaved convergence plot to cfie_kress_vs_kr.png\n');
+end
+
 end
 
 %% =========================================================================
