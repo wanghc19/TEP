@@ -36,7 +36,28 @@ This repository contains MATLAB code for numerical experiments on periodic waveg
 - Explicitly include the key mathematical formulas in LaTeX-style notation whenever this helps clarify the implementation.
 - In particular, for important kernels, block operators, jump relations, or assembled matrix formulas, prefer writing the defining formula explicitly rather than only describing it in words.
 
-- For MATLAB `.m` files, place the file header comment block before the main code.
+- For MATLAB `.m` files, distinguish between scripts and function files:
+  - For MATLAB script files, place the file header comment block before the main executable code.
+  - For MATLAB function files, place the function header comment block immediately after the `function ...` signature line, as MATLAB help text.
+  - The comment block in a function file must start at column 1, without indentation, even though it is inside the function body.
+  - Use the function-name style header when appropriate, for example:
+    ```matlab
+    function [C, curvelen, xxint, xxext] = construct_cont(ntot, flag_geom, nint, next, varargin)
+    % CONSTRUCT_CONT Build the TEP contour and optional interior/exterior points.
+    %
+    % Purpose:
+    %   Constructs the common contour matrix used by the TEP scripts.
+    %
+    % Input:
+    %   ntot      - Number of periodic contour samples.
+    %
+    % Output:
+    %   C         - Contour data array.
+    %
+    % Notes:
+    %   Add implementation notes or compatibility notes here.
+    ```
+  - Do not place a separate file-level comment block above the `function` line unless there is a special reason, such as licensing or package-level metadata.
 
 ## When editing code
 - For nontrivial refactors, summarize the plan before coding.
