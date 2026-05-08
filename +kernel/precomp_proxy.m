@@ -61,9 +61,12 @@ m_vec = (-M_pw : M_pw).';
 N_pw_total = length(m_vec);
 beta_m = beta + m_vec * (2 * pi / d);
 
-% Branch cut for gamma_m: must be positive real or positive imaginary
-% MATLAB's sqrt(-x) yields +i*sqrt(x) automatically, matching radiation condition.
 gamma_m = sqrt(k^2 - beta_m.^2);
+% Branch cut for gamma_m: use the outgoing/decaying branch.  For real k,
+% propagating modes keep the positive real root and evanescent modes have
+% positive imaginary part; for complex k we explicitly correct the sign.
+flip = imag(gamma_m) < 0;
+gamma_m(flip) = -gamma_m(flip);
 
 % --- 5. Matrix Assembly A * c = b ---
 % Unknowns:[c_proxy (N_proxy); C_up (N_pw_total); C_down (N_pw_total)]

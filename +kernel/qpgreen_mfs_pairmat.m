@@ -116,12 +116,13 @@ function [pot_ext, gradx_ext, grady_ext, hessxx_ext, hessxy_ext, hessyy_ext] = .
     m_vec = (-M_pw:M_pw).';
     beta_m = beta + m_vec * (2 * pi / d);
 
-    diff_sq = k^2 - beta_m.^2;
-    gamma_m = zeros(size(beta_m));
-    mask_prop = diff_sq >= 0;
-    mask_eva = diff_sq < 0;
-    gamma_m(mask_prop) = sqrt(diff_sq(mask_prop));
-    gamma_m(mask_eva) = 1i * sqrt(-diff_sq(mask_eva));
+    % Define vertical wavenumber gamma_m with the outgoing/decaying branch.
+    % For real k this keeps propagating modes on the positive real branch
+    % and evanescent modes on the positive imaginary branch.  For complex k
+    % it avoids invalid complex comparisons such as k^2 - beta_m^2 >= 0.
+    gamma_m = sqrt(k^2 - beta_m.^2);
+    flip = imag(gamma_m) < 0;
+    gamma_m(flip) = -gamma_m(flip);
 
     if any(idx_up(:))
       X_up = X0(idx_up).';

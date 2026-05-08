@@ -40,6 +40,8 @@ ntot = 100;                       % Boundary node count used in the local dip sc
 flag_geom = 'star';               % Geometry type passed to geom.construct_cont: 'star' or 'ellipse'
 er = 13;                          % Permittivity ratio; nref = sqrt(er) sets kint = kext*nref
 nref = sqrt(er);                  % Interior/exterior refractive index ratio
+eps_k = 1e-6;                        % Optional absorption parameter: eps_k = 0 gives the real-k scan.
+                                  % If eps_k > 0, scan k = k_real + 1i*eps_k along the same real-k interval.
 d = 1.0;                          % Period length in the physical y direction
 beta = 0.5 * 2 * pi / d;          % Fixed Bloch phase for the physical y quasi-periodic field
 
@@ -58,26 +60,27 @@ num_k = 31;                       % Odd k-grid size so each refinement has a cen
 max_refine_level = 4;             % Number of recursive local refinement levels
 % initial_interval = [2.65350974, 2.65351408]; % Local ellipse dip interval
 % initial_interval = [2.13012810, 2.13012840]; % Local star dip interval for 'x';
-initial_interval = [2.49881313, 2.49881340]; % Local star dip interval for 'y';
+initial_interval = [2.49881313, 2.49881340]; % Local star dip interval for 'y' and eps_k = 0;
+% initial_interval = [2.44011590, 2.44104378];
 
 fprintf('Running physical y-periodic recursive singular value scan (beta = %.8f, ntot = %d)\n', beta, ntot);
-fprintf('Initial interval = [%.8f, %.8f], num_k = %d, max_refine_level = %d\n', ...
-  initial_interval(1), initial_interval(2), num_k, max_refine_level);
+fprintf('Initial interval = [%.8f, %.8f], num_k = %d, max_refine_level = %d, eps_k = %.6e\n', ...
+  initial_interval(1), initial_interval(2), num_k, max_refine_level, eps_k);
 
 % --- 2. Geometry Setup ---
 [C, curvelen, ~, ~] = geom.construct_cont(ntot, flag_geom, 0, 0);
 
 % --- 3. Recursive Dip Refinement ---
 history = LOCAL_recursive_dip_refine(initial_interval, num_k, max_refine_level, ...
-  nref, C, pars1, pars2, curvelen);
+  nref, eps_k, C, pars1, pars2, curvelen);
 
 LOCAL_print_refine_summary(history);
 [best_sigma, best_k, best_level] = LOCAL_get_best_result(history);
-fprintf('\nFinal best result: level %d, k = %.16f, sigma_min = %.16e\n', ...
-  best_level, best_k, best_sigma);
+fprintf('\nFinal best result: level %d, k_real = %.16f, eps_k = %.6e, sigma_min = %.16e\n', ...
+  best_level, best_k, eps_k, best_sigma);
 
 % --- 4. Plot All Refinement Levels ---
-% LOCAL_plot_refine_history(history, ntot);
+% LOCAL_plot_refine_history(history, ntot, eps_k);
 
 fprintf('\nFinished recursive dip scan successfully.\n');
 
@@ -85,7 +88,7 @@ fprintf('\nFinished recursive dip scan successfully.\n');
 %  LOCAL HELPERS
 %  =========================================================================
 function history = LOCAL_recursive_dip_refine(initial_interval, num_k, max_refine_level, ...
-    nref, C, pars1, pars2, curvelen)
+    nref, eps_k, C, pars1, pars2, curvelen)
 
   history = repmat(struct( ...
     'level', [], ...
@@ -105,7 +108,7 @@ function history = LOCAL_recursive_dip_refine(initial_interval, num_k, max_refin
 
   for level = 1:max_refine_level
     [k_grid, sigma_vals] = LOCAL_scan_sigma_on_grid(current_interval, num_k, ...
-      nref, C, pars1, pars2, curvelen);
+      nref, eps_k, C, pars1, pars2, curvelen);
     [sigma_min, idx_min] = min(sigma_vals);
     k_min = k_grid(idx_min);
 
@@ -147,13 +150,13 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [k_grid, sigma_vals] = LOCAL_scan_sigma_on_grid(interval, num_k, ...
-    nref, C, pars1, pars2, curvelen)
+    nref, eps_k, C, pars1, pars2, curvelen)
 
   k_grid = linspace(interval(1), interval(2), num_k);
   sigma_vals = zeros(size(k_grid));
 
   for j = 1:length(k_grid)
-    sigma_vals(j) = LOCAL_get_sigma_min(k_grid(j), nref, C, pars1, pars2, curvelen);
+    sigma_vals(j) = LOCAL_get_sigma_min(k_grid(j), nref, eps_k, C, pars1, pars2, curvelen);
   end
 
 end
@@ -205,7 +208,7 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function LOCAL_plot_refine_history(history, ntot)
+function LOCAL_plot_refine_history(history, ntot, eps_k)
 
   figure('Name', 'Recursive Singular Value Dip Diagnosis', ...
     'Position', [120, 120, 1000, 720], 'Color', 'w');
@@ -222,21 +225,22 @@ function LOCAL_plot_refine_history(history, ntot)
   end
 
   grid on;
-  xlabel('Wavenumber k', 'FontSize', 11);
+  xlabel('Real wavenumber k_{real}', 'FontSize', 11);
   ylabel('\sigma_{min}', 'FontSize', 11);
-  title(sprintf('Recursive dip refinement for ntot = %d', ntot), 'FontSize', 12);
+  title(sprintf('Recursive dip refinement for ntot = %d, eps_k = %.3e', ntot, eps_k), ...
+    'FontSize', 12);
   legend('Location', 'best');
 
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function smin = LOCAL_get_sigma_min(kh, nref, C, pars1, pars2, curvelen)
+function smin = LOCAL_get_sigma_min(k_real, nref, eps_k, C, pars1, pars2, curvelen)
 
-  pars1.k = kh;
+  kext = k_real + 1i * eps_k;
+  kint = nref * kext;
+  pars1.k = kext;
   proxy = kernel.precomp_proxy(pars1, pars2);
-  kext = kh;
-  kint = kh * nref;
   A_QP = op.construct_A_QP(C, kext, kint, pars1, proxy, curvelen);
   s = svd(A_QP);
   smin = s(end);
