@@ -15,10 +15,14 @@
 %   plotting, and textual output are kept from tep_scan_local4_2.m.  The
 %   quasi-periodic Muller matrix construction has been moved to
 %   op.construct_A_QP(C, kext, kint, pars1, proxy, curvelen).
+%   This smoke-test variant uses physical y-periodicity.  The qpgreen
+%   implementation maps this to the existing x-periodic computational
+%   coordinates by swapping x and y internally.
 %
 % Numerical goal:
-%   Reproduce the local singular-value dip scan while using the packaged
-%   A_QP constructor shared by other 1D TEP workflows.
+%   Roughly check the local singular-value dip scan for the y-periodic
+%   wrapper while using the packaged A_QP constructor shared by other 1D TEP
+%   workflows.
 
 format long;
 
@@ -28,20 +32,22 @@ format long;
 % should be chosen to contain one singular-value dip.
 %
 % ellipse: ntot = 120, sigma_min = 8.578334734939e-13 at k = 2.6535116672544254
-% star: ntot = 100, 4.113868802806e-13 at k = 2.1301282065155553
+% star: ntot = 100, 4.113868802806e-13 at k = 2.1301282065155553 for 'x'
+% star: ntot = 100, 3.7420523239268711e-13 at k = 2.4988132875946665 for 'y'
 
 % --- 1. Parameter Setup ---
 ntot = 100;                       % Boundary node count used in the local dip scan
 flag_geom = 'star';               % Geometry type passed to geom.construct_cont: 'star' or 'ellipse'
 er = 13;                          % Permittivity ratio; nref = sqrt(er) sets kint = kext*nref
 nref = sqrt(er);                  % Interior/exterior refractive index ratio
-d = 1.0;                          % Period length in the x direction
-beta = 0.5 * 2 * pi / d;          % Fixed Bloch phase for the quasi-periodic exterior field
+d = 1.0;                          % Period length in the physical y direction
+beta = 0.5 * 2 * pi / d;          % Fixed Bloch phase for the physical y quasi-periodic field
 
 pars1.beta = beta;
 pars1.d = d;
+pars1.periodic_axis = 'y';        % Smoke-test the physical y-periodic qpgreen wrapper
 
-pars2.H = 0.5 * pars1.d;          % Height of the fundamental domain [-H, H]
+pars2.H = 0.5 * pars1.d;          % Half-width in physical x after the qpgreen x/y swap
 pars2.proxy_dist = 0.2 * pars1.d; % Distance of proxy boundary from the domain
 pars2.N_side = 50;                % Number of collocation points on Left/Right walls
 pars2.N_top = 50;                 % Number of collocation points on Top/Bottom walls
@@ -51,9 +57,10 @@ pars2.M_pw = 10;                  % Truncation order for plane waves (-M_pw to M
 num_k = 31;                       % Odd k-grid size so each refinement has a center point
 max_refine_level = 4;             % Number of recursive local refinement levels
 % initial_interval = [2.65350974, 2.65351408]; % Local ellipse dip interval
-initial_interval = [2.13012810, 2.13012840]; % Local star dip interval
+% initial_interval = [2.13012810, 2.13012840]; % Local star dip interval for 'x';
+initial_interval = [2.49881313, 2.49881340]; % Local star dip interval for 'y';
 
-fprintf('Running recursive singular value scan (beta = %.8f, ntot = %d)\n', beta, ntot);
+fprintf('Running physical y-periodic recursive singular value scan (beta = %.8f, ntot = %d)\n', beta, ntot);
 fprintf('Initial interval = [%.8f, %.8f], num_k = %d, max_refine_level = %d\n', ...
   initial_interval(1), initial_interval(2), num_k, max_refine_level);
 

@@ -113,6 +113,43 @@ function [R_diag, gradR_diag, hessR_diag] = LOCAL_qpgreen_regular_diagonal(pars1
   gradR_diag = gradR_diag(:, 1);
   hessR_diag = hessR_diag(:, 1);
 
+  periodic_axis = LOCAL_parse_periodic_axis(pars1);
+  if strcmp(periodic_axis, 'y')
+    % proxy.Z and proxy.q live in computational coordinates.  Map the
+    % diagonal proxy derivatives back to physical coordinates for y-periodic
+    % qpgreen output: x_comp = y_phys, y_comp = x_phys.
+    gradR_diag = gradR_diag([2 1]);
+    hessR_diag = hessR_diag([3 2 1]);
+  end
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function periodic_axis = LOCAL_parse_periodic_axis(pars1)
+
+  periodic_axis = 'x';
+  if isfield(pars1, 'periodic_axis') && ~isempty(pars1.periodic_axis)
+    periodic_axis = pars1.periodic_axis;
+  end
+
+  if isstring(periodic_axis)
+    if ~isscalar(periodic_axis)
+      error('op:construct_A_QP:InvalidPeriodicAxis', ...
+        'periodic_axis must be either ''x'' or ''y''.');
+    end
+    periodic_axis = char(periodic_axis);
+  elseif ~ischar(periodic_axis)
+    error('op:construct_A_QP:InvalidPeriodicAxis', ...
+      'periodic_axis must be either ''x'' or ''y''.');
+  end
+
+  periodic_axis = lower(strtrim(periodic_axis));
+  if ~strcmp(periodic_axis, 'x') && ~strcmp(periodic_axis, 'y')
+    error('op:construct_A_QP:InvalidPeriodicAxis', ...
+      'periodic_axis must be either ''x'' or ''y''.');
+  end
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

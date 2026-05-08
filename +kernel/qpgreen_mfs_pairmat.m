@@ -1,5 +1,5 @@
 function [pot_ext, gradx_ext, grady_ext, hessxx_ext, hessxy_ext, hessyy_ext] = ...
-    qpgreen_mfs_pairmat(src, trg, pars1, proxy)
+    qpgreen_mfs_pairmat(src, trg, pars1, proxy, varargin)
 % QPGREEN_MFS_PAIRMAT Evaluate quasi-periodic Green data for all point pairs.
 %
 % Purpose:
@@ -9,8 +9,10 @@ function [pot_ext, gradx_ext, grady_ext, hessxx_ext, hessxy_ext, hessyy_ext] = .
 % Input:
 %   src   - Source coordinates as a 2-by-ns array.
 %   trg   - Target coordinates as a 2-by-nt array.
-%   pars1 - Physical parameter struct with fields d, beta, and k.
+%   pars1 - Physical parameter struct with fields d, beta, and k.  Optional
+%           field periodic_axis selects the physical periodic direction.
 %   proxy - Precomputed proxy/plane-wave struct from kernel.precomp_proxy.
+%   varargin - Optional periodic axis override, either 'x' or 'y'.
 %
 % Output:
 %   pot_ext    - Potential matrix of size nt-by-ns.
@@ -21,9 +23,48 @@ function [pot_ext, gradx_ext, grady_ext, hessxx_ext, hessxy_ext, hessyy_ext] = .
 %   hessyy_ext - yy Hessian matrix of size nt-by-ns.
 %
 % Notes:
-%   Relative x-coordinates are folded into the central period and corrected
-%   by the Bloch phase. Targets outside the proxy box are evaluated with the
-%   upward/downward plane-wave expansions stored in proxy.
+%   This pairwise matrix routine uses the same periodic_axis convention as
+%   kernel.qpgreen_mfs.  The default is physical x-periodicity, matching the
+%   original behavior.  When periodic_axis = 'y', physical coordinates are
+%   swapped internally so that the existing first-coordinate-periodic
+%   computational kernel can be reused.
+%
+%   The proxy precomputation in kernel.precomp_proxy still interprets pars1.d
+%   and proxy.H in computational coordinates only; it does not know about
+%   physical x/y periodic directions.  For periodic_axis = 'y', pars1.d is
+%   the physical y-period, and proxy.H is the half-width in the exchanged
+%   computational non-periodic direction, namely the physical x half-width.
+%
+%   Derivatives are returned in physical coordinates.  For y-periodicity the
+%   computed matrices are remapped as
+%     G_{x_phys} = G_{y_comp},  G_{y_phys} = G_{x_comp},
+%   and
+%     G_{x_phys x_phys} = G_{y_comp y_comp},
+%     G_{x_phys y_phys} = G_{x_comp y_comp},
+%     G_{y_phys y_phys} = G_{x_comp x_comp}.
+
+  periodic_axis = LOCAL_parse_periodic_axis(pars1, varargin{:});
+
+  if strcmp(periodic_axis, 'x')
+    [pot_ext, gradx_ext, grady_ext, hessxx_ext, hessxy_ext, hessyy_ext] = ...
+      LOCAL_qpgreen_mfs_pairmat_xperiodic(src, trg, pars1, proxy);
+    return;
+  end
+
+  src_comp = src([2 1], :);
+  trg_comp = trg([2 1], :);
+  [pot_ext, gradx_comp, grady_comp, hessxx_comp, hessxy_ext, hessyy_comp] = ...
+    LOCAL_qpgreen_mfs_pairmat_xperiodic(src_comp, trg_comp, pars1, proxy);
+
+  gradx_ext = grady_comp;
+  grady_ext = gradx_comp;
+  hessxx_ext = hessyy_comp;
+  hessyy_ext = hessxx_comp;
+
+end
+
+function [pot_ext, gradx_ext, grady_ext, hessxx_ext, hessxy_ext, hessyy_ext] = ...
+    LOCAL_qpgreen_mfs_pairmat_xperiodic(src, trg, pars1, proxy)
 
   d = pars1.d;
   beta = pars1.beta;
@@ -113,6 +154,45 @@ function [pot_ext, gradx_ext, grady_ext, hessxx_ext, hessxy_ext, hessyy_ext] = .
       hessxy_ext(idx_dn) = sum(C_down .* basis .* (beta_m .* gamma_m), 1) .* phase_dn;
       hessyy_ext(idx_dn) = sum(C_down .* basis .* (-gamma_m.^2), 1) .* phase_dn;
     end
+  end
+
+end
+
+function periodic_axis = LOCAL_parse_periodic_axis(pars1, varargin)
+
+  periodic_axis = 'x';
+  if isfield(pars1, 'periodic_axis') && ~isempty(pars1.periodic_axis)
+    periodic_axis = LOCAL_normalize_periodic_axis(pars1.periodic_axis);
+  end
+
+  if numel(varargin) > 1
+    error('kernel:qpgreen_mfs_pairmat:InvalidPeriodicAxis', ...
+      'Pass at most one periodic axis override.');
+  end
+
+  if numel(varargin) == 1
+    periodic_axis = LOCAL_normalize_periodic_axis(varargin{1});
+  end
+
+end
+
+function periodic_axis = LOCAL_normalize_periodic_axis(periodic_axis)
+
+  if isstring(periodic_axis)
+    if ~isscalar(periodic_axis)
+      error('kernel:qpgreen_mfs_pairmat:InvalidPeriodicAxis', ...
+        'periodic_axis must be either ''x'' or ''y''.');
+    end
+    periodic_axis = char(periodic_axis);
+  elseif ~ischar(periodic_axis)
+    error('kernel:qpgreen_mfs_pairmat:InvalidPeriodicAxis', ...
+      'periodic_axis must be either ''x'' or ''y''.');
+  end
+
+  periodic_axis = lower(strtrim(periodic_axis));
+  if ~strcmp(periodic_axis, 'x') && ~strcmp(periodic_axis, 'y')
+    error('kernel:qpgreen_mfs_pairmat:InvalidPeriodicAxis', ...
+      'periodic_axis must be either ''x'' or ''y''.');
   end
 
 end
