@@ -32,6 +32,14 @@ This repository contains MATLAB code for numerical experiments on periodic waveg
 - Parameter comments should explain purpose and usage, not merely repeat the variable name.
 - When introducing a new parameter, add or update nearby comments so that a reader can understand how to use it.
 
+- For scripts or test files with multiple logical steps, add short stage comments before each major block using the format:
+  `% --- stage N: brief description ---`
+  For example:
+  `% --- stage 1: set parameters ---`
+  `% --- stage 2: build geometry and operators ---`
+  `% --- stage 3: run checks and report errors ---`
+- Stage comments should describe the purpose of the block, not implementation minutiae. Use them especially in test scripts, prototype scripts, and long numerical workflows.
+
 - When documenting mathematical logic, operator structure, or matrix assembly, do not rely on prose alone.
 - Explicitly include the key mathematical formulas in LaTeX-style notation whenever this helps clarify the implementation.
 - In particular, for important kernels, block operators, jump relations, or assembled matrix formulas, prefer writing the defining formula explicitly rather than only describing it in words.
