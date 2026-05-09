@@ -94,6 +94,6 @@ if test_passed
   fprintf('RESULT: PASS - qpgreen_mfs y-periodic axis swap is consistent.\n');
 else
   fprintf('RESULT: FAIL - at least one axis-swap difference exceeds tolerance.\n');
-  error('tmp_test_qpgreen_axis_swap:Failed', ...
+  error('test_qpgreen_axis_swap:Failed', ...
     'qpgreen_mfs axis-swap consistency check failed.');
 end

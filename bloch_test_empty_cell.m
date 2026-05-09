@@ -68,7 +68,7 @@ traces = bloch.mode_traces(modes.lambda, modes.V, rayleighchan);
 lambda_expected = [rayleighchan.phase; 1 ./ rayleighchan.phase];
 lambda_computed = modes.lambda(:);
 
-fprintf('bloch_empty_cell\n');
+fprintf('bloch_test_empty_cell\n');
 fprintf('K = %d, M = %d\n', K, M);
 fprintf('k = %.16g%+.16gi\n', real(k), imag(k));
 fprintf('beta = %.16g, d = %.16g, L = %.16g\n', beta, d, L);
@@ -86,12 +86,12 @@ for j = 1:length(lambda_computed)
 end
 
 if length(lambda_computed) ~= length(lambda_expected)
-  error('bloch_empty_cell:ModeCountMismatch', ...
+  error('bloch_test_empty_cell:ModeCountMismatch', ...
     'Expected %d modes but computed %d modes.', ...
     length(lambda_expected), length(lambda_computed));
 end
 if size(modes.V, 1) ~= 2 * K || size(modes.V, 2) ~= length(lambda_computed)
-  error('bloch_empty_cell:EigenvectorSizeMismatch', ...
+  error('bloch_test_empty_cell:EigenvectorSizeMismatch', ...
     'modes.V must be 2K-by-number_of_modes.');
 end
 

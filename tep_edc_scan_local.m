@@ -1,5 +1,5 @@
-function varargout = empty_defect_scan_local()
-% EMPTY_DEFECT_SCAN_LOCAL Recursively scan an empty-defect Bloch matching system.
+function varargout = tep_edc_scan_local()
+% TEP_EDC_SCAN_LOCAL Recursively scan an empty-defect Bloch matching system.
 %
 % Purpose:
 %   Run a recursive local real-k scan for the missing-column /
@@ -182,16 +182,16 @@ end
 function LOCAL_validate_params(params)
 
   if params.initial_interval(2) <= params.initial_interval(1)
-    error('empty_defect_scan_local:InvalidScanInterval', ...
+    error('tep_edc_scan_local:InvalidScanInterval', ...
       'beta must be larger than 2*k_margin.');
   end
   if params.num_k < 2 || params.num_k ~= floor(params.num_k)
-    error('empty_defect_scan_local:InvalidNumK', ...
+    error('tep_edc_scan_local:InvalidNumK', ...
       'num_k must be an integer at least 2.');
   end
   if params.max_refine_level < 1 || ...
       params.max_refine_level ~= floor(params.max_refine_level)
-    error('empty_defect_scan_local:InvalidMaxRefineLevel', ...
+    error('tep_edc_scan_local:InvalidMaxRefineLevel', ...
       'max_refine_level must be a positive integer.');
   end
 
@@ -263,7 +263,7 @@ function [sigma_min, info] = LOCAL_empty_defect_sigma_min(k_real, ctx)
 
   if info.K_out_plus ~= K || info.K_out_minus ~= K
     info.status = 'rect';
-    warning('empty_defect_scan_local:UnexpectedModeCount', ...
+    warning('tep_edc_scan_local:UnexpectedModeCount', ...
       'k = %.16g selected [%d,%d] outgoing modes instead of [%d,%d].', ...
       k_real, info.K_out_plus, info.K_out_minus, K, K);
   end

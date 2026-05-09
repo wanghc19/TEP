@@ -1,5 +1,5 @@
-function varargout = tep1d_scan_local()
-% TEP1D_SCAN_LOCAL Recursively scan a local 1D waveguide objective.
+function varargout = tep_1d_scan_local()
+% TEP_1D_SCAN_LOCAL Recursively scan a local 1D waveguide objective.
 %
 % Purpose:
 %   Run a local singular-value scan for the 1D periodic waveguide
@@ -90,7 +90,7 @@ function varargout = tep1d_scan_local()
 
   % --- stage 4: report and plot scan result ---
 
-  scan.print_summary(result, history, 'tep1d local scan');
+  scan.print_summary(result, history, 'tep_1d local scan');
   if result.success
     fprintf('\nFinal best result: level %d, k_real = %.16f, eps_k = %.6e, sigma_min = %.16e\n', ...
       result.best_level, result.best_x, eps_k, result.best_value);
