@@ -32,11 +32,46 @@ This repository contains MATLAB code for numerical experiments on periodic waveg
 - Parameter comments should explain purpose and usage, not merely repeat the variable name.
 - When introducing a new parameter, add or update nearby comments so that a reader can understand how to use it.
 
+- For scripts or test files with multiple logical steps, add short stage comments before each major block using the format:
+  `% --- stage N: brief description ---`
+  For example:
+  `% --- stage 1: set parameters ---`
+  `% --- stage 2: build geometry and operators ---`
+  `% --- stage 3: run checks and report errors ---`
+- Stage comments should describe the purpose of the block, not implementation minutiae. Use them especially in test scripts, prototype scripts, and long numerical workflows.
+
+- When a MATLAB file has many local `LOCAL_` helper functions, group them by role so that VSCode's outline is easy to navigate. Start each group with a MATLAB section marker using exactly this spaced format:
+  `%% ==================== Trace-matching matrix helper ====================`
+  Then add one short English comment line below it explaining what the group does, for example:
+  `% This helper builds the empty-defect block matrix used by the solve.`
+  Use role-specific section names such as incoming trace helpers, matrix assembly helpers, field evaluation helpers, or plotting helpers.
+
 - When documenting mathematical logic, operator structure, or matrix assembly, do not rely on prose alone.
 - Explicitly include the key mathematical formulas in LaTeX-style notation whenever this helps clarify the implementation.
 - In particular, for important kernels, block operators, jump relations, or assembled matrix formulas, prefer writing the defining formula explicitly rather than only describing it in words.
 
-- For MATLAB `.m` files, place the file header comment block before the main code.
+- For MATLAB `.m` files, distinguish between scripts and function files:
+  - For MATLAB script files, place the file header comment block before the main executable code.
+  - For MATLAB function files, place the function header comment block immediately after the `function ...` signature line, as MATLAB help text.
+  - The comment block in a function file must start at column 1, without indentation, even though it is inside the function body.
+  - Use the function-name style header when appropriate, for example:
+    ```matlab
+    function [C, curvelen, xxint, xxext] = construct_cont(ntot, flag_geom, nint, next, varargin)
+    % CONSTRUCT_CONT Build the TEP contour and optional interior/exterior points.
+    %
+    % Purpose:
+    %   Constructs the common contour matrix used by the TEP scripts.
+    %
+    % Input:
+    %   ntot      - Number of periodic contour samples.
+    %
+    % Output:
+    %   C         - Contour data array.
+    %
+    % Notes:
+    %   Add implementation notes or compatibility notes here.
+    ```
+  - Do not place a separate file-level comment block above the `function` line unless there is a special reason, such as licensing or package-level metadata.
 
 ## When editing code
 - For nontrivial refactors, summarize the plan before coding.
