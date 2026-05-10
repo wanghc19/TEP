@@ -40,6 +40,12 @@ This repository contains MATLAB code for numerical experiments on periodic waveg
   `% --- stage 3: run checks and report errors ---`
 - Stage comments should describe the purpose of the block, not implementation minutiae. Use them especially in test scripts, prototype scripts, and long numerical workflows.
 
+- When a MATLAB file has many local `LOCAL_` helper functions, group them by role so that VSCode's outline is easy to navigate. Start each group with a MATLAB section marker using exactly this spaced format:
+  `%% ==================== Trace-matching matrix helper ====================`
+  Then add one short English comment line below it explaining what the group does, for example:
+  `% This helper builds the empty-defect block matrix used by the solve.`
+  Use role-specific section names such as incoming trace helpers, matrix assembly helpers, field evaluation helpers, or plotting helpers.
+
 - When documenting mathematical logic, operator structure, or matrix assembly, do not rely on prose alone.
 - Explicitly include the key mathematical formulas in LaTeX-style notation whenever this helps clarify the implementation.
 - In particular, for important kernels, block operators, jump relations, or assembled matrix formulas, prefer writing the defining formula explicitly rather than only describing it in words.
