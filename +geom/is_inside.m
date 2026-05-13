@@ -9,9 +9,13 @@ function inside = is_inside(x, y, flag_geom, varargin)
 % Input:
 %   x, y      - Local point coordinates relative to the default geometry
 %               center used by geom.construct_cont.
-%   flag_geom - Geometry selector. Currently supports 'none' and 'circle'.
+%   flag_geom - Geometry selector. Currently supports 'none', 'circle', and
+%               'ellipse'.
 %   varargin  - Optional geometry parameters. For 'circle', varargin{1}
 %               may specify the radius. The default radius is 1.
+%               For 'ellipse', either varargin{1} = [a,b] or
+%               varargin{1} = a, varargin{2} = b may specify the x/y
+%               semi-axes. The default is a = b = 0.4.
 %
 % Output:
 %   inside    - Logical array of the same size as x and y.
@@ -37,9 +41,48 @@ function inside = is_inside(x, y, flag_geom, varargin)
       tol = 10 * eps(max(1, radius));
       inside = x.^2 + y.^2 <= radius^2 + tol;
 
+    case 'ellipse'
+      [a, b] = LOCAL_parse_ellipse_axes(varargin{:});
+      tol = 10 * eps(max([1, a, b]));
+      inside = (x ./ a).^2 + (y ./ b).^2 <= 1 + tol;
+
     otherwise
       error('geom:is_inside:UnsupportedGeometry', ...
-        'geom.is_inside currently supports only ''none'' and ''circle''.');
+        'geom.is_inside currently supports only ''none'', ''circle'', and ''ellipse''.');
+  end
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function [a, b] = LOCAL_parse_ellipse_axes(varargin)
+% LOCAL_PARSE_ELLIPSE_AXES Parse and validate optional ellipse semi-axes.
+
+  a = 0.4;
+  b = 0.4;
+  if isempty(varargin)
+    return;
+  end
+
+  if length(varargin) == 1
+    axes_val = varargin{1};
+    if isnumeric(axes_val) && isreal(axes_val) && numel(axes_val) == 2
+      axes_val = axes_val(:);
+      a = axes_val(1);
+      b = axes_val(2);
+    else
+      error('geom:is_inside:InvalidEllipseAxes', ...
+        'Ellipse axes must be positive real scalars a,b or a two-entry vector [a,b].');
+    end
+  else
+    a = varargin{1};
+    b = varargin{2};
+  end
+
+  if ~isscalar(a) || ~isnumeric(a) || ~isreal(a) || ~isfinite(a) || a <= 0 || ...
+      ~isscalar(b) || ~isnumeric(b) || ~isreal(b) || ~isfinite(b) || b <= 0
+    error('geom:is_inside:InvalidEllipseAxes', ...
+      'Ellipse axes must be positive real scalars a and b.');
   end
 
 end

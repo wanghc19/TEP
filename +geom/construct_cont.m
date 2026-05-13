@@ -13,6 +13,9 @@ function [C, curvelen, xxint, xxext] = construct_cont(ntot, flag_geom, nint, nex
 %   next      - Number of random exterior sample points to generate.
 %   varargin  - Optional geometry parameters. For flag_geom = 'circle',
 %               varargin{1} may specify the radius a; the default is a = 1.
+%               For flag_geom = 'ellipse', either varargin{1} = [a,b] or
+%               varargin{1} = a, varargin{2} = b may specify the x/y
+%               semi-axes. The default is a = b = 0.4.
 %
 % Output:
 %   C        - 6-by-ntot contour array containing position and derivatives:
@@ -47,8 +50,7 @@ function [C, curvelen, xxint, xxext] = construct_cont(ntot, flag_geom, nint, nex
     ttext = 2 * pi * rand(1, next);
     xxext = 1.6 * [rmax * cos(ttext); rmax * sin(ttext)];
   elseif strcmp(flag_geom, 'ellipse')
-    a = 0.4;
-    b = 0.4;
+    [a, b] = LOCAL_parse_ellipse_axes(varargin{:});
     tt = linspace(0, 2 * pi * (1 - 1 / ntot), ntot);
     C = zeros(6, ntot);
     C(1,:) =  a * cos(tt);
@@ -91,6 +93,40 @@ function [C, curvelen, xxint, xxext] = construct_cont(ntot, flag_geom, nint, nex
     xxext = 1.4 * a * [cos(ttext); sin(ttext)];
   else
     error('This option for the geometry is not implemented.');
+  end
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function [a, b] = LOCAL_parse_ellipse_axes(varargin)
+% LOCAL_PARSE_ELLIPSE_AXES Parse optional ellipse x/y semi-axes.
+
+  a = 0.4;
+  b = 0.4;
+  if isempty(varargin)
+    return;
+  end
+
+  if length(varargin) == 1
+    axes_val = varargin{1};
+    if isnumeric(axes_val) && isreal(axes_val) && numel(axes_val) == 2
+      axes_val = axes_val(:);
+      a = axes_val(1);
+      b = axes_val(2);
+    else
+      error('geom:construct_cont:InvalidEllipseAxes', ...
+        'Ellipse axes must be positive real scalars a,b or a two-entry vector [a,b].');
+    end
+  else
+    a = varargin{1};
+    b = varargin{2};
+  end
+
+  if ~isscalar(a) || ~isnumeric(a) || ~isreal(a) || ~isfinite(a) || a <= 0 || ...
+      ~isscalar(b) || ~isnumeric(b) || ~isreal(b) || ~isfinite(b) || b <= 0
+    error('geom:construct_cont:InvalidEllipseAxes', ...
+      'Ellipse axes must be positive real scalars a and b.');
   end
 
 end
