@@ -45,7 +45,6 @@ Legacy 1D TEP scripts (Kress quadrature, KR comparisons, convergence studies) li
   precomp_proxy         -- precomputes MFS proxy coefficients
   qpgreen_mfs           -- evaluates QP Green function at target points
   qpgreen_mfs_pairmat   -- vectorized pair-matrix version of qpgreen_mfs
-  cfie_kress_split      -- Kress/Kussmaul-Martensen kernel splitting
   h2d_directch          -- 2D Helmholtz direct evaluation
   kress_l_splits / kress_mn_splits -- Kress quadrature ingredients
 
