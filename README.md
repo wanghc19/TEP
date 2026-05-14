@@ -48,6 +48,12 @@ When naming a new file:
 
 The `tep_` prefix may be used in a broad sense for eigenvalue or resonance searches built from the same transmission / Bloch trace-matching machinery, even when the center defect cell is empty and the problem is not the original material-interface TEP.
 
+Scattering scripts for linear-defect configurations should use the form:
+
+```text
+scat_ld_*.m
+```
+
 ### Fallback test prefix
 
 Use `test_` for standalone validation scripts that do not clearly belong to a specific topic prefix such as `tep_`, `bloch_`, `scat_`, or `bie_`.
@@ -93,6 +99,7 @@ and avoid committing them unless intentionally preserving them.
 | `1d`         | one-dimensional periodic waveguide model |
 | `lead`       | periodic lead cell problem               |
 | `edc`        | empty defect cell                        |
+| `ld`         | linear defect                            |
 | `mc`         | missing column                           |
 | `pc`         | perfect periodic crystal                 |
 | `cent`       | center cell                              |
@@ -126,3 +133,4 @@ Prefer `edc` when the center defect cell is empty background medium. Prefer `mc`
 | `scat_edc_ps.m`       | scattering problem for an empty defect cell with point-source forcing |
 | `scat_edc_ps_scan.m`  | scan for the empty-defect-cell point-source scattering problem        |
 | `scat_edc_trmatch.m`  | trace-matching system for the empty defect cell scattering model      |
+| `scat_ld_lead_in.m`   | scattering problem for a linear defect driven by an incoming lead mode |
