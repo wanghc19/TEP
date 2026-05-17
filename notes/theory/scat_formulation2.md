@@ -197,7 +197,7 @@ $$
 所以应区分：
 
 $$
-D_{\mathrm{out}}^\pm a_s^\pm
+D_{\mathrm{out}}^\pm r^\pm
 \quad\text{is a trace vector},
 $$
 
@@ -375,42 +375,44 @@ $$
 u_h(x,y)
 =
 \sum_{m=-M}^M
-c_m^+
+a_m
 e^{\mathrm{i}\gamma_m(x-X_-)}
 \psi_m(y)
 +
 \sum_{m=-M}^M
-c_m^-
+b_m
 e^{-\mathrm{i}\gamma_m(x-X_-)}
 \psi_m(y).
 $$
 
-这里 $c_m^+$ 和 $c_m^-$ 只是中心区域中的 right-going / left-going Rayleigh amplitudes，不表示正负 half-lead。
+这里 $a_m$ 和 $b_m$ 只是中心区域中的 right-going / left-going Rayleigh amplitudes，不表示正负 half-lead。
 
 令
 
 $$
-c^+=(c_m^+)_{|m|\le M},
+a=(a_m)_{|m|\le M},
 \qquad
-c^-=(c_m^-)_{|m|\le M}.
+b=(b_m)_{|m|\le M}.
 $$
+
+注意 $a$ 和 $b$ 不带正负上标，因为它们是中心 cell 的方向系数，不是正 / 负 half-lead 量。
 
 则 $u_h$ 在两个端口上的 trace vectors 为
 
 $$
-D_h^- = c^+ + c^-,
+D_h^- = a + b,
 $$
 
 $$
-N_h^- = -\mathrm{i}\Gamma(c^+-c^-),
+N_h^- = -\mathrm{i}\Gamma(a-b),
 $$
 
 $$
-D_h^+ = Ec^+ + E^{-1}c^-,
+D_h^+ = Ea + E^{-1}b,
 $$
 
 $$
-N_h^+ = \mathrm{i}\Gamma(Ec^+-E^{-1}c^-).
+N_h^+ = \mathrm{i}\Gamma(Ea-E^{-1}b).
 $$
 
 这些式子只描述中心 cell 内的 homogeneous Rayleigh component。它们不是 outgoing lead basis，也不是 Bloch mode trace。
@@ -464,9 +466,9 @@ $$
 $$
 A_{\mathrm{QP}}\eta
 +
-H_\Sigma^+c^+
+H_\Sigma^a a
 +
-H_\Sigma^-c^-
+H_\Sigma^b b
 =
 0.
 $$
@@ -474,11 +476,18 @@ $$
 其中
 
 $$
-H_\Sigma^\pm
+H_\Sigma^a
 =
 \begin{bmatrix}
-H_{D,\Sigma}^\pm\\
-H_{N,\Sigma}^\pm
+H_{D,\Sigma}^{a}\\
+H_{N,\Sigma}^{a}
+\end{bmatrix},
+\qquad
+H_\Sigma^b
+=
+\begin{bmatrix}
+H_{D,\Sigma}^{b}\\
+H_{N,\Sigma}^{b}
 \end{bmatrix}
 $$
 
@@ -495,14 +504,14 @@ $$
 则
 
 $$
-H_{D,\Sigma}^+(j,m)
+H_{D,\Sigma}^{a}(j,m)
 =
 e^{\mathrm{i}\gamma_m(x_j-X_-)}
 \psi_m(y_j),
 $$
 
 $$
-H_{D,\Sigma}^-(j,m)
+H_{D,\Sigma}^{b}(j,m)
 =
 e^{-\mathrm{i}\gamma_m(x_j-X_-)}
 \psi_m(y_j).
@@ -511,7 +520,7 @@ $$
 法向导数 block 为
 
 $$
-H_{N,\Sigma}^+(j,m)
+H_{N,\Sigma}^{a}(j,m)
 =
 \left(
 \mathrm{i}\gamma_m\nu_{x,j}
@@ -523,7 +532,7 @@ e^{\mathrm{i}\gamma_m(x_j-X_-)}
 $$
 
 $$
-H_{N,\Sigma}^-(j,m)
+H_{N,\Sigma}^{b}(j,m)
 =
 \left(
 -\mathrm{i}\gamma_m\nu_{x,j}
@@ -534,7 +543,7 @@ e^{-\mathrm{i}\gamma_m(x_j-X_-)}
 \psi_m(y_j).
 $$
 
-如果之后改成 TE boundary condition，只需要替换 $A_{\mathrm{QP}}$ 中的 Neumann row 和 $H_{N,\Sigma}^\pm$ 的权重。例如加权法向导数条件可写成
+如果之后改成 TE boundary condition，只需要替换 $A_{\mathrm{QP}}$ 中的 Neumann row 和 $H_{N,\Sigma}^{a}$、$H_{N,\Sigma}^{b}$ 的权重。例如加权法向导数条件可写成
 
 $$
 \alpha_e\partial_\nu u_e=\alpha_i\partial_\nu u_i.
@@ -644,7 +653,7 @@ D_{\mathrm{lead}}^\pm
 =
 D_{\mathrm{in}}^\pm p_{\mathrm{in}}^\pm
 +
-D_{\mathrm{out}}^\pm a_s^\pm,
+D_{\mathrm{out}}^\pm r^\pm,
 $$
 
 $$
@@ -652,7 +661,7 @@ N_{\mathrm{lead}}^\pm
 =
 N_{\mathrm{in}}^\pm p_{\mathrm{in}}^\pm
 +
-N_{\mathrm{out}}^\pm a_s^\pm.
+N_{\mathrm{out}}^\pm r^\pm.
 $$
 
 因此 port matching conditions 是
@@ -662,7 +671,7 @@ D_h^-+D_s^-
 =
 D_{\mathrm{in}}^-p_{\mathrm{in}}^-
 +
-D_{\mathrm{out}}^-a_s^-,
+D_{\mathrm{out}}^-r^-,
 $$
 
 $$
@@ -670,7 +679,7 @@ N_h^-+N_s^-
 =
 N_{\mathrm{in}}^-p_{\mathrm{in}}^-
 +
-N_{\mathrm{out}}^-a_s^-,
+N_{\mathrm{out}}^-r^-,
 $$
 
 $$
@@ -678,7 +687,7 @@ D_h^++D_s^+
 =
 D_{\mathrm{in}}^+p_{\mathrm{in}}^+
 +
-D_{\mathrm{out}}^+a_s^+,
+D_{\mathrm{out}}^+r^+,
 $$
 
 $$
@@ -686,31 +695,31 @@ N_h^++N_s^+
 =
 N_{\mathrm{in}}^+p_{\mathrm{in}}^+
 +
-N_{\mathrm{out}}^+a_s^+.
+N_{\mathrm{out}}^+r^+.
 $$
 
 代入 $D_h^\pm,N_h^\pm$ 和 $D_s^\pm,N_s^\pm$，得到
 
 $$
-F_-\eta+c^+ + c^- -D_{\mathrm{out}}^-a_s^-
+F_-\eta+a + b -D_{\mathrm{out}}^-r^-
 =
 D_{\mathrm{in}}^-p_{\mathrm{in}}^-,
 $$
 
 $$
-\mathrm{i}\Gamma F_-\eta-\mathrm{i}\Gamma c^+ + \mathrm{i}\Gamma c^- -N_{\mathrm{out}}^-a_s^-
+\mathrm{i}\Gamma F_-\eta-\mathrm{i}\Gamma a + \mathrm{i}\Gamma b -N_{\mathrm{out}}^-r^-
 =
 N_{\mathrm{in}}^-p_{\mathrm{in}}^-,
 $$
 
 $$
-F_+\eta+Ec^+ + E^{-1}c^- -D_{\mathrm{out}}^+a_s^+
+F_+\eta+Ea + E^{-1}b -D_{\mathrm{out}}^+r^+
 =
 D_{\mathrm{in}}^+p_{\mathrm{in}}^+,
 $$
 
 $$
-\mathrm{i}\Gamma F_+\eta+\mathrm{i}\Gamma Ec^+ - \mathrm{i}\Gamma E^{-1}c^- -N_{\mathrm{out}}^+a_s^+
+\mathrm{i}\Gamma F_+\eta+\mathrm{i}\Gamma Ea - \mathrm{i}\Gamma E^{-1}b -N_{\mathrm{out}}^+r^+
 =
 N_{\mathrm{in}}^+p_{\mathrm{in}}^+.
 $$
@@ -725,10 +734,10 @@ $$
 x=
 \begin{bmatrix}
 \eta\\
-c^+\\
-c^-\\
-a_s^-\\
-a_s^+
+a\\
+b\\
+r^-\\
+r^+
 \end{bmatrix}.
 $$
 
@@ -737,13 +746,13 @@ $$
 $$
 \eta\in\mathbb C^{2N},
 \qquad
-c^+,c^-\in\mathbb C^K,
+a,b\in\mathbb C^K,
 $$
 
 $$
-a_s^-\in\mathbb C^{K_{\mathrm{out}}^-},
+r^-\in\mathbb C^{K_{\mathrm{out}}^-},
 \qquad
-a_s^+\in\mathbb C^{K_{\mathrm{out}}^+}.
+r^+\in\mathbb C^{K_{\mathrm{out}}^+}.
 $$
 
 总系统写为
@@ -758,7 +767,7 @@ $$
 \mathcal A
 =
 \begin{bmatrix}
-A_{\mathrm{QP}} & H_\Sigma^+ & H_\Sigma^- & 0 & 0\\
+A_{\mathrm{QP}} & H_\Sigma^a & H_\Sigma^b & 0 & 0\\
 F_- & I & I & -D_{\mathrm{out}}^- & 0\\
 \mathrm{i}\Gamma F_- & -\mathrm{i}\Gamma & \mathrm{i}\Gamma & -N_{\mathrm{out}}^- & 0\\
 F_+ & E & E^{-1} & 0 & -D_{\mathrm{out}}^+\\
@@ -888,7 +897,7 @@ $$
 E=\operatorname{diag}(e^{\mathrm{i}\gamma_mL_0}).
 $$
 
-这个 direct phase contribution 只属于 $u_h$ 中 $c^\pm$ 的传播，不属于介质柱 density $\eta$ 产生的 scattered coefficient extraction。
+这个 direct phase contribution 只属于 $u_h$ 中 $a,b$ 的传播，不属于介质柱 density $\eta$ 产生的 scattered coefficient extraction。
 
 ---
 
@@ -1134,10 +1143,10 @@ $$
 x_{\mathrm{empty}}
 =
 \begin{bmatrix}
-c^+\\
-c^-\\
-a_s^-\\
-a_s^+
+a\\
+b\\
+r^-\\
+r^+
 \end{bmatrix}.
 $$
 
@@ -1159,10 +1168,10 @@ $$
 $$
 \mathcal A_{\mathrm{empty}}
 \begin{bmatrix}
-c^+\\
-c^-\\
-a_s^-\\
-a_s^+
+a\\
+b\\
+r^-\\
+r^+
 \end{bmatrix}
 =
 \begin{bmatrix}
@@ -1194,9 +1203,9 @@ $$
 $$
 A_{\mathrm{QP}}\eta
 +
-H_\Sigma^+c^+
+H_\Sigma^a a
 +
-H_\Sigma^-c^-
+H_\Sigma^b b
 =
 0.
 $$
@@ -1216,7 +1225,7 @@ D_h^\pm
 =
 D_{\mathrm{in}}^\pm p_{\mathrm{in}}^\pm
 +
-D_{\mathrm{out}}^\pm a_s^\pm
+D_{\mathrm{out}}^\pm r^\pm
 $$
 
 变成
@@ -1226,7 +1235,7 @@ D_h^\pm+D_s^\pm
 =
 D_{\mathrm{in}}^\pm p_{\mathrm{in}}^\pm
 +
-D_{\mathrm{out}}^\pm a_s^\pm,
+D_{\mathrm{out}}^\pm r^\pm,
 $$
 
 Neumann trace 同理。
@@ -1276,7 +1285,7 @@ $$
 这些项只进入 port matching rows 的 RHS，而不直接进入 $\Sigma$ 上的 BIE row。原因是中心 cell 中的 field $u_h$ 是未知 Rayleigh expansion，它通过端口 matching 与 incoming trace 自洽确定，然后通过
 
 $$
-H_\Sigma^+c^+ + H_\Sigma^-c^-
+H_\Sigma^a a + H_\Sigma^b b
 $$
 
 作用到介质柱边界方程上。
@@ -1318,9 +1327,9 @@ $$
 $$
 A_{\mathrm{QP}}\eta
 +
-H_\Sigma^+c^+
+H_\Sigma^a a
 +
-H_\Sigma^-c^-
+H_\Sigma^b b
 =
 -
 \begin{bmatrix}
@@ -1342,25 +1351,25 @@ $$
 $$
 D_h^-+D_s^-+D_p^-
 =
-D_{\mathrm{out}}^-a_s^-,
+D_{\mathrm{out}}^-r^-,
 $$
 
 $$
 N_h^-+N_s^-+N_p^-
 =
-N_{\mathrm{out}}^-a_s^-,
+N_{\mathrm{out}}^-r^-,
 $$
 
 $$
 D_h^++D_s^++D_p^+
 =
-D_{\mathrm{out}}^+a_s^+,
+D_{\mathrm{out}}^+r^+,
 $$
 
 $$
 N_h^++N_s^++N_p^+
 =
-N_{\mathrm{out}}^+a_s^+.
+N_{\mathrm{out}}^+r^+.
 $$
 
 因此总 RHS 变为
@@ -1449,9 +1458,9 @@ using the existing Müller matrix construction.
 Then assemble the Rayleigh-to-boundary matrices
 
 $$
-H_\Sigma^+,
+H_\Sigma^a,
 \qquad
-H_\Sigma^-.
+H_\Sigma^b.
 $$
 
 These matrices represent the Cauchy data of the two center Rayleigh basis families restricted to $\Sigma$.
@@ -1503,7 +1512,7 @@ $$
 \mathcal A
 =
 \begin{bmatrix}
-A_{\mathrm{QP}} & H_\Sigma^+ & H_\Sigma^- & 0 & 0\\
+A_{\mathrm{QP}} & H_\Sigma^a & H_\Sigma^b & 0 & 0\\
 F_- & I & I & -D_{\mathrm{out}}^- & 0\\
 \mathrm{i}\Gamma F_- & -\mathrm{i}\Gamma & \mathrm{i}\Gamma & -N_{\mathrm{out}}^- & 0\\
 F_+ & E & E^{-1} & 0 & -D_{\mathrm{out}}^+\\
@@ -1537,10 +1546,10 @@ $$
 x=
 \begin{bmatrix}
 \eta\\
-c^+\\
-c^-\\
-a_s^-\\
-a_s^+
+a\\
+b\\
+r^-\\
+r^+
 \end{bmatrix}.
 $$
 
@@ -1601,9 +1610,9 @@ $$
 The outgoing parts are represented by the solved coefficients
 
 $$
-a_s^-,
+r^-,
 \qquad
-a_s^+.
+r^+.
 $$
 
 ---
@@ -1633,9 +1642,9 @@ r_\Sigma
 =
 A_{\mathrm{QP}}\eta
 +
-H_\Sigma^+c^+
+H_\Sigma^a a
 +
-H_\Sigma^-c^-.
+H_\Sigma^b b.
 $$
 
 For lead incoming forcing without point source, this should be small.
@@ -1647,9 +1656,9 @@ r_\Sigma
 =
 A_{\mathrm{QP}}\eta
 +
-H_\Sigma^+c^+
+H_\Sigma^a a
 +
-H_\Sigma^-c^-
+H_\Sigma^b b
 +
 \begin{bmatrix}
 u_p|_\Sigma\\
@@ -1666,7 +1675,7 @@ Check the four port residuals:
 $$
 r_D^-
 =
-F_-\eta+c^+ + c^- -D_{\mathrm{out}}^-a_s^-
+F_-\eta+a + b -D_{\mathrm{out}}^-r^-
 -
 D_{\mathrm{in}}^-p_{\mathrm{in}}^-,
 $$
@@ -1674,8 +1683,8 @@ $$
 $$
 r_N^-
 =
-\mathrm{i}\Gamma F_-\eta-\mathrm{i}\Gamma c^+ + \mathrm{i}\Gamma c^-
--N_{\mathrm{out}}^-a_s^-
+\mathrm{i}\Gamma F_-\eta-\mathrm{i}\Gamma a + \mathrm{i}\Gamma b
+-N_{\mathrm{out}}^-r^-
 -
 N_{\mathrm{in}}^-p_{\mathrm{in}}^-,
 $$
@@ -1683,7 +1692,7 @@ $$
 $$
 r_D^+
 =
-F_+\eta+Ec^+ + E^{-1}c^- -D_{\mathrm{out}}^+a_s^+
+F_+\eta+Ea + E^{-1}b -D_{\mathrm{out}}^+r^+
 -
 D_{\mathrm{in}}^+p_{\mathrm{in}}^+,
 $$
@@ -1691,8 +1700,8 @@ $$
 $$
 r_N^+
 =
-\mathrm{i}\Gamma F_+\eta+\mathrm{i}\Gamma Ec^+ - \mathrm{i}\Gamma E^{-1}c^-
--N_{\mathrm{out}}^+a_s^+
+\mathrm{i}\Gamma F_+\eta+\mathrm{i}\Gamma Ea - \mathrm{i}\Gamma E^{-1}b
+-N_{\mathrm{out}}^+r^+
 -
 N_{\mathrm{in}}^+p_{\mathrm{in}}^+.
 $$

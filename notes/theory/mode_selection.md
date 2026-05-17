@@ -542,12 +542,20 @@ $$
 $$
 u_0(x,y)
 =
-\sum_m c_m^+ e^{\mathrm{i}\gamma_m(x-X_0^-)}\psi_m(y)
+\sum_m a_m e^{\mathrm{i}\gamma_m(x-X_0^-)}\psi_m(y)
 +
-\sum_m c_m^- e^{-\mathrm{i}\gamma_m(x-X_0^-)}\psi_m(y).
+\sum_m b_m e^{-\mathrm{i}\gamma_m(x-X_0^-)}\psi_m(y).
 $$
 
-这里 $c_m^+$ 和 $c_m^-$ 仍表示中心空腔中的 right-going / left-going Rayleigh amplitude，不表示正 / 负 half-lead。中心负端口 outward normal 是 $-e_x$，中心正端口 outward normal 是 $+e_x$。令
+这里 $a_m$ 和 $b_m$ 仍表示中心空腔中的 right-going / left-going Rayleigh amplitude，不表示正 / 负 half-lead。对应截断向量记为
+
+$$
+a=(a_m)_{|m|\le M},
+\qquad
+b=(b_m)_{|m|\le M}.
+$$
+
+注意 $a$ 和 $b$ 不带正负上标，因为它们是中心 cell 方向系数，不是正 / 负 half-lead 量。中心负端口 outward normal 是 $-e_x$，中心正端口 outward normal 是 $+e_x$。令
 
 $$
 E=\operatorname{diag}(e^{\mathrm{i}\gamma_m L_0}),
@@ -558,45 +566,45 @@ $$
 中心空腔负端口 trace 为
 
 $$
-D_0^-=c^+ + c^-,
+D_h^- = a+b,
 $$
 
 $$
-N_0^-
+N_h^-
 =
--\mathrm{i}\gamma_m(c^+ - c^-),
+-\mathrm{i}\Gamma(a-b),
 $$
 
-这里 $N_0^-$ 是中心区域负端口的 outward normal trace，因此有负号。
+这里 $N_h^-$ 是中心区域负端口的 outward normal trace，因此有负号。
 
 中心空腔正端口 trace 为
 
 $$
-D_0^+=E c^+ + E^{-1}c^-,
+D_h^+ = Ea+E^{-1}b,
 $$
 
 $$
-N_0^+
+N_h^+
 =
-\mathrm{i}\gamma_m(Ec^+ - E^{-1}c^-).
+\mathrm{i}\Gamma(Ea-E^{-1}b).
 $$
 
 与正负 half-lead outgoing traces 匹配：
 
 $$
-D_0^-=D_{\mathrm{out}}^- a^-,
+D_h^- = D_{\mathrm{out}}^- r^-,
 $$
 
 $$
-N_0^-=N_{\mathrm{out}}^- a^-,
+N_h^- = N_{\mathrm{out}}^- r^-,
 $$
 
 $$
-D_0^+=D_{\mathrm{out}}^+ a^+,
+D_h^+ = D_{\mathrm{out}}^+ r^+,
 $$
 
 $$
-N_0^+=N_{\mathrm{out}}^+ a^+.
+N_h^+ = N_{\mathrm{out}}^+ r^+.
 $$
 
 设 Rayleigh 截断阶数为 $M$，则
@@ -608,23 +616,23 @@ $$
 中心空腔中的两个 Rayleigh 系数向量满足
 
 $$
-c^+,c^-\in\mathbb C^K.
+a,b\in\mathbb C^K.
 $$
 
 经过 mode selection 后，负 half-lead 与正 half-lead 中被保留的 outgoing Bloch mode 个数分别记为
 
 $$
-K^-_{\mathrm{out}}=\dim a^-,
+K^-_{\mathrm{out}}=\dim r^-,
 \qquad
-K^+_{\mathrm{out}}=\dim a^+.
+K^+_{\mathrm{out}}=\dim r^+.
 $$
 
 因此
 
 $$
-a^-\in\mathbb C^{K^-_{\mathrm{out}}},
+r^-\in\mathbb C^{K^-_{\mathrm{out}}},
 \qquad
-a^+\in\mathbb C^{K^+_{\mathrm{out}}}.
+r^+\in\mathbb C^{K^+_{\mathrm{out}}}.
 $$
 
 对应地，
@@ -641,10 +649,10 @@ $$
 
 $$
 \begin{bmatrix}
-c^+\\
-c^-\\
-a^-\\
-a^+
+a\\
+b\\
+r^-\\
+r^+
 \end{bmatrix}
 \in
 \mathbb C^{2K+K^-_{\mathrm{out}}+K^+_{\mathrm{out}}}.
@@ -668,10 +676,10 @@ E & E^{-1} & 0 & -D_{\mathrm{out}}^+\\
 \mathrm{i}\Gamma E & -\mathrm{i}\Gamma E^{-1} & 0 & -N_{\mathrm{out}}^+
 \end{bmatrix}
 \begin{bmatrix}
-c^+\\
-c^-\\
-a^-\\
-a^+
+a\\
+b\\
+r^-\\
+r^+
 \end{bmatrix}
 =0,
 $$

@@ -386,23 +386,23 @@ $$
 令对应 mode 系数为
 
 $$
-a^+
+r^+
 =
 \begin{bmatrix}
-a_1^+\\
+r_1^+\\
 \vdots\\
-a_{m_+}^+
+r_{m_+}^+
 \end{bmatrix}.
 $$
 
 则右端口 outgoing matching 条件为
 
 $$
-C_+^D\eta-B_+^D a^+=0,
+C_+^D\eta-B_+^D r^+=0,
 $$
 
 $$
-C_+^N\eta-B_+^N a^+=0.
+C_+^N\eta-B_+^N r^+=0.
 $$
 
 左侧 outgoing Bloch modes 记为
@@ -446,23 +446,23 @@ $$
 令
 
 $$
-a^-
+r^-
 =
 \begin{bmatrix}
-a_1^-\\
+r_1^-\\
 \vdots\\
-a_{m_-}^-
+r_{m_-}^-
 \end{bmatrix}.
 $$
 
 左端口 outgoing matching 条件为
 
 $$
-C_-^D\eta-B_-^D a^-=0,
+C_-^D\eta-B_-^D r^-=0,
 $$
 
 $$
-C_-^N\eta-B_-^N a^-=0.
+C_-^N\eta-B_-^N r^-=0.
 $$
 
 ---
@@ -477,14 +477,14 @@ X
 \begin{bmatrix}
 \tau\\
 -\sigma\\
-a^+\\
-a^-
+r^+\\
+r^-
 \end{bmatrix}
 =
 \begin{bmatrix}
 \eta\\
-a^+\\
-a^-
+r^+\\
+r^-
 \end{bmatrix}.
 $$
 
@@ -512,8 +512,8 @@ $$
 \begin{bmatrix}
 \tau\\
 -\sigma\\
-a^+\\
-a^-
+r^+\\
+r^-
 \end{bmatrix}
 =0.
 }
@@ -571,7 +571,7 @@ $$
 \sigma_{\min}(\mathcal A(\omega,\beta))
 $$
 
-检测非平凡解。若希望得到方阵形式，可以进一步通过消去 $a^\pm$、投影到 Bloch trace 子空间的正交补、或选择匹配点与模式数使维度配平来实现；这不是当前 note 的目标。
+检测非平凡解。若希望得到方阵形式，可以进一步通过消去 $r^\pm$、投影到 Bloch trace 子空间的正交补、或选择匹配点与模式数使维度配平来实现；这不是当前 note 的目标。
 
 ---
 
@@ -625,4 +625,3 @@ C_-^N & 0 & -B_-^N
 $$
 
 5. 扫描 $\omega$ 或 $(\omega,\beta)$，寻找 $\sigma_{\min}(\mathcal A)$ 的局部极小值。
-

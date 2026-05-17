@@ -12,7 +12,7 @@
 
 - $L,R$ 只表示**单个 lead cell 的左 / 右壁**，不表示正 / 负 half-lead；
 - 与正 / 负 half-lead 以及中心 cell 正 / 负端口有关的量使用上标 $+$ 和 $-$；
-- 中心空腔展开中的 $c_m^+$、$c_m^-$ 是例外，它们只表示中心空腔中的 right-going / left-going Rayleigh amplitude，不表示正 / 负 half-lead。
+- 中心空腔展开中的 $a_m$、$b_m$ 表示中心空腔中的 right-going / left-going Rayleigh amplitude；对应向量 $a,b$ 不带正负上标，因为它们不表示正 / 负 half-lead。
 
 ---
 
@@ -187,7 +187,7 @@ N_s^\pm
 \begin{bmatrix}
 D_{\mathrm{out}}^\pm\\
 N_{\mathrm{out}}^\pm
-\end{bmatrix}a^\pm.
+\end{bmatrix}r^\pm.
 $$
 
 ---
@@ -234,7 +234,7 @@ D_{\mathrm{in,tot}}^+=D_{\mathrm{in}}^+p^+,
 N_{\mathrm{in,tot}}^+=N_{\mathrm{in}}^+p^+.
 $$
 
-在 scattering problem 中，$p^\pm$ 是给定的，而 outgoing 系数 $a^\pm$ 是未知的。
+在 scattering problem 中，$p^\pm$ 是给定的，而 outgoing 系数 $r^\pm$ 是未知的。
 
 ### 4.2 以 empty-defect cell 为例的方程
 
@@ -243,12 +243,20 @@ $$
 $$
 u_0(x,y)
 =
-\sum_m c_m^+e^{\mathrm{i}\gamma_m(x-X_0^-)}\psi_m(y)
+\sum_m a_m e^{\mathrm{i}\gamma_m(x-X_0^-)}\psi_m(y)
 +
-\sum_m c_m^-e^{-\mathrm{i}\gamma_m(x-X_0^-)}\psi_m(y).
+\sum_m b_m e^{-\mathrm{i}\gamma_m(x-X_0^-)}\psi_m(y).
 $$
 
-这里 $c_m^+$、$c_m^-$ 只表示中心空腔 Rayleigh 展开中的 right-going / left-going amplitude。
+这里 $a_m$、$b_m$ 只表示中心空腔 Rayleigh 展开中的 right-going / left-going amplitude。对应截断向量记为
+
+$$
+a=(a_m)_{|m|\le M},
+\qquad
+b=(b_m)_{|m|\le M}.
+$$
+
+$a$ 和 $b$ 不带正负上标，因为它们不是正 / 负 half-lead 量。
 
 令
 
@@ -263,60 +271,60 @@ $$
 中心空腔负端口 outward trace 为
 
 $$
-D_0^-=c^+ + c^-,
+D_h^-=a + b,
 $$
 
 $$
-N_0^-=-\mathrm{i}\Gamma(c^+-c^-).
+N_h^-=-\mathrm{i}\Gamma(a-b).
 $$
 
 中心空腔正端口 outward trace 为
 
 $$
-D_0^+=Ec^+ + E^{-1}c^-,
+D_h^+=Ea + E^{-1}b,
 $$
 
 $$
-N_0^+=\mathrm{i}\Gamma(Ec^+-E^{-1}c^-).
+N_h^+=\mathrm{i}\Gamma(Ea-E^{-1}b).
 $$
 
 设左右 outgoing trace 为
 
 $$
-D_s^- = D_{\mathrm{out}}^-a^-,
+D_s^- = D_{\mathrm{out}}^-r^-,
 \qquad
-N_s^- = N_{\mathrm{out}}^-a^-,
+N_s^- = N_{\mathrm{out}}^-r^-,
 $$
 
 $$
-D_s^+ = D_{\mathrm{out}}^+a^+,
+D_s^+ = D_{\mathrm{out}}^+r^+,
 \qquad
-N_s^+ = N_{\mathrm{out}}^+a^+.
+N_s^+ = N_{\mathrm{out}}^+r^+.
 $$
 
 若两端都允许给定入射，则匹配条件为
 
 $$
-D_0^- = D_{\mathrm{in,tot}}^- + D_{\mathrm{out}}^-a^-,
+D_h^- = D_{\mathrm{in,tot}}^- + D_{\mathrm{out}}^-r^-,
 $$
 
 $$
-N_0^- = N_{\mathrm{in,tot}}^- + N_{\mathrm{out}}^-a^-,
+N_h^- = N_{\mathrm{in,tot}}^- + N_{\mathrm{out}}^-r^-,
 $$
 
 $$
-D_0^+ = D_{\mathrm{in,tot}}^+ + D_{\mathrm{out}}^+a^+,
+D_h^+ = D_{\mathrm{in,tot}}^+ + D_{\mathrm{out}}^+r^+,
 $$
 
 $$
-N_0^+ = N_{\mathrm{in,tot}}^+ + N_{\mathrm{out}}^+a^+.
+N_h^+ = N_{\mathrm{in,tot}}^+ + N_{\mathrm{out}}^+r^+.
 $$
 
 将未知量取为
 
 $$
 \begin{bmatrix}
-c^+\\c^-\\a^-\\a^+
+a\\b\\r^-\\r^+
 \end{bmatrix},
 $$
 
@@ -330,7 +338,7 @@ E & E^{-1} & 0 & -D_{\mathrm{out}}^+\\
 \mathrm{i}\Gamma E & -\mathrm{i}\Gamma E^{-1} & 0 & -N_{\mathrm{out}}^+
 \end{bmatrix}
 \begin{bmatrix}
-c^+\\c^-\\a^-\\a^+
+a\\b\\r^-\\r^+
 \end{bmatrix}
 =
 \begin{bmatrix}
@@ -446,27 +454,27 @@ $$
 $$
 u_h(x,y)
 =
-\sum_m c_m^+e^{\mathrm{i}\gamma_m(x-X_0^-)}\psi_m(y)
+\sum_m a_m e^{\mathrm{i}\gamma_m(x-X_0^-)}\psi_m(y)
 +
-\sum_m c_m^-e^{-\mathrm{i}\gamma_m(x-X_0^-)}\psi_m(y).
+\sum_m b_m e^{-\mathrm{i}\gamma_m(x-X_0^-)}\psi_m(y).
 $$
 
 匹配条件为
 
 $$
-D_h^-+D_p^- = D_{\mathrm{out}}^-a^-,
+D_h^-+D_p^- = D_{\mathrm{out}}^-r^-,
 $$
 
 $$
-N_h^-+N_p^- = N_{\mathrm{out}}^-a^-,
+N_h^-+N_p^- = N_{\mathrm{out}}^-r^-,
 $$
 
 $$
-D_h^++D_p^+ = D_{\mathrm{out}}^+a^+,
+D_h^++D_p^+ = D_{\mathrm{out}}^+r^+,
 $$
 
 $$
-N_h^++N_p^+ = N_{\mathrm{out}}^+a^+.
+N_h^++N_p^+ = N_{\mathrm{out}}^+r^+.
 $$
 
 因此矩阵左边仍与 homogeneous empty-defect problem 相同：
@@ -479,7 +487,7 @@ E & E^{-1} & 0 & -D_{\mathrm{out}}^+\\
 \mathrm{i}\Gamma E & -\mathrm{i}\Gamma E^{-1} & 0 & -N_{\mathrm{out}}^+
 \end{bmatrix}
 \begin{bmatrix}
-c^+\\c^-\\a^-\\a^+
+a\\b\\r^-\\r^+
 \end{bmatrix}
 =
 -
@@ -772,7 +780,7 @@ N_{\mathrm{s}}^+
 \begin{bmatrix}
 D_{\mathrm{out}}^+\\
 N_{\mathrm{out}}^+
-\end{bmatrix}a^+.
+\end{bmatrix}r^+.
 $$
 
 如果同时在正端口也给 incoming trace，则描述的是双边入射问题，而不是单侧入射。
@@ -880,25 +888,25 @@ $$
 $$
 D_{\mathrm{h}}^-+D_{\mathrm{p}}^-
 =
-D_{\mathrm{out}}^-a^-,
+D_{\mathrm{out}}^-r^-,
 $$
 
 $$
 N_{\mathrm{h}}^-+N_{\mathrm{p}}^-
 =
-N_{\mathrm{out}}^-a^-,
+N_{\mathrm{out}}^-r^-,
 $$
 
 $$
 D_{\mathrm{h}}^++D_{\mathrm{p}}^+
 =
-D_{\mathrm{out}}^+a^+,
+D_{\mathrm{out}}^+r^+,
 $$
 
 $$
 N_{\mathrm{h}}^++N_{\mathrm{p}}^+
 =
-N_{\mathrm{out}}^+a^+.
+N_{\mathrm{out}}^+r^+.
 $$
 
 这给出一个非齐次 forced scattering problem，而不是齐次 cavity-mode problem。
