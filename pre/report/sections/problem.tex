@@ -1,0 +1,97 @@
+% problem.tex
+%
+% Purpose:
+%   Define the scalar Helmholtz transmission model and the two main workflows:
+%   forced lead scattering and homogeneous eigenvalue search.
+%
+% Main algorithm:
+%   The section states the continuous equations and the matrix forms
+%   \mathcal A x=b and \mathcal A x=0 used later.
+%
+% Based on:
+%   notes/theory/scat_formulation.md and notes/theory/scat_formulation2.md.
+%
+% Main changes:
+%   The problem statement is condensed into a paper-style formulation.
+%
+% Numerical goal:
+%   Fix the interpretation of the unknowns and right-hand sides before the
+%   discretized trace system is introduced.
+
+\section{Transmission and Scattering Problems}
+
+\subsection{Scalar Helmholtz transmission model}
+
+In each homogeneous material region the field satisfies a scalar Helmholtz
+equation.  In the exterior background and inside an inclusion we write
+\[
+  (\Delta+k_e^2)u_e=0,
+  \qquad
+  (\Delta+k_i^2)u_i=0 .
+\]
+For a dielectric inclusion with relative index \(n\), one often has
+\(k_i=nk_e\), but the formulation only uses the exterior and interior
+wavenumbers supplied to the boundary integral assembly.
+
+Across a smooth material interface \(\Sigma_j=\partial\Omega_j\), the TM-like
+transmission conditions used in the current formulation are
+\[
+  u_e=u_i,
+  \qquad
+  \partial_\nu u_e=\partial_\nu u_i .
+\]
+Here \(\nu\) is the unit normal pointing out of the inclusion.  A TE variant
+would replace the Neumann continuity by a weighted normal derivative condition,
+but that is a change in the boundary condition row rather than in the
+trace-subspace idea.
+
+The transverse quasiperiodicity is
+\[
+  u(x,y+d)=\ee^{\ii\beta d}u(x,y),
+\]
+where \(d\) is the transverse period and \(\beta\) is the transverse
+quasimomentum.
+
+\subsection{Forced lead-scattering workflow}
+
+In a forced scattering problem, the data are incoming Bloch traces from one or
+both half-leads.  The field is decomposed into prescribed incoming data and an
+unknown scattered part that is outgoing or admissible in each half-lead.  The
+discretized system has the form
+\[
+  \Atr(k,\beta)x=b_{\mathrm{in}} .
+\]
+The right-hand side is not an arbitrary wall trace.  It must be an element of
+the incoming trace subspace selected from the periodic half-lead:
+\[
+  \begin{bmatrix}
+  D_{\mathrm{in,tot}}^\pm\\
+  N_{\mathrm{in,tot}}^\pm
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  \Din^\pm\\
+  \Nin^\pm
+  \end{bmatrix}p_{\mathrm{in}}^\pm .
+\]
+For a one-sided negative-lead incidence one sets \(p_{\mathrm{in}}^+=0\); for a
+one-sided positive-lead incidence one sets \(p_{\mathrm{in}}^-=0\).
+
+\subsection{Homogeneous eigenvalue workflow}
+
+For a defect-mode or transmission-eigenvalue-type calculation, the same assembly
+is used without forcing:
+\[
+  \Atr(k,\beta)x=0 .
+\]
+Numerically, one scans for parameter values where
+\[
+  \sigmin(\Atr(k,\beta))\approx 0 .
+\]
+This homogeneous problem should be interpreted with care.  Away from resonances,
+a forced exterior problem is expected to be unique after an appropriate
+radiation or limiting absorption condition is imposed.  In contrast, the
+eigenvalue workflow is precisely a search for nontrivial admissible null vectors.
+Thus the same matrix structure is used for two different purposes: solving
+well-posed forced problems and locating lossless or nearly lossless homogeneous
+states.

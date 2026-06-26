@@ -1,0 +1,153 @@
+% discretization.tex
+%
+% Purpose:
+%   Summarize the Nyström, Kress, MFS/proxy, and implementation components used
+%   by the report-level formulation.
+%
+% Main algorithm:
+%   Describes how smooth boundary integral operators and singular kernels are
+%   discretized, and how quasiperiodic Green functions are approximated.
+%
+% Based on:
+%   notes/implementation/kress_quadrature.md, notes/implementation/kress_scheme.md,
+%   notes/implementation/mfs2d.md, and the package layout in the repository.
+%
+% Main changes:
+%   The material is shortened to a high-level implementation description with
+%   the key formulas preserved.
+%
+% Numerical goal:
+%   Identify the discretization choices and package roles that should be varied
+%   during convergence checks.
+
+\section{Discretization and Implementation Components}
+
+\subsection{Boundary quadrature}
+
+The inclusion boundaries are assumed smooth and are discretized by a periodic
+Nystr\"om method.  For a \(2\pi\)-periodic boundary parameter \(t\), the nodes are
+\[
+  t_j=\frac{2\pi j}{N},
+  \qquad
+  j=0,\ldots,N-1,
+\]
+with even \(N\).  Smooth integral blocks use the periodic trapezoid rule, which
+is spectrally accurate for smooth periodic data.
+
+Logarithmic singularities are handled by Kress product quadrature
+\cite{Kress1991,Kress2014}.  The kernel is split as
+\[
+  k(t,s)
+  =
+  \phi(t,s)\log\!\left(4\sin^2\frac{t-s}{2}\right)
+  +
+  \psi(t,s),
+\]
+where \(\phi\) and \(\psi\) are smooth.  The Kress weights for the singular
+factor are
+\[
+  R_j^{(N/2)}(t)
+  =
+  -\frac{4\pi}{N}
+  \left[
+  \sum_{n=1}^{N/2-1}\frac{1}{n}\cos(n(t_j-t))
+  +
+  \frac{1}{N}\cos\!\left(\frac{N}{2}(t_j-t)\right)
+  \right].
+\]
+The corresponding Nystr\"om matrix has entries of the form
+\[
+  A_{ij}=R_{ij}\phi(t_i,t_j)+h\psi(t_i,t_j),
+  \qquad
+  h=\frac{2\pi}{N}.
+\]
+For the Muller matrix, hypersingular differences such as
+\[
+  T^{(k_e)}-T^{(k_i)}
+\]
+are treated in a cancellation-aware Kress form.  The leading singular parts
+cancel to a lower-order structure, but the implementation still needs the
+correct split and diagonal treatment.
+
+\subsection{Quasiperiodic Green functions and proxy/MFS periodization}
+
+The quasiperiodic Green function is one of the numerically delicate parts of the
+method.  In a one-direction periodic open waveguide, the Green function has a
+Rayleigh expansion in the open direction, for example
+\[
+  G_{\mathrm{QP}}^{(k)}((x,y),(x_s,y_s))
+  =
+  \frac{\ii}{2d}
+  \sum_{m\in\mathbb Z}
+  \frac{1}{\gamma_m}
+  \ee^{\ii\beta_m(y-y_s)}
+  \ee^{\ii\gamma_m|x-x_s|},
+\]
+away from thresholds.  Direct lattice sums may be slowly convergent or singular
+near exceptional parameters.
+
+The codebase uses MFS/proxy ideas to approximate quasiperiodic corrections.  In
+a typical proxy representation,
+\[
+  G_{\mathrm{QP}}^{(k)}(x,y)
+  \approx
+  G^{(k)}(x,y)
+  +
+  \sum_{\ell=1}^{P}q_\ell(y)\,G^{(k)}(x,z_\ell),
+\]
+where \(G^{(k)}\) is the free-space singular Green function and the proxy
+sources \(z_\ell\) lie outside the physical cell.  The proxy strengths enforce
+quasiperiodic value and derivative discrepancies on the cell boundary.  The
+free-space singular part is retained; the proxy correction is a homogeneous
+field inside the cell.
+
+This periodization strategy is flexible and useful for the present experiments,
+but its parameters require convergence checks.  It should be compared with, and
+understood alongside, alternative quasiperiodic integral representations such as
+those discussed by Barnett and Greengard \cite{BarnettGreengard2010}.
+
+\subsection{Far-field extractors}
+
+The matrices \(F_\pm\) map the center boundary density to outgoing Rayleigh
+coefficients at the ports:
+\[
+  s^- = F_-\eta,
+  \qquad
+  s^+ = F_+\eta .
+\]
+At the continuous level, the right-going coefficient functions come from the
+Rayleigh expansion of \(G_{\mathrm{QP}}\).  For instance, for a source point
+\(z=(z_x,z_y)\) and right reference wall \(X_R\),
+\[
+  g_m^R(z)
+  =
+  \frac{\ii}{2\sqrt d\,\gamma_m}
+  \exp[-\ii\beta_m z_y-\ii\gamma_m(z_x-X_R)] .
+\]
+The double-layer source-normal contribution has coefficient
+\[
+  -\ii(\gamma_m\nu_x+\beta_m\nu_y)g_m^R(z),
+\]
+and the single-layer contribution is proportional to \(-g_m^R(z)\) under the
+current \(\eta=[\tau;-\sigma]\) convention.  The left extractor is analogous
+with the left-going Rayleigh phase and the corresponding source-normal
+derivative formula.
+
+\subsection{Implementation components}
+
+The present code organization separates the numerical roles into packages and
+driver scripts:
+\[
+\begin{array}{ll}
+\texttt{+geom} & \text{geometry construction and cached contour data},\\
+\texttt{+kernel} & \text{quasiperiodic Green, MFS/proxy, and Kress kernel data},\\
+\texttt{+op} & \text{Muller matrix assembly, including }\texttt{construct\_A\_QP},\\
+\texttt{+bloch} & \text{Rayleigh channels, scattering matrices, modes, traces, selection},\\
+\texttt{+viz} & \text{geometry and field visualization helpers}.
+\end{array}
+\]
+The scattering workflows are represented by scripts such as
+\path|scat_ld_lead_in.m|, \path|scat_edc_lead_in.m|, and
+\path|scat_edc_ps.m|.  Eigenvalue or transmission-eigenvalue scans are
+represented by scripts with the \path|tep_| prefix.  These names are
+implementation anchors rather than a fixed API specification.

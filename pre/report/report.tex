@@ -1,0 +1,110 @@
+% report.tex
+%
+% Purpose:
+%   Main LaTeX driver for a first-draft technical report on the boundary
+%   integral trace-subspace formulation used in this repository.
+%
+% Main workflow:
+%   The report is split into six paper-style section files under sections/.
+%   It introduces the model and notation, develops the trace-subspace
+%   formulation, records the numerical discretization and implementation
+%   workflow, and leaves a standard placeholder for numerical experiments.
+%
+% Based on:
+%   notes/theory/scat_formulation.md, notes/theory/scat_formulation2.md,
+%   notes/theory/mode_selection.md, notes/theory/bloch_mode.md,
+%   notes/implementation/kress_quadrature.md, notes/implementation/kress_scheme.md,
+%   notes/implementation/mfs2d.md, and pre/pre1/pre1.tex.
+%
+% Main changes:
+%   The report uses a compact paper-like organization rather than one top-level
+%   section per concept.  The detailed derivations are grouped into subsections.
+%
+% Numerical goal:
+%   Provide a readable, compilable reference document for the current
+%   Transmission Eigenvalue / Bloch-mode / line-defect implementation workflow.
+
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+\usetikzlibrary{arrows.meta}
+
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\CC}{\mathbb C}
+\newcommand{\RR}{\mathbb R}
+\newcommand{\Ccell}{\mathcal C}
+\newcommand{\Tspace}{\mathcal T}
+\newcommand{\Aqp}{A_{\mathrm{QP}}}
+\newcommand{\Asc}{A_{\mathrm{sc}}}
+\newcommand{\Bsc}{B_{\mathrm{sc}}}
+\newcommand{\Atr}{\mathcal A}
+\newcommand{\Ein}{E_{\mathrm{in}}}
+\newcommand{\Eout}{E_{\mathrm{out}}}
+\newcommand{\Din}{D_{\mathrm{in}}}
+\newcommand{\Nin}{N_{\mathrm{in}}}
+\newcommand{\Dout}{D_{\mathrm{out}}}
+\newcommand{\Nout}{N_{\mathrm{out}}}
+\newcommand{\sigmin}{\sigma_{\min}}
+\newcommand{\GammaR}{\Gamma_{\mathrm R}}
+\newcommand{\FigurePlaceholder}[1]{%
+  \begin{center}
+    \setlength{\fboxsep}{1.2em}%
+    \fbox{\parbox{0.75\textwidth}{\centering #1}}%
+  \end{center}%
+}
+\newcommand{\SafeIncludeGraphics}[2][]{%
+  \IfFileExists{#2}{%
+    \includegraphics[#1]{#2}%
+  }{%
+    \FigurePlaceholder{Missing figure: \url{#2}}%
+  }%
+}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\rank}{rank}
+
+\title{A Boundary Integral Trace-Subspace Formulation for Periodic Line-Defect Waveguides}
+\author{Draft technical note}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This note records a constructive numerical formulation for periodic line-defect
+scattering and eigenvalue calculations in a two-dimensional scalar Helmholtz
+transmission model.  The formulation combines boundary integral equations on
+material interfaces, compact quasiperiodic port traces, Rayleigh coordinate
+spaces, one-cell Bloch/scattering computations in the periodic half-leads, and a
+center-cell trace-matching system.  The main point is not to construct the full
+periodic half-guide Dirichlet-to-Neumann map explicitly, but to impose the
+finite-dimensional Cauchy trace subspace selected by the Bloch-mode radiation or
+admissibility condition.  The document is a first draft intended to make the
+current implementation readable and testable.
+\end{abstract}
+
+\tableofcontents
+
+\input{sections/01_introduction}
+\input{sections/02_preliminaries}
+\input{sections/03_trace_subspace_formulation}
+\input{sections/04_numerical_method}
+\input{sections/05_numerical_experiments}
+\input{sections/06_conclusion}
+
+\bibliographystyle{plain}
+\bibliography{report}
+
+\end{document}

@@ -1,0 +1,112 @@
+% truncation_and_diagnostics.tex
+%
+% Purpose:
+%   Discuss Rayleigh truncation, light-line intuition, Bloch multiplier
+%   convergence, and practical diagnostics for the global matching matrix.
+%
+% Main algorithm:
+%   No single algorithm is introduced.  The section lists checks that should be
+%   run when varying M, N_tot, proxy parameters, and mode-selection thresholds.
+%
+% Based on:
+%   notes/theory/scat_formulation.md, notes/theory/mode_selection.md, and
+%   notes/theory/scat_formulation2.md.
+%
+% Main changes:
+%   Heuristic truncation rules are explicitly labeled as practical guidance
+%   rather than rigorous error estimates.
+%
+% Numerical goal:
+%   Provide a validation checklist for line-defect scattering and eigenvalue
+%   scans.
+
+\section{Truncation Parameters and Diagnostics}
+
+\subsection{Rayleigh truncation}
+
+The truncation parameter \(M\) sets the number \(K=2M+1\) of Rayleigh trace
+coordinates.  It controls both the resolution of wall Cauchy traces and the
+amount of evanescent coupling retained between separated objects and ports.
+For large \(|m|\), real \(k\), and fixed \(\beta\),
+\[
+  \gamma_m\approx \ii|\beta_m|,
+  \qquad
+  |\beta_m|\sim\frac{2\pi|m|}{d}.
+\]
+An evanescent component crossing an open distance \(\ell\) has the heuristic
+decay factor
+\[
+  \ee^{-\operatorname{Im}\gamma_m\ell}.
+\]
+If each inclusion is separated from its nearest cell wall by at least
+\(\delta\), then the gap between adjacent inclusions across a port is roughly at
+least \(2\delta\).  A practical high-order coupling heuristic is therefore
+\[
+  \ee^{-2\operatorname{Im}\gamma_m\delta}.
+\]
+This is useful intuition for choosing \(M\), but it is not a rigorous error
+estimate for the full periodic lead problem.
+
+\subsection{Light-line and periodic dispersion}
+
+For a homogeneous Rayleigh exterior,
+\[
+  \gamma_m^2=k^2-\beta_m^2 .
+\]
+Thus the Rayleigh order \(m\) decays in an open direction exactly when
+\[
+  k<|\beta_m|
+\]
+for real positive \(k\).  In the simple one-dimensional prototype with
+\(0\le\beta\le\pi/d\),
+\[
+  \text{all Rayleigh orders decay}
+  \iff
+  k<\min_m|\beta_m|=\beta .
+\]
+
+A periodic lead is different.  Its admissibility is selected by the Bloch
+multiplier in
+\[
+  \Asc(k,\beta)z=\lambda\Bsc(k,\beta)z,
+\]
+not by a scalar Rayleigh light-cone formula.  The Rayleigh light-line remains a
+useful diagnostic for the homogeneous background channels, but the periodic
+lead dispersion and the selected Cauchy subspace are governed by the truncated
+Bloch problem.
+
+\subsection{Diagnostics}
+
+The Rayleigh tail alone does not determine the error in the Bloch multipliers
+\(\lambda_j\).  Changing \(M\) changes the truncated scattering matrix and
+therefore the generalized eigenproblem itself.  Convergence should be checked
+for multipliers, outgoing subspaces, global matrix singular values, and fields.
+
+Useful diagnostics include:
+\begin{itemize}
+  \item The selected counts \(K_{\mathrm{out}}^\pm\) should be near \(K\) in
+  non-degenerate band-gap or regularized cases.
+  \item The combined modal matrix
+  \[
+    \Phi_{\mathrm{all}}^\pm
+    =
+    \begin{bmatrix}
+    D_{\mathrm{in}}^\pm & D_{\mathrm{out}}^\pm\\
+    N_{\mathrm{in}}^\pm & N_{\mathrm{out}}^\pm
+    \end{bmatrix}
+  \]
+  should have reasonable numerical rank and conditioning.
+  \item Principal angles or projector differences between \(E_{\mathrm{out}}\)
+  at successive \(M\) values should decrease in stable parameter regimes.
+  \item \(\sigmin(\Atr(k,\beta))\) should converge under refinement of
+  \(N_{\mathrm{tot}}\), \(M\), proxy parameters, and selection thresholds.
+  \item Residuals of the BIE row and all port matching rows should be checked
+  after solving.
+  \item Field plots and point evaluations should converge under the same
+  refinements, especially near the ports and material interfaces.
+\end{itemize}
+
+Potential warning signs include sudden changes in \(K_{\mathrm{out}}^\pm\),
+large generalized eigenpair residuals, nearly defective Bloch pencils, grazing
+Rayleigh orders \(\gamma_m\approx0\), and strong sensitivity of the field to the
+mode-selection tolerance.

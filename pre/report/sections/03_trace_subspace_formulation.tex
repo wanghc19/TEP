@@ -1,0 +1,354 @@
+% 03_trace_subspace_formulation.tex
+%
+% Purpose:
+%   Present the main mathematical trace-subspace formulation, including lead
+%   Bloch modes, incoming/outgoing Cauchy subspaces, the DtN interpretation, and
+%   the center-cell port matching matrix.
+%
+% Main algorithm:
+%   Build lead-cell scattering matrices, solve the Bloch generalized
+%   eigenproblem, select admissible Cauchy trace subspaces, and couple them to
+%   the center Muller boundary integral row.
+%
+% Based on:
+%   sections/bloch_leads.tex, sections/dtn_relation.tex, and
+%   sections/bie_center.tex from the first report draft.
+%
+% Main changes:
+%   Combines the conceptual core of the method into one paper-style top-level
+%   section with several subsections.
+%
+% Numerical goal:
+%   Record the block matrix and dimension count used by the scattering and
+%   eigenvalue workflows.
+
+\section{Trace-Subspace Formulation}
+
+\subsection{Lead-cell scattering and Bloch multipliers}
+
+For a single periodic lead cell with left wall \(x=X_L\) and right wall
+\(x=X_R\), write local Rayleigh amplitudes as \(a^L,b^L,a^R,b^R\), where
+\(a\) denotes a local right-going Rayleigh amplitude and \(b\) denotes a local
+left-going Rayleigh amplitude.  The finite-dimensional cell scattering relation
+is
+\[
+  \begin{bmatrix}
+  b^L\\
+  a^R
+  \end{bmatrix}
+  =
+  S_{\mathrm{cell}}
+  \begin{bmatrix}
+  a^L\\
+  b^R
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  R_L & T_{R\to L}\\
+  T_{L\to R} & R_R
+  \end{bmatrix}
+  \begin{bmatrix}
+  a^L\\
+  b^R
+  \end{bmatrix}.
+\]
+The Bloch condition for a multiplier \(\lambda\) is
+\[
+  a^R=\lambda a^L,
+  \qquad
+  b^R=\lambda b^L .
+\]
+With \(z=[a;b]\), this gives the generalized eigenproblem
+\[
+  \Asc z=\lambda\Bsc z,
+\]
+where
+\[
+  \Asc=
+  \begin{bmatrix}
+  -R_L&I\\
+  T_{L\to R}&0
+  \end{bmatrix},
+  \qquad
+  \Bsc=
+  \begin{bmatrix}
+  0&T_{R\to L}\\
+  I&-R_R
+  \end{bmatrix}.
+\]
+
+\subsection{Incoming and outgoing trace subspaces}
+
+The Bloch eigenvectors are converted to Cauchy traces on lead-cell walls.  On a
+cell left wall,
+\[
+  D_L(:,j)=a_j^L+b_j^L,
+  \qquad
+  N_L(:,j)=\ii\GammaR(a_j^L-b_j^L),
+\]
+where
+\[
+  \GammaR=\diag(\gamma_m).
+\]
+The right wall traces satisfy
+\[
+  D_R(:,j)=\lambda_jD_L(:,j),
+  \qquad
+  N_R(:,j)=\lambda_jN_L(:,j).
+\]
+Here \(N_L,N_R\) denote \(\partial_x u\) trace coefficients on a lead-cell wall.
+They are converted to center-cell outward-normal derivatives only when attached
+to \(\Gamma_-\) or \(\Gamma_+\).
+
+For the positive half-lead, outgoing decay as \(x\to+\infty\) corresponds, away
+from unit-circle complications, to
+\[
+  |\lambda_j|<1 .
+\]
+Thus
+\[
+  D_{\mathrm{out}}^+=D_L(:,\mathcal I^+),
+  \qquad
+  N_{\mathrm{out}}^+=N_L(:,\mathcal I^+),
+  \qquad
+  \mathcal I^+=\{j:|\lambda_j|<1\}.
+\]
+For the negative half-lead, outgoing decay as \(x\to-\infty\) corresponds to
+\[
+  |\lambda_j|>1 .
+\]
+Since the outward normal at the center-cell negative port is \(-e_x\),
+\[
+  D_{\mathrm{out}}^-=D_R(:,\mathcal I^-),
+  \qquad
+  N_{\mathrm{out}}^-=-N_R(:,\mathcal I^-),
+  \qquad
+  \mathcal I^-=\{j:|\lambda_j|>1\}.
+\]
+
+The incoming and outgoing trace subspaces are
+\[
+  E_{\mathrm{in/out}}^\pm
+  =
+  \operatorname{range}
+  \begin{bmatrix}
+  D_{\mathrm{in/out}}^\pm\\
+  N_{\mathrm{in/out}}^\pm
+  \end{bmatrix}
+  \subset \CC^K\times\CC^K .
+\]
+Rayleigh coordinates are not Bloch modes.  They provide a wall coordinate basis,
+while the Bloch computation identifies the physical admissible subspaces.  Any
+well-conditioned basis of the same selected subspace may be used numerically,
+for example after QR or SVD.  An arbitrary subspace of \(\CC^{2K}\), however,
+would impose an artificial boundary condition.
+
+\subsection{Relation to DtN maps}
+
+At the continuous level, a positive half-lead outgoing Dirichlet-to-Neumann map,
+when it is well defined, has the form
+\[
+  \Lambda_{\mathrm{out}}^+:
+  H^{1/2}(\Gamma_+)\to H^{-1/2}(\Gamma_+),
+  \qquad
+  D^+\mapsto N^+ .
+\]
+An analogous map may be written for the negative half-lead.  The exterior PDE
+alone does not define this map; one must impose a radiation, admissibility, or
+limiting absorption condition to select the exterior branch.
+
+The implementation keeps the Cauchy trace condition in subspace form:
+\[
+  \begin{bmatrix}
+  D^\pm\\
+  N^\pm
+  \end{bmatrix}
+  \in
+  E_{\mathrm{out}}^\pm .
+\]
+If the selected subspace is a graph over its Dirichlet projection, then
+\[
+  N^\pm=\Lambda_{\mathrm{out}}^\pm D^\pm .
+\]
+Near resonances, thresholds, or points where this projection loses rank, forming
+an explicit \(\Lambda_{\mathrm{out}}^\pm\) can be ill-conditioned.  The
+Cauchy-subspace form avoids this unnecessary graph requirement and matches the
+data naturally produced by the Bloch eigenproblem.
+
+For forced problems, uniqueness is expected only away from resonances and
+eigenvalues.  For homogeneous eigenvalue problems, a nontrivial admissible
+nullspace is the target.  Limiting absorption, for example replacing \(k\) by
+\(k+\ii\varepsilon\) with \(\varepsilon>0\), can regularize mode selection and
+half-guide solution branches, but it should not be confused with changing the
+final lossless eigenvalue problem.
+
+\subsection{Center-cell trace matching formulation}
+
+In the center background region, the homogeneous Rayleigh part is written
+\[
+  u_h(x,y)
+  =
+  \sum_{m=-M}^{M}
+  a_m\ee^{\ii\gamma_m(x-X_-)}\psi_m(y)
+  +
+  \sum_{m=-M}^{M}
+  b_m\ee^{-\ii\gamma_m(x-X_-)}\psi_m(y).
+\]
+The vectors \(a,b\in\CC^K\) are local center-cell right-going and left-going
+Rayleigh coefficients.  They are not positive and negative lead indices.
+
+Let
+\[
+  E=\diag(\ee^{\ii\gamma_mL_0}),
+  \qquad
+  L_0=X_+-X_-,
+  \qquad
+  \GammaR=\diag(\gamma_m).
+\]
+The center-cell outward-normal traces of \(u_h\) are
+\[
+  D_h^- = a+b,
+  \qquad
+  N_h^- = -\ii\GammaR(a-b),
+\]
+and
+\[
+  D_h^+ = Ea+E^{-1}b,
+  \qquad
+  N_h^+ = \ii\GammaR(Ea-E^{-1}b).
+\]
+
+The exterior center-cell field and interior obstacle field are represented as
+\[
+  u_e=u_h+u_s^e,
+  \qquad
+  u_i=u_s^i .
+\]
+With the density convention
+\[
+  \eta=
+  \begin{bmatrix}
+  \tau\\
+  -\sigma
+  \end{bmatrix},
+\]
+the center obstacle transmission condition gives the forced Muller row
+\[
+  \Aqp\eta+H_\Sigma^a a+H_\Sigma^b b=0 .
+\]
+The matrices \(H_\Sigma^a,H_\Sigma^b\) are the Cauchy data on
+\(\Sigma=\partial\Omega_0\) of the center homogeneous Rayleigh basis.
+
+The center density produces outgoing Rayleigh coefficients at the ports:
+\[
+  s^- = F_-\eta,
+  \qquad
+  s^+ = F_+\eta .
+\]
+Thus
+\[
+  D_s^- = F_-\eta,
+  \qquad
+  N_s^- = \ii\GammaR F_-\eta,
+\]
+and
+\[
+  D_s^+ = F_+\eta,
+  \qquad
+  N_s^+ = \ii\GammaR F_+\eta .
+\]
+The same \(+\ii\GammaR\) factor appears on both sides because the left outgoing
+Rayleigh factor has \(\partial_x=-\ii\gamma_m\), while the left port outward
+normal is \(-e_x\).
+
+The port matching equations are
+\[
+  D_h^\pm+D_s^\pm
+  =
+  \Din^\pm p_{\mathrm{in}}^\pm+\Dout^\pm r^\pm,
+\]
+\[
+  N_h^\pm+N_s^\pm
+  =
+  \Nin^\pm p_{\mathrm{in}}^\pm+\Nout^\pm r^\pm .
+\]
+With
+\[
+  x=
+  \begin{bmatrix}
+  \eta\\
+  a\\
+  b\\
+  r^-\\
+  r^+
+  \end{bmatrix},
+\]
+the coupled matrix is
+\[
+  \Atr
+  =
+  \begin{bmatrix}
+  \Aqp & H_\Sigma^a & H_\Sigma^b & 0 & 0\\
+  F_- & I & I & -\Dout^- & 0\\
+  \ii\GammaR F_- & -\ii\GammaR & \ii\GammaR & -\Nout^- & 0\\
+  F_+ & E & E^{-1} & 0 & -\Dout^+\\
+  \ii\GammaR F_+ & \ii\GammaR E & -\ii\GammaR E^{-1} & 0 & -\Nout^+
+  \end{bmatrix}.
+\]
+For forced lead scattering,
+\[
+  \Atr x=b_{\mathrm{in}},
+\]
+where
+\[
+  b_{\mathrm{in}}
+  =
+  \begin{bmatrix}
+  0\\
+  \Din^-p_{\mathrm{in}}^-\\
+  \Nin^-p_{\mathrm{in}}^-\\
+  \Din^+p_{\mathrm{in}}^+\\
+  \Nin^+p_{\mathrm{in}}^+
+  \end{bmatrix}.
+\]
+For the eigenvalue or TEP-type workflow, one uses \(\Atr x=0\).
+
+\subsection{Dimension count and center homogeneous coefficients}
+
+Let \(N=N_{\mathrm{tot}}\) be the number of boundary quadrature nodes on
+\(\Sigma\).  Then \(\eta\in\CC^{2N}\).  The BIE/transmission row contributes
+\(2N\) equations.  Each port contributes \(K\) Dirichlet equations and \(K\)
+Neumann equations, so the two ports contribute \(4K\) equations.  The total
+number of equations is
+\[
+  2N+4K .
+\]
+The unknowns are
+\[
+  \eta\in\CC^{2N},
+  \qquad
+  a,b\in\CC^K,
+  \qquad
+  r^\pm\in\CC^{K_{\mathrm{out}}^\pm}.
+\]
+The total number of unknowns is
+\[
+  2N+2K+K_{\mathrm{out}}^-+K_{\mathrm{out}}^+ .
+\]
+The matrix is square when
+\[
+  K_{\mathrm{out}}^-+K_{\mathrm{out}}^+=2K .
+\]
+In a non-degenerate lossless second-order setting, one expects
+\[
+  K_{\mathrm{out}}^\pm\approx K .
+\]
+This is a diagnostic, not an unconditional theorem.  Deviations may indicate
+unit-circle propagating modes, band edges, grazing Rayleigh orders, mode
+collisions, thresholding issues, or insufficient Rayleigh truncation.
+
+The center homogeneous coefficients \(a,b\) are required.  The density
+\(\eta\) represents the scattered correction generated by the center inclusion;
+it does not span the full homogeneous solution space in the center cell.  If
+\(a,b\) are omitted, the port matching system is generally overdetermined and
+does not represent the intended center-cell solution class.

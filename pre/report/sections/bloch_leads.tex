@@ -1,0 +1,175 @@
+% bloch_leads.tex
+%
+% Purpose:
+%   Describe the one-cell scattering matrix, Bloch generalized eigenproblem, and
+%   incoming/outgoing trace selection for the periodic half-leads.
+%
+% Main algorithm:
+%   A lead-cell scattering matrix maps incoming Rayleigh amplitudes to outgoing
+%   Rayleigh amplitudes.  The Bloch condition turns this map into a generalized
+%   eigenproblem whose selected eigenspaces define admissible trace subspaces.
+%
+% Based on:
+%   notes/theory/bloch_mode.md and notes/theory/mode_selection.md.
+%
+% Main changes:
+%   The derivation is written in report form and tied directly to the port
+%   trace convention used by the center-cell matrix.
+%
+% Numerical goal:
+%   Explain how D_out^\pm and N_out^\pm are obtained and why they encode the
+%   exterior half-lead condition.
+
+\section{Periodic Lead Cells and Bloch Trace Subspaces}
+
+\subsection{One-cell scattering matrix}
+
+For a single lead cell with left wall \(x=X_L\) and right wall \(x=X_R\), write
+local Rayleigh amplitudes as \(a^L,b^L,a^R,b^R\), where \(a\) denotes a
+right-going local Rayleigh amplitude and \(b\) denotes a left-going local
+Rayleigh amplitude.  The finite-dimensional scattering matrix is
+\[
+  \begin{bmatrix}
+  b^L\\
+  a^R
+  \end{bmatrix}
+  =
+  S_{\mathrm{cell}}
+  \begin{bmatrix}
+  a^L\\
+  b^R
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  R_L & T_{R\to L}\\
+  T_{L\to R} & R_R
+  \end{bmatrix}
+  \begin{bmatrix}
+  a^L\\
+  b^R
+  \end{bmatrix}.
+\]
+In the present code organization, this object is assembled by the Rayleigh
+channel builder and scattering-matrix routine in the \texttt{+bloch} package,
+together with the boundary integral assembly routines used inside them.
+
+The Bloch condition for a multiplier \(\lambda\) is
+\[
+  a^R=\lambda a^L,
+  \qquad
+  b^R=\lambda b^L .
+\]
+Setting \(a=a^L\) and \(b=b^L\), the scattering relation gives
+\[
+  b=R_La+\lambda T_{R\to L}b,
+  \qquad
+  \lambda a=T_{L\to R}a+\lambda R_Rb .
+\]
+Equivalently,
+\[
+  \Asc z=\lambda \Bsc z,
+  \qquad
+  z=\begin{bmatrix}a\\ b\end{bmatrix},
+\]
+with
+\[
+  \Asc=
+  \begin{bmatrix}
+  -R_L&I\\
+  T_{L\to R}&0
+  \end{bmatrix},
+  \qquad
+  \Bsc=
+  \begin{bmatrix}
+  0&T_{R\to L}\\
+  I&-R_R
+  \end{bmatrix}.
+\]
+This is the generalized eigenproblem solved by the Bloch-mode module.
+
+\subsection{Trace matrices}
+
+Given a Bloch eigenpair \((\lambda_j,z_j)\), the wall traces are computed in
+Rayleigh coordinates.  On the cell left wall,
+\[
+  D_L(:,j)=a_j^L+b_j^L,
+  \qquad
+  N_L(:,j)=\ii\GammaR(a_j^L-b_j^L),
+\]
+where
+\[
+  \GammaR=\diag(\gamma_m) .
+\]
+The right wall traces satisfy
+\[
+  D_R(:,j)=\lambda_jD_L(:,j),
+  \qquad
+  N_R(:,j)=\lambda_jN_L(:,j).
+\]
+Here \(N_L,N_R\) denote \(\partial_x u\) trace coefficients on a lead cell wall,
+not yet the outward-normal derivatives of the center cell.  The sign conversion
+is made when the mode is attached to \(\Gamma_-\) or \(\Gamma_+\).
+
+\subsection{Outgoing trace selection}
+
+For the positive half-lead, the center port \(\Gamma_+\) touches the left wall
+of a positive lead cell, and outgoing decay as \(x\to+\infty\) corresponds, away
+from unit-circle complications, to
+\[
+  |\lambda_j|<1 .
+\]
+Thus
+\[
+  D_{\mathrm{out}}^+=D_L(:,\mathcal I^+),
+  \qquad
+  N_{\mathrm{out}}^+=N_L(:,\mathcal I^+),
+  \qquad
+  \mathcal I^+=\{j:|\lambda_j|<1\}.
+\]
+
+For the negative half-lead, the center port \(\Gamma_-\) touches the right wall
+of a negative lead cell, and outgoing decay as \(x\to-\infty\) corresponds to
+\[
+  |\lambda_j|>1 .
+\]
+Since the center-cell outward normal on \(\Gamma_-\) is \(-e_x\), the Neumann
+trace has an additional sign:
+\[
+  D_{\mathrm{out}}^-=D_R(:,\mathcal I^-),
+  \qquad
+  N_{\mathrm{out}}^-=-N_R(:,\mathcal I^-),
+  \qquad
+  \mathcal I^-=\{j:|\lambda_j|>1\}.
+\]
+
+When \(k\) is real and propagating Bloch modes are present, some multipliers may
+lie on or close to the unit circle.  Then magnitude alone does not decide
+incoming versus outgoing.  A typical flux diagnostic is
+\[
+  \mathcal F_x
+  =
+  \operatorname{Im}\int_0^d \overline{u(y)}\,\partial_xu(y)\,\dd y
+  \approx
+  \operatorname{Im}\sum_m \overline{D_m}N_m .
+\]
+In early numerical experiments it is often more robust to work in a band gap, or
+to use \(k+\ii\varepsilon\) with \(\varepsilon>0\), so that the unit-circle
+ambiguity is moved away from the selection threshold.
+
+\subsection{What the selected subspace means}
+
+Any arbitrary basis of a \(K\)-dimensional subspace of \(\CC^{2K}\) can close a
+finite algebraic system.  It will not, in general, represent the radiation
+condition of the periodic half-lead.  The physical content is the subspace
+\(\Eout^\pm\) selected by the Bloch problem and the outgoing/admissible rule:
+\[
+  \Eout^\pm
+  =
+  \operatorname{range}
+  \begin{bmatrix}
+  \Dout^\pm\\
+  \Nout^\pm
+  \end{bmatrix}.
+\]
+After this subspace is selected, its columns may be orthonormalized or
+well-conditioned by QR or SVD without changing the exterior condition.

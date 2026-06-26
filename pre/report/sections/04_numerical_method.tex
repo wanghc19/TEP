@@ -1,0 +1,264 @@
+% 04_numerical_method.tex
+%
+% Purpose:
+%   Collect the numerical approximation, implementation components, diagnostics,
+%   and computational workflow in one paper-style section.
+%
+% Main algorithm:
+%   Summarizes Nyström/Kress discretization, proxy/MFS quasiperiodic Green
+%   functions, density-to-Rayleigh extractors, mode-selection diagnostics, and
+%   the end-to-end assembly workflow.
+%
+% Based on:
+%   sections/discretization.tex, sections/truncation_and_diagnostics.tex, and
+%   sections/numerical_workflow.tex from the first report draft.
+%
+% Main changes:
+%   Moves diagnostics and workflow under the numerical method section rather
+%   than leaving them as separate top-level sections.
+%
+% Numerical goal:
+%   Identify the numerical parameters and checks needed before experiments are
+%   considered reliable.
+
+\section{Numerical Method and Implementation}
+
+\subsection{Boundary integral discretization and Kress quadrature}
+
+The inclusion boundaries are assumed smooth and are discretized by a periodic
+Nystr\"om method.  For a \(2\pi\)-periodic boundary parameter \(t\), the nodes are
+\[
+  t_j=\frac{2\pi j}{N},
+  \qquad
+  j=0,\ldots,N-1,
+\]
+with even \(N\).  Smooth integral blocks use the periodic trapezoid rule, which
+is spectrally accurate for smooth periodic data.
+
+Logarithmic singularities are handled by Kress product quadrature
+\cite{Kress1991,Kress2014}.  The kernel is split as
+\[
+  k(t,s)
+  =
+  \phi(t,s)\log\!\left(4\sin^2\frac{t-s}{2}\right)
+  +
+  \psi(t,s),
+\]
+where \(\phi\) and \(\psi\) are smooth.  The Kress weights for the singular
+factor are
+\[
+  R_j^{(N/2)}(t)
+  =
+  -\frac{4\pi}{N}
+  \left[
+  \sum_{n=1}^{N/2-1}\frac{1}{n}\cos(n(t_j-t))
+  +
+  \frac{1}{N}\cos\!\left(\frac{N}{2}(t_j-t)\right)
+  \right].
+\]
+The corresponding Nystr\"om entries have the form
+\[
+  A_{ij}=R_{ij}\phi(t_i,t_j)+h\psi(t_i,t_j),
+  \qquad
+  h=\frac{2\pi}{N}.
+\]
+For the Muller matrix, hypersingular differences such as
+\[
+  T^{(k_e)}-T^{(k_i)}
+\]
+are treated in a cancellation-aware Kress form.  The leading singular parts
+cancel to a lower-order structure, but the implementation still needs the
+correct split and diagonal treatment.
+
+\subsection{Quasiperiodic Green functions and proxy periodization}
+
+The quasiperiodic Green function is one of the delicate numerical parts of the
+method.  In a one-direction periodic open waveguide, away from thresholds, a
+representative Rayleigh expansion is
+\[
+  G_{\mathrm{QP}}^{(k)}((x,y),(x_s,y_s))
+  =
+  \frac{\ii}{2d}
+  \sum_{m\in\mathbb Z}
+  \frac{1}{\gamma_m}
+  \ee^{\ii\beta_m(y-y_s)}
+  \ee^{\ii\gamma_m|x-x_s|}.
+\]
+Direct lattice sums can be slowly convergent or singular near exceptional
+parameters.  The codebase therefore uses MFS/proxy ideas to approximate
+quasiperiodic corrections.  A typical proxy representation has the form
+\[
+  G_{\mathrm{QP}}^{(k)}(x,y)
+  \approx
+  G^{(k)}(x,y)
+  +
+  \sum_{\ell=1}^{P}q_\ell(y)\,G^{(k)}(x,z_\ell),
+\]
+where \(G^{(k)}\) is the free-space singular Green function and the proxy
+sources \(z_\ell\) lie outside the physical cell.  The free-space singular part
+is retained; the proxy correction is a homogeneous field inside the cell.  This
+strategy is flexible, but its source geometry, check points, and truncation
+parameters require convergence checks.  It should be understood alongside other
+quasiperiodic integral representations such as those discussed by Barnett and
+Greengard \cite{BarnettGreengard2010}.
+
+\subsection{Far-field extractors}
+
+The matrices \(F_\pm\) map the center boundary density to outgoing Rayleigh
+coefficients at the ports:
+\[
+  s^- = F_-\eta,
+  \qquad
+  s^+ = F_+\eta .
+\]
+They are not additional unknowns.  At the continuous level, the coefficient
+functions come from the Rayleigh expansion of \(G_{\mathrm{QP}}\).  For example,
+for a source point \(z=(z_x,z_y)\) and right reference wall \(X_R\),
+\[
+  g_m^R(z)
+  =
+  \frac{\ii}{2\sqrt d\,\gamma_m}
+  \exp[-\ii\beta_m z_y-\ii\gamma_m(z_x-X_R)] .
+\]
+The double-layer source-normal contribution has coefficient
+\[
+  -\ii(\gamma_m\nu_x+\beta_m\nu_y)g_m^R(z),
+\]
+and the single-layer contribution is proportional to \(-g_m^R(z)\) under the
+current \(\eta=[\tau;-\sigma]\) convention.  The left extractor is analogous
+with the left-going Rayleigh phase and the corresponding source-normal
+derivative formula.
+
+\subsection{Mode selection, truncation, and diagnostics}
+
+For real \(k\), homogeneous Rayleigh orders satisfy
+\[
+  \gamma_m^2=k^2-\beta_m^2 .
+\]
+Thus the Rayleigh order \(m\) decays in an open homogeneous direction exactly
+when
+\[
+  k<|\beta_m|.
+\]
+In the simple one-dimensional prototype with \(0\le\beta\le\pi/d\),
+\[
+  \text{all Rayleigh orders decay}
+  \iff
+  k<\min_m|\beta_m|=\beta .
+\]
+Periodic leads require Bloch multiplier selection instead; admissibility is
+selected through
+\[
+  \Asc(k,\beta)z=\lambda\Bsc(k,\beta)z,
+\]
+not through a scalar Rayleigh light-cone formula.
+
+When \(k\) is real and propagating Bloch modes are present, some multipliers may
+lie on or near the unit circle.  Magnitude alone then does not decide incoming
+versus outgoing.  A typical flux diagnostic is
+\[
+  \mathcal F_x
+  =
+  \operatorname{Im}\int_0^d \overline{u(y)}\,\partial_xu(y)\,\dd y
+  \approx
+  \operatorname{Im}\sum_m \overline{D_m}N_m .
+\]
+In early experiments it is often more robust to work in a band gap, or to use
+\(k+\ii\varepsilon\) with \(\varepsilon>0\), so that unit-circle ambiguity is
+moved away from the selection threshold.
+
+The Rayleigh truncation parameter \(M\) controls trace resolution and the amount
+of evanescent coupling retained between separated objects and ports.  For large
+\(|m|\), real \(k\), and fixed \(\beta\),
+\[
+  \gamma_m\approx \ii|\beta_m|,
+  \qquad
+  |\beta_m|\sim\frac{2\pi|m|}{d}.
+\]
+An evanescent component crossing an open distance \(\ell\) has the heuristic
+decay factor
+\[
+  \ee^{-\operatorname{Im}\gamma_m\ell}.
+\]
+If each inclusion is separated from its nearest cell wall by at least
+\(\delta\), then the gap between adjacent inclusions across a port is roughly at
+least \(2\delta\), giving the practical coupling heuristic
+\[
+  \ee^{-2\operatorname{Im}\gamma_m\delta}.
+\]
+This is a useful guideline for choosing \(M\), but it is not a rigorous global
+error estimate.
+
+Changing \(M\) changes the truncated scattering matrix and therefore the Bloch
+generalized eigenproblem.  Convergence should be checked not only for Rayleigh
+tails but also for multipliers, outgoing subspaces, singular values, and fields.
+Useful diagnostics include:
+\begin{itemize}
+  \item the selected counts \(K_{\mathrm{out}}^\pm\), which should be near \(K\)
+  in non-degenerate band-gap or regularized cases;
+  \item the conditioning and rank of
+  \[
+    \Phi_{\mathrm{all}}^\pm
+    =
+    \begin{bmatrix}
+    D_{\mathrm{in}}^\pm & D_{\mathrm{out}}^\pm\\
+    N_{\mathrm{in}}^\pm & N_{\mathrm{out}}^\pm
+    \end{bmatrix};
+  \]
+  \item principal angles or projector differences between \(E_{\mathrm{out}}\)
+  at successive \(M\) values;
+  \item convergence of \(\sigmin(\Atr(k,\beta))\);
+  \item BIE row residuals, port matching residuals, and field-plot convergence.
+\end{itemize}
+
+\subsection{Implementation components}
+
+The present code organization separates the numerical roles into packages and
+driver scripts:
+\[
+\begin{array}{ll}
+\texttt{+geom} & \text{geometry construction and cached contour data},\\
+\texttt{+kernel} & \text{quasiperiodic Green, MFS/proxy, and Kress kernel data},\\
+\texttt{+op} & \text{Muller matrix assembly, including }\texttt{construct\_A\_QP},\\
+\texttt{+bloch} & \text{Rayleigh channels, scattering matrices, modes, traces, selection},\\
+\texttt{+viz} & \text{geometry and field visualization helpers}.
+\end{array}
+\]
+The scattering workflows are represented by scripts such as
+\path|scat_ld_lead_in.m|, \path|scat_edc_lead_in.m|, and
+\path|scat_edc_ps.m|.  Eigenvalue or transmission-eigenvalue scans are
+represented by scripts with the \path|tep_| prefix.  These names are
+implementation anchors rather than a fixed API specification.
+
+\subsection{Computational workflow}
+
+A typical computation proceeds as follows.
+\begin{enumerate}
+  \item Choose the geometry, transverse quasiperiodicity \(\beta\), and either a
+  fixed \(k\) or a scan range for \(k\).
+  \item Build the boundary discretization for the center obstacle and, when
+  needed, the representative lead obstacles.
+  \item Construct the quasiperiodic Green or proxy/MFS data required by the
+  exterior boundary integral operators.
+  \item Assemble the center Muller matrix \(\Aqp\) and the center homogeneous
+  trace matrices \(H_\Sigma^a,H_\Sigma^b\).
+  \item Build the Rayleigh channel data
+  \[
+    \beta_m,\qquad \gamma_m,\qquad E=\diag(\ee^{\ii\gamma_mL_0}).
+  \]
+  \item Assemble each lead-cell scattering matrix \(S_{\mathrm{cell}}^\pm\) and
+  solve \(\Asc z=\lambda\Bsc z\).
+  \item Convert Bloch eigenvectors to wall Cauchy traces and select incoming and
+  outgoing half-lead trace subspaces.
+  \item Build the density far-field extractors \(F_-\) and \(F_+\), and assemble
+  the global trace-matching matrix \(\Atr\).
+  \item For forced scattering, choose valid incoming coefficients
+  \(p_{\mathrm{in}}^\pm\) and solve \(\Atr x=b_{\mathrm{in}}\).
+  \item For an eigenvalue or TEP-type scan, compute
+  \[
+    \sigmin(\Atr(k,\beta))
+  \]
+  across the parameter range and refine candidate dips.
+  \item Validate convergence in \(N_{\mathrm{tot}}\), \(M\), proxy parameters,
+  and mode-selection thresholds.
+\end{enumerate}

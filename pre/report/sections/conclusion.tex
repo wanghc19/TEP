@@ -1,0 +1,43 @@
+% conclusion.tex
+%
+% Purpose:
+%   Close the first-draft report and identify near-term refinements.
+%
+% Main algorithm:
+%   No algorithm is introduced.  The section summarizes the formulation and
+%   lists open documentation and validation tasks.
+%
+% Based on:
+%   The preceding sections of this report.
+%
+% Main changes:
+%   Provides a modest conclusion suitable for a draft technical note.
+%
+% Numerical goal:
+%   Make clear what should be checked next before treating the report as a
+%   polished paper manuscript.
+
+\section{Conclusion}
+
+This report has organized the current Transmission Eigenvalue / Bloch-mode /
+line-defect formulation into a single technical narrative.  The main numerical
+structure is a center-cell boundary integral equation coupled to compact port
+matching conditions.  The half-lead exterior condition is imposed by requiring
+the port Cauchy data to lie in Bloch-selected incoming or outgoing trace
+subspaces, rather than by explicitly forming a full periodic half-guide
+Dirichlet-to-Neumann operator.
+
+The formulation is deliberately practical.  It identifies which pieces are
+continuous modeling assumptions, which pieces are finite-dimensional
+approximations, and which choices are numerical heuristics that need convergence
+checks.  The most important next steps are to insert validated numerical
+examples, record parameter choices for stable scans, and compare successive
+refinements of \(N_{\mathrm{tot}}\), \(M\), proxy data, and mode-selection
+thresholds.
+
+Several details remain draft-level.  The exact treatment of unit-circle Bloch
+modes should be documented more fully once the energy-flux selection is settled.
+The bibliography metadata should be checked against the final source PDFs or
+publisher records.  Finally, the report should eventually include numerical
+figures showing singular-value scans, field plots, and convergence tables for
+representative line-defect configurations.

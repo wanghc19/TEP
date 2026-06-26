@@ -1,0 +1,37 @@
+% 06_conclusion.tex
+%
+% Purpose:
+%   Close the reorganized report and identify the main remaining tasks.
+%
+% Main algorithm:
+%   No algorithm is introduced.  The section summarizes the formulation and the
+%   validation work still needed.
+%
+% Based on:
+%   sections/conclusion.tex from the first report draft.
+%
+% Main changes:
+%   Revises the conclusion to match the new six-section paper organization.
+%
+% Numerical goal:
+%   Clarify what must be completed before the draft becomes a numerical paper.
+
+\section{Conclusion}
+
+This report has organized the current Transmission Eigenvalue / Bloch-mode /
+line-defect formulation into a compact paper-style draft.  The main numerical
+structure is a center-cell boundary integral equation coupled to compact port
+matching conditions.  The periodic half-lead exterior condition is imposed by
+requiring the port Cauchy data to lie in Bloch-selected incoming or outgoing
+trace subspaces, rather than by explicitly forming a full half-guide
+Dirichlet-to-Neumann matrix.
+
+The formulation is practical and finite-dimensional.  It separates continuous
+modeling assumptions from numerical approximations and identifies several
+heuristic choices, especially Rayleigh truncation and mode selection, that need
+convergence checks.
+
+The main remaining tasks are to add numerical experiments, document unit-circle
+mode selection in more detail, verify any unresolved bibliography metadata, and
+insert convergence tables and field plots for representative forced-scattering
+and homogeneous singular-value scans.

@@ -1,0 +1,93 @@
+% trace_spaces.tex
+%
+% Purpose:
+%   Define Rayleigh wall coordinates and distinguish the ambient trace space
+%   from physically admissible incoming/outgoing trace subspaces.
+%
+% Main algorithm:
+%   Introduces the truncated Rayleigh basis and the Cauchy coordinate vectors
+%   D^\pm and N^\pm used throughout the matching system.
+%
+% Based on:
+%   notes/theory/scat_formulation.md and notes/theory/mode_selection.md.
+%
+% Main changes:
+%   The explanatory material is rewritten in English with a compact notation.
+%
+% Numerical goal:
+%   Make explicit what the truncation parameter M controls and what it does not
+%   select physically.
+
+\section{Rayleigh Trace Coordinate Spaces}
+
+On any vertical port \(x=X\), the transverse quasiperiodicity suggests the
+Rayleigh basis
+\[
+  \beta_m=\beta+\frac{2\pi m}{d},
+  \qquad
+  \psi_m(y)=\frac{1}{\sqrt d}\ee^{\ii\beta_m y},
+  \qquad
+  m\in\mathbb Z .
+\]
+The longitudinal Rayleigh wavenumber is
+\[
+  \gamma_m=\sqrt{k^2-\beta_m^2},
+  \qquad
+  \operatorname{Im}\gamma_m\ge 0 .
+\]
+The truncated index set is \(|m|\le M\), and
+\[
+  K=2M+1 .
+\]
+
+For each port \(\Gamma_\pm\), write the Dirichlet and outward-normal derivative
+trace coefficients as
+\[
+  D^\pm\in\CC^K,
+  \qquad
+  N^\pm\in\CC^K .
+\]
+At the continuous level, these are coordinates for Cauchy traces in
+\[
+  H^{1/2}(\Gamma_\pm)\times H^{-1/2}(\Gamma_\pm).
+\]
+After truncation, the ambient coordinate space is
+\[
+  \Tspace_M=\CC_D^K\times\CC_N^K .
+\]
+
+This ambient space is only a coordinate space.  It does not say that an
+arbitrary vector \((D,N)\in\Tspace_M\) is the trace of a physical half-lead
+solution.  Physical incoming and outgoing data lie in subspaces,
+\[
+  \Ein^\pm,\Eout^\pm
+  \subset
+  \CC^K\times\CC^K,
+\]
+selected by the periodic half-lead radiation or admissibility condition.
+
+\subsection{Rayleigh coordinates versus Bloch modes}
+
+The Rayleigh basis is a wall trace coordinate basis.  A Bloch mode is a one-cell
+periodic-lead propagation eigenmode, and in a nonempty periodic cell it is not
+usually a single Rayleigh order.  Its wall trace can still be expanded in the
+Rayleigh basis, which is why the Bloch-selected subspaces can be represented by
+matrices
+\[
+  \begin{bmatrix}
+  \Din^\pm\\
+  \Nin^\pm
+  \end{bmatrix},
+  \qquad
+  \begin{bmatrix}
+  \Dout^\pm\\
+  \Nout^\pm
+  \end{bmatrix}.
+\]
+Local right-going and left-going Rayleigh amplitudes in a center cell are also
+different objects from physical incoming and outgoing half-lead modes.  The
+labels ``right-going'' and ``left-going'' describe the elementary factors
+\(\ee^{\pm \ii\gamma_m x}\) in a homogeneous center region.  Physical incoming
+and outgoing behavior in a periodic half-lead is selected by the Bloch
+multiplier, and, for unit-circle modes, by an energy-flux or limiting absorption
+criterion.

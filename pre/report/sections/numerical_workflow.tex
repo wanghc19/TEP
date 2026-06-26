@@ -1,0 +1,82 @@
+% numerical_workflow.tex
+%
+% Purpose:
+%   Give a practical end-to-end workflow for assembling, solving, and validating
+%   the current trace-subspace formulation.
+%
+% Main algorithm:
+%   Lists the ordered computational steps from geometry selection through
+%   scattering solves or singular-value scans.
+%
+% Based on:
+%   Existing driver scripts and notes/theory/scat_formulation2.md.
+%
+% Main changes:
+%   Converts implementation fragments into a concise checklist suitable for a
+%   technical report.
+%
+% Numerical goal:
+%   Provide a reproducible roadmap for future MATLAB validation runs without
+%   claiming that this report itself executed them.
+
+\section{Numerical Workflow}
+
+A typical computation proceeds as follows.
+
+\begin{enumerate}
+  \item Choose the geometry, transverse quasiperiodicity \(\beta\), and either a
+  fixed \(k\) or a scan range for \(k\).
+
+  \item Build the boundary discretization for the center obstacle and, when
+  needed, the representative lead obstacles.  Select \(N_{\mathrm{tot}}\) and
+  ensure that the quadrature assumptions are compatible with the boundary
+  smoothness.
+
+  \item Construct the quasiperiodic Green or proxy/MFS data required by the
+  exterior boundary integral operators.
+
+  \item Assemble the center Muller matrix \(\Aqp\) and the center homogeneous
+  trace matrices \(H_\Sigma^a,H_\Sigma^b\).
+
+  \item Build the Rayleigh channel data:
+  \[
+    \beta_m,\qquad \gamma_m,\qquad E=\diag(\ee^{\ii\gamma_mL_0}).
+  \]
+
+  \item Assemble each lead-cell scattering matrix \(S_{\mathrm{cell}}^\pm\).
+
+  \item Solve the Bloch generalized eigenproblem
+  \[
+    \Asc z=\lambda\Bsc z
+  \]
+  for each lead.
+
+  \item Convert Bloch eigenvectors to wall Cauchy traces and select incoming and
+  outgoing half-lead trace subspaces.  Apply the negative-port Neumann sign
+  convention when constructing \(N_{\mathrm{out}}^-\).
+
+  \item Build the density far-field extractors \(F_-\) and \(F_+\).
+
+  \item Assemble the global trace-matching matrix \(\Atr\).
+
+  \item For forced scattering, choose valid incoming coefficients
+  \(p_{\mathrm{in}}^\pm\) and solve
+  \[
+    \Atr x=b_{\mathrm{in}} .
+  \]
+
+  \item For an eigenvalue or TEP-type scan, compute
+  \[
+    \sigmin(\Atr(k,\beta))
+  \]
+  across the parameter range and refine candidate dips.
+
+  \item Validate convergence in \(N_{\mathrm{tot}}\), \(M\), proxy parameters,
+  and mode-selection thresholds.  Check BIE residuals, port residuals,
+  outgoing-subspace stability, and field plots.
+\end{enumerate}
+
+This workflow is intentionally modular.  It allows the same lead-cell
+calculation to support either a forced scattering solve or a homogeneous
+singular-value scan, and it separates errors caused by boundary quadrature,
+quasiperiodic periodization, Rayleigh truncation, and Bloch-mode selection.

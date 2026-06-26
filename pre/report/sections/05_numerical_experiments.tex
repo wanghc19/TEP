@@ -1,0 +1,68 @@
+% 05_numerical_experiments.tex
+%
+% Purpose:
+%   Provide a standard paper-style placeholder for numerical experiments that
+%   will be inserted after MATLAB validation.
+%
+% Main algorithm:
+%   No numerical results are reported here.  The section lists planned
+%   validation tests and experiment categories.
+%
+% Based on:
+%   The validation and diagnostics discussion in the existing report draft.
+%
+% Main changes:
+%   Adds a dedicated top-level experiments section without fabricating data,
+%   figures, convergence tables, or numerical claims.
+%
+% Numerical goal:
+%   Reserve space for reproducible experiments in the next revision.
+
+\section{Numerical Experiments}
+
+Numerical experiments will be inserted in the next revision after the MATLAB
+drivers have been run and the outputs have been checked.  No numerical results
+are reported in this draft.
+
+\subsection{Validation tests and limiting cases}
+
+Planned validation tests include an empty or homogeneous lead sanity check, a
+perfect-crystal Bloch-mode recovery test, and limiting cases where the
+line-defect formulation should reduce to a simpler periodic or empty-center
+problem.
+
+% TODO: Insert validated empty-cell and perfect-crystal comparison data.
+
+\subsection{Convergence in boundary and Rayleigh discretizations}
+
+The first convergence tables should vary the boundary discretization
+\(N_{\mathrm{tot}}\), the Rayleigh truncation \(M\), proxy parameters, and
+mode-selection thresholds.  The quantities to track include Bloch multipliers,
+outgoing subspace projector differences, BIE residuals, port residuals, and
+\(\sigmin(\Atr)\).
+
+% TODO: Insert N_tot and M sweeps with residual and singular-value tables.
+
+\subsection{Forced scattering examples}
+
+Forced lead-scattering examples should prescribe incoming data from the selected
+incoming trace subspaces and solve
+\[
+  \Atr x=b_{\mathrm{in}} .
+\]
+The planned outputs are field plots, reflected/transmitted outgoing
+coefficients, and residual checks for the BIE and port equations.
+
+% TODO: Insert forced scattering field plots and coefficient diagnostics.
+
+\subsection{Eigenvalue and singular-value scans}
+
+Eigenvalue or TEP-type examples should scan
+\[
+  \sigmin(\Atr(k,\beta))
+\]
+over selected ranges of \(k\) and \(\beta\), then refine candidate dips.  The
+same candidates should be checked under changes in \(N_{\mathrm{tot}}\), \(M\),
+and proxy parameters before being interpreted as physical modes.
+
+% TODO: Insert singular-value scans and refined candidate tables.

@@ -1,0 +1,72 @@
+% 01_introduction.tex
+%
+% Purpose:
+%   Introduce the line-defect waveguide problem, the constructive trace-subspace
+%   method, and the relation to existing quasiperiodic BIE and periodic
+%   waveguide boundary-condition literature.
+%
+% Main algorithm:
+%   This section is expository.  It states the computational objective and
+%   positions the formulation before the mathematical details are introduced.
+%
+% Based on:
+%   sections/intro.tex from the first report draft and pre/pre1/pre1.tex.
+%
+% Main changes:
+%   Keeps the motivation and literature discussion at the top level while
+%   moving detailed geometry and trace notation to the preliminaries.
+%
+% Numerical goal:
+%   Clarify what the report is meant to support: scattering solves, homogeneous
+%   singular-value scans, and future numerical validation.
+
+\section{Introduction}
+
+This report develops a constructive numerical realization for periodic
+line-defect waveguide scattering and eigenvalue-type calculations.  The model is
+a scalar Helmholtz transmission problem in a two-dimensional geometry that is
+quasiperiodic in the transverse direction and open through periodic half-leads
+in the longitudinal direction.  The two main workflows are forced lead
+scattering, where incoming Bloch data are prescribed from one or both leads, and
+homogeneous eigenvalue or transmission-eigenvalue-type searches, where a
+nontrivial admissible null vector is sought.
+
+The formulation combines several standard numerical ingredients in a compact
+port framework: boundary integral equations on material interfaces, artificial
+quasiperiodic ports, Rayleigh coordinates for wall Cauchy traces, one-cell
+scattering computations in the periodic leads, Bloch-mode selection of
+incoming/outgoing trace subspaces, and a center-cell matching system.  Its main
+point is not to construct a new abstract Dirichlet-to-Neumann theory for
+periodic half-guides.  Instead, it builds the finite-dimensional Cauchy trace
+subspaces needed by the current line-defect geometry and imposes those
+subspaces directly in the global matrix.
+
+The distinction between coordinates and physics is central.  Rayleigh modes form
+a convenient Fourier basis for traces on a vertical port, but an arbitrary
+Rayleigh Cauchy vector need not be the trace of an admissible half-lead solution.
+Physical incoming and outgoing data are identified by a lead-cell Bloch or
+scattering computation, followed by a mode-selection rule.  Once the admissible
+subspace has been selected, any numerically well-conditioned basis of that same
+subspace may be used in the coupled system.
+
+\subsection{Relation to existing methods}
+
+The present formulation is closely related to several established strands of
+work.  Boundary integral methods for quasiperiodic band-structure calculations,
+including the numerical difficulties associated with quasiperiodic Green
+functions and empty-cell resonances, are represented by the work of Barnett and
+Greengard \cite{BarnettGreengard2010}.  Exact boundary conditions for locally
+perturbed periodic waveguides are developed by Joly, Li, and Fliss
+\cite{JolyLiFliss2006}, where half-guide exterior conditions are described
+through periodic-guide Dirichlet-to-Neumann and related operators.  Coatl\'even
+\cite{Coatleven2012} treats Helmholtz problems in periodic media with line
+defects using a combination of Floquet--Bloch transforms,
+Lippmann--Schwinger ideas, and Dirichlet-to-Neumann maps.
+
+The present formulation differs from these approaches in emphasis.  It is a
+compact-port finite-dimensional trace-space realization tailored to the current
+boundary integral implementation.  It should not be read as replacing the full
+functional-analytic half-guide theory.  Rather, it records how Rayleigh wall
+coordinates, one-cell Bloch/scattering calculations, and center-cell boundary
+integral equations are assembled into a practical matrix formulation whose
+truncation and mode-selection choices can be tested numerically.

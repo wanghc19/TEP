@@ -1,0 +1,67 @@
+% dtn_relation.tex
+%
+% Purpose:
+%   Relate the Cauchy trace-subspace condition to periodic half-guide
+%   Dirichlet-to-Neumann maps and limiting absorption ideas.
+%
+% Main algorithm:
+%   No new algorithm is introduced.  The section explains when a selected
+%   Cauchy subspace can be viewed as a graph N=\Lambda D.
+%
+% Based on:
+%   notes/theory/scat_formulation.md, notes/theory/mode_selection.md, and the
+%   literature on exact boundary conditions for periodic waveguides.
+%
+% Main changes:
+%   This section separates the continuous exterior problem from the
+%   finite-dimensional implementation choice.
+%
+% Numerical goal:
+%   Make clear why the code imposes a Cauchy subspace rather than explicitly
+%   forming a half-guide DtN matrix.
+
+\section{Relation to Dirichlet-to-Neumann Conditions}
+
+At the continuous level, a positive half-lead outgoing Dirichlet-to-Neumann map,
+when it is well defined, has the form
+\[
+  \Lambda_{\mathrm{out}}^+:
+  H^{1/2}(\Gamma_+)\to H^{-1/2}(\Gamma_+),
+  \qquad
+  D^+\mapsto N^+ .
+\]
+An analogous map may be written for the negative half-lead.  The exterior PDE
+alone does not define this map.  It must be supplemented by a radiation,
+admissibility, or limiting absorption condition that selects the exterior
+branch.
+
+For forced problems, uniqueness is expected only away from resonances and
+eigenvalues.  For homogeneous eigenvalue problems, the nontrivial admissible
+nullspace is the desired object rather than a pathology to remove.  In the exact
+boundary condition framework of Joly, Li, and Fliss \cite{JolyLiFliss2006}, an
+absorption parameter \(\varepsilon>0\) can be used as a regularization or
+limiting absorption device to construct a unique half-guide solution and a
+regularized operator \(\Lambda_\varepsilon\).  This should not be confused with
+changing the final lossless eigenvalue problem; it is a way to define or
+approximate the physical branch.
+
+The implementation in this project keeps the Cauchy trace condition in subspace
+form:
+\[
+  \begin{bmatrix}
+  D^\pm\\
+  N^\pm
+  \end{bmatrix}
+  \in
+  \Eout^\pm .
+\]
+If the selected subspace is a graph over the Dirichlet coordinates, then one can
+write
+\[
+  N^\pm=\Lambda_{\mathrm{out}}^\pm D^\pm .
+\]
+However, explicitly forming \(\Lambda_{\mathrm{out}}^\pm\) may be ill-conditioned
+or impossible near points where the Dirichlet projection of the Cauchy subspace
+loses rank.  The Cauchy-subspace form avoids this unnecessary graph
+requirement, and it matches the data naturally produced by the Bloch
+eigenproblem.
