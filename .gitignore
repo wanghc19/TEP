@@ -1,5 +1,32 @@
+# macOS
 .DS_Store
+
+# Figures and rendered documents
 *.pdf
 *.jpg
 *.png
+*.jpeg
+
+# MATLAB generated / local artifacts
+*.asv
 *.mat
+*.mexmaca64
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.blg
+
+# Benchmark generated outputs
+benchmark/output/
+
+# Scratch files
+waveguide_1d/tmp.m
+tmp_*.m
