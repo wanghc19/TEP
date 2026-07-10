@@ -25,7 +25,8 @@ function [u, aux] = qpgreen_ewald_xperiodic_bench(src, trg, pars1, pars2)
 %
 % Main changes:
 %   This benchmark-only version computes values only, accepts many target
-%   points in one call, uses MATLAB/Octave's complex erfc directly, and
+%   points in one call, uses the repository Faddeeva_erfc MEX for complex
+%   complementary error functions, and
 %   returns NaN at singular source-image points instead of a misleading
 %   finite value.
 %
@@ -96,7 +97,7 @@ function [u, aux] = qpgreen_ewald_xperiodic_bench(src, trg, pars1, pars2)
   aux.min_abs_gamma = min_abs_gamma;
   aux.cutoff_warning = cutoff_warning;
   aux.branch_note = 'gamma_m = sqrt(beta_m^2-k^2), propagating branch gamma_m = -1i*sqrt(k^2-beta_m^2)';
-  aux.erfc_note = 'Uses built-in erfc for complex arguments.';
+  aux.erfc_note = 'Uses Faddeeva_erfc for complex complementary error functions.';
 end
 
 %% ==================== Ewald matrix helper ====================
@@ -109,8 +110,8 @@ function spectral_value = LOCAL_spectral_sum(dx_periodic, dy_transverse, d, a, .
 
   exp_plus = exp(gamma_m * dy_transverse);
   exp_minus = exp(-gamma_m * dy_transverse);
-  erfc_plus = erfc(arg_plus);
-  erfc_minus = erfc(arg_minus);
+  erfc_plus = LOCAL_erfc(arg_plus);
+  erfc_minus = LOCAL_erfc(arg_minus);
 
   phase = exp(1i * beta_m * dx_periodic);
   spectral_value = 0.25 * sum(phase .* (exp_plus .* erfc_plus + ...
@@ -151,4 +152,11 @@ function gamma_m = LOCAL_ewald_gamma(k, beta_m)
   idx_propagating = diff_sq < 0;
   gamma_m(idx_evanescent) = sqrt(diff_sq(idx_evanescent));
   gamma_m(idx_propagating) = -1i * sqrt(-diff_sq(idx_propagating));
+end
+
+%% ==================== Complex erfc helper ====================
+% This helper uses the repository MEX wrapper for complex arguments.
+
+function val = LOCAL_erfc(z)
+  val = Faddeeva_erfc(z);
 end
