@@ -376,7 +376,7 @@
 \section{Linton Table Benchmarks}
 
 \begin{frame}{Benchmark Against Linton Tables 2--4}
-  \small
+  \scriptsize
   Linton's Tables 2--4 give 10-digit reference values for the
   quasi-periodic Green function at
   \[
@@ -394,9 +394,48 @@
     \]
   \end{block}
 
-  \vspace{0.2em}
   We compare the project MFS qpgreen with an x-periodic Ewald benchmark.
   The Linton printed value is kept as an external sign-convention check.
+
+  \begin{block}{MFS parameters used below}
+    Table-4-tuned setting:
+    \(H=0.6,\ M=16,\ N_{\mathrm p}=160,\ \mathrm{proxy\ dist}=0.15,\)
+    and \(N_{\mathrm{side}}=N_{\mathrm{top}}=160\).
+  \end{block}
+\end{frame}
+
+\begin{frame}{MFS Parameters for the Linton Table Run}
+  \scriptsize
+  The following MFS parameters are used for all three Linton table cases in
+  the next slides.  Only \(k\) and \(\beta\) change from table to table.
+
+  \vspace{0.1em}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.04}
+  \begin{tabular}{lll}
+    \hline
+    parameter & value & role\\
+    \hline
+    \(d\) & \(1\) & x-period\\
+    \(H\) & \(0.6\) & half-height of the matching box \( [-d/2,d/2]\times[-H,H]\)\\
+    \(M\) & \(16\) & Rayleigh half-truncation, \(m=-M,\ldots,M\)\\
+    \(2M+1\) & \(33\) & Rayleigh modes above and below the box\\
+    \(N_{\mathrm p}\) & \(160\) & total proxy sources on the enclosing proxy box\\
+    proxy distance & \(0.15\) & offset from \(\Czero\) to the proxy box\\
+    \(N_{\mathrm{side}}\) & \(160\) & collocation points on each left/right wall\\
+    \(N_{\mathrm{top}}\) & \(160\) & collocation points on each top/bottom boundary\\
+    \hline
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.1em}
+  Unknowns:
+  \(N_{\mathrm p}+2(2M+1)=160+66=226\).
+  Collocation equations:
+  \(2N_{\mathrm{side}}+4N_{\mathrm{top}}=320+640=960\).
+  The side equations enforce left/right value and \(\partial_x\)
+  quasiperiodicity; the top/bottom equations enforce value and
+  \(\partial_y\) Rayleigh matching.
 \end{frame}
 
 \begin{frame}{Accuracy and Sign Convention}
@@ -415,9 +454,9 @@
     Table & \(kd\) & \(\beta d\) & \(|G_{\mathrm{MFS}}-G_{\mathrm{Ewald}}|\)
       & relative error\\
     \hline
-    2 & \(2\) & \(\sqrt2\) & \(1.3868{\times}10^{-8}\) & \(2.3985{\times}10^{-8}\)\\
-    3 & \(10\) & \(5\sqrt2\) & \(1.4511{\times}10^{-8}\) & \(3.6683{\times}10^{-8}\)\\
-    4 & \(2\) & \(3\) & \(2.4016{\times}10^{-8}\) & \(3.1527{\times}10^{-8}\)\\
+    2 & \(2\) & \(\sqrt2\) & \(4.1038{\times}10^{-9}\) & \(7.0976{\times}10^{-9}\)\\
+    3 & \(10\) & \(5\sqrt2\) & \(4.5691{\times}10^{-9}\) & \(1.1550{\times}10^{-8}\)\\
+    4 & \(2\) & \(3\) & \(1.1140{\times}10^{-9}\) & \(1.4624{\times}10^{-9}\)\\
     \hline
   \end{tabular}
   \end{center}
@@ -432,6 +471,9 @@
     \]
     \item Thus the comparison MFS vs Ewald is made in the project sign
     convention; Linton's values validate the Ewald reference up to sign.
+    \item Compared with the previous \(H=0.5,M=25,N_{\mathrm p}=320\)
+    table run, the absolute errors improve by about \(3.4\times\),
+    \(3.2\times\), and \(21.6\times\) for Tables 2--4.
   \end{itemize}
 \end{frame}
 
@@ -449,29 +491,30 @@
     \hline
     2 &
     \(0.4595298795+0.3509130869\ii\) &
-    \(0.4595298689+0.3509130960\ii\)\\
+    \(0.4595298756+0.3509130883\ii\)\\
     3 &
     \(0.3538172307+0.1769332383\ii\) &
-    \(0.3538172165+0.1769332413\ii\)\\
+    \(0.3538172336+0.1769332417\ii\)\\
     4 &
     \(0.7617463954+0.0006387129\ii\) &
-    \(0.7617464190+0.0006387086\ii\)\\
+    \(0.7617463964+0.0006387135\ii\)\\
     \hline
   \end{tabular}
   \end{center}
 
   \vspace{0.4em}
   \begin{block}{Interpretation}
-    With the default benchmark MFS parameters, the single-point table
-    errors are about \(10^{-8}\).  This is enough to reproduce the Linton
-    values to roughly 7--8 significant digits after the sign conversion.
+    The Table-4-tuned MFS parameters improve all three Linton table cases.
+    The two non-tuned cases still land near a few \(10^{-9}\), while the
+    tuned Table 4 point reaches \(1.1{\times}10^{-9}\).
   \end{block}
 \end{frame}
 
 \begin{frame}{Runtime Comparison}
   \scriptsize
-  Timing is from the same run as the accuracy table.  The MFS time includes
-  proxy/Rayleigh precomputation and evaluation.  Importantly,
+  Timing is from the same run as the accuracy table.  The MFS total is the
+  benchmark wrapper wall time; the precomp/eval columns isolate the kernel
+  costs.  Importantly,
   \[
     \texttt{kernel.qpgreen\_mfs}
     \quad\text{computes value, gradient, and Hessian,}
@@ -486,9 +529,9 @@
     \hline
     Table & Ewald value-only & MFS total & MFS precomp & MFS eval & total ratio\\
     \hline
-    2 & \(0.007459\) & \(0.579123\) & \(0.573020\) & \(0.005108\) & \(77.6\)\\
-    3 & \(0.001190\) & \(0.486196\) & \(0.485263\) & \(0.000749\) & \(408.6\)\\
-    4 & \(0.000635\) & \(0.513697\) & \(0.512857\) & \(0.000657\) & \(808.8\)\\
+    2 & \(0.003246\) & \(0.382164\) & \(0.235503\) & \(0.003260\) & \(117.7\)\\
+    3 & \(0.001181\) & \(0.356029\) & \(0.238551\) & \(0.000791\) & \(301.5\)\\
+    4 & \(0.000599\) & \(0.402536\) & \(0.245741\) & \(0.000560\) & \(672.1\)\\
     \hline
   \end{tabular}
   \end{center}
@@ -499,6 +542,9 @@
     least-squares precomputation.
     \item The evaluation-only MFS cost is comparable to Ewald value-only
     even though MFS also returns first and second derivatives.
+    \item The tuned setting uses \(226\) unknowns instead of the previous
+    \(422\), so the single-point error improves while the precomputation
+    is also smaller.
     \item For \(A_{\mathrm{QP}}\) assembly, the precomputation is amortized
     over many target-source pairs; the present Ewald timings are a lower
     bound because derivative and Hessian Ewald formulas are not yet included.
