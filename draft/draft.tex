@@ -58,6 +58,10 @@
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
 \newtheorem{conjecture}{Conjecture}
+\newtheorem{theorem}{Theorem}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
 
 \title{A Boundary Integral Trace-Subspace Formulation for Periodic Line-Defect Waveguides}
 \author{}
@@ -82,8 +86,8 @@ define \begin{align*}
   \mathcal{C}^0_j = \mathcal{C}^0 + (0, (j-1)d),\quad (i,j) \in \mathbb{Z}^2,
 \end{align*}
 where the unit periodicity cells are \begin{align*}
-  &\mathcal{C}^\pm = \{ (x, y) | X_\pm \leq \pm x \leq X_\pm + L^\pm, 0 \leq y \leq d \},\\
-  &\mathcal{C}^0 = \{ (x, y) | X_- \leq x \leq X_+, 0 \leq y \leq d \}.
+  &\mathcal{C}^\pm = \{ (x, y) | X^\pm \leq \pm x \leq X^\pm + L^\pm, 0 \leq y \leq d \},\\
+  &\mathcal{C}^0 = \{ (x, y) | X^- \leq x \leq X^+, 0 \leq y \leq d \}.
 \end{align*}
 Let $\Omega^\pm, \Omega^0$ be the inclusions in the unit periodicity cells $\mathcal{C}^\pm, \mathcal{C}^0$, respectively, and define \begin{align*}
   \Omega^\pm_{ij} = \Omega^\pm \pm ((i-1)L^\pm, (j-1)d), \quad
@@ -150,11 +154,13 @@ An eigensolution is non-trivial solution to \eqref{eq:helmholtz-equation} and \e
 where $\beta$ is the \emph{Bloch wavenumber}.
 \end{definition}
 
-For a prescribed Bloch wavenumber $\beta$, the eigenvalue problem is to find a
-spectral parameter $k$ and a nonzero field $u$ such that $u$ is an
-eigensolution in the sense of Definition~1.  Equivalently, find
+For a prescribed Bloch wavenumber $\beta$, the eigenvalue problem is to
+determine a spectral parameter $k$ for which there exists a nonzero field
+$u$ that is an eigensolution in the sense of Definition~1. Equivalently,
+we seek $k$ and $u\not\equiv 0$ satisfying
 $(k,u)$ with $u \not\equiv 0$ such that
-\begin{align*}
+\begin{align}
+  \begin{cases}
   &\Delta u + k^2 n^2 u = 0
     \quad \text{in } \mathbb{R}^2 \setminus
     \left(
@@ -166,9 +172,12 @@ $(k,u)$ with $u \not\equiv 0$ such that
   &u(x,y+d)=e^{\ii\beta d}u(x,y),\\
   &u(x,y)\to 0 \quad \text{as } x\to\pm\infty,
     \text{ for } y\in[0,d].
-\end{align*}
-Such a value of $k$ is called an eigenvalue for the Bloch wavenumber $\beta$,
-and the corresponding nonzero field $u$ is the associated eigensolution.
+  \end{cases}
+  \label{eq:original-eigenvalue-problem}
+\end{align}
+If such a nonzero field $u$ exists, the parameter pair $(k,\beta)$ is
+called a \emph{Bloch eigenvalue} of the line-defect waveguide, and $u$ is called
+an associated eigensolution.
 
 \section{Reduction to a bounded domain}
 
@@ -251,7 +260,10 @@ The we can rewrite the eigenvalue problem as follows:
 \end{cases}
 \end{align}
 
-Our goal is to reduce the problem to the bounded domain $\mathcal{C}^0$ with the help of Dirichlet-to-Neumann (DtN) maps on the artificial boundaries $\Gamma^\pm$.
+Our goal is to reduce the problem to the bounded domain $\mathcal C^0$
+by imposing exact nonlocal boundary conditions on the artificial
+boundaries $\Gamma^\pm$. Formally, these boundary conditions may be
+written in terms of Dirichlet-to-Neumann operators $\Lambda^\pm$ as
 \begin{align}
 \begin{cases}
   &\Delta u + k^2 n^2 u = 0 \quad \text{in } \mathcal{C}^0\setminus \partial \Omega^0,\\
@@ -260,11 +272,14 @@ Our goal is to reduce the problem to the bounded domain $\mathcal{C}^0$ with the
   &u, u_\nu \text{ continuous across } \partial \Omega^0.
 \end{cases}\label{eq:dtn-cell-problem}
 \end{align}
-where $\Lambda^\pm$ are the DtN maps. In our method we will not compute the DtN maps 
-explicitly, but instead we will use the trace-subspace formulation to interpret the 
-radiation condition.
+The precise definition of $\Lambda^\pm$, the assumptions under which
+these operators are well-defined, and their equivalent interpretation
+in terms of outgoing Cauchy trace subspaces will be given in
+Section~\ref{sec:outgoing-trace-subspaces}. In the subsequent formulation, we will not construct the DtN operators
+explicitly. Instead, we impose the equivalent outgoing trace-subspace
+condition directly.
 
-\subsection{Outgoing trace subspaces}
+\subsection{Outgoing trace subspaces}\label{sec:outgoing-trace-subspaces}
 In this subsection we show how to interpret the radiation condition in terms of outgoing trace subspaces. 
 \begin{definition}
   For a sufficiently regular field \(u\), its Cauchy \emph{trace} on the artificial boundaries $\Gamma^\pm_j$ is
@@ -302,13 +317,13 @@ Then the \emph{outgoing trace subspace} on $\Gamma^\pm$ is defined by\begin{alig
 
 We now relate this definition to the usual Dirichlet-to-Neumann map. Let
 \[
-  \pi_D
+  \pi_\mathrm{D}
   \begin{bmatrix}
     D\\ N
   \end{bmatrix}
   =D,
   \qquad
-  \pi_N
+  \pi_\mathrm{N}
   \begin{bmatrix}
     D\\ N
   \end{bmatrix}
@@ -321,7 +336,7 @@ defined by
 \[
   \Lambda^\pm(k,\beta)D^\pm
   :=
-  \pi_N \operatorname{Tr}_{\Gamma^\pm}u^\pm
+  \pi_\mathrm{N} \operatorname{Tr}_{\Gamma^\pm}u^\pm
   =
   \pm \partial_x u^\pm|_{\Gamma^\pm},
   \qquad
@@ -331,9 +346,9 @@ Equivalently,
 \[
   \Lambda^\pm(k,\beta)
   =
-  \pi_N\circ
+  \pi_\mathrm{N}\circ
   \left(
-    \pi_D|_{\mathcal E^\pm_{\rm out}(k,\beta)}
+    \pi_\mathrm{D}|_{\mathcal E^\pm_{\rm out}(k,\beta)}
   \right)^{-1}.
 \]
 Hence, whenever the above inverse is well-defined, the outgoing trace subspace is the
@@ -359,13 +374,130 @@ is equivalent to the trace-subspace condition
   \operatorname{Tr}_{\Gamma^\pm}u\in \mathcal E^\pm_{\rm out}(k,\beta).
 \]
 In this work we use the latter formulation. It keeps the Dirichlet and Neumann traces
-on equal footing and avoids explicitly constructing the DtN operators.
+on equal footing and avoids explicitly constructing the DtN operators. 
+
+\begin{remark}[Absorbing DtN maps]
+In the previous statement, we assume that for any $D^\pm \in H^{1/2}_\beta(\Gamma^\pm)$, there exists a unique outgoing solution $u^\pm \in \mathcal U^\pm(k,\beta)$, thus $\pi_\mathrm{D}|_{\mathcal E^\pm_{\rm out}(k,\beta)}$ is invertible. This may not be true for all $(k,\beta)$, so we consider the following absorbing case.
+
+For $\varepsilon>0$ and prescribed
+$D^\pm\in H^{1/2}_\beta(\Gamma^\pm)$, consider
+\[
+\begin{cases}
+\Delta u_\varepsilon^\pm
++n^2(k^2+\ii\varepsilon)u_\varepsilon^\pm=0
+& \text{in }W^\pm\setminus\Sigma^\pm,\\
+u_\varepsilon^\pm|_{y=d}
+=e^{\ii\beta d}u_\varepsilon^\pm|_{y=0},
+\qquad
+\partial_yu_\varepsilon^\pm|_{y=d}
+=e^{\ii\beta d}\partial_yu_\varepsilon^\pm|_{y=0},\\
+u_\varepsilon^\pm,\ (u_\varepsilon^\pm)_\nu
+\text{ are continuous across }\Sigma^\pm,\\
+u_\varepsilon^\pm|_{\Gamma^\pm}=D^\pm .
+\end{cases}
+\]
+This absorbing half-guide problem admits a unique solution in
+$H^1_\beta(W^\pm)$; see
+\cite{JolyLiFliss2006,Coatleven2012}. The absorption selects a solution
+that decays along the half-guide, so no additional radiation condition
+is required.
+Consequently, if $\mathcal E^\pm_\varepsilon(k,\beta)$ denotes its
+Cauchy trace space, then
+\[
+\pi^\pm_{\mathrm{D},\varepsilon}
+:=
+\left.\pi_\mathrm{D}\right|_{\mathcal E^\pm_\varepsilon(k,\beta)}
+\]
+is invertible, and one may define
+\[
+\Lambda^\pm_\varepsilon(k,\beta)
+=
+\pi_\mathrm{N}\circ
+\left(\pi^\pm_{\mathrm{D},\varepsilon}\right)^{-1}.
+\]
+The behavior of $\Lambda^\pm_\varepsilon$ as
+$\varepsilon\to0^+$ is not addressed here. We therefore use the
+outgoing trace-subspace formulation directly for the lossless problem.
+\end{remark}
+
+Now we rewrite
+the eigenvalue problem \eqref{eq:dtn-cell-problem} in the trace-subspace formulation:
+\begin{align}
+\begin{cases}
+  &\Delta u + k^2 n^2 u = 0 \quad \text{in } \mathcal{C}^0\setminus \partial \Omega^0,\\
+  &u|_{y = d} = e^{\ii\beta d} u|_{y = 0}, \quad \partial_y u|_{y = d} = e^{\ii\beta d} \partial_y u|_{y = 0},\\
+  &\operatorname{Tr}_{\Gamma^\pm} u \in \mathcal{E}^\pm_{\mathrm{out}}(k,\beta),\\
+  &u, u_\nu \text{ continuous across } \partial \Omega^0.
+\end{cases}
+\label{eq:trace-subspace-cell-tep}
+\end{align}
+
+\begin{theorem}
+  A parameter pair $(k,\beta)$ is a Bloch eigenvalue of
+  \eqref{eq:original-eigenvalue-problem} if and only if the bounded
+  trace-subspace problem \eqref{eq:trace-subspace-cell-tep} admits a
+  nontrivial solution.
+\end{theorem}
+
+\begin{proof}
+We prove the equivalence for sufficiently regular fields for which the Cauchy
+traces on \(\Gamma^\pm\) are well-defined and the usual elliptic gluing
+argument across these artificial interfaces is valid.
+
+First suppose that \((k,\beta)\) is a Bloch eigenvalue of
+\eqref{eq:original-eigenvalue-problem}, with eigensolution \(u\). Let
+\[
+  u^0:=u|_{\mathcal C^0},\qquad
+  u^\pm:=u|_{\mathcal W^\pm}.
+\]
+The restriction \(u^0\) satisfies the Helmholtz equation, the
+\(y\)-quasiperiodic boundary condition, and the transmission conditions on
+\(\partial\Omega^0\). Moreover, since the full eigensolution decays as
+\(x\to\pm\infty\), each \(u^\pm\) belongs to
+\(\mathcal U^\pm(k,\beta)\). By the definition of the outgoing trace subspaces,
+\[
+  \operatorname{Tr}_{\Gamma^\pm}u^0
+  =
+  \operatorname{Tr}_{\Gamma^\pm}u^\pm
+  \in
+  \mathcal E^\pm_{\rm out}(k,\beta).
+\]
+Thus \(u^0\) solves \eqref{eq:trace-subspace-cell-tep}. If $u^0\equiv0$, then $u = 0$ on $\Gamma^\pm$, which implies that $u = 0$ on $\mathcal{W}^\pm$; see Theorem~3.3.1 in \cite{Isakov2017}. This
+contradicts the nontriviality of the eigensolution.
+
+Conversely, assume that \eqref{eq:trace-subspace-cell-tep} has a nontrivial
+solution \(u^0\) in \(\mathcal C^0\). The trace condition means that, for each
+sign, there exists \(u^\pm\in\mathcal U^\pm(k,\beta)\) such that
+\[
+  \operatorname{Tr}_{\Gamma^\pm}u^\pm
+  =
+  \operatorname{Tr}_{\Gamma^\pm}u^0.
+\]
+Define a field on the whole strip by
+\[
+  u(x,y)=
+  \begin{cases}
+    u^-(x,y), & (x,y)\in \mathcal W^-,\\
+    u^0(x,y), & (x,y)\in \mathcal C^0,\\
+    u^+(x,y), & (x,y)\in \mathcal W^+.
+  \end{cases}
+\]
+The equality of Cauchy traces gives continuity of both the Dirichlet trace and
+the outward normal derivative across \(\Gamma^\pm\). Therefore no additional
+interface source is created at the artificial boundaries, and the glued field
+satisfies the Helmholtz equation and the physical transmission conditions in
+the whole strip. The three pieces are \(y\)-quasiperiodic with the same Bloch
+phase, while the half-guide pieces decay as \(x\to\pm\infty\) by the definition
+of \(\mathcal U^\pm(k,\beta)\). Hence the glued field is an eigensolution of
+\eqref{eq:original-eigenvalue-problem}. It is nonzero because
+\(u^0\not\equiv0\), so \((k,\beta)\) is a Bloch eigenvalue.
+\end{proof}
 
 \subsection{Rayleigh-Bloch expansions in homogeneous background}
 Before introducting the representation of the solutions, we recall the form of 
 $y$-quasiperiodic solutions in a homogeneous background. Consider the following Helmholtz equation in a homogeneous strip:\begin{align*}
 \begin{cases}
-  &\Delta u + k^2 u = 0, \quad (x, y) \in [l,r] \times [0,d],\\
+  &\Delta u + k^2 u = 0, \quad (x, y) \in [X_\mathrm{L},X_\mathrm{R}] \times [0,d],\\
   &u|_{y = d} = e^{\ii\beta d} u|_{y = 0}, \quad \partial_y u|_{y = d} = e^{\ii\beta d} \partial_y u|_{y = 0}.
 \end{cases}
 \end{align*}
@@ -388,20 +520,22 @@ where $\gamma_m$ is chosen such that $\Im \gamma_m \geq 0$, i.e. \begin{align*}
   \end{cases}
 \end{align*}
 
-\subsection{Representation of the solutions in a single cell}
-A natural representation of the solution in a single cell is to combine the layer potential representation and the quasiperiodic Green's function (take $\mathcal{C}^0$ as an example): \begin{align*}
+\subsection{Representation of total fields in a single cell}
+Let $\mathcal C=[X_\mathrm{L},X_\mathrm{R}]\times[0,d]$ be an arbitrary cell
+containing an inclusion $\Omega$.
+A natural representation of the solution in a single cell is to combine the layer potential representation and the quasiperiodic Green's function: \begin{align*}
   u(\mathbf{x}) = \begin{cases}
-    \mathcal{S}^{(k)}_{\mathrm{QP}}[\sigma](\mathbf{x}) + \mathcal{D}^{(k)}_{\mathrm{QP}}[\tau](\mathbf{x}), & \mathbf{x} \in \mathcal{C}^0\setminus \overline{\Omega^0},\\
-    \mathcal{S}^{(nk)}[\sigma](\mathbf{x}) + \mathcal{D}^{(nk)}[\tau](\mathbf{x}), & \mathbf{x} \in \Omega^0,
+    \mathcal{S}^{(k)}_{\mathrm{QP}}[\sigma](\mathbf{x}) + \mathcal{D}^{(k)}_{\mathrm{QP}}[\tau](\mathbf{x}), & \mathbf{x} \in \mathcal{C}\setminus \overline{\Omega},\\
+    \mathcal{S}^{(nk)}[\sigma](\mathbf{x}) + \mathcal{D}^{(nk)}[\tau](\mathbf{x}), & \mathbf{x} \in \Omega,
   \end{cases}
 \end{align*}
 where the single and double layer potentials are defined as \begin{align*}
-  \mathcal{S}^{(k)}[\sigma](\mathbf{x}) = \int_{\partial \Omega^0} G^{(k)}(\mathbf{x},\mathbf{y}) \sigma(\mathbf{y})\, \dd s(\mathbf{y}),\quad
-  \mathcal{D}^{(k)}[\tau](\mathbf{x}) = \int_{\partial \Omega^0} \frac{\partial G^{(k)}(\mathbf{x},\mathbf{y})}{\partial \nu(\mathbf{y})} \tau(\mathbf{y})\, \dd s(\mathbf{y}),
+  \mathcal{S}^{(k)}[\sigma](\mathbf{x}) = \int_{\partial \Omega} G^{(k)}(\mathbf{x},\mathbf{y}) \sigma(\mathbf{y})\, \dd s(\mathbf{y}),\quad
+  \mathcal{D}^{(k)}[\tau](\mathbf{x}) = \int_{\partial \Omega} \frac{\partial G^{(k)}(\mathbf{x},\mathbf{y})}{\partial \nu(\mathbf{y})} \tau(\mathbf{y})\, \dd s(\mathbf{y}),
 \end{align*}
 and their periodic versions are likewise \begin{align*}
-  \mathcal{S}^{(k)}_{\mathrm{QP}}[\sigma](\mathbf{x}) = \int_{\partial \Omega^0} G^{(k)}_{\mathrm{QP}}(\mathbf{x},\mathbf{y}) \sigma(\mathbf{y})\, \dd s(\mathbf{y}),\quad
-  \mathcal{D}^{(k)}_{\mathrm{QP}}[\tau](\mathbf{x}) = \int_{\partial \Omega^0} \frac{\partial G^{(k)}_{\mathrm{QP}}(\mathbf{x},\mathbf{y})}{\partial \nu(\mathbf{y})} \tau(\mathbf{y})\, \dd s(\mathbf{y}),
+  \mathcal{S}^{(k)}_{\mathrm{QP}}[\sigma](\mathbf{x}) = \int_{\partial \Omega} G^{(k)}_{\mathrm{QP}}(\mathbf{x},\mathbf{y}) \sigma(\mathbf{y})\, \dd s(\mathbf{y}),\quad
+  \mathcal{D}^{(k)}_{\mathrm{QP}}[\tau](\mathbf{x}) = \int_{\partial \Omega} \frac{\partial G^{(k)}_{\mathrm{QP}}(\mathbf{x},\mathbf{y})}{\partial \nu(\mathbf{y})} \tau(\mathbf{y})\, \dd s(\mathbf{y}),
 \end{align*}
 the quasiperiodic Green's function is defined as \begin{align*}
   G^{(k)}_{\mathrm{QP}}(\mathbf{x},\mathbf{y}) = \sum_{j\in\mathbb{Z}} e^{\ii j \beta d} G^{(k)}(\mathbf{x},\mathbf{y} + (0,jd)),
@@ -409,20 +543,83 @@ the quasiperiodic Green's function is defined as \begin{align*}
 and the fundamental solution of the Helmholtz equation is \begin{align*}
   G^{(k)}(\mathbf{x},\mathbf{y}) = \frac{\ii}{4} H_0^{(1)}(k|\mathbf{x}-\mathbf{y}|).
 \end{align*}
-The quasiperiodic layer potentials describe the field generated by equivalent sources on
-the boundary of the center inclusion. However, they do not by themselves represent the
-most general solution in the homogeneous background of the cell. One must also include the
-homogeneous solutions of the \(y\)-quasiperiodic Helmholtz equation in the empty strip.
-These homogeneous solutions are precisely the Rayleigh-Bloch modes. Therefore we use the following representation of the solution in a cell $\mathcal{C}^0$:
+The quasiperiodic Green's function has the spectral representation \cite{Linton1998}:
+\begin{align}
+  G_\mathrm{QP}^{(k)}(x,y;x',y') = \frac{\ii}{2d} \sum_{m\in\mathbb{Z}} \frac{1}{\gamma_m} e^{\ii \beta_m (y - y')} e^{\ii \gamma_m |x - x'|}, \label{eq:qp-green-spectral}
+\end{align}
+from which we can see that $G_\mathrm{QP}^{(k)}$ is not well-defined when $\gamma_m = 0$
+for some $m$.
+\begin{definition}[Wood anomaly]
+A parameter pair $(k,\beta)$ is said to be at a \emph{Wood anomaly}
+if
+\[
+  \gamma_m(k,\beta)=0
+\]
+for some $m\in\mathbb Z$, or equivalently,
+\[
+  k=\left|\beta+\frac{2\pi m}{d}\right|
+\]
+for some $m\in\mathbb Z$.
+\end{definition}
+
+The quasiperiodic layer potentials represent only the field generated
+by equivalent sources on $\partial\Omega$. They cannot describe the
+most general $y$-quasiperiodic solution in the cell: when
+$\Omega=\varnothing$, the layer-potential contribution vanishes, but
+nontrivial Rayleigh-Bloch fields remain. We therefore write the
+exterior total field as the sum of a layer-potential contribution and
+a homogeneous background component $u_h[\xi]$:
 \begin{align}
   u(\mathbf{x}) = \begin{cases}
-    \mathcal{S}^{(k)}_{\mathrm{QP}}[\sigma](\mathbf{x}) + \mathcal{D}^{(k)}_{\mathrm{QP}}[\tau](\mathbf{x}) + u_h[\xi](\mathbf{x}), & \mathbf{x} \in \mathcal{C}^0\setminus \overline{\Omega^0},\\
-    \mathcal{S}^{(nk)}[\sigma](\mathbf{x}) + \mathcal{D}^{(nk)}[\tau](\mathbf{x}), & \mathbf{x} \in \Omega^0,
+    \mathcal{S}^{(k)}_{\mathrm{QP}}[\sigma](\mathbf{x}) + \mathcal{D}^{(k)}_{\mathrm{QP}}[\tau](\mathbf{x}) + u_h[\xi](\mathbf{x}), & \mathbf{x} \in \mathcal{C}\setminus \overline{\Omega},\\
+    \mathcal{S}^{(nk)}[\sigma](\mathbf{x}) + \mathcal{D}^{(nk)}[\tau](\mathbf{x}), & \mathbf{x} \in \Omega,
   \end{cases}
 \end{align}
-where the homogeneous field $u_h$ has the form \begin{align}
-  u_h[\xi](x, y) = \sum_{m \in \mathbb{Z}} \xi_m^\rightarrow e^{\ii \gamma_m (x - X^-)} \psi_m(y) + \sum_{m \in \mathbb{Z}} \xi_m^\leftarrow e^{-\ii \gamma_m (x - X^-)} \psi_m(y),\quad (x, y) \in \mathcal{C}^0\setminus \overline{\Omega^0}.  \label{eq:homogeneous-field}
+where the Rayleigh-Bloch field $u_h$ has the form 
+\begin{align}
+  u_h[\xi](x, y) = \sum_{m \in \mathbb{Z}} \xi_m^\rightarrow e^{\ii \gamma_m (x - X^-)} \psi_m(y) + \sum_{m \in \mathbb{Z}} \xi_m^\leftarrow e^{-\ii \gamma_m (x - X^+)} \psi_m(y),\quad (x, y) \in \mathcal{C}\setminus \overline{\Omega}.  \label{eq:homogeneous-field}
 \end{align}
+
+\begin{conjecture}[Exact and unique single-cell representation]
+\label{conj:single-cell-representation}
+Let
+$
+  \mathcal C=[X_\mathrm{L},X_\mathrm{R}]\times[0,d]
+$
+be a periodic cell containing an inclusion $\Omega$, and assume that
+$(k,\beta)$ is not at a Wood anomaly.
+
+Every sufficiently regular field $u$ satisfying
+\[
+\begin{cases}
+\Delta u+k^2u=0
+& \text{in }\mathcal C\setminus\overline{\Omega},\\
+\Delta u+(nk)^2u=0
+& \text{in }\Omega,\\
+u|_{y=d}=e^{\ii\beta d}u|_{y=0},
+\qquad
+\partial_yu|_{y=d}
+=e^{\ii\beta d}\partial_yu|_{y=0},\\
+u,\ u_\nu \text{ are continuous across }\partial\Omega,
+\end{cases}
+\]
+with no boundary condition imposed on the vertical boundaries
+$\Gamma_L$ and $\Gamma_R$, admits a unique representation
+\[
+u(x)=
+\begin{cases}
+S_{\rm QP}^{(k)}[\sigma](x)
++D_{\rm QP}^{(k)}[\tau](x)
++u_h[\xi](x),
+& x\in\mathcal C\setminus\overline{\Omega},\\[1mm]
+S^{(nk)}[\sigma](x)
++D^{(nk)}[\tau](x),
+& x\in\Omega,
+\end{cases}
+\]
+where the Rayleigh--Bloch series defining $u_h[\xi]$ converges in the
+appropriate $H^1$ sense.
+\end{conjecture}
 
 \subsection{Eigenvalue condition as a homogeneous linear system}
 In this subsection we show that the eigenvalue problem can be reduced to a homogeneous linear system. The first equation is the continuity of the field and its normal derivative across the interface $\partial \Omega^0$. Define the operator:
@@ -469,10 +666,17 @@ remainders, and the logarithmic parts are integrated by the Kress product
 quadrature scheme.
 
 And we define the operator: \begin{align}
-  B_{\partial \Omega^0}: \mathbb{C}^\mathbb{Z} \times \mathbb{C}^\mathbb{Z} \to C(\partial \Omega^0),\quad 
-  \xi \mapsto u_h[\xi]|_{\partial \Omega^0},
+  B_{\partial \Omega^0}: \ell^2_{1/2,\beta}(\mathbb{Z}) \times \ell^2_{1/2,\beta}(\mathbb{Z}) \to H^{1/2}(\partial \Omega^0) \times H^{-1/2}(\partial \Omega^0),\quad 
+  \xi \mapsto \begin{bmatrix}
+    \left. u_h[\xi] \right|_{\partial \Omega^0}\\
+    \left.\partial_\nu u_h[\xi] \right|_{\partial \Omega^0}
+  \end{bmatrix},
 \end{align}
-then using the standard jump relations for the layer potentials, the continuity conditions across the interface $\partial \Omega^0$ can be written as the following homogeneous linear system:
+where the weighted sequence space $\ell^2_{1/2,\beta}(\mathbb{Z})$ is defined as 
+\begin{align*}
+  \ell^2_{1/2,\beta}(\mathbb{Z}) = \left\{(a_m)_{m\in\mathbb{Z}}: \sum_{m\in\mathbb{Z}} (1 + |\beta_m|^2)^{1/2} |a_m|^2 < \infty\right\}.
+\end{align*}
+Then using the standard jump relations for the layer potentials, the continuity conditions across the interface $\partial \Omega^0$ can be written as the following homogeneous linear system:
 \begin{align}
   A_\mathrm{QP}\eta + B_{\partial \Omega^0}\xi = 0,\quad \eta := \begin{bmatrix} \tau\\ -\sigma \end{bmatrix}.
 \end{align}
@@ -491,25 +695,34 @@ mode is called \emph{outgoing}, or \emph{admissible}, if it decays outward along
 \[
   |\lambda^\pm|<1.
 \]
-The corresponding outgoing trace space is
+\end{definition}
+Let $J^\pm_\mathrm{out}$ be the index set for the outgoing Bloch modes in the $\pm$ half-guide, we have the following conjecture:
+\begin{conjecture}[Completeness of outgoing Bloch traces]
+\label{conj:outgoing-trace-completeness}
+The outgoing trace space satisfies
 \[
   \mathcal E^\pm_{\rm out}(k,\beta)
-  :=
+  =
   \overline{\operatorname{span}}
   \left\{
-    \operatorname{Tr}_{\Gamma^\pm}\phi^\pm:
-    \phi^\pm \text{ is an outgoing Bloch mode in the } \pm \text{ half-guide}
-  \right\}.
+    \operatorname{Tr}_{\Gamma^\pm}\phi_j^\pm:
+    j\in J^\pm_{\rm out}
+  \right\},
 \]
-\end{definition}
-Let $J^\pm_\mathrm{out}$ be the index set for the outgoing Bloch modes in the $\pm$ half-guide, and we can define the operator: \begin{align}
-  Q^\pm: \mathbb{C}^{J^\pm_\mathrm{out}} \to H^{1/2}_\beta(\Gamma^\pm)\times H^{-1/2}_\beta(\Gamma^\pm),\quad r^\pm \mapsto \sum_{j\in J^\pm_\mathrm{out}} r_j^\pm \operatorname{Tr}_{\Gamma^\pm}\phi_j^\pm.
+where the closure is taken in 
+$H^{1/2}_\beta(\Gamma^\pm) \times H^{-1/2}_\beta(\Gamma^\pm)$.
+\end{conjecture}
+
+Define the operator: \begin{align}
+  Q^\pm: \ell^2(J_\mathrm{out}^\pm) \to H^{1/2}_\beta(\Gamma^\pm)\times H^{-1/2}_\beta(\Gamma^\pm),\quad r^\pm \mapsto \sum_{j\in J^\pm_\mathrm{out}} r_j^\pm \operatorname{Tr}_{\Gamma^\pm}\phi_j^\pm,
 \end{align}
-And the following two operator:\begin{align}
+and the following two operator:\begin{align}
   &\Pi_\ell^\pm: C(\partial \Omega^0) \times C(\partial \Omega^0) \to H^{1/2}_\beta(\Gamma^\pm)\times H^{-1/2}_\beta(\Gamma^\pm), \quad \eta \mapsto \operatorname{Tr}_{\Gamma^\pm} \left(\mathcal{S}^{(k)}_{\mathrm{QP}}[\sigma] + \mathcal{D}^{(k)}_{\mathrm{QP}}[\tau]\right),\\
-  &\Pi_h^\pm: \mathbb{C}^\mathbb{Z} \times \mathbb{C}^\mathbb{Z} \to H^{1/2}_\beta(\Gamma^\pm)\times H^{-1/2}_\beta(\Gamma^\pm), \quad \xi \mapsto \operatorname{Tr}_{\Gamma^\pm} u_h[\xi],
+  &\Pi_h^\pm: \ell^2_{1/2,\beta}(\mathbb{Z}) \times \ell^2_{1/2,\beta}(\mathbb{Z}) \to H^{1/2}_\beta(\Gamma^\pm)\times H^{-1/2}_\beta(\Gamma^\pm), \quad \xi \mapsto \operatorname{Tr}_{\Gamma^\pm} u_h[\xi],
 \end{align}
-where the subscript $\ell$ indicates the layer potential contribution and the subscript $h$ indicates the homogeneous contribution. Then the trace matching condition on the artificial boundaries $\Gamma^\pm$ can be written as \begin{align}
+Here the subscript $\ell$ denotes the layer-potential contribution,
+whereas the subscript $h$ denotes the homogeneous background
+component. Using conjecture~\ref{conj:outgoing-trace-completeness}, the trace matching condition on the artificial boundaries $\Gamma^\pm$ can be written as \begin{align}
   \Pi_\ell^\pm \eta + \Pi_h^\pm \xi - Q^\pm r^\pm = 0.
 \end{align}
 Combining the continuity condition and the trace matching condition, we can rewrite the
@@ -520,18 +733,19 @@ equation \eqref{eq:dtn-cell-problem} as a homogeneous linear system for the unkn
     \eta \\ \xi \\ r^+ \\ r^-
   \end{bmatrix} = 0, \quad
   \mathcal{A}(k,\beta) := \begin{bmatrix}
-    A_{QP} & B_{\partial \Omega^0} & 0 & 0\\
+    A_{\mathrm{QP}} & B_{\partial \Omega^0} & 0 & 0\\
     \Pi_\ell^+ & \Pi_h^+ & -Q^+ & 0\\
     \Pi_\ell^- & \Pi_h^- & 0 & -Q^-
   \end{bmatrix},
 \end{align}
 \begin{conjecture}
-  The pair \((k,\beta)\) is an eigenpair of the original problem if and only if the
-  homogeneous linear system above has a nontrivial solution, i.e., $\operatorname{Null}(\mathcal{A}(k,\beta)) \neq \{0\}$.
+  Assume $(k,\beta)$ is not at a Wood anomaly.
+  Then \((k,\beta)\) is a Bloch eigenvalue 
+  if and only if $\operatorname{Null}(\mathcal{A}(k,\beta)) \neq \{0\}$.
 \end{conjecture}
 
 This conjecture suggests the following numerical scheme: at each of a sampling (e.g. a grid) of parameters $(k, \beta)$, find the lowest singular value 
-$\sigma_{\min}(\mathcal{A})$ of a matrix discretization of $\mathcal{A}(k,\beta)$. Then the eigenpairs are located at the local minima of $\sigma_{\min}(\mathcal{A})$ in the $(k, \beta)$ plane.
+$\sigma_{\min}(\tilde{\mathcal{A}})$ of a matrix discretization $\tilde{\mathcal{A}}$ of $\mathcal{A}$. Then the eigenvalues are located at the local minima of $\sigma_{\min}(\mathcal{A})$ in the $(k, \beta)$ plane.
 
 \section{MFS construction of the quasiperiodic Green's function}
 There are many analytical and numerical approaches for evaluating the one-dimensionally
@@ -749,10 +963,8 @@ as the incident wave, i.e., $a = [e_n; 0]$, then we can solve \begin{align*}
 \end{align*}
 to obtain the density $\eta$ of the layer potential of the scattered field, then we need 
 to convert the layer potential representation to the Rayleigh-Bloch expansion near the 
-two vertical boundaries. We make use of the spectral representation of the y-quasiperiodic Green's function \cite{Linton1998}\begin{align}
-  G_\mathrm{QP}^{(k)}(x,y;x_s,y_s) = \frac{\ii}{2d} \sum_{m\in\mathbb{Z}} \frac{1}{\gamma_m} e^{\ii \beta_m (y - y_s)} e^{\ii \gamma_m |x - x_s|}, \label{eq:qp-green-spectral}
-\end{align}
-where $\mathbf{s} = (x_s, y_s)$ is some boundary point of $\Omega$. To get the $n$-th column of $R_\mathrm{L}$ and $T_{\mathrm{LR}}$, we rewrite \eqref{eq:qp-green-spectral} as \begin{align*}
+two vertical boundaries. We make use of the spectral representation of the y-quasiperiodic Green's function \eqref{eq:qp-green-spectral},
+let $\mathbf{s} = (x_s, y_s)$ be some boundary point of $\Omega$. To get the $n$-th column of $R_\mathrm{L}$ and $T_{\mathrm{LR}}$, we rewrite \eqref{eq:qp-green-spectral} as \begin{align*}
   G_\mathrm{QP}^{(k)}(x,y;x_s,y_s) &= \frac{\ii}{2\sqrt{d}} \sum_{m\in\mathbb{Z}} \frac{1}{\gamma_m} e^{-\ii \beta_m y_s + \ii \gamma_m (x_s - X_\mathrm{L})} e^{-\ii \gamma_m (x - X_\mathrm{L})} \psi_m(y),\quad x < x_s,\\
   &= \frac{\ii}{2\sqrt{d}} \sum_{m\in\mathbb{Z}} \frac{1}{\gamma_m} e^{-\ii \beta_m y_s - \ii \gamma_m (x_s - X_\mathrm{R})} e^{\ii \gamma_m (x - X_\mathrm{R})} \psi_m(y),\quad x > x_s.
 \end{align*}
@@ -912,7 +1124,7 @@ pairs are evaluated in the boundary-integral matrix assembly.
 
 \subsection{1D periodic waveguide}
 In this subsection, we consider a special case of line-defected waveguide, in which case
-\(\Omega^\pm = \emptyset\), and \(\Omega^0\) is a star-shaped inclusion, as
+\(\Omega^\pm = \varnothing\), and \(\Omega^0\) is a star-shaped inclusion, as
 shown in Figure~\ref{fig:1d-waveguide-inclusion}. The experiment is
 implemented by the script \path{examples/run_tep_fixed_beta_k_scan.m}. This is
 a standard 1D periodic waveguide model. In this case the Bloch modes are exactly the Rayleigh-Bloch modes\begin{align*}
