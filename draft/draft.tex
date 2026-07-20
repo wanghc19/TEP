@@ -59,6 +59,7 @@
 \newtheorem{definition}{Definition}
 \newtheorem{conjecture}{Conjecture}
 \newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
 
 \theoremstyle{remark}
 \newtheorem{remark}{Remark}
@@ -73,6 +74,7 @@
 \section{Introduction}
 
 \section{Model problem}
+\label{sec:model-problem}
 We consider the Helmholtz equation for a line-defect waveguide in a periodic medium: 
 \begin{align}
  \Delta u(x, y) + k^2 n(x, y)^2 u(x, y) &= 0, \quad (x, y) \in \mathbb{R}^2 \setminus \text{interface}, \label{eq:helmholtz-equation}
@@ -93,6 +95,17 @@ Let $\Omega^\pm, \Omega^0$ be the inclusions in the unit periodicity cells $\mat
   \Omega^\pm_{ij} = \Omega^\pm \pm ((i-1)L^\pm, (j-1)d), \quad
   \Omega^0_j = \Omega^0 + (0, (j-1)d),\quad (i,j) \in \mathbb{Z}^2.
 \end{align*}
+Throughout this work, we assume that each reference inclusion is compactly
+contained in the interior of its corresponding cell. More precisely, there
+exists a fixed constant \(\delta_\Omega>0\) such that
+\begin{align*}
+  \overline{\Omega^s}&\subset\operatorname{int}(\mathcal C^s),
+  &\operatorname{dist}\!\left(\overline{\Omega^s},\partial\mathcal C^s\right)
+  &\geq\delta_\Omega,
+  &&s\in\{-,0,+\}.
+\end{align*}
+Consequently, every translated inclusion remains a positive distance from the
+boundary of its translated cell, and distinct periodic copies do not touch.
 Then the interface in \eqref{eq:transmission-conditions} is \begin{align*}
   \bigcup_{(i,j) \in \mathbb{Z}^2} \partial\Omega^\pm_{ij} \cup
   \bigcup_{j \in \mathbb{Z}} \partial\Omega^0_j.
@@ -493,32 +506,141 @@ of \(\mathcal U^\pm(k,\beta)\). Hence the glued field is an eigensolution of
 \(u^0\not\equiv0\), so \((k,\beta)\) is a Bloch eigenvalue.
 \end{proof}
 
-\subsection{Rayleigh-Bloch expansions in homogeneous background}
-Before introducting the representation of the solutions, we recall the form of 
-$y$-quasiperiodic solutions in a homogeneous background. Consider the following Helmholtz equation in a homogeneous strip:\begin{align*}
+\subsection{Rayleigh expansions in homogeneous background}
+Before introducing the representation of the solutions, we recall the form of 
+$y$-quasiperiodic solutions in a homogeneous background. Consider the following Helmholtz equation in an empty cell $\mathcal{C} = [X_\mathrm{L},X_\mathrm{R}] \times [0,d]$:\begin{align*}
 \begin{cases}
-  &\Delta u + k^2 u = 0, \quad (x, y) \in [X_\mathrm{L},X_\mathrm{R}] \times [0,d],\\
+  &\Delta u + k^2 u = 0, \quad (x, y) \in \mathcal{C},\\
   &u|_{y = d} = e^{\ii\beta d} u|_{y = 0}, \quad \partial_y u|_{y = d} = e^{\ii\beta d} \partial_y u|_{y = 0}.
 \end{cases}
 \end{align*}
 Define \begin{align*}
   \beta_m = \beta + \frac{2\pi m}{d},\quad \psi_m(y) = \frac{1}{\sqrt{d}} e^{\ii \beta_m y},\quad m \in \mathbb{Z},
 \end{align*}
-then a $y$-quasiperiodic field with period $d$ can be expanded in the Rayleigh/Fourier basis as 
+then a $y$-quasiperiodic field with period $d$ can be expanded in the $\beta$-quasiperiodic Fourier basis $\{\psi_m\}_{m \in \mathbb{Z}}$ as 
 \begin{align*}
   u(x,y) = \sum_{m\in\mathbb{Z}} u_m(x) \psi_m(y).
 \end{align*}
-Substituting this expansion into the homogeneous Helmholtz equation yields the 
-Rayleigh-Bloch expansion \[
+Substituting this expansion into the homogeneous Helmholtz equation yields 
+\begin{align}
   u(x,y)= \sum_{m\in\mathbb Z} \xi_m^\rightarrow e^{\ii\gamma_m x}\psi_m(y) + 
   \sum_{m\in\mathbb Z} \xi_m^\leftarrow e^{-\ii\gamma_m x}\psi_m(y),
-\]
-where $\gamma_m$ is chosen such that $\Im \gamma_m \geq 0$, i.e. \begin{align*}
+  \label{eq:rayleigh-expansion}
+\end{align}
+where $\gamma_m$ is chosen as follows: \begin{align*}
   \gamma_m = \begin{cases}
     \sqrt{k^2 - \beta_m^2}, & k^2 \geq \beta_m^2,\\
     \ii\sqrt{\beta_m^2 - k^2}, & k^2 < \beta_m^2.
   \end{cases}
 \end{align*}
+The expansion \eqref{eq:rayleigh-expansion} is called the \emph{Rayleigh expansion}, and the coefficients $\xi = (\xi^\leftarrow, \xi^\rightarrow)$ are called the Rayleigh coefficients \cite{Arens2006}; in some literature, expansion \eqref{eq:rayleigh-expansion} is also called the Rayleigh-Bloch expansion \cite{Wilcox1984}, we use the former terminology in this work. And we call the corresponding field 
+$u$ a Rayleigh field.
+
+\begin{definition}[Wood anomaly]
+A parameter pair $(k,\beta)$ is said to be at a \emph{Wood anomaly}
+if
+\[
+  \gamma_m(k,\beta)=0
+\]
+for some $m\in\mathbb Z$, or equivalently,
+\[
+  k=\left|\beta+\frac{2\pi m}{d}\right|
+\]
+for some $m\in\mathbb Z$.
+\end{definition}
+
+Assume that \((k,\beta)\) is not at a Wood anomaly. If
+\(u\in H^1_\beta(\mathcal C)\) is a weak solution of the homogeneous
+Helmholtz equation, then there exist unique Rayleigh coefficient
+sequences \(\xi^\rightarrow\) and \(\xi^\leftarrow\) such that the following
+series converges to \(u\) in \(H^1(\mathcal C)\):
+\begin{align}
+u(x,y)=
+\sum_{m\in\mathbb Z}
+\left(
+\xi_m^\rightarrow e^{\ii\gamma_m (x - X_*)}
++
+\xi_m^\leftarrow e^{-\ii\gamma_m (x - X_*)}
+\right)\psi_m(y),
+\label{eq:rayleigh-expansion-centered}
+\end{align}
+At the reference cross-section \(x=X_*\), orthonormality of
+\(\{\psi_m\}_{m\in\mathbb Z}\) gives
+\begin{align*}
+  \int_0^d u(X_*,y)\overline{\psi_m(y)}\,\dd y
+  &=\xi_m^\rightarrow+\xi_m^\leftarrow,\\
+  \int_0^d \partial_xu(X_*,y)\overline{\psi_m(y)}\,\dd y
+  &=\ii\gamma_m\bigl(\xi_m^\rightarrow-\xi_m^\leftarrow\bigr).
+\end{align*}
+Since \(\gamma_m\neq0\), solving these two equations yields the explicit
+coefficient formulas
+\begin{align}
+  \xi_m^\rightarrow = \xi_m^\rightarrow(X_*)
+  &=\frac{1}{2}\int_0^d
+  \left(
+    u(X_*,y)+\frac{1}{\ii\gamma_m}\partial_xu(X_*,y)
+  \right)\overline{\psi_m(y)}\,\dd y,
+  \label{eq:right-coefficient-extraction}
+  \\
+  \xi_m^\leftarrow = \xi_m^\leftarrow(X_*)
+  &=\frac{1}{2}\int_0^d
+  \left(
+    u(X_*,y)-\frac{1}{\ii\gamma_m}\partial_xu(X_*,y)
+  \right)\overline{\psi_m(y)}\,\dd y,
+  \qquad m\in\mathbb Z.
+  \label{eq:left-coefficient-extraction}
+\end{align}
+Although the numerical values of the Rayleigh coefficients depend on the
+chosen reference cross-section, their vanishing does not. More precisely, if
+the reference is changed from \(X_*\) to \(X_*'\), then
+\[
+  \xi_m^\rightarrow(X_*')
+  =e^{\ii\gamma_m(X_*'-X_*)}\xi_m^\rightarrow(X_*),
+  \qquad
+  \xi_m^\leftarrow(X_*')
+  =e^{-\ii\gamma_m(X_*'-X_*)}\xi_m^\leftarrow(X_*).
+\]
+\begin{definition}[Rayleigh radiation condition]
+\label{def:rayleigh-radiation-condition}
+Let \(\mathcal C=[X_\mathrm{L},X_\mathrm{R}]\times[0,d]\) be a cell
+containing an inclusion \(\Omega\), and assume that \((k,\beta)\) is not at a
+Wood anomaly. Let \(u\) be a sufficiently regular \(y\)-quasiperiodic field
+satisfying
+\[
+  (\Delta+k^2)u=0
+  \qquad\text{in }\mathcal C\setminus\overline\Omega.
+\]
+We say that \(u\) satisfies the \emph{Rayleigh radiation condition} if its
+incoming Rayleigh coefficients vanish at both vertical boundaries, namely,
+\[
+  \xi_m^\rightarrow(u;X_\mathrm{L})=0,
+  \qquad
+  \xi_m^\leftarrow(u;X_\mathrm{R})=0,
+  \qquad m\in\mathbb Z.
+\]
+Equivalently, the Cauchy data of \(u\) satisfy
+\begin{align}
+  \int_0^d
+  \left(
+    u(X_\mathrm{L},y)
+    +\frac{1}{\ii\gamma_m}\partial_xu(X_\mathrm{L},y)
+  \right)\overline{\psi_m(y)}\,\dd y
+  &=0,
+  \qquad m\in\mathbb Z,
+  \label{eq:left-outgoing-rayleigh-condition}\\
+  \int_0^d
+  \left(
+    u(X_\mathrm{R},y)
+    -\frac{1}{\ii\gamma_m}\partial_xu(X_\mathrm{R},y)
+  \right)\overline{\psi_m(y)}\,\dd y
+  &=0,
+  \qquad m\in\mathbb Z,
+  \label{eq:right-outgoing-rayleigh-condition}
+\end{align}
+The first condition excludes every right-going component incident through
+the left boundary, whereas the second excludes every left-going component
+incident through the right boundary.
+\end{definition}
 
 \subsection{Representation of total fields in a single cell}
 Let $\mathcal C=[X_\mathrm{L},X_\mathrm{R}]\times[0,d]$ be an arbitrary cell
@@ -537,36 +659,25 @@ and their periodic versions are likewise \begin{align*}
   \mathcal{S}^{(k)}_{\mathrm{QP}}[\sigma](\mathbf{x}) = \int_{\partial \Omega} G^{(k)}_{\mathrm{QP}}(\mathbf{x},\mathbf{y}) \sigma(\mathbf{y})\, \dd s(\mathbf{y}),\quad
   \mathcal{D}^{(k)}_{\mathrm{QP}}[\tau](\mathbf{x}) = \int_{\partial \Omega} \frac{\partial G^{(k)}_{\mathrm{QP}}(\mathbf{x},\mathbf{y})}{\partial \nu(\mathbf{y})} \tau(\mathbf{y})\, \dd s(\mathbf{y}),
 \end{align*}
-the quasiperiodic Green's function is defined as \begin{align*}
-  G^{(k)}_{\mathrm{QP}}(\mathbf{x},\mathbf{y}) = \sum_{j\in\mathbb{Z}} e^{\ii j \beta d} G^{(k)}(\mathbf{x},\mathbf{y} + (0,jd)),
-\end{align*}
+the quasiperiodic Green's function is defined as \begin{align}
+  G^{(k)}_{\mathrm{QP}}(\mathbf{x},\mathbf{y}) = \sum_{j\in\mathbb{Z}} e^{\ii j \beta d} G^{(k)}(\mathbf{x},\mathbf{y} + (0,jd)), \label{eq:lattice-sum-qpgreen}
+\end{align}
 and the fundamental solution of the Helmholtz equation is \begin{align*}
-  G^{(k)}(\mathbf{x},\mathbf{y}) = \frac{\ii}{4} H_0^{(1)}(k|\mathbf{x}-\mathbf{y}|).
+  G^{(k)}(\mathbf{x},\mathbf{y}) = \frac{\ii}{4} H_0^{(1)}(k|\mathbf{x}-\mathbf{y}|),
 \end{align*}
+where $H_0^{(1)}$ is the Hankel function of the first kind of order zero.
 The quasiperiodic Green's function has the spectral representation \cite{Linton1998}:
 \begin{align}
   G_\mathrm{QP}^{(k)}(x,y;x',y') = \frac{\ii}{2d} \sum_{m\in\mathbb{Z}} \frac{1}{\gamma_m} e^{\ii \beta_m (y - y')} e^{\ii \gamma_m |x - x'|}, \label{eq:qp-green-spectral}
 \end{align}
-from which we can see that $G_\mathrm{QP}^{(k)}$ is not well-defined when $\gamma_m = 0$
-for some $m$.
-\begin{definition}[Wood anomaly]
-A parameter pair $(k,\beta)$ is said to be at a \emph{Wood anomaly}
-if
-\[
-  \gamma_m(k,\beta)=0
-\]
-for some $m\in\mathbb Z$, or equivalently,
-\[
-  k=\left|\beta+\frac{2\pi m}{d}\right|
-\]
-for some $m\in\mathbb Z$.
-\end{definition}
+from which we can see that $G_\mathrm{QP}^{(k)}$ is not well-defined when $(k,\beta)$ is at a Wood anomaly. 
+
 
 The quasiperiodic layer potentials represent only the field generated
 by equivalent sources on $\partial\Omega$. They cannot describe the
 most general $y$-quasiperiodic solution in the cell: when
 $\Omega=\varnothing$, the layer-potential contribution vanishes, but
-nontrivial Rayleigh-Bloch fields remain. We therefore write the
+nontrivial Rayleigh fields remain. We therefore write the
 exterior total field as the sum of a layer-potential contribution and
 a homogeneous background component $u_h[\xi]$:
 \begin{align}
@@ -575,21 +686,28 @@ a homogeneous background component $u_h[\xi]$:
     \mathcal{S}^{(nk)}[\sigma](\mathbf{x}) + \mathcal{D}^{(nk)}[\tau](\mathbf{x}), & \mathbf{x} \in \Omega,
   \end{cases}
 \end{align}
-where the Rayleigh-Bloch field $u_h$ has the form 
+where the homogeneous Rayleigh field \(u_h\) has the form
 \begin{align}
-  u_h[\xi](x, y) = \sum_{m \in \mathbb{Z}} \xi_m^\rightarrow e^{\ii \gamma_m (x - X^-)} \psi_m(y) + \sum_{m \in \mathbb{Z}} \xi_m^\leftarrow e^{-\ii \gamma_m (x - X^+)} \psi_m(y),\quad (x, y) \in \mathcal{C}\setminus \overline{\Omega}.  \label{eq:homogeneous-field}
+  u_h[\xi](x,y)
+  ={}&\sum_{m\in\mathbb Z}
+  \xi_m^\rightarrow e^{\ii\gamma_m(x-X_\mathrm{L})}\psi_m(y)
+  +\sum_{m\in\mathbb Z}
+  \xi_m^\leftarrow e^{-\ii\gamma_m(x-X_\mathrm{R})}\psi_m(y).
+  \label{eq:homogeneous-field}
 \end{align}
 
-\begin{conjecture}[Exact and unique single-cell representation]
-\label{conj:single-cell-representation}
+\begin{theorem}[Exact and unique single-cell representation]
+\label{thm:single-cell-representation}
 Let
 $
   \mathcal C=[X_\mathrm{L},X_\mathrm{R}]\times[0,d]
 $
-be a periodic cell containing an inclusion $\Omega$, and assume that
-$(k,\beta)$ is not at a Wood anomaly.
+be a periodic cell containing an inclusion $\Omega$ satisfying the standing
+separation assumption in Section~\ref{sec:model-problem}, and suppose that
+\(\partial\Omega\) is sufficiently smooth. Let \(k>0\), \(n>0\), and
+\(\beta\in\mathbb R\), and assume that $(k,\beta)$ is not at a Wood anomaly.
 
-Every sufficiently regular field $u$ satisfying
+For every sufficiently regular field $u$ that solves the transmission problem
 \[
 \begin{cases}
 \Delta u+k^2u=0
@@ -604,22 +722,34 @@ u,\ u_\nu \text{ are continuous across }\partial\Omega,
 \end{cases}
 \]
 with no boundary condition imposed on the vertical boundaries
-$\Gamma_L$ and $\Gamma_R$, admits a unique representation
+$\Gamma_\mathrm{L}$ and $\Gamma_\mathrm{R}$, define the incoming Rayleigh
+coefficient sequences by
+\begin{align*}
+  \xi_m^\rightarrow
+  &:=\xi_m^\rightarrow(u;X_\mathrm{L}),
+  &\xi_m^\leftarrow
+  &:=\xi_m^\leftarrow(u;X_\mathrm{R}),
+  &&m\in\mathbb Z,
+\end{align*}
+using \eqref{eq:right-coefficient-extraction} and
+\eqref{eq:left-coefficient-extraction}, respectively. Then there exist unique
+interface densities \(\sigma\) and \(\tau\) such that
 \[
-u(x)=
-\begin{cases}
-S_{\rm QP}^{(k)}[\sigma](x)
-+D_{\rm QP}^{(k)}[\tau](x)
-+u_h[\xi](x),
-& x\in\mathcal C\setminus\overline{\Omega},\\[1mm]
-S^{(nk)}[\sigma](x)
-+D^{(nk)}[\tau](x),
-& x\in\Omega,
-\end{cases}
+  u(\mathbf{x}) = \begin{cases}
+    \mathcal{S}^{(k)}_{\mathrm{QP}}[\sigma](\mathbf{x}) + \mathcal{D}^{(k)}_{\mathrm{QP}}[\tau](\mathbf{x}) + u_h[\xi](\mathbf{x}), & \mathbf{x} \in \mathcal{C}\setminus \overline{\Omega},\\
+    \mathcal{S}^{(nk)}[\sigma](\mathbf{x}) + \mathcal{D}^{(nk)}[\tau](\mathbf{x}), & \mathbf{x} \in \Omega,
+  \end{cases}
 \]
-where the Rayleigh--Bloch series defining $u_h[\xi]$ converges in the
-appropriate $H^1$ sense.
-\end{conjecture}
+Moreover, the exterior remainder
+\[
+  w_e:=u-u_h[\xi]
+  \qquad\text{in }\mathcal C\setminus\overline\Omega
+\]
+satisfies the Rayleigh radiation condition of
+Definition~\ref{def:rayleigh-radiation-condition}. Consequently, the triple
+\((\sigma,\tau,\xi)\) is uniquely determined by \(u\).
+\end{theorem}
+The proof of Theorem~\ref{thm:single-cell-representation} is given in Appendix~\ref{sec:appendixA}.
 
 \subsection{Eigenvalue condition as a homogeneous linear system}
 In this subsection we show that the eigenvalue problem can be reduced to a homogeneous linear system. The first equation is the continuity of the field and its normal derivative across the interface $\partial \Omega^0$. Define the operator:
@@ -849,7 +979,7 @@ Figure~\ref{fig:y-qpgreen-mfs}.
   \end{tikzpicture}
   \caption{MFS construction of the $y$-quasiperiodic Green's function. Proxy
   sources represent the smooth correction inside the bounded cell, while
-  Rayleigh-Bloch expansions impose outgoing behavior in the two unbounded
+  Rayleigh expansions impose outgoing behavior in the two unbounded
   $x$-directions.}
   \label{fig:y-qpgreen-mfs}
 \end{figure}
@@ -874,11 +1004,11 @@ $M$, the MFS approximation is
   \end{cases}
   \label{eq:y-qpgreen-mfs-ansatz}
 \end{align}
-The $\pm$ sign in the exponent of the Rayleigh-Bloch expansions is chosen to ensure that the outgoing condition is satisfied, i.e., left-going waves for left half-guide and right-going waves for right half-guide.
+The $\pm$ sign in the exponent of the Rayleigh expansions is chosen to ensure that the outgoing condition is satisfied, i.e., left-going waves for left half-guide and right-going waves for right half-guide.
 The representation is extended from this strip to all $y$ by quasiperiodicity.
 
 % \subsection{Determination of the coefficients}
-The unknown proxy strengths $q_j$ and Rayleigh-Bloch coefficients $c_m^\pm$
+The unknown proxy strengths $q_j$ and Rayleigh coefficients $c_m^\pm$
 are determined by collocation. At paired points on the horizontal boundaries,
 the near-field expression $G_{\mathrm{near}}$ in the middle line of
 \eqref{eq:y-qpgreen-mfs-ansatz} is required to satisfy
@@ -962,7 +1092,7 @@ as the incident wave, i.e., $a = [e_n; 0]$, then we can solve \begin{align*}
   A_\mathrm{QP}\eta = -B_{\partial \Omega} a
 \end{align*}
 to obtain the density $\eta$ of the layer potential of the scattered field, then we need 
-to convert the layer potential representation to the Rayleigh-Bloch expansion near the 
+to convert the layer potential representation to the Rayleigh expansion near the 
 two vertical boundaries. We make use of the spectral representation of the y-quasiperiodic Green's function \eqref{eq:qp-green-spectral},
 let $\mathbf{s} = (x_s, y_s)$ be some boundary point of $\Omega$. To get the $n$-th column of $R_\mathrm{L}$ and $T_{\mathrm{LR}}$, we rewrite \eqref{eq:qp-green-spectral} as \begin{align*}
   G_\mathrm{QP}^{(k)}(x,y;x_s,y_s) &= \frac{\ii}{2\sqrt{d}} \sum_{m\in\mathbb{Z}} \frac{1}{\gamma_m} e^{-\ii \beta_m y_s + \ii \gamma_m (x_s - X_\mathrm{L})} e^{-\ii \gamma_m (x - X_\mathrm{L})} \psi_m(y),\quad x < x_s,\\
@@ -1006,7 +1136,7 @@ the following generalized eigenvalue problem for the Bloch multiplier $\lambda$ 
     a^\rightarrow \\ a^\leftarrow
   \end{bmatrix}.
 \end{align}
-The Bloch mode $\phi_\lambda$ corresponding to the multiplier $\lambda$ has the Rayleigh-Bloch expansion in the neighborhood of the left boundary $\Gamma_\mathrm{L}$ as follows:
+The Bloch mode $\phi_\lambda$ corresponding to the multiplier $\lambda$ has the Rayleigh expansion in the neighborhood of the left boundary $\Gamma_\mathrm{L}$ as follows:
 \begin{align*}
   \phi_\lambda(x,y) = \sum_{m\in\mathbb{Z}} a_m^\rightarrow(\lambda) e^{\ii \gamma_m (x - X_\mathrm{L})} \psi_m(y) + \sum_{m\in\mathbb{Z}} a_m^\leftarrow(\lambda) e^{-\ii \gamma_m (x - X_\mathrm{L})} \psi_m(y).
 \end{align*}
@@ -1127,13 +1257,13 @@ In this subsection, we consider a special case of line-defected waveguide, in wh
 \(\Omega^\pm = \varnothing\), and \(\Omega^0\) is a star-shaped inclusion, as
 shown in Figure~\ref{fig:1d-waveguide-inclusion}. The experiment is
 implemented by the script \path{examples/run_tep_fixed_beta_k_scan.m}. This is
-a standard 1D periodic waveguide model. In this case the Bloch modes are exactly the Rayleigh-Bloch modes\begin{align*}
+a standard 1D periodic waveguide model. In this case the Bloch modes are exactly the Rayleigh modes\begin{align*}
   e^{\ii \gamma_m |x|}e^{\ii \beta_m y},\quad m\in\mathbb{Z}.
 \end{align*}
 Since $\gamma_m$ are chosen such that $\Im \gamma_m \geq 0$, the multiplier $|e^{\ii \gamma_m L}| < 1$ if and only if $\Im \gamma_m > 0$, i.e. $\beta_m^2 > k^2$. Let 
 $\mathcal{C}^0 = [-H, H] \times [-d/2, d/2]$, which is symmetric about $x$-axis, thus
 we only need to scan $\beta$ in the first irreducible Brillouin zone \([0,\pi/d]\). 
-If we search $k$ in the interval $[0, \beta)$, then all of the Rayleigh-Bloch modes are
+If we search $k$ in the interval $[0, \beta)$, then all of the Rayleigh modes are
 outgoing/admissible and the quasiperiodic Green's function decays in the $x$-direction.
 In this notation, the region \(k\geq \beta\) is the \emph{light cone}
 \cite[Chapter~7]{Joannopoulos2011}. This is the
@@ -1143,7 +1273,7 @@ there are extended states in the exterior medium. Equivalently, for
 \(\beta\in[0,\pi/d]\) and \(k<\beta\), every Rayleigh shifted wave number
 \(\beta_m=\beta+2\pi m/d\) satisfies \(|\beta_m|>k\). Thus, after the numerical
 truncation \(|m|\leq M\), the outgoing trace space is spanned by the decaying
-Rayleigh-Bloch modes in the retained channels. This observation is special to
+Rayleigh modes in the retained channels. This observation is special to
 the homogeneous 1D periodic waveguide; for a general periodic half-guide, the
 outgoing modes must be selected from the cell Bloch multipliers rather than
 from a single Rayleigh-channel inequality.
@@ -1336,6 +1466,11 @@ sampled singular value in this run is approximately \(2.50\times10^{-15}\).
 \subsection{Line-Defect waveguide}
 
 \section{Conclusion}
+
+\appendix
+\numberwithin{equation}{section}
+\input{appendixA}
+
 \bibliographystyle{plain}
 \bibliography{references}
 \end{document}
