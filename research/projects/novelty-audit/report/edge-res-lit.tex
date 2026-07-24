@@ -1,0 +1,1019 @@
+% Full title: Band-Edge and Resonance Extension to the Literature and Novelty Audit
+\documentclass[UTF8,11pt,fontset=none]{ctexart}
+
+\setCJKmainfont[BoldFont={Songti SC Bold}]{Songti SC}
+\setCJKsansfont{PingFang SC}
+\setCJKmonofont{PingFang SC}
+
+\usepackage[a4paper,margin=2.15cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,longtable,tabularx,array,multirow}
+\usepackage[table]{xcolor}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xurl}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{caption}
+\usepackage{pdflscape}
+\usepackage[backend=biber,style=numeric,sorting=nyt,maxbibnames=10,giveninits=true]{biblatex}
+
+\addbibresource{references.bib}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  citecolor=green!40!black,
+  urlcolor=blue!60!black,
+  pdftitle={Periodic line-defect waveguide 文献调研与创新性审计},
+  pdfauthor={Codex literature audit}
+}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.25em}
+\setlist[itemize]{leftmargin=2em,itemsep=0.25em,topsep=0.3em}
+\setlist[enumerate]{leftmargin=2.2em,itemsep=0.25em,topsep=0.3em}
+\renewcommand{\arraystretch}{1.18}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\statusA}{\textbf{A（已有）}}
+\newcommand{\statusB}{\textbf{B（直接扩展）}}
+\newcommand{\statusC}{\textbf{C（部分新）}}
+\newcommand{\statusD}{\textbf{D（可能新但证据不足）}}
+\newcommand{\draft}{\texttt{draft/}\allowbreak\texttt{draft.tex}}
+\setlength{\headheight}{14pt}
+\setlength{\emergencystretch}{1.5em}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Periodic line-defect waveguide 文献与创新性审计}
+\fancyhead[R]{检索截止：2026-07-20}
+\fancyfoot[C]{\thepage}
+\setcounter{tocdepth}{2}
+
+\title{\bfseries Periodic Line-Defect Waveguide Guided Modes\\
+系统文献调研与当前 Draft 创新性审计}
+\author{针对 \texttt{tep} 项目的证据型审计报告}
+\date{检索截止日期：2026 年 7 月 20 日}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+本报告审计当前 \draft{} 中 periodic line-defect waveguide guided-mode/eigenvalue
+问题的理论、边界积分、Bloch 模态和数值特征值构造。证据集包括本地
+\texttt{ref/} 的 13 个 PDF（其中 12 篇外部学术论文、1 份内部旧报告）以及
+13 篇经期刊页、DOI 或 arXiv 核实的外部论文；20 篇最直接相关论文另有逐篇笔记。
+结论是：全局导模问题到小邻域非线性 DtN 问题的精确等价、吸收传播算子/Riccati
+构造、RtR 对 forbidden frequencies 的处理、广义 Floquet/Jordan 模态完备性、
+以及 smallest-singular-value 扫描均已有明确先例。draft 最可能保留的研究价值，
+不是这些组成部分本身，而是“高阶 Müller 界面积分离散 + 广义稳定 Bloch Cauchy
+relation + 可排除 representation nullspace 的特征值认证”这一特定交叉耦合。
+然而当前 Theorem 2 的 Appendix A 在一个关键式子中混用了 (k) 与 (nk) 的
+quasiperiodic double-layer operator，Conjecture 1 又遗漏 Jordan chains，因此尚不能把
+该耦合宣称为已证明的新方法。报告给出六条候选方向、优先级、主路线、备用路线和明确
+停止/转向条件。
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+\section{调研目标、范围与结论先行}
+
+本次任务回答五个问题：哪些内容已经解决，draft 与哪些工作重合，哪些只是直接改写，
+哪些交叉方向仍可能成文，以及下一步应优先投入什么。审计对象是 2026-07-20 21:04:36
+修改的 \draft{} 及其 \texttt{appendixA.tex}；它比 \texttt{pre/} 下各候选版本更新，且
+同时包含 outgoing Cauchy trace subspaces、Theorems 1--2、Conjectures 1--2、MFS
+quasiperiodic Green function、Müller BIE、one-cell scattering matrix 和 Bloch pencil，
+故不是仅凭文件名选择。
+
+本报告使用如下等级：A 为已有结果，B 为已有方法的直接扩展，C 为部分新颖但需要证明，
+D 为截至本次检索可能新但证据不足，E 为有充分证据的真正未解问题。这里未给任何现有
+draft claim 评为 E，因为“没有找到直接重合”不能证明“此前无人研究”。
+
+\begin{table}[htbp]
+\centering
+\caption{核心结论摘要}
+\small
+\begin{tabularx}{\textwidth}{p{0.24\textwidth} C{2.0cm} Y}
+\toprule
+Draft 组成 & 状态 & 审计结论 \\
+\midrule
+全局问题与 bounded trace/DtN 问题等价 & A & Fliss 2013 已证明 line-defect guided-mode 的精确小区域 DtN 等价且保持重数。 \\
+完整 Cauchy relation & B/C & 正则处只是 DtN graph 的关系写法；exceptional frequencies 处可能有价值，但 RtR 已解决 forbidden-frequency 可计算性。 \\
+Theorem 2 exact/unique representation & C（证明有误） & 证明框架与 Barnett--Greengard Appendix A 高度重合；当前混用 \(D^{(nk)}_{\rm QP}\) 与 \(D^{(k)}_{\rm QP}\)。 \\
+Bloch trace completeness & A（需改写） & 广义 Floquet modes/Jordan chains 的 Riesz basis 已有定理；普通 eigenvectors 一般不够。 \\
+MFS QP Green function 与三单元近场 & B & proxy、近邻自由空间源和 Rayleigh matching 均有先例；除非补稳定性/误差结果。 \\
+scattering-to-Bloch pencil & A/B & 是标准 scattering/transfer/wave-FEM 代数构造；直接稳定 relation coupling 仍可研究。 \\
+smallest singular value scan & A & 旧有启发式；应由 contour/Riesz projection 加物理残差认证替代。 \\
+当前数值证据 & 预备性 & line-defect 小节为空，尚无完整耦合算例、收敛表或独立 solver 比较。 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{当前 draft 的问题与方法概述}
+
+轴向 Bloch 参数固定为 \(\beta\)，横向无界的 line-defect eigenproblem 可抽象写为
+\begin{equation}
+  \mathcal L_\beta u = k^2 u,\qquad
+  u\in H^1_{\beta}(\mathbb R\times(0,L)),\qquad
+  u(x,\cdot)\to0\quad (|x|\to\infty),
+\end{equation}
+其中外侧周期 leads 与中间 defect cell 的系数不同。draft 的第一步是在左右 artificial
+ports \(\Gamma_L,\Gamma_R\) 定义 outgoing Cauchy trace relations
+\begin{equation}
+  \mathcal C_\pm(k,\beta)
+  \subset H^{1/2}(\Gamma_\pm)\times H^{-1/2}(\Gamma_\pm),
+\end{equation}
+再把全局问题化为 center cell 内 PDE 加
+\((\gamma u,\partial_n u)|_{\Gamma_\pm}\in\mathcal C_\pm\)。若 Dirichlet 投影可逆，
+\(\mathcal C_\pm=\{(f,\Lambda_\pm f)\}\) 是 DtN graph。
+
+第二步以 quasiperiodic/free-space layer potentials 与独立 homogeneous Rayleigh field
+表示单元场，利用 transmission jumps 形成 Müller-type block。第三步从 one-cell
+scattering matrix \(S\) 和端口相位条件组成关于 Bloch multiplier \(\lambda\) 的 pencil，
+选取 \(|\lambda|<1\) 的稳定 modes，再把其 Cauchy traces 作为半导外边界 relation 的
+有限维基。最终非线性矩阵可示意为
+\begin{equation}
+  \mathcal A(k,\beta)
+  \begin{bmatrix}\eta\\a_{\rm Rayleigh}\\c_L\\c_R\end{bmatrix}=0,
+  \qquad
+  \sigma_{\min}(\mathcal A(k,\beta))\approx0.
+\end{equation}
+现有数值内容验证 QP Green function 的 MFS 近似，并测试 homogeneous-lead special
+case；尚未展示一般 line defect。
+
+\section{检索方法、数据库与证据分层}
+
+检索截止日期为 2026-07-20。关键词被分为七组：line-defect guided modes；DtN/RtR/
+propagation operator；boundary integral；Bloch completeness/operator pencil；TE 与
+discontinuous coefficients；band edge/embedded/leaky/Wood；nonlinear eigenvalue 与
+contour methods。所有实际 query 和舍弃理由见伴随文件 \texttt{search\_log.md}。
+
+Backward chaining 从 Joly--Li--Fliss、Fliss、Barnett--Greengard、Yuan--Lu--Antoine
+与 Brown 等论文出发；forward chaining 重点追踪 RtR、Hohage--Soussi 到 Zhang 的
+generalized-mode DtN，以及 Barnett--Greengard 到 neighbor/proxy periodization。技术判断
+只使用论文原文、正式摘要/全文页或 DOI 信息。bulk band structure、forced scattering、
+local defect、fiber/slab 和 line-defect eigenproblem 被严格区分。
+
+证据集包含 25 篇不同的外部学术论文：本地 12 篇与外部新增 13 篇；另有一份内部旧
+报告只用于项目溯源，不计入 prior art。20 篇最直接论文进入逐篇笔记和主比较矩阵。
+
+\section{线缺陷 guided-mode 问题的已有理论}
+
+Ammari--Santosa 已建立 line defect 在 photonic band gap 中产生导引谱及色散关系的
+数学框架\cite{AmmariSantosa2004}。因此“研究 line-defect guided modes”这一问题层面
+显然不是新对象。Fliss 随后针对固定轴向 quasi-momentum，把无界 self-adjoint
+eigenproblem 精确化为 defect 邻域上的 nonlinear DtN eigenproblem\cite{Fliss2013}。
+其 Theorem 4.5 正是 global/bounded equivalence，Theorem 3.5 又把横向指数衰减率与到
+essential spectrum 的距离联系起来。
+
+数值上，Klindworth--Schmidt--Fliss 实现 cell operators、Riccati equation、high-order
+FEM、Newton 与 Chebyshev interpolation，并与 supercell 对比；还给出 group velocity
+公式\cite{KlindworthSchmidtFliss2014}。Supercell 本身在缺陷模场景有严格的指数收敛结果
+\cite{Soussi2005}，但靠近 band edge 时模式衰减弱，所需超胞宽度和建模误差会变差。
+
+因此 draft Theorem 1 的“restriction + gluing”逻辑应被定位为基础 lemma。可能保留的
+差异是 full Cauchy relation 不要求 Dirichlet trace 可作为全局坐标，但这必须与已有 RtR
+方法比较，并在异常频率给出实质 theorem，而非只说明 graph 可能失效。
+
+\section{周期 half-guide 的 DtN、propagation operator 与 RtR}
+
+Joly--Li--Fliss 在吸收介质中构造 compact propagation operator \(R\)，证明
+\(\rho(R)<1\)，并以 stationary Riccati equation 选择物理解\cite{JolyLiFliss2006}。
+Coatléven 把该框架用于含 line defect 的强迫问题，允许左右周期外介质不同，并给出
+Floquet--Bloch quadrature 与截断误差估计\cite{Coatleven2012}。这两篇都清楚指出：正吸收
+给出 coercivity/decay，而 \(\varepsilon\downarrow0\) 的 lossless 情形更困难。
+
+Fliss 2013 的 classical DtN 在一个可数 forbidden set 上不可用。Fliss--Klindworth--
+Schmidt 以 Robin-to-Robin map 改写 local problems，使 transparent condition 在这些频率
+仍可计算\cite{FlissKlindworthSchmidt2015}。因而“完整 relation 不会在 DtN pole 爆掉”
+是一个有潜力的数值设计目标，但不能声称首次绕过 forbidden frequencies。必须回答：
+
+\begin{enumerate}
+  \item relation 与 RtR 是否连续/代数等价，还是能覆盖更宽的 threshold/unit-circle 情形；
+  \item 离散 relation 的维数、闭性和 inf--sup 常数是否跨 pole 保持；
+  \item 与 RtR 相比，条件数、mode count 和 eigenvalue residual 是否更优。
+\end{enumerate}
+
+\section{Boundary integral methods 与单元 DtN 的已有工作}
+
+Yuan--Lu--Antoine 已用 transmission BIE 计算任意截面 dielectric cylinders 的 unit-cell
+DtN，覆盖两种 scalar polarizations，并用于 bulk band structure\cite{YuanLuAntoine2008}。
+所以“用 BIE 代替 FEM”或“只在 interface 上离散”本身不足以构成理论创新。
+
+Barnett--Greengard 的 Theorem 4 在非 exceptional 参数处证明 bulk Bloch eigenvalue
+当且仅当 quasiperiodic Müller operator 有非零 kernel\cite{BarnettGreengard2010}。其
+Appendix A 通过 swapped-wavenumber complementary transmission problem 证明唯一性，
+这与 draft Theorem 2 的证明架构直接重合。该论文也明确用 smallest singular value
+扫描 band structure，并进一步以 free-space kernels、相邻 images 和 auxiliary wall
+unknowns 绕过 empty-cell/QP Green resonance。
+
+对于一般 transmission BIE，well-posed formulations 和高阶 Nyström 已是成熟工具
+\cite{DominguezLyonTurc2016,HaoEtAl2014,Kress1991}。但 Hiptmair--Moiola--Spence 说明：
+直接 BIE inverse 可能在 physical solution operator 并未相应放大时出现 spurious
+quasi-resonances\cite{HiptmairMoiolaSpence2022}。因此本项目若继续 BIE 路线，不能把
+\(\sigma_{\min}\) 的谷值直接解释为 guided mode；必须验证重构场非零、PDE/interface/
+transparent residual 同时收敛，并证明或检测 representation nullspace。
+
+\subsection{Theorem 2 的逐式审计}
+
+draft Appendix A 先把总场拆成 homogeneous Rayleigh field 与 outgoing remainder，再
+构造 swapped problem。这个总体思路与 Barnett--Greengard Lemmas 9--10 和 Appendix A
+高度一致。但在 \texttt{appendixA.tex} 当前源文件第 243 行，第二组 QP potentials 写成
+\begin{equation}
+  -S_{\rm QP}^{(k)}[v_n^-] + D_{\rm QP}^{(nk)}[v^-].
+\end{equation}
+若要对内部满足 wavenumber \(k\) 的 \(v^-\) 应用紧邻的 QP interior representation
+lemma，第二项必须是 \(D_{\rm QP}^{(k)}[v^-]\)。混用 \(k\) 与 \(nk\) 后，随后声称的
+cancellation 不成立。这可能是笔误，但它位于唯一性/存在性证明的关键链条中，必须修正
+并重新核对 signs、quasiperiodic phases、Wood anomaly 排除和 auxiliary resonance。
+
+更重要的是，修正笔误并不自动产生新定理：还要精确说明“独立 homogeneous Rayleigh
+augmentation”相对于 Barnett 的 range/nullspace theorem 新增了什么，以及为何不会在
+interior transmission eigenvalues 或 auxiliary resonances 处丢失唯一性。
+
+\section{Bloch modes、stable subspaces 与 modal completeness}
+
+Joly--Li--Fliss 2006 的 Remark 5.1 曾把 propagation eigenfunction completeness 留作
+问题。Hohage--Soussi 2013 的 Theorem 2.2 随后给出 solution space 的 Riesz basis，并
+把 translation operator 表示为 infinite Jordan matrix；非平凡 Jordan blocks 至多有限个，
+且 Dirichlet/Neumann/mixed traces 继承同一 Jordan 结构\cite{HohageSoussi2013}。
+
+这直接否定 draft Conjecture 1 的普通-eigenvector-only 写法。正确形式不是
+\begin{equation}
+  \mathcal C_+ = \overline{\operatorname{span}}
+  \{\gamma_C u_j:T u_j=\lambda_j u_j,\ |\lambda_j|<1\},
+\end{equation}
+而应包含 generalized chains \(u_{j,0},\ldots,u_{j,m_j-1}\)，并说明 trace topology、
+阈值与 unit-circle modes。Zhang 用 contour/residue 进一步分解 translation operator 和
+limiting-absorption solution\cite{Zhang2021}，随后显式构造 generalized-eigenfunction DtN，
+证明 modal truncation 指数收敛并给出 FEM 总误差\cite{Zhang2023}。
+
+因此 draft 可有的差异不是“Bloch modes 完备”，而是：从一个高阶 cell scattering
+operator 通过 ordered generalized Schur/stable invariant subspace，直接形成 Cauchy
+relation，避免显式求一个可能奇异的 Dirichlet block inverse。这个差异必须用连续到离散
+的 gap estimate 或 graph-distance estimate 表述，例如
+\begin{equation}
+  \operatorname{gap}\bigl(\mathcal C_+,
+  \mathcal C_{+,N,M}\bigr)
+  \le C\bigl(e^{-cM}+E_{\rm Rayleigh}(N)+E_{\rm BIE}(h,p)\bigr),
+\end{equation}
+而不是只展示若干 eigenvalues。
+
+\section{MFS、quasiperiodic Green function 与 three-cell modification}
+
+Linton 系统整理了 periodic Helmholtz Green function 的 lattice sum、Kummer/Ewald 等
+表示\cite{Linton1998}。Luan--Sun--Zhuang 已用 fundamental solutions 加 Rayleigh
+expansion 做 quasiperiodic penetrable scattering，并在非 Wood 条件下把场误差控制到
+interface residual\cite{LuanSunZhuang2019}。Barnett--Greengard 的相邻 images 思想之后，
+Cho--Barnett 明确把 central period 与 immediate left/right neighbors 作为 near field，
+proxy sources 表示远处周期 copies，并以 Rayleigh 条件和 Schur complements 消元
+\cite{ChoBarnett2015}。
+
+所以 three-cell near-field modification 不是新的算法结构。仍可能有价值的工作是针对
+“计算 \(G_{\rm QP}\) 而非直接解 scattering field”的特定 least-squares operator，证明
+source radius、proxy number、Rayleigh truncation 与距 Wood anomaly 的联合稳定性。
+在没有此类 theorem 前，MFS 应被定位为 enabling implementation。
+
+\section{One-cell scattering matrix 与 Bloch generalized eigenproblem}
+
+bulk bands 通过 transfer/scattering/DtN 的边界 eigenproblem 至少在 2008 年的综述性
+论述中已经是标准路线，且 transfer matrix 的指数不稳定早已被指出
+\cite{YuanLuAntoine2008}。draft 的 two-port scattering relation
+\begin{equation}
+  \begin{bmatrix}b_L\\ b_R\end{bmatrix}
+  =S(k,\beta)\begin{bmatrix}a_L\\a_R\end{bmatrix},
+  \qquad
+  \begin{bmatrix}a_R\\b_R\end{bmatrix}
+  =\lambda\begin{bmatrix}b_L\\a_L\end{bmatrix}
+\end{equation}
+经消元成为 generalized eigenproblem，这是标准代数转换。Dohnal--Schweizer 也已经
+分析以 Bloch waves 施加周期 outlet radiation condition 的数值方案
+\cite{DohnalSchweizer2018}。
+
+可研究的问题是 stable subspace 本身，而非 pencil 形式：在 \(|\lambda|\approx1\)、
+multiple/defective multipliers、强 evanescent scale separation 时，如何用 structure-
+preserving QZ/ordered Schur 得到可靠 relation，并量化它相对于连续 Cauchy space 的角度。
+
+\section{TE 模式与 divergence-form transmission problems}
+
+TE 模式的自然算子是 divergence form，例如
+\begin{equation}
+  -\nabla\!\cdot\!\bigl(\varepsilon^{-1}\nabla u\bigr)=k^2u,
+\end{equation}
+接口条件为 \([u]=0\) 和 \([\varepsilon^{-1}\partial_nu]=0\)。Brown--Hoang--Plum--
+Radosz--Wood 已在 line defect、discontinuous coefficients 和负阶 Sobolev/Floquet
+框架下证明 arbitrarily weak defects 可向 gap 引入 TE spectrum\cite{BrownEtAl2017}。
+Yuan--Lu--Antoine 的 cell DtN/BIE 也包含两种 scalar polarization
+\cite{YuanLuAntoine2008}。
+
+所以仅把 TM 的 normal derivative continuity 替换为 weighted flux continuity是 B 级
+扩展。它只有作为“统一 TM/TE 的高阶 interface-only solver + 同一透明 relation + 一致
+误差/认证框架”的一部分才值得保留；并需明确 principal coefficient jump 对 natural trace、
+self-adjoint pairing、Müller weights 与 flux normalization 的影响。
+
+\section{Nonlinear eigenvalue algorithms 与数值检测}
+
+Barnett--Greengard 已用 \(\sigma_{\min}\) 扫描 bulk bands\cite{BarnettGreengard2010}；
+Fliss 的数值链已经使用固定点、Newton 与 Chebyshev interpolation
+\cite{KlindworthSchmidtFliss2014}。一般 analytic NEP 的 contour/Riesz projection 方法
+已经成熟\cite{BinkowskiZschiedrichBurger2020,BrennanEmbreeGugercin2023}，2025 年的
+semi-/bi-infinite photonic-crystal 工作还把 contour integral 与 block quasi-Toeplitz/
+doubling structure 结合起来\cite{LyuLiLin2025}。
+
+因此 draft 的 grid + recursive dip refinement 只能作为可视化/初值工具。生产求解器应
+围绕 contour \(\Gamma\) 计算
+\begin{equation}
+  P_\Gamma V = \frac{1}{2\pi i}\int_\Gamma
+  \mathcal A(z,\beta)^{-1}V\,\mathrm dz,
+\end{equation}
+并增加至少三层过滤：operator 在 contour 上无 pole；重构物理场非零；PDE/interface/
+transparent residual 随离散同步收敛。对 relation-valued block 若非方阵，应先设计稳定的
+square linearization 或使用 left/right test spaces，而不是直接对任意 least-squares matrix
+套用 contour method。
+
+\section{文献比较矩阵的可读摘要}
+
+完整逐列矩阵见 \texttt{literature\_matrix.csv}。这里按三个问题拆表，避免一张超宽表。
+
+\begin{table}[htbp]
+\centering
+\caption{直接解决 line-defect guided modes 或透明边界的工作}
+\small
+\begin{tabularx}{\textwidth}{p{0.22\textwidth} p{0.20\textwidth} p{0.22\textwidth} Y}
+\toprule
+文献 & 问题 & Exterior treatment & 相对 draft 的结论 \\
+\midrule
+Ammari--Santosa 2004 & line defect 存在性/色散 & 谱理论 & 问题本身已有数学框架。 \\
+Fliss 2013 & line-defect guided eigenmodes & 精确 DtN + Riccati & Theorem 1 和 nonlinear bounded reduction 已覆盖。 \\
+Klindworth et al. 2014 & 上述方法数值化 & DtN + high-order FEM & Newton/Chebyshev、group velocity、band-edge 对比均已有。 \\
+Fliss et al. 2015 & forbidden frequencies & RtR & 不能仅以“DtN graph 失效”为创新。 \\
+Coatléven 2012 & absorbed line-defect scattering & 左右 DtN + FBT & 不同 leads、propagation 与误差估计已有。 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{BIE、modal 与数值算法先例}
+\small
+\begin{tabularx}{\textwidth}{p{0.22\textwidth} p{0.25\textwidth} Y}
+\toprule
+文献 & 已证明/实现 & 对 draft 的约束 \\
+\midrule
+Barnett--Greengard 2010 & QP Müller nullspace equivalence；swapped problem；\(\sigma_{\min}\) scan & Theorem 2 与扫描高度重合，须明确新 range statement。 \\
+Yuan--Lu--Antoine 2008 & BIE 构造 unit-cell DtN，E/H polarization & “FEM 换 BIE”不足。 \\
+Hohage--Soussi 2013 & Floquet Riesz basis + Jordan form + trace bases & Conjecture 1 必须包含 generalized modes。 \\
+Zhang 2021/2023 & generalized spectrum decomposition；DtN 指数 truncation + FEM error & stable trace truncation 需要达到这一证据标准。 \\
+Cho--Barnett 2015 & immediate neighbors + proxies + Rayleigh，Wood robust & three-cell/proxy 架构已有。 \\
+Hiptmair et al. 2022 & BIE spurious quasi-resonance & 小奇异值必须配物理残差认证。 \\
+Binkowski et al. 2020；Lyu et al. 2025 & contour/Riesz NEP；semi-infinite photonic structure & 网格 scan 不是先进 eigensolver。 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{当前 draft 的逐项 prior-art audit}
+
+\begin{longtable}{p{0.29\textwidth} p{0.16\textwidth} p{0.47\textwidth}}
+\caption{Claim-by-claim 审计摘要；详细证据见 \texttt{claim\_audit.md}}\\
+\toprule
+Claim & 状态 & 依据与处理建议 \\
+\midrule
+\endfirsthead
+\toprule
+Claim & 状态 & 依据与处理建议 \\
+\midrule
+\endhead
+Theorem 1 global/bounded equivalence & A & Fliss Theorem 4.5 已建立；降为 lemma。\\
+DtN graph interpretation & B & 正则处为定义性代数；异常处须与 RtR 比较。\\
+Absorbing DtN & A & Joly/Coatléven 已建立，lossless limit 才困难。\\
+Rayleigh expansion & A & 非 Wood 情形标准；draft 排除了难点。\\
+Theorem 2 exact/unique representation & C & Barnett proof 高度重合；Appendix A 目前有 (k/nk) kernel mismatch。\\
+Müller + homogeneous Rayleigh block & B/C & 标准组件的特定耦合；需 Fredholm/kernel-isomorphism theorem。\\
+Conjecture 1 completeness & A（需改写） & generalized modes/Jordan chains 的 Riesz basis 已证明；当前写法过强。\\
+Conjecture 2 singular iff guided mode & C & 组合性强，且未排除 representation kernel/spurious BIE resonance。\\
+MFS QP Green function & B & Luan、Barnett、Cho 等已有；可作基础模块。\\
+Scattering-to-Bloch pencil & A/B & 标准转换；稳定 subspace 的连续误差尚可研究。\\
+Stable eigentrace relation & C & modal DtN 已有，但与高阶 Müller 的 pole-resistant direct relation coupling 尚未发现完整结果。\\
+TE extension & B & divergence form/discontinuous TE theory已有；单纯换权重不新。\\
+Smallest singular value scan & A & Barnett 已用；且有漏根/伪根风险。\\
+当前 numerical evidence & 预备性 & 一般 line-defect 小节为空，不足以支撑算法 claim。\\
+\bottomrule
+\end{longtable}
+
+\section{明确已经解决、相近解决与仍不确定的内容}
+
+\subsection{已经解决}
+
+\begin{itemize}
+  \item line-defect guided spectrum 的基础数学问题和 gap 中导模存在框架；
+  \item global eigenproblem 到 defect neighborhood exact nonlinear DtN problem 的等价；
+  \item absorbed half-guide propagation operator、Riccati equation 和 DtN；
+  \item 以 RtR 绕过 classical DtN forbidden frequencies；
+  \item generalized Floquet modes/Jordan chains 的 Riesz basis 及 trace basis；
+  \item generalized modal DtN 的指数截断和一个 FEM 总误差框架；
+  \item bulk unit-cell Müller BIE 与 Bloch eigenvalue 的 exact nullspace equivalence；
+  \item unit-cell DtN 的 boundary-integral computation；
+  \item proxy/neighbor/Rayleigh periodization 与 smallest-singular-value scanning 的基本结构。
+\end{itemize}
+
+\subsection{只在不同假设或不同几何下解决}
+
+Müller BIE 的 exact theorem 主要针对 bulk bands；modal completeness/DtN 主要用于 scattering
+或抽象 half-guide；contour photonic NEP 的近期工作采用 PEC/semi-infinite block structure；
+TE weak-defect work是存在性理论而非界面-only eigensolver。这些不能被错误描述为已经完整
+解决 draft 的特定耦合，但足以否定各单一组件的 priority claim。
+
+\subsection{截至本次检索仍不确定}
+
+\begin{itemize}
+  \item 一个连续且离散均可认证的 Müller--generalized-Bloch-Cauchy-relation operator，
+    在 DtN poles 附近保持稳定并严格排除 representation nullspace；
+  \item 针对该特定 operator 的三重误差分解：interface Nyström、Rayleigh truncation、
+    Bloch stable-subspace truncation；
+  \item Wood anomalies、unit-circle multipliers 与 band-edge thresholds 同时存在时的 relation
+    极限；
+  \item 相同框架下 dielectric line-defect complex resonances/leaky modes 的 pole tracking。
+\end{itemize}
+
+对这些项目只能写：\textbf{截至本次检索尚未发现直接重合工作，但现有证据不足以断言该
+方向为首次提出。}
+
+\section{当前 draft 最可能保留的贡献}
+
+最可保留的中心不是 Theorem 1、Conjecture 1、MFS 或 Bloch pencil 单独任何一项，而是
+如下交叉命题：
+
+\begin{quote}
+在 piecewise-constant dielectric-cylinder line-defect geometry 中，构造 high-order
+Müller interface operator 与左右 generalized stable Bloch Cauchy relations 的耦合；证明
+离散 kernel 与物理 guided-mode eigenspace 同构，并在 classical DtN forbidden frequencies
+附近保持可计算；再用 contour eigensolver 和物理残差排除 representation-induced roots。
+\end{quote}
+
+该表述仍需四个最小条件才可成为贡献：修复并重新证明 representation theorem；将
+ordinary Bloch modes 改为 generalized invariant subspace；给出至少离散层面的 spurious-
+free kernel theorem；完成一般 line-defect convergence/benchmark。少任一项，论文容易被
+评价为已有 DtN、Müller、scattering matrix 和 contour method 的串联。
+
+\section{下一步六个候选创新方向}
+
+\subsection{方向一：Spurious-free Müller--Cauchy-relation guided-mode operator}
+
+\begin{description}[style=multiline,leftmargin=4.4cm,labelwidth=4.1cm]
+  \item[核心研究问题：] 证明 central-cell Müller block 与左右 outgoing generalized Cauchy relations 的 kernel 与真实 guided eigenspace 一一对应。
+  \item[与已有文献的差异：] Fliss 用 FEM--DtN/RtR；Barnett 用 bulk QP Müller；Zhang 用 generalized-mode DtN。目标是三者在 line defect 上的 exact interface-only coupling，并显式排除 representation kernel。
+  \item[为什么可能创新：] 本次检索未找到同一几何下的完整 Fredholm/kernel-isomorphism + high-order BIE 结果；Hiptmair 的 spurious 现象使认证不是装饰性细节。
+  \item[继续核实的文献：] 更广的 multi-trace/Calderón relation、photonic-crystal-fiber BEM modes、operator-valued NEP 与 pole cancellation。
+  \item[主要定理：] Fredholm index zero；物理场重构映射在 kernel 上双射；离散 spectral exactness/no pollution。
+  \item[算法：] Kress/Alpert Nyström，ordered generalized Schur stable relation，rank-revealing nullspace，物理 residual filter。
+  \item[数值实验：] Fliss geometry、circular/noncircular rods、左右相同/不同 leads、DtN pole 附近；与 FEM--DtN/RtR 独立对比。
+  \item[最小可发表单元：] 一个 TM geometry、一个 theorem（kernel 双射）、一套 convergence table、两个 reference dispersion curves。
+  \item[难度：] 理论高；实现中高。
+  \item[主要风险：] Theorem 2 可能只是一条标准 representation，或 relation block 在异常点不 Fredholm。
+  \item[失败时保留：] 经严格验证的高阶 BIE--RtR solver 与 spurious-root diagnostics。
+  \item[推荐优先级：] \textbf{1，当前论文主线首选。}
+\end{description}
+
+\subsection{方向二：广义稳定 Bloch Cauchy relation 的误差与条件数}
+
+\begin{description}[style=multiline,leftmargin=4.4cm,labelwidth=4.1cm]
+  \item[核心研究问题：] 从 discretized one-cell scattering operator 直接逼近 continuous outgoing Cauchy subspace，而不形成 DtN inverse，并给出 gap/angle error。
+  \item[差异：] Hohage/Zhang 已给 generalized completeness 和 modal DtN truncation；目标强调 scattering stable invariant subspace、relation coordinates 和跨 DtN pole 条件数。
+  \item[创新性依据：] 直接 relation 的条件数优势尚未在检索到的 line-defect BIE 文献中得到证明，但不能据此断言首次。
+  \item[继续核实：] wave finite element、symplectic pencils、discrete Riccati invariant subspaces、Krein/flux pairing。
+  \item[主要定理：] subspace gap bound；defective multiplier 的 Jordan-chain approximation；远离/接近 unit circle 的条件数界。
+  \item[算法：] structure-preserving scattering assembly，QZ/ordered Schur，biorthogonal flux normalization。
+  \item[实验：] 人造近重根、\(|\lambda|\approx1\)、DtN Dirichlet block singular；与 DtN/RtR condition number 对比。
+  \item[最小单元：] 离散 finite-Rayleigh model 上的定理 + 数值，随后再连接 continuous BIE。
+  \item[难度：] 理论很高；实现中。
+  \item[风险：] 与 Zhang 2023 的结论等价，只是坐标改变。
+  \item[失败时保留：] 稳定的 QZ 模态模块和一套 threshold diagnostics。
+  \item[优先级：] \textbf{2；适合作为方向一的理论核心或独立后续。}
+\end{description}
+
+\subsection{方向三：Contour NEP + 物理场残差认证}
+
+\begin{description}[style=multiline,leftmargin=4.4cm,labelwidth=4.1cm]
+  \item[核心问题：] 用 contour/Riesz projection 找全指定区域的 guided eigenvalues，同时区分 operator poles、representation nullspace 与真实 modes。
+  \item[差异：] contour method 本身成熟；差异必须是 relation-valued BIE 的 square realization、pole-safe resolvent 与物理认证。
+  \item[创新性：] 可把 draft 最薄弱的 \(\sigma_{\min}\) scan 变成可靠算法，但单纯调用 Beyn/SS 不新。
+  \item[继续核实：] meromorphic NEP、BIE pole cancellation、InfBeyn/FEAST、non-square analytic operator pencils。
+  \item[主要定理：] contour 内 mode count；无 pole 污染条件；residual filter 对真实 kernel 的一致性。
+  \item[算法：] adaptive quadrature、random probing、SVD rank decision、argument-principle/pole check、field reconstruction。
+  \item[实验：] multiple/tangent roots、接近 auxiliary resonance、与 dense grid 的漏根/成本对比。
+  \item[最小单元：] 固定 TM BIE operator 上的 complete mode count + independently verified eigenpairs。
+  \item[难度：] 理论中；实现中。
+  \item[风险：] 贡献被视为成熟 eigensolver 的应用。
+  \item[失败时保留：] 更可靠的内部研究工具，可立即服务其他方向。
+  \item[优先级：] \textbf{1（工程优先），作为方向一的必需算法而非单独主创新。}
+\end{description}
+
+\subsection{方向四：Band-edge poorly confined modes 的联合误差控制}
+
+\begin{description}[style=multiline,leftmargin=4.4cm,labelwidth=4.1cm]
+  \item[核心问题：] 当 decay rate \(\kappa\to0\) 时，联合控制 BIE、Rayleigh、Bloch-modal 与 eigensolver 误差。
+  \item[差异：] Fliss 已有衰减定理与 FEM/supercell 对比；需增加 interface-only relation 的参数一致误差和 adaptive rule。
+  \item[创新性：] 若给出 complexity/error law 而非只增加算例，可能有充分算法价值。
+  \item[继续核实：] threshold resolvent、slow light/group velocity、supercell asymptotics、spectral pollution。
+  \item[主要定理：] 误差常数对 band-edge distance 的显式依赖；adaptive mode count 停止准则。
+  \item[算法：] residual-driven Rayleigh/Bloch enrichment，contour branch tracking，high-precision fallback。
+  \item[实验：] 从 well-confined 连续追踪到 near-edge，比较 supercell width 与 relation dimension/CPU。
+  \item[最小单元：] 一个可重复 benchmark + 三项误差拆分 + 与 Fliss FEM 的独立交叉验证。
+  \item[难度：] 理论中高；实现中高。
+  \item[风险：] unit-circle threshold 破坏 analytic NEP 假设。
+  \item[失败时保留：] 高价值 benchmark 与软件验证数据集。
+  \item[优先级：] \textbf{2；数值论文或方向一的强证据。}
+\end{description}
+
+\subsection{方向五：左右不同周期 leads 的 interface-only guided-mode solver}
+
+\begin{description}[style=multiline,leftmargin=4.4cm,labelwidth=4.1cm]
+  \item[核心问题：] 两侧材料、周期单元或 band gaps 不同，仍计算局域 interface/defect modes。
+  \item[差异：] Coatléven 已处理 absorbed scattering，Dohnal--Schweizer 处理不同 periodic outlets；需聚焦 lossless guided eigenmodes 与 BIE relations。
+  \item[创新性：] 几何扩展本身不够；必须结合 exact mode existence condition、不同稳定维数匹配和误差认证。
+  \item[继续核实：] photonic interface/topological edge states、heterojunction DtN、bi-infinite block methods。
+  \item[主要定理：] 两侧 Cauchy relations 交叉的 Fredholm/index 与 mode multiplicity。
+  \item[算法：] 独立 left/right cell scattering operators，异维 stable relations，contour eigensolver。
+  \item[实验：] identical-lead 回归测试、heterojunction、仅一侧有 gap 的边界案例。
+  \item[最小单元：] 两个不同 cylinder lattices 的 TM interface mode + reference FEM。
+  \item[难度：] 理论中高；实现中。
+  \item[风险：] 被视为 Coatléven/edge-state 方法的直接扩展。
+  \item[失败时保留：] 通用双 lead 软件架构。
+  \item[优先级：] \textbf{3；适合作为方向一证明后的扩展。}
+\end{description}
+
+\subsection{方向六：Wood anomalies、unit-circle multipliers 或 complex leaky resonances}
+
+\begin{description}[style=multiline,leftmargin=4.4cm,labelwidth=4.1cm]
+  \item[核心问题：] 越过 draft 当前排除的 Wood/threshold 情形，或把 real guided eigenvalues 延拓到 complex resonances。
+  \item[差异：] scattering 中已有用 shifted kernels 或 proxy sources 处理 Wood anomalies 的 formulation；resonance、PML 与 contour 文献也很广，尚未完成与本项目全部交叉的核实。
+  \item[创新性：] 难点真实且可能高，但当前证据不足，不能作近期承诺。
+  \item[继续核实：] shifted Green functions、threshold radiation conditions、resonance sheets、analytic continuation of stable subspaces。
+  \item[主要定理：] threshold relation 极限或 meromorphic continuation；complex pole 与 outgoing field 等价。
+  \item[算法：] Wood-robust free-space/proxy BIE，complex contour tracking，sheet-aware branch handling。
+  \item[实验：] grazing Rayleigh order、multiplier 穿越 unit circle、由 bound mode 变 leaky mode。
+  \item[最小单元：] 一个简化 grating/line-defect threshold model 的理论与算法。
+  \item[难度：] 理论极高；实现高。
+  \item[风险：] radiation condition 与 analyticity 失败，范围迅速膨胀。
+  \item[失败时保留：] Wood-robust QP Green/BIE module。
+  \item[优先级：] \textbf{4，探索性后续，不建议当前主线。}
+\end{description}
+
+\section{方向排序与不建议作为主创新的内容}
+
+\begin{table}[htbp]
+\centering
+\caption{候选方向排序（5 为最优/最高；风险 5 为最高）}
+\small
+\begin{tabularx}{\textwidth}{p{0.30\textwidth} C{1.15cm} C{1.15cm} C{1.15cm} C{1.15cm} C{1.15cm} C{1.35cm} Y}
+\toprule
+方向 & 新颖潜力 & 可行性 & 时间成本 & 理论风险 & 数值风险 & 代码兼容 & 主线？ \\
+\midrule
+1 Müller--relation + spurious-free theorem & 4 & 4 & 4 & 4 & 3 & 5 & 是 \\
+3 Contour + physical certification & 3 & 5 & 2 & 2 & 2 & 5 & 作为主线算法 \\
+2 Stable relation error/conditioning & 4 & 3 & 5 & 5 & 3 & 4 & 可作理论核心 \\
+4 Band-edge joint error & 4 & 3 & 4 & 4 & 4 & 4 & 强数值副线 \\
+5 Different leads & 3 & 4 & 3 & 3 & 3 & 4 & 后续扩展 \\
+6 Wood/complex resonances & 5? & 2 & 5 & 5 & 5 & 3 & 当前否 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+不建议作为主创新：仅把 TM 改为 TE；仅重证 Fliss 的 bounded equivalence；只把 FEM 换
+成 BIE；只复现 scattering-to-Bloch pencil；只做 MFS/Linton benchmark；只增加新数值图；
+只用 contour eigensolver 而不解决 operator pole/spurious kernel。它们可以作为完整方法的
+必要组成，却不足以独立支撑 priority claim。
+
+\section{推荐主路线、备用路线与停止条件}
+
+\subsection{推荐主路线}
+
+\textbf{目标：先证明/验证 spurious-free Müller--generalized-Cauchy operator，再实现
+contour + physical residual eigensolver，最后以 Fliss/Klindworth geometry 和 band-edge
+benchmark 做独立比较。}
+
+\paragraph{第一阶段：两至四周的理论与最小离散审计。}
+修正 Theorem 2 的 kernel mismatch；把定理范围缩到清楚的非 Wood、无 auxiliary
+resonance 区间；用 Hohage/Zhang 的 generalized modes 重写 Conjecture 1；在固定有限
+Rayleigh truncation 上证明 block kernel 重构非零物理场的充要性。代码上增加 field
+reconstruction、PDE/interface/port residual 和 null-density/zero-field test。实验先只做
+circular rods 的 TM 回归。
+
+\paragraph{第二阶段：数值可靠性与收敛。}
+实现 ordered QZ/Schur stable relation 和 contour eigensolver。分别改变 interface nodes、
+Rayleigh orders、stable-mode dimension、proxy radius/number，得到三轴收敛表；与一个独立
+FEM--DtN/RtR 或充分宽 supercell 对比 eigenvalue、field profile、group velocity。必须包含
+一个 near-band-edge poorly confined mode。
+
+\paragraph{第三阶段：论文结构。}
+理论部分只保留真正需要的三条结果：representation/kernel-isomorphism、generalized
+relation approximation、no-spurious spectral convergence。算法部分给出 contour mode
+count 与 residual certification；数值部分给出 standard、DtN-pole-nearby、band-edge 三组。
+
+\paragraph{停止条件。}
+若进一步 forward search 找到同一 line-defect Müller--RtR/generalized-relation 的完整
+theorem 与同等 high-order numerics，则停止 priority claim，把工作转为复现/软件。若修正
+Theorem 2 后仍在普通 non-Wood 参数出现 nonphysical kernel，停止 exact-unique 路线。
+
+\paragraph{转向条件。}
+若连续 Fredholm proof 过难，但有限 Rayleigh/BIE block 可严格证明 kernel 双射和 spectral
+convergence，则转为“discrete certified solver”较小论文。若 relation 在 DtN pole 无条件数
+优势，则直接采用已有 RtR，将贡献收缩为 high-order BIE--RtR + contour certification。
+
+\subsection{较保守备用路线}
+
+实现 high-order Müller BIE--RtR solver（承认 transparent condition 来自已有文献），把
+新贡献限定为：可重复的 interface-only implementation、严格的三项离散收敛 study、
+contour complete mode count、spurious-root physical residual filter，以及 near-band-edge
+与非圆 rods benchmark。该路线理论新颖性较弱，但范围清楚、完成风险低于 general
+Cauchy-relation theorem，也与现有代码最兼容。
+
+\section{质量控制与最终结论}
+
+本次审计已区分 scattering 与 eigenvalue、bulk bands 与 line defects、TM 与 TE、DtN/
+RtR/trace relation、ordinary 与 generalized Bloch modes。报告没有使用“首次”“全新”或
+“此前无人”作为未经证据的结论。外部条目均提供 DOI/URL；本地条目在 BibTeX 中标注
+local copy。详细文献元数据、逐篇笔记、搜索记录和每条 draft claim 的证据链均保存在
+同一审计目录。
+
+最终判断是：\textbf{当前 draft 的主要组成大多已有先例；现阶段最值得投入的是特定
+Müller--\allowbreak generalized-Cauchy coupling 的 spurious-free 认证和可靠 contour eigensolver，
+其次是 band-edge 的联合误差/复杂度研究。}在完成 proof repair、generalized-mode 修订和
+一般 line-defect 数值验证之前，不建议提交以 Theorems 1--2/Conjectures 1--2 的现有组合
+为主创新的论文。
+
+\clearpage
+\fancyhead[R]{扩展检索截止：2026-07-21}
+\part*{2026-07-21 增量扩展：Band Edge、Threshold 与 Complex Resonance}
+\addcontentsline{toc}{part}{2026-07-21 增量扩展}
+
+\section{本轮扩展调研的范围与方法}
+
+本部分是对前十六节的只增不改扩展。旧六个创新方向、旧排序、推荐主路线、保守备用
+路线及停止/转向条件均保留原文；本部分只补充证据和新增建议。检索截止日期为
+2026-07-21。新增检索分为 band-edge/threshold、complex resonance、统一 formulation
+三条证据链，并从 Fliss、periodic-waveguide LAP、photonic BIE resonance、leaky-mode
+waveguide 和 contour NEP 论文做 backward/forward chaining。
+
+新增证据中，Hoang、Fliss--Joly、Kirsch--Lechleiter 与后续工作建立了实频周期导波管的
+LAP/辐射条件框架\cite{Hoang2011LAP,FlissJoly2016Radiation,KirschLechleiter2018,
+KirschSchweizer2025}；Nazarov 则说明真正 threshold 可能出现不衰减甚至多项式增长的
+almost-standing waves\cite{Nazarov2020Threshold}。在 resonance 侧，周期 slab 的
+second-kind BIE 已经把 real bound state 与 complex resonance 放到同一 dispersion
+relation 中\cite{ShipmanVenakides2003,ShipmanVenakides2005}，而 leaky photonic-crystal
+waveguide、PCF BIE 与 contour/BEM NEP 也都有直接先例
+\cite{LiLu2010LeakyWaveguides,LuLu2012PCF,LaiJiang2018,PerrusselPoirier2024}。
+
+因此本扩展不把“未检出完全同构论文”写成“首次”。检索日志、23 篇新增逐篇笔记、两张
+比较矩阵和代码审计分别保存在 \texttt{extensions/} 与
+\texttt{papers\_extended/}。
+
+\section{Band edge、threshold 与 cutoff 的概念区分}
+
+至少要区分下列十二个对象。
+
+\begin{enumerate}
+  \item \textbf{bulk photonic-crystal band edge}：完整二维周期背景的 Bloch band 极值；
+  \item \textbf{fixed-\(\beta\) projected edge}：固定轴向 Bloch 参数后，横向 lead 的
+    essential spectrum 边界；
+  \item \textbf{half-guide spectral threshold}：半无限周期算子的连续谱阈值；
+  \item \textbf{unit-circle multiplier}：\(|\lambda|=1\)，只说明无指数衰减，不自动
+    给出传播方向；
+  \item \textbf{repeated/defective multiplier}：需要 invariant subspace、Jordan chain
+    或 Puiseux 展开；
+  \item \textbf{zero group velocity}：band function 驻点，可能在带边，也可能是带内
+    驻点；
+  \item \textbf{cutoff/grazing}：某个 homogeneous Rayleigh channel 的
+    \(\gamma_m=0\)，不等同于 bulk/projected edge；
+  \item \textbf{guide curve touching essential spectrum}：离散导模支与连续谱边界接触；
+  \item \textbf{threshold eigenvalue}：阈值处仍属 \(L^2\) 的真本征态；
+  \item \textbf{threshold resonance/virtual level}：非 \(L^2\) 的有界或多项式增长
+    齐次解；
+  \item \textbf{poorly confined gap mode}：仍严格位于 gap 内，但 decay rate 很小；
+  \item \textbf{band-edge bifurcation}：参数变化下 eigenvalue/resonance 从阈值生成或
+    消失的局部分支结构。
+\end{enumerate}
+
+旧报告方向四主要针对第 11 项，而本轮新增的 exact-threshold 理论针对第 3、5、6、9、
+10 项。把二者合并会错误地把“小指数衰减”当作 threshold radiation condition。
+
+\section{Band-edge periodic waveguide 的已有谱理论}
+
+在严格 projected gap 内，Fliss 型半导波管解指数衰减，DtN 在排除 half-guide
+Dirichlet poles 后可定义；RtR 可绕开经典 DtN 的 forbidden frequencies，但不能消除
+谱阈值本身的 radiation-selection 问题。周期 outlets 的更一般 DtN 分析已由
+Fliss--Joly--Lescarret 推进\cite{FlissJolyLescarret2021}。
+
+在连续谱内，Hoang 以吸收极限定义 physical solution，Fliss--Joly 给出 outgoing
+propagating modes 加 exponentially decaying remainder 的渐近式，其 Definition 5、
+Theorems 7--8 明确使用 band derivative/group velocity 选择方向
+\cite{Hoang2011LAP,FlissJoly2016Radiation}。Lamacz--Schweizer 也用 Bloch measure 和
+能流定义 outgoing waves\cite{LamaczSchweizer2018}。这些结果支持“实轴上传播模应按
+flux/group velocity 选取”，但没有把任意零群速退化点变成常规 DtN graph。
+
+Nazarov 对 ordinary/degenerate thresholds、virtual levels 与 threshold resonances 的
+分类表明：退化阈值可携带多项式增长的 almost-standing waves，必须进入 weighted spaces
+或 separated-asymptotic conditions\cite{Nazarov2020Threshold}。这比当前 draft 的
+ordinary stable-mode span 需要更多结构。
+
+\section{Unit-circle Bloch multipliers 与 limiting absorption}
+
+当 \(|\lambda|\neq1\) 且稳定/不稳定谱簇有正间隙时，outgoing trace 可表示为 stable
+invariant subspace；Dirichlet 投影可逆时才进一步成为 DtN graph。当乘子进入单位圆，
+至少出现三种不同情况：非零群速传播模、零群速普通阈值、重复/defective 乘子。第一种
+按能流符号选择；后两种需要 generalized traces 和极限关系。
+
+Zhang 将 Floquet--Bloch 变量复化，证明 transformed field 对 multiplier 变量的解析/
+亚纯延拓，并用围住 right-going poles 的 contour 表示解
+\cite{Zhang2021NumericalWaveguides}。这一观点比逐点排序 \(\lambda\) 更接近当前需要的
+trace projector。Kirsch--Schweizer 又说明不同 damping 可能选择不同 LAP limit，除非
+物理损耗模型和非退化条件已固定\cite{KirschSchweizer2025}。因此本项目若定义 threshold
+relation，必须同时声明时间约定、吸收的放置方式和取极限路径。
+
+结论是：DtN 在阈值可发散、失去解析性，或仅能作为多值 linear relation 的局部坐标；
+Cauchy relation/Calderón subspace 比强行求 Neumann-over-Dirichlet 更稳健，但它仍不保证
+阈值处存在路径无关的解析极限。
+
+\section{Band-edge 附近的数值病态性}
+
+接近 projected edge 时，decay rate 趋零，stable/unstable subspaces 的 spectral gap
+闭合，端口截断、supercell 宽度、Rayleigh order、BIE 离散与特征值残差相互放大。旧
+Klindworth benchmark 已显示 poorly confined mode 的 supercell 收敛显著变慢；本轮
+文献没有找到可直接移植到当前 high-order BIE--relation block 的参数一致误差定理。
+
+具体数值症状包括：QZ eigenvectors 对小扰动旋转；ordinary mode sorting 换序；DtN
+Dirichlet block 条件数增大；far-field extractor 中 \(1/\gamma_m\) 在 cutoff 发散；
+smallest-singular-value 曲线变平或产生尖峰。应记录至少四个尺度：到 projected edge 的
+距离、最小 \(|\log|\lambda||\)、群速度、stable/unstable subspace angle。只有在这些
+尺度随离散加密稳定后，才能把数值现象称为 near-edge law。
+
+近期可行的范围是“严格 gap 内逼近 band edge”，而不是一步进入 exact threshold。
+
+\section{Leaky modes、resonances 与 quasinormal modes}
+
+本报告采用 \(e^{-i\omega t}\) 约定。被动系统的 complex-frequency QNM 通常满足
+\(\operatorname{Im}\omega<0\)：它随时间衰减，但解析延拓后的 outgoing field 可以在
+空间向外增长\cite{ShipmanVenakides2003,ShipmanVenakides2005}。因此“空间衰减”不是
+complex resonance 的通用定义。
+
+还必须区分：固定实 \(\beta\) 求复 \(\omega\)；固定实 \(\omega\) 求复传播常数；同时
+复化两者；scattering-matrix pole；resolvent pole；source-free outgoing NEP zero；guided
+resonance；quasi-guided/high-Q state；BIC 旁的 pole。Li--Lu 的 line-defect leaky-mode
+方法属于固定实频、复传播常数切片\cite{LiLu2010LeakyWaveguides}；Shipman--Venakides
+主要属于实 Bloch 参数、复频切片。Abdrabou--Lu 进一步表明，复传播常数分支可能是
+laterally decaying complex mode，而不一定是 leaky mode
+\cite{AbdrabouLu2019,AbdrabouLu2022}。
+
+故扩大题目必须先选定 spectral slice。本项目最自然的第一步是保持 fixed real
+\(\beta\)，令 \(k\) 复化；这最大限度保留当前 strip geometry，但需要重建 outgoing
+periodic-lead branch。
+
+\section{Periodic leads 中复频率 outgoing condition}
+
+复 \(k\) 下不能逐点使用 \(|\lambda|<1\) 作为物理 outgoing 定义。该规则在实 gap 内
+恰好选择空间衰减解；在 QNM sheet 上，物理解可由上半平面吸收问题解析延拓到下半平面，
+并在空间增长。更稳健的定义是：在 passive base point 选择 physical invariant
+subspace，再沿不穿过 branch point/pole 的路径 continuation，实轴极限则与 flux/LAP
+相容。
+
+Rayleigh channels 有
+\[
+  \gamma_m(k)=\sqrt{k^2-\beta_m^2},
+\]
+其 branch point 为 \(k=\pm\beta_m\)。周期 lead 还会出现 Bloch multipliers 的 collision、
+unit-circle crossing 和 cell-resolvent poles。一个 contour 若穿过这些点，\(T(k)\) 不再是
+Beyn 理论所需的单值 holomorphic matrix。允许的策略是限制在单一 sheet 的 simply
+connected domain、把 contour 避开 cut/poles，或使用局部 covering variable；不能用
+逐点 `imag(gamma)` 翻转伪装成解析分支。
+
+\section{Boundary integral methods for photonic resonances}
+
+Haider--Shipman--Venakides 已在带 channel defect 的二维 photonic-crystal slab 中建立
+second-kind BIE 并识别多类 resonance peaks\cite{HaiderShipmanVenakides2002}；随后
+Shipman--Venakides 的 Calderón projection formulation 以 analytic Fredholm dispersion
+统一 real bound states 与 complex slab resonances\cite{ShipmanVenakides2003}。这使
+“BIE + photonic crystal + bound/resonant modes”成为明确 prior art。
+
+Li--Lu 的 leaky cavity 精确边界方法、PCF high-order BIE 以及 Lai--Jiang 的 second-kind
+optical-waveguide formulation 又说明 boundary-only complex mode NEP 已成熟
+\cite{LiLu2009LeakyCavities,LuLu2012PCF,LaiJiang2018}。Kristensen 等还对 photonic-
+crystal cavity--defect-waveguide QNM 使用 nonlocal waveguide boundary 并处理发散尾部
+的归一化\cite{KristensenEtAl2014}。
+
+Müller transmission BIE 在选定复参数 sheet、远离 branch points 和 auxiliary
+singularities 时可保持 Fredholm second kind；但“second kind”不自动等于“无 spurious
+resonance roots”。必须重构场并检查 PDE、interface、port/outgoing residual，同时区分
+central representation pole、cell scattering pole 与 physical resolvent pole。
+
+Wood anomaly 处 classical QP Green function 失效。Bruno--Delourme 的 shifted Green
+function 在 Wood points 仍可构造 rapidly convergent formulation
+\cite{BrunoDelourme2014}，说明当前 proxy kernel 若要跨 Wood 点，需增加同等级的
+completion/shifted mechanism，不能只把 \(k\) 设为复数。
+
+\section{Complex nonlinear eigenvalue algorithms}
+
+复平面 dense \(\sigma_{\min}\) scan 既昂贵又非解析，并会把 matrix poles 与 zeros 混在
+同一低值图上。Beyn contour method 对 holomorphic matrix function 用 Keldysh moments
+恢复 contour 内全部 eigenvalues\cite{Beyn2012}；Riesz-projection 与系统理论版本在旧
+报告已有覆盖。Bykov--Doskolovich 已对 grating scattering-matrix poles 给出局部迭代与
+Cauchy all-pole 方法，并指出 determinant 路径的数值问题
+\cite{BykovDoskolovich2013}。Mai--Lu 在周期 cylinder arrays 中把 scattering anomalies
+写成小型 NEP 并用 contour solver 求全指定区域的解\cite{MaiLu2022}；最新 photonic-
+crystal-fiber BEM 工作也直接比较 Müller iteration、contour 与 rational interpolant
+\cite{PerrusselPoirier2024}。
+
+因此算法创新不能是“使用 Beyn/contour”。可发表的增量必须是：构造 branch-consistent
+periodic-lead BIE pencil；对已知 operator poles 做 subtraction/count correction；证明
+field-reconstruction residual 可排除 representation roots；并验证 multiple/tangent roots
+和 contour completeness。
+
+\section{Guided、threshold 与 leaky modes 的统一 formulation 审计}
+
+一个真实的统一 formulation 应统一同一几何、同一 central Müller representation、同一
+relation-valued periodic-lead exterior object、同一 field reconstruction 和同一 root
+certification。它在 gap 内给 stable trace subspace，在 regular propagation band 给
+outgoing-propagating 加 evanescent traces，在 complex sheet 给 analytically continued
+trace space，在 threshold 给 limiting linear relation。
+
+形式上可写统一 block：
+\[
+  \mathcal T(k,\beta)
+  \begin{bmatrix}\eta\\c_L\\c_R\end{bmatrix}=0,
+  \qquad
+  (\gamma u,\partial_n u)|_{\Gamma_\pm}\in\mathcal C_\pm(k,\beta).
+\]
+但符号相同不代表 operator-theoretic 统一。branch point 不是 ordinary eigenvalue；DtN
+graph 可在 relation 本身仍有意义时发散；不同 LAP 可有不同 boundary value；一个
+branch-blind contour solver 不能跨越所有区域。
+
+本轮未检出把上述四个 regime 全部纳入当前 infinite periodic-half-lead line-defect BIE
+的直接论文。但 Fliss/Hohage/Zhang/Nazarov、Shipman--Venakides、Li--Lu 与 contour-BEM
+文献已经覆盖绝大多数组件。故扩大后的原题目不适合作为单篇论文 priority claim。
+
+\section{与当前 draft 的相似性和差异}
+
+几何上，band-edge 方向几乎完全复用当前 fixed-\(\beta\) strip 和 cylinder interfaces；
+resonance 方向也可复用中心几何，但 periodic-lead radiation theory 必须改变。PDE 上，
+fixed real \(\beta\)/complex \(k\) 与当前 scalar Helmholtz 最接近；fixed real \(k\)/complex
+axial propagation constant 则会改变 reduction 和与 Li--Lu 文献的比较基准。
+
+operator 层面，central Müller block 和 relation coupling 结构可以保留；Theorem 1 的
+gap decay、当前 DtN graph、ordinary stable selection 和 Conjectures 1--2 不能直接延伸
+到 exact threshold/complex sheet。若只做 gap 内 near-edge study，旧理论复用为“高”；
+若做 exact threshold 为“中”；若做 complex resonance 仅为“中低”。
+
+与扩大题目最接近的工作依次是：Shipman--Venakides 的 unified slab BIE，Li--Lu 的
+leaky line-defect waveguide，Fliss--Joly--Lescarret 的 periodic-outlet DtN，Zhang 的
+multiplier-contour radiation，Nazarov 的 threshold relation ingredients，Kristensen 的
+waveguide-coupled QNM boundary，以及 Mai--Lu/Perrussel--Poirier 的 photonic contour NEP。
+
+\section{现有理论与代码的可复用性}
+
+可直接保留的是 geometry/quadrature cache、interface parametrization、绝大多数 central
+Müller layer blocks 和 field reconstruction skeleton。可有条件复用的是 one-cell
+scattering matrix、Rayleigh expansions 与 trace matching。必须重建或隔离的是：
+
+\begin{itemize}
+  \item \texttt{rayleigh\_channels}、QP proxy/kernel 中按
+    \texttt{imag(gamma)<0} 的逐点翻转；
+  \item \texttt{solve\_modes}/\texttt{select\_port\_traces} 中的
+    \texttt{abs(lambda)}、排序和 tolerance 分支；
+  \item \texttt{precomp\_proxy} 的 \texttt{lsqminnorm}/\texttt{pinv} 动态秩判定；
+  \item real-only \texttt{scan/eval\_grid}、interval refinement 和
+    \(\sigma_{\min}\) objective；
+  \item far-field extractor 在 \(\gamma_m=0\) 的 \(1/\gamma_m\) 奇性。
+\end{itemize}
+
+这些操作可以返回复数，却不构成 contour 所需的 analytic matrix-valued function。
+建议把 branch/sheet 作为显式数据结构，从 passive base point continuation；用 ordered
+QZ/Riesz projector 追踪簇，而不是追踪单个已排序 eigenvector；proxy elimination 采用
+contour 内固定秩的 block formulation。
+
+\section{转向 band-edge 方向的可行性}
+
+\begin{description}[style=multiline,leftmargin=4.3cm,labelwidth=4.0cm]
+  \item[几何/PDE 相似性：] 极高/极高。
+  \item[理论/代码复用：] gap 内 approach 为高/高；exact threshold 为中/中。
+  \item[新增数学：] invariant-subspace perturbation、group-velocity/flux、threshold
+    resolvent、generalized/polynomial Bloch waves、weighted spaces。
+  \item[关键失败点：] stable/unstable gap 闭合，或 LAP limit 依赖 absorption path。
+  \item[最小/完整时间：] gap 内稳定性约 3--5/8--14 个月；exact threshold 至少
+    8--12/18--30 个月。
+  \item[推荐：] 近期 A（严格 gap 内）；exact threshold C（长期）。
+\end{description}
+
+最平滑转向是先做旧方向四的严格化：计算 edge distance、decay、subspace angle、DtN/
+RtR condition number 和三项离散误差，再决定是否进入 \(|\lambda|=1\)。该路线最符合
+当前数学背景，也最能形成 numerical-analysis paper；若获得 relation limit theorem，才
+进一步形成理论论文。
+
+\section{转向 leaky-resonance 方向的可行性}
+
+\begin{description}[style=multiline,leftmargin=4.3cm,labelwidth=4.0cm]
+  \item[几何/PDE 相似性：] 高/高（固定实 \(\beta\)、复 \(k\)）。
+  \item[理论/代码复用：] 中/中；中心 BIE 可复用，lead selection 不可直接复用。
+  \item[新增数学：] resonance sheets、analytic Fredholm pencil、outgoing QNM
+    continuation、pole/zero correspondence、residue normalization。
+  \item[新增数值：] branch manager、analytic proxy elimination、contour/rational NEP、
+    pole subtraction 和 physical residual。
+  \item[关键失败点：] pointwise branch/sorting 破坏 holomorphy，得到伪 contour moments。
+  \item[最小/完整时间：] 6--10/14--24 个月。
+  \item[推荐：] B-/C+ 探索性备用，先用 homogeneous/simple periodic lead。
+\end{description}
+
+该方向更可能形成 computational-physics 或 numerical-methods paper，但 prior-art 风险高于
+near-edge stability：leaky PC waveguide、photonic BIE、S-matrix poles 与 contour BEM NEP
+均已有直接论文。标题必须突出 periodic-half-lead branch relation 和 spurious-free
+certification。
+
+\section{扩大后统一课题的可行性}
+
+统一题目可作为长期项目总标题，不适合作为当前单篇论文目标。最小可信拆分为：
+
+\begin{enumerate}
+  \item regular real/complex sheet（排除 threshold/Wood）上的 analytic
+    Müller--trace pencil 与 certified contour resonances；
+  \item gap 内 near-edge stable relation 的 conditioning/error law；
+  \item 一个分类清楚的 threshold limiting relation 及 guided-to-resonance continuation。
+\end{enumerate}
+
+若第一篇都无法证明 analytic sampling 和 physical root equivalence，则“统一”只剩软件
+接口层面。完整范围预计是 3--5 年、两至三篇论文，而非一次扩充 draft。TE/TM 或 Maxwell
+统一应放在标量分支问题解决之后。
+
+\section{本轮新增创新方向}
+
+旧方向 1--6 的原文和优先级保持不动。本轮只追加下列方向；完整卡片见
+\path{extensions/directions.md}。
+
+\begin{enumerate}[start=7]
+  \item \textbf{Projected-edge approach and stable-trace conditioning}：严格 gap
+    内建立 decay--subspace angle--BIE error 联合规律；本轮新增排序第 1。
+  \item \textbf{Unit-circle multiplier 的 LAP Cauchy relation}：处理零群速、重复或
+    defective multiplier；理论极高风险，排序第 4。
+  \item \textbf{Complex-frequency analytic periodic-lead trace pencil}：在单一
+    outgoing sheet 上构造 relation projector；与方向 10 并列第 2。
+  \item \textbf{Müller BIE + contour resonance + physical pole certification}：
+    贡献点是 analytic operator 与 pole/root 认证，不是 Beyn 算法；并列第 2。
+  \item \textbf{Guided-to-leaky/BIC continuation}：只在前两项完成后启用；prior-art
+    风险很高，排序第 3。
+  \item \textbf{Relation-valued guided/threshold/leaky umbrella}：长期总题目，不能
+    作为最小可发表单元；排序第 5/长期。
+\end{enumerate}
+
+该新增排序完全独立于旧排序，不降低旧方向一和方向三的优先级。
+
+\section{本轮新增备用路线}
+
+旧推荐主路线和保守备用路线 A 保持不变。本轮追加：
+
+\paragraph{备用路线 B：Band-edge stability inside the gap。}
+启用条件是旧主 theorem 缺乏足够新颖性，但 gap 内 mode 可稳定计算。三阶段依次为
+multiplier/decay/condition tracking、BIE--Rayleigh--relation error separation 与 RtR/
+supercell 比较、参数自适应 error-cost rule。最小成果是一条 inside-gap 稳定性规律和
+可复现 benchmark；若无稳定 pre-asymptotic regime，则停止理论 claim，保留数据集与 QZ
+工具。
+
+\paragraph{备用路线 C：Complex resonance solver。}
+先在 homogeneous/simple lead 上把 central BIE 做成复 \(k\) 解析矩阵，再加 contour
+count、pole subtraction 和 field residual，最后替换为 periodic lead。若 branch/proxy
+不能在 contour 上保持一致，则转用已有 DtN/PML exterior，并把成果收缩为 complex
+central BIE 与认证流程。
+
+\paragraph{长期路线：Guided--threshold--leaky relation program。}
+只有当路线 B 已给 near-edge control、路线 C 已给 complex-sheet stability、LAP branch
+明确且再次检索仍无直接同构 prior art 时启用。其成果应拆分成至少两篇论文。
+
+\section{本轮扩展结论}
+
+本轮给出以下分层判断。
+
+\begin{description}[style=multiline,leftmargin=3.3cm,labelwidth=3.0cm]
+  \item[近期最推荐：] 保持旧主路线，同时把新增方向 7 作为最强数值副线。它对几何、
+    BIE、QP Green 与 scattering matrix 的复用最高，且不要求立即解决 exact threshold。
+  \item[近期备用：] 备用路线 B。启用条件是旧 spurious-free theorem 难以形成足够强的
+    continuous result，但一般 guided solver 已可靠。
+  \item[中期扩展：] 方向 9--10/备用路线 C。前置条件是消除 pointwise branch、排序、
+    pseudoinverse/SVD 等非解析路径，并在简单 lead 上通过 contour completeness 测试。
+  \item[长期方向：] exact threshold relation 和 unified program。主要障碍是零群速/
+    defective multiplier 的 LAP、branched continuation 与 relation convergence。
+  \item[暂不建议：] 直接以“A unified BIE--Bloch-trace formulation for guided,
+    threshold, and leaky modes”为单篇论文目标；范围过大且每个组件都有强 prior art。
+\end{description}
+
+对十个最终问题的直接回答是：band-edge 的 gap 内 approach 是自然深化，exact threshold
+近似新课题；leaky resonance 需要重建 periodic-lead radiation/analytic theory；band-edge
+最能复用现有代码，resonance 的 prior-art 风险更高；用户当前背景最适合先做 near-edge
+numerical analysis。exact threshold 更可能形成理论论文，near-edge 形成数值分析论文，
+resonance solver 形成计算物理论文。统一题目应是长期两至三篇计划。若当前主创新最终
+不足，最平滑转向是备用路线 B；若要最大限度保留中心 BIE 并进入新现象，则在 analytic
+refactor 后采用备用路线 C。
+
+最终 novelty 表述只能是限定性的：截至 2026-07-21，本轮未验证到“当前 infinite
+periodic half-leads + central Müller BIE + complex-frequency analytic Bloch trace +
+threshold limiting relation + certified contour NEP”的完整同构工作；但绝不能据此声称
+首次，且任何宽泛的 leaky-mode/BIE/unified-dispersion claim 都已有强先例。
+
+\clearpage
+\printbibliography[heading=bibintoc,title={参考文献}]
+
+\end{document}
