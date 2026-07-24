@@ -1,0 +1,1296 @@
+% report.tex
+%
+% Purpose:
+%   Give a self-contained theoretical investigation of Conjecture 1 in the
+%   TEP draft: a single-cell Helmholtz transmission field represented as a
+%   homogeneous Rayleigh field plus common-density interface layer potentials.
+%
+% Main workflow:
+%   Reconstruct the source statement, define the Sobolev and modal setting,
+%   prove the homogeneous Fourier expansion, derive the direct Green formula,
+%   isolate the extra Muller synthesis theorem, and separate field, component,
+%   coefficient, and density uniqueness.
+%
+% Based on:
+%   draft/draft.tex, especially Conjecture 1 and the surrounding definitions;
+%   Barnett--Greengard (2010), Appendix A; Colton--Kress (1983/2013),
+%   Theorem 3.41; Linton (1998); and standard transmission layer-potential
+%   theory.
+%
+% Main changes:
+%   The original imprecise uniqueness claim is replaced by an unconditional
+%   direct Green representation and a corrected common-density theorem.  The
+%   mixed QP/free ansatz leads to a standard full-plane complementary
+%   transmission problem, not a quasiperiodic-cylinder spectral condition.
+%   The synthesis proof is expanded into an explicit complementary field,
+%   four Green extinction formulas, and closed density formulas.
+%
+% Numerical goal:
+%   None. This file contains theory only and no numerical experiment.
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,mathrsfs}
+\usepackage{booktabs,tabularx}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,urlcolor=blue!55!black}
+\setlist{itemsep=2pt,topsep=4pt}
+\allowdisplaybreaks
+
+\newcommand{\C}{\mathcal C}
+\newcommand{\Om}{\Omega}
+\newcommand{\Sig}{\Sigma}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\ii}{\mathrm i}
+\newcommand{\ee}{\mathrm e}
+\newcommand{\QP}{\mathrm{QP}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\pair}[2]{\left\langle #1,#2\right\rangle}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Conjecture 1: Single-Cell Helmholtz Fields as a Homogeneous Background Plus Interface Potentials}
+\author{A theoretical audit for the TEP project}
+\date{14 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The TEP draft conjectures that every sufficiently regular, vertically
+quasiperiodic Helmholtz transmission field in one cell, with no condition on
+the two vertical ports, has a unique representation as a homogeneous
+Rayleigh--Bloch field plus quasiperiodic exterior and free-space interior layer
+potentials using one common density pair.  The claim is not a valid theorem as
+written because its spaces, radiation convention, and meaning of uniqueness are
+unspecified.  This report proves an unconditional Green representation with
+physical Cauchy data and opposite interior/exterior signs.  It then proves a
+corrected version of the draft's common-density representation.  The key
+non-elementary step is the standard well-posedness of a swapped-wavenumber
+full-plane transmission problem: the complementary exterior field comes from
+the nonphysical extension of the free-space interior potential and therefore
+satisfies the radial Sommerfeld condition, not a quasiperiodic-cylinder
+radiation condition.  Away from Wood thresholds, and after fixing the incident
+normalization of the two Rayleigh families, the component fields, Rayleigh
+coefficients, and common density pair are unique.  At a Wood threshold the
+displayed exponential basis misses the generalized mode \(x\psi_m\).  Physical
+guided modes remain intended null fields of the mismatch operator and do not
+invalidate the representation.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction and verdict}
+
+The representation in question is not merely a convenient formula.  It is the
+surjectivity and injectivity assertion behind the later block system combining
+a Muller interface row with Rayleigh coefficients and lead traces.  If the
+representation misses fields, the block system can miss eigenfunctions.  If it
+has coordinate nullspaces, a singular discretized matrix need not correspond
+to a nonzero physical field.
+
+The conclusion of this investigation is deliberately split into two levels.
+
+\begin{enumerate}
+\item An \emph{unconditional direct Green representation} is available under
+standard trace assumptions.  Its interface densities are the physical
+Dirichlet and Neumann traces, but the interior and exterior interface terms
+have opposite signs.
+\item The exact \emph{same-density, same-sign Muller ansatz} in the draft is an
+indirect representation.  Its completeness is proved through a complementary
+(swapped-wavenumber) transmission problem.  Because the ansatz uses a QP kernel
+outside and a free-space kernel inside, the complementary exterior field is a
+free-space radiating field on \(\R^2\setminus\overline\Om\).  Standard
+transmission well-posedness supplies the needed existence and uniqueness; no
+additional quasiperiodic-cylinder nonresonance hypothesis is introduced.
+\end{enumerate}
+
+Consequently, Conjecture 1 is classified as a \emph{correctable claim}: after
+the spaces, non-Wood condition, port normalization, and kernel conventions are
+made explicit, the corrected theorem in Section~\ref{sec:corrected} is proved.
+
+\section{The source statement and what it leaves open}
+\label{sec:source}
+
+The source is \texttt{draft/draft.tex}, lines 583--622.  With notation retained
+from the draft, its exact mathematical content is:
+
+\begin{quote}
+Let \(\C=[X_L,X_R]\times[0,d]\) contain an inclusion \(\Om\), and assume
+\((k,\beta)\) is not at a Wood anomaly.  Every sufficiently regular field
+satisfying
+\[
+\begin{cases}
+\Delta u+k^2u=0&\text{in }\C\setminus\overline\Om,\\
+\Delta u+(nk)^2u=0&\text{in }\Om,\\
+u(x,d)=\ee^{\ii\beta d}u(x,0),\quad
+u_y(x,d)=\ee^{\ii\beta d}u_y(x,0),\\
+u,\ u_\nu\text{ continuous on }\partial\Om,
+\end{cases}
+\]
+with no vertical-port boundary condition has a unique representation
+\[
+u=\begin{cases}
+S_{\QP}^{(k)}\sigma+D_{\QP}^{(k)}\tau+u_h[\xi],
+&\C\setminus\overline\Om,\\
+S^{(nk)}\sigma+D^{(nk)}\tau,&\Om,
+\end{cases}
+\]
+where the Rayleigh series for \(u_h\) converges in an appropriate \(H^1\)
+sense.
+\end{quote}
+
+The text defines
+\begin{equation}
+u_h(x,y)=\sum_{m\in\Z}a_m\ee^{\ii\gamma_m(x-X_L)}\psi_m(y)
++\sum_{m\in\Z}b_m\ee^{-\ii\gamma_m(x-X_R)}\psi_m(y),
+\label{eq:uh}
+\end{equation}
+with
+\begin{equation}
+\beta_m=\beta+\frac{2\pi m}{d},\qquad
+\psi_m(y)=d^{-1/2}\ee^{\ii\beta_my},\qquad
+\gamma_m^2=k^2-\beta_m^2,\qquad \Im\gamma_m\geq0.
+\label{eq:modes}
+\end{equation}
+For the corrected theorem, the branch convention is strengthened to
+\(\Re\gamma_m\geq0\), \(\Im\gamma_m\geq0\), with \(\gamma_m>0\) for a
+nonzero propagating order.  The draft's condition \(\Im\gamma_m\geq0\) alone
+does not choose between the two real square roots.
+
+Several logically different meanings are hidden in the word ``unique'':
+uniqueness of the PDE field, of \(u_h\), of the layer field, of the density
+pair, and of the two Rayleigh coefficient sequences.  The PDE field is
+obviously not unique because no vertical boundary condition is imposed.  The
+only sensible question is uniqueness of coordinates for a \emph{given} field.
+The source also leaves the boundary regularity, density spaces, jump signs,
+coefficient norm, and exceptional transmission spectrum unspecified.
+
+\section{Geometry, weak solutions, and trace spaces}
+\label{sec:spaces}
+
+\subsection{The quasiperiodic cylinder}
+
+It is convenient to identify the horizontal sides of the cell and work on
+\[
+\mathscr X_\beta=\R\times(\R/d\Z),\qquad
+v(x,y+d)=\ee^{\ii\beta d}v(x,y).
+\]
+Let \(\Sig=\partial\Om\) be of class \(C^2\), let
+\(\overline\Om\subset(X_L,X_R)\times(0,d)\), and assume a positive distance
+between \(\Sig\) and both vertical ports.  The normal \(\nu\) points from
+\(\Om\) into the background.  We take \(k>0\), \(n>0\), and real \(\beta\),
+with
+\[
+k_e=k,\qquad k_i=nk.
+\]
+The absorbing case \(\Im k>0\) is easier because outgoing uniqueness follows
+from an energy identity; the real lossless case contains the spectral issues
+of interest.
+
+\subsection{What \texorpdfstring{\(H^1\), \(H^{1/2}\), and \(H^{-1/2}\)}{H1, H1/2, and H-1/2} mean}
+
+The space \(L^2(D)\) consists of square-integrable functions.  A function is in
+\(H^1(D)\) if it and its first \emph{weak} derivatives are in \(L^2(D)\).  A
+weak derivative is defined by moving a derivative onto a smooth test function
+in the integration-by-parts identity; no pointwise differentiability is
+required.
+
+On a Lipschitz boundary, the trace theorem gives a bounded map
+\[
+\gamma:H^1(D)\longrightarrow H^{1/2}(\partial D).
+\]
+For a Helmholtz solution \(v\in H^1(D)\) with \(\Delta v\in L^2(D)\), Green's
+identity defines its normal derivative by
+\begin{equation}
+\pair{\partial_\nu v}{\gamma\phi}_{\partial D}
+=\int_D \nabla v\cdot\nabla\overline\phi-k^2v\overline\phi\,dx.
+\label{eq:weaknormal}
+\end{equation}
+This is a continuous functional on \(H^{1/2}(\partial D)\), hence an element of
+its dual \(H^{-1/2}(\partial D)\).  Thus Dirichlet and Neumann traces naturally
+live in \(H^{1/2}\) and \(H^{-1/2}\), respectively.  These facts are standard
+consequences of the trace and weak Green theories; see McLean
+\cite[Chapters 3--4]{McLean2000}.
+
+We use the solution class
+\begin{equation}
+u_e\in H^1_\beta(\C\setminus\overline\Om),\qquad
+u_i\in H^1(\Om),
+\label{eq:solutionclass}
+\end{equation}
+with weak Helmholtz equations and
+\begin{equation}
+\gamma^+u_e=\gamma^-u_i\in H^{1/2}(\Sig),\qquad
+\partial_\nu^+u_e=\partial_\nu^-u_i\in H^{-1/2}(\Sig).
+\label{eq:transmission}
+\end{equation}
+One can first prove all formulas for piecewise \(H^2\) fields and then pass to
+\eqref{eq:solutionclass} by continuity.
+
+\subsection{Quasiperiodic Sobolev spaces}
+
+If \(f=\sum_m f_m\psi_m\), define
+\begin{equation}
+\|f\|_{H^s_\beta(0,d)}^2
+=\sum_{m\in\Z}(1+|\beta_m|^2)^s|f_m|^2.
+\label{eq:Hs}
+\end{equation}
+This is the periodic Fourier definition after factoring out
+\(\ee^{\ii\beta y}\).  It also makes the duality
+\((H^{1/2}_\beta)'=H^{-1/2}_\beta\) transparent: Cauchy--Schwarz pairs the
+weights \((1+|\beta_m|^2)^{1/2}\) and its reciprocal.
+
+\section{Homogeneous Rayleigh representation}
+\label{sec:rayleigh}
+
+\subsection{Modewise derivation}
+
+Let \(h\in H^1_\beta((A,B)\times(0,d))\) solve
+\((\Delta+k^2)h=0\) weakly.  Expanding in the orthonormal basis \(\psi_m\),
+\[
+h(x,y)=\sum_m h_m(x)\psi_m(y),
+\]
+and testing the weak equation with \(\varphi(x)\overline{\psi_m(y)}\) gives
+\begin{equation}
+h_m''+(k^2-\beta_m^2)h_m=0
+\quad\text{in }\mathcal D'(A,B).
+\label{eq:ode}
+\end{equation}
+Distributional solutions of this constant-coefficient ODE are smooth.  If
+\(\gamma_m\neq0\),
+\begin{equation}
+h_m(x)=a_m\ee^{\ii\gamma_m(x-X_L)}
++b_m\ee^{-\ii\gamma_m(x-X_R)}.
+\label{eq:modepair}
+\end{equation}
+The two functions have Wronskian \(-2\ii\gamma_m\) times a nonzero phase and
+are therefore linearly independent.  This proves modewise uniqueness away
+from thresholds.
+
+At \(\gamma_m=0\), equation \eqref{eq:ode} becomes \(h_m''=0\), whose solution
+space is
+\begin{equation}
+h_m(x)=A_m+B_mx.
+\label{eq:threshold}
+\end{equation}
+The two exponentials in \eqref{eq:modepair} both become 1 and cannot represent
+the second solution.  This is an explicit, elementary failure of the displayed
+draft coordinates at a Wood anomaly.
+
+\subsection{Coefficient norm and convergence}
+
+For large \(|m|\), write \(\gamma_m=\ii\alpha_m\), \(\alpha_m>0\).  The two
+anchored factors are
+\[
+\ee^{-\alpha_m(x-X_L)},\qquad
+\ee^{-\alpha_m(X_R-x)}.
+\]
+They decay into the cell from opposite ports.  Direct integration of the
+function, \(x\)-derivative, and \(y\)-derivative terms gives, up to constants
+depending only on the cell width,
+\begin{equation}
+\|h\|_{H^1(\C)}^2\asymp
+\sum_m(1+|\beta_m|^2)^{1/2}(|a_m|^2+|b_m|^2),
+\label{eq:coefnorm}
+\end{equation}
+apart from finitely many propagating modes.  The cross terms contain
+\(\ee^{-\alpha_m(X_R-X_L)}\) and are harmless.  Thus the appropriate space is
+\[
+\ell^2_{1/2,\beta}\times\ell^2_{1/2,\beta}.
+\]
+Equation \eqref{eq:coefnorm} proves convergence in \(H^1\), convergence of
+Dirichlet traces in \(H^{1/2}\), and convergence of normal traces in
+\(H^{-1/2}\).
+
+\begin{proposition}[Empty-cell check]
+\label{prop:empty}
+If \(\Om=\varnothing\) and \(\gamma_m\neq0\) for all \(m\), every weak
+\(H^1_\beta\) homogeneous cell solution has a unique representation
+\eqref{eq:uh} with coefficients in
+\(\ell^2_{1/2,\beta}\times\ell^2_{1/2,\beta}\).  At a threshold, the formula
+must be enlarged by \eqref{eq:threshold}.
+\end{proposition}
+
+\begin{proof}
+Equations \eqref{eq:ode}--\eqref{eq:coefnorm} give existence, convergence, and
+modewise uniqueness.  Orthogonality of \(\psi_m\) prevents cancellation
+between different orders.
+\end{proof}
+
+\subsection{Incoming normalization}
+
+Near the left port, write the local field as
+\[
+u_e=\sum_m(A_m^L\ee^{\ii\gamma_m(x-X_L)}
++B_m^L\ee^{-\ii\gamma_m(x-X_L)})\psi_m.
+\]
+Near the right port use coefficients \(A_m^R,B_m^R\) anchored at \(X_R\).
+For a non-Wood order, Dirichlet and \(x\)-derivative Fourier coefficients
+\((f_m,g_m)\) determine
+\begin{equation}
+A_m=\tfrac12\left(f_m+\frac{g_m}{\ii\gamma_m}\right),\qquad
+B_m=\tfrac12\left(f_m-\frac{g_m}{\ii\gamma_m}\right).
+\label{eq:portcoeff}
+\end{equation}
+The trace weights show that \(f\in H^{1/2}\) and \(g\in H^{-1/2}\) imply the
+half-order coefficient bound.
+
+We define the background field by the \emph{incoming} coefficients
+\begin{equation}
+u_h=\sum_m A_m^L\ee^{\ii\gamma_m(x-X_L)}\psi_m
++\sum_m B_m^R\ee^{-\ii\gamma_m(x-X_R)}\psi_m.
+\label{eq:incomingh}
+\end{equation}
+Then \(w_e=u_e-u_h\) is outgoing at both ends: it contains only the left-going
+factor on the left and the right-going factor on the right.  For evanescent
+orders ``outgoing'' means exponential decay.  This normalization is essential;
+without saying how \(u_h\) is tied to the two ports, the original uniqueness
+claim has no precise content.
+
+\section{Quasiperiodic Green function and layer potentials}
+\label{sec:layers}
+
+Let
+\[
+\Phi_\kappa(x,z)=\frac{\ii}{4}H_0^{(1)}(\kappa|x-z|),
+\]
+and define
+\begin{equation}
+S_\kappa\sigma(x)=\int_\Sig\Phi_\kappa(x,z)\sigma(z)\,ds_z,
+\quad
+D_\kappa\tau(x)=\int_\Sig\partial_{\nu_z}\Phi_\kappa(x,z)\tau(z)\,ds_z.
+\label{eq:potentials}
+\end{equation}
+The exterior operators replace \(\Phi_k\) by the outgoing
+\(y\)-quasiperiodic Green function.  Its spectral form, in the draft's sign
+convention, is
+\begin{equation}
+G_{\QP}^{(k)}(x,y;x',y')
+=\frac{\ii}{2d}\sum_{m\in\Z}\frac{1}{\gamma_m}
+\ee^{\ii\beta_m(y-y')}\ee^{\ii\gamma_m|x-x'|}.
+\label{eq:qpgreen}
+\end{equation}
+Linton derives the equivalent eigenfunction expansion and its outgoing
+asymptotics in equations (2.13)--(2.17) of \cite{Linton1998}.  Formula
+\eqref{eq:qpgreen} is undefined when a \(\gamma_m\) vanishes.
+
+For the normal pointing out of \(\Om\), write \(+\) for the trace from the
+exterior and \(-\) for the trace from the interior, and choose the jump
+convention
+\begin{align}
+\gamma^\pm D\tau&=K\tau\pm\tfrac12\tau,
+&\gamma^\pm S\sigma&=S\sigma,\label{eq:jumps1}\\
+\partial_\nu^\pm S\sigma&=K'\sigma\mp\tfrac12\sigma,
+&\partial_\nu^\pm D\tau&=T\tau.\label{eq:jumps2}
+\end{align}
+Changing the sign of the fundamental solution or normal changes all displayed
+half signs together; it does not change the conclusions.  The mapping spaces
+are
+\[
+\tau\in H^{1/2}(\Sig),\qquad \sigma\in H^{-1/2}(\Sig).
+\]
+The trace and mapping statements in these spaces follow from the Calderon
+theory summarized in \cite[Sections 3--4]{DominguezLyonTurc2016}.
+
+\section{What direct Green's identity actually proves}
+\label{sec:green}
+
+Let
+\[
+p=\gamma u\in H^{1/2}(\Sig),\qquad
+q=\partial_\nu u\in H^{-1/2}(\Sig).
+\]
+Apply Green's second identity first in \(\Om\) and then in
+\(\C\setminus\overline\Om\).  In the latter domain, the outward normal on the
+inner boundary is \(-\nu\).  The top and bottom integrals cancel: the field has
+phase \(\ee^{\ii\beta d}\), while the Green kernel as a function of the source
+variable has the inverse phase; the normal directions are opposite.  This is
+the one-period analogue of Lemma 10 in \cite[Appendix A]{BarnettGreengard2010}.
+The two vertical-boundary integrals remain.
+
+Denote their sum by \(h_V\).  For targets in the open cell, its sources lie on
+the vertical boundary, so
+\((\Delta+k^2)h_V=0\) and it is \(y\)-quasiperiodic.  Section
+\ref{sec:rayleigh} therefore gives it a two-sided Rayleigh expansion in the
+cell.  Careful use of the inner-boundary normal gives
+\begin{theorem}[Direct Green representation]
+\label{thm:directgreen}
+Under the geometry and weak-solution assumptions of Section~\ref{sec:spaces},
+and away from Wood thresholds,
+\begin{align}
+u_e&=h_V+D_{\QP}^{(k_e)}p-S_{\QP}^{(k_e)}q
+&&\text{in }\C\setminus\overline\Om,\label{eq:directext}\\
+u_i&=S^{(k_i)}q-D^{(k_i)}p
+&&\text{in }\Om.\label{eq:directint}
+\end{align}
+Here \(h_V\) is the retained vertical-boundary Cauchy integral and has an
+\(H^1\)-convergent Rayleigh expansion.
+\end{theorem}
+
+\begin{proof}
+For piecewise \(H^2\), excise a small circle around the target, apply Green's
+second identity, and let its radius tend to zero.  The small-circle term gives
+the field value.  The horizontal terms cancel as described above.  On
+\(\Sig\), the background-domain normal is \(-\nu\), which changes both the
+normal derivative of the field and the source-normal derivative of the Green
+kernel and yields \(+Dp-Sq\).  In the inclusion the ordinary interior formula
+yields \(+Sq-Dp\).  For piecewise \(H^1\), interpret normal derivatives by
+\eqref{eq:weaknormal}; boundedness of trace and potential maps extends the
+identity by density.
+\end{proof}
+
+The signs in \eqref{eq:directext}--\eqref{eq:directint} are opposite.  Hence
+direct Green's identity does \emph{not} prove the draft's formula with the same
+\((\sigma,\tau)\) and the same signs on both sides.  That formula is a Muller
+ansatz and needs an additional completeness theorem.
+
+\section{The common-density Muller synthesis}
+\label{sec:muller}
+
+Define the synthesis map
+\begin{equation}
+\mathcal J(\tau,\sigma)=
+\left(
+D_{\QP}^{(k_e)}\tau+S_{\QP}^{(k_e)}\sigma,
+D^{(k_i)}\tau+S^{(k_i)}\sigma
+\right).
+\label{eq:J}
+\end{equation}
+Its exterior member is outgoing because of \eqref{eq:qpgreen}.  Using
+\eqref{eq:jumps1}--\eqref{eq:jumps2} and the draft vector
+\(\eta=(\tau,-\sigma)^T\), its Cauchy mismatch is
+\begin{equation}
+A_{\QP}\eta=
+\begin{bmatrix}
+I+K_e-K_i&S_i-S_e\\
+T_e-T_i&I+K_i'-K_e'
+\end{bmatrix}\eta.
+\label{eq:A}
+\end{equation}
+This recovers the operator printed after Conjecture 1.  The leading
+singularities cancel in each wavenumber difference.  On a \(C^2\) curve,
+\(A_{\QP}\) is identity plus compact on
+\begin{equation}
+\mathcal X=H^{1/2}(\Sig)\times H^{-1/2}(\Sig).
+\label{eq:X}
+\end{equation}
+Barnett and Greengard make the same observation after their equation (20)
+\cite[Section 3]{BarnettGreengard2010}.  Compactness of corresponding
+wavenumber differences in Sobolev trace spaces is recorded in
+\cite[Section 4.1]{DominguezLyonTurc2016}.
+
+\subsection{The complementary problem}
+
+The crucial object is not an interior Dirichlet or Neumann eigenproblem.  It is
+the \emph{swapped} transmission problem obtained by extending the two
+potentials into their nonphysical sides:
+\begin{equation}
+\begin{cases}
+(\Delta+k_e^2)v_i=0&\text{in }\Om,\\
+(\Delta+k_i^2)v_e=0&\text{in }\R^2\setminus\overline\Om,\\
+v_e-v_i=F,\quad
+\partial_\nu v_e-\partial_\nu v_i=G&\text{on }\Sig,\\
+\displaystyle
+\partial_r v_e-\ii k_i v_e=o(r^{-1/2})
+&\text{as }r=|x|\to\infty,
+\end{cases}
+\label{eq:complement}
+\end{equation}
+The wavenumbers have exchanged physical locations.  The geometry is determined
+by the kernels being continued, not by the physical exterior geometry.  The
+nonphysical continuation of the QP exterior potential gives \(v_i\) inside
+\(\Om\), while the nonphysical continuation of the free-space interior
+potential gives \(v_e\) on the full plane outside \(\Om\).  Thus \(v_e\)
+satisfies the radial Sommerfeld condition.  This is exactly the
+``complementary field'' device in Appendix A of
+\cite{BarnettGreengard2010}.
+
+\begin{remark}[Relation to Hiptmair--Moiola--Spence (2022)]
+Definition 1.4 of \cite{HiptmairMoiolaSpence2022} distinguishes the physical
+solution operator \(S_{io}\) from the swapped-parameter unphysical operator
+\(S_{oi}\), and Theorem 1.10 expresses standard transmission-BIE inverses in
+terms of both.  This supports the structural distinction used here.  Their
+paper concerns full-plane direct BIEs; the present common-density calculation
+uses the mixed QP/free indirect ansatz of \cite[Appendix A]{BarnettGreengard2010}.
+\end{remark}
+
+\begin{definition}[Well-posed complementary problem]
+\label{def:complement-solvability}
+The complementary problem \eqref{eq:complement} is called well posed if, for
+every
+\[
+(F,G)\in H^{1/2}(\Sig)\times H^{-1/2}(\Sig),
+\]
+there exists exactly one pair
+\[
+v_i\in H^1(\Om),\qquad
+v_e\in H^1_{\rm loc}(\R^2\setminus\overline\Om)
+\]
+satisfying \eqref{eq:complement} and the Sommerfeld radiation condition.
+\end{definition}
+
+For a bounded \(C^2\) inclusion and positive real \(k_e,k_i\), this is the
+standard free-space Helmholtz transmission problem.  Colton and Kress state
+its classical existence and uniqueness as ``The transmission problem has a
+unique solution'' in Theorem 3.41 of \cite[Theorem 3.41,
+p.~101]{ColtonKress1983}; their preceding Theorem 3.40 proves uniqueness.
+Barnett and Greengard invoke exactly those two results in their Appendix A
+\cite[pp.~22--24]{BarnettGreengard2010}.  Colton and Kress formulate the
+argument for classical traces on a \(C^2\) surface in \(\R^3\).  The same
+layer-potential/Fredholm proof, with the two-dimensional outgoing fundamental
+solution and the Sobolev mapping properties in Section~\ref{sec:layers}, gives
+Definition~\ref{def:complement-solvability}.  Thus this is standard
+full-plane transmission well-posedness, not an additional periodic-waveguide
+spectral assumption.
+
+The complementary field can itself be written as layer potentials.  For any
+\((\tau,\sigma)\in\mathcal X\), define its physical fields
+\begin{equation}
+P_e=D_{\QP}^{(k_e)}\tau+S_{\QP}^{(k_e)}\sigma
+\quad\hbox{in }\C\setminus\overline\Om,
+\qquad
+P_i=D^{(k_i)}\tau+S^{(k_i)}\sigma
+\quad\hbox{in }\Om,
+\label{eq:physical-potentials}
+\end{equation}
+and continue the same potentials to their nonphysical sides with one sign
+change:
+\begin{equation}
+v^{\tau,\sigma}(x)=
+\begin{cases}
+v_i(x):=D_{\QP}^{(k_e)}\tau(x)+S_{\QP}^{(k_e)}\sigma(x),
+&x\in\Om,\\
+v_e(x):=-D^{(k_i)}\tau(x)-S^{(k_i)}\sigma(x),
+&x\in\R^2\setminus\overline\Om.
+\end{cases}
+\label{eq:complementary-layer}
+\end{equation}
+This is the present sign convention's version of equation (A.7) of
+\cite{BarnettGreengard2010}.  The QP potential has merely been evaluated on
+the other side of \(\Sig\), while the free-space potential in the second line
+is radiating because it is a finite-interface outgoing layer potential.
+
+\begin{lemma}[Explicit common-density synthesis]
+\label{lem:synthesis}
+Assume non-Wood parameters and the geometry and positive-material hypotheses
+above.  Let
+\[
+w_e\in H^1_{\rm loc}(\C\setminus\overline\Om),
+\qquad w_i\in H^1(\Om),
+\]
+where \(w_e\) is \(y\)-quasiperiodic, solves
+\((\Delta+k_e^2)w_e=0\), and is outgoing at both vertical ends, while
+\((\Delta+k_i^2)w_i=0\) in \(\Om\).  No transmission condition between
+\(w_e\) and \(w_i\) is assumed.  Then there is exactly one
+\((\tau,\sigma)\in\mathcal X\) such that
+\begin{equation}
+w_e=D_{\QP}^{(k_e)}\tau+S_{\QP}^{(k_e)}\sigma,
+\qquad
+w_i=D^{(k_i)}\tau+S^{(k_i)}\sigma
+\label{eq:synthesis-target}
+\end{equation}
+in their respective domains.
+\end{lemma}
+
+\begin{proof}
+We prove uniqueness and existence separately.
+
+\emph{1. Uniqueness of the densities.}
+Suppose first that both physical fields in
+\eqref{eq:physical-potentials} vanish.  Define \((v_i,v_e)\) by
+\eqref{eq:complementary-layer}.  Since \(P_e\) is zero on its exterior side,
+the jumps \eqref{eq:jumps1}--\eqref{eq:jumps2} give
+\begin{equation}
+\gamma v_i=-\tau,\qquad \partial_\nu v_i=\sigma.
+\label{eq:kernel-traces-i}
+\end{equation}
+Since \(P_i\) is zero on its interior side and \(v_e=-P_i\) on the exterior
+side, the same jumps give
+\begin{equation}
+\gamma v_e=-\tau,\qquad \partial_\nu v_e=\sigma.
+\label{eq:kernel-traces-e}
+\end{equation}
+Thus \((v_i,v_e)\) satisfies \eqref{eq:complement} with \(F=G=0\).  The
+uniqueness part of Definition~\ref{def:complement-solvability} yields
+\(v_i=v_e=0\).  Equations \eqref{eq:kernel-traces-i}--
+\eqref{eq:kernel-traces-e} then give \(\tau=\sigma=0\).  Hence
+\begin{equation}
+\Ker\mathcal J=\{0\}.
+\label{eq:Jinjective}
+\end{equation}
+
+\emph{2. Construction of the densities.}
+For the prescribed fields in the lemma, introduce the four Cauchy traces
+\begin{equation}
+p_e=\gamma^+w_e,\quad q_e=\partial_\nu^+w_e,
+\qquad
+p_i=\gamma^-w_i,\quad q_i=\partial_\nu^-w_i.
+\label{eq:w-traces}
+\end{equation}
+Use Definition~\ref{def:complement-solvability} to solve
+\eqref{eq:complement} with
+\begin{equation}
+F=-(p_e+p_i),\qquad G=-(q_e+q_i).
+\label{eq:complement-data-from-w}
+\end{equation}
+Write
+\[
+p_{v,i}=\gamma v_i,\quad q_{v,i}=\partial_\nu v_i,
+\qquad
+p_{v,e}=\gamma v_e,\quad q_{v,e}=\partial_\nu v_e.
+\]
+The two jump equations in \eqref{eq:complement} are precisely
+\begin{align}
+p_{v,e}-p_{v,i}&=-(p_e+p_i),\label{eq:vjump-p}\\
+q_{v,e}-q_{v,i}&=-(q_e+q_i).\label{eq:vjump-q}
+\end{align}
+Therefore the following two expressions on each line agree, and we define
+\begin{align}
+\tau&:=p_e-p_{v,i}=-p_{v,e}-p_i,\label{eq:density-tau}\\
+\sigma&:=q_{v,i}-q_e=q_{v,e}+q_i.\label{eq:density-sigma}
+\end{align}
+
+It remains to verify that these densities produce the prescribed fields.  We
+first prove the two quasiperiodic Green formulas separately, in the style of
+Lemmas 9--10 of \cite[Appendix A]{BarnettGreengard2010}.
+
+\begin{lemma}[Interior quasiperiodic Green formula]
+\label{lem:qp-green-interior}
+Let \(v_i\) satisfy \((\Delta+k_e^2)v_i=0\) in \(\Om\), and let
+\(p_{v,i}=\gamma v_i\), \(q_{v,i}=\partial_\nu v_i\).  Then
+\begin{equation}
+D_{\QP}^{(k_e)}p_{v,i}-S_{\QP}^{(k_e)}q_{v,i}
+=\begin{cases}
+-v_i,&\text{in }\Om,\\
+0,&\text{in }\C\setminus\overline\Om.
+\end{cases}
+\label{eq:green-vi}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Put \(e_y=(0,1)\), \(\alpha=\ee^{\ii\beta d}\), and
+\(\Om_j=\Om+jd e_y\), \(\Sig_j=\partial\Om_j\).  The one-period
+quasiperiodic Green function is the appropriately converged lattice sum
+\[
+G_{\QP}^{(k_e)}(x,z)
+=\sum_{j\in\Z}\alpha^j\Phi_{k_e}(x,z+jd e_y).
+\]
+For clarity, first truncate this sum to \(|j|\leq N\).  On \(\Sig_j\), copy
+the Cauchy data by
+\[
+p_{v,i}^{(j)}(z+jd e_y)=p_{v,i}(z),\qquad
+q_{v,i}^{(j)}(z+jd e_y)=q_{v,i}(z).
+\]
+After the change of variable \(z_j=z+jd e_y\), the contribution of the
+\(j\)-th image is
+\[
+\begin{aligned}
+I_j(x)
+&=\int_{\Sig_j}
+ \left[\partial_{\nu_{z_j}}\Phi_{k_e}(x,z_j)
+             p_{v,i}^{(j)}(z_j)
+       -\Phi_{k_e}(x,z_j)q_{v,i}^{(j)}(z_j)\right]ds_{z_j}\\
+&=\begin{cases}
+-v_i(x-jd e_y),&x\in\Om_j,\\
+0,&x\notin\overline\Om_j.
+\end{cases}
+\end{aligned}
+\]
+This is exactly the ordinary interior Green formula together with its
+extinction case.  Since \(\overline\Om\subset\R\times(0,d)\), a target in the
+open reference cell belongs to at most one translated inclusion.  Hence
+\[
+\sum_{|j|\leq N}\alpha^j I_j(x)
+=\begin{cases}-v_i(x),&x\in\Om,\\0,&x\in\C\setminus\overline\Om,
+\end{cases}
+\]
+for every sufficiently large \(N\).  Passing to the non-Wood quasiperiodic
+Green-function limit proves \eqref{eq:green-vi}.  This is the one-period
+version of Lemma 9 of \cite[Appendix A]{BarnettGreengard2010}.
+\end{proof}
+
+\begin{lemma}[Outgoing exterior quasiperiodic Green formula]
+\label{lem:qp-green-exterior}
+Let \(w_e\) satisfy \((\Delta+k_e^2)w_e=0\) in
+\(\C\setminus\overline\Om\), be \(y\)-quasiperiodic with phase
+\(\alpha=\ee^{\ii\beta d}\), and be outgoing at both vertical ends.  With
+\(p_e=\gamma^+w_e\) and \(q_e=\partial_\nu^+w_e\),
+\begin{equation}
+D_{\QP}^{(k_e)}p_e-S_{\QP}^{(k_e)}q_e
+=\begin{cases}
+0,&\text{in }\Om,\\
+w_e,&\text{in }\C\setminus\overline\Om.
+\end{cases}
+\label{eq:green-we}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Fix a target \(x=(x_1,x_2)\) and write the source point as \(z=(s,t)\).
+Choose \(L<X_L\) and \(R>X_R\), with \(L<x_1<R\), and set
+\[
+\mathcal D_{L,R}=((L,R)\times(0,d))\setminus\overline\Om.
+\]
+If \(x\in\mathcal D_{L,R}\), remove a disk \(B_\varepsilon(x)\); if
+\(x\in\Om\), no disk is removed.  Apply Green's second identity to
+\(w_e(z)\) and \(G_{\QP}^{(k_e)}(x,z)\).  The boundary integrand is
+\[
+\mathcal B(z)
+=w_e(z)\partial_{n_z}G_{\QP}^{(k_e)}(x,z)
+ -G_{\QP}^{(k_e)}(x,z)\partial_{n_z}w_e(z).
+\]
+
+We first dispose of the horizontal sides.  As a function of its source,
+the Green function has the inverse quasiperiodicity
+\[
+\begin{aligned}
+w_e(s,d)&=\alpha w_e(s,0),
+&\partial_t w_e(s,d)&=\alpha\partial_t w_e(s,0),\\
+G_{\QP}(x;s,d)&=\alpha^{-1}G_{\QP}(x;s,0),
+&\partial_tG_{\QP}(x;s,d)&=\alpha^{-1}\partial_tG_{\QP}(x;s,0).
+\end{aligned}
+\]
+Because the outward normals are \(+e_y\) at \(t=d\) and \(-e_y\) at
+\(t=0\), the two integrals are
+\[
+\begin{aligned}
+I_T
+&=\int_L^R\left[
+ \alpha w_e(s,0)\,\alpha^{-1}\partial_tG_{\QP}(x;s,0)
+ -\alpha^{-1}G_{\QP}(x;s,0)\,\alpha\partial_tw_e(s,0)
+ \right]ds,\\
+I_B
+&=-\int_L^R\left[
+ w_e(s,0)\partial_tG_{\QP}(x;s,0)
+ -G_{\QP}(x;s,0)\partial_tw_e(s,0)
+ \right]ds.
+\end{aligned}
+\]
+Thus \(I_T+I_B=0\), exactly as in Barnett's Lemma 10.
+
+It remains to examine the two vertical sides.  Define the anti-quasiperiodic
+dual modes
+\[
+\widetilde\psi_m(t)=d^{-1/2}\ee^{-\ii\beta_m t},\qquad
+\int_0^d\psi_m(t)\widetilde\psi_n(t)\,dt=\delta_{mn}.
+\]
+The outgoing hypothesis gives, on the right and left homogeneous ports,
+\[
+\begin{aligned}
+w_e(s,t)&=\sum_m A_m^R
+ \ee^{\ii\gamma_m(s-X_R)}\psi_m(t),&&s\geq X_R,\\
+w_e(s,t)&=\sum_m B_m^L
+ \ee^{-\ii\gamma_m(s-X_L)}\psi_m(t),&&s\leq X_L.
+\end{aligned}
+\]
+The spectral Green formula \eqref{eq:qpgreen}, now viewed as a function of
+the source \(z=(s,t)\), gives
+\[
+\begin{aligned}
+G_{\QP}(x;s,t)
+ &=\sum_m c_m^R(x)\ee^{\ii\gamma_m(s-X_R)}
+   \widetilde\psi_m(t),&&s>x_1,\\
+G_{\QP}(x;s,t)
+ &=\sum_m c_m^L(x)\ee^{-\ii\gamma_m(s-X_L)}
+   \widetilde\psi_m(t),&&s<x_1,
+\end{aligned}
+\]
+where, explicitly,
+\[
+c_m^R(x)=\frac{\ii}{2\sqrt d\,\gamma_m}
+ \ee^{\ii\beta_mx_2}\ee^{\ii\gamma_m(X_R-x_1)},\qquad
+c_m^L(x)=\frac{\ii}{2\sqrt d\,\gamma_m}
+ \ee^{\ii\beta_mx_2}\ee^{\ii\gamma_m(x_1-X_L)}.
+\]
+On the right side \(s=R\), the outward derivative is \(\partial_{n_z}=\partial_s\).
+Using the two right-going expansions and the dual-mode identity,
+\[
+\begin{aligned}
+I_R
+&=\int_0^d\left(w_e\partial_sG_{\QP}
+                 -G_{\QP}\partial_sw_e\right)(x;R,t)\,dt\\
+&=\sum_{m,n}A_m^R c_n^R(x)
+ \ee^{\ii(\gamma_m+\gamma_n)(R-X_R)}
+ \ii(\gamma_n-\gamma_m)
+ \int_0^d\psi_m(t)\widetilde\psi_n(t)\,dt\\
+&=\sum_m A_m^R c_m^R(x)
+ \ee^{2\ii\gamma_m(R-X_R)}\ii(\gamma_m-\gamma_m)=0.
+\end{aligned}
+\]
+On the left side \(s=L\), the outward derivative is
+\(\partial_{n_z}=-\partial_s\).  Both left-going factors then have the same
+outward logarithmic derivative \(+\ii\gamma_m\), so the identical calculation
+gives
+\[
+\begin{aligned}
+I_L
+&=\int_0^d\left(w_e\partial_{n_z}G_{\QP}
+                 -G_{\QP}\partial_{n_z}w_e\right)(x;L,t)\,dt\\
+&=\sum_{m,n}B_m^L c_n^L(x)
+ \ee^{-\ii(\gamma_m+\gamma_n)(L-X_L)}
+ \ii(\gamma_n-\gamma_m)\delta_{mn}=0.
+\end{aligned}
+\]
+These equalities hold for propagating orders as well as evanescent orders:
+decay is not used for a real \(\gamma_m\); the Wronskian vanishes because
+\(w_e\) and the Green function contain the same outgoing exponential.  An
+incoming exponential would have the opposite logarithmic derivative and
+would leave a nonzero term proportional to \(2\ii\gamma_m\).
+
+Finally, on \(\Sig\) the outward normal of \(\mathcal D_{L,R}\) is
+\(-\nu\), hence its boundary contribution is
+\[
+-\int_\Sig\left[p_e(z)\partial_{\nu_z}G_{\QP}(x,z)
+                 -G_{\QP}(x,z)q_e(z)\right]ds_z
+=-\left(D_{\QP}^{(k_e)}p_e-S_{\QP}^{(k_e)}q_e\right)(x).
+\]
+If \(x\in\C\setminus\overline\Om\), the small-circle integral tends to
+\(+w_e(x)\), since \((\Delta+k_e^2)G_{\QP}(x,\cdot)=-\delta_x\).  All four
+outer-side integrals have vanished, so Green's identity becomes
+\[
+0=-\left(D_{\QP}^{(k_e)}p_e-S_{\QP}^{(k_e)}q_e\right)(x)+w_e(x).
+\]
+If \(x\in\Om\), there is no small circle and the same calculation gives the
+potential equal to zero.  This proves \eqref{eq:green-we}.  For weak fields,
+apply the calculation first to finite Rayleigh sums and smooth data, then pass
+to the trace-space limit.
+\end{proof}
+
+At wavenumber \(k_i\), the two free-space formulas are
+\begin{align}
+D^{(k_i)}p_{v,e}-S^{(k_i)}q_{v,e}
+&=\begin{cases}0,&\text{in }\Om,\\v_e,&\text{in }\R^2\setminus\overline\Om,
+\end{cases}\label{eq:green-ve}\\
+D^{(k_i)}p_i-S^{(k_i)}q_i
+&=\begin{cases}-w_i,&\text{in }\Om,\\0,&\text{in }\R^2\setminus\overline\Om.
+\end{cases}\label{eq:green-wi}
+\end{align}
+Equations \eqref{eq:green-ve}--\eqref{eq:green-wi} are the ordinary exterior
+and interior Green formulas.
+
+Now use the first expressions in \eqref{eq:density-tau}--
+\eqref{eq:density-sigma}.  In the physical exterior,
+\begin{equation}
+\begin{aligned}
+D_{\QP}^{(k_e)}\tau+S_{\QP}^{(k_e)}\sigma
+&=\bigl(D_{\QP}^{(k_e)}p_e-S_{\QP}^{(k_e)}q_e\bigr)
+ -\bigl(D_{\QP}^{(k_e)}p_{v,i}-S_{\QP}^{(k_e)}q_{v,i}\bigr)\\
+&=w_e-0=w_e.
+\end{aligned}
+\label{eq:verify-we}
+\end{equation}
+Use instead the second expressions in
+\eqref{eq:density-tau}--\eqref{eq:density-sigma}.  In \(\Om\),
+\begin{equation}
+\begin{aligned}
+D^{(k_i)}\tau+S^{(k_i)}\sigma
+&=-\bigl(D^{(k_i)}p_{v,e}-S^{(k_i)}q_{v,e}\bigr)
+ -\bigl(D^{(k_i)}p_i-S^{(k_i)}q_i\bigr)\\
+&=-0-(-w_i)=w_i.
+\end{aligned}
+\label{eq:verify-wi}
+\end{equation}
+This proves existence.  If two density pairs produced the same
+\((w_e,w_i)\), their difference would lie in \(\Ker\mathcal J\), which is
+zero by \eqref{eq:Jinjective}.  This proves uniqueness.  The calculation is
+the full analogue, with the present signs and arbitrary interface mismatch,
+of equations (A.7)--(A.14) of \cite{BarnettGreengard2010}.
+\end{proof}
+
+\begin{remark}
+If both physical layer representations used QP Green functions, their
+nonphysical continuations would instead produce a periodic complementary
+problem, where spurious guided modes could require a separate spectral
+hypothesis.  That is not the ansatz in Conjecture 1: its QP exterior/free-space
+interior choice is precisely what makes \eqref{eq:complement} a standard
+nonperiodic problem.  Barnett and Greengard emphasize this distinction at the
+end of their Appendix A.
+\end{remark}
+
+\section{Existence and uniqueness of the corrected representation}
+\label{sec:corrected}
+
+\begin{theorem}[Corrected Conjecture 1]
+\label{thm:corrected}
+Assume:
+\begin{enumerate}[label=(\roman*)]
+\item \(\Sig\) is \(C^2\), \(\overline\Om\) is strictly inside the cell, and
+there are homogeneous background collars at both vertical ports;
+\item \(k>0\), \(n>0\), and \(\beta\in\R\), with ordinary TM continuity
+\eqref{eq:transmission};
+\item \(u\) is a piecewise \(H^1\) weak solution in the sense of
+\eqref{eq:solutionclass};
+\item \(\gamma_m(k,\beta)\neq0\) for every \(m\).
+\end{enumerate}
+Define \(u_h\) by the incoming port coefficients in
+\eqref{eq:incomingh}.  Then there exists a unique density pair
+\((\tau,\sigma)\in H^{1/2}(\Sig)\times H^{-1/2}(\Sig)\) such that
+\begin{equation}
+u=\begin{cases}
+u_h+D_{\QP}^{(k_e)}\tau+S_{\QP}^{(k_e)}\sigma,
+&\C\setminus\overline\Om,\\
+D^{(k_i)}\tau+S^{(k_i)}\sigma,&\Om.
+\end{cases}
+\label{eq:correctedrep}
+\end{equation}
+The Rayleigh coefficients of \(u_h\) belong to
+\(\ell^2_{1/2,\beta}\times\ell^2_{1/2,\beta}\) and are unique.  Hence the
+background field, layer field, and densities are all unique for the given
+\(u\).
+\end{theorem}
+
+\begin{proof}
+We separate the port normalization, the layer construction, and uniqueness.
+
+\emph{1. Extract the incoming background.}
+In the left homogeneous collar, the exterior field has the unique expansion
+\begin{equation}
+u_e=\sum_m\left(
+A_m^L\ee^{\ii\gamma_m(x-X_L)}
++B_m^L\ee^{-\ii\gamma_m(x-X_L)}
+\right)\psi_m,
+\label{eq:theorem-left-expansion}
+\end{equation}
+and in the right collar it has the analogous coefficients
+\(A_m^R,B_m^R\), anchored at \(X_R\).  Since \(\gamma_m\ne0\), formula
+\eqref{eq:portcoeff} recovers all four coefficient sequences from the Cauchy
+data at the two ports.  Define the incident background by retaining exactly
+the right-going coefficients at the left port and the left-going coefficients
+at the right port:
+\begin{equation}
+u_h=\sum_m A_m^L\ee^{\ii\gamma_m(x-X_L)}\psi_m
++\sum_m B_m^R\ee^{-\ii\gamma_m(x-X_R)}\psi_m.
+\label{eq:theorem-uh}
+\end{equation}
+The estimate \eqref{eq:coefnorm} gives convergence in \(H^1(\C)\).
+
+\emph{2. The remaining exterior field is outgoing.}
+Put
+\begin{equation}
+w_e:=u_e-u_h\quad\text{in }\C\setminus\overline\Om,
+\qquad
+w_i:=u_i\quad\text{in }\Om.
+\label{eq:theorem-w}
+\end{equation}
+Near the two ports, cancellation of the incoming terms in
+\eqref{eq:theorem-left-expansion} and \eqref{eq:theorem-uh} gives
+\begin{align}
+w_e&=\sum_m B_m^L\ee^{-\ii\gamma_m(x-X_L)}\psi_m
+&&\text{near }X_L,\label{eq:w-left-out}\\
+w_e&=\sum_m A_m^R\ee^{\ii\gamma_m(x-X_R)}\psi_m
+&&\text{near }X_R.\label{eq:w-right-out}
+\end{align}
+Thus \(w_e\) is outgoing at both ends, including exponential decay for every
+evanescent order.  The pair \((w_e,w_i)\) now satisfies every hypothesis of
+Lemma~\ref{lem:synthesis}; no interface continuity is needed for that lemma.
+
+\begin{remark}[Why the background is subtracted only from the exterior field]
+The background field satisfies
+\((\Delta+k_e^2)u_h=0\), whereas the physical interior field satisfies
+\((\Delta+k_i^2)u_i=0\).  If one instead defined
+\(\widetilde w_i:=u_i-u_h\) in \(\Om\), then
+\begin{equation}
+  (\Delta+k_i^2)\widetilde w_i
+  =(k_e^2-k_i^2)u_h.
+  \label{eq:interior-background-subtraction}
+\end{equation}
+Except when $k_e=k_i$ or $u_h|_\Om=0$, this is a nonzero volume source.
+Thus \(\widetilde w_i\) is not a homogeneous interior Helmholtz field and
+cannot be represented by the present interface layer potentials alone; a
+volume potential would have to be added.  This is why
+\eqref{eq:theorem-w} leaves $w_i=u_i$.
+\end{remark}
+
+\emph{3. Construct the densities.}
+For complete explicitness, let \((p_e,q_e,p_i,q_i)\) be the traces of
+\((w_e,w_i)\) in \eqref{eq:w-traces}.  Solve the standard full-plane
+complementary problem with
+\begin{equation}
+v_e-v_i=-(p_e+p_i),\qquad
+\partial_\nu v_e-\partial_\nu v_i=-(q_e+q_i).
+\label{eq:theorem-complement-data}
+\end{equation}
+Definition~\ref{def:complement-solvability}, justified by Colton--Kress
+Theorem 3.41, gives one and only one \((v_i,v_e)\).  Define
+\begin{equation}
+\tau=p_e-p_{v,i}=-p_{v,e}-p_i,\qquad
+\sigma=q_{v,i}-q_e=q_{v,e}+q_i.
+\label{eq:theorem-densities}
+\end{equation}
+The equalities on each side follow directly from
+\eqref{eq:theorem-complement-data}.  Equations
+\eqref{eq:verify-we}--\eqref{eq:verify-wi} then give
+\[
+w_e=D_{\QP}^{(k_e)}\tau+S_{\QP}^{(k_e)}\sigma,
+\qquad
+w_i=D^{(k_i)}\tau+S^{(k_i)}\sigma.
+\]
+Substitution into \eqref{eq:theorem-w} is exactly
+\eqref{eq:correctedrep}, proving existence.
+
+\emph{4. Uniqueness.}
+For a fixed physical field \(u\), the port Cauchy data are fixed.
+Formula \eqref{eq:portcoeff} therefore fixes \(A_m^L\) and \(B_m^R\), so the
+normalization \eqref{eq:theorem-uh} fixes \(u_h\) uniquely.  Consequently
+\((w_e,w_i)\) in \eqref{eq:theorem-w} is fixed.  The uniqueness part of
+Lemma~\ref{lem:synthesis}, equivalently \(\Ker\mathcal J=\{0\}\), fixes
+\((\tau,\sigma)\) uniquely.  Finally, the modewise Wronskian calculation in
+Section~\ref{sec:rayleigh} shows that the Rayleigh coefficients themselves are
+unique.  This proves every uniqueness assertion in the theorem.
+\end{proof}
+
+\subsection{Why there is no additional complementary resonance here}
+
+Ordinary interior Dirichlet or Neumann eigenvalues can make a pure single- or
+double-layer representation nonunique; Kress gives the classical example in
+\cite[Section 1]{Kress1991}.  The common-density Muller construction avoids
+those defects by coupling the two potentials and using the swapped transmission
+problem.  In the present mixed QP/free ansatz, that swapped problem is the
+standard full-plane problem \eqref{eq:complement}.  Its homogeneous radiating
+solution is zero, so reversing the jump construction cannot produce a nonzero
+element of \(\Ker\mathcal J\).  In particular,
+\[
+\Ker\mathcal J=\{0\}
+\]
+under the hypotheses of Theorem~\ref{thm:corrected}.  A complementary periodic
+resonance would become relevant only for a different formulation using QP
+kernels on both physical sides.
+
+\subsection{Physical guided modes are not the same defect}
+
+A physical guided mode has \(u_h=0\) and a nonzero density satisfying
+\[
+A_{\QP}\eta=0.
+\]
+This is precisely what the TEP eigenvalue method seeks.  Injectivity of
+\(\mathcal J\), established through the free-space complementary problem,
+shows that this density generates a nonzero physical field.  Therefore
+\(\Ker A_{\QP}\neq\{0\}\) need not imply coordinate redundancy: \(A_{\QP}\)
+records only the interface mismatch, whereas \(\mathcal J\) records the whole
+field.  Confusing \(\Ker A_{\QP}\) with \(\Ker\mathcal J\) is the central
+uniqueness trap.
+
+\section{Wood anomalies and other exceptional cases}
+
+At \(\gamma_{m_0}=0\), three failures occur simultaneously.
+
+\begin{enumerate}
+\item The Green series \eqref{eq:qpgreen} contains \(1/\gamma_{m_0}\) and is
+undefined without regularization.
+\item The two exponentials for order \(m_0\) coalesce, while the ODE requires
+the two-dimensional span of \(\psi_{m_0}\) and \(x\psi_{m_0}\).
+\item Incoming/outgoing classification of the threshold order is not selected
+by the sign of \(\gamma_m\).  A limiting-absorption or generalized-mode rule is
+needed.
+\end{enumerate}
+
+Thus merely saying ``the proof is ill-conditioned at Wood'' is too weak: the
+formula in the conjecture is structurally incomplete there.  A threshold-safe
+theorem must change both the Green kernel and the homogeneous basis.  Such a
+change is outside this task because it changes the formulation rather than
+proving the stated one.
+
+If \(\Im k>0\), the modal branch has strict decay and energy identities usually
+remove real-axis guided modes.  This gives a useful regularized theory and a
+limiting-absorption route, but the limit back to real \(k\) can be singular at
+thresholds or embedded guided modes.
+
+If \(\Om\) touches a vertical port, the homogeneous collar disappears and
+\eqref{eq:portcoeff} cannot be used.  If it crosses the quasiperiodic seam, one
+must use periodic charts and include the continued interface.  Neither case is
+covered by Theorem~\ref{thm:corrected}.
+
+\section{Consequences for the DtN--Muller formulation}
+
+The later draft system uses
+\[
+A_{\QP}\eta+B_\Sig\xi=0
+\]
+together with port trace equations.  The present analysis gives five concrete
+requirements.
+
+\begin{enumerate}
+\item The vector \(\xi=(a,b)\) must be interpreted as left-incoming and
+right-incoming homogeneous coordinates, not as an arbitrary duplicate of the
+outgoing layer far field.
+\item The coefficient domain should be
+\(\ell^2_{1/2,\beta}\times\ell^2_{1/2,\beta}\), with the finite-dimensional
+truncation viewed only as an approximation.
+\item At the continuous level, injectivity of the mixed-kernel synthesis map
+ensures that a nonzero density produces a nonzero physical field.  A numerical
+implementation should still check for discretization-induced near-nullvectors.
+\item Physical singularity of \(A_{\QP}\) is not automatically spurious; it
+can be the desired guided mode.  The field synthesis map, not the mismatch row
+alone, distinguishes physical and coordinate nullspaces.
+\item Near Wood thresholds the standard QP Green matrix and Rayleigh basis
+must not be trusted.  Excluding a numerical neighborhood is a practical choice,
+but a theorem requires a regularized threshold formulation.
+\end{enumerate}
+
+The unconditional direct Green representation in Theorem
+\ref{thm:directgreen} remains a useful independent check: it uses physical
+Cauchy data as primary unknowns and retains the vertical boundary term
+explicitly, at the cost of a different operator system.
+
+\section{Final classification and remaining open work}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.30\textwidth}X}
+\toprule
+Claim & Status \\
+\midrule
+Empty-cell non-Wood Rayleigh representation & Proved, including the natural
+half-order coefficient norm.\\
+Top/bottom Green terms cancel & Proved from opposite normals and reciprocal
+quasiperiodic phases.\\
+Vertical terms are a homogeneous background & Proved inside the open cell;
+they have the Rayleigh representation of Section~\ref{sec:rayleigh}.\\
+Direct physical-trace layer representation & Proved in Theorem
+\ref{thm:directgreen}; interior/exterior signs are opposite.\\
+Draft common-density representation & Proved under the explicit regularity and
+non-Wood assumptions of Theorem~\ref{thm:corrected}.\\
+Uniqueness of Rayleigh coefficients & Proved away from Wood thresholds after
+incoming normalization.\\
+Uniqueness of common densities & Proved using uniqueness of the standard
+full-plane swapped transmission problem.\\
+Original Conjecture 1 as written & Too imprecise to be a theorem; after its
+spaces, port normalization, signs, and non-Wood condition are made explicit,
+it is replaced by Theorem~\ref{thm:corrected}.\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The remaining work concerns genuine exceptional sets and numerical
+verification.  At Wood parameters one must construct a threshold-safe QP Green
+kernel and generalized Rayleigh basis.  One must also verify that discrete
+trace and layer maps preserve the continuous injectivity established above.
+The mixed QP/free representation has no separate complementary cylinder
+spectrum.
+
+\begin{thebibliography}{99}
+
+\bibitem{BarnettGreengard2010}
+A. H. Barnett and L. Greengard,
+``A new integral representation for quasiperiodic fields and its application
+to two-dimensional band structure calculations,''
+\emph{Journal of Computational Physics}, 229(19):6898--6914, 2010.
+\href{https://doi.org/10.1016/j.jcp.2010.05.029}{doi:10.1016/j.jcp.2010.05.029};
+\href{https://arxiv.org/abs/1001.5464}{arXiv:1001.5464}.
+
+\bibitem{ColtonKress1983}
+D. Colton and R. Kress,
+\emph{Integral Equation Methods in Scattering Theory},
+Classics in Applied Mathematics 72, Society for Industrial and Applied
+Mathematics, Philadelphia, 2013; reprint of the original Wiley edition, 1983.
+\href{https://doi.org/10.1137/1.9781611973167}{doi:10.1137/1.9781611973167}.
+
+\bibitem{DominguezLyonTurc2016}
+V. Dominguez, M. Lyon, and C. Turc,
+``Well-posed boundary integral equation formulations and Nystrom
+discretizations for the solution of Helmholtz transmission problems in
+two-dimensional Lipschitz domains,'' 2016.
+\href{https://arxiv.org/abs/1509.04415}{arXiv:1509.04415v2}.
+
+\bibitem{HiptmairMoiolaSpence2022}
+R. Hiptmair, A. Moiola, and E. A. Spence,
+``Spurious quasi-resonances in boundary integral equations for the Helmholtz
+transmission problem,'' \emph{SIAM Journal on Applied Mathematics},
+82(4):1446--1469, 2022.
+\href{https://doi.org/10.1137/21M1447052}{doi:10.1137/21M1447052};
+\href{https://arxiv.org/abs/2109.08530}{arXiv:2109.08530}.
+
+\bibitem{Kress1991}
+R. Kress,
+``Boundary integral equations in time-harmonic acoustic scattering,''
+\emph{Mathematical and Computer Modelling}, 15(3--5):229--243, 1991.
+\href{https://doi.org/10.1016/0895-7177(91)90068-I}{doi:10.1016/0895-7177(91)90068-I}.
+
+\bibitem{Linton1998}
+C. M. Linton,
+``The Green's function for the two-dimensional Helmholtz equation in periodic
+domains,'' \emph{Journal of Engineering Mathematics}, 33:377--402, 1998.
+\href{https://doi.org/10.1023/A:1004377501747}{doi:10.1023/A:1004377501747}.
+
+\bibitem{McLean2000}
+W. McLean,
+\emph{Strongly Elliptic Systems and Boundary Integral Equations},
+Cambridge University Press, 2000.
+ISBN 978-0-521-66332-8.
+
+\end{thebibliography}
+
+\appendix
+\section{A modewise uniqueness calculation}
+
+For one non-Wood order, suppose
+\[
+a\ee^{\ii\gamma(x-X_L)}+b\ee^{-\ii\gamma(x-X_R)}=0
+\quad\text{for }X_L<x<X_R.
+\]
+Evaluating this identity and its derivative at any point gives
+\[
+\begin{bmatrix}
+\ee^{\ii\gamma(x-X_L)}&\ee^{-\ii\gamma(x-X_R)}\\
+\ii\gamma\ee^{\ii\gamma(x-X_L)}&
+-\ii\gamma\ee^{-\ii\gamma(x-X_R)}
+\end{bmatrix}
+\begin{bmatrix}a\\b\end{bmatrix}=0.
+\]
+The determinant is
+\(-2\ii\gamma\ee^{\ii\gamma(X_R-X_L)}\neq0\), so \(a=b=0\).
+This is coefficient uniqueness.  It says nothing about density uniqueness,
+which is controlled by the entirely different map \(\mathcal J\).
+
+\section{Why opposing horizontal Green terms cancel}
+
+Let the source variable be \(z=(z_x,z_y)\).  If the field has phase
+\(u(z_x,d)=\alpha u(z_x,0)\), \(\alpha=\ee^{\ii\beta d}\), then the Green
+kernel used against it has inverse source phase
+\(G(x;z_x,d)=\alpha^{-1}G(x;z_x,0)\).  The same holds for the corresponding
+source-normal derivatives.  Since the outward normal is \(+e_y\) at the top
+and \(-e_y\) at the bottom, substituting the two phase relations into
+\[
+\int_{\Gamma_{\rm top}\cup\Gamma_{\rm bot}}
+  (G\partial_n u-u\partial_nG)\,ds
+\]
+shows term-by-term cancellation.  This is why no extra horizontal-boundary
+unknown is required when the kernel and field use matching quasiperiodicity.
+
+\section{Operator-level uniqueness dictionary}
+
+\begin{align*}
+\text{PDE field uniqueness}
+&\neq \text{representation uniqueness},\\
+\Ker A_{\QP}
+&=\text{densities producing zero interface mismatch},\\
+\Ker\mathcal J
+&=\text{densities producing zero fields on both physical sides},\\
+\Ker A_{\QP}\setminus\Ker\mathcal J
+&=\text{physical guided-mode densities (under the stated hypotheses)},\\
+\Ker\mathcal J
+&=\{0\}\quad\text{by full-plane complementary uniqueness},\\
+\gamma_m=0
+&\Rightarrow\text{failure of the displayed Rayleigh coordinate basis}.
+\end{align*}
+
+This dictionary is the shortest way to avoid conflating the physical mismatch
+nullspace, the synthesis map, and the separate Wood-threshold failure.
+
+\end{document}

@@ -1,0 +1,1172 @@
+% Full title: Chinese Translation of Conjecture 1: Single-Cell Helmholtz Fields as a Homogeneous Background Plus Interface Potentials
+%
+% Purpose:
+%   Provide a complete Chinese translation of report.tex for the theoretical
+%   investigation of Conjecture 1 in the TEP draft.
+%
+% Main workflow:
+%   Preserve the mathematical statements, formulas, labels, theorem hierarchy,
+%   assumptions, and final classification of the English report while making
+%   the exposition fully accessible in Chinese.
+%
+% Based on:
+%   report.tex in the same directory. The local copies of Hiptmair--Moiola--
+%   Spence (2022) and Colton--Kress Chapter 3 were checked for the physical/
+%   swapped solution operators and transmission well-posedness, respectively.
+%
+% Main changes:
+%   Translate the report into Chinese and preserve the expanded complementary
+%   layer field, four Green extinction formulas, explicit density formulas,
+%   and detailed proof of the corrected representation theorem.
+%
+% Numerical goal:
+%   None. This file contains theory only and no numerical experiment.
+
+\documentclass[UTF8,11pt,fontset=fandol]{ctexart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,mathrsfs}
+\usepackage{booktabs,tabularx}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,urlcolor=blue!55!black}
+\setlist{itemsep=2pt,topsep=4pt}
+\allowdisplaybreaks
+
+\newcommand{\C}{\mathcal C}
+\newcommand{\Om}{\Omega}
+\newcommand{\Sig}{\Sigma}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\ii}{\mathrm i}
+\newcommand{\ee}{\mathrm e}
+\newcommand{\QP}{\mathrm{QP}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\pair}[2]{\left\langle #1,#2\right\rangle}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{定义}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{注}
+\renewcommand{\proofname}{证明}
+
+\title{Conjecture 1：单个周期 cell 内 Helmholtz 场的\\“齐次背景场加界面层势”表示}
+\author{TEP 项目的理论审查报告（中文副本）}
+\date{2026 年 7 月 14 日}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+TEP 草稿猜想：单个周期 cell 内每个具有足够正则性、沿竖直方向准周期的
+Helmholtz transmission 场，在两个竖直端口上不施加边界条件时，均可唯一表示为
+一个齐次 Rayleigh--Bloch 场，加上分别采用准周期外部核与自由空间内部核、但共用
+同一对密度的界面层势。这个命题按原文写法并不是一个有效定理：其中没有指定函数
+空间，也没有说明辐射约定及“唯一”的对象。本报告首先用物理 Cauchy 数据证明一个
+无条件成立的 Green 表示，其内部与外部界面项符号相反；随后证明草稿中共同密度
+表示的修正版本。唯一的非初等步骤是交换波数后全平面 transmission 问题的标准
+适定性：互补外场来自自由空间内部层势向非物理外侧的延拓，所以满足径向 Sommerfeld
+条件，而不是准周期柱面辐射条件。在避开 Wood 阈值并固定两族 Rayleigh 模态的入射
+归一化之后，分量场、Rayleigh 系数以及共同密度对均唯一。在 Wood 阈值处，草稿所列
+指数基缺少广义模态 \(x\psi_m\)。物理 guided mode 是 mismatch 算子的目标零场，
+本身并不否定该表示。
+\end{abstract}
+
+\tableofcontents
+
+\section{引言与结论}
+
+这里研究的表示不仅是一个方便的公式。它还是后续 block system 的满射性与单射性
+基础；该系统把 Müller 界面行、Rayleigh 系数以及 lead trace 组合在一起。如果表示
+遗漏某些场，block system 就可能遗漏特征函数；如果表示存在坐标零空间，离散矩阵
+奇异也未必对应非零物理场。
+
+本研究的结论有意分成两个层次。
+
+\begin{enumerate}
+\item 在标准 trace 假设下，可以得到一个\emph{无条件的直接 Green 表示}。它的
+界面密度就是物理 Dirichlet 与 Neumann trace，但内部与外部界面项具有相反符号。
+\item 草稿中\emph{同密度、同符号的 Müller ansatz} 是一种间接表示。其完备性
+通过互补（交换波数）transmission 问题证明。由于该 ansatz 在外部使用 QP 核、
+在内部使用 free-space 核，互补外场是
+\(\R^2\setminus\overline\Om\) 上的自由空间辐射场。标准 transmission
+适定性给出所需的存在性与唯一性，不需要额外的准周期柱面非共振假设。
+\end{enumerate}
+
+因此，Conjecture 1 应被归类为一个\emph{可修正的命题}：明确函数空间、非 Wood
+条件、端口归一化与核的约定后，第~\ref{sec:corrected} 节的修正定理可以得到证明。
+
+\section{原始命题及其未说明之处}
+\label{sec:source}
+
+原始命题位于 \texttt{draft/draft.tex} 第 583--622 行。保留草稿记号后，其准确
+数学内容如下：
+
+\begin{quote}
+设 \(\C=[X_L,X_R]\times[0,d]\) 含有 inclusion \(\Om\)，并假定
+\((k,\beta)\) 不处于 Wood anomaly。每个满足
+\[
+\begin{cases}
+\Delta u+k^2u=0&\text{于 }\C\setminus\overline\Om,\\
+\Delta u+(nk)^2u=0&\text{于 }\Om,\\
+u(x,d)=\ee^{\ii\beta d}u(x,0),\quad
+u_y(x,d)=\ee^{\ii\beta d}u_y(x,0),\\
+u,\ u_\nu\text{ 在 }\partial\Om\text{ 上连续},
+\end{cases}
+\]
+并且在竖直端口上没有边界条件的充分正则场，都有唯一表示
+\[
+u=\begin{cases}
+S_{\QP}^{(k)}\sigma+D_{\QP}^{(k)}\tau+u_h[\xi],
+&\C\setminus\overline\Om,\\
+S^{(nk)}\sigma+D^{(nk)}\tau,&\Om,
+\end{cases}
+\]
+其中 \(u_h\) 的 Rayleigh 级数在适当的 \(H^1\) 意义下收敛。
+\end{quote}
+
+草稿定义
+\begin{equation}
+u_h(x,y)=\sum_{m\in\Z}a_m\ee^{\ii\gamma_m(x-X_L)}\psi_m(y)
++\sum_{m\in\Z}b_m\ee^{-\ii\gamma_m(x-X_R)}\psi_m(y),
+\label{eq:uh}
+\end{equation}
+其中
+\begin{equation}
+\beta_m=\beta+\frac{2\pi m}{d},\qquad
+\psi_m(y)=d^{-1/2}\ee^{\ii\beta_my},\qquad
+\gamma_m^2=k^2-\beta_m^2,\qquad \Im\gamma_m\geq0.
+\label{eq:modes}
+\end{equation}
+在修正定理中还要加强分支约定：取 \(\Re\gamma_m\geq0\)、
+\(\Im\gamma_m\geq0\)，并对非零传播阶次取 \(\gamma_m>0\)。草稿只写
+\(\Im\gamma_m\geq0\)，尚不能在两个实平方根之间作出选择。
+
+“唯一”一词掩盖了若干逻辑上不同的含义：PDE 场、\(u_h\)、层势场、密度对以及
+两列 Rayleigh 系数各自的唯一性。由于竖直端口没有边界条件，PDE 场本身显然并不
+唯一；合理的问题只能是：对一个\emph{给定}场，其坐标是否唯一。原文也没有说明
+边界正则性、密度空间、jump 符号、系数范数以及例外 transmission 谱。
+
+\section{几何、弱解与 trace 空间}
+\label{sec:spaces}
+
+\subsection{准周期柱面}
+
+把 cell 的水平边识别起来，并在
+\[
+\mathscr X_\beta=\R\times(\R/d\Z),\qquad
+v(x,y+d)=\ee^{\ii\beta d}v(x,y)
+\]
+上工作会更方便。设 \(\Sig=\partial\Om\) 为 \(C^2\) 类，
+\(\overline\Om\subset(X_L,X_R)\times(0,d)\)，并假定 \(\Sig\) 与两个竖直
+端口均有正距离。法向 \(\nu\) 从 \(\Om\) 指向背景区域。取 \(k>0\)、\(n>0\)
+以及实数 \(\beta\)，并记
+\[
+k_e=k,\qquad k_i=nk.
+\]
+吸收情形 \(\Im k>0\) 更容易，因为能量恒等式给出 outgoing 唯一性；真正包含
+所关心谱问题的是实数、无耗散情形。
+
+\subsection{\texorpdfstring{\(H^1\)、\(H^{1/2}\) 与 \(H^{-1/2}\)}{H1、H1/2 与 H-1/2} 的含义}
+
+\(L^2(D)\) 由平方可积函数组成。如果一个函数及其一阶\emph{弱导数}均属于
+\(L^2(D)\)，则它属于 \(H^1(D)\)。弱导数通过分部积分恒等式把导数移到光滑
+测试函数上来定义，并不要求逐点可微。
+
+在 Lipschitz 边界上，trace 定理给出有界映射
+\[
+\gamma:H^1(D)\longrightarrow H^{1/2}(\partial D).
+\]
+对满足 \(v\in H^1(D)\)、\(\Delta v\in L^2(D)\) 的 Helmholtz 解，Green
+恒等式用下式定义其法向导数：
+\begin{equation}
+\pair{\partial_\nu v}{\gamma\phi}_{\partial D}
+=\int_D \nabla v\cdot\nabla\overline\phi-k^2v\overline\phi\,dx.
+\label{eq:weaknormal}
+\end{equation}
+这是 \(H^{1/2}(\partial D)\) 上的连续泛函，因而属于其对偶空间
+\(H^{-1/2}(\partial D)\)。所以 Dirichlet 与 Neumann trace 的自然空间分别是
+\(H^{1/2}\) 与 \(H^{-1/2}\)。这些都是 trace 理论和弱 Green 理论的标准结论；
+参见 McLean \cite[第 3--4 章]{McLean2000}。
+
+本文采用解空间
+\begin{equation}
+u_e\in H^1_\beta(\C\setminus\overline\Om),\qquad
+u_i\in H^1(\Om),
+\label{eq:solutionclass}
+\end{equation}
+并要求弱 Helmholtz 方程以及
+\begin{equation}
+\gamma^+u_e=\gamma^-u_i\in H^{1/2}(\Sig),\qquad
+\partial_\nu^+u_e=\partial_\nu^-u_i\in H^{-1/2}(\Sig).
+\label{eq:transmission}
+\end{equation}
+可以先对分片 \(H^2\) 场证明所有公式，再利用连续性推广到
+\eqref{eq:solutionclass}。
+
+\subsection{准周期 Sobolev 空间}
+
+若 \(f=\sum_m f_m\psi_m\)，定义
+\begin{equation}
+\|f\|_{H^s_\beta(0,d)}^2
+=\sum_{m\in\Z}(1+|\beta_m|^2)^s|f_m|^2.
+\label{eq:Hs}
+\end{equation}
+这就是提出因子 \(\ee^{\ii\beta y}\) 后的周期 Fourier 定义。它也直接显示
+对偶关系 \((H^{1/2}_\beta)'=H^{-1/2}_\beta\)：Cauchy--Schwarz 不等式配对
+权重 \((1+|\beta_m|^2)^{1/2}\) 及其倒数。
+
+\section{齐次 Rayleigh 表示}
+\label{sec:rayleigh}
+
+\subsection{逐模态推导}
+
+设 \(h\in H^1_\beta((A,B)\times(0,d))\) 弱意义满足
+\((\Delta+k^2)h=0\)。在正交归一基 \(\psi_m\) 中展开
+\[
+h(x,y)=\sum_m h_m(x)\psi_m(y),
+\]
+并用 \(\varphi(x)\overline{\psi_m(y)}\) 测试弱方程，得到
+\begin{equation}
+h_m''+(k^2-\beta_m^2)h_m=0
+\quad\text{于 }\mathcal D'(A,B).
+\label{eq:ode}
+\end{equation}
+该常系数 ODE 的分布解是光滑的。当 \(\gamma_m\neq0\) 时，
+\begin{equation}
+h_m(x)=a_m\ee^{\ii\gamma_m(x-X_L)}
++b_m\ee^{-\ii\gamma_m(x-X_R)}.
+\label{eq:modepair}
+\end{equation}
+这两个函数的 Wronskian 等于 \(-2\ii\gamma_m\) 乘以一个非零相位，故线性
+无关。这证明了离开阈值时的逐模态唯一性。
+
+当 \(\gamma_m=0\) 时，方程 \eqref{eq:ode} 变成 \(h_m''=0\)，其解空间为
+\begin{equation}
+h_m(x)=A_m+B_mx.
+\label{eq:threshold}
+\end{equation}
+式 \eqref{eq:modepair} 中两个指数函数此时都退化为 1，无法表示第二个解。这是草稿
+所列坐标在 Wood anomaly 处失效的一个明确而初等的例子。
+
+\subsection{系数范数与收敛性}
+
+对充分大的 \(|m|\)，写成 \(\gamma_m=\ii\alpha_m\)、\(\alpha_m>0\)。两个
+以端口为锚点的因子为
+\[
+\ee^{-\alpha_m(x-X_L)},\qquad
+\ee^{-\alpha_m(X_R-x)}.
+\]
+它们分别从两个端口向 cell 内衰减。直接积分函数项、\(x\) 导数项与 \(y\) 导数项，
+可得（相差的常数只依赖 cell 宽度）
+\begin{equation}
+\|h\|_{H^1(\C)}^2\asymp
+\sum_m(1+|\beta_m|^2)^{1/2}(|a_m|^2+|b_m|^2),
+\label{eq:coefnorm}
+\end{equation}
+其中有限个传播模态不影响结论。交叉项含有
+\(\ee^{-\alpha_m(X_R-X_L)}\)，因此无害。适当的系数空间是
+\[
+\ell^2_{1/2,\beta}\times\ell^2_{1/2,\beta}.
+\]
+式 \eqref{eq:coefnorm} 同时给出 \(H^1\) 收敛、Dirichlet trace 在
+\(H^{1/2}\) 中的收敛，以及 normal trace 在 \(H^{-1/2}\) 中的收敛。
+
+\begin{proposition}[空 cell 检验]
+\label{prop:empty}
+若 \(\Om=\varnothing\) 且对所有 \(m\) 都有 \(\gamma_m\neq0\)，则每个弱
+\(H^1_\beta\) 齐次 cell 解都具有唯一表示 \eqref{eq:uh}，且系数属于
+\(\ell^2_{1/2,\beta}\times\ell^2_{1/2,\beta}\)。在阈值处，必须用
+\eqref{eq:threshold} 扩充该公式。
+\end{proposition}
+
+\begin{proof}
+式 \eqref{eq:ode}--\eqref{eq:coefnorm} 给出存在性、收敛性与逐模态唯一性。
+\(\psi_m\) 的正交性排除了不同阶次之间的相消。
+\end{proof}
+
+\subsection{入射归一化}
+
+在左端口附近，把局部场写成
+\[
+u_e=\sum_m(A_m^L\ee^{\ii\gamma_m(x-X_L)}
++B_m^L\ee^{-\ii\gamma_m(x-X_L)})\psi_m.
+\]
+在右端口附近使用以 \(X_R\) 为锚点的系数 \(A_m^R,B_m^R\)。对非 Wood
+阶次，Dirichlet trace 与 \(x\) 导数的 Fourier 系数 \((f_m,g_m)\) 决定
+\begin{equation}
+A_m=\tfrac12\left(f_m+\frac{g_m}{\ii\gamma_m}\right),\qquad
+B_m=\tfrac12\left(f_m-\frac{g_m}{\ii\gamma_m}\right).
+\label{eq:portcoeff}
+\end{equation}
+trace 权重表明，\(f\in H^{1/2}\)、\(g\in H^{-1/2}\) 蕴含半阶系数界。
+
+用\emph{入射}系数定义背景场
+\begin{equation}
+u_h=\sum_m A_m^L\ee^{\ii\gamma_m(x-X_L)}\psi_m
++\sum_m B_m^R\ee^{-\ii\gamma_m(x-X_R)}\psi_m.
+\label{eq:incomingh}
+\end{equation}
+于是 \(w_e=u_e-u_h\) 在两端均为 outgoing：它在左侧只含向左传播的因子，
+在右侧只含向右传播的因子。对倏逝阶次，“outgoing”指指数衰减。这个归一化不可
+缺少；如果不说明 \(u_h\) 如何与两个端口绑定，原始唯一性命题便没有精确含义。
+
+\section{准周期 Green 函数与层势}
+\label{sec:layers}
+
+令
+\[
+\Phi_\kappa(x,z)=\frac{\ii}{4}H_0^{(1)}(\kappa|x-z|),
+\]
+并定义
+\begin{equation}
+S_\kappa\sigma(x)=\int_\Sig\Phi_\kappa(x,z)\sigma(z)\,ds_z,
+\quad
+D_\kappa\tau(x)=\int_\Sig\partial_{\nu_z}\Phi_\kappa(x,z)\tau(z)\,ds_z.
+\label{eq:potentials}
+\end{equation}
+外部算子把 \(\Phi_k\) 换成 outgoing 的 \(y\)-准周期 Green 函数。按草稿符号
+约定，其谱表示为
+\begin{equation}
+G_{\QP}^{(k)}(x,y;x',y')
+=\frac{\ii}{2d}\sum_{m\in\Z}\frac{1}{\gamma_m}
+\ee^{\ii\beta_m(y-y')}\ee^{\ii\gamma_m|x-x'|}.
+\label{eq:qpgreen}
+\end{equation}
+Linton 在 \cite{Linton1998} 的 (2.13)--(2.17) 式中推导了等价的特征函数展开
+及其 outgoing 渐近。若某个 \(\gamma_m\) 为零，式 \eqref{eq:qpgreen} 无定义。
+
+法向取为从 \(\Om\) 指向外部。以下用 \(+\) 表示从外部取得的 trace，
+用 \(-\) 表示从 \(\Om\) 内部取得的 trace，并采用 jump 约定
+\begin{align}
+\gamma^\pm D\tau&=K\tau\pm\tfrac12\tau,
+&\gamma^\pm S\sigma&=S\sigma,\label{eq:jumps1}\\
+\partial_\nu^\pm S\sigma&=K'\sigma\mp\tfrac12\sigma,
+&\partial_\nu^\pm D\tau&=T\tau.\label{eq:jumps2}
+\end{align}
+改变基本解或法向的符号会同时改变所有半跳项的符号，但不会改变本文结论。映射空间为
+\[
+\tau\in H^{1/2}(\Sig),\qquad \sigma\in H^{-1/2}(\Sig).
+\]
+这些空间中的 trace 与映射性质来自 \cite[第 3--4 节]{DominguezLyonTurc2016}
+所综述的 Calderón 理论。
+
+\section{直接 Green 恒等式真正能证明什么}
+\label{sec:green}
+
+令
+\[
+p=\gamma u\in H^{1/2}(\Sig),\qquad
+q=\partial_\nu u\in H^{-1/2}(\Sig).
+\]
+先在 \(\Om\) 中、再在 \(\C\setminus\overline\Om\) 中应用 Green 第二恒等式。
+在后一域中，内边界上的外法向是 \(-\nu\)。顶部与底部积分相消：场具有相位
+\(\ee^{\ii\beta d}\)，而 Green 核作为源变量的函数具有逆相位，且两条边的法向
+相反。这是 \cite[附录 A]{BarnettGreengard2010} 中引理 10 的单周期版本。两个
+竖直边界积分则被保留下来。
+
+把它们之和记为 \(h_V\)。对开 cell 内的目标点，\(h_V\) 的源位于竖直边界，故
+\((\Delta+k^2)h_V=0\)，且它沿 \(y\) 准周期。第~\ref{sec:rayleigh} 节因而给出
+它在 cell 中的双向 Rayleigh 展开。仔细处理内边界法向可得下述定理。
+
+\begin{theorem}[直接 Green 表示]
+\label{thm:directgreen}
+在第~\ref{sec:spaces} 节的几何与弱解假设下，并且离开 Wood 阈值时，
+\begin{align}
+u_e&=h_V+D_{\QP}^{(k_e)}p-S_{\QP}^{(k_e)}q
+&&\text{于 }\C\setminus\overline\Om,\label{eq:directext}\\
+u_i&=S^{(k_i)}q-D^{(k_i)}p
+&&\text{于 }\Om.\label{eq:directint}
+\end{align}
+这里 \(h_V\) 是保留下来的竖直边界 Cauchy 积分，并具有在 \(H^1\) 中收敛的
+Rayleigh 展开。
+\end{theorem}
+
+\begin{proof}
+对分片 \(H^2\) 场，在目标点周围挖去一个小圆，应用 Green 第二恒等式，再令圆
+半径趋于零。小圆项给出场值，水平边界项按上述理由相消。在 \(\Sig\) 上，背景域
+法向为 \(-\nu\)，这同时改变场的法向导数与 Green 核的源法向导数，从而得到
+\(+Dp-Sq\)；inclusion 中的通常内部公式给出 \(+Sq-Dp\)。对分片 \(H^1\)
+场，按式 \eqref{eq:weaknormal} 解释法向导数，再由 trace 与层势映射的有界性通过
+稠密性推广该恒等式。
+\end{proof}
+
+式 \eqref{eq:directext}--\eqref{eq:directint} 中的符号相反。因此，直接 Green
+恒等式\emph{不能}证明草稿中在两侧使用相同 \((\sigma,\tau)\) 和相同符号的公式。
+后者是 Müller ansatz，需要另一个完备性定理。
+
+\section{共同密度的 Müller 综合}
+\label{sec:muller}
+
+定义综合映射
+\begin{equation}
+\mathcal J(\tau,\sigma)=
+\left(
+D_{\QP}^{(k_e)}\tau+S_{\QP}^{(k_e)}\sigma,
+D^{(k_i)}\tau+S^{(k_i)}\sigma
+\right).
+\label{eq:J}
+\end{equation}
+由式 \eqref{eq:qpgreen}，其外部分量是 outgoing 的。利用
+\eqref{eq:jumps1}--\eqref{eq:jumps2} 以及草稿向量
+\(\eta=(\tau,-\sigma)^T\)，其 Cauchy mismatch 为
+\begin{equation}
+A_{\QP}\eta=
+\begin{bmatrix}
+I+K_e-K_i&S_i-S_e\\
+T_e-T_i&I+K_i'-K_e'
+\end{bmatrix}\eta.
+\label{eq:A}
+\end{equation}
+这正好恢复 Conjecture 1 后所列算子。每个波数差中的主导奇性相消。在 \(C^2\)
+曲线上，\(A_{\QP}\) 在
+\begin{equation}
+\mathcal X=H^{1/2}(\Sig)\times H^{-1/2}(\Sig)
+\label{eq:X}
+\end{equation}
+上是恒等加紧算子。Barnett 与 Greengard 在其 (20) 式后作了同样观察
+\cite[第 3 节]{BarnettGreengard2010}；Sobolev trace 空间中相应波数差的紧性见
+\cite[第 4.1 节]{DominguezLyonTurc2016}。
+
+\subsection{互补问题}
+
+关键对象并非内部 Dirichlet 或 Neumann 特征值问题，而是把两个层势延拓到各自
+非物理一侧后得到的\emph{交换} transmission 问题：
+\begin{equation}
+\begin{cases}
+(\Delta+k_e^2)v_i=0&\text{于 }\Om,\\
+(\Delta+k_i^2)v_e=0&\text{于 }\R^2\setminus\overline\Om,\\
+v_e-v_i=F,\quad
+\partial_\nu v_e-\partial_\nu v_i=G&\text{于 }\Sig,\\
+\displaystyle
+\partial_r v_e-\ii k_i v_e=o(r^{-1/2})
+&\text{当 }r=|x|\to\infty.
+\end{cases}
+\label{eq:complement}
+\end{equation}
+波数在物理位置之间进行了交换。辅助问题的几何由被延拓的层势核决定，而不是由
+物理外域决定：QP 外部层势向 \(\Om\) 内的非物理延拓给出 \(v_i\)，free-space
+内部层势向 \(\Om\) 外的非物理延拓则在整个
+\(\R^2\setminus\overline\Om\) 上给出 \(v_e\)。因此 \(v_e\) 满足径向
+Sommerfeld 条件。这正是 \cite[附录 A]{BarnettGreengard2010} 中的
+“complementary field” 方法。
+
+\begin{remark}[Hiptmair--Moiola--Spence (2022) 本地核对说明]
+已核对项目中的 \texttt{pdf/Hiptmair2022.pdf}。该文定义 1.4 把
+\(S_{io}=S(n_i,n_o)\) 称为物理解算子，并把交换参数后的
+\(S_{oi}=S(n_o,n_i)\) 称为非物理解算子；其定理 1.10 明确给出
+\(A_I^{-1}=S_{io}+S_{oi}-I\) 以及
+\(A_{II}^{-1}=I-S_{io}-S_{oi}+2S_{io}S_{oi}\)。这严格支持“分析 BIE
+时必须区分物理解算子与交换参数解算子”这一结构性判断。该文处理的是全空间
+Helmholtz transmission 问题的标准\emph{直接} BIE；本文的共同密度计算则采用
+\cite[附录 A]{BarnettGreengard2010} 中的混合 QP/free 间接 ansatz。
+\end{remark}
+
+\begin{definition}[互补问题的适定性]
+\label{def:complement-solvability}
+如果对任意
+\[
+(F,G)\in H^{1/2}(\Sig)\times H^{-1/2}(\Sig),
+\]
+问题 \eqref{eq:complement} 都存在唯一一对解
+\[
+v_i\in H^1(\Om),\qquad
+v_e\in H^1_{\rm loc}(\R^2\setminus\overline\Om),
+\]
+并且 \(v_e\) 满足 Sommerfeld 辐射条件，就称这个互补问题是适定的。
+\end{definition}
+
+对有界 \(C^2\) inclusion 和正实数 \(k_e,k_i\)，这就是标准的自由空间
+Helmholtz transmission 问题。Colton--Kress 在
+\cite[定理 3.41，第 101 页]{ColtonKress1983} 中直接给出结论：
+``The transmission problem has a unique solution''；其前一个定理 3.40 证明
+唯一性。Barnett--Greengard 在附录 A 中调用的正是这两个定理
+\cite[第 22--24 页]{BarnettGreengard2010}。Colton--Kress 的原文针对
+\(\R^3\) 中 \(C^2\) 曲面上的经典 trace。把其中的基本解替换为二维 outgoing
+基本解，并使用第~\ref{sec:layers} 节的 Sobolev 层势映射性质，就得到定义
+\ref{def:complement-solvability} 的二维 Sobolev 版本。因此这里调用的是标准
+全平面 transmission 适定性，不是额外的周期波导谱假设。
+
+互补场本身确实可以写成层势。对任意
+\((\tau,\sigma)\in\mathcal X\)，先记两个物理侧的层势为
+\begin{equation}
+P_e=D_{\QP}^{(k_e)}\tau+S_{\QP}^{(k_e)}\sigma
+\quad\text{于 }\C\setminus\overline\Om,
+\qquad
+P_i=D^{(k_i)}\tau+S^{(k_i)}\sigma
+\quad\text{于 }\Om,
+\label{eq:physical-potentials}
+\end{equation}
+再把同一层势延拓到各自的非物理一侧，并在第二行加一个负号：
+\begin{equation}
+v^{\tau,\sigma}(x)=
+\begin{cases}
+v_i(x):=D_{\QP}^{(k_e)}\tau(x)+S_{\QP}^{(k_e)}\sigma(x),
+&x\in\Om,\\
+v_e(x):=-D^{(k_i)}\tau(x)-S^{(k_i)}\sigma(x),
+&x\in\R^2\setminus\overline\Om.
+\end{cases}
+\label{eq:complementary-layer}
+\end{equation}
+这就是 \cite{BarnettGreengard2010} 的 (A.7) 式在本文符号约定下的版本。
+第一行只是把 QP 层势放到 \(\Sig\) 的另一侧求值；第二行的 free-space 层势
+由有限闭界面产生，因此自动满足向无穷远辐射的条件。
+
+\begin{lemma}[共同密度的显式综合]
+\label{lem:synthesis}
+假设参数非 Wood，并满足上述几何与正介质条件。任意给定
+\[
+w_e\in H^1_{\rm loc}(\C\setminus\overline\Om),
+\qquad w_i\in H^1(\Om),
+\]
+其中 \(w_e\) 沿 \(y\) 准周期，满足
+\((\Delta+k_e^2)w_e=0\)，并在左右两个竖直端口均为 outgoing；同时
+\((\Delta+k_i^2)w_i=0\) 于 \(\Om\)。这里不要求 \(w_e\) 与 \(w_i\) 在
+\(\Sig\) 上满足任何 transmission 条件。则存在唯一
+\((\tau,\sigma)\in\mathcal X\)，使得
+\begin{equation}
+w_e=D_{\QP}^{(k_e)}\tau+S_{\QP}^{(k_e)}\sigma,
+\qquad
+w_i=D^{(k_i)}\tau+S^{(k_i)}\sigma
+\label{eq:synthesis-target}
+\end{equation}
+分别在二者各自的定义域内成立。
+\end{lemma}
+
+\begin{proof}
+把密度唯一性和密度构造分开证明。
+
+\emph{1. 密度的唯一性。}
+先假设式 \eqref{eq:physical-potentials} 的两个物理场都为零，并由
+\eqref{eq:complementary-layer} 定义 \((v_i,v_e)\)。因为 \(P_e\) 在外侧为零，
+jump 公式 \eqref{eq:jumps1}--\eqref{eq:jumps2} 给出
+\begin{equation}
+\gamma v_i=-\tau,\qquad \partial_\nu v_i=\sigma.
+\label{eq:kernel-traces-i}
+\end{equation}
+另一方面，\(P_i\) 在内侧为零，而在外侧 \(v_e=-P_i\)，同一组 jump 公式给出
+\begin{equation}
+\gamma v_e=-\tau,\qquad \partial_\nu v_e=\sigma.
+\label{eq:kernel-traces-e}
+\end{equation}
+所以 \((v_i,v_e)\) 满足 \eqref{eq:complement}，且 \(F=G=0\)。定义
+\ref{def:complement-solvability} 中的唯一性给出 \(v_i=v_e=0\)。再由
+\eqref{eq:kernel-traces-i}--\eqref{eq:kernel-traces-e} 得
+\(\tau=\sigma=0\)。因此
+\begin{equation}
+\Ker\mathcal J=\{0\}.
+\label{eq:Jinjective}
+\end{equation}
+
+\emph{2. 密度的构造。}
+对引理中给定的两个场，定义四个 Cauchy trace
+\begin{equation}
+p_e=\gamma^+w_e,\quad q_e=\partial_\nu^+w_e,
+\qquad
+p_i=\gamma^-w_i,\quad q_i=\partial_\nu^-w_i.
+\label{eq:w-traces}
+\end{equation}
+利用定义 \ref{def:complement-solvability}，求解互补问题
+\eqref{eq:complement}，并取 jump 数据
+\begin{equation}
+F=-(p_e+p_i),\qquad G=-(q_e+q_i).
+\label{eq:complement-data-from-w}
+\end{equation}
+记该唯一解的四个 trace 为
+\[
+p_{v,i}=\gamma v_i,\quad q_{v,i}=\partial_\nu v_i,
+\qquad
+p_{v,e}=\gamma v_e,\quad q_{v,e}=\partial_\nu v_e.
+\]
+互补问题中的两个 jump 方程就是
+\begin{align}
+p_{v,e}-p_{v,i}&=-(p_e+p_i),\label{eq:vjump-p}\\
+q_{v,e}-q_{v,i}&=-(q_e+q_i).\label{eq:vjump-q}
+\end{align}
+所以以下每一行中的两个表达式相等；据此定义
+\begin{align}
+\tau&:=p_e-p_{v,i}=-p_{v,e}-p_i,\label{eq:density-tau}\\
+\sigma&:=q_{v,i}-q_e=q_{v,e}+q_i.\label{eq:density-sigma}
+\end{align}
+
+下面逐式验证这些密度确实生成给定场。先仿照
+\cite[附录 A]{BarnettGreengard2010} 的引理 9--10，把两个准周期 Green 公式
+分别证明。
+
+\begin{lemma}[内部准周期 Green 公式]
+\label{lem:qp-green-interior}
+设 \(v_i\) 在 \(\Om\) 中满足 \((\Delta+k_e^2)v_i=0\)，并记
+\(p_{v,i}=\gamma v_i\)、\(q_{v,i}=\partial_\nu v_i\)。则
+\begin{equation}
+D_{\QP}^{(k_e)}p_{v,i}-S_{\QP}^{(k_e)}q_{v,i}
+=\begin{cases}
+-v_i,&\text{于 }\Om,\\
+0,&\text{于 }\C\setminus\overline\Om.
+\end{cases}
+\label{eq:green-vi}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+令 \(e_y=(0,1)\)、\(\alpha=\ee^{\ii\beta d}\)，并记
+\(\Om_j=\Om+jd e_y\)、\(\Sig_j=\partial\Om_j\)。单周期准周期 Green 函数
+可以写成适当收敛意义下的 lattice sum
+\[
+G_{\QP}^{(k_e)}(x,z)
+=\sum_{j\in\Z}\alpha^j\Phi_{k_e}(x,z+jd e_y).
+\]
+为把论证写清楚，先把级数截断为 \(|j|\leq N\)。把 Cauchy 数据复制到
+\(\Sig_j\)：
+\[
+p_{v,i}^{(j)}(z+jd e_y)=p_{v,i}(z),\qquad
+q_{v,i}^{(j)}(z+jd e_y)=q_{v,i}(z).
+\]
+作变量替换 \(z_j=z+jd e_y\) 后，第 \(j\) 个 image 的贡献为
+\[
+\begin{aligned}
+I_j(x)
+&=\int_{\Sig_j}
+ \left[\partial_{\nu_{z_j}}\Phi_{k_e}(x,z_j)
+             p_{v,i}^{(j)}(z_j)
+       -\Phi_{k_e}(x,z_j)q_{v,i}^{(j)}(z_j)\right]ds_{z_j}\\
+&=\begin{cases}
+-v_i(x-jd e_y),&x\in\Om_j,\\
+0,&x\notin\overline\Om_j.
+\end{cases}
+\end{aligned}
+\]
+最后一个等号正是通常的内部 Green 公式及其 extinction 情形。由于
+\(\overline\Om\subset\R\times(0,d)\)，参考 cell 中的目标点至多属于一个平移
+后的 inclusion。因此，对所有充分大的 \(N\)，
+\[
+\sum_{|j|\leq N}\alpha^j I_j(x)
+=\begin{cases}-v_i(x),&x\in\Om,\\0,&x\in\C\setminus\overline\Om.
+\end{cases}
+\]
+令截断 lattice sum 趋于非 Wood 参数下的准周期 Green 函数，即得
+\eqref{eq:green-vi}。这就是
+\cite[附录 A]{BarnettGreengard2010} 中引理 9 的单周期版本。
+\end{proof}
+
+\begin{lemma}[Outgoing 外部准周期 Green 公式]
+\label{lem:qp-green-exterior}
+设 \(w_e\) 在 \(\C\setminus\overline\Om\) 中满足
+\((\Delta+k_e^2)w_e=0\)，沿 \(y\) 方向以
+\(\alpha=\ee^{\ii\beta d}\) 为相位准周期，并在左右两个竖直端口均为
+outgoing。令 \(p_e=\gamma^+w_e\)、\(q_e=\partial_\nu^+w_e\)，则
+\begin{equation}
+D_{\QP}^{(k_e)}p_e-S_{\QP}^{(k_e)}q_e
+=\begin{cases}
+0,&\text{于 }\Om,\\
+w_e,&\text{于 }\C\setminus\overline\Om.
+\end{cases}
+\label{eq:green-we}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+固定目标点 \(x=(x_1,x_2)\)，把源点写成 \(z=(s,t)\)。取
+\(L<X_L\)、\(R>X_R\)，并令 \(L<x_1<R\)，再定义截断外域
+\[
+\mathcal D_{L,R}=((L,R)\times(0,d))\setminus\overline\Om.
+\]
+若 \(x\in\mathcal D_{L,R}\)，从该域中挖去小圆盘 \(B_\varepsilon(x)\)；若
+\(x\in\Om\)，则不挖去圆盘。对 \(w_e(z)\) 与
+\(G_{\QP}^{(k_e)}(x,z)\) 应用 Green 第二恒等式，其边界 integrand 为
+\[
+\mathcal B(z)
+=w_e(z)\partial_{n_z}G_{\QP}^{(k_e)}(x,z)
+ -G_{\QP}^{(k_e)}(x,z)\partial_{n_z}w_e(z).
+\]
+
+先处理上下两条水平边。Green 函数作为源变量的函数具有逆准周期性：
+\[
+\begin{aligned}
+w_e(s,d)&=\alpha w_e(s,0),
+&\partial_t w_e(s,d)&=\alpha\partial_t w_e(s,0),\\
+G_{\QP}(x;s,d)&=\alpha^{-1}G_{\QP}(x;s,0),
+&\partial_tG_{\QP}(x;s,d)&=\alpha^{-1}\partial_tG_{\QP}(x;s,0).
+\end{aligned}
+\]
+上边的外法向为 \(+e_y\)，下边的外法向为 \(-e_y\)，所以两个积分分别是
+\[
+\begin{aligned}
+I_T
+&=\int_L^R\left[
+ \alpha w_e(s,0)\,\alpha^{-1}\partial_tG_{\QP}(x;s,0)
+ -\alpha^{-1}G_{\QP}(x;s,0)\,\alpha\partial_tw_e(s,0)
+ \right]ds,\\
+I_B
+&=-\int_L^R\left[
+ w_e(s,0)\partial_tG_{\QP}(x;s,0)
+ -G_{\QP}(x;s,0)\partial_tw_e(s,0)
+ \right]ds.
+\end{aligned}
+\]
+由此逐项得到 \(I_T+I_B=0\)。这正是 Barnett 引理 10 中的边界抵消。
+
+下面具体计算左右两个竖直端口。定义 anti-quasiperiodic 的对偶模态
+\[
+\widetilde\psi_m(t)=d^{-1/2}\ee^{-\ii\beta_m t},\qquad
+\int_0^d\psi_m(t)\widetilde\psi_n(t)\,dt=\delta_{mn}.
+\]
+outgoing 条件在左右齐次端口上分别给出
+\[
+\begin{aligned}
+w_e(s,t)&=\sum_m A_m^R
+ \ee^{\ii\gamma_m(s-X_R)}\psi_m(t),&&s\geq X_R,\\
+w_e(s,t)&=\sum_m B_m^L
+ \ee^{-\ii\gamma_m(s-X_L)}\psi_m(t),&&s\leq X_L.
+\end{aligned}
+\]
+另一方面，把谱公式 \eqref{eq:qpgreen} 看成源点 \(z=(s,t)\) 的函数，可得
+\[
+\begin{aligned}
+G_{\QP}(x;s,t)
+ &=\sum_m c_m^R(x)\ee^{\ii\gamma_m(s-X_R)}
+   \widetilde\psi_m(t),&&s>x_1,\\
+G_{\QP}(x;s,t)
+ &=\sum_m c_m^L(x)\ee^{-\ii\gamma_m(s-X_L)}
+   \widetilde\psi_m(t),&&s<x_1,
+\end{aligned}
+\]
+其中
+\[
+c_m^R(x)=\frac{\ii}{2\sqrt d\,\gamma_m}
+ \ee^{\ii\beta_mx_2}\ee^{\ii\gamma_m(X_R-x_1)},\qquad
+c_m^L(x)=\frac{\ii}{2\sqrt d\,\gamma_m}
+ \ee^{\ii\beta_mx_2}\ee^{\ii\gamma_m(x_1-X_L)}.
+\]
+在右边 \(s=R\) 上，外法向导数是 \(\partial_{n_z}=\partial_s\)。代入两个
+向右 outgoing 的展开，再使用对偶模态关系，得到
+\[
+\begin{aligned}
+I_R
+&=\int_0^d\left(w_e\partial_sG_{\QP}
+                 -G_{\QP}\partial_sw_e\right)(x;R,t)\,dt\\
+&=\sum_{m,n}A_m^R c_n^R(x)
+ \ee^{\ii(\gamma_m+\gamma_n)(R-X_R)}
+ \ii(\gamma_n-\gamma_m)
+ \int_0^d\psi_m(t)\widetilde\psi_n(t)\,dt\\
+&=\sum_m A_m^R c_m^R(x)
+ \ee^{2\ii\gamma_m(R-X_R)}\ii(\gamma_m-\gamma_m)=0.
+\end{aligned}
+\]
+在左边 \(s=L\) 上，外法向导数是 \(\partial_{n_z}=-\partial_s\)。两个向左
+outgoing 的因子因而具有同一个外向对数导数 \(+\ii\gamma_m\)，所以同样有
+\[
+\begin{aligned}
+I_L
+&=\int_0^d\left(w_e\partial_{n_z}G_{\QP}
+                 -G_{\QP}\partial_{n_z}w_e\right)(x;L,t)\,dt\\
+&=\sum_{m,n}B_m^L c_n^L(x)
+ \ee^{-\ii(\gamma_m+\gamma_n)(L-X_L)}
+ \ii(\gamma_n-\gamma_m)\delta_{mn}=0.
+\end{aligned}
+\]
+这两个等式对传播阶次和倏逝阶次都成立。当 \(\gamma_m\) 为实数时，并没有使用
+振幅衰减；积分为零是因为 \(w_e\) 与 Green 函数包含同一个 outgoing 指数，
+所以其 Wronskian 为零。若 \(w_e\) 含有 incoming 指数，它的对数导数将反号，
+并留下一个正比于 \(2\ii\gamma_m\) 的非零项。
+
+最后，在 \(\Sig\) 上，截断外域 \(\mathcal D_{L,R}\) 的外法向是
+\(-\nu\)，所以该边界的贡献为
+\[
+-\int_\Sig\left[p_e(z)\partial_{\nu_z}G_{\QP}(x,z)
+                 -G_{\QP}(x,z)q_e(z)\right]ds_z
+=-\left(D_{\QP}^{(k_e)}p_e-S_{\QP}^{(k_e)}q_e\right)(x).
+\]
+若 \(x\in\C\setminus\overline\Om\)，由于
+\((\Delta+k_e^2)G_{\QP}(x,\cdot)=-\delta_x\)，小圆积分在
+\(\varepsilon\to0\) 时趋于 \(+w_e(x)\)。四条外边界的积分已经全部消失，
+Green 恒等式因此变成
+\[
+0=-\left(D_{\QP}^{(k_e)}p_e-S_{\QP}^{(k_e)}q_e\right)(x)+w_e(x).
+\]
+若 \(x\in\Om\)，没有小圆项，同一计算给出该层势为零。这就证明了
+\eqref{eq:green-we}。对于弱解，可以先对有限 Rayleigh 和与光滑数据完成计算，
+再取 trace 空间中的极限。
+\end{proof}
+
+波数 \(k_i\) 的两个 free-space 公式为
+\begin{align}
+D^{(k_i)}p_{v,e}-S^{(k_i)}q_{v,e}
+&=\begin{cases}0,&\text{于 }\Om,\\v_e,&\text{于 }\R^2\setminus\overline\Om,
+\end{cases}\label{eq:green-ve}\\
+D^{(k_i)}p_i-S^{(k_i)}q_i
+&=\begin{cases}-w_i,&\text{于 }\Om,\\0,&\text{于 }\R^2\setminus\overline\Om.
+\end{cases}\label{eq:green-wi}
+\end{align}
+式 \eqref{eq:green-ve}--\eqref{eq:green-wi} 是通常的外部与内部 Green 公式。
+
+在物理外域中，使用 \eqref{eq:density-tau}--\eqref{eq:density-sigma}
+各自的第一个表达式，得到
+\begin{equation}
+\begin{aligned}
+D_{\QP}^{(k_e)}\tau+S_{\QP}^{(k_e)}\sigma
+&=\bigl(D_{\QP}^{(k_e)}p_e-S_{\QP}^{(k_e)}q_e\bigr)
+ -\bigl(D_{\QP}^{(k_e)}p_{v,i}-S_{\QP}^{(k_e)}q_{v,i}\bigr)\\
+&=w_e-0=w_e.
+\end{aligned}
+\label{eq:verify-we}
+\end{equation}
+在 \(\Om\) 内，改用 \eqref{eq:density-tau}--\eqref{eq:density-sigma}
+各自的第二个表达式，得到
+\begin{equation}
+\begin{aligned}
+D^{(k_i)}\tau+S^{(k_i)}\sigma
+&=-\bigl(D^{(k_i)}p_{v,e}-S^{(k_i)}q_{v,e}\bigr)
+ -\bigl(D^{(k_i)}p_i-S^{(k_i)}q_i\bigr)\\
+&=-0-(-w_i)=w_i.
+\end{aligned}
+\label{eq:verify-wi}
+\end{equation}
+这就证明了存在性。如果两组密度产生同一个 \((w_e,w_i)\)，二者之差属于
+\(\Ker\mathcal J\)，而该核由 \eqref{eq:Jinjective} 只有零元，所以密度也唯一。
+以上计算就是 \cite{BarnettGreengard2010} 的 (A.7)--(A.14) 式在本文符号下、
+并允许任意界面 mismatch 后的完整版本。
+\end{proof}
+
+\begin{remark}
+如果两个物理侧的表示都使用 QP Green 函数，那么它们的非物理延拓会产生周期
+互补问题，此时 spurious guided mode 可能要求额外谱假设。但 Conjecture 1 并非
+这种 ansatz：它选择 QP exterior/free-space interior，恰好使
+\eqref{eq:complement} 成为标准非周期问题。Barnett 与 Greengard 在附录 A 末尾
+特别强调了这个区别。
+\end{remark}
+
+\section{修正表示的存在性与唯一性}
+\label{sec:corrected}
+
+\begin{theorem}[修正后的 Conjecture 1]
+\label{thm:corrected}
+假设：
+\begin{enumerate}[label=(\roman*)]
+\item \(\Sig\) 为 \(C^2\)，\(\overline\Om\) 严格位于 cell 内，且两个竖直
+端口附近都有齐次背景 collar；
+\item \(k>0\)、\(n>0\)、\(\beta\in\R\)，并采用式
+\eqref{eq:transmission} 的通常 TM 连续条件；
+\item \(u\) 是式 \eqref{eq:solutionclass} 意义下的分片 \(H^1\) 弱解；
+\item 对每个 \(m\) 都有 \(\gamma_m(k,\beta)\neq0\)。
+\end{enumerate}
+用式 \eqref{eq:incomingh} 中的端口入射系数定义 \(u_h\)。则存在唯一密度对
+\((\tau,\sigma)\in H^{1/2}(\Sig)\times H^{-1/2}(\Sig)\)，使得
+\begin{equation}
+u=\begin{cases}
+u_h+D_{\QP}^{(k_e)}\tau+S_{\QP}^{(k_e)}\sigma,
+&\C\setminus\overline\Om,\\
+D^{(k_i)}\tau+S^{(k_i)}\sigma,&\Om.
+\end{cases}
+\label{eq:correctedrep}
+\end{equation}
+\(u_h\) 的 Rayleigh 系数属于
+\(\ell^2_{1/2,\beta}\times\ell^2_{1/2,\beta}\)，且是唯一的。因此对给定的
+\(u\)，背景场、层势场和密度均唯一。
+\end{theorem}
+
+\begin{proof}
+把端口归一化、层势构造和唯一性分成四步。
+
+\emph{1. 提取入射背景场。}
+在左侧齐次 collar 中，外场具有唯一展开
+\begin{equation}
+u_e=\sum_m\left(
+A_m^L\ee^{\ii\gamma_m(x-X_L)}
++B_m^L\ee^{-\ii\gamma_m(x-X_L)}
+\right)\psi_m.
+\label{eq:theorem-left-expansion}
+\end{equation}
+右侧 collar 中有以 \(X_R\) 为锚点的类似系数 \(A_m^R,B_m^R\)。因为
+\(\gamma_m\ne0\)，式 \eqref{eq:portcoeff} 可由两个端口上的 Cauchy 数据恢复
+全部四组系数。只保留左端向右传播的系数与右端向左传播的系数，定义入射背景场
+\begin{equation}
+u_h=\sum_m A_m^L\ee^{\ii\gamma_m(x-X_L)}\psi_m
++\sum_m B_m^R\ee^{-\ii\gamma_m(x-X_R)}\psi_m.
+\label{eq:theorem-uh}
+\end{equation}
+估计 \eqref{eq:coefnorm} 保证该级数在 \(H^1(\C)\) 中收敛。
+
+\emph{2. 剩余外场在两个端口均为 outgoing。}
+令
+\begin{equation}
+w_e:=u_e-u_h\quad\text{于 }\C\setminus\overline\Om,
+\qquad
+w_i:=u_i\quad\text{于 }\Om.
+\label{eq:theorem-w}
+\end{equation}
+式 \eqref{eq:theorem-left-expansion} 与 \eqref{eq:theorem-uh} 中的入射项
+相消，所以在两个端口附近分别有
+\begin{align}
+w_e&=\sum_m B_m^L\ee^{-\ii\gamma_m(x-X_L)}\psi_m
+&&\text{于左端附近},\label{eq:w-left-out}\\
+w_e&=\sum_m A_m^R\ee^{\ii\gamma_m(x-X_R)}\psi_m
+&&\text{于右端附近}.\label{eq:w-right-out}
+\end{align}
+因此 \(w_e\) 在两端均为 outgoing；对倏逝阶次，这正是向相应无穷远指数衰减。
+现在 \((w_e,w_i)\) 满足引理 \ref{lem:synthesis} 的全部假设。注意该引理不要求
+二者在界面上连续。
+
+\begin{remark}[为什么只在外场中减去背景场]
+背景场满足 \((\Delta+k_e^2)u_h=0\)，而物理内场满足
+\((\Delta+k_i^2)u_i=0\)。如果在 \(\Om\) 中也定义
+\(\widetilde w_i:=u_i-u_h\)，则
+\begin{equation}
+  (\Delta+k_i^2)\widetilde w_i
+  =(k_e^2-k_i^2)u_h.
+  \label{eq:interior-background-subtraction}
+\end{equation}
+除非 $k_e=k_i$ 或 $u_h|_\Om=0$，右端是非零体源。因此
+\(\widetilde w_i\) 不再是齐次的内部 Helmholtz 场，不能只用当前的界面层势表示，
+还必须加入体势。这就是式 \eqref{eq:theorem-w} 保持 $w_i=u_i$ 的原因。
+\end{remark}
+
+\emph{3. 显式构造密度。}
+为把构造完全写清楚，令 \((p_e,q_e,p_i,q_i)\) 表示
+\eqref{eq:w-traces} 中 \((w_e,w_i)\) 的四个 trace。求解标准全平面互补问题
+\begin{equation}
+v_e-v_i=-(p_e+p_i),\qquad
+\partial_\nu v_e-\partial_\nu v_i=-(q_e+q_i).
+\label{eq:theorem-complement-data}
+\end{equation}
+由 Colton--Kress 定理 3.41 所保证的定义
+\ref{def:complement-solvability}，它有唯一解 \((v_i,v_e)\)。定义
+\begin{equation}
+\tau=p_e-p_{v,i}=-p_{v,e}-p_i,\qquad
+\sigma=q_{v,i}-q_e=q_{v,e}+q_i.
+\label{eq:theorem-densities}
+\end{equation}
+每一项中的两个表达式相等，直接来自
+\eqref{eq:theorem-complement-data}。式
+\eqref{eq:verify-we}--\eqref{eq:verify-wi} 随即给出
+\[
+w_e=D_{\QP}^{(k_e)}\tau+S_{\QP}^{(k_e)}\sigma,
+\qquad
+w_i=D^{(k_i)}\tau+S^{(k_i)}\sigma.
+\]
+代回 \eqref{eq:theorem-w}，恰好得到 \eqref{eq:correctedrep}，所以存在性成立。
+
+\emph{4. 唯一性。}
+对固定物理场 \(u\)，两个端口上的 Cauchy 数据已经固定。式
+\eqref{eq:portcoeff} 因而唯一确定 \(A_m^L\) 和 \(B_m^R\)，所以归一化
+\eqref{eq:theorem-uh} 唯一确定 \(u_h\)。于是 \eqref{eq:theorem-w} 中的
+\((w_e,w_i)\) 也已固定。引理 \ref{lem:synthesis} 的唯一性，等价地
+\(\Ker\mathcal J=\{0\}\)，再唯一确定 \((\tau,\sigma)\)。最后，第
+\ref{sec:rayleigh} 节逐阶 Wronskian 计算保证 Rayleigh 系数本身唯一。至此，
+定理中关于背景场、层势密度和模态系数的全部唯一性结论都得到证明。
+\end{proof}
+
+\subsection{为什么这里没有额外的互补共振}
+
+普通内部 Dirichlet 或 Neumann 特征值会使纯单层或纯双层表示不唯一；Kress 在
+\cite[第 1 节]{Kress1991} 中给出经典例子。共同密度 Müller 构造通过耦合两个
+层势并使用交换 transmission 问题来消除这些缺陷。在当前混合 QP/free ansatz 中，
+该交换问题正是全平面标准问题 \eqref{eq:complement}；它的齐次辐射解只有零解，
+所以反向 jump 构造不能产生 \(\Ker\mathcal J\) 中的非零元素。特别地，在定理
+\ref{thm:corrected} 的假设下，
+\[
+\Ker\mathcal J=\{0\}.
+\]
+只有改用“两侧都采用 QP 核”的不同 formulation 时，周期互补共振才可能成为问题。
+
+\subsection{物理 guided mode 不是同一种缺陷}
+
+物理 guided mode 满足 \(u_h=0\)，并具有非零密度使
+\[
+A_{\QP}\eta=0.
+\]
+这正是 TEP 特征值方法要寻找的对象。通过自由空间互补问题建立的
+\(\mathcal J\) 单射性保证该密度生成非零物理场。
+所以 \(\Ker A_{\QP}\neq\{0\}\) 并不必然意味着坐标冗余：\(A_{\QP}\) 只记录
+界面 mismatch，而 \(\mathcal J\) 记录完整场。混淆 \(\Ker A_{\QP}\) 与
+\(\Ker\mathcal J\) 是最核心的唯一性陷阱。
+
+\section{Wood anomaly 与其他例外情形}
+
+当 \(\gamma_{m_0}=0\) 时，以下三个问题同时出现。
+
+\begin{enumerate}
+\item Green 级数 \eqref{eq:qpgreen} 含有 \(1/\gamma_{m_0}\)，未经正则化便无定义。
+\item 阶次 \(m_0\) 的两个指数函数合并，而 ODE 所需的是
+\(\psi_{m_0}\) 与 \(x\psi_{m_0}\) 张成的二维空间。
+\item 阈值阶次的 incoming/outgoing 分类不能由 \(\gamma_m\) 的符号决定，需要
+limiting absorption 或广义模态规则。
+\end{enumerate}
+
+因此，仅仅说“证明在 Wood 处病态”还不够：猜想中的公式在那里结构上不完备。
+阈值安全的定理必须同时改变 Green 核与齐次基。这样的改变已经是在修改 formulation，
+而不是证明原命题，所以不属于本任务。
+
+若 \(\Im k>0\)，模态分支严格衰减，能量恒等式通常可排除实轴 guided mode。
+这给出有用的正则化理论及 limiting-absorption 路径，但回到实 \(k\) 的极限在阈值
+或嵌入 guided mode 处可能奇异。
+
+若 \(\Om\) 接触竖直端口，齐次 collar 消失，式 \eqref{eq:portcoeff} 不能使用。
+若它跨越准周期 seam，则必须使用周期坐标图并包含延拓后的界面。定理
+\ref{thm:corrected} 均不覆盖这两种情形。
+
+\section{对 DtN--Müller formulation 的影响}
+
+草稿后续系统使用
+\[
+A_{\QP}\eta+B_\Sig\xi=0
+\]
+以及端口 trace 方程。本分析给出五项具体要求。
+
+\begin{enumerate}
+\item 向量 \(\xi=(a,b)\) 必须解释为左端入射与右端入射的齐次坐标，而不能看作
+outgoing 层势远场的任意副本。
+\item 系数定义域应为
+\(\ell^2_{1/2,\beta}\times\ell^2_{1/2,\beta}\)，有限维截断只能看作近似。
+\item 在连续层面，混合核综合映射的单射性保证非零密度生成非零物理场；数值实现中
+仍应检查离散误差造成的近零向量。
+\item \(A_{\QP}\) 的物理奇异性并不自动是伪奇异；它可能正是目标 guided mode。
+应由场综合映射而不是单独的 mismatch 行区分物理零空间与坐标零空间。
+\item 在 Wood 阈值附近，不能信任标准 QP Green 矩阵与 Rayleigh 基。数值上排除
+一个邻域是实际可行的选择，但定理需要正则化的阈值 formulation。
+\end{enumerate}
+
+定理 \ref{thm:directgreen} 中的无条件直接 Green 表示仍提供一个独立检查：它以
+物理 Cauchy 数据为主未知量并显式保留竖直边界项，代价是需要不同的算子系统。
+
+\section{最终分类与剩余开放问题}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{p{0.29\textwidth}X}
+\toprule
+命题 & 状态 \\
+\midrule
+空 cell、非 Wood 的 Rayleigh 表示 & 已证明，包括自然的半阶系数范数。\\
+顶部/底部 Green 项相消 & 已由相反法向与互逆准周期相位证明。\\
+竖直项构成齐次背景场 & 已在开 cell 内证明；它具有第~\ref{sec:rayleigh} 节的
+Rayleigh 表示。\\
+物理 trace 的直接层势表示 & 已由定理 \ref{thm:directgreen} 证明；内外符号相反。\\
+草稿中的共同密度表示 & 在定理 \ref{thm:corrected} 明确列出的正则性和非 Wood
+假设下已证明。\\
+Rayleigh 系数唯一性 & 在避开 Wood 阈值并作入射归一化后已证明。\\
+共同密度唯一性 & 已由标准全平面交换 transmission 问题的唯一性证明。\\
+原文所写 Conjecture 1 & 过于含混，尚不能直接作为定理；明确函数空间、端口
+归一化、符号与非 Wood 条件后，由定理 \ref{thm:corrected} 取代。\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+剩余数学工作集中在真正的例外集合与实现层面的严格性：在 Wood 参数处构造阈值安全
+的 QP Green 核与广义 Rayleigh 基，并验证离散 trace 和层势映射保持上述连续
+单射性。混合 QP/free 表示不包含独立的互补柱面谱问题。
+
+\begin{thebibliography}{99}
+
+\bibitem{BarnettGreengard2010}
+A. H. Barnett and L. Greengard,
+``A new integral representation for quasiperiodic fields and its application
+to two-dimensional band structure calculations,''
+\emph{Journal of Computational Physics}, 229(19):6898--6914, 2010.
+\href{https://doi.org/10.1016/j.jcp.2010.05.029}{doi:10.1016/j.jcp.2010.05.029};
+\href{https://arxiv.org/abs/1001.5464}{arXiv:1001.5464}.
+
+\bibitem{ColtonKress1983}
+D. Colton and R. Kress,
+\emph{Integral Equation Methods in Scattering Theory},
+Classics in Applied Mathematics 72, Society for Industrial and Applied
+Mathematics, Philadelphia, 2013；Wiley 1983 年原版的重印本。
+\href{https://doi.org/10.1137/1.9781611973167}{doi:10.1137/1.9781611973167}.
+
+\bibitem{DominguezLyonTurc2016}
+V. Dominguez, M. Lyon, and C. Turc,
+``Well-posed boundary integral equation formulations and Nystrom
+discretizations for the solution of Helmholtz transmission problems in
+two-dimensional Lipschitz domains,'' 2016.
+\href{https://arxiv.org/abs/1509.04415}{arXiv:1509.04415v2}.
+
+\bibitem{HiptmairMoiolaSpence2022}
+R. Hiptmair, A. Moiola, and E. A. Spence,
+``Spurious quasi-resonances in boundary integral equations for the Helmholtz
+transmission problem,'' \emph{SIAM Journal on Applied Mathematics},
+82(4):1446--1469, 2022.
+\href{https://doi.org/10.1137/21M1447052}{doi:10.1137/21M1447052};
+\href{https://arxiv.org/abs/2109.08530}{arXiv:2109.08530}.
+
+\bibitem{Kress1991}
+R. Kress,
+``Boundary integral equations in time-harmonic acoustic scattering,''
+\emph{Mathematical and Computer Modelling}, 15(3--5):229--243, 1991.
+\href{https://doi.org/10.1016/0895-7177(91)90068-I}{doi:10.1016/0895-7177(91)90068-I}.
+
+\bibitem{Linton1998}
+C. M. Linton,
+``The Green's function for the two-dimensional Helmholtz equation in periodic
+domains,'' \emph{Journal of Engineering Mathematics}, 33:377--402, 1998.
+\href{https://doi.org/10.1023/A:1004377501747}{doi:10.1023/A:1004377501747}.
+
+\bibitem{McLean2000}
+W. McLean,
+\emph{Strongly Elliptic Systems and Boundary Integral Equations},
+Cambridge University Press, 2000. ISBN 978-0-521-66332-8.
+
+\end{thebibliography}
+
+\appendix
+\section{逐模态唯一性计算}
+
+对一个非 Wood 阶次，假设
+\[
+a\ee^{\ii\gamma(x-X_L)}+b\ee^{-\ii\gamma(x-X_R)}=0
+\quad\text{对 }X_L<x<X_R.
+\]
+在任一点分别计算该恒等式及其导数，得到
+\[
+\begin{bmatrix}
+\ee^{\ii\gamma(x-X_L)}&\ee^{-\ii\gamma(x-X_R)}\\
+\ii\gamma\ee^{\ii\gamma(x-X_L)}&
+-\ii\gamma\ee^{-\ii\gamma(x-X_R)}
+\end{bmatrix}
+\begin{bmatrix}a\\b\end{bmatrix}=0.
+\]
+其行列式为
+\(-2\ii\gamma\ee^{\ii\gamma(X_R-X_L)}\neq0\)，故 \(a=b=0\)。这是系数
+唯一性；它与密度唯一性无关，后者由完全不同的映射 \(\mathcal J\) 控制。
+
+\section{为什么相对的水平 Green 项会相消}
+
+令源变量为 \(z=(z_x,z_y)\)。若场满足
+\(u(z_x,d)=\alpha u(z_x,0)\)、\(\alpha=\ee^{\ii\beta d}\)，则与之配对的
+Green 核对源变量具有逆相位
+\(G(x;z_x,d)=\alpha^{-1}G(x;z_x,0)\)。相应的源法向导数也满足同样关系。
+由于顶部外法向为 \(+e_y\)，底部外法向为 \(-e_y\)，把两条相位关系代入
+\[
+\int_{\Gamma_{\rm top}\cup\Gamma_{\rm bot}}
+  (G\partial_n u-u\partial_nG)\,ds
+\]
+即可逐项相消。因此，只要 Green 核与场采用匹配的准周期性，就不需要额外的水平
+边界未知量。
+
+\section{算子层面的唯一性词典}
+
+\begin{align*}
+\text{PDE 场唯一性}
+&\neq \text{表示唯一性},\\
+\Ker A_{\QP}
+&=\text{产生零界面 mismatch 的密度},\\
+\Ker\mathcal J
+&=\text{在两个物理侧都产生零场的密度},\\
+\Ker A_{\QP}\setminus\Ker\mathcal J
+&=\text{物理 guided-mode 密度（在上述假设下）},\\
+\Ker\mathcal J
+&=\{0\}\quad\text{由全平面互补问题唯一性得到},\\
+\gamma_m=0
+&\Rightarrow\text{所列 Rayleigh 坐标基失效}.
+\end{align*}
+
+这份词典是避免混淆物理 mismatch 零空间、综合映射以及独立 Wood 阈值失效的
+最简方式。
+
+\end{document}
