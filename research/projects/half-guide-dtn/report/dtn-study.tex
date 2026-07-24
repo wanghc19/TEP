@@ -1,0 +1,78 @@
+% Full title: Feasibility Study of Direct DtN Maps for Periodic Half-Guides
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\title{Feasibility Study: Direct DtN Maps for Periodic Half-Guides in the TEP Formulation}
+\author{TEP DtN Attempt}
+\date{Draft status: July 13, 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Executive Summary}
+
+This is a draft feasibility report created at the beginning of the isolated
+\texttt{attempt/} study. The current evidence supports the sign conversion for
+the homogeneous lead, but does not yet validate obstacle leads or the full
+Muller-DtN eigenvalue formulation.
+
+\section{Current Formulation And Motivation}
+
+The current project uses outgoing Bloch trace subspaces at the two center-cell
+ports. The proposed alternative is to replace these subspaces by half-guide
+Dirichlet-to-Neumann maps
+\[
+  N^\pm=\Lambda^\pm(k,\beta)D^\pm,
+  \qquad
+  N^+=+\partial_xu|_{\Gamma^+},\quad
+  N^-=-\partial_xu|_{\Gamma^-}.
+\]
+
+\section{Review Of Joly And Coatleven}
+
+Joly, Li, and Fliss construct exact boundary conditions for periodic
+waveguides using local cell DtN blocks and a stationary Riccati equation
+\cite{JolyLiFliss2006}. Coatleven reuses this construction for line defects
+after a Floquet-Bloch transform along the defect direction \cite{Coatleven2012}.
+
+\section{Homogeneous Lead Check}
+
+For one Rayleigh channel in a homogeneous cell of length \(L\),
+\[
+  T_{00}=T_{11}=\gamma\cot(\gamma L),\qquad
+  T_{01}=T_{10}=-\gamma\csc(\gamma L).
+\]
+With \(R=\exp(i\gamma L)\), the Joly Riccati residual vanishes:
+\[
+  T_{10}R^2+(T_{00}+T_{11})R+T_{01}=0.
+\]
+The TEP project outward-normal DtN is
+\[
+  \Lambda_{\mathrm{TEP}}=-(T_{00}+T_{01}R)=i\gamma.
+\]
+
+\section{Current Numerical Evidence}
+
+The prototype \texttt{attempt/prototype/run\_all.m} checks the homogeneous
+formula for \(M=8\), \(d=1\), \(L=0.73\), \(k_0=2.4\), and \(\beta=0.35\).
+The first Octave sanity check produced project-DtN relative errors around
+\(4\cdot10^{-17}\) and Riccati residuals around \(10^{-15}\).
+
+\section{Limitations}
+
+This draft does not yet contain:
+\begin{itemize}
+  \item obstacle-lead local cell DtN blocks;
+  \item matrix Riccati or QZ implementation for non-diagonal blocks;
+  \item Muller-DtN center coupling;
+  \item comparison against the existing trace-subspace formulation;
+  \item final bibliography verification for all sources.
+\end{itemize}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
