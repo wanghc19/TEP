@@ -11,6 +11,7 @@
 *.asv
 *.mat
 *.mexmaca64
+*.fig
 
 # LaTeX build artifacts
 *.aux
@@ -23,10 +24,36 @@
 *.fls
 *.fdb_latexmk
 *.blg
+*.bbl
+*.bcf
+*.run.xml
+*.xdv
+*.glo
+*.gls
+*.glg
+*.idx
+*.ilg
+*.ind
+*.ist
+*.lof
+*.lot
+*.vrb
 
 # Benchmark generated outputs
-benchmark/output/
+benchmark/qpgreen/output/
+benchmark/qpgreen_mfs_three_cell
+draft/examples/output/
 
 # Scratch files
 waveguide_1d/tmp.m
 tmp_*.m
+tmp/*
+
+# Research task artifacts
+research/tmp/
+research/**/tmp/
+research/**/logs/
+research/**/checkpoints/
+
+# reference
+ref/*
