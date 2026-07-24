@@ -1,0 +1,256 @@
+% Full title: Main Results and Proof Architecture
+\section{Main Results and Proof Architecture}
+\label{sec:main-results}
+
+We collect the assumptions required by the target theorem.  They define the
+\emph{regular parameter set} $\mathfrak R$ of pairs $(k,\beta)$ for which:
+\begin{enumerate}[label=(R\arabic*),leftmargin=2.8em]
+  \item $k>0$ is real and $k^2$ lies in the compact gap window
+  $I_\beta$ of \eqref{eq:strict-gap};
+  \item $k\notin\mathfrak E_{\mathrm{rep}}(\beta)$ and all layer, Rayleigh,
+  and port-trace maps in \Cref{sec:muller-coupling} are bounded on the stated
+  spaces;
+  \item the half-guide translations have no unit-circle spectrum and
+  \Cref{prop:relation-Bloch} holds with injective Riesz synthesis maps
+  $\mathcal E^\pm$;
+  \item the center representation in \Cref{thm:center-representation} is
+  surjective and $\mathcal N_{\mathrm c}(k,\beta)$ is closed.
+\end{enumerate}
+These assumptions deliberately exclude thresholds, Wood anomalies, embedded
+guided states, complex resonances, and representation poles.
+
+Before stating the main equation, it is useful to keep its three objects at
+different conceptual levels:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+  \item $\mathbb A(k,\beta):\mathcal X(k,\beta)\to\mathcal Y(k,\beta)$ is the
+  \emph{residual operator} defined in \eqref{eq:coupled-operator}.  Its input
+  is one tuple $x=(\eta,\xi,c^-,c^+)$ of center interface densities,
+  homogeneous Rayleigh coefficients, and left/right stable-mode
+  coefficients.  The equation $\mathbb A x=0$ says exactly that the center
+  transmission jumps and both center--half-guide Cauchy mismatches vanish.
+  \item $\mathcal N_{\mathrm{rep}}(k,\beta)$ is the subset of
+  $\ker\mathbb A(k,\beta)$ defined in \eqref{eq:Nrep-definition} whose
+  densities and modal coefficients reconstruct the zero field everywhere.
+  It is removed because two algebraic descriptions that generate the same
+  physical field must represent the same solution class.
+  \item $\mathcal G(k,\beta)=\ker(A(\beta)-k^2I)$ is the physical guided-mode
+  eigenspace defined in \eqref{eq:guided-space}: its elements are global,
+  vertically $\beta$-quasiperiodic $H^1$ solutions on the infinite strip and
+  are therefore square-integrable in the transverse direction.
+\end{enumerate}
+Thus the theorem does not identify all algebraic vectors with fields one by
+one; it identifies algebraic kernel vectors modulo their zero-field
+representations with the physical eigenspace.
+
+\begin{theorem}[Kernel--guided-mode equivalence: main target]
+\label{thm:main-kernel-equivalence}
+Let $(k,\beta)\in\mathfrak R$.  The reconstruction
+$\mathcal R_{\mathrm g}(k,\beta)$ maps
+$\ker\mathbb A(k,\beta)$ onto the global guided-mode eigenspace
+$\mathcal G(k,\beta)$, and
+\begin{equation}
+  \ker\!\left(
+  \mathcal R_{\mathrm g}(k,\beta)|_{\ker\mathbb A(k,\beta)}
+  \right)
+  =\mathcal N_{\mathrm{rep}}(k,\beta)
+  =\mathcal N_{\mathrm c}(k,\beta)\times\{0\}\times\{0\}.
+  \label{eq:representation-kernel-identification}
+\end{equation}
+Consequently, reconstruction induces a natural linear isomorphism
+\begin{equation}
+  \overline{\mathcal R}_{\mathrm g}(k,\beta):
+  \frac{\ker\mathbb A(k,\beta)}{\mathcal N_{\mathrm{rep}}(k,\beta)}
+  \xrightarrow{\ \cong\ }\mathcal G(k,\beta).
+  \label{eq:main-quotient-isomorphism}
+\end{equation}
+In particular,
+\begin{equation}
+  \dim\!\left(
+  \ker\mathbb A(k,\beta)/\mathcal N_{\mathrm{rep}}(k,\beta)
+  \right)=m_{\mathrm g}(k,\beta).
+  \label{eq:multiplicity-preservation}
+\end{equation}
+If the stronger density-injectivity statement
+$\mathcal N_{\mathrm c}(k,\beta)=\{0\}$ holds, then the quotient can be
+removed and $\ker\mathbb A(k,\beta)\cong\mathcal G(k,\beta)$.
+\end{theorem}
+\status{main proof target.}
+\begin{proofroadmap}
+For completeness, take $u\in\mathcal G(k,\beta)$.  By
+\Cref{thm:bounded-reduction}, its center restriction belongs to
+$\mathcal S_{\mathrm c}(k,\beta)$ and its half-guide restrictions lie in the two
+outgoing spaces.  Apply \Cref{thm:center-representation} to choose a center
+class $[\eta,\xi]$, and apply \eqref{eq:relation-stable-range} to obtain the
+unique generalized-mode coordinates $c^\pm$.  The physical interface and port
+matching conditions then give $x=(\eta,\xi,c^-,c^+)\in\ker\mathbb A$.
+
+For soundness, start with $x\in\ker\mathbb A$.  The first row of
+\eqref{eq:coupled-operator} makes the center reconstruction a physical
+transmission field.  The other rows identify its complete Cauchy data with
+those of the two synthesized half-guide fields.  Apply
+\Cref{lem:weak-gluing} and the strict-gap $H^1$ selection to obtain a member of
+$\mathcal G(k,\beta)$.
+
+For injectivity, assume the reconstructed global field is zero.  Injectivity
+of the generalized Riesz synthesis gives $c^-=c^+=0$.  The center pair then
+lies in $\mathcal N_{\mathrm c}$, proving
+\eqref{eq:representation-kernel-identification}.  This last step is the main
+proof bottleneck if the half-guide synthesis is only a closed-range map or if the
+center density kernel has not been characterized.  The closest prior
+ingredients are \cite[Theorem~4.5]{Fliss2013},
+\cite[Theorem~4 and Appendix~A]{BarnettGreengard2010}, and
+\cite[Theorem~2.2]{HohageSoussi2013}; none by itself proves the coupled
+statement.
+
+The full internal obligation is headed ``continuous kernel--guided-space
+isomorphism'' in
+\path{research/planning/muller-cauchy/p-proofs.md}; the dependency
+analysis is in
+\path{research/planning/muller-cauchy/p-deps.md}.  The
+weakest acceptable conclusion is a surjection from the quotient kernel onto
+$\mathcal G(k,\beta)$ together with an abstract, rather than explicit,
+description of $\mathcal N_{\mathrm{rep}}$.
+\end{proofroadmap}
+\begin{proof}
+Fix $(k,\beta)\in\mathfrak R$ and suppress these parameters from the
+notation.
+
+\emph{Step 1: reconstruction maps the algebraic kernel into the guided-mode
+space.}
+Let $x=(\eta,\xi,c^-,c^+)\in\ker\mathbb A$.  Its first block equation is
+$\mathcal M(\eta,\xi)=0$.  Hence the two material traces of
+$\mathcal R_{\mathrm c}(\eta,\xi)$ agree, and the center reconstruction is a
+field in $\mathcal S_{\mathrm c}$.  The two remaining block equations say
+\[
+  \Pi^\pm(\eta,\xi)=Q^\pm c^\pm
+  =\Tr^{0,\pm}\mathcal E^\pm c^\pm.
+\]
+Thus the center field and each synthesized half-guide field have identical
+center-oriented Cauchy data at their common port.  Since
+$\mathcal E^\pm c^\pm\in\mathcal U^\pm_{\mathrm{out}}$, two applications of
+\Cref{lem:weak-gluing} show that $\mathcal R_{\mathrm g}x$ is a global field
+in $H^1_\beta(B)$ satisfying the weak eigenvalue equation.  By
+\Cref{prop:weak-strong},
+\[
+  \mathcal R_{\mathrm g}x\in\mathcal G(k,\beta).
+\]
+Consequently the restriction of $\mathcal R_{\mathrm g}$ to
+$\ker\mathbb A$ is a well-defined linear map into $\mathcal G(k,\beta)$.
+
+\emph{Step 2: every guided mode has algebraic coordinates.}
+Take $u\in\mathcal G(k,\beta)$.  By
+\Cref{thm:bounded-reduction}, its center restriction
+$u^0:=u|_{\mathcal C^0}$ is a physical center solution and the restrictions
+$u^\pm:=u|_{W^\pm}$ belong to
+$\mathcal U^\pm_{\mathrm{out}}$.  Assumption (R4) and
+\Cref{thm:center-representation} provide
+$(\eta,\xi)\in\mathcal Z_{\mathrm c}$ such that
+\[
+  \mathcal R_{\mathrm c}(\eta,\xi)=u^0.
+\]
+By assumption (R3) and \eqref{eq:relation-stable-range}, there are
+$c^\pm\in\mathcal K_s^\pm$ such that
+\[
+  Q^\pm c^\pm=\Tr^{0,\pm}u^\pm.
+\]
+The converse part of \Cref{lem:weak-gluing} gives
+$\Tr^{0,\pm}u^0=\Tr^{0,\pm}u^\pm$.  Therefore
+$x=(\eta,\xi,c^-,c^+)$ makes all three rows of
+\eqref{eq:coupled-operator} vanish.  It lies in $\ker\mathbb A$, and its
+piecewise reconstruction is exactly $u$.  Hence
+$\mathcal R_{\mathrm g}|_{\ker\mathbb A}$ is onto
+$\mathcal G(k,\beta)$.
+
+\emph{Step 3: identify the representation kernel.}
+The first equality in \eqref{eq:representation-kernel-identification} follows
+immediately from the definition \eqref{eq:Nrep-definition}.  We prove the
+second.  Suppose $x\in\ker\mathbb A$ and
+$\mathcal R_{\mathrm g}x=0$.  On the two half-guides this says
+\[
+  \mathcal E^-c^-=0,
+  \qquad
+  \mathcal E^+c^+=0.
+\]
+The injectivity required in (R3) gives $c^-=c^+=0$.  On the center cell,
+$\mathcal R_{\mathrm c}(\eta,\xi)=0$, while the first row of
+$\mathbb A x=0$ gives $(\eta,\xi)\in\mathcal Z_{\mathrm c}$.  Thus
+$(\eta,\xi)\in\mathcal N_{\mathrm c}$ and
+\[
+  \mathcal N_{\mathrm{rep}}
+  \subset\mathcal N_{\mathrm c}\times\{0\}\times\{0\}.
+\]
+Conversely, if $(\eta,\xi)\in\mathcal N_{\mathrm c}$ and $c^-=c^+=0$,
+then $\mathcal M(\eta,\xi)=0$ and
+$\Pi^\pm(\eta,\xi)=\Tr^{0,\pm}\mathcal R_{\mathrm c}(\eta,\xi)=0$.
+Hence $(\eta,\xi,0,0)\in\ker\mathbb A$ and reconstructs the zero global
+field.  The reverse inclusion follows, proving
+\eqref{eq:representation-kernel-identification}.
+
+\emph{Step 4: quotient and multiplicity.}
+We have proved that the linear map
+$\mathcal R_{\mathrm g}|_{\ker\mathbb A}$ is surjective and has kernel
+$\mathcal N_{\mathrm{rep}}$.  The first isomorphism theorem gives
+\eqref{eq:main-quotient-isomorphism}.  Taking dimensions and using
+\eqref{eq:geometric-multiplicity} yields
+\eqref{eq:multiplicity-preservation}.  Finally, if
+$\mathcal N_{\mathrm c}=\{0\}$, then
+\eqref{eq:representation-kernel-identification} makes the restricted
+reconstruction injective, so no quotient is needed.
+\end{proof}
+
+\subsection{Interpretation and the Fredholm question}
+
+The term ``spurious-free'' is justified at the continuous level only after
+\eqref{eq:representation-kernel-identification}: a kernel class then carries a
+nonzero guided field unless it is the zero class.  This does not control large
+inverse norms or discretization-induced near-kernels.  Those distinct issues
+are emphasized by the spurious quasi-resonance results in
+\cite[Theorems~1.10--1.12]{HiptmairMoiolaSpence2022}.
+
+If $\mathcal N_{\mathrm c}$ is closed, let
+\[
+  \widehat{\mathcal X}(k,\beta):=
+  \mathcal X(k,\beta)/
+  \bigl(\mathcal N_{\mathrm c}(k,\beta)\times\{0\}\times\{0\}\bigr).
+\]
+Since this nullspace is contained in $\ker\mathbb A$, the coupled operator
+descends to a bounded map
+$\widehat{\mathbb A}(k,\beta):\widehat{\mathcal X}(k,\beta)
+\to\mathcal Y(k,\beta)$.  Recall that a bounded operator between Banach spaces
+is Fredholm if its range is closed and its kernel and cokernel are finite
+dimensional; its index is $\ind F=\dim\ker F-\dim\operatorname{coker}F$.
+
+\begin{conjecture}[Fredholm index-zero realization]
+\label{conj:Fredholm}
+There is a natural square multitrace or quotient realization of
+$\widehat{\mathbb A}(k,\beta)$ on the regular parameter set for which
+\begin{equation}
+  \widehat{\mathbb A}(k,\beta)
+  =\mathbb A_0+\mathbb K(k,\beta),
+  \qquad \mathbb A_0^{-1}\text{ bounded},\quad
+  \mathbb K(k,\beta)\text{ compact},
+  \label{eq:Fredholm-splitting}
+\end{equation}
+and hence $\widehat{\mathbb A}(k,\beta)$ is Fredholm of index zero.
+\end{conjecture}
+\status{currently conjectural strengthening.}
+\begin{proofroadmap}
+The principal candidate for $\mathbb A_0$ combines the M\"uller/Calder\'on
+principal block with identity blocks obtained by Riesz-normalizing the stable
+trace syntheses.  Smooth quasiperiodic-minus-free-space kernel differences and
+trace maps between separated curves are compact candidates.  Every remainder
+must be checked on the precise Sobolev products in
+\eqref{eq:coupled-domain}--\eqref{eq:coupled-codomain}; a block display that is
+not square does not have a Fredholm index.
+
+See \path{research/planning/muller-cauchy/notes/fredholm.md} and
+the obligations named ``reference operator plus compact perturbation'' and
+``Fredholm index zero'' in
+\path{research/planning/muller-cauchy/p-proofs.md}.  The closest
+structural precedents are \cite[Theorem~4]{BarnettGreengard2010} and
+\cite[Lemma~5.1]{HohageSoussi2013}.  If no natural square realization exists,
+the conjecture must be replaced by a closed-range or semi-Fredholm statement,
+or by an index-zero theorem only after finite modal truncation.  The main
+quotient equivalence in \Cref{thm:main-kernel-equivalence} does not logically
+depend on this conjecture.
+\end{proofroadmap}

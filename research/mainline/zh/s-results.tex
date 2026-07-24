@@ -1,0 +1,170 @@
+% Full title: Chinese Translation of Main Results and Proof Architecture
+\section{主要结果与证明结构}
+\label{sec:main-results}
+
+下面汇总目标定理所需的假设。它们定义参数对 $(k,\beta)$ 的\emph{正则参数集} $\mathfrak R$，其条件为：
+\begin{enumerate}[label=(R\arabic*),leftmargin=2.8em]
+  \item $k>0$ 为实数，且 $k^2$ 位于 \eqref{eq:strict-gap} 的紧带隙窗口 $I_\beta$ 中；
+  \item $k\notin\mathfrak E_{\mathrm{rep}}(\beta)$，并且\Cref{sec:muller-coupling} 中的所有层势、Rayleigh 和端口迹映射在所述空间上有界；
+  \item 半波导移位算子在单位圆上无谱，并且\Cref{prop:relation-Bloch} 对单射的 Riesz 合成映射 $\mathcal F^\pm$ 成立；
+  \item \Cref{thm:center-representation} 中的中心区表示为满射，且 $\mathcal N_{\mathrm c}(k,\beta)$ 为闭空间。
+\end{enumerate}
+这些假设有意排除了阈值、Wood 异常、嵌入导引态、复共振和表示极点。
+
+在陈述主方程之前，有必要把其中三个对象保持在不同的概念层次：
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+  \item $\mathbb A(k,\beta):\mathcal X(k,\beta)\to\mathcal Y(k,\beta)$ 是 \eqref{eq:coupled-operator} 定义的\emph{残差算子}。它的输入是一个元组 $x=(\eta,\xi,c^-,c^+)$，依次包含中心界面密度、齐次 Rayleigh 系数以及左/右稳定模态系数。方程 $\mathbb A x=0$ 恰好表示中心区传输跳跃和两个中心区--半波导 Cauchy 失配均为零。
+  \item $\mathcal N_{\mathrm{rep}}(k,\beta)$ 是 \eqref{eq:Nrep-definition} 定义的 $\ker\mathbb A(k,\beta)$ 子集；其中的密度和模态系数在全域上重构出零场。之所以要除去它，是因为生成同一物理场的两个代数描述必须代表同一个解类。
+  \item $\mathcal G(k,\beta)=\ker(A(\beta)-k^2I)$ 是 \eqref{eq:guided-space} 定义的物理导模特征空间：其元素是无限条带上的全局、竖直方向 $\beta$-准周期 $H^1$ 解，因而在横向平方可积。
+\end{enumerate}
+因此，该定理并非逐一对应所有代数向量与物理场；它把模去零场表示后的代数核向量与物理特征空间对应起来。
+
+\begin{theorem}[核--导模等价性：主要目标]
+\label{thm:main-kernel-equivalence}
+设 $(k,\beta)\in\mathfrak R$。重构映射 $\mathcal R_{\mathrm g}(k,\beta)$ 把 $\ker\mathbb A(k,\beta)$ 满射到全局导模特征空间 $\mathcal G(k,\beta)$，并且
+\begin{equation}
+  \ker\!\left(
+  \mathcal R_{\mathrm g}(k,\beta)|_{\ker\mathbb A(k,\beta)}
+  \right)
+  =\mathcal N_{\mathrm{rep}}(k,\beta)
+  =\mathcal N_{\mathrm c}(k,\beta)\times\{0\}\times\{0\}.
+  \label{eq:representation-kernel-identification}
+\end{equation}
+因此，重构诱导自然线性同构
+\begin{equation}
+  \overline{\mathcal R}_{\mathrm g}(k,\beta):
+  \frac{\ker\mathbb A(k,\beta)}{\mathcal N_{\mathrm{rep}}(k,\beta)}
+  \xrightarrow{\ \cong\ }\mathcal G(k,\beta).
+  \label{eq:main-quotient-isomorphism}
+\end{equation}
+特别地，
+\begin{equation}
+  \dim\!\left(
+  \ker\mathbb A(k,\beta)/\mathcal N_{\mathrm{rep}}(k,\beta)
+  \right)=m_{\mathrm g}(k,\beta).
+  \label{eq:multiplicity-preservation}
+\end{equation}
+若更强的密度单射性结论 $\mathcal N_{\mathrm c}(k,\beta)=\{0\}$ 成立，则可去掉商空间，并有 $\ker\mathbb A(k,\beta)\cong\mathcal G(k,\beta)$。
+\end{theorem}
+\status{主要证明目标。}
+\begin{proofroadmap}
+先证完备性。取 $u\in\mathcal G(k,\beta)$。由\Cref{thm:bounded-reduction}，其中心区限制属于 $\mathcal S_{\mathrm c}(k,\beta)$，两个半波导限制分别属于相应的出射空间。应用\Cref{thm:center-representation} 选择中心区类 $[\eta,\xi]$，再应用 \eqref{eq:relation-stable-range} 得到唯一的广义模态坐标 $c^\pm$。物理界面和端口匹配条件于是给出 $x=(\eta,\xi,c^-,c^+)\in\ker\mathbb A$。
+
+再证可靠性。从 $x\in\ker\mathbb A$ 出发。\eqref{eq:coupled-operator} 的第一行使中心区重构成为物理传输场；其余两行把该场的完整 Cauchy 数据与两个合成半波导场的数据等同。应用\Cref{lem:weak-gluing} 和严格带隙中的 $H^1$ 选择，即得到 $\mathcal G(k,\beta)$ 的一个元素。
+
+最后证单射性。假设重构的全局场为零。广义 Riesz 合成的单射性给出 $c^-=c^+=0$。中心区数据对于是属于 $\mathcal N_{\mathrm c}$，从而证明 \eqref{eq:representation-kernel-identification}。若半波导合成只有闭值域，或中心区密度核尚未刻画，则最后一步是主要证明瓶颈。最接近的既有工具分别是 \cite[Theorem~4.5]{Fliss2013}、\cite[Theorem~4 and Appendix~A]{BarnettGreengard2010} 和 \cite[Theorem~2.2]{HohageSoussi2013}；其中任何一个都不能单独证明这一耦合结论。
+
+完整内部待证事项见 \path{research/planning/muller-cauchy/p-proofs.md} 中的 ``continuous kernel--guided-space isomorphism''；依赖分析见 \path{research/planning/muller-cauchy/p-deps.md}。最低可接受结论是从商核到 $\mathcal G(k,\beta)$ 的满射，并以抽象方式而非显式方式描述 $\mathcal N_{\mathrm{rep}}$。
+\end{proofroadmap}
+\begin{proof}
+固定 $(k,\beta)\in\mathfrak R$，并在证明中省略这两个参数。
+
+\emph{步骤 1：重构把代数核映入导模空间。}
+设 $x=(\eta,\xi,c^-,c^+)\in\ker\mathbb A$。其第一分块方程为
+$\mathcal M(\eta,\xi)=0$，故
+$\mathcal R_{\mathrm c}(\eta,\xi)$ 的两个材料迹相等，中心区重构是
+$\mathcal S_{\mathrm c}$ 中的场。其余两个分块方程给出
+\[
+  \Pi^\pm(\eta,\xi)=Q^\pm c^\pm
+  =\Tr^{0,\pm}\mathcal F^\pm c^\pm.
+\]
+因此，中心区场与每个合成半波导场在公共端口上具有完全相同的面向中心区
+Cauchy 数据。由于
+$\mathcal F^\pm c^\pm\in\mathcal U^\pm$，两次应用
+\Cref{lem:weak-gluing} 可知 $\mathcal R_{\mathrm g}x$ 是
+$H^1_\beta(B)$ 中满足弱特征值方程的全局场。由\Cref{prop:weak-strong}，
+\[
+  \mathcal R_{\mathrm g}x\in\mathcal G(k,\beta).
+\]
+所以 $\mathcal R_{\mathrm g}$ 在 $\ker\mathbb A$ 上的限制是一个良定义的线性
+映射，值域包含于 $\mathcal G(k,\beta)$。
+
+\emph{步骤 2：每个导模都具有代数坐标。}
+取 $u\in\mathcal G(k,\beta)$。由\Cref{thm:bounded-reduction}，其中心区限制
+$u^0:=u|_{\mathcal C^0}$ 是物理中心区解，而两个限制
+$u^\pm:=u|_{W^\pm}$ 属于
+$\mathcal U^\pm$。假设 (R4) 与
+\Cref{thm:center-representation} 给出
+$(\eta,\xi)\in\mathcal Z_{\mathrm c}$，使得
+\[
+  \mathcal R_{\mathrm c}(\eta,\xi)=u^0.
+\]
+由假设 (R3) 及 \eqref{eq:relation-stable-range}，存在
+$c^\pm\in\mathcal K_s^\pm$ 满足
+\[
+  Q^\pm c^\pm=\Tr^{0,\pm}u^\pm.
+\]
+\Cref{lem:weak-gluing} 的反向结论给出
+$\Tr^{0,\pm}u^0=\Tr^{0,\pm}u^\pm$。因此
+$x=(\eta,\xi,c^-,c^+)$ 使 \eqref{eq:coupled-operator} 的三行都为零，
+从而 $x\in\ker\mathbb A$，并且其分片重构恰为 $u$。所以
+$\mathcal R_{\mathrm g}|_{\ker\mathbb A}$ 满射到
+$\mathcal G(k,\beta)$。
+
+\emph{步骤 3：识别表示核。}
+\eqref{eq:representation-kernel-identification} 中第一个等号直接来自
+\eqref{eq:Nrep-definition} 的定义。下面证明第二个等号。设
+$x\in\ker\mathbb A$ 且 $\mathcal R_{\mathrm g}x=0$。在两个半波导上，这给出
+\[
+  \mathcal F^-c^-=0,
+  \qquad
+  \mathcal F^+c^+=0.
+\]
+由 (R3) 要求的单射性，$c^-=c^+=0$。在中心胞元上，
+$\mathcal R_{\mathrm c}(\eta,\xi)=0$；另一方面，
+$\mathbb A x=0$ 的第一行给出
+$(\eta,\xi)\in\mathcal Z_{\mathrm c}$。因此
+$(\eta,\xi)\in\mathcal N_{\mathrm c}$，并有
+\[
+  \mathcal N_{\mathrm{rep}}
+  \subset\mathcal N_{\mathrm c}\times\{0\}\times\{0\}.
+\]
+反之，若 $(\eta,\xi)\in\mathcal N_{\mathrm c}$ 且 $c^-=c^+=0$，则
+$\mathcal M(\eta,\xi)=0$，并且
+$\Pi^\pm(\eta,\xi)
+=\Tr^{0,\pm}\mathcal R_{\mathrm c}(\eta,\xi)=0$。
+所以 $(\eta,\xi,0,0)\in\ker\mathbb A$，且其全局重构为零。反向包含关系成立，
+从而得到 \eqref{eq:representation-kernel-identification}。
+
+\emph{步骤 4：商空间与重数。}
+我们已经证明线性映射
+$\mathcal R_{\mathrm g}|_{\ker\mathbb A}$ 为满射，且其核为
+$\mathcal N_{\mathrm{rep}}$。第一同构定理给出
+\eqref{eq:main-quotient-isomorphism}。取维数并使用
+\eqref{eq:geometric-multiplicity}，便得到
+\eqref{eq:multiplicity-preservation}。最后，若
+$\mathcal N_{\mathrm c}=\{0\}$，则
+\eqref{eq:representation-kernel-identification} 表明上述限制重构是单射，
+因而无需再取商。
+\end{proof}
+
+\subsection{解释与 Fredholm 问题}
+
+只有在 \eqref{eq:representation-kernel-identification} 成立后，连续层面的 ``无伪解'' 才有依据：除零类外，每个核类都承载一个非零导引场。这并不能控制很大的逆范数，也不能控制离散化诱发的近核。\cite[Theorems~1.10--1.12]{HiptmairMoiolaSpence2022} 中的伪准共振结果强调了这些问题之间的区别。
+
+若 $\mathcal N_{\mathrm c}$ 为闭空间，令
+\[
+  \widehat{\mathcal X}(k,\beta):=
+  \mathcal X(k,\beta)/
+  \bigl(\mathcal N_{\mathrm c}(k,\beta)\times\{0\}\times\{0\}\bigr).
+\]
+由于这一零空间包含于 $\ker\mathbb A$，耦合算子下降为有界映射 $\widehat{\mathbb A}(k,\beta):\widehat{\mathcal X}(k,\beta)\to\mathcal Y(k,\beta)$。回顾：Banach 空间之间的有界算子若值域闭，且核与余核均为有限维，则称为 Fredholm 算子；其指标为 $\ind F=\dim\ker F-\dim\operatorname{coker}F$。
+
+\begin{conjecture}[指标为零的 Fredholm 实现]
+\label{conj:Fredholm}
+在正则参数集上，$\widehat{\mathbb A}(k,\beta)$ 存在一个自然的方形多迹或商空间实现，使得
+\begin{equation}
+  \widehat{\mathbb A}(k,\beta)
+  =\mathbb A_0+\mathbb K(k,\beta),
+  \qquad \mathbb A_0^{-1}\text{ 有界},\quad
+  \mathbb K(k,\beta)\text{ 紧},
+  \label{eq:Fredholm-splitting}
+\end{equation}
+从而 $\widehat{\mathbb A}(k,\beta)$ 是指标为零的 Fredholm 算子。
+\end{conjecture}
+\status{当前仍为猜想性强化结论。}
+\begin{proofroadmap}
+$\mathbb A_0$ 的主要候选由 M\"uller/Calder\'on 主块与通过 Riesz 归一化稳定迹合成所得到的单位块组成。光滑的准周期核减自由空间核之差，以及分离曲线之间的迹映射，都是紧算子的候选。必须在 \eqref{eq:coupled-domain}--\eqref{eq:coupled-codomain} 中精确的 Sobolev 乘积空间上核查每一个余项；非方形的分块表示没有 Fredholm 指标。
+
+参见 \path{research/planning/muller-cauchy/notes/fredholm.md}，以及 \path{research/planning/muller-cauchy/p-proofs.md} 中名为 ``reference operator plus compact perturbation'' 和 ``Fredholm index zero'' 的待证事项。最接近的结构性先例为 \cite[Theorem~4]{BarnettGreengard2010} 和 \cite[Lemma~5.1]{HohageSoussi2013}。若不存在自然的方形实现，则必须把该猜想替换为闭值域或半 Fredholm 陈述，或者只在有限模态截断后证明指标为零。\Cref{thm:main-kernel-equivalence} 中的主要商空间等价性在逻辑上不依赖此猜想。
+\end{proofroadmap}

@@ -1,0 +1,312 @@
+% Full title: Essential Spectrum for Two Different Periodic Ends
+% Purpose:
+%   Prove the essential-spectrum formula for a scalar strip with two different
+%   periodic ends and supply every localization lemma used by the proof.
+% Main workflow:
+%   Establish local compactness and cutoff commutator bounds, derive a Zhislin
+%   criterion, construct one-sided periodic Weyl sequences, and prove both
+%   inclusions in the essential-spectrum identity.
+% Based on:
+%   The Zhislin-sequence mechanism of De Nittis et al. (2021) and the periodic
+%   Floquet--Bloch characterization of Fliss (2013).
+% Main changes:
+%   Adapts the one-dimensional first-order argument to the present
+%   two-dimensional second-order weighted strip operator with exact periodic
+%   tails and possibly different transverse periods.
+% Mathematical goal:
+%   Prove Theorem~\ref{thm:two-ended-essential-spectrum} without assuming the
+%   essential-spectrum union formula.
+
+\section{Essential spectrum for two different periodic ends}
+\label{app:essential-spectrum}
+
+Throughout this appendix, fix
+$\beta\in[-\pi/d,\pi/d)$ and abbreviate
+\[
+  A:=A(\beta),\qquad A^\star:=A^\star(\beta),
+  \qquad \star\in\{-,+\}.
+\]
+The operators act respectively in
+$H=L^2(B,\rho\,\dd x\dd y)$ and
+$H^\star=L^2(B,\rho^\star\,\dd x\dd y)$.  Define
+\begin{equation}
+  H_0:=H^-\oplus H^+,
+  \qquad A_0:=A^-\oplus A^+.
+  \label{eq:appendix-free-operator}
+\end{equation}
+Let $Q$ denote multiplication by $x$ on a strip space and let
+$Q_0:=Q\oplus Q$ on $H_0$.  Choose $R_0>0$ so large that
+\[
+  \overline{\mathcal C^0}\subset(-R_0,R_0)\times[0,d],
+  \qquad
+  \rho=\rho^-\text{ for }x<-R_0,
+  \qquad
+  \rho=\rho^+\text{ for }x>R_0.
+\]
+The last two equalities hold by construction of the two periodic half-guides.
+All norms below may be compared with their unweighted counterparts because of
+the common positive upper and lower bounds on the coefficients.
+For a scalar operator $T$, write $\rho_T=\rho$ when $T=A$ and
+$\rho_T=\rho^\star$ when $T=A^\star$; formulas for $A_0$ are understood
+componentwise.
+
+\begin{lemma}[Local compactness and cutoff commutators]
+\label{lem:appendix-local-compactness}
+Let $T$ be any one of $A,A^-,A^+$, or $A_0$, acting in its corresponding
+Hilbert space $H_T$, and let $Q_T$ be the corresponding position operator.
+Then:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+  \item for every bounded interval $K\subset\R$,
+  \[
+    \mathbf 1_K(Q_T)(T+\ii)^{-1}:H_T\longrightarrow H_T
+    \quad\text{is compact};
+  \]
+  \item if $\zeta\in C_c^\infty(\R;[0,1])$ satisfies
+  $\zeta=1$ on $[-1,1]$ and $\zeta=0$ outside $[-2,2]$, and
+  $\zeta_R(x):=\zeta(x/R)$, then
+  \begin{equation}
+    \bigl\|[T,\zeta_R(Q_T)](T+\ii)^{-1}\bigr\|_{\mathcal B(H_T)}
+    \longrightarrow0
+    \qquad(R\to\infty).
+    \label{eq:appendix-commutator-limit}
+  \end{equation}
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+We first treat a scalar component.  Its closed form is
+\[
+  a_T(u,v)=\int_B\nabla u\cdot\nabla\overline v\,\dd x\dd y,
+  \qquad D(a_T)=H^1_\beta(B).
+\]
+If $u=(T+\ii)^{-1}f$, nonnegativity and the variational identity give
+\[
+  \|u\|_{H_T}\leq\|f\|_{H_T},
+  \qquad
+  \|\nabla u\|_{L^2(B)}^2
+  =\operatorname{Re}\langle f,u\rangle_{H_T}
+  \leq\|f\|_{H_T}^2.
+\]
+Thus the resolvent maps boundedly into $H^1_\beta(B)$.  Restriction to
+$K\times(0,d)$ followed by the Rellich embedding
+$H^1(K\times(0,d))\hookrightarrow L^2(K\times(0,d))$ is compact.  The
+coefficient bounds make the weighted and unweighted local $L^2$ norms
+equivalent, proving (i).  The direct-sum case follows componentwise.
+
+Multiplication by a smooth function of $x$ preserves the operator domain:
+for $u\in H^1(\Delta,B)$,
+\[
+  \Delta(\eta u)=\eta\Delta u+2\eta'\partial_xu+\eta''u\in L^2(B),
+\]
+and the horizontal $\beta$-quasiperiodic trace conditions are unchanged.
+Consequently, on $D(T)$,
+\begin{equation}
+  [T,\zeta_R]u
+  =-\frac1{\rho_T}
+    \left(2\zeta_R'\partial_xu+\zeta_R''u\right),
+  \label{eq:appendix-commutator-formula}
+\end{equation}
+with the formula interpreted componentwise for $A_0$.  Since
+$\|\zeta_R'\|_\infty=O(R^{-1})$ and
+$\|\zeta_R''\|_\infty=O(R^{-2})$, the preceding resolvent estimate yields
+\[
+  \bigl\|[T,\zeta_R](T+\ii)^{-1}f\bigr\|_{H_T}
+  \leq C\left(R^{-1}+R^{-2}\right)\|f\|_{H_T}.
+\]
+This proves (ii).
+\end{proof}
+
+\begin{lemma}[Zhislin criterion on the strip]
+\label{lem:appendix-Zhislin}
+For any operator $T$ in
+\Cref{lem:appendix-local-compactness} and any $\lambda\in\R$, the following
+are equivalent:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+  \item $\lambda\in\sigma_{\mathrm{ess}}(T)$;
+  \item there exists $u_m\in D(T)$ such that
+  \begin{equation}
+    \|u_m\|_{H_T}=1,\qquad
+    \mathbf 1_{[-m,m]}(Q_T)u_m=0,\qquad
+    \|(T-\lambda)u_m\|_{H_T}\longrightarrow0.
+    \label{eq:appendix-Zhislin-sequence}
+  \end{equation}
+\end{enumerate}
+For $T=A_0$, the support condition is imposed on both components.
+\end{lemma}
+\begin{proof}
+A sequence satisfying (ii) converges weakly to zero: this is immediate first
+against compactly supported $L^2$ functions and then against arbitrary
+functions by density.  It is therefore a singular Weyl sequence, which proves
+(i).
+
+Conversely, let $v_j$ be a singular Weyl sequence for $T$ and $\lambda$.
+For every fixed $R$, local compactness gives
+\[
+  \zeta_R(Q_T)v_j
+  =\zeta_R(Q_T)(T+\ii)^{-1}(T+\ii)v_j
+  \longrightarrow0
+  \quad\text{strongly as }j\to\infty.
+\]
+Indeed,
+$(T+\ii)v_j=(T-\lambda)v_j+(\lambda+\ii)v_j$ converges weakly to zero and
+is bounded.  Choose a subsequence, still denoted $v_m$, such that
+\[
+  \|\zeta_m(Q_T)v_m\|_{H_T}\leq m^{-1},\qquad
+  \|(T-\lambda)v_m\|_{H_T}\leq m^{-1}.
+\]
+Set $w_m=(1-\zeta_m(Q_T))v_m$.  Then $w_m$ vanishes for $|x|\leq m$ and
+$\|w_m\|_{H_T}\to1$.  Moreover,
+\[
+  (T-\lambda)w_m
+  =(1-\zeta_m)(T-\lambda)v_m-[T,\zeta_m]v_m.
+\]
+The first term tends to zero.  For the second, write
+\[
+  [T,\zeta_m]v_m
+  =[T,\zeta_m](T+\ii)^{-1}(T+\ii)v_m.
+\]
+The first factor tends to zero by
+\eqref{eq:appendix-commutator-limit}, while the second is bounded.  Normalizing
+$w_m$ gives \eqref{eq:appendix-Zhislin-sequence}.  This is the strip analogue
+of the Zhislin construction in
+\cite[Lemmas~3.11--3.12]{DeNittisEtAl2021}.
+\end{proof}
+
+\begin{lemma}[Periodic Weyl sequences placed in a prescribed end]
+\label{lem:appendix-one-sided-Weyl}
+Let $\star\in\{-,+\}$ and
+$\lambda\in\sigma(A^\star)$.  There are normalized
+$v_m^\star\in D(A^\star)$ such that
+\[
+  \|(A^\star-\lambda)v_m^\star\|_{H^\star}\longrightarrow0
+\]
+and
+\[
+  \operatorname{supp}v_m^+\subset[m,\infty)\times[0,d],
+  \qquad
+  \operatorname{supp}v_m^-\subset(-\infty,-m]\times[0,d].
+\]
+\end{lemma}
+\begin{proof}
+We give the right-end construction.  By the Weyl criterion for the spectrum,
+choose $f_m\in D(A^+)$ with
+\[
+  \|f_m\|_{H^+}=1,\qquad
+  \|(A^+-\lambda)f_m\|_{H^+}\leq m^{-1}.
+\]
+Since $A^+$ is nonnegative and associated with the gradient form,
+\[
+  \|\nabla f_m\|_{L^2(B)}^2
+  =\langle A^+f_m,f_m\rangle_{H^+}
+  \leq\lambda+m^{-1}
+\]
+for all sufficiently large $m$.  The periodic translation
+\[
+  (\tau_q^+f)(x,y):=f(x-qL^+,y),\qquad q\in\Z,
+\]
+is unitary in $H^+$ and commutes with $A^+$.  Choose $q_m$ so large that
+\[
+  \bigl\|\mathbf 1_{(-\infty,2m]}(Q)\tau_{q_m}^+f_m
+  \bigr\|_{H^+}\leq m^{-1}.
+\]
+Let $\eta\in C^\infty(\R;[0,1])$ satisfy
+$\eta(t)=0$ for $t\leq0$ and $\eta(t)=1$ for $t\geq1$, and set
+$\eta_m^+(x):=\eta((x-m)/m)$.  Then
+\[
+  g_m:=\eta_m^+\tau_{q_m}^+f_m
+\]
+is supported in $[m,\infty)\times[0,d]$ and
+$\|g_m\|_{H^+}\to1$.  The domain-preservation calculation in
+\Cref{lem:appendix-local-compactness} gives $g_m\in D(A^+)$, and
+\[
+  (A^+-\lambda)g_m
+  =\eta_m^+\tau_{q_m}^+(A^+-\lambda)f_m
+   +[A^+,\eta_m^+]\tau_{q_m}^+f_m.
+\]
+The first term tends to zero.  Formula
+\eqref{eq:appendix-commutator-formula}, the uniform $H^1$ bound, and
+$\|\partial_x^r\eta_m^+\|_\infty=O(m^{-r})$ for $r=1,2$ show that the second
+term also tends to zero.  Normalize $g_m$ to obtain $v_m^+$.  Translating by
+negative integer multiples of $L^-$ and using
+$\eta_m^-(x):=\eta((-x-m)/m)$ gives the left-end sequence.  This is the
+second-order strip counterpart of the translation-and-cutoff construction in
+the proof of
+\cite[Proposition~3.10]{DeNittisEtAl2021}.
+\end{proof}
+
+\begin{proof}[Proof of \Cref{thm:two-ended-essential-spectrum}]
+Floquet--Bloch decomposition applied separately to the two periodic
+extensions gives, by \eqref{eq:background-bands},
+\begin{equation}
+  \sigma_{\mathrm{ess}}(A_0)
+  =\sigma_{\mathrm{ess}}(A^-)
+   \cup\sigma_{\mathrm{ess}}(A^+)
+  =\sigma(A^-)\cup\sigma(A^+)
+  =\Sigma_-(\beta)\cup\Sigma_+(\beta).
+  \label{eq:appendix-free-essential-spectrum}
+\end{equation}
+Here the first equality is the elementary essential-spectrum formula for a
+finite orthogonal direct sum, while the second is the periodic-spectrum result
+of \cite[Proposition~3.1, especially equations~(3.3)--(3.4)]{Fliss2013}.
+
+We first prove
+$\sigma_{\mathrm{ess}}(A)\subset\sigma_{\mathrm{ess}}(A_0)$.
+Choose $j_-,j_+\in C^\infty(\R;[0,1])$ such that
+\[
+\begin{array}{lll}
+  j_-(x)=1&\text{for }x\leq-2R_0,&
+  j_-(x)=0\text{ for }x\geq-R_0,\\
+  j_+(x)=0&\text{for }x\leq R_0,&
+  j_+(x)=1\text{ for }x\geq2R_0.
+\end{array}
+\]
+Let $\lambda\in\sigma_{\mathrm{ess}}(A)$ and take the Zhislin sequence
+$u_m$ furnished by \Cref{lem:appendix-Zhislin}.  For $m>2R_0$,
+\[
+  u_m=j_-u_m+j_+u_m,
+\]
+and the two terms have disjoint supports.  Define
+\[
+  u_m^0:=c_m(j_-u_m,j_+u_m)\in D(A_0),
+  \qquad
+  c_m:=\|(j_-u_m,j_+u_m)\|_{H_0}^{-1}.
+\]
+On the support of $j_-u_m$ the weights $\rho$ and $\rho^-$ agree, and on the
+support of $j_+u_m$ the weights $\rho$ and $\rho^+$ agree.  Hence $c_m=1$ for
+all sufficiently large $m$.  The derivatives of $j_\pm$ are supported in the
+fixed set $[-2R_0,2R_0]$, where $u_m$ vanishes.  Therefore the commutator
+terms vanish and
+\[
+\begin{aligned}
+  \|(A_0-\lambda)u_m^0\|_{H_0}^2
+  &=\|(A^--\lambda)j_-u_m\|_{H^-}^2
+    +\|(A^+-\lambda)j_+u_m\|_{H^+}^2\\
+  &\leq C\|(A-\lambda)u_m\|_H^2\longrightarrow0.
+\end{aligned}
+\]
+The sequence $u_m^0$ still vanishes in $|x|\leq m$.  By
+\Cref{lem:appendix-Zhislin},
+$\lambda\in\sigma_{\mathrm{ess}}(A_0)$.
+
+For the reverse inclusion, let
+$\lambda\in\sigma(A^+)$.  By
+\Cref{lem:appendix-one-sided-Weyl}, there is a normalized approximate
+eigenvector sequence $v_m^+$ supported in
+$[m,\infty)\times[0,d]$.  Once $m>R_0$, the two weights and the two
+differential realizations agree on this support.  Thus
+\[
+  \|v_m^+\|_H=1,\qquad
+  \|(A-\lambda)v_m^+\|_H
+  =\|(A^+-\lambda)v_m^+\|_{H^+}\longrightarrow0.
+\]
+Because the supports escape to the right, $v_m^+\rightharpoonup0$ in $H$.
+It is a singular Weyl sequence for $A$, and hence
+$\lambda\in\sigma_{\mathrm{ess}}(A)$.  The left-end construction gives
+$\sigma(A^-)\subset\sigma_{\mathrm{ess}}(A)$ in the same way.  Consequently,
+\[
+  \sigma(A^-)\cup\sigma(A^+)
+  \subset\sigma_{\mathrm{ess}}(A)
+  \subset\sigma_{\mathrm{ess}}(A_0).
+\]
+Combining this with \eqref{eq:appendix-free-essential-spectrum} proves
+\eqref{eq:projected-spectrum}.
+\end{proof}

@@ -1,0 +1,596 @@
+% Archived detailed essential-spectrum argument
+%
+% This file preserves the detailed coupled/decoupled resolvent route that was
+% formerly included in theory.tex and theory-zh.tex.  It is retained as a
+% technical proof attempt and reference record, but it is no longer the main
+% argument used in the draft to determine numerical scan intervals.  This
+% fragment is intentionally not \input by either main document.
+
+\section*{English archived argument}
+
+\begin{proposition}[Essential spectrum for two different half-guides]
+\label{prop:asymmetric-essential-spectrum}
+Assume that $\rho$ agrees with $\rho^-$ on $W^-$ and with $\rho^+$ on $W^+$,
+while the region where it differs from these periodic backgrounds is contained
+in the bounded center cell $\overline{\mathcal C^0}$.  Then
+\begin{equation}
+  \boxed{\quad
+  \sigma_{\mathrm{ess}}(A(\beta))
+  =\Sigma_{\mathrm{ess}}(\beta)
+  :=\sigma(A^-(\beta))\cup\sigma(A^+(\beta)).\quad}
+  \label{eq:projected-spectrum}
+\end{equation}
+No equality between the two background spectra is required.
+\end{proposition}
+\begin{proof}
+\begin{enumerate}[label=\textit{Step \arabic*.},leftmargin=*]
+\item \emph{Construct both realizations on one Hilbert space and locate a
+common resolvent point.}
+The bounds in \eqref{eq:material} give the common Hilbert space
+\[
+  H:=L^2(B,\rho\,\dd x\dd y),
+  \qquad
+  \langle u,v\rangle_H
+  :=\int_B\rho\,u\overline v\,\dd x\dd y.
+\]
+Here
+$0<\rho_{\min}:=\rho_-\leq\rho\leq\rho_+=:\rho_{\max}<\infty$.
+As a set, $H=L^2(B)$, and its weighted norm is equivalent to the ordinary
+$L^2$ norm.  In particular, $H^1(B)\subset H$.  Since the ports have measure
+zero, restriction to the three open pieces gives the orthogonal decomposition
+\[
+  H=H^-\oplus H^0\oplus H^+,
+  \qquad
+  \begin{aligned}
+    H^-&:=L^2(W^-,\rho^-\,\dd x\dd y),\\
+    H^0&:=L^2(\mathcal C^0,\rho\,\dd x\dd y),\\
+    H^+&:=L^2(W^+,\rho^+\,\dd x\dd y).
+  \end{aligned}
+\]
+
+For any one of the domains used below, put
+\[
+  H^1(\Delta,D):=\{u\in H^1(D):\Delta u\in L^2(D)\}.
+\]
+The coupled realization is the operator
+\[
+  A(\beta):D(A(\beta))\subset H\longrightarrow H,
+  \qquad A(\beta)u=-\frac1\rho\Delta u,
+\]
+with
+\[
+  D(A(\beta))=\left\{u\in H^1(\Delta,B):
+  \begin{array}{l}
+    \left.u\right|_{y=d}
+      =e^{\ii\beta d}\left.u\right|_{y=0},\\[-1mm]
+    \left.\partial_yu\right|_{y=d}
+      =e^{\ii\beta d}\left.\partial_yu\right|_{y=0}
+  \end{array}\right\}.
+\]
+The value equality is an $H^{1/2}$ trace equality and the derivative equality
+is understood in the weak $H^{-1/2}$ trace space.  To realize this operator by
+a closed form, set
+\[
+  V_\beta:=H^1_\beta(B),
+  \qquad
+  a_\beta(u,v):=\int_B\nabla u\cdot\nabla\overline v\,\dd x\dd y,
+  \qquad u,v\in V_\beta.
+\]
+The space of functions $e^{\ii\beta y}\phi(x,y)$ with $\phi$ smooth,
+$d$-periodic in $y$, and compactly supported in $x$ is contained in
+$V_\beta$ and is dense in $H$: this follows from the unitary gauge
+$u\mapsto e^{-\ii\beta y}u$, periodic mollification in $y$, and cutoffs in
+$x$.  Thus $a_\beta$ is densely defined.  It is sesquilinear, symmetric, and
+nonnegative.  Moreover,
+\[
+  \|u\|_{a_\beta}^2
+  :=a_\beta(u,u)+\|u\|_H^2
+\]
+is equivalent to the $H^1(B)$ norm by the bounds on $\rho$.  The Sobolev trace
+theorem makes $V_\beta$ a closed subspace of $H^1(B)$, so this form norm is
+complete and $a_\beta$ is closed; see also
+\cite[Chapter~3]{McLean2000}.  The first representation theorem for closed,
+densely defined, nonnegative forms
+\cite[Chapter~VI, Section~2]{Kato1995} therefore produces a self-adjoint
+nonnegative operator in $H$.  Green's identity and cancellation of the two
+quasiperiodic horizontal boundary terms identify that associated operator
+with the differential realization $A(\beta)$ displayed above; the domain
+identification is detailed in the remark following this step.
+
+For the decoupled realization, impose homogeneous Dirichlet conditions at the
+ports and define
+\[
+  A_D^- (\beta):D(A_D^-(\beta))\subset H^-\longrightarrow H^- ,
+  \qquad A_D^-(\beta)u^-=-\frac1{\rho^-}\Delta u^- ,
+\]
+\[
+  D(A_D^-(\beta)):=\left\{u^-\in H^1(\Delta,W^-):
+  \begin{array}{l}
+    \left.u^-\right|_{\Gamma^-}=0,\\
+    \left.u^-\right|_{y=d}
+      =e^{\ii\beta d}\left.u^-\right|_{y=0},\\[-1mm]
+    \left.\partial_yu^-\right|_{y=d}
+      =e^{\ii\beta d}\left.\partial_yu^-\right|_{y=0}
+  \end{array}\right\},
+\]
+\[
+  A_D^0(\beta):D(A_D^0(\beta))\subset H^0\longrightarrow H^0,
+  \qquad A_D^0(\beta)u^0=-\frac1\rho\Delta u^0,
+\]
+\[
+  D(A_D^0(\beta)):=\left\{u^0\in H^1(\Delta,\mathcal C^0):
+  \begin{array}{l}
+    \left.u^0\right|_{\Gamma^-}
+      =\left.u^0\right|_{\Gamma^+}=0,\\
+    \left.u^0\right|_{y=d}
+      =e^{\ii\beta d}\left.u^0\right|_{y=0},\\[-1mm]
+    \left.\partial_yu^0\right|_{y=d}
+      =e^{\ii\beta d}\left.\partial_yu^0\right|_{y=0}
+  \end{array}\right\},
+\]
+and
+\[
+  A_D^+(\beta):D(A_D^+(\beta))\subset H^+\longrightarrow H^+,
+  \qquad A_D^+(\beta)u^+=-\frac1{\rho^+}\Delta u^+,
+\]
+\[
+  D(A_D^+(\beta)):=\left\{u^+\in H^1(\Delta,W^+):
+  \begin{array}{l}
+    \left.u^+\right|_{\Gamma^+}=0,\\
+    \left.u^+\right|_{y=d}
+      =e^{\ii\beta d}\left.u^+\right|_{y=0},\\[-1mm]
+    \left.\partial_yu^+\right|_{y=d}
+      =e^{\ii\beta d}\left.\partial_yu^+\right|_{y=0}
+  \end{array}\right\}.
+\]
+All these boundary equalities have the same weak trace meaning as above.  Their
+form domains are
+\[
+\begin{aligned}
+  V_D^-&:=\{u^-\in H^1_\beta(W^-):
+    \left.u^-\right|_{\Gamma^-}=0\},\\
+  V_D^0&:=\{u^0\in H^1_\beta(\mathcal C^0):
+    \left.u^0\right|_{\Gamma^-}
+    =\left.u^0\right|_{\Gamma^+}=0\},\\
+  V_D^+&:=\{u^+\in H^1_\beta(W^+):
+    \left.u^+\right|_{\Gamma^+}=0\}.
+\end{aligned}
+\]
+On $V_{\mathrm{dec}}:=V_D^-\oplus V_D^0\oplus V_D^+$ define
+\[
+  a_{\mathrm{dec}}(U,V)
+  :=\sum_{\star\in\{-,0,+\}}
+    \int_{D^\star}\nabla u^\star\cdot\nabla\overline{v^\star}
+      \,\dd x\dd y,
+  \qquad
+  D^-:=W^-,\quad D^0:=\mathcal C^0,\quad D^+:=W^+.
+\]
+Smooth functions compactly supported in each open piece show that this form is
+dense in $H$.  It is sesquilinear, symmetric, and nonnegative.  Its form norm
+is equivalent to the sum of the three $H^1(D^\star)$ norms.  Each local form
+domain is closed in the corresponding $H^1$ space by continuity of the trace,
+so $V_{\mathrm{dec}}$ is complete in the form norm and
+$a_{\mathrm{dec}}$ is closed.  The same representation theorem, followed by
+Green's identity on each piece, therefore identifies its associated operator
+as the self-adjoint, nonnegative direct sum
+\[
+  A_{\mathrm{dec}}(\beta)
+  :=A_D^-(\beta)\oplus A_D^0(\beta)\oplus A_D^+(\beta)
+  \quad\text{in }H.
+\]
+The compact embedding $H^1(\mathcal C^0)\hookrightarrow H^0$ also implies
+that $A_D^0(\beta)$ has compact resolvent
+\cite[Chapter~3]{McLean2000}.
+
+We have now proved that $A(\beta)$ and $A_{\mathrm{dec}}(\beta)$ are
+self-adjoint, nonnegative, and hence closed operators on the same Hilbert
+space.  Their spectra lie in $[0,\infty)$
+\cite[Chapter~V]{Kato1995}, and consequently
+\[
+  -1\in\rho(A(\beta))\cap\rho(A_{\mathrm{dec}}(\beta)).
+\]
+Here $\rho(T)$ denotes the resolvent set of an operator $T$.
+In particular, both resolvents are everywhere defined bounded operators,
+\[
+  (A(\beta)+I)^{-1},\ (A_{\mathrm{dec}}(\beta)+I)^{-1}
+  \in\mathcal B(H),
+  \qquad
+  \|(A(\beta)+I)^{-1}\|,\
+  \|(A_{\mathrm{dec}}(\beta)+I)^{-1}\|\leq1,
+\]
+and their common domain as bounded operators is all of $H$.  The same
+conclusion can be checked directly by Lax--Milgram: for every $f\in H$, the
+forms
+\[
+  a_\beta(u,v)+\langle u,v\rangle_H,
+  \qquad
+  a_{\mathrm{dec}}(U,V)+\langle U,V\rangle_H
+\]
+are continuous and coercive in their respective form norms, and therefore the
+two variational equations with right-hand side $\langle f,\cdot\rangle_H$
+have unique solutions and satisfy the displayed norm bounds
+\cite[Lemma~2.32]{McLean2000}.  The closed-form theorem supplies the
+self-adjoint realizations, while Lax--Milgram independently verifies the
+common resolvent point and its estimate; no spectral-invariance conclusion is
+used in this argument.
+
+The resolvent difference
+\[
+  (A(\beta)+I)^{-1}-(A_{\mathrm{dec}}(\beta)+I)^{-1}
+\]
+is therefore a well-defined member of $\mathcal B(H)$.  The Weyl resolvent
+form of the essential-spectrum theorem states that, for two self-adjoint
+operators on the same Hilbert space and a common resolvent point $z$, a
+compact resolvent difference at $z$ implies equality of their essential
+spectra \cite[Theorem~XIII.14]{ReedSimon1978}.  At $z=-1$ all of its
+hypotheses except that compactness have now been verified.  The only remaining
+hypothesis needed for the Weyl-type invariance argument is to prove that the
+above resolvent difference is compact on $H$.
+\end{enumerate}
+
+\begin{proofremark}[Form domains and operator domains]
+The space $V_\beta$ is the form domain; it is not the operator domain.  If
+$T_\beta$ denotes the operator associated with $a_\beta$, then abstractly
+\[
+\begin{aligned}
+  D(T_\beta)=\bigl\{u\in V_\beta:{}&\ \text{there exists }f\in H
+  \text{ such that}\\[-1mm]
+  &a_\beta(u,v)=\langle f,v\rangle_H
+  \text{ for every }v\in V_\beta\bigr\},
+  \qquad T_\beta u=f.
+\end{aligned}
+\]
+This is exactly the $H^1(\Delta,B)$ trace domain used for $A(\beta)$ above,
+and hence agrees with the realization in Fliss~\cite[Section~3]{Fliss2013}.
+Indeed, one implication follows from the weak Green identity: the horizontal
+boundary terms cancel because both the value and weak $\partial_y$ traces are
+$\beta$-quasiperiodic.  Conversely, testing the abstract identity first
+with functions compactly supported in the interior of $B$ gives
+$-\Delta u=\rho f$ in distributions, so $\Delta u\in L^2(B)$.  Applying the
+weak Green identity to arbitrary $\beta$-quasiperiodic test functions then
+forces
+\[
+  \left.\partial_yu\right|_{y=d}
+  =e^{\ii\beta d}\left.\partial_yu\right|_{y=0}
+\]
+in $H^{-1/2}$; the value quasiperiodicity was already imposed by
+$u\in V_\beta$.  The local Dirichlet realizations are identified in the same
+way: zero value traces at the artificial ports are imposed in
+$V_D^\star$, while Green's identity recovers the remaining natural
+quasiperiodic derivative condition.  The weak Green identities and normal
+traces used here are those for $H^1(\Delta,D)$; see
+\cite[Chapters~3--4]{McLean2000}.
+\end{proofremark}
+
+\begin{enumerate}[label=\textit{Step \arabic*.},leftmargin=*,start=2]
+
+\item \emph{Compare the coupled and decoupled resolvents.}
+Both $A(\beta)$ and $A_{\mathrm{dec}}(\beta)$ are nonnegative, so
+$-1$ belongs to their common resolvent set.  Cutting or restoring transmission
+across $\Gamma^-\cup\Gamma^+$ changes the resolvent by a compact operator:
+\begin{equation*}
+  (A(\beta)+1)^{-1}-(A_{\mathrm{dec}}(\beta)+1)^{-1}
+  \quad\text{is compact on }H.
+\end{equation*}
+Indeed, localized resolvents have additional elliptic regularity near the
+ports.  The map from a volume right-hand side to its port Dirichlet traces is
+therefore bounded into a Sobolev space compactly embedded in $H^{1/2}$, while
+the Poisson solution map from $H^{1/2}$ port data into $H$ is bounded.  The
+resolvent difference factors through these two maps and is compact.
+Weyl's essential spectrum theorem
+\cite[Theorem~XIII.14]{ReedSimon1978} now yields
+\[
+  \sigma_{\mathrm{ess}}(A(\beta))
+  =\sigma_{\mathrm{ess}}(A_{\mathrm{dec}}(\beta)).
+\]
+
+\item \emph{Compute the essential spectrum of the direct sum.}
+The essential spectrum of a finite orthogonal direct sum is the union of the
+essential spectra of its summands.  Since $A_D^0(\beta)$ has compact
+resolvent, $\sigma_{\mathrm{ess}}(A_D^0(\beta))=\varnothing$, and hence
+\[
+  \sigma_{\mathrm{ess}}(A(\beta))
+  =\sigma_{\mathrm{ess}}(A_D^-(\beta))
+   \cup\sigma_{\mathrm{ess}}(A_D^+(\beta)).
+\]
+
+\item \emph{Identify each half-guide contribution.}
+Fix $\star\in\{-,+\}$.  If
+$\lambda\in\sigma(A^\star(\beta))$, Floquet decomposition produces Bloch
+wave packets supported over an increasing number of cells whose residuals
+tend to zero.  Translating these packets arbitrarily far into $W^\star$ and
+cutting them off away from the finite port gives a singular Weyl sequence for
+$A_D^\star(\beta)$.  Thus
+\[
+  \sigma(A^\star(\beta))
+  \subset\sigma_{\mathrm{ess}}(A_D^\star(\beta)).
+\]
+Conversely, local compactness forces every singular Weyl sequence for
+$A_D^\star(\beta)$ to escape from its finite port.  Cutting it off in cells
+far from that port and extending it into the two-sided periodic guide gives a
+Weyl sequence for $A^\star(\beta)$.  Consequently,
+\[
+  \sigma_{\mathrm{ess}}(A_D^\star(\beta))
+  \subset\sigma(A^\star(\beta)),
+\]
+and therefore
+\[
+  \sigma_{\mathrm{ess}}(A_D^\star(\beta))
+  =\sigma(A^\star(\beta)).
+\]
+The full spectrum of $A_D^\star(\beta)$ may additionally contain discrete
+port-induced eigenvalues; they do not enter this essential-spectrum identity.
+Applying the identity for $\star=-$ and $\star=+$ in Step~3 proves
+\eqref{eq:projected-spectrum}.
+\end{enumerate}
+\end{proof}
+
+\clearpage
+\section*{中文归档论证}
+
+本节保存原中文草稿中的详细预解式论证路线。它目前不再作为主草稿中决定数值扫描区间的主要论证，也不会由中文主文件通过 \verb|\input| 载入。
+
+\begin{proposition}[两个不同半波导对应的本质谱]
+\label{prop:asymmetric-essential-spectrum}
+假设 $\rho$ 在 $W^-$ 上等于 $\rho^-$、在 $W^+$ 上等于 $\rho^+$，并且它偏离这两个周期背景的区域包含在有界中心胞元 $\overline{\mathcal C^0}$ 中。则
+\begin{equation}
+  \boxed{\quad
+  \sigma_{\mathrm{ess}}(A(\beta))
+  =\Sigma_{\mathrm{ess}}(\beta)
+  :=\sigma(A^-(\beta))\cup\sigma(A^+(\beta)).\quad}
+  \label{eq:projected-spectrum}
+\end{equation}
+这里不要求两个背景谱相等。
+\end{proposition}
+\begin{proof}
+\begin{enumerate}[label=\textit{步骤 \arabic*.},leftmargin=*]
+\item \emph{在同一 Hilbert 空间中构造两种实现，并确定一个公共预解点。}
+由 \eqref{eq:material} 中的界可取共同的 Hilbert 空间
+\[
+  H:=L^2(B,\rho\,\dd x\dd y),
+  \qquad
+  \langle u,v\rangle_H
+  :=\int_B\rho\,u\overline v\,\dd x\dd y.
+\]
+这里 $0<\rho_{\min}:=\rho_-\leq\rho\leq\rho_+=:\rho_{\max}<\infty$。
+作为函数集合，$H=L^2(B)$，其加权范数与通常的 $L^2$ 范数等价。特别地，
+$H^1(B)\subset H$。由于两个端口均为零测集，对三个开区域作限制便得到正交分解
+\[
+  H=H^-\oplus H^0\oplus H^+,
+  \qquad
+  \begin{aligned}
+    H^-&:=L^2(W^-,\rho^-\,\dd x\dd y),\\
+    H^0&:=L^2(\mathcal C^0,\rho\,\dd x\dd y),\\
+    H^+&:=L^2(W^+,\rho^+\,\dd x\dd y).
+  \end{aligned}
+\]
+
+对于下文出现的任一区域 $D$，记
+\[
+  H^1(\Delta,D):=\{u\in H^1(D):\Delta u\in L^2(D)\}.
+\]
+耦合实现是算子
+\[
+  A(\beta):D(A(\beta))\subset H\longrightarrow H,
+  \qquad A(\beta)u=-\frac1\rho\Delta u,
+\]
+其中
+\[
+  D(A(\beta))=\left\{u\in H^1(\Delta,B):
+  \begin{array}{l}
+    \left.u\right|_{y=d}
+      =e^{\ii\beta d}\left.u\right|_{y=0},\\[-1mm]
+    \left.\partial_yu\right|_{y=d}
+      =e^{\ii\beta d}\left.\partial_yu\right|_{y=0}
+  \end{array}\right\}.
+\]
+函数值等式是 $H^{1/2}$ 中的迹等式，导数等式则在弱 $H^{-1/2}$ 迹空间中理解。
+为通过闭型实现这一算子，令
+\[
+  V_\beta:=H^1_\beta(B),
+  \qquad
+  a_\beta(u,v):=\int_B\nabla u\cdot\nabla\overline v\,\dd x\dd y,
+  \qquad u,v\in V_\beta.
+\]
+所有形如 $e^{\ii\beta y}\phi(x,y)$ 的函数组成的空间包含于 $V_\beta$，其中
+$\phi$ 光滑、关于 $y$ 以 $d$ 为周期，并且关于 $x$ 具有紧支撑；这个空间在 $H$
+中稠密。事实上，这可由酉规范变换 $u\mapsto e^{-\ii\beta y}u$、$y$ 方向的周期
+磨光以及 $x$ 方向的截断得到。因此，$a_\beta$ 稠密定义。它是半双线性、对称且
+非负的。此外，型范数
+\[
+  \|u\|_{a_\beta}^2
+  :=a_\beta(u,u)+\|u\|_H^2
+\]
+由 $\rho$ 的上下界可知与 $H^1(B)$ 范数等价。Sobolev 迹定理表明 $V_\beta$ 是
+$H^1(B)$ 的闭子空间，故它关于该型范数完备，从而 $a_\beta$ 是闭型；另见
+\cite[Chapter~3]{McLean2000}。闭的、稠密定义的非负型的第一表示定理
+\cite[Chapter~VI, Section~2]{Kato1995} 因而在 $H$ 中给出一个自伴非负算子。
+Green 恒等式以及上下两条准周期水平边界项的抵消表明，该关联算子正是上面给出的
+微分实现 $A(\beta)$；具体的定义域识别见本步骤之后的注。
+
+对于切断实现，在两个端口施加齐次 Dirichlet 条件，并定义
+\[
+  A_D^- (\beta):D(A_D^-(\beta))\subset H^-\longrightarrow H^- ,
+  \qquad A_D^-(\beta)u^-=-\frac1{\rho^-}\Delta u^- ,
+\]
+\[
+  D(A_D^-(\beta)):=\left\{u^-\in H^1(\Delta,W^-):
+  \begin{array}{l}
+    \left.u^-\right|_{\Gamma^-}=0,\\
+    \left.u^-\right|_{y=d}
+      =e^{\ii\beta d}\left.u^-\right|_{y=0},\\[-1mm]
+    \left.\partial_yu^-\right|_{y=d}
+      =e^{\ii\beta d}\left.\partial_yu^-\right|_{y=0}
+  \end{array}\right\},
+\]
+\[
+  A_D^0(\beta):D(A_D^0(\beta))\subset H^0\longrightarrow H^0,
+  \qquad A_D^0(\beta)u^0=-\frac1\rho\Delta u^0,
+\]
+\[
+  D(A_D^0(\beta)):=\left\{u^0\in H^1(\Delta,\mathcal C^0):
+  \begin{array}{l}
+    \left.u^0\right|_{\Gamma^-}
+      =\left.u^0\right|_{\Gamma^+}=0,\\
+    \left.u^0\right|_{y=d}
+      =e^{\ii\beta d}\left.u^0\right|_{y=0},\\[-1mm]
+    \left.\partial_yu^0\right|_{y=d}
+      =e^{\ii\beta d}\left.\partial_yu^0\right|_{y=0}
+  \end{array}\right\},
+\]
+以及
+\[
+  A_D^+(\beta):D(A_D^+(\beta))\subset H^+\longrightarrow H^+,
+  \qquad A_D^+(\beta)u^+=-\frac1{\rho^+}\Delta u^+,
+\]
+\[
+  D(A_D^+(\beta)):=\left\{u^+\in H^1(\Delta,W^+):
+  \begin{array}{l}
+    \left.u^+\right|_{\Gamma^+}=0,\\
+    \left.u^+\right|_{y=d}
+      =e^{\ii\beta d}\left.u^+\right|_{y=0},\\[-1mm]
+    \left.\partial_yu^+\right|_{y=d}
+      =e^{\ii\beta d}\left.\partial_yu^+\right|_{y=0}
+  \end{array}\right\}.
+\]
+以上所有边界等式均与前文具有相同的弱迹含义。相应的型定义域为
+\[
+\begin{aligned}
+  V_D^-&:=\{u^-\in H^1_\beta(W^-):
+    \left.u^-\right|_{\Gamma^-}=0\},\\
+  V_D^0&:=\{u^0\in H^1_\beta(\mathcal C^0):
+    \left.u^0\right|_{\Gamma^-}
+    =\left.u^0\right|_{\Gamma^+}=0\},\\
+  V_D^+&:=\{u^+\in H^1_\beta(W^+):
+    \left.u^+\right|_{\Gamma^+}=0\}.
+\end{aligned}
+\]
+在 $V_{\mathrm{dec}}:=V_D^-\oplus V_D^0\oplus V_D^+$ 上定义
+\[
+  a_{\mathrm{dec}}(U,V)
+  :=\sum_{\star\in\{-,0,+\}}
+    \int_{D^\star}\nabla u^\star\cdot\nabla\overline{v^\star}
+      \,\dd x\dd y,
+  \qquad
+  D^-:=W^-,\quad D^0:=\mathcal C^0,\quad D^+:=W^+.
+\]
+每个开区域中具有紧支撑的光滑函数表明该型在 $H$ 中稠密定义。它是半双线性、
+对称且非负的，其型范数与三个 $H^1(D^\star)$ 范数平方和的平方根等价。由迹映射
+的连续性，每个局部型定义域都是相应 $H^1$ 空间的闭子空间，故
+$V_{\mathrm{dec}}$ 关于型范数完备，$a_{\mathrm{dec}}$ 是闭型。再次应用表示定理，
+并在每个区域上使用 Green 恒等式，即可把关联算子识别为 $H$ 中的自伴非负直和
+\[
+  A_{\mathrm{dec}}(\beta)
+  :=A_D^-(\beta)\oplus A_D^0(\beta)\oplus A_D^+(\beta).
+\]
+紧嵌入 $H^1(\mathcal C^0)\hookrightarrow H^0$ 还表明
+$A_D^0(\beta)$ 具有紧预解式 \cite[Chapter~3]{McLean2000}。
+
+至此已经证明，$A(\beta)$ 与 $A_{\mathrm{dec}}(\beta)$ 是同一 Hilbert 空间上的
+自伴、非负并因而闭的算子。它们的谱均包含于 $[0,\infty)$
+\cite[Chapter~V]{Kato1995}，所以
+\[
+  -1\in\rho(A(\beta))\cap\rho(A_{\mathrm{dec}}(\beta)).
+\]
+这里 $\rho(T)$ 表示算子 $T$ 的预解集。
+特别地，两个预解式都是处处定义的有界算子，并且
+\[
+  (A(\beta)+I)^{-1},\ (A_{\mathrm{dec}}(\beta)+I)^{-1}
+  \in\mathcal B(H),
+  \qquad
+  \|(A(\beta)+I)^{-1}\|,\
+  \|(A_{\mathrm{dec}}(\beta)+I)^{-1}\|\leq1;
+\]
+作为有界算子，它们的定义域都是整个 $H$。也可以用 Lax--Milgram 定理直接检验
+这一结论：对每个 $f\in H$，两个型
+\[
+  a_\beta(u,v)+\langle u,v\rangle_H,
+  \qquad
+  a_{\mathrm{dec}}(U,V)+\langle U,V\rangle_H
+\]
+分别在各自的型范数下连续且强制，因此以 $\langle f,\cdot\rangle_H$ 为右端的两个
+变分方程都有唯一解，并满足上面的范数估计
+\cite[Lemma~2.32]{McLean2000}。闭型表示定理给出自伴实现，而 Lax--Milgram 定理
+则独立核验公共预解点及其估计；这一论证没有使用任何谱不变性结论。
+
+因此，预解式之差
+\[
+  (A(\beta)+I)^{-1}-(A_{\mathrm{dec}}(\beta)+I)^{-1}
+\]
+是 $\mathcal B(H)$ 中定义良好的元素。Weyl 本质谱定理的预解式形式指出：若两个
+自伴算子作用于同一 Hilbert 空间，$z$ 是其公共预解点，并且它们在 $z$ 处的预解式
+之差紧，则二者的本质谱相等
+\cite[Theorem~XIII.14]{ReedSimon1978}。取 $z=-1$ 时，除紧性之外的所有假设均已
+验证。为了应用上述 Weyl 型不变性论证，唯一尚需证明的假设是：上面的预解式之差
+在 $H$ 上是紧算子。
+\end{enumerate}
+
+\begin{proofremark}[型定义域与算子定义域]
+$V_\beta$ 是型定义域，而不是算子定义域。若 $T_\beta$ 表示与 $a_\beta$ 关联的
+算子，则抽象地
+\[
+\begin{aligned}
+  D(T_\beta)=\bigl\{u\in V_\beta:{}&\ \text{存在 }f\in H\text{，使得}\\[-1mm]
+  &a_\beta(u,v)=\langle f,v\rangle_H
+  \text{ 对每个 }v\in V_\beta\text{ 均成立}\bigr\},
+  \qquad T_\beta u=f.
+\end{aligned}
+\]
+这恰好是上面用于 $A(\beta)$ 的 $H^1(\Delta,B)$ 迹定义域，因而与
+Fliss~\cite[Section~3]{Fliss2013} 中的实现一致。事实上，一个方向直接来自弱 Green
+恒等式：由于函数值迹与弱 $\partial_y$ 迹都满足 $\beta$-准周期条件，两条水平边界上的
+项相互抵消。反过来，先以支撑于 $B$ 内部的函数检验上述抽象等式，可在分布意义下
+得到 $-\Delta u=\rho f$，故 $\Delta u\in L^2(B)$。再对任意 $\beta$-准周期检验
+函数应用弱 Green 恒等式，便可在 $H^{-1/2}$ 中推出
+\[
+  \left.\partial_yu\right|_{y=d}
+  =e^{\ii\beta d}\left.\partial_yu\right|_{y=0};
+\]
+函数值的准周期性已经由 $u\in V_\beta$ 给出。局部 Dirichlet 实现也可用相同方式
+识别：人工端口上的零函数值迹由 $V_D^\star$ 直接施加，其余自然的准周期导数条件
+则由 Green 恒等式恢复。这里使用的是 $H^1(\Delta,D)$ 上的弱 Green 恒等式和法向
+迹；参见 \cite[Chapters~3--4]{McLean2000}。
+\end{proofremark}
+
+\begin{enumerate}[label=\textit{步骤 \arabic*.},leftmargin=*,start=2]
+
+\item \emph{比较耦合算子与切断算子的预解式。}
+$A(\beta)$ 和 $A_{\mathrm{dec}}(\beta)$ 都非负，故 $-1$ 属于二者的公共预解集。在 $\Gamma^-\cup\Gamma^+$ 上切断或恢复传输条件只使预解式改变一个紧算子：
+\begin{equation*}
+  (A(\beta)+1)^{-1}-(A_{\mathrm{dec}}(\beta)+1)^{-1}
+  \quad\text{是 }H\text{ 上的紧算子。}
+\end{equation*}
+具体而言，局部化预解式在端口附近具有更高的椭圆正则性，因而从体右端项到端口 Dirichlet 迹的映射取值于一个紧嵌入 $H^{1/2}$ 的 Sobolev 空间；另一方面，从 $H^{1/2}$ 端口数据到 $H$ 中解的 Poisson 映射有界。预解式之差通过这两个映射分解，故为紧算子。现在应用 Weyl 本质谱定理 \cite[Theorem~XIII.14]{ReedSimon1978}，得到
+\[
+  \sigma_{\mathrm{ess}}(A(\beta))
+  =\sigma_{\mathrm{ess}}(A_{\mathrm{dec}}(\beta)).
+\]
+
+\item \emph{计算直和算子的本质谱。}
+有限正交直和的本质谱等于各分量本质谱之并。由于 $A_D^0(\beta)$ 具有紧预解式，$\sigma_{\mathrm{ess}}(A_D^0(\beta))=\varnothing$，所以
+\[
+  \sigma_{\mathrm{ess}}(A(\beta))
+  =\sigma_{\mathrm{ess}}(A_D^-(\beta))
+   \cup\sigma_{\mathrm{ess}}(A_D^+(\beta)).
+\]
+
+\item \emph{分别识别两个半波导的贡献。}
+固定 $\star\in\{-,+\}$。若 $\lambda\in\sigma(A^\star(\beta))$，Floquet 分解给出支撑在越来越多胞元上的 Bloch 波包，且其残量趋于零。把这些波包平移到 $W^\star$ 的任意深处，并在远离有限端口处截断，即得到 $A_D^\star(\beta)$ 的奇异 Weyl 序列。因此
+\[
+  \sigma(A^\star(\beta))
+  \subset\sigma_{\mathrm{ess}}(A_D^\star(\beta)).
+\]
+反过来，局部紧性迫使 $A_D^\star(\beta)$ 的每个奇异 Weyl 序列逃离其有限端口。在远离端口的胞元中将其截断，再延拓到双侧周期波导，就得到 $A^\star(\beta)$ 的 Weyl 序列。因此
+\[
+  \sigma_{\mathrm{ess}}(A_D^\star(\beta))
+  \subset\sigma(A^\star(\beta)),
+\]
+从而
+\[
+  \sigma_{\mathrm{ess}}(A_D^\star(\beta))
+  =\sigma(A^\star(\beta)).
+\]
+$A_D^\star(\beta)$ 的完整谱还可能含有人工端口诱导的离散特征值，但它们不进入上述本质谱恒等式。分别对 $\star=-$ 和 $\star=+$ 使用该恒等式，并代入步骤 3，即得 \eqref{eq:projected-spectrum}。
+\end{enumerate}
+\end{proof}
+

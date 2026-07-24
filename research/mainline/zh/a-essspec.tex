@@ -1,0 +1,299 @@
+% Full title: Chinese Translation of Essential Spectrum for Two Different Periodic Ends
+% Purpose:
+%   Provide the Chinese counterpart of the complete essential-spectrum proof
+%   for a scalar strip with two different periodic ends.
+% Main workflow:
+%   Establish local compactness and cutoff commutator bounds, derive a Zhislin
+%   criterion, construct one-sided periodic Weyl sequences, and prove both
+%   inclusions in the essential-spectrum identity.
+% Based on:
+%   The Zhislin-sequence mechanism of De Nittis et al. (2021) and the periodic
+%   Floquet--Bloch characterization of Fliss (2013).
+% Main changes:
+%   Adapts the one-dimensional first-order argument to the present
+%   two-dimensional second-order weighted strip operator with exact periodic
+%   tails and possibly different transverse periods.
+% Mathematical goal:
+%   Prove Theorem~\ref{thm:two-ended-essential-spectrum} without assuming the
+%   essential-spectrum union formula.
+
+\section{两个不同周期端对应的本质谱}
+\label{app:essential-spectrum}
+
+在本附录中，固定
+$\beta\in[-\pi/d,\pi/d)$，并简记
+\[
+  A:=A(\beta),\qquad A^\star:=A^\star(\beta),
+  \qquad \star\in\{-,+\}.
+\]
+这些算子分别作用于
+$H=L^2(B,\rho\,\dd x\dd y)$ 和
+$H^\star=L^2(B,\rho^\star\,\dd x\dd y)$。定义
+\begin{equation}
+  H_0:=H^-\oplus H^+,
+  \qquad A_0:=A^-\oplus A^+.
+  \label{eq:appendix-free-operator}
+\end{equation}
+以 $Q$ 表示条带空间上的乘法算子 $u(x,y)\mapsto xu(x,y)$，并令
+$Q_0:=Q\oplus Q$ 作用于 $H_0$。取充分大的 $R_0>0$，使得
+\[
+  \overline{\mathcal C^0}\subset(-R_0,R_0)\times[0,d],
+  \qquad
+  \rho=\rho^-\quad\text{在 }x<-R_0\text{ 上},
+  \qquad
+  \rho=\rho^+\quad\text{在 }x>R_0\text{ 上}.
+\]
+后两个等式由两个周期半波导的构造保证。由于各系数具有公共的正下界和有限
+上界，下文所有加权范数均与相应的非加权范数等价。对于标量算子 $T$，当
+$T=A$ 时记 $\rho_T=\rho$，当 $T=A^\star$ 时记
+$\rho_T=\rho^\star$；涉及 $A_0$ 的公式均逐分量理解。
+
+\begin{lemma}[局部紧性与截断交换子]
+\label{lem:appendix-local-compactness}
+设 $T$ 为 $A,A^-,A^+$ 或 $A_0$ 中任一算子，作用于相应的 Hilbert 空间
+$H_T$；以 $Q_T$ 表示相应的位置算子。则：
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+  \item 对每个有界区间 $K\subset\R$，
+  \[
+    \mathbf 1_K(Q_T)(T+\ii)^{-1}:H_T\longrightarrow H_T
+    \quad\text{是紧算子};
+  \]
+  \item 若 $\zeta\in C_c^\infty(\R;[0,1])$ 在 $[-1,1]$ 上等于 $1$，
+  在 $[-2,2]$ 外等于 $0$，并令
+  $\zeta_R(x):=\zeta(x/R)$，则
+  \begin{equation}
+    \bigl\|[T,\zeta_R(Q_T)](T+\ii)^{-1}\bigr\|_{\mathcal B(H_T)}
+    \longrightarrow0
+    \qquad(R\to\infty).
+    \label{eq:appendix-commutator-limit}
+  \end{equation}
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+先考虑一个标量分量。其闭型为
+\[
+  a_T(u,v)=\int_B\nabla u\cdot\nabla\overline v\,\dd x\dd y,
+  \qquad D(a_T)=H^1_\beta(B).
+\]
+若 $u=(T+\ii)^{-1}f$，则由非负性和变分恒等式得到
+\[
+  \|u\|_{H_T}\leq\|f\|_{H_T},
+  \qquad
+  \|\nabla u\|_{L^2(B)}^2
+  =\operatorname{Re}\langle f,u\rangle_{H_T}
+  \leq\|f\|_{H_T}^2.
+\]
+所以预解算子有界地映入 $H^1_\beta(B)$。先限制到
+$K\times(0,d)$，再使用 Rellich 紧嵌入
+$H^1(K\times(0,d))\hookrightarrow L^2(K\times(0,d))$，即可得到紧性。
+系数上下界保证局部加权与非加权 $L^2$ 范数等价，故 (i) 成立。直和情形逐
+分量即得。
+
+只依赖于 $x$ 的光滑函数乘法保持算子定义域不变：若
+$u\in H^1(\Delta,B)$，则
+\[
+  \Delta(\eta u)=\eta\Delta u+2\eta'\partial_xu+\eta''u\in L^2(B),
+\]
+并且水平方向的 $\beta$-准周期迹条件不变。因此，在 $D(T)$ 上，
+\begin{equation}
+  [T,\zeta_R]u
+  =-\frac1{\rho_T}
+    \left(2\zeta_R'\partial_xu+\zeta_R''u\right),
+  \label{eq:appendix-commutator-formula}
+\end{equation}
+其中对 $A_0$ 逐分量理解。由于
+$\|\zeta_R'\|_\infty=O(R^{-1})$ 且
+$\|\zeta_R''\|_\infty=O(R^{-2})$，前述预解式估计给出
+\[
+  \bigl\|[T,\zeta_R](T+\ii)^{-1}f\bigr\|_{H_T}
+  \leq C\left(R^{-1}+R^{-2}\right)\|f\|_{H_T}.
+\]
+这就证明了 (ii)。
+\end{proof}
+
+\begin{lemma}[条带上的 Zhislin 判据]
+\label{lem:appendix-Zhislin}
+对于 \Cref{lem:appendix-local-compactness} 中任一算子 $T$ 和任意
+$\lambda\in\R$，下列两条等价：
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+  \item $\lambda\in\sigma_{\mathrm{ess}}(T)$；
+  \item 存在 $u_m\in D(T)$，使得
+  \begin{equation}
+    \|u_m\|_{H_T}=1,\qquad
+    \mathbf 1_{[-m,m]}(Q_T)u_m=0,\qquad
+    \|(T-\lambda)u_m\|_{H_T}\longrightarrow0.
+    \label{eq:appendix-Zhislin-sequence}
+  \end{equation}
+\end{enumerate}
+当 $T=A_0$ 时，支撑条件同时施加于两个分量。
+\end{lemma}
+\begin{proof}
+满足 (ii) 的序列弱收敛到零：先对紧支撑的 $L^2$ 函数验证这一点，再由稠密性
+推广到任意函数即可。因此它是一个奇异 Weyl 序列，从而推出 (i)。
+
+反过来，设 $v_j$ 是 $T$ 在 $\lambda$ 处的奇异 Weyl 序列。对每个固定的
+$R$，局部紧性给出
+\[
+  \zeta_R(Q_T)v_j
+  =\zeta_R(Q_T)(T+\ii)^{-1}(T+\ii)v_j
+  \longrightarrow0
+  \quad(j\to\infty)
+\]
+的强收敛。事实上，
+$(T+\ii)v_j=(T-\lambda)v_j+(\lambda+\ii)v_j$ 弱收敛到零且有界。
+选取一个子序列，仍记为 $v_m$，使得
+\[
+  \|\zeta_m(Q_T)v_m\|_{H_T}\leq m^{-1},\qquad
+  \|(T-\lambda)v_m\|_{H_T}\leq m^{-1}.
+\]
+令 $w_m=(1-\zeta_m(Q_T))v_m$。于是 $w_m$ 在 $|x|\leq m$ 上为零，并且
+$\|w_m\|_{H_T}\to1$。此外，
+\[
+  (T-\lambda)w_m
+  =(1-\zeta_m)(T-\lambda)v_m-[T,\zeta_m]v_m.
+\]
+第一项趋于零。对于第二项，写成
+\[
+  [T,\zeta_m]v_m
+  =[T,\zeta_m](T+\ii)^{-1}(T+\ii)v_m.
+\]
+第一个因子由 \eqref{eq:appendix-commutator-limit} 趋于零，第二个因子保持
+有界。将 $w_m$ 归一化即得 \eqref{eq:appendix-Zhislin-sequence}。这正是
+\cite[Lemmas~3.11--3.12]{DeNittisEtAl2021} 中 Zhislin 构造在当前条带上的
+对应形式。
+\end{proof}
+
+\begin{lemma}[置于指定端部的周期 Weyl 序列]
+\label{lem:appendix-one-sided-Weyl}
+设 $\star\in\{-,+\}$ 且
+$\lambda\in\sigma(A^\star)$。则存在归一化的
+$v_m^\star\in D(A^\star)$，使得
+\[
+  \|(A^\star-\lambda)v_m^\star\|_{H^\star}\longrightarrow0
+\]
+以及
+\[
+  \operatorname{supp}v_m^+\subset[m,\infty)\times[0,d],
+  \qquad
+  \operatorname{supp}v_m^-\subset(-\infty,-m]\times[0,d].
+\]
+\end{lemma}
+\begin{proof}
+只写出右端构造。由谱的 Weyl 判据，可取 $f_m\in D(A^+)$，满足
+\[
+  \|f_m\|_{H^+}=1,\qquad
+  \|(A^+-\lambda)f_m\|_{H^+}\leq m^{-1}.
+\]
+因为 $A^+$ 非负且由梯度型生成，
+\[
+  \|\nabla f_m\|_{L^2(B)}^2
+  =\langle A^+f_m,f_m\rangle_{H^+}
+  \leq\lambda+m^{-1}
+\]
+对所有充分大的 $m$ 成立。周期平移
+\[
+  (\tau_q^+f)(x,y):=f(x-qL^+,y),\qquad q\in\Z,
+\]
+在 $H^+$ 中是酉算子，并与 $A^+$ 交换。取充分大的 $q_m$，使得
+\[
+  \bigl\|\mathbf 1_{(-\infty,2m]}(Q)\tau_{q_m}^+f_m
+  \bigr\|_{H^+}\leq m^{-1}.
+\]
+取 $\eta\in C^\infty(\R;[0,1])$，满足
+$\eta(t)=0$（$t\leq0$）以及 $\eta(t)=1$（$t\geq1$），并令
+$\eta_m^+(x):=\eta((x-m)/m)$。则
+\[
+  g_m:=\eta_m^+\tau_{q_m}^+f_m
+\]
+支撑于 $[m,\infty)\times[0,d]$，且 $\|g_m\|_{H^+}\to1$。
+\Cref{lem:appendix-local-compactness} 中保持定义域的计算说明
+$g_m\in D(A^+)$，并且
+\[
+  (A^+-\lambda)g_m
+  =\eta_m^+\tau_{q_m}^+(A^+-\lambda)f_m
+   +[A^+,\eta_m^+]\tau_{q_m}^+f_m.
+\]
+第一项趋于零。由 \eqref{eq:appendix-commutator-formula}、一致的
+$H^1$ 界以及
+$\|\partial_x^r\eta_m^+\|_\infty=O(m^{-r})$（$r=1,2$），第二项也趋于零。
+归一化 $g_m$ 即得到 $v_m^+$。沿负方向平移 $L^-$ 的整数倍并使用
+$\eta_m^-(x):=\eta((-x-m)/m)$，即可得到左端序列。这是
+\cite[Proposition~3.10]{DeNittisEtAl2021} 证明中的平移--截断构造在二阶
+条带算子上的对应形式。
+\end{proof}
+
+\begin{proof}[\Cref{thm:two-ended-essential-spectrum} 的证明]
+分别对两个周期延拓使用 Floquet--Bloch 分解，并利用
+\eqref{eq:background-bands}，可得
+\begin{equation}
+  \sigma_{\mathrm{ess}}(A_0)
+  =\sigma_{\mathrm{ess}}(A^-)
+   \cup\sigma_{\mathrm{ess}}(A^+)
+  =\sigma(A^-)\cup\sigma(A^+)
+  =\Sigma_-(\beta)\cup\Sigma_+(\beta).
+  \label{eq:appendix-free-essential-spectrum}
+\end{equation}
+这里第一个等式是有限正交直和的本质谱公式；第二个等式来自
+\cite[Proposition~3.1, especially equations~(3.3)--(3.4)]{Fliss2013}
+的周期谱结论。
+
+先证
+$\sigma_{\mathrm{ess}}(A)\subset\sigma_{\mathrm{ess}}(A_0)$。
+取 $j_-,j_+\in C^\infty(\R;[0,1])$，满足
+\[
+\begin{array}{lll}
+  j_-(x)=1&\text{当 }x\leq-2R_0,&
+  j_-(x)=0\text{ 当 }x\geq-R_0,\\
+  j_+(x)=0&\text{当 }x\leq R_0,&
+  j_+(x)=1\text{ 当 }x\geq2R_0.
+\end{array}
+\]
+设 $\lambda\in\sigma_{\mathrm{ess}}(A)$，并取
+\Cref{lem:appendix-Zhislin} 给出的 Zhislin 序列 $u_m$。当
+$m>2R_0$ 时，
+\[
+  u_m=j_-u_m+j_+u_m,
+\]
+且右端两项支撑不交。定义
+\[
+  u_m^0:=c_m(j_-u_m,j_+u_m)\in D(A_0),
+  \qquad
+  c_m:=\|(j_-u_m,j_+u_m)\|_{H_0}^{-1}.
+\]
+在 $j_-u_m$ 的支撑上，权重 $\rho$ 与 $\rho^-$ 相等；在
+$j_+u_m$ 的支撑上，权重 $\rho$ 与 $\rho^+$ 相等。因此，对所有充分大的
+$m$，均有 $c_m=1$。函数 $j_\pm$ 的导数支撑于固定集合
+$[-2R_0,2R_0]$，而 $u_m$ 在该集合上为零。所以交换子项为零，并且
+\[
+\begin{aligned}
+  \|(A_0-\lambda)u_m^0\|_{H_0}^2
+  &=\|(A^--\lambda)j_-u_m\|_{H^-}^2
+    +\|(A^+-\lambda)j_+u_m\|_{H^+}^2\\
+  &\leq C\|(A-\lambda)u_m\|_H^2\longrightarrow0.
+\end{aligned}
+\]
+序列 $u_m^0$ 在 $|x|\leq m$ 上仍为零。由
+\Cref{lem:appendix-Zhislin}，
+$\lambda\in\sigma_{\mathrm{ess}}(A_0)$。
+
+对于反向包含，设 $\lambda\in\sigma(A^+)$。由
+\Cref{lem:appendix-one-sided-Weyl}，存在归一化近似特征向量序列
+$v_m^+$，其支撑包含于 $[m,\infty)\times[0,d]$。一旦 $m>R_0$，两个
+权重以及两个微分实现就在该支撑上相同。因此
+\[
+  \|v_m^+\|_H=1,\qquad
+  \|(A-\lambda)v_m^+\|_H
+  =\|(A^+-\lambda)v_m^+\|_{H^+}\longrightarrow0.
+\]
+因为这些支撑向右端逃逸，所以 $v_m^+\rightharpoonup0$ 于 $H$。它是
+$A$ 的一个奇异 Weyl 序列，故
+$\lambda\in\sigma_{\mathrm{ess}}(A)$。同理，左端构造给出
+$\sigma(A^-)\subset\sigma_{\mathrm{ess}}(A)$。所以
+\[
+  \sigma(A^-)\cup\sigma(A^+)
+  \subset\sigma_{\mathrm{ess}}(A)
+  \subset\sigma_{\mathrm{ess}}(A_0).
+\]
+结合 \eqref{eq:appendix-free-essential-spectrum} 即证
+\eqref{eq:projected-spectrum}。
+\end{proof}

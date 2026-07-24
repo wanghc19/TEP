@@ -1,0 +1,493 @@
+% Full title: Chinese Translation of Outgoing Cauchy Relations and Bounded-Domain Reduction
+\section{出射 Cauchy 关系与有界域约化}
+\label{sec:cauchy-reduction}
+
+\subsection{弱迹与出射半波导空间}
+
+令 $\mathcal O$ 为 $\mathcal C^0,W^-,W^+$ 之一。对于满足分片 $\Delta u\in L^2(\mathcal O)$ 的场 $u\in H^1_\beta(\mathcal O)$，其端口 Dirichlet 迹属于 $H^{1/2}_\beta(\Gamma)$。它的弱外向 Neumann 迹 $\gamma_{\mathrm N,\mathcal O}u\in H^{-1/2}_\beta(\Gamma)$ 定义为
+\begin{equation}
+  \pair{\gamma_{\mathrm N,\mathcal O}u}{\varphi}_{\Gamma}
+  :=\int_{\mathcal O}\left(\nabla u\cdot\nabla\overline V-k^2\rho\,u\overline V\right)
+  \dd x\dd y,
+  \label{eq:weak-Neumann}
+\end{equation}
+其中 $V\in H^1_\beta(\mathcal O)$ 的端口迹为 $\varphi$，在其他有限端口上的迹为零，并且在其余方面是任意有界提升。弱 PDE 保证 \eqref{eq:weak-Neumann} 与提升的选择无关。水平边界项由准周期性抵消。
+
+指向\emph{中心胞元外部}的单位法向量为
+\[
+  \nu^{0,-}=-\mathbf e_x\quad\text{于 }\Gamma^- ,\qquad
+  \nu^{0,+}=\mathbf e_x\quad\text{于 }\Gamma^+.
+\]
+它们与相邻半波导的外向法向量方向相反。全文均采用这一面向中心区的约定。对于 $\mathcal C^0$ 中的 $u^0$ 和 $W^\pm$ 中的 $w^\pm$，定义
+\begin{align}
+  \Tr^{0,\pm} u^0
+  &:=\bigl(\gamma_{\mathrm D}u^0,\gamma_{\mathrm N,\mathcal C^0}u^0\bigr)
+  \in\mathcal H(\Gamma^\pm),\label{eq:center-trace}\\
+  \Tr^{0,\pm} w^\pm
+  &:=\bigl(\gamma_{\mathrm D}w^\pm,-\gamma_{\mathrm N,W^\pm}w^\pm\bigr)
+  \in\mathcal H(\Gamma^\pm).
+  \label{eq:halfguide-trace}
+\end{align}
+因此，两对数据相等意味着场及其沿同一物理方向 $\nu^{0,\pm}$ 的导数均连续。
+
+令 $H^1_{\beta,0}(W^\pm;\Gamma^\pm)$ 表示在有限端口上 Dirichlet 迹为零的子空间。平方可积的半波导解空间为
+\begin{equation}
+  \mathcal U^\pm(k,\beta):=
+  \left\{w\in H^1_\beta(W^\pm):
+  \int_{W^\pm}\nabla w\cdot\nabla\overline v
+  =k^2\int_{W^\pm}\rho\,w\overline v
+  \ \forall v\in H^1_{\beta,0}(W^\pm;\Gamma^\pm)\right\}.
+  \label{eq:halfguide-outgoing}
+\end{equation}
+当 $k^2\in I_\beta$ 时，这一 $H^1$ 条件选出稳定衰减解，无需再附加逐点辐射条件。
+
+\begin{definition}[出射 Cauchy 关系]
+\label{def:outgoing-relations}
+$\pm$ 半波导的出射 Cauchy 关系为
+\begin{equation}
+  \mathcal E^\pm(k,\beta)
+  :=\left\{\Tr^{0,\pm} w:w\in
+  \mathcal U^\pm(k,\beta)\right\}
+  \subset\mathcal H(\Gamma^\pm).
+  \label{eq:outgoing-relation}
+\end{equation}
+它是完整 Dirichlet--Neumann 数据对的一个线性子空间，并不预先假设它是某个算子的图。Dirichlet 与 Neumann 投影分别为
+\begin{equation}
+  \pi_{\mathrm D}^\pm(f,g):=f,\qquad \pi_{\mathrm N}^\pm(f,g):=g,
+  \qquad (f,g)\in\mathcal H(\Gamma^\pm).
+  \label{eq:trace-projections}
+\end{equation}
+\end{definition}
+
+\begin{lemma}[人工端口处的弱拼接]
+\label{lem:weak-gluing}
+设 $u_1$ 和 $u_2$ 是两个相邻 Lipschitz 子区域内的 $H^1_\beta$ 弱 Helmholtz 解。若它们在公共端口上的 Dirichlet 迹相等，且外向弱 Neumann 迹之和为零，则其分片并集是整个并域上的 $H^1_\beta$ 弱解。反之，全局弱解的限制满足这两个匹配条件。
+\end{lemma}
+\status{背景结果。}
+\begin{proofroadmap}
+Sobolev 拼接定理由 Dirichlet 迹相等给出全局 $H^1$ 函数。在两个子区域内分别应用 Green 恒等式；唯一新增的分布项是两侧外向余法向迹之和，它按假设为零。这正是 \eqref{eq:halfguide-trace} 中需要负号的原因。该论证使用完整 Cauchy 数据，绝不从零 Dirichlet 迹推断唯一性。
+
+参见 \path{research/planning/muller-cauchy/notes/trace-glue.md}，以及 \path{research/planning/muller-cauchy/p-proofs.md} 中名为 ``restriction--gluing isomorphism'' 的待证事项。最低可接受结论是分布意义的拼接；随后可在远离角点与材料界面处恢复更强的局部正则性。
+\end{proofroadmap}
+\begin{proof}
+令 $\mathcal O_1,\mathcal O_2$ 为两个子区域，并令
+$\Gamma:=\partial\mathcal O_1\cap\partial\mathcal O_2$ 表示它们的公共端口。下面分别证明两个方向。
+
+\emph{步骤 1：Sobolev 拼接。}
+在 $\mathcal O_j$ 中几乎处处定义 $u=u_j$。Dirichlet 迹相等蕴含
+$u\in H^1_\beta(\mathcal O_1\cup\mathcal O_2)$。为说明这一点，可在局部拉直 $\Gamma$ 并计算分片函数的分布导数：它等于分片导数，再加上一个密度为跳量
+$\gamma_{\mathrm D}u_1-\gamma_{\mathrm D}u_2$ 的界面分布。该跳量在
+$H^{1/2}_\beta(\Gamma)$ 中为零，故分布导数属于 $L^2$。水平边界上的准周期迹条件也由两侧分片函数继承。
+
+\emph{步骤 2：余法向迹的抵消。}
+任取 $v\in H^1_\beta(\mathcal O_1\cup\mathcal O_2)$；若并域无界，先取具有有界支集的 $v$。在两个子区域中分别应用弱 Green 恒等式，得到
+\begin{align*}
+  &\sum_{j=1}^2\int_{\mathcal O_j}
+  \left(\nabla u_j\cdot\nabla\overline v
+  -k^2\rho\,u_j\overline v\right)\dd x\dd y\\
+  &\qquad=
+  \pair{\gamma_{\mathrm N,\mathcal O_1}u_1+\gamma_{\mathrm N,\mathcal O_2}u_2}
+  {\gamma_{\mathrm D}v}_{\Gamma}.
+\end{align*}
+其余边界项或者因测试空间的约束而消失，或者因准周期性而相互抵消。由假设，右端为零。再利用有界支集测试函数在相应全局测试空间中的稠密性，即知 $u$ 在并域上满足弱 Helmholtz 方程。
+
+\emph{步骤 3：逆命题。}
+设 $u\in H^1_\beta(\mathcal O_1\cup\mathcal O_2)$ 是全局弱解，并令
+$u_j=u|_{\mathcal O_j}$。全局 $H^1$ 函数在内部 Lipschitz 界面上只有一个 Dirichlet 迹，故
+$\gamma_{\mathrm D}u_1=\gamma_{\mathrm D}u_2$。把两个弱 Green 恒等式相加，再减去全局弱方程，可得
+\[
+  \pair{\gamma_{\mathrm N,\mathcal O_1}u_1+\gamma_{\mathrm N,\mathcal O_2}u_2}{\varphi}_{\Gamma}=0
+  \qquad\forall\varphi\in H^{1/2}_\beta(\Gamma),
+\]
+其中任意 $\varphi$ 都可由支集位于 $\Gamma$ 邻域内的有界提升实现。因此两个外向弱 Neumann 迹之和在
+$H^{-1/2}_\beta(\Gamma)$ 中为零。
+\end{proof}
+
+定义有界中心区解空间
+\begin{equation}
+\begin{split}
+  \mathcal U^0(k,\beta):=\bigl\{u^0\in H^1_\beta(\mathcal C^0):\ &
+  u^0\text{ 满足中心区弱 Helmholtz 方程},\\[-0.2em]
+  &\Tr^{0,-}u^0\in\mathcal E^-(k,\beta),\quad
+  \Tr^{0,+}u^0\in\mathcal E^+(k,\beta)\bigr\},
+\end{split}
+\label{eq:bounded-center-space}
+\end{equation}
+其中，中心区弱方程以 $H^1_\beta(\mathcal C^0)$ 中在两个端口上 Dirichlet 迹均为零的函数作为测试函数。系数 $\rho$ 编码了 $\Upsilon^0$ 上的物理传输条件。
+
+\begin{theorem}[有界迹关系约化]
+\label{thm:bounded-reduction}
+假设 $k^2\in I_\beta$，并且 \eqref{eq:outgoing-relation} 中的半波导关系为闭关系。到中心胞元的典范投影定义线性同构
+\begin{equation}
+  \pi_0:\mathcal G(k,\beta)
+  \longrightarrow\mathcal U^0(k,\beta),
+  \qquad u\longmapsto u|_{\mathcal C^0}.
+  \label{eq:restriction-isomorphism}
+\end{equation}
+其逆映射通过选择具有指定 Cauchy 数据对的半波导场，并把它们与中心区场拼接而得到。特别地，
+\begin{equation}
+  \dim\mathcal G(k,\beta)=\dim\mathcal U^0(k,\beta).
+  \label{eq:bounded-multiplicity}
+\end{equation}
+\end{theorem}
+\status{对已知结果的适配。}
+\begin{proofroadmap}
+对于正向映射，把一个全局导模限制到三个子区域；半波导上的限制属于 \eqref{eq:halfguide-outgoing}，并给出两个关系条件。若中心区限制为零，则其完整 Cauchy 数据为零，弱唯一延拓性说明全局场为零。
+
+反之，选择两个关系数据对在半波导场中的原像，并应用\Cref{lem:weak-gluing}。具有零完整 Cauchy 数据的半波导场的唯一性保证结果与原像的选择无关。随后，指数衰减性由公共带隙中的半波导空间继承。对于相同半波导，该结论退化为 \cite[Theorem~4.5]{Fliss2013} 的 DtN 约化；当前的非对称结论则在两个端部分别使用 Cauchy 关系与拼接论证。
+
+内部核查见 \path{research/planning/muller-cauchy/r-draft-thm.md}；详细待证事项见 \path{research/planning/muller-cauchy/p-proofs.md}。若闭性或半波导唯一性不成立，则最低可接受的替代结论是在模去半波导零 Cauchy 解空间后得到同构。
+\end{proofroadmap}
+\begin{proof}
+先说明后文要用到的唯一性事实。在\Cref{sec:functional-setting} 的几何条件下，如果一个全局分片 Helmholtz 解在基质相的某个非空开子集上为零，则它处处为零。事实上，从准周期条带中删去彼此分离的紧致夹杂后所得的基质区域是连通的；该区域内系数为常数，故由内部椭圆正则性和 Helmholtz 方程，解是实解析的。因此它在一个开子集上为零便蕴含它在整个基质区域上为零。于是每个夹杂边界上的 Dirichlet 迹和法向导数都为零。把夹杂内部的场跨越一段边界延拓为零，并应用\Cref{lem:weak-gluing}，便得到一个在边界一侧为零的常系数 Helmholtz 解；解析延拓说明它在夹杂内部也为零。对所有夹杂重复此论证即得全条带上的唯一性。类似地，若半波导解在有限端口上具有零完整 Cauchy 数据，把它跨越该端口延拓为零，同一论证也给出其唯一性。
+
+\par\smallskip
+\begingroup
+\color{green!35!black}
+\noindent\textbf{[Reference Verification R1 Start]}
+
+\emph{作为后文唯一性依据的文献结果。}
+上一段保留为几何直观说明；后文所需的唯一性只由本核验块建立。
+Isakov~\cite[Theorem~3.3.1, p.~65]{Isakov2017} 考虑二阶椭圆算子
+\[
+  Av=\sum_{j,k=1}^2 a_{jk}\partial_j\partial_kv
+      +\sum_{j=1}^2 b_j\partial_jv+cv,
+\]
+其中主系数 $a_{jk}$ 实值并属于 $C^1$，而 $b_j,c\in L^\infty$。
+若 $Av=f$ 于有界域 $\mathcal O$，并且在相对开且为 $C^1$ 的边界部分
+$\Sigma\subset\partial\mathcal O$ 上有 Cauchy 数据
+$v=g_0$、$\partial_\nu v=g_1$，则对每个满足
+$\overline{\mathcal O_1}\subset\mathcal O\cup\Sigma$ 的子域
+$\mathcal O_1$，存在 $C>0$ 和 $\kappa\in(0,1)$，使得
+\[
+  \lVert v\rVert_{H^1(\mathcal O_1)}
+  \leq C\left(
+    F+\lVert v\rVert_{H^1(\mathcal O)}^{1-\kappa}F^\kappa
+  \right),
+  \qquad
+  F:=\lVert f\rVert_{L^2(\mathcal O)}
+     +\lVert g_0\rVert_{H^1(\Sigma)}
+     +\lVert g_1\rVert_{L^2(\Sigma)}.
+  \tag{R1.1}
+\]
+
+现在直接由该估计推出本文所需的唯一性。设 $\mathcal V\subset B$ 为连通开集，
+$\widetilde\rho\in L^\infty(\mathcal V)$ 实值，并且
+$v\in H^1_{\mathrm{loc}}(\mathcal V)$ 弱满足
+\[
+  \Delta v+k^2\widetilde\rho\,v=0\quad\text{于 }\mathcal V.
+  \tag{R1.2}\label{eq:R1-unique-pde}
+\]
+假设 $v$ 在非空开集 $\mathcal V_0\subset\mathcal V$ 上为零。下面逐项验证
+\cite[Theorem~3.3.1]{Isakov2017} 的条件并推出 $v=0$。
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=*]
+  \item 在 \eqref{eq:R1-unique-pde} 中取
+  $a_{jk}=\delta_{jk}$、$b_j=0$、$c=k^2\widetilde\rho$。
+  主系数矩阵为恒等矩阵，实值、属于 $C^1$ 且一致椭圆；同时
+  $b_j,c\in L^\infty(\mathcal V)$。这也说明材料界面上的跳跃只进入该定理允许的
+  零阶系数 $c$，没有进入主系数。
+  \item 由 \eqref{eq:R1-unique-pde}，
+  $\Delta v=-k^2\widetilde\rho\,v\in L^2_{\mathrm{loc}}(\mathcal V)$。
+  Laplace 算子的内部正则性给出
+  $v\in H^2_{\mathrm{loc}}(\mathcal V)$，因而在下面选取的有界域上具有该定理所需的
+  解正则性。若 $v$ 为复值，则因 $\widetilde\rho$ 实值，实部和虚部分别满足同一方程，
+  可分别应用该定理。
+  \item 固定任意 $x_\ast\in\mathcal V\setminus\mathcal V_0$。
+  取开球 $B_r(x_0)$ 使
+  $\overline{B_r(x_0)}\subset\mathcal V_0$。沿 $\mathcal V$ 内连接
+  $B_r(x_0)$ 与 $x_\ast$ 的简单折线路径取充分细的光滑管状邻域，可选取一个有界
+  $C^1$ 域 $\mathcal D$，使得
+  \[
+    \overline{B_r(x_0)}\cup\{x_\ast\}
+    \subset\mathcal D,
+    \qquad \overline{\mathcal D}\subset\mathcal V,
+    \qquad
+    \mathcal O:=\mathcal D\setminus\overline{B_r(x_0)}
+    \text{ 连通}.
+  \]
+  令 $\Sigma:=\partial B_r(x_0)$，并取包含 $x_\ast$ 的开球
+  $\mathcal O_1$，使得 $\overline{\mathcal O_1}\subset\mathcal O$。
+  于是 $\mathcal O$ 有界，$\Sigma$ 是
+  $\partial\mathcal O$ 的相对开 $C^1$ 部分，而且
+  $\overline{\mathcal O_1}\subset\mathcal O\cup\Sigma$。
+  \item 在 $\mathcal O$ 上取 $A=\Delta+k^2\widetilde\rho$。
+  因为 $\overline{B_r(x_0)}\subset\mathcal V_0$，$v$ 在 $\Sigma$ 的一个邻域内为零，
+  故 Cauchy 数据满足
+  \[
+    f=0\quad\text{于 }\mathcal O,
+    \qquad g_0=v|_\Sigma=0,
+    \qquad g_1=\partial_\nu v|_\Sigma=0.
+  \]
+  因而式 \textup{(R1.1)} 中 $F=0$。分别对 $\operatorname{Re}v$ 与
+  $\operatorname{Im}v$ 应用该式，得到
+  \[
+    \lVert\operatorname{Re}v\rVert_{H^1(\mathcal O_1)}
+    \leq C\left(0+
+      \lVert\operatorname{Re}v\rVert_{H^1(\mathcal O)}^{1-\kappa}0^\kappa
+    \right)=0,
+  \]
+  以及同样的
+  $\lVert\operatorname{Im}v\rVert_{H^1(\mathcal O_1)}=0$。
+  因此 $v=0$ 于 $\mathcal O_1$，特别地 $v(x_\ast)=0$。
+\end{enumerate}
+由于 $x_\ast\in\mathcal V\setminus\mathcal V_0$ 任意，遂有
+$v=0$ 于整个 $\mathcal V$。这就是下文两次使用的唯一性结论：对
+$\mathcal V=B$ 和 $\widetilde\rho=\rho$，它给出全局场的单射性；对零 Cauchy 数据的
+半波导差场，先按\Cref{lem:weak-gluing} 跨端口作零延拓，再在所得连通开集上取相应的
+实值分片 $L^\infty$ 系数 $\widetilde\rho$，同一结论给出该差场为零。
+
+\noindent\textbf{[Reference Verification R1 End]}
+\endgroup
+\par\smallskip
+
+\emph{步骤 1：限制映射良定义且单射。}
+设 $u\in\Gspace$。在全局弱方程中使用
+$H^1_{\beta,0}(W^\pm;\Gamma^\pm)$ 中函数的零延拓作为测试函数，可得
+$u|_{W^\pm}\in\mathcal U^\pm(k,\beta)$；中心区限制满足中心区弱方程。由\Cref{lem:weak-gluing} 的逆命题以及
+\eqref{eq:halfguide-trace} 的符号约定，
+\[
+  \Tr^{0,\pm}(u|_{\mathcal C^0})
+  =\Tr^{0,\pm}(u|_{W^\pm})
+  \in\mathcal E^\pm(k,\beta).
+\]
+因此 $\pi_0u\in\mathcal U^0(k,\beta)$。若
+$\pi_0u=0$，则 $u$ 在中心区基质的一个开集上为零；由上述唯一性论证，$u=0$。故
+$\pi_0$ 为单射。
+
+\emph{步骤 2：通过弱拼接证明满射。}
+任取 $u^0\in\mathcal U^0(k,\beta)$。由两个出射关系的定义，存在
+$w^\pm\in\mathcal U^\pm(k,\beta)$，使得
+\[
+  \Tr^{0,\pm}w^\pm=\Tr^{0,\pm}u^0.
+\]
+第一分量给出 Dirichlet 迹相等。由
+\eqref{eq:center-trace}--\eqref{eq:halfguide-trace}，第二分量相等恰好等价于
+\[
+  \gamma_{\mathrm N,\mathcal C^0}u^0+\gamma_{\mathrm N,W^\pm}w^\pm=0
+  \quad\text{于 }\Gamma^\pm.
+\]
+在两个端口上应用\Cref{lem:weak-gluing}，得到
+\[
+  u=\begin{cases}
+    w^-&\text{于 }W^-,\\
+    u^0&\text{于 }\mathcal C^0,\\
+    w^+&\text{于 }W^+
+  \end{cases}
+  \in H^1_\beta(B),
+\]
+并且该场满足全局弱特征值方程。由\Cref{prop:weak-strong} 中记录的
+$A(\beta)$ 的闭型刻画，$u\in\Gspace$；同时按构造
+$\pi_0u=u^0$。
+
+\emph{步骤 3：半波导原像选择的无关性。}
+若 $\widetilde w^\pm$ 是具有相同完整 Cauchy 数据对的另一选择，则
+$z^\pm=w^\pm-\widetilde w^\pm$ 在 $\Gamma^\pm$ 上具有零 Dirichlet 迹和零面向中心区的 Neumann 迹。把 $z^\pm$ 通过中心区延拓为零；拼接引理说明该延拓是一个在非空开集上为零的全局弱解。证明开头的唯一性论证给出 $z^\pm=0$。因此拼接所得的场与所有原像选择无关，并定义了
+$\pi_0$ 的线性逆映射。
+
+由此得到同构 \eqref{eq:restriction-isomorphism}，而
+\eqref{eq:bounded-multiplicity} 中的维数相等立即随之成立。所假设的两个关系的闭性保证定义
+$\mathcal U^0(k,\beta)$ 的两个迹约束在迹拓扑中为闭约束；上述代数性的限制--拼接论证本身只使用这些关系作为迹值域的定义性质。
+\end{proof}
+
+\subsection{DtN 坐标图与广义 Bloch 迹}
+
+只要 $\pi_{\mathrm D}^\pm|_{\Etracepm}$ 到 $H^{1/2}_\beta(\Gamma^\pm)$ 是双射，就定义 DtN 算子
+\begin{equation}
+  \Lambda^\pm(k,\beta):=
+  \pi_{\mathrm N}^\pm\bigl(\pi_{\mathrm D}^\pm|_{\Etracepm}\bigr)^{-1}.
+  \label{eq:DtN-definition}
+\end{equation}
+该逆映射失效意味着 Dirichlet 坐标图失效，但不一定意味着 Cauchy 关系失效。Robin 投影可给出另一种 RtR 坐标图，见 \cite{FlissKlindworthSchmidt2015}。
+
+下面定义后文使用的移位对象。固定一个符号 $\star\in\{-,+\}$。回顾
+\Cref{sec:functional-setting}：$\rho^\star$ 是把 $W^\star$ 中的材料系数沿
+$x$ 方向周期延拓到整个双侧条带 $B=\R\times(0,d)$ 后得到的系数。
+令 $v\in H^1_{\mathrm{loc}}(B)$ 满足
+\begin{equation}
+  \left\{
+  \begin{aligned}
+    -\Delta v&=k^2\rho^\star v&&\text{在 }B\text{ 中，按弱意义理解},\\
+    \left.v\right|_{y=d}
+      &=e^{\ii\beta d}\left.v\right|_{y=0},\\
+    \left.\partial_yv\right|_{y=d}
+      &=e^{\ii\beta d}\left.\partial_yv\right|_{y=0}.
+  \end{aligned}
+  \right.
+  \label{eq:ideal-strip-solutions}
+\end{equation}
+第一行的弱方程已经包含 $\rho^\star$ 的所有周期延拓材料界面上的物理传输条件；
+最后一行在弱 $H^{-1/2}$ 迹意义下理解。这里不要求 $v$ 沿 $x$ 方向周期；
+$x$ 方向的 Bloch 或广义 Bloch 行为将由下述移位算子的谱给出。
+对于 $j=0,1$，记 $\left.\Tr^{0,\star}v\right|_{\Gamma_j^\star}$ 为
+$v$ 在 $\Gamma_j^\star$ 上沿向外胞元坐标 $t^\star=s^\star(x-X^\star)$
+方向取得的完整 Cauchy 迹。定义理想双侧条带的参考端口迹空间
+\begin{equation}
+  \mathscr T^\star(k,\beta)
+  :=\left\{\left.\Tr^{0,\star}v\right|_{\Gamma_0^\star}:
+  v\in H^1_{\mathrm{loc}}(B)\text{ 且满足 \eqref{eq:ideal-strip-solutions}}\right\}
+  \subset\mathcal H(\Gamma^\star).
+  \label{eq:ideal-strip-trace-space}
+\end{equation}
+通过唯一延拓性，参考端口上的完整 Cauchy 迹唯一确定
+$H^1_{\mathrm{loc}}(B)$ 中满足 \eqref{eq:ideal-strip-solutions} 的解；因此可用一个固定的局部解范数给
+$\mathscr T^\star(k,\beta)$ 赋范。对
+$e\in\mathscr T^\star(k,\beta)$，令 $v_e$ 表示具有参考端口迹 $e$ 的唯一解，
+并定义单胞元迹移位
+\begin{equation}
+  T^\star(k,\beta)e
+  :=\left.\Tr^{0,\star}v_e\right|_{\Gamma_1^\star},
+  \label{eq:translation-operator}
+\end{equation}
+其中 $\Gamma_1^\star$ 上的迹通过系数的周期识别运回参考端口
+$\Gamma_0^\star$。分别取 $\star=-$ 和 $\star=+$ 即得到
+$\mathscr T^\pm(k,\beta)$ 与 $T^\pm(k,\beta)$。$T^\pm$ 的有界性，以及局部迹范数与解范数的等价性，均属于移位框架的假设。
+
+\begin{lemma}[公共本质谱带隙排除传播乘子]
+\label{lem:gap-unit-circle}
+假设理想波导在横向周期方向上的 Floquet 变换有效，且非零解迹对应非零 Bloch 解。若 $k^2\in I_\beta$，则
+\begin{equation}
+  \sigma(T^\pm(k,\beta))\cap\Sone=\varnothing.
+  \label{eq:no-unit-multiplier}
+\end{equation}
+\end{lemma}
+\status{Floquet 理论的背景推论。}
+\begin{proof}
+若存在模为一的乘子，可将其写为 $\lambda=e^{\ii\theta L^\pm}$，其中 $\theta$ 是实横向准动量。相应非零解满足单胞元横向 Bloch 条件，并使 $k^2$ 属于理想波导的 $\theta$-纤维谱。Floquet 直积分分解随即给出 $k^2\in\sigma(A^\pm(\beta))\subset\Sigma_{\mathrm{ess}}(\beta)$，这与 \eqref{eq:strict-gap} 矛盾。这正是公共本质谱带隙中不存在传播半波导通道的谱意义。
+\end{proof}
+
+乘子 $\lambda\in\Complex$ 的广义 Bloch 迹链是有限序列 $e_0,\ldots,e_{m-1}\in\mathscr T^\pm$，满足
+\begin{equation}
+  (T^\pm-\lambda\mathrm{id})e_0=0,
+  \qquad (T^\pm-\lambda\mathrm{id})e_l=e_{l-1},
+  \quad 1\leq l<m.
+  \label{eq:Jordan-chain}
+\end{equation}
+相应场称为广义 Bloch 模态。若 $\sigma(T^\pm)\cap\Sone=\varnothing$，选择一条恰好包围所有 $|\lambda|<1$ 乘子的围道 $C_s$，并定义
+\begin{equation}
+  P_s^\pm:=\frac{1}{2\pi\ii}\int_{C_s}(z\mathrm{id}-T^\pm)^{-1}\dd z.
+  \label{eq:stable-projection}
+\end{equation}
+其值域 $\ran P_s^\pm$ 即稳定谱子空间。
+
+在 Riesz 基假设下，把所有稳定链收集到系数 Hilbert 空间
+\begin{equation}
+  \mathcal K_s^\pm:=
+  \ell^2\bigl(\{(j,l): |\lambda_j^\pm|<1,
+  0\leq l<m_j^\pm\}\bigr).
+  \label{eq:stable-coefficients}
+\end{equation}
+令
+\begin{equation}
+  \mathcal F^\pm(k,\beta):\mathcal K_s^\pm
+  \longrightarrow\mathcal U^\pm(k,\beta)
+  \label{eq:field-synthesis}
+\end{equation}
+为相应广义场的 Riesz 合成，并定义完整 Cauchy 迹合成
+\begin{equation}
+  Q^\pm(k,\beta):=\Tr^{0,\pm}\mathcal F^\pm(k,\beta):
+  \mathcal K_s^\pm\longrightarrow\mathcal H(\Gamma^\pm).
+  \label{eq:trace-synthesis}
+\end{equation}
+
+\begin{proposition}[Cauchy 关系、DtN 图与稳定迹]
+\label{prop:relation-Bloch}
+假设周期半波导和迹问题满足 \cite[Theorem~2.2]{HohageSoussi2013} 中广义 Floquet Riesz 基定理的条件，并且 $\sigma(T^\pm)\cap\Sone=\varnothing$。则
+\begin{equation}
+  \mathcal E^\pm(k,\beta)=\ran Q^\pm(k,\beta),
+  \label{eq:relation-stable-range}
+\end{equation}
+其中值域闭，且合成包含每一条稳定 Jordan 链。若进一步假设 $\pi_{\mathrm D}^\pm|_{\Etracepm}$ 是双射，则
+\begin{equation}
+  \mathcal E^\pm(k,\beta)
+  =\graph\Lambda^\pm(k,\beta).
+  \label{eq:relation-DtN-graph}
+\end{equation}
+只有当 $T^\pm$ 的稳定部分半单时，才能用普通 Bloch 特征向量替代这些链。
+\end{proposition}
+\status{已知模态结果，但需针对当前传输迹作适配。}
+\begin{proofroadmap}
+首先把模为一的乘子与实横向 Bloch 准动量对应起来。公共本质谱带隙排除此类理想波导 Bloch 解，并提供相互分离的稳定与不稳定 Riesz 围道。应用 \cite[Theorem~2.2 and Propositions~6.1--6.2]{HohageSoussi2013}，得到广义模态的 Riesz 基；当迹问题适定时，还得到这些模态之迹的 Riesz 基。\cite[Sections~3--5]{Zhang2021} 中的谱分解路线以及 \cite{Zhang2023} 中的模态 DtN 构造给出了互补表述。
+
+非平凡的适配工作是：对本文的分片常数传输半波导验证系数、界面和迹同构假设，其中包括双分量、面向中心区的 Cauchy 迹。随后，图恒等式直接由 \eqref{eq:DtN-definition} 得到。参见 \path{research/planning/muller-cauchy/notes/bloch-trans.md} 和 \path{research/planning/muller-cauchy/notes/outgoing.md}。若无法得到迹的 Riesz 基，最低可接受结果是闭值域恒等式 \eqref{eq:relation-stable-range}，其中系数空间需模去 $\ker Q^\pm$。
+\end{proofroadmap}
+\begin{proof}
+只需证明一个符号的情形。记
+$\star\in\{-,+\}$；外向坐标
+$t^\star=s^\star(x-X^\star)$ 把两个半波导都化为同一个向右延伸的半条带模型。
+
+先按照实际使用顺序，逐项核对
+\cite[Theorem~2.2 and Proposition~3.5]{HohageSoussi2013} 的假设。
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=*]
+  \item 该文的标量半条带方程要求系数为正、有界且周期。把
+  $t^\star$ 按 $L^\star$ 缩放后，这正是
+  \eqref{eq:material} 的周期延拓。该定理只要求系数属于
+  $L^\infty$ 且有正下界，因此允许本文的分片常数传输系数。
+  \item 该文允许横向边界算子取准周期条件，本文的 $y$-准周期条件正属于此情形。在个别准周期参数处，该文可能要求额外对称性；当前命题已明确假设该定理的全部条件成立，因此这些附加条件也包含在假设中。
+  \item 该文要求出射解空间在单胞元移位下不变；这里这属于移位框架的假设。又因为
+  $\sigma(T^\star)\cap\Sone=\varnothing$ 排除了所有实准动量 Floquet 模态，所以该文的辐射空间
+  $H^{1,+}$ 在此退化为平方可积的 $H^1$ 解空间
+  $\mathcal U^\star(k,\beta)$。
+  \item 为使用该文定理第 2 部分的迹结论，取该定理中的系数
+  $a_{\mathrm D},a_{\mathrm N}$，令 $\mathcal Y^\star$ 为相应适定迹问题的数据空间，并定义
+  \[
+    \tau^\star:\mathcal H(\Gamma^\star)\to\mathcal Y^\star,
+    \qquad \tau^\star(f,g):=a_{\mathrm D}f+a_{\mathrm N}g.
+  \]
+  与此对应的边值迹为
+  $a_{\mathrm D}\gamma_{\mathrm D}+a_{\mathrm N}\partial_{t^\star}$，其边值问题必须适定。这正是当前命题所假设的“迹问题满足该定理条件”的含义。按面向中心区的约定，
+  $\partial_{t^\star}$ 正是 \eqref{eq:halfguide-trace} 的第二分量，故 $\tau^\star$ 是本文双分量 Cauchy 迹的有界投影。
+\end{enumerate}
+因此，该文关于解空间和迹空间的结论，以及其 Proposition~3.5 对 Jordan 链的识别，在本文中适用，且无需改变乘子或法向约定。
+
+\emph{步骤 1：把稳定合成识别为全部出射场。}
+所引 Riesz 基定理给出由典范广义 Floquet 链构成的合成同构
+\[
+  \mathcal F^\star:\mathcal K_s^\star
+  \longrightarrow\mathcal U^\star(k,\beta).
+\]
+单位圆谱的排除说明该 $H^1$ 解空间中的每个模态都具有稳定乘子，并且每条稳定链都出现在这一合成中。因此，由
+\eqref{eq:trace-synthesis} 和 \eqref{eq:outgoing-relation}，
+\[
+  \ran Q^\star
+  =\Tr^{0,\star}\ran\mathcal F^\star
+  =\Tr^{0,\star}\mathcal U^\star(k,\beta)
+  =\mathcal E^\star(k,\beta).
+\]
+
+\emph{步骤 2：证明值域闭。}
+由 \cite[Theorem~2.2, part~2]{HohageSoussi2013}，
+$\tau^\star Q^\star$ 是 Riesz 合成同构。因此存在
+$C_{\mathrm{tr}}>0$，使得对每个 $c\in\mathcal K_s^\star$，
+\[
+  C_{\mathrm{tr}}\lVert c\rVert_{\mathcal K_s^\star}
+  \leq\lVert \tau^\star Q^\star c\rVert_{\mathcal Y^\star}
+  \leq\lVert \tau^\star\rVert
+  \lVert Q^\star c\rVert_{\mathcal H(\Gamma^\star)}.
+\]
+另一方面，迹定理和 $\mathcal F^\star$ 的 Riesz 上界给出
+\[
+  \lVert Q^\star c\rVert_{\mathcal H(\Gamma^\star)}
+  \leq C\lVert c\rVert_{\mathcal K_s^\star}.
+\]
+所以 $Q^\star$ 既有界又有正下界，因而为单射且具有闭值域。这就证明了
+\eqref{eq:relation-stable-range} 的全部断言。
+
+\emph{步骤 3：转到 Dirichlet 坐标图。}
+进一步假设
+$\pi_{\mathrm D}^\star|_{\mathcal E^\star}$ 为双射。对任意
+$(f,g)\in\mathcal E^\star$，由
+\eqref{eq:DtN-definition} 的定义，
+\[
+  g=\pi_{\mathrm N}^\star(f,g)
+   =\pi_{\mathrm N}^\star
+    \bigl(\pi_{\mathrm D}^\star|_{\mathcal E^\star}\bigr)^{-1}f
+   =\Lambda^\star f.
+\]
+反之，对每个 $f\in H^{1/2}_\beta(\Gamma^\star)$，Dirichlet 投影的逆都把
+$(f,\Lambda^\star f)$ 映入该关系。因此
+$\mathcal E^\star=\graph\Lambda^\star$，即
+\eqref{eq:relation-DtN-graph}。
+
+最后，所引论文的 Proposition~3.5 把每个根子空间识别为单胞元移位的有限 Jordan 链。若某个稳定 Jordan 块的大小大于一，则其中的伴随向量不是特征向量，也不可能属于该块普通特征向量的张成空间。因此，恰好在
+$T^\star$ 的稳定限制为半单时，才可以用普通 Bloch 特征向量替代全部广义链向量。
+\end{proof}

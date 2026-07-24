@@ -1,0 +1,103 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,mathrsfs}
+\usepackage{bm}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xurl}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=green!35!black,
+  urlcolor=blue!60!black]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage[backend=biber,style=alphabetic,sorting=nyt,maxbibnames=8,
+  giveninits=true]{biblatex}
+
+\addbibresource{references.bib}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjectural strengthening}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem*{proofremark}{Remark}
+
+\newenvironment{proofroadmap}
+  {\par\medskip\noindent\textit{Proof roadmap.}%
+   \begin{list}{}{\leftmargin=1.5em\rightmargin=1.5em}%
+   \item\small}
+  {\end{list}\medskip}
+
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Sone}{\mathbb{S}^{1}}
+\newcommand{\pair}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\status}[1]{\par\smallskip\noindent\textbf{Status: #1}\par\smallskip}
+\newcommand{\Gspace}{\mathcal{G}(k,\beta)}
+\newcommand{\Coutpm}{\mathcal{C}^{\pm}_{\mathrm{out}}(k,\beta)}
+\newcommand{\Aop}{\mathbb{A}(k,\beta)}
+\newcommand{\Nrep}{\mathcal{N}_{\mathrm{rep}}(k,\beta)}
+\newcommand{\Rc}{\mathcal{R}_{\mathrm{c}}(k,\beta)}
+\newcommand{\Rg}{\mathcal{R}_{\mathrm{g}}(k,\beta)}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\ran}{\operatorname{ran}}
+\newcommand{\graph}{\operatorname{graph}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\ind}{\operatorname{ind}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\Span}{\operatorname{span}}
+
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0.2em}
+\setlength{\emergencystretch}{2em}
+\allowdisplaybreaks
+
+\title{A M\"uller--Cauchy-Relation Framework for Guided Modes\\
+in Periodic Line-Defect Waveguides\\[0.5em]
+\large A theorem skeleton and proof draft}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We formulate the fixed-quasiperiod guided-mode problem for a two-dimensional
+periodic line-defect waveguide as the self-adjoint eigenvalue problem obtained
+by fixing the Bloch quasimomentum $\beta$ and solving for $k>0$ (equivalently,
+for $k^2$) on an infinite strip.  For spectral parameters in a compact window
+inside a common essential gap, square-integrability supplies the guided condition and
+exponential transverse localization is a consequence rather than a pointwise
+boundary condition.  The unbounded half-guides are represented by their outgoing
+Cauchy relations, described through stable generalized Bloch modes and their
+Jordan chains.  In the defect cell, a M\"uller-type layer-potential
+representation is augmented by homogeneous Rayleigh fields.  These ingredients
+define a continuous center--half-guide operator whose quotient kernel is intended to
+be naturally isomorphic to the global guided-mode eigenspace.  This document is
+a working theoretical draft: background results are separated from adaptations,
+and the unproved representation and kernel-identification steps are accompanied
+by concise proof roadmaps.
+\end{abstract}
+
+\input{en/s-intro}
+\input{en/s-setting}
+\input{en/s-cauchy}
+\input{en/s-muller}
+\input{en/s-results}
+\appendix
+\input{en/a-essspec}
+
+\input{en/a-rep-id}
+
+\printbibliography
+
+\end{document}

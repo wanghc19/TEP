@@ -1,0 +1,436 @@
+% Full title: M\"uller Representation and the Coupled Operator
+\section{M\"uller Representation and the Coupled Operator}
+\label{sec:muller-coupling}
+
+\subsection{Rayleigh and layer-potential conventions}
+
+Let $\nu$ denote the unit normal on $\Upsilon^0=\partial\Omega^0$ pointing from
+$\Omega^0$ into the background.  Interior and exterior traces are
+\[
+  \gamma^{\mathrm i}u(z):=\lim_{h\downarrow0}u(z-h\nu(z)),
+  \qquad
+  \gamma^{\mathrm e}u(z):=\lim_{h\downarrow0}u(z+h\nu(z)).
+\]
+The same superscripts are used for normal derivatives in the direction $\nu$.
+The outgoing two-dimensional fundamental solution is
+\begin{equation}
+  \Phi_\kappa(x,z):=\frac{\ii}{4}H_0^{(1)}(\kappa|x-z|).
+  \label{eq:fundamental-solution}
+\end{equation}
+For $x\notin\Upsilon^0$, define
+\begin{align}
+  (S_\kappa\sigma)(x)&:=\int_{\Upsilon^0}\Phi_\kappa(x,z)\sigma(z)\dd s(z),
+  \label{eq:single-layer}\\
+  (D_\kappa\tau)(x)&:=\int_{\Upsilon^0}
+  \partial_{\nu(z)}\Phi_\kappa(x,z)\tau(z)\dd s(z).
+  \label{eq:double-layer}
+\end{align}
+With these conventions,
+$\gamma_D^{\mathrm e}D_\kappa-\gamma_D^{\mathrm i}D_\kappa=I$ and
+$\gamma_N^{\mathrm e}S_\kappa-\gamma_N^{\mathrm i}S_\kappa=-I$.
+
+Let $G^{\mathrm{qp}}_{k,\beta}$ be the vertically $\beta$-quasiperiodic
+outgoing Green function satisfying
+\[
+  G^{\mathrm{qp}}_{k,\beta}(x+de_y,z)
+  =e^{\ii\beta d}G^{\mathrm{qp}}_{k,\beta}(x,z),
+  \qquad (\Delta_x+k^2)G^{\mathrm{qp}}_{k,\beta}(x,z)=-\delta_z.
+\]
+Away from its exceptional set it is represented by the lattice sum
+\begin{equation}
+  G^{\mathrm{qp}}_{k,\beta}(x,z)
+  =\sum_{\ell\in\Z}e^{\ii\beta\ell d}
+  \Phi_k(x,z+\ell d e_y),
+  \label{eq:qp-Green}
+\end{equation}
+interpreted by the standard convergent continuation when necessary.  Replacing
+$\Phi_k$ by $G^{\mathrm{qp}}_{k,\beta}$ in
+\eqref{eq:single-layer}--\eqref{eq:double-layer} defines
+$S^{\mathrm{qp}}_{k,\beta}$ and $D^{\mathrm{qp}}_{k,\beta}$.
+
+For
+\[
+  \gamma_m(k,\beta):=\sqrt{k^2-\beta_m^2},
+  \qquad \operatorname{Im}\gamma_m\geq0,
+\]
+a Wood anomaly occurs when $\gamma_m=0$ for some $m$.  At a non-Wood
+parameter, define
+\begin{equation}
+  h^{1/2}_\beta:=
+  \left\{a=(a_m)_{m\in\Z}:
+  \sum_m\langle\beta_m\rangle|a_m|^2<\infty\right\},
+  \qquad
+  \Xi_\beta:=h^{1/2}_\beta\times h^{1/2}_\beta.
+  \label{eq:Rayleigh-space}
+\end{equation}
+For $\xi=(\xi^\rightarrow,\xi^\leftarrow)\in\Xi_\beta$, the homogeneous
+Rayleigh reconstruction in the center cell is
+\begin{equation}
+  (\mathcal H_{k,\beta}\xi)(x,y)
+  :=\sum_{m\in\Z}\left[
+  \xi_m^\rightarrow e^{\ii\gamma_m(x-X^-)}
+  +\xi_m^\leftarrow e^{-\ii\gamma_m(x-X^+)}\right]\psi_m(y).
+  \label{eq:Rayleigh-reconstruction}
+\end{equation}
+The weights in \eqref{eq:Rayleigh-space} control both the
+$H^{1/2}_\beta$ Dirichlet trace and the $H^{-1/2}_\beta$ normal trace.
+
+The interface-density space is
+\begin{equation}
+  \mathcal D^0:=H^{1/2}(\Upsilon^0)\times H^{-1/2}(\Upsilon^0),
+  \qquad \eta=(\tau,\sigma)\in\mathcal D^0,
+  \label{eq:density-space}
+\end{equation}
+where $\tau$ is the double-layer density and $\sigma$ is the single-layer
+density.  To describe a field before its two material traces have been
+matched, set
+\begin{equation}
+  H^1_{\beta,\mathrm{br}}(\mathcal C^0):=
+  H^1_\beta(\mathcal C^0\setminus\overline{\Omega^0})
+  \oplus H^1(\Omega^0).
+  \label{eq:center-broken-space}
+\end{equation}
+The subscript ``br'' means \emph{broken across $\Upsilon^0$}: the two components
+have independent traces until the transmission residual below is set to zero.
+Let $k^0:=n^0k$.  The center reconstruction
+\begin{equation}
+  \mathcal R_{\mathrm c}(k,\beta):\mathcal D^0\times\Xi_\beta
+  \longrightarrow H^1_{\beta,\mathrm{br}}(\mathcal C^0)
+  \label{eq:center-reconstruction-map}
+\end{equation}
+is the broken field $u_{\eta,\xi}^{\mathrm c}$ with
+\begin{equation}
+  u_{\eta,\xi}^{\mathrm c}(x)=
+  \begin{cases}
+  \mathcal H_{k,\beta}\xi(x)
+  +D^{\mathrm{qp}}_{k,\beta}\tau(x)
+  -S^{\mathrm{qp}}_{k,\beta}\sigma(x),
+  &x\in\mathcal C^0\setminus\overline{\Omega^0},\\
+  D_{k^0}\tau(x)-S_{k^0}\sigma(x),
+  &x\in\Omega^0.
+  \end{cases}
+  \label{eq:center-reconstruction}
+\end{equation}
+Thus the exterior component is vertically quasiperiodic, while the bounded
+interior component needs no separate quasiperiodic condition.
+
+Define the M\"uller transmission residual by taking all traces in the fixed
+normal direction $\nu$:
+\begin{equation}
+\begin{split}
+  \mathcal M(k,\beta)(\eta,\xi):=
+  \bigl(&\gamma_D^{\mathrm e}u_{\eta,\xi}^{\mathrm c}
+         -\gamma_D^{\mathrm i}u_{\eta,\xi}^{\mathrm c},\\
+        &\gamma_N^{\mathrm e}u_{\eta,\xi}^{\mathrm c}
+         -\gamma_N^{\mathrm i}u_{\eta,\xi}^{\mathrm c}\bigr)
+  \in\mathcal H_{\Upsilon^0},
+  \qquad
+  \mathcal H_{\Upsilon^0}:=H^{1/2}(\Upsilon^0)\times H^{-1/2}(\Upsilon^0).
+\end{split}
+\label{eq:Muller-residual}
+\end{equation}
+This trace definition fixes every half-identity sign without relying on an
+unwritten matrix convention.  Its expansion using the jump relations is the
+M\"uller block.  Let
+\begin{equation}
+  \mathcal Z_{\mathrm c}(k,\beta):=\ker\mathcal M(k,\beta),
+  \qquad
+  \mathcal N_{\mathrm c}(k,\beta):=
+  \mathcal Z_{\mathrm c}(k,\beta)\cap\ker\mathcal R_{\mathrm c}(k,\beta).
+  \label{eq:center-nullspaces}
+\end{equation}
+Thus $\mathcal N_{\mathrm c}$ contains exactly the center algebraic
+representations that satisfy the transmission equations but generate the zero
+physical center field.
+
+Let $\mathcal S_{\mathrm c}(k,\beta)$ be the space of piecewise Helmholtz
+fields in $H^1_\beta(\mathcal C^0)$ satisfying the physical TM transmission
+conditions at $\Upsilon^0$, with no boundary condition at $\Gamma^\pm$.
+Define the representation exceptional set $\mathfrak E_{\mathrm{rep}}(\beta)$
+as the union of
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+  \item Wood parameters $\gamma_m(k,\beta)=0$;
+  \item poles or undefined parameters of the chosen quasiperiodic Green
+  function;
+  \item parameters for which the complementary swapped-wavenumber transmission
+  problem with interior wavenumber $k$ and exterior wavenumber $k^0$ is not
+  uniquely solvable.
+\end{enumerate}
+The quotient below retains possible representation nullspaces even outside
+this explicitly listed set.
+
+\begin{theorem}[Center-cell M\"uller--Rayleigh representation]
+\label{thm:center-representation}
+Let $k^2\in I_\beta$ and $k\notin\mathfrak E_{\mathrm{rep}}(\beta)$.  The
+restriction of $\mathcal R_{\mathrm c}(k,\beta)$ to
+$\mathcal Z_{\mathrm c}(k,\beta)$ is surjective onto
+$\mathcal S_{\mathrm c}(k,\beta)$.  Consequently it induces a linear
+isomorphism
+\begin{equation}
+  \mathcal Z_{\mathrm c}(k,\beta)/\mathcal N_{\mathrm c}(k,\beta)
+  \xrightarrow{\ \cong\ }\mathcal S_{\mathrm c}(k,\beta),
+  \qquad [\eta,\xi]\longmapsto\mathcal R_{\mathrm c}(k,\beta)(\eta,\xi).
+  \label{eq:center-quotient-isomorphism}
+\end{equation}
+No uniqueness of the densities is asserted.  Density uniqueness is equivalent
+to the additional statement $\mathcal N_{\mathrm c}(k,\beta)=\{0\}$.
+\end{theorem}
+\status{adaptation and proof target.}
+\begin{proofroadmap}
+Extract from a given center field the two homogeneous Rayleigh components in
+homogeneous collars of $\Gamma^-$ and $\Gamma^+$.  Subtract their continuation
+\eqref{eq:Rayleigh-reconstruction}; the remainder satisfies the outgoing
+single-cell representation hypotheses.  Apply the quasiperiodic exterior and
+free-space interior Green identities and construct the complementary
+swapped-wavenumber field as in
+\cite[Theorem~4 and Appendix~A, Lemmas~9--10]{BarnettGreengard2010}.  The
+exterior double layer in this calculation is
+$D^{\mathrm{qp}}_{k,\beta}$, whereas the inclusion double layer is $D_{k^0}$;
+using $D^{\mathrm{qp}}_{k^0,\beta}$ in the exterior extinction identity is the
+kernel mismatch that must not be repeated.
+
+Surjectivity of the physical-field map is the substantive claim.  Once it is
+proved, the quotient isomorphism follows from the first isomorphism theorem.
+The density kernel must be analyzed separately with jump relations,
+complementary fields, and Calder\'on projector ranges; the transmission-BIE
+analysis in \cite[Lemmas~2.2--2.6]{HiptmairMoiolaSpence2022} explains why a
+physical uniqueness theorem does not automatically prove density uniqueness.
+
+Detailed internal guidance is in
+\path{research/planning/muller-cauchy/notes/layers.md} and the
+obligations named ``corrected center representation'' and
+``density-to-field kernel characterization'' in
+\path{research/planning/muller-cauchy/p-proofs.md}.  The weakest
+acceptable result is surjectivity modulo a finite-dimensional missed
+homogeneous sector; an unquotiented theorem is acceptable only after
+$\mathcal N_{\mathrm c}=\{0\}$ is proved on the stated regular set.
+\end{proofroadmap}
+\begin{proof}
+Write $u=(u^{\mathrm e},u^{\mathrm i})\in
+\mathcal S_{\mathrm c}(k,\beta)$ for the exterior and inclusion components,
+and construct $(\eta,\xi)\in\mathcal Z_{\mathrm c}(k,\beta)$ whose
+reconstructed field is $u$.
+
+\emph{Step 1: separate the incoming homogeneous Rayleigh field.}
+Because $\Omega^0\Subset\mathcal C^0$, there are homogeneous collars of both
+ports.  In either collar, the Fourier coefficient of $u^{\mathrm e}$ in the
+mode $\psi_m$ solves
+\[
+  \partial_x^2u_m+\gamma_m^2u_m=0.
+\]
+The non-Wood assumption gives $\gamma_m\neq0$, so the solution has a unique
+right/left-going decomposition.  Denote by $a_m^{-,\rightarrow}$ the
+right-going coefficient in the left collar and by
+$a_m^{+,\leftarrow}$ the left-going coefficient in the right collar, with
+the phases based respectively at $X^-$ and $X^+$.  If $(f_m^\pm,p_m^\pm)$
+are the Fourier coefficients of the Dirichlet and $\partial_x$ traces at the
+two ports, then
+\[
+  a_m^{-,\rightarrow}
+  =\frac12\left(f_m^-+\frac{p_m^-}{\ii\gamma_m}\right),
+  \qquad
+  a_m^{+,\leftarrow}
+  =\frac12\left(f_m^+-\frac{p_m^+}{\ii\gamma_m}\right).
+\]
+The trace theorem gives $f^\pm\in h^{1/2}_\beta$ and
+$p^\pm\in h^{-1/2}_\beta$.  Moreover,
+$|\gamma_m|\asymp\langle\beta_m\rangle$ for all sufficiently large $|m|$;
+the remaining set is finite and contains no zero $\gamma_m$.  Hence
+\[
+  \xi:=\bigl((a_m^{-,\rightarrow})_m,
+             (a_m^{+,\leftarrow})_m\bigr)\in\Xi_\beta.
+\]
+Set $h:=\mathcal H_{k,\beta}\xi$ and $w:=u^{\mathrm e}-h$.  In the left
+collar $w$ contains only left-going modes, and in the right collar it contains
+only right-going modes: the term launched from the opposite port contributes
+only to the corresponding outgoing component.  Continuing these modal
+series through the two ports therefore extends $w$ to a vertically
+$\beta$-quasiperiodic solution of $(\Delta+k^2)w=0$ in
+$B\setminus\overline{\Omega^0}$ which is outgoing at both ends.
+
+\emph{Step 2: the two Green representation identities.}
+Use the fixed normal $\nu$ and abbreviate
+\[
+  P_\kappa(f,q):=D_\kappa f-S_\kappa q,
+  \qquad
+  P^{\mathrm{qp}}_{k,\beta}(f,q)
+  :=D^{\mathrm{qp}}_{k,\beta}f-S^{\mathrm{qp}}_{k,\beta}q.
+\]
+Green's second identity, first on a truncated quasiperiodic strip and then by
+the outgoing limiting-absorption limit, gives
+\[
+  P^{\mathrm{qp}}_{k,\beta}
+  (\gamma_D^{\mathrm e}w,\gamma_N^{\mathrm e}w)
+  =w
+  \quad\text{in }B\setminus\overline{\Omega^0}.
+\]
+The same identity applied to a solution $z$ of $(\Delta+k^2)z=0$ in
+$\Omega^0$ yields the extinction relation
+\[
+  P^{\mathrm{qp}}_{k,\beta}
+  (\gamma_D^{\mathrm i}z,\gamma_N^{\mathrm i}z)=0
+  \quad\text{in }B\setminus\overline{\Omega^0}.
+\]
+For the free-space kernel at $k^0$, the corresponding identities are
+\begin{align*}
+  P_{k^0}(\gamma_D^{\mathrm i}z,\gamma_N^{\mathrm i}z)
+  &=-z&&\text{in }\Omega^0,\\
+  P_{k^0}(\gamma_D^{\mathrm e}z,\gamma_N^{\mathrm e}z)
+  &=0&&\text{in }\Omega^0
+\end{align*}
+when the latter $z$ is an outgoing exterior field.  The signs follow from
+the jump conventions preceding \eqref{eq:single-layer}.  These are the
+one-periodic analogues of the identities used in
+\cite[Appendix~A, Lemmas~9--10]{BarnettGreengard2010}; here the vertical
+wall terms cancel by $\beta$-quasiperiodicity and the two end terms are
+removed by outgoing limiting absorption.
+
+\emph{Step 3: construct common M\"uller densities.}
+Let
+\[
+  f:=\gamma_D^{\mathrm e}u^{\mathrm e}
+    =\gamma_D^{\mathrm i}u^{\mathrm i},
+  \qquad
+  q:=\gamma_N^{\mathrm e}u^{\mathrm e}
+    =\gamma_N^{\mathrm i}u^{\mathrm i},
+\]
+and write $h_D:=\gamma_Dh$, $h_N:=\gamma_Nh$ on $\Upsilon^0$.  Then the
+exterior Cauchy data of $w$ are $(f-h_D,q-h_N)$.  Consider the complementary
+swapped-wavenumber transmission problem
+\begin{align*}
+  (\Delta+k^2)v^{\mathrm i}&=0
+    &&\text{in }\Omega^0,\\
+  (\Delta+(k^0)^2)v^{\mathrm e}&=0
+    &&\text{in }\R^2\setminus\overline{\Omega^0},
+\end{align*}
+with the Sommerfeld condition for $v^{\mathrm e}$ and jumps
+\begin{align*}
+  \gamma_D^{\mathrm e}v^{\mathrm e}
+  -\gamma_D^{\mathrm i}v^{\mathrm i}&=2f-h_D,\\
+  \gamma_N^{\mathrm e}v^{\mathrm e}
+  -\gamma_N^{\mathrm i}v^{\mathrm i}&=2q-h_N.
+\end{align*}
+Clause (iii) in the definition of
+$\mathfrak E_{\mathrm{rep}}(\beta)$ and
+$k\notin\mathfrak E_{\mathrm{rep}}(\beta)$ give its unique solution for
+these admissible trace data.  Define
+\begin{align*}
+  \tau
+  &:=f-h_D+\gamma_D^{\mathrm i}v^{\mathrm i}
+    =-f+\gamma_D^{\mathrm e}v^{\mathrm e},\\
+  \sigma
+  &:=q-h_N+\gamma_N^{\mathrm i}v^{\mathrm i}
+    =-q+\gamma_N^{\mathrm e}v^{\mathrm e}.
+\end{align*}
+The equalities are exactly the two prescribed jumps, and the trace mapping
+properties put $(\tau,\sigma)$ in $\mathcal D^0$.
+
+Set $\eta=(\tau,\sigma)$.  By the two quasiperiodic identities above, the
+exterior component of the reconstruction is
+\begin{align*}
+  h+P^{\mathrm{qp}}_{k,\beta}(\tau,\sigma)
+  &=h+P^{\mathrm{qp}}_{k,\beta}(f-h_D,q-h_N)\\
+  &\quad
+    +P^{\mathrm{qp}}_{k,\beta}
+      (\gamma_D^{\mathrm i}v^{\mathrm i},
+       \gamma_N^{\mathrm i}v^{\mathrm i})\\
+  &=h+w=u^{\mathrm e}.
+\end{align*}
+Likewise, using the alternative expressions for $\tau,\sigma$ and the two
+free-space identities above, its interior component is
+\begin{align*}
+  P_{k^0}(\tau,\sigma)
+  &=-P_{k^0}(f,q)
+    +P_{k^0}(\gamma_D^{\mathrm e}v^{\mathrm e},
+             \gamma_N^{\mathrm e}v^{\mathrm e})\\
+  &=u^{\mathrm i}.
+\end{align*}
+Thus $\mathcal R_{\mathrm c}(k,\beta)(\eta,\xi)=u$.  Since $u$ satisfies
+the physical transmission conditions, its two jumps vanish, so
+$\mathcal M(k,\beta)(\eta,\xi)=0$ and
+$(\eta,\xi)\in\mathcal Z_{\mathrm c}(k,\beta)$.  This proves the asserted
+surjectivity.
+
+\emph{Step 4: pass to the quotient.}
+The kernel of
+$\mathcal R_{\mathrm c}|_{\mathcal Z_{\mathrm c}}$ is, by
+\eqref{eq:center-nullspaces}, exactly $\mathcal N_{\mathrm c}$.  The first
+isomorphism theorem therefore gives
+\eqref{eq:center-quotient-isomorphism}.  This argument neither requires nor
+asserts that $\mathcal N_{\mathrm c}$ is zero.
+\end{proof}
+
+\subsection{The continuous coupled operator}
+
+The port trace of the center reconstruction is the bounded map
+\begin{equation}
+  \Pi^\pm(k,\beta):=\Tr^{0,\pm}\mathcal R_{\mathrm c}(k,\beta):
+  \mathcal D^0\times\Xi_\beta\longrightarrow\mathcal H_\Gamma^\pm.
+  \label{eq:center-port-map}
+\end{equation}
+This definition includes both the layer contribution and the homogeneous
+Rayleigh contribution.  The half-guide maps $\mathcal E^\pm$ and $Q^\pm$ were
+defined in \eqref{eq:field-synthesis}--\eqref{eq:trace-synthesis}.
+
+\begin{definition}[Coupled M\"uller--Cauchy operator and representation nullspace]
+\label{def:coupled-operator}
+Define the algebraic domain and residual codomain by
+\begin{align}
+  \mathcal X(k,\beta)
+  &:=\mathcal D^0\times\Xi_\beta\times
+  \mathcal K_s^-\times\mathcal K_s^+,
+  \label{eq:coupled-domain}\\
+  \mathcal Y(k,\beta)
+  &:=\mathcal H_{\Upsilon^0}\times
+  \mathcal H_\Gamma^-\times\mathcal H_\Gamma^+.
+  \label{eq:coupled-codomain}
+\end{align}
+For $x=(\eta,\xi,c^-,c^+)\in\mathcal X(k,\beta)$, set
+\begin{equation}
+  \mathbb A(k,\beta)x:=
+  \begin{bmatrix}
+  \mathcal M(k,\beta)(\eta,\xi)\\
+  \Pi^-(k,\beta)(\eta,\xi)-Q^-(k,\beta)c^-\\
+  \Pi^+(k,\beta)(\eta,\xi)-Q^+(k,\beta)c^+
+  \end{bmatrix}
+  \in\mathcal Y(k,\beta).
+  \label{eq:coupled-operator}
+\end{equation}
+The first row is the physical transmission mismatch on $\Upsilon^0$; the second
+and third rows are the complete center-oriented Cauchy mismatches at the left
+and right ports.
+
+Let
+\begin{equation}
+  H^1_{\beta,\mathrm{br}}(B):=
+  H^1_\beta(W^- )\oplus
+  H^1_\beta(\mathcal C^0\setminus\overline{\Omega^0})
+  \oplus H^1(\Omega^0)
+  \oplus H^1_\beta(W^+).
+  \label{eq:global-broken-space}
+\end{equation}
+The global broken-field reconstruction is
+\begin{equation}
+  \mathcal R_{\mathrm g}(k,\beta)x:=
+  \begin{cases}
+    \mathcal E^-(k,\beta)c^-,&\text{in }W^-,\\
+    \mathcal R_{\mathrm c}(k,\beta)(\eta,\xi),&\text{in }\mathcal C^0,\\
+    \mathcal E^+(k,\beta)c^+,&\text{in }W^+.
+  \end{cases}
+  \label{eq:global-reconstruction}
+\end{equation}
+It is a broken field for general $x$ and a global $H^1_\beta(B)$ field when
+$x\in\ker\mathbb A(k,\beta)$.  Finally, the representation-induced nullspace
+is
+\begin{equation}
+  \mathcal N_{\mathrm{rep}}(k,\beta):=
+  \left\{x\in\ker\mathbb A(k,\beta):
+  \mathcal R_{\mathrm g}(k,\beta)x=0
+  \text{ in }H^1_{\beta,\mathrm{br}}(B)\right\}.
+  \label{eq:Nrep-definition}
+\end{equation}
+Thus $\mathbb A$ is the fully defined algebraic coupling, while
+$\mathcal N_{\mathrm{rep}}$ records precisely its kernel vectors that carry no
+physical field.  Neither symbol is shorthand for an unspecified numerical
+matrix.
+\end{definition}

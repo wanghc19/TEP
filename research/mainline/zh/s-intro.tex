@@ -1,0 +1,10 @@
+% Full title: Chinese Translation of Introduction
+\section{引言}
+
+考虑一种介电结构：它在一个坐标方向上周期，在横向方向上延伸至无穷，并且只在有限宽的中心区域内偏离理想周期介质。固定轴向 Bloch 准动量后，导模是横向平方可积的特征函数。在 Fliss 所研究的左右周期背景相同情形下，利用 Dirichlet-to-Neumann（DtN）算子把这一无限域特征值问题精确约化到有界缺陷区域，已由 \cite[Theorem~4.5]{Fliss2013} 建立；相应带隙特征函数的指数局域性见 \cite[Theorem~3.5]{Fliss2013}。周期出口的传播算子和 Riccati 构造见 \cite{JolyLiFliss2006,Coatleven2012}；当 Dirichlet 坐标图失效时，Robin-to-Robin 映射提供了正则替代方案 \cite{FlissKlindworthSchmidt2015}。
+
+本文无意重新证明上述有界域约化。本文旨在建立一个精确的连续框架：中心胞元由 M\"uller 型边界积分拟设表示，每条半波导则由其完整 Cauchy 关系表示。后者是 Dirichlet 迹与 Neumann 迹之间的线性关系；当其 Dirichlet 投影可逆时，它约化为 DtN 算子的图。模态坐标必须包含广义 Floquet 模态和 Jordan 链。普通 Bloch 特征向量未必完备，而 \cite[Theorem~2.2]{HohageSoussi2013} 给出了 Riesz 基和移位算子方面的结果；相关谱分解与模态 DtN 逼近见 \cite{Zhang2021,Zhang2023}。
+
+中心区表示遵循 \cite[Theorem~4 and Appendix~A]{BarnettGreengard2010} 的准周期/自由空间构造，但我们有意在商空间上陈述它。即使层密度不唯一，物理场仍可能唯一。这一区分至关重要，因为边界积分算子可能具有由表示方式诱发的零空间或很大的非物理解逆范数 \cite{HiptmairMoiolaSpence2022}。特别地，第二类结构本身并不意味着每个小奇异值都对应一个导模。
+
+全文包含四个数学阶段。\Cref{sec:functional-setting} 定义固定 $\beta$ 的条带特征值问题，把两端周期结构的本质谱公式证明为一个定理，并区分公共带隙与后文使用的紧带隙窗口。\Cref{sec:cauchy-reduction} 定义弱 Cauchy 迹、出射关系、其广义 Bloch 坐标以及精确的限制--拼接约化。\Cref{sec:muller-coupling} 固定全部层势约定，引入中心区重构与耦合算子，并分离表示零空间。\Cref{sec:main-results} 陈述商空间安全的主要目标以及尚待解决的 Fredholm 问题。只有在证明或适配仍需完成时，正式陈述之后才附上\emph{证明路线图}。

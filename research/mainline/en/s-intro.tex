@@ -1,0 +1,50 @@
+% Full title: Introduction
+\section{Introduction}
+
+Consider a dielectric structure that is periodic in one coordinate, extends
+to infinity in the transverse coordinate, and differs from a perfect periodic
+medium only in a finite-width central region.  At a fixed axial Bloch
+quasimomentum, a guided mode is an eigenfunction that is square-integrable in
+the transverse direction.  For the identical-background setting treated
+there, the exact reduction of this infinite-domain eigenproblem to a bounded
+defect region by Dirichlet-to-Neumann (DtN) operators is established in
+\cite[Theorem~4.5]{Fliss2013}; the associated gap
+eigenfunctions are exponentially localized by
+\cite[Theorem~3.5]{Fliss2013}.  Propagation-operator and Riccati constructions
+for periodic outlets were developed in \cite{JolyLiFliss2006,Coatleven2012},
+and Robin-to-Robin maps provide a regular alternative at frequencies where a
+Dirichlet chart fails \cite{FlissKlindworthSchmidt2015}.
+
+The purpose of this draft is not to reprove that bounded-domain reduction.
+Instead, it prepares a precise continuous framework in which the center cell is
+represented by a M\"uller-type boundary integral ansatz while each half-guide is
+represented by its complete Cauchy relation.  The latter is a linear relation
+between Dirichlet and Neumann traces; it reduces to a DtN graph when its
+Dirichlet projection is invertible.  The modal coordinates must include
+generalized Floquet modes and Jordan chains.  Ordinary Bloch eigenvectors alone
+need not be complete, whereas Riesz-basis and translation-operator results are
+available in \cite[Theorem~2.2]{HohageSoussi2013}; related spectral
+decompositions and modal DtN approximations are developed in
+\cite{Zhang2021,Zhang2023}.
+
+The center representation follows the quasiperiodic/free-space architecture
+of \cite[Theorem~4 and Appendix~A]{BarnettGreengard2010}, but it is deliberately
+stated on a quotient.  A physical field may be unique even when its layer
+densities are not.  This distinction is essential because boundary integral
+operators can exhibit representation-induced nullspaces or large nonphysical
+inverse norms \cite{HiptmairMoiolaSpence2022}.  In particular, second-kind
+structure alone does not imply that every small singular value represents a
+guided mode.
+
+The paper has four mathematical stages.  \Cref{sec:functional-setting}
+defines the fixed-$\beta$ strip eigenproblem, records the two-ended
+essential-spectrum formula as a proved theorem, and separates common
+gaps from the compact gap windows used later.  \Cref{sec:cauchy-reduction}
+defines weak Cauchy traces,
+outgoing relations, their generalized-Bloch coordinates, and the exact
+restriction--gluing reduction.  \Cref{sec:muller-coupling} fixes all
+layer-potential conventions, introduces the center reconstruction and the
+coupled operator, and isolates the representation nullspace.
+\Cref{sec:main-results} states the quotient-safe main target and the remaining
+Fredholm question.  Formal statements are followed by a \emph{proof roadmap}
+only when a proof or adaptation remains to be completed.

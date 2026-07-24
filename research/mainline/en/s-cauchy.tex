@@ -1,0 +1,515 @@
+% Full title: Outgoing Cauchy Relations and Bounded-Domain Reduction
+\section{Outgoing Cauchy Relations and Bounded-Domain Reduction}
+\label{sec:cauchy-reduction}
+
+\subsection{Weak traces and outgoing half-guide spaces}
+
+Let $D$ be one of $\mathcal C^0,W^-,W^+$.  For a field
+$u\in H^1_\beta(D)$ satisfying $\Delta u\in L^2(D)$ piecewise, the Dirichlet
+trace on a port belongs to $H^{1/2}_\beta(\Gamma)$.  Its weak outward Neumann
+trace $\gamma_{N,D}u\in H^{-1/2}_\beta(\Gamma)$ is defined by
+\begin{equation}
+  \pair{\gamma_{N,D}u}{\varphi}_{\Gamma}
+  :=\int_D\left(\nabla u\cdot\nabla\overline V-k^2\rho\,u\overline V\right)
+  \dd x\dd y,
+  \label{eq:weak-Neumann}
+\end{equation}
+where $V\in H^1_\beta(D)$ has port trace $\varphi$, vanishes on any other
+finite port, and is otherwise an arbitrary bounded lifting.  The weak PDE
+makes \eqref{eq:weak-Neumann} independent of the lifting.  Horizontal terms
+cancel by quasiperiodicity.
+
+The unit normals pointing \emph{out of the center cell} are
+\[
+  \nu^{0,-}=-e_x\quad\text{on }\Gamma^- ,\qquad
+  \nu^{0,+}=e_x\quad\text{on }\Gamma^+.
+\]
+They are opposite to the outward normals of the adjacent half-guides.  We use
+this center-oriented convention everywhere.  For $u^0$ in $\mathcal C^0$ and
+$w^\pm$ in $W^\pm$, define
+\begin{align}
+  \Tr^{0,\pm} u^0
+  &:=\bigl(\gamma_Du^0,\gamma_{N,\mathcal C^0}u^0\bigr)
+  \in\mathcal H_\Gamma^\pm,\label{eq:center-trace}\\
+  \Tr^{0,\pm} w^\pm
+  &:=\bigl(\gamma_Dw^\pm,-\gamma_{N,W^\pm}w^\pm\bigr)
+  \in\mathcal H_\Gamma^\pm.
+  \label{eq:halfguide-trace}
+\end{align}
+Consequently, equality of the two pairs means continuity of the field and of
+the derivative in the same physical direction $\nu^{0,\pm}$.
+
+Let $H^1_{\beta,0}(W^\pm;\Gamma^\pm)$ be the subspace with zero Dirichlet
+trace at the finite port.  The square-integrable half-guide solution space is
+\begin{equation}
+  \mathcal U^\pm_{\mathrm{out}}(k,\beta):=
+  \left\{w\in H^1_\beta(W^\pm):
+  \int_{W^\pm}\nabla w\cdot\nabla\overline v
+  =k^2\int_{W^\pm}\rho\,w\overline v
+  \ \forall v\in H^1_{\beta,0}(W^\pm;\Gamma^\pm)\right\}.
+  \label{eq:halfguide-outgoing}
+\end{equation}
+When $k^2\in I_\beta$, this $H^1$ condition selects the stable, decaying
+solutions.  No pointwise radiation condition is added.
+
+\begin{definition}[Outgoing Cauchy relations]
+\label{def:outgoing-relations}
+The outgoing Cauchy relation of the $\pm$ half-guide is
+\begin{equation}
+  \mathcal C^\pm_{\mathrm{out}}(k,\beta)
+  :=\left\{\Tr^{0,\pm} w:w\in
+  \mathcal U^\pm_{\mathrm{out}}(k,\beta)\right\}
+  \subset\mathcal H_\Gamma^\pm.
+  \label{eq:outgoing-relation}
+\end{equation}
+It is a linear subspace of complete Dirichlet--Neumann pairs; it is not assumed
+to be the graph of an operator.  The Dirichlet and Neumann projections are
+\begin{equation}
+  \pi_D^\pm(f,g):=f,\qquad \pi_N^\pm(f,g):=g,
+  \qquad (f,g)\in\mathcal H_\Gamma^\pm.
+  \label{eq:trace-projections}
+\end{equation}
+\end{definition}
+
+\begin{lemma}[Weak gluing across an artificial port]
+\label{lem:weak-gluing}
+Let $u_1$ and $u_2$ be $H^1_\beta$ weak Helmholtz solutions in two adjacent
+Lipschitz subdomains.  If their Dirichlet traces agree and their outward weak
+Neumann traces sum to zero on the common port, then their piecewise union is an
+$H^1_\beta$ weak solution on the union.  Conversely, the restrictions of a
+global weak solution satisfy these two matching conditions.
+\end{lemma}
+\status{background result.}
+\begin{proofroadmap}
+The Sobolev gluing theorem gives a global $H^1$ function from equality of the
+Dirichlet traces.  Apply Green's identity in the two subdomains.  The only new
+distributional term is the sum of the two outward conormal traces; it vanishes
+by hypothesis.  This is precisely why the sign in \eqref{eq:halfguide-trace} is
+required.  The argument uses full Cauchy data and never infers uniqueness from
+zero Dirichlet trace alone.
+
+See \path{research/planning/muller-cauchy/notes/trace-glue.md} and
+the obligation named ``restriction--gluing isomorphism'' in
+\path{research/planning/muller-cauchy/p-proofs.md}.  The weakest
+acceptable conclusion is distributional gluing; stronger local regularity may
+then be recovered away from corners and material interfaces.
+\end{proofroadmap}
+\begin{proof}
+Let $D_1$ and $D_2$ be the two subdomains and let
+$\Gamma:=\partial D_1\cap\partial D_2$ denote their common port.  We prove
+the two directions separately.
+
+\emph{Step 1: Sobolev gluing.}
+Set $u=u_j$ almost everywhere in $D_j$.  Equality of the Dirichlet traces
+implies $u\in H^1_\beta(D_1\cup D_2)$.  For completeness, this follows
+locally by flattening $\Gamma$ and computing the distributional derivatives:
+the derivative of the piecewise function is the piecewise derivative plus an
+interface distribution whose density is the jump
+$\gamma_Du_1-\gamma_Du_2$.  The latter is zero in
+$H^{1/2}_\beta(\Gamma)$, so the distributional derivatives belong to $L^2$.
+The quasiperiodic trace condition on the horizontal sides is inherited from
+the two pieces.
+
+\emph{Step 2: cancellation of the conormal traces.}
+Take $v\in H^1_\beta(D_1\cup D_2)$, initially with bounded support if the
+union is unbounded.  The weak Green identities in the two subdomains give
+\begin{align*}
+  &\sum_{j=1}^2\int_{D_j}
+  \left(\nabla u_j\cdot\nabla\overline v
+  -k^2\rho\,u_j\overline v\right)\dd x\dd y\\
+  &\qquad=
+  \pair{\gamma_{N,D_1}u_1+\gamma_{N,D_2}u_2}
+  {\gamma_Dv}_{\Gamma}.
+\end{align*}
+All other boundary terms either vanish by the imposed test space or cancel
+by quasiperiodicity.  The right-hand side is zero by hypothesis.  Density of
+the bounded-support tests in the relevant global test space then shows that
+$u$ satisfies the weak Helmholtz equation on the union.
+
+\emph{Step 3: the converse.}
+Let $u\in H^1_\beta(D_1\cup D_2)$ be a global weak solution and set
+$u_j=u|_{D_j}$.  A global $H^1$ function has a single Dirichlet trace on the
+interior Lipschitz interface, hence
+$\gamma_Du_1=\gamma_Du_2$.  Applying the two weak Green identities and
+subtracting the global weak equation yields
+\[
+  \pair{\gamma_{N,D_1}u_1+\gamma_{N,D_2}u_2}{\varphi}_{\Gamma}=0
+  \qquad\forall\varphi\in H^{1/2}_\beta(\Gamma),
+\]
+where an arbitrary $\varphi$ is realized by a bounded lifting supported near
+$\Gamma$.  Thus the two outward weak Neumann traces sum to zero in
+$H^{-1/2}_\beta(\Gamma)$, as claimed.
+\end{proof}
+
+Define the bounded center solution space
+\begin{equation}
+\begin{split}
+  \mathcal B^0(k,\beta):=\bigl\{u^0\in H^1_\beta(\mathcal C^0):\ &
+  u^0\text{ satisfies the center weak Helmholtz equation},\\[-0.2em]
+  &\Tr^{0,-}u^0\in\mathcal C^-_{\mathrm{out}}(k,\beta),\quad
+  \Tr^{0,+}u^0\in\mathcal C^+_{\mathrm{out}}(k,\beta)\bigr\},
+\end{split}
+\label{eq:bounded-center-space}
+\end{equation}
+where the center weak equation is tested against functions in
+$H^1_\beta(\mathcal C^0)$ with zero Dirichlet trace on both ports.  The
+coefficient $\rho$ encodes the physical transmission conditions at $\Upsilon^0$.
+
+\begin{theorem}[Bounded trace-relation reduction]
+\label{thm:bounded-reduction}
+Assume $k^2\in I_\beta$ and that the half-guide relations in
+\eqref{eq:outgoing-relation} are closed.  Restriction to the center cell defines
+a linear isomorphism
+\begin{equation}
+  \operatorname{Res}^0:\mathcal G(k,\beta)
+  \longrightarrow\mathcal B^0(k,\beta),
+  \qquad u\longmapsto u|_{\mathcal C^0}.
+  \label{eq:restriction-isomorphism}
+\end{equation}
+The inverse is obtained by choosing half-guide fields with the prescribed
+Cauchy pairs and gluing them to the center field.  In particular,
+\begin{equation}
+  \dim\mathcal G(k,\beta)=\dim\mathcal B^0(k,\beta).
+  \label{eq:bounded-multiplicity}
+\end{equation}
+\end{theorem}
+\status{adaptation of a known result.}
+\begin{proofroadmap}
+For the forward map, restrict a global guided mode to the three subdomains;
+the half-guide restrictions lie in \eqref{eq:halfguide-outgoing} and yield the two
+relation conditions.  If the center restriction vanishes, its complete Cauchy
+data vanish, and weak unique continuation gives a zero global field.
+
+Conversely, choose half-guide preimages of the two relation pairs and apply
+\Cref{lem:weak-gluing}.  Independence of the choices follows from uniqueness
+for a half-guide field with zero complete Cauchy data.  Exponential decay is
+then inherited from the half-guide spaces in the common gap.  For identical
+half-guides this reduces to the DtN reduction of
+\cite[Theorem~4.5]{Fliss2013}; the present asymmetric statement instead uses
+the two Cauchy relations and the gluing argument independently at each end.
+
+The internal audit is
+\path{research/planning/muller-cauchy/r-draft-thm.md};
+the detailed proof obligation is in
+\path{research/planning/muller-cauchy/p-proofs.md}.  If closedness
+or half-guide uniqueness fails, the weakest acceptable replacement is an
+isomorphism after quotienting the half-guide zero-Cauchy solution space.
+\end{proofroadmap}
+\begin{proof}
+We first record the uniqueness fact used below.  Under the geometry of
+\Cref{sec:functional-setting}, a global piecewise Helmholtz solution which
+vanishes on a nonempty open subset of the matrix phase vanishes everywhere.
+Indeed, the matrix region obtained by removing the mutually separated compact
+inclusions from the quasiperiodic strip is connected.  In that region the
+coefficient is constant, so interior elliptic regularity and the Helmholtz
+equation make the solution real analytic; vanishing on one open subset
+therefore implies vanishing throughout the matrix region.  On every inclusion
+boundary both the Dirichlet trace and the normal derivative consequently
+vanish.  Extending the interior field by zero across a boundary patch and
+using \Cref{lem:weak-gluing} gives a constant-coefficient Helmholtz solution
+which vanishes on one side of that patch.  Analytic continuation makes it zero
+inside the inclusion as well.  Repeating this argument proves the asserted
+uniqueness on the whole strip.  The same argument applies to a half-guide
+solution with zero complete Cauchy data after it is extended by zero across
+its finite port.
+
+\emph{Step 1: the restriction map is well defined and injective.}
+Let $u\in\Gspace$.  Testing the global weak equation with zero extensions of
+functions in $H^1_{\beta,0}(W^\pm;\Gamma^\pm)$ shows that
+$u|_{W^\pm}\in\mathcal U^\pm_{\mathrm{out}}(k,\beta)$.  The center
+restriction satisfies the center weak equation.  The converse part of
+\Cref{lem:weak-gluing}, together with the sign convention in
+\eqref{eq:halfguide-trace}, yields
+\[
+  \Tr^{0,\pm}(u|_{\mathcal C^0})
+  =\Tr^{0,\pm}(u|_{W^\pm})
+  \in\mathcal C^\pm_{\mathrm{out}}(k,\beta).
+\]
+Hence $\operatorname{Res}^0u\in\mathcal B^0(k,\beta)$.  If
+$\operatorname{Res}^0u=0$, then $u$ vanishes on the open center matrix
+region, and the uniqueness argument above gives $u=0$.  Thus
+$\operatorname{Res}^0$ is injective.
+
+\emph{Step 2: surjectivity by weak gluing.}
+Take $u^0\in\mathcal B^0(k,\beta)$.  By the definition of the two outgoing
+relations there are fields $w^\pm\in\mathcal U^\pm_{\mathrm{out}}(k,\beta)$
+such that
+\[
+  \Tr^{0,\pm}w^\pm=\Tr^{0,\pm}u^0.
+\]
+The first components give equality of the Dirichlet traces.  By
+\eqref{eq:center-trace}--\eqref{eq:halfguide-trace}, equality of the second
+components is exactly
+\[
+  \gamma_{N,\mathcal C^0}u^0+\gamma_{N,W^\pm}w^\pm=0
+  \quad\text{on }\Gamma^\pm.
+\]
+Applying \Cref{lem:weak-gluing} at both ports therefore produces a field
+\[
+  u=\begin{cases}
+    w^-&\text{in }W^-,\\
+    u^0&\text{in }\mathcal C^0,\\
+    w^+&\text{in }W^+
+  \end{cases}
+  \in H^1_\beta(B)
+\]
+which satisfies the global weak eigenvalue equation.  The closed-form
+characterization of $A(\beta)$ recorded in \Cref{prop:weak-strong} gives
+$u\in\Gspace$, and by construction $\operatorname{Res}^0u=u^0$.
+
+\emph{Step 3: independence of the half-guide preimages.}
+If $\widetilde w^\pm$ is another choice with the same complete Cauchy pair,
+then $z^\pm=w^\pm-\widetilde w^\pm$ has zero Dirichlet and center-oriented
+Neumann traces at $\Gamma^\pm$.  Extend $z^\pm$ by zero through the center.
+The gluing lemma makes this extension a global weak solution which vanishes
+on a nonempty open set; the uniqueness argument at the start of the proof
+implies $z^\pm=0$.  Hence the glued field is independent of all choices and
+defines a linear inverse of $\operatorname{Res}^0$.
+
+We have proved the isomorphism \eqref{eq:restriction-isomorphism}; equality of
+dimensions in \eqref{eq:bounded-multiplicity} follows immediately.  The
+assumed closedness of the two relations ensures that the two trace constraints
+defining $\mathcal B^0(k,\beta)$ are closed; the algebraic restriction--gluing
+argument itself uses only their defining trace-range property.
+\end{proof}
+
+\subsection{DtN charts and generalized Bloch traces}
+
+Whenever $\pi_D^\pm|_{\Coutpm}$ is bijective onto
+$H^{1/2}_\beta(\Gamma^\pm)$, define the DtN operator
+\begin{equation}
+  \Lambda^\pm(k,\beta):=
+  \pi_N^\pm\bigl(\pi_D^\pm|_{\Coutpm}\bigr)^{-1}.
+  \label{eq:DtN-definition}
+\end{equation}
+A failure of this inverse is a failure of the Dirichlet chart, not necessarily
+of the Cauchy relation.  A Robin projection gives an alternative RtR chart as
+in \cite{FlissKlindworthSchmidt2015}.
+
+We next define the translation objects used below.  Extend the coefficient of
+each half-guide periodically to a perfect two-sided strip.  Let
+$\mathscr T^\pm(k,\beta)$ be the Hilbert space of center-oriented Cauchy traces
+on $\Gamma_0^\pm$ of $H^1_{\mathrm{loc},\beta}$ solutions in that perfect
+strip, equipped with a fixed local solution norm.  Unique continuation makes
+the one-cell trace translation well defined on this solution-trace space:
+\begin{equation}
+  T^\pm(k,\beta)e:=\Tr^{0,\pm} v\big|_{\Gamma_1^\pm},
+  \label{eq:translation-operator}
+\end{equation}
+where $v$ is the half-guide solution having trace $e$ on $\Gamma_0^\pm$, and the
+trace at $\Gamma_1^\pm$ is transported back to the reference port by periodic
+identification.  Boundedness of $T^\pm$ and equivalence of the local trace norm
+with the solution norm are part of the translation-framework hypotheses.
+
+\begin{lemma}[A common essential gap excludes propagating multipliers]
+\label{lem:gap-unit-circle}
+Assume the perfect-guide Floquet transform in the transverse periodic direction
+is valid and that nonzero solution traces correspond to nonzero Bloch
+solutions.  If $k^2\in I_\beta$, then
+\begin{equation}
+  \sigma(T^\pm(k,\beta))\cap\Sone=\varnothing.
+  \label{eq:no-unit-multiplier}
+\end{equation}
+\end{lemma}
+\status{background Floquet consequence.}
+\begin{proof}
+If a unit-modulus multiplier existed, write it as
+$\lambda=e^{\ii\theta L^\pm}$ with real transverse quasimomentum $\theta$.
+The corresponding nonzero solution would satisfy the one-cell transverse
+Bloch condition and would place $k^2$ in the $\theta$-fiber spectrum of the
+perfect guide.  The Floquet direct-integral decomposition would then give
+$k^2\in\sigma(A^\pm(\beta))\subset\Sigma_{\mathrm{ess}}(\beta)$, contrary to
+\eqref{eq:strict-gap}.  This is the spectral meaning of the absence of
+propagating half-guide channels in a common essential gap.
+\end{proof}
+
+A generalized Bloch trace chain for a multiplier $\lambda\in\Complex$ is a finite
+sequence $e_0,\ldots,e_{m-1}\in\mathscr T^\pm$ satisfying
+\begin{equation}
+  (T^\pm-\lambda I)e_0=0,
+  \qquad (T^\pm-\lambda I)e_\ell=e_{\ell-1},
+  \quad 1\leq\ell<m.
+  \label{eq:Jordan-chain}
+\end{equation}
+The corresponding fields are generalized Bloch modes.  If
+$\sigma(T^\pm)\cap\Sone=\varnothing$, choose a contour $\Gamma_s$ enclosing
+precisely the multipliers with $|\lambda|<1$ and define
+\begin{equation}
+  P_s^\pm:=\frac{1}{2\pi\ii}\int_{\Gamma_s}(zI-T^\pm)^{-1}\dd z,
+  \qquad \mathscr E_s^\pm:=\ran P_s^\pm.
+  \label{eq:stable-projection}
+\end{equation}
+The subspace $\mathscr E_s^\pm$ is the stable spectral subspace.
+
+Under a Riesz-basis hypothesis, collect all stable chains in a coefficient
+Hilbert space
+\begin{equation}
+  \mathcal K_s^\pm:=
+  \ell^2\bigl(\{(j,\ell): |\lambda_j^\pm|<1,
+  0\leq\ell<m_j^\pm\}\bigr).
+  \label{eq:stable-coefficients}
+\end{equation}
+Let
+\begin{equation}
+  \mathcal E^\pm(k,\beta):\mathcal K_s^\pm
+  \longrightarrow\mathcal U^\pm_{\mathrm{out}}(k,\beta)
+  \label{eq:field-synthesis}
+\end{equation}
+be the Riesz synthesis of the associated generalized fields, and define the
+complete Cauchy-trace synthesis
+\begin{equation}
+  Q^\pm(k,\beta):=\Tr^{0,\pm}\mathcal E^\pm(k,\beta):
+  \mathcal K_s^\pm\longrightarrow\mathcal H_\Gamma^\pm.
+  \label{eq:trace-synthesis}
+\end{equation}
+
+\begin{proposition}[Cauchy relation, DtN graph, and stable traces]
+\label{prop:relation-Bloch}
+Assume the periodic half-guide and trace problem satisfy the hypotheses of the
+generalized Floquet Riesz-basis theorem in
+\cite[Theorem~2.2]{HohageSoussi2013}, and assume
+$\sigma(T^\pm)\cap\Sone=\varnothing$.  Then
+\begin{equation}
+  \mathcal C^\pm_{\mathrm{out}}(k,\beta)=\ran Q^\pm(k,\beta),
+  \label{eq:relation-stable-range}
+\end{equation}
+where the range is closed and the synthesis includes every stable Jordan
+chain.  If in addition $\pi_D^\pm|_{\Coutpm}$ is bijective, then
+\begin{equation}
+  \mathcal C^\pm_{\mathrm{out}}(k,\beta)
+  =\graph\Lambda^\pm(k,\beta).
+  \label{eq:relation-DtN-graph}
+\end{equation}
+Ordinary Bloch eigenvectors may replace the chains only when the stable part
+of $T^\pm$ is semisimple.
+\end{proposition}
+\status{known modal result with an adaptation required for the present transmission traces.}
+\begin{proofroadmap}
+First identify a unit-modulus multiplier with a real transverse Bloch
+quasimomentum.  The common essential gap excludes such a perfect-guide Bloch
+solution and provides separated stable and unstable Riesz contours.  Apply
+\cite[Theorem~2.2 and Propositions~6.1--6.2]{HohageSoussi2013} to obtain a
+Riesz basis of generalized modes and, when the trace problem is well posed, a
+Riesz basis of their traces.  The spectral-decomposition route in
+\cite[Sections~3--5]{Zhang2021} and the modal DtN construction in
+\cite{Zhang2023} provide complementary formulations.
+
+The nontrivial adaptation is to verify the coefficient, interface, and trace
+isomorphism hypotheses for the piecewise-constant transmission half-guide used
+here, including the two-component center-oriented Cauchy trace.  The graph
+identity then follows immediately from \eqref{eq:DtN-definition}.  Consult
+\path{research/planning/muller-cauchy/notes/bloch-trans.md}
+and \path{research/planning/muller-cauchy/notes/outgoing.md}.
+If a trace Riesz basis cannot be obtained, the weakest acceptable result is
+the closed-range identity \eqref{eq:relation-stable-range} with coefficients
+factored by $\ker Q^\pm$.
+\end{proofroadmap}
+\begin{proof}
+It suffices to argue for one sign, denoted by
+$\star\in\{-,+\}$, because the outward coordinate
+$t^\star=s^\star(x-X^\star)$ puts both half-guides into the same right-going
+half-strip form.
+
+We first match the hypotheses of
+\cite[Theorem~2.2 and Proposition~3.5]{HohageSoussi2013} in the order in
+which they enter the argument.
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=*]
+  \item Their scalar half-strip equation requires a positive, bounded,
+  periodic coefficient.  After rescaling $t^\star$ by $L^\star$, this is
+  precisely the periodic extension of \eqref{eq:material}; piecewise-constant
+  transmission coefficients are allowed because the cited theorem assumes
+  only an $L^\infty$ coefficient bounded away from zero.
+  \item Their lateral boundary operator may be quasiperiodic.  The present
+  $y$-quasiperiodicity is that case.  Any additional symmetry required by the
+  cited theorem at its exceptional quasiperiodic parameters is included in
+  the present proposition's explicit assumption that all of that theorem's
+  hypotheses hold.
+  \item Their outgoing solution space must be invariant under one-cell
+  translation.  Here this is part of the translation-framework hypotheses.
+  Moreover, $\sigma(T^\star)\cap\Sone=\varnothing$ removes all real-
+  quasimomentum Floquet modes, so their radiating space
+  $H^{1,+}$ reduces to the square-integrable $H^1$ solution space
+  $\mathcal U^\star_{\mathrm{out}}(k,\beta)$.
+  \item For the trace conclusion in part 2 of their theorem, the boundary
+  problem for a trace
+  $\tau=\theta_D\gamma_D+\theta_N\partial_{t^\star}$ must be well posed.
+  This is exactly the ``trace problem'' part of the hypotheses assumed in the
+  present proposition.  With the center-oriented convention,
+  $\partial_{t^\star}$ is the second component of
+  \eqref{eq:halfguide-trace}, so $\tau$ is a bounded projection of the present
+  two-component Cauchy trace.
+\end{enumerate}
+Thus the solution-space and trace-space conclusions of the cited theorem,
+and the Jordan-chain identification of its Proposition~3.5, apply without a
+change of multiplier or orientation.
+
+\emph{Step 1: identify the stable synthesis with all outgoing fields.}
+The cited Riesz-basis theorem gives constants $a,b>0$ and a synthesis
+isomorphism
+\[
+  \mathcal E^\star:\mathcal K_s^\star
+  \longrightarrow\mathcal U^\star_{\mathrm{out}}(k,\beta)
+\]
+formed from the canonical generalized Floquet chains.  The unit-circle
+exclusion implies that every mode in this $H^1$ solution space has a stable
+multiplier and that every stable chain occurs in the synthesis.  Consequently,
+using \eqref{eq:trace-synthesis} and then
+\eqref{eq:outgoing-relation},
+\[
+  \ran Q^\star
+  =\Tr^{0,\star}\ran\mathcal E^\star
+  =\Tr^{0,\star}\mathcal U^\star_{\mathrm{out}}(k,\beta)
+  =\mathcal C^\star_{\mathrm{out}}(k,\beta).
+\]
+
+\emph{Step 2: prove that the range is closed.}
+Let $\mathcal Y_\tau^\star$ be the boundary space in which the well-posed
+trace problem takes its data, and let
+\[
+  L_\tau^\star:\mathcal H_\Gamma^\star\to
+  \mathcal Y_\tau^\star,
+  \qquad L_\tau^\star(f,g)=\theta_Df+\theta_Ng.
+\]
+Part 2 of \cite[Theorem~2.2]{HohageSoussi2013} says that
+$L_\tau^\star Q^\star$ is a Riesz synthesis isomorphism.  Hence, for some
+$c_\tau>0$ and every $c\in\mathcal K_s^\star$,
+\[
+  c_\tau\lVert c\rVert_{\mathcal K_s^\star}
+  \leq\lVert L_\tau^\star Q^\star c\rVert_{\mathcal Y_\tau^\star}
+  \leq\lVert L_\tau^\star\rVert
+  \lVert Q^\star c\rVert_{\mathcal H_\Gamma^\star}.
+\]
+The trace theorem and the upper Riesz estimate for $\mathcal E^\star$ also
+give
+\[
+  \lVert Q^\star c\rVert_{\mathcal H_\Gamma^\star}
+  \leq C\lVert c\rVert_{\mathcal K_s^\star}.
+\]
+Thus $Q^\star$ is bounded below as well as bounded.  In particular it is
+injective and has closed range.  This proves all assertions in
+\eqref{eq:relation-stable-range}.
+
+\emph{Step 3: pass to the Dirichlet chart.}
+Assume now that
+$\pi_D^\star|_{\mathcal C^\star_{\mathrm{out}}}$ is bijective.  For every
+$(f,g)\in\mathcal C^\star_{\mathrm{out}}$, definition
+\eqref{eq:DtN-definition} gives
+\[
+  g=\pi_N^\star(f,g)
+   =\pi_N^\star
+    \bigl(\pi_D^\star|_{\mathcal C^\star_{\mathrm{out}}}\bigr)^{-1}f
+   =\Lambda^\star f.
+\]
+Conversely, the inverse Dirichlet projection puts
+$(f,\Lambda^\star f)$ in the relation for every
+$f\in H^{1/2}_\beta(\Gamma^\star)$.  Hence
+$\mathcal C^\star_{\mathrm{out}}=\graph\Lambda^\star$, which is
+\eqref{eq:relation-DtN-graph}.
+
+Finally, Proposition~3.5 of the cited paper identifies each root subspace with
+finite Jordan chains for one-cell translation.  If a stable Jordan block has
+size greater than one, its associated vectors are not eigenvectors and cannot
+belong to the span of ordinary eigenvectors of that block.  Ordinary Bloch
+eigenvectors can therefore replace all generalized chain vectors exactly when
+the stable restriction of $T^\star$ is semisimple.
+\end{proof}

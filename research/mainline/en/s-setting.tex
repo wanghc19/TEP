@@ -1,0 +1,575 @@
+% Full title: Functional Setting and the Guided-Mode Eigenvalue Problem
+\section{Functional Setting and the Guided-Mode Eigenvalue Problem}
+\label{sec:functional-setting}
+
+\subsection{Geometry, material coefficient, and quasiperiodic spaces}
+
+Let $d>0$ be the axial period and let
+\[
+  B:=\R\times(0,d)
+\]
+be the infinite period strip.  Choose two port locations $X^-<X^+$ and set
+\[
+  \mathcal C^0:=(X^-,X^+)\times(0,d),\qquad
+  W^-:=(-\infty,X^-)\times(0,d),\qquad
+  W^+:=(X^+,\infty)\times(0,d).
+\]
+The artificial ports are
+\[
+  \Gamma^-:=\{X^-\}\times(0,d),\qquad
+  \Gamma^+:=\{X^+\}\times(0,d).
+\]
+Write $s^-= -1$ and $s^+=1$.  If $L^\pm>0$ is the transverse period of the
+corresponding half-guide, its outwardly numbered cells and cell interfaces are
+\begin{align*}
+  \mathcal C_j^\pm
+  &:=\bigl\{(x,y)\in B:(j-1)L^\pm<s^\pm(x-X^\pm)<jL^\pm\bigr\},
+  &&j\in\N,\\
+  \Gamma_j^\pm
+  &:=\bigl\{(x,y)\in B:s^\pm(x-X^\pm)=jL^\pm\bigr\},
+  &&j\in\N_0,
+\end{align*}
+so that $\Gamma_0^\pm=\Gamma^\pm$ and
+$W^\pm=\bigcup_{j\geq1}\overline{\mathcal C_j^\pm}$ up to cell interfaces.
+
+The center cell contains one bounded inclusion
+$\Omega^0\Subset\mathcal C^0$.  A reference inclusion
+$\Omega_1^\pm\Subset\mathcal C_1^\pm$ is repeated in the corresponding half-guide,
+with
+\[
+  \Omega_j^\pm:=\Omega_1^\pm+s^\pm(j-1)L^\pm e_x,
+  \qquad e_x=(1,0).
+\]
+All inclusion boundaries are assumed to be $C^{2}$ and separated from the cell
+boundaries by a uniform positive distance.  The physical material interfaces
+are
+\[
+  \Upsilon^0:=\partial\Omega^0,\qquad
+  \Upsilon^\pm:=\bigcup_{j\geq1}\partial\Omega_j^\pm,\qquad
+  \Upsilon:=\Upsilon^0\cup\Upsilon^-\cup\Upsilon^+.
+\]
+For the scalar TM model, let $\rho=n^2$ be the squared refractive index,
+\begin{equation}
+  \rho(x,y)=
+  \begin{cases}
+    (n^0)^2,&(x,y)\in\Omega^0,\\
+    (n^\pm)^2,&(x,y)\in\Omega_j^\pm\text{ for some }j\geq1,\\
+    1,&\text{otherwise},
+  \end{cases}
+  \qquad 0<\rho_-\leq \rho\leq \rho_+<\infty.
+  \label{eq:material}
+\end{equation}
+More general positive piecewise-constant half-guide coefficients can be used without
+changing the definitions below.
+
+Fix a real Bloch quasimomentum $\beta\in[-\pi/d,\pi/d)$.  For any strip-like
+domain $D$ having the two horizontal sides $y=0$ and $y=d$, define
+\begin{equation}
+  H^1_\beta(D):=
+  \bigl\{u\in H^1(D):
+  \left.u\right|_{y=d}
+  =e^{\ii\beta d}\left.u\right|_{y=0}\bigr\},
+  \label{eq:H1beta}
+\end{equation}
+where the boundary restrictions are understood as Sobolev traces.  This is a
+closed subspace of $H^1(D)$ with the inherited norm.  The normal-derivative
+quasiperiodicity is not imposed at the form level; it follows for functions in
+the operator domain.
+
+The trace spaces on a vertical port are defined by identifying the port with
+$(0,d)$.  With
+\[
+  \beta_m:=\beta+\frac{2\pi m}{d},\qquad
+  \psi_m(y):=d^{-1/2}e^{\ii\beta_my},\qquad m\in\Z,
+\]
+set, for $s\in\R$,
+\begin{equation}
+  H^s_\beta(\Gamma):=
+  \left\{f=\sum_{m\in\Z}f_m\psi_m:
+  \sum_{m\in\Z}\langle\beta_m\rangle^{2s}|f_m|^2<\infty\right\},
+  \qquad \langle t\rangle=(1+t^2)^{1/2}.
+  \label{eq:port-Sobolev}
+\end{equation}
+Thus $H^{-1/2}_\beta(\Gamma)$ is the anti-dual of
+$H^{1/2}_\beta(\Gamma)$ under the extension of the $L^2(0,d)$ pairing.  We use
+the product Cauchy space
+\begin{equation}
+  \mathcal H_\Gamma^\pm
+  :=H^{1/2}_\beta(\Gamma^\pm)\times H^{-1/2}_\beta(\Gamma^\pm).
+  \label{eq:Cauchy-space}
+\end{equation}
+
+\subsection{Guided modes and the \texorpdfstring{$\beta$}{beta}-formulation}
+
+Fix $\beta\in[-\pi/d,\pi/d)$.  Following the formulation of
+Fliss~\cite[(2.4)]{Fliss2013}, a \emph{guided mode} at wavenumber $k>0$ is a
+nonzero field $u\in H^1(B)$ satisfying
+\begin{equation}
+  \left\{
+  \begin{aligned}
+    -\frac{1}{\rho}\Delta u&=k^2u&&\text{in }B,\\
+    \left.u\right|_{y=d}
+      &=e^{\ii\beta d}\left.u\right|_{y=0},\\
+    \left.\partial_yu\right|_{y=d}
+      &=e^{\ii\beta d}\left.\partial_yu\right|_{y=0}.
+  \end{aligned}
+  \right.
+  \label{eq:guided-mode-Fliss}
+\end{equation}
+The condition $u\in H^1(B)$ includes square-integrability in the unbounded
+$x$-direction.  Thus transverse confinement is part of the definition, while
+pointwise or exponential decay will be a consequence in a spectral gap.
+
+This paper uses the \emph{$\beta$-formulation}: $\beta$ is prescribed and the
+wavenumber $k>0$ is sought.  More precisely, the problem is
+\begin{equation}
+  \boxed{\quad
+  \text{find }k>0\text{ and }u\in D(A(\beta)),\ u\neq0,
+  \quad A(\beta)u=k^2u.\quad}
+  \tag{$E^\beta$}
+  \label{eq:beta-formulation}
+\end{equation}
+\addtocounter{equation}{1}
+Introduce the Sobolev space used in this formulation,
+\begin{equation}
+  H^1(\Delta,B):=\{u\in H^1(B):\Delta u\in L^2(B)\},
+  \label{eq:H1-Delta}
+\end{equation}
+and set
+\begin{equation}
+  A(\beta):=-\frac{1}{\rho}\Delta,
+  \qquad
+  D(A(\beta)):=\left\{u\in H^1(\Delta,B):
+  \begin{array}{l}
+    \left.u\right|_{y=d}
+      =e^{\ii\beta d}\left.u\right|_{y=0},\\[-1mm]
+    \left.\partial_yu\right|_{y=d}
+      =e^{\ii\beta d}\left.\partial_yu\right|_{y=0}
+  \end{array}\right\}.
+  \label{eq:Abeta}
+\end{equation}
+The closed-form argument of \cite[Section~3]{Fliss2013} shows that
+$A(\beta)$ is self-adjoint and nonnegative in
+\begin{equation}
+  H:=L^2(B,\rho\,\dd x\dd y),
+  \qquad \langle u,v\rangle_H:=\int_B\rho\,u\overline v\,\dd x\dd y.
+  \label{eq:weighted-Hilbert-space}
+\end{equation}
+
+\begin{definition}[Fixed-$\beta$ guided modes]
+\label{def:guided-space}
+For fixed $\beta$ and $k>0$, the eigenspace of problem
+\eqref{eq:beta-formulation} is
+\begin{equation}
+  \mathcal G(k,\beta)
+  :=\ker(A(\beta)-k^2I).
+  \label{eq:guided-space}
+\end{equation}
+Its nonzero members are precisely the guided modes in
+\eqref{eq:guided-mode-Fliss}.  Their geometric multiplicity is
+\begin{equation}
+  m_{\mathrm g}(k,\beta):=\dim\mathcal G(k,\beta).
+  \label{eq:geometric-multiplicity}
+\end{equation}
+\end{definition}
+
+\begin{proposition}[Equivalent weak and transmission formulations]
+\label{prop:weak-strong}
+Suppose $\rho$ is given by \eqref{eq:material} and all interfaces are $C^2$.
+A field $u$ belongs to $\mathcal G(k,\beta)$ if and only if
+$u\in H^1_\beta(B)$ and
+\begin{equation}
+  \int_B\nabla u\cdot\nabla\overline v\,\dd x\dd y
+  =k^2\int_B\rho\,u\overline v\,\dd x\dd y
+  \qquad\forall v\in H^1_\beta(B).
+  \label{eq:guided-weak-form}
+\end{equation}
+Every such field is locally $H^2$ away from the interfaces and satisfies
+\begin{align}
+  \Delta u+k^2\rho u&=0&&\text{in }B\setminus\Upsilon,\label{eq:strong-pde}\\
+  [u]_{\Upsilon}&=0,&[\partial_\nu u]_{\Upsilon}&=0,\label{eq:TM-jumps}\\
+  \left.u\right|_{y=d}
+    &=e^{\ii\beta d}\left.u\right|_{y=0},&
+  \left.\partial_yu\right|_{y=d}
+    &=e^{\ii\beta d}\left.\partial_yu\right|_{y=0},
+    \label{eq:strong-quasi}
+\end{align}
+where $\nu$ is either consistently chosen unit normal on each physical
+interface and $[\cdot]$ denotes the trace from the $\nu$-side minus the trace
+from the opposite side.  Conversely, a piecewise $H^2_{\mathrm{loc}}$ field
+in $H^1(B)$ satisfying \eqref{eq:strong-pde}--\eqref{eq:strong-quasi} belongs
+to $\mathcal G(k,\beta)$.
+\end{proposition}
+\status{background result.}
+\begin{proofroadmap}
+The equivalence of the operator equation and \eqref{eq:guided-weak-form}
+follows from Green's identity in the weighted space $H$.  Global
+$H^1$ regularity gives continuity of the Dirichlet trace across each smooth
+interface; integration by parts on the two material sides shows that the
+distributional interface source vanishes exactly when the two normal
+derivatives agree.  The horizontal boundary terms cancel by quasiperiodicity,
+and standard transmission regularity gives piecewise local $H^2$ regularity.
+The converse is the same calculation in reverse.  Suitable background tools
+are collected in \cite[Chapters~3--4]{McLean2000}.
+
+Relevant internal notes are
+\path{research/planning/muller-cauchy/notes/spaces.md} and
+\path{research/planning/muller-cauchy/notes/trace-glue.md}.
+The weakest acceptable form is distributional equivalence without asserting
+global piecewise $H^2$ regularity at material junctions; such junctions are
+excluded by the present smooth, separated geometry.
+\end{proofroadmap}
+\begin{proof}
+We prove first the equivalence between the operator and weak formulations and
+then recover the transmission conditions.
+
+\emph{Step 1: the operator equation implies the weak equation.}
+Let $u\in\mathcal G(k,\beta)$.  Then
+$-\Delta u=k^2\rho u$ in $L^2(B)$ and both the Dirichlet and normal traces of
+$u$ are $\beta$-quasiperiodic on the horizontal sides.  Take first
+$v\in H^1_\beta(B)$ with bounded support in the $x$-direction.  Green's
+identity on a bounded strip containing that support gives
+\[
+  \int_B\nabla u\cdot\nabla\overline v
+  =k^2\int_B\rho u\overline v.
+\]
+Indeed, there are no vertical-end terms, and the terms at $y=0$ and $y=d$
+cancel because the traces of $u$, $\partial_yu$, and $v$ carry the same
+quasiperiodic phase.  Such test functions are dense in $H^1_\beta(B)$, so
+continuity of both integrals proves \eqref{eq:guided-weak-form} for every
+$v\in H^1_\beta(B)$.
+
+\emph{Step 2: the weak equation implies the operator equation.}
+Suppose that $u\in H^1_\beta(B)$ satisfies
+\eqref{eq:guided-weak-form}.  Testing first with compactly supported smooth
+functions shows in distributions that
+\[
+  -\Delta u=k^2\rho u.
+\]
+Since $\rho u\in L^2(B)$, this gives $u\in H^1(\Delta,B)$.  Its weak normal
+traces on $y=0,d$ are therefore defined.  Applying Green's identity to a
+boundedly supported $v\in H^1_\beta(B)$ and using the distributional equation
+leaves only
+\[
+  \pair{\partial_yu|_{y=d}}{v|_{y=d}}
+  -\pair{\partial_yu|_{y=0}}{v|_{y=0}}=0.
+\]
+Because $v|_{y=d}=e^{\ii\beta d}v|_{y=0}$ and the trace at $y=0$ can be
+chosen arbitrarily in $H^{1/2}(\R)$, this identity is precisely
+\[
+  \partial_yu|_{y=d}
+  =e^{\ii\beta d}\partial_yu|_{y=0}
+  \quad\text{in }H^{-1/2}.
+\]
+The corresponding Dirichlet condition already follows from
+$u\in H^1_\beta(B)$.  Hence $u\in D(A(\beta))$ and
+$A(\beta)u=k^2u$, so $u\in\mathcal G(k,\beta)$.
+
+\emph{Step 3: transmission conditions and local regularity.}
+For a weak solution, the distributional equation found above holds with an
+$L^2_{\mathrm{loc}}$ right-hand side.  Interior elliptic regularity gives
+$u\in H^2_{\mathrm{loc}}$ in every material subdomain away from its boundary.
+Since $u$ is one global $H^1$ function, its two Dirichlet traces on every
+component of $\Upsilon$ agree.  Integrate the distributional equation by
+parts on the two sides of one interface, using a test function supported in a
+small interface neighbourhood.  The volume terms cancel by
+\eqref{eq:strong-pde}, leaving
+\[
+  \pair{[\partial_\nu u]_{\Upsilon}}{\varphi}_{\Upsilon}=0
+  \qquad\forall\varphi\in H^{1/2}(\Upsilon)
+\]
+locally on that component.  Thus both relations in
+\eqref{eq:TM-jumps} hold, while \eqref{eq:strong-quasi} was established in
+Steps 1--2.
+
+\emph{Step 4: converse from the transmission formulation.}
+Let now $u\in H^1(B)$ be piecewise $H^2_{\mathrm{loc}}$ and satisfy
+\eqref{eq:strong-pde}--\eqref{eq:strong-quasi}.  For a
+$\beta$-quasiperiodic test function with bounded $x$-support, integrate by
+parts in the finitely many material pieces meeting its support.  The
+Dirichlet traces define a global $H^1$ field, the interface terms cancel by
+$[\partial_\nu u]_{\Upsilon}=0$, and the two horizontal terms cancel by
+\eqref{eq:strong-quasi}.  This gives \eqref{eq:guided-weak-form}; density
+extends it to all of $H^1_\beta(B)$.  The same calculation shows that the
+piecewise Laplacians have no interface distribution, hence
+$\Delta u=-k^2\rho u\in L^2(B)$.  Therefore $u\in D(A(\beta))$ and
+$A(\beta)u=k^2u$, which completes the converse and the proof.
+\end{proof}
+
+\begin{remark}[TE polarization]
+The draft develops only the TM model.  A scalar TE reduction has a
+divergence-form principal part, for example
+$-\nabla\cdot(\rho^{-1}\nabla u)=k^2u$, and continuity of the weighted normal
+flux $\rho^{-1}\partial_\nu u$ replaces \eqref{eq:TM-jumps}.  This changes the form,
+the conormal trace, and the integral-equation weights, so it is not treated as
+a notational substitution here.
+\end{remark}
+
+\subsection{Essential spectrum, common gaps, and scan intervals}
+
+For each $\star\in\{-,+\}$, extend the coefficient in $W^\star$
+periodically in the $x$-direction to the whole strip $B$, and denote the
+extension by $\rho^\star$.  The corresponding full periodic operator is
+\begin{equation}
+  A^\star(\beta):=-\frac{1}{\rho^\star}\Delta,\qquad
+  D(A^\star(\beta)):=D(A(\beta)),
+  \label{eq:background-operators}
+\end{equation}
+acting in $H^\star:=L^2(B,\rho^\star\,\dd x\dd y)$.  Thus
+$A^\star(\beta)$ is the full periodic extension of the $\star$ half-guide,
+not a half-guide operator with an artificial boundary condition at its port.
+
+On the first cell $\mathcal C_1^\star$, introduce the outward cell coordinate
+(with $X^\star=X^-$ for $\star=-$ and $X^\star=X^+$ for $\star=+$)
+\[
+  t^\star:=s^\star(x-X^\star)\in(0,L^\star),
+  \qquad \partial_{t^\star}=s^\star\partial_x,
+\]
+so that $t^\star=0$ on $\Gamma_0^\star$ and $t^\star=L^\star$ on
+$\Gamma_1^\star$.  For
+\[
+  \theta\in\mathbb B^\star
+  :=\left[-\frac{\pi}{L^\star},\frac{\pi}{L^\star}\right),
+\]
+define the Floquet fiber in
+$L^2(\mathcal C_1^\star,\rho^\star\,\dd x\dd y)$ by
+\[
+\begin{aligned}
+  A^\star(\beta,\theta)u
+  &:=-\frac{1}{\rho^\star}\Delta u,\\
+  D(A^\star(\beta,\theta))
+  :=\Bigl\{u\in H^1(\Delta,\mathcal C_1^\star):{}&
+  \left.u\right|_{\Gamma_1^\star}
+    =e^{\ii\theta L^\star}\left.u\right|_{\Gamma_0^\star},\\
+  &\left.\partial_{t^\star}u\right|_{\Gamma_1^\star}
+    =e^{\ii\theta L^\star}
+      \left.\partial_{t^\star}u\right|_{\Gamma_0^\star},\\
+  &\left.u\right|_{y=d}
+    =e^{\ii\beta d}\left.u\right|_{y=0},\\
+  &\left.\partial_yu\right|_{y=d}
+    =e^{\ii\beta d}\left.\partial_yu\right|_{y=0}
+  \Bigr\}.
+\end{aligned}
+\]
+Here
+$H^1(\Delta,\mathcal C_1^\star)
+:=\{u\in H^1(\mathcal C_1^\star):\Delta u\in
+L^2(\mathcal C_1^\star)\}$.  The value equalities are understood in
+$H^{1/2}$ and the derivative equalities in the corresponding weak
+$H^{-1/2}$ trace spaces.  Each fiber is self-adjoint and has compact
+resolvent.  Denote its eigenvalues, repeated with multiplicity, by
+$\lambda_n^\star(\beta,\theta)$, $n\geq1$.
+
+Fliss~\cite[Proposition~3.1, especially equations~(3.3)--(3.4)]{Fliss2013}
+gives the Floquet--Bloch band representation and continuity of the band
+functions for this scalar periodic setting.  Applied separately to the two
+periodic extensions, it gives
+\begin{equation}
+  \Sigma_\star(\beta)
+  :=\sigma(A^\star(\beta))
+  =\sigma_{\mathrm{ess}}(A^\star(\beta))
+  =\bigcup_{n\geq1}
+    \bigl\{\lambda_n^\star(\beta,\theta):
+    \theta\in\mathbb B^\star\bigr\},
+  \qquad \star\in\{-,+\}.
+  \label{eq:background-bands}
+\end{equation}
+Fliss uses $\omega^2$ as the spectral parameter; in the present notation the
+same parameter is $\lambda=k^2$.  The two spectra in
+\eqref{eq:background-bands} must be computed independently when the periods,
+cells, or material coefficients differ.
+
+Write the nonempty bounded components of the individual positive-axis gaps as
+\[
+  G_m^-(\beta)
+  :=\bigl(a_m^-(\beta),b_m^-(\beta)\bigr),
+  \qquad
+  G_n^+(\beta)
+  :=\bigl(a_n^+(\beta),b_n^+(\beta)\bigr).
+\]
+Their common gaps are the nonempty intersections
+\begin{equation}
+\begin{aligned}
+  G_{mn}(\beta)
+  &:=G_m^-(\beta)\cap G_n^+(\beta)\\
+  &=\left(
+    \max\{a_m^-(\beta),a_n^+(\beta)\},
+    \min\{b_m^-(\beta),b_n^+(\beta)\}
+    \right),
+  \label{eq:common-gap-intersection}
+\end{aligned}
+\end{equation}
+which exist precisely when
+\[
+  \max\{a_m^-(\beta),a_n^+(\beta)\}
+  <\min\{b_m^-(\beta),b_n^+(\beta)\}.
+\]
+Enumerate all such intervals as
+$G_j(\beta)=(a_j(\beta),b_j(\beta))$,
+$1\leq j\leq N(\beta)$, and assume below that $N(\beta)\geq1$.
+
+For comparison, De~Nittis et al.~
+\cite[Proposition~3.10 and Lemma~3.12]{DeNittisEtAl2021} prove
+$\sigma_{\mathrm{ess}}(M)=\sigma(M_\ell)\cup\sigma(M_r)$
+for a one-dimensional first-order Maxwell operator with two different
+asymptotically periodic matrix weights.  Their Weyl essential spectrum is
+characterized there by Zhislin sequences.  This is a structural precedent for
+a two-ended periodic junction, but it does not itself prove the corresponding
+statement for the present two-dimensional scalar second-order strip operator.
+The proof in \Cref{app:essential-spectrum} adapts their localization mechanism
+to the present strip and then uses the separate Floquet--Bloch descriptions
+\eqref{eq:background-bands}.
+
+\begin{theorem}[Essential spectrum for two different periodic half-guides]
+\label{thm:two-ended-essential-spectrum}
+\label{prop:asymmetric-essential-spectrum}
+Under the geometry and coefficient assumptions of \eqref{eq:material}, the
+Weyl essential spectrum of the junction operator is
+\begin{equation}
+  \sigma_{\mathrm{ess}}(A(\beta))
+  =\Sigma_{\mathrm{ess}}(\beta)
+  :=\Sigma_-(\beta)\cup\Sigma_+(\beta).
+  \label{eq:projected-spectrum}
+\end{equation}
+In particular, no equality between the two periods or the two periodic
+coefficients is required.
+\end{theorem}
+
+The detailed proof, including the local-compactness, Zhislin-sequence, and
+one-sided periodic Weyl-sequence lemmas, is given in
+\Cref{app:essential-spectrum}.
+
+\begin{corollary}[Admissible scan intervals for fixed $\beta$]
+\label{cor:admissible-scan-intervals}
+\label{prop:admissible-scan-intervals}
+If $k^2$ is an isolated $L^2$ eigenvalue of $A(\beta)$ lying outside this
+essential spectrum, then
+\[
+  k^2\notin\Sigma_-(\beta)\cup\Sigma_+(\beta).
+\]
+Consequently, the candidate real-frequency scan set for ordinary discrete
+gap modes is
+\begin{equation}
+  \mathcal K(\beta)
+  :=\left\{k>0:
+  k^2\notin\Sigma_-(\beta)\cup\Sigma_+(\beta)\right\}
+  =\bigcup_{j=1}^{N(\beta)}
+    \bigl(\sqrt{a_j(\beta)},\sqrt{b_j(\beta)}\bigr).
+  \label{eq:admissible-k-scan}
+\end{equation}
+Equivalently, $k^2$ must lie in a common gap of the two full periodic
+half-guide extensions.  This is a necessary scan condition and does not
+assert that any particular common gap contains an eigenvalue.
+\end{corollary}
+\begin{proof}
+By \Cref{thm:two-ended-essential-spectrum}, every isolated eigenvalue outside
+the essential spectrum is excluded from both periodic spectra.  On the
+positive spectral axis,
+\[
+  \bigl((0,\infty)\setminus\Sigma_-(\beta)\bigr)
+  \cap
+  \bigl((0,\infty)\setminus\Sigma_+(\beta)\bigr)
+  =(0,\infty)\setminus
+  \bigl(\Sigma_-(\beta)\cup\Sigma_+(\beta)\bigr),
+\]
+so the admissible spectral-parameter intervals are intersections of left and
+right gaps, not their union.  For the pair $(m,n)$,
+\eqref{eq:common-gap-intersection} and $\lambda=k^2$ give
+\[
+  k\in\left(
+  \sqrt{\max\{a_m^-(\beta),a_n^+(\beta)\}},
+  \sqrt{\min\{b_m^-(\beta),b_n^+(\beta)\}}
+  \right),
+\]
+provided the strict endpoint inequality above holds.
+\end{proof}
+
+\begin{remark}[Numerical consequence]
+For each fixed $\beta$, the practical scan proceeds as follows:
+\begin{enumerate}[leftmargin=*]
+  \item solve the left-cell Bloch problems while scanning
+  $\theta\in\mathbb B^-$ and assemble $\Sigma_-(\beta)$;
+  \item independently solve the right-cell Bloch problems while scanning
+  $\theta\in\mathbb B^+$ and assemble $\Sigma_+(\beta)$;
+  \item construct the two individual families of gaps;
+  \item intersect the left and right gaps by
+  \eqref{eq:common-gap-intersection};
+  \item take square roots of the resulting $k^2$ intervals; and
+  \item run the transmission-eigenvalue or smallest-singular-value scan only
+  on those candidate $k$ intervals.
+\end{enumerate}
+The two periods $L^-$ and $L^+$, unit cells, and material coefficients may
+all differ, so the two Bloch calculations cannot in general be reused.
+The center defect can generate ordinary discrete $L^2$ localized modes only
+at candidate points in these common gaps, but no existence in any candidate
+interval is guaranteed.
+\end{remark}
+
+\begin{remark}[Embedded and threshold phenomena]
+The scan set \eqref{eq:admissible-k-scan} targets ordinary discrete $L^2$
+eigenvalues outside the essential spectrum, namely gap modes.  It does not
+cover embedded eigenvalues, bound states in the continuum, threshold
+eigenvalues, or band-edge resonances.  Such objects, if present, may satisfy
+$k^2\in\Sigma_-(\beta)\cup\Sigma_+(\beta)$ and require a separate analysis.
+Thus all isolated eigenvalues outside the essential spectrum must lie in the
+common gaps; the statement is not a classification of every possible
+eigenvalue.
+\end{remark}
+
+The former detailed coupled/decoupled resolvent argument, including the closed
+forms, common resolvent point, Weyl theorem, and compactness route, has been
+moved to
+\path{archive/essential_spectrum_resolvent_argument.tex}.  It is retained
+there as a technical proof attempt and is not included in this document.
+
+\begin{proposition}[Discrete spectrum in a common gap]
+\label{prop:gap-discrete-spectrum}
+For every $j$ the set $\sigma(A(\beta))\cap G_j(\beta)$ consists only of isolated
+eigenvalues of finite multiplicity.  Such eigenvalues can accumulate only at
+$a_j(\beta)$ or $b_j(\beta)$.
+\end{proposition}
+\begin{proof}
+By \Cref{thm:two-ended-essential-spectrum}, the interval $G_j(\beta)$ is
+disjoint from the essential spectrum of the self-adjoint operator
+$A(\beta)$.  Standard self-adjoint spectral theory,
+used in the identical-background setting in
+Fliss~\cite[Proposition~3.3]{Fliss2013}, therefore gives the claim.
+\end{proof}
+
+For the uniform estimates used in later sections, choose one common gap
+$G_{j_*}(\beta)$ and a relatively compact open window
+\begin{equation}
+  I_\beta=(\lambda_-,\lambda_+),\qquad
+  \overline{I_\beta}\subset G_{j_*}(\beta),\qquad
+  \overline{I_\beta}\cap\Sigma_{\mathrm{ess}}(\beta)=\varnothing.
+  \label{eq:strict-gap}
+\end{equation}
+The eigenproblem \eqref{eq:beta-formulation} itself is defined for every
+$k>0$; the restriction $k^2\in I_\beta$ is imposed only in the later
+Cauchy-relation analysis.  It guarantees simultaneously that any spectral
+point is a discrete guided eigenvalue, that neither half-guide has a
+propagating Bloch channel, and that the stable/unstable splitting is uniformly
+separated.  To study an entire gap, one may cover it by such windows and treat
+the band edges separately.
+
+\begin{proposition}[Localization with two different half-guides]
+\label{prop:asymmetric-localization}
+If $k^2\in G_j(\beta)$ is an eigenvalue of $A(\beta)$, every associated
+eigenfunction decays exponentially in both transverse directions.
+\end{proposition}
+\begin{proof}
+The weighted-resolvent argument of
+\cite[Proposition~3.3 and Theorem~3.5]{Fliss2013} applies separately at the two
+ends.  More explicitly, the positive distances from $k^2$ to
+$\sigma(A^-(\beta))$ and $\sigma(A^+(\beta))$ allow small exponential
+conjugations $e^{-\alpha_-x}$ on $W^-$ and $e^{\alpha_+x}$ on $W^+$ while
+keeping the two background resolvents bounded.  After a cutoff near each
+port, the eigenvalue equation has a compactly supported right-hand side, so
+these conjugated resolvent estimates give exponential weighted $H^1$ bounds
+on the corresponding half-guides.  Joining the two estimates across the
+bounded center cell proves two-sided exponential decay.  Pointwise decay then
+follows from local elliptic regularity.
+\end{proof}
+
+Thus the informal condition $u(x,y)\to0$ as $x\to\pm\infty$ is a consequence
+for gap eigenfunctions, not the functional definition of a guided mode.

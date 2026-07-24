@@ -1,0 +1,480 @@
+% Full title: Chinese Translation of Functional Setting and the Guided-Mode Eigenvalue Problem
+\section{函数设置与导模特征值问题}
+\label{sec:functional-setting}
+
+\subsection{几何、材料系数与准周期空间}
+
+设 $d>0$ 为轴向周期，并令
+\[
+  B:=\R\times(0,d)
+\]
+为无限周期条带。选取两个端口位置 $X^-<X^+$，并令
+\[
+  \mathcal C^0:=(X^-,X^+)\times(0,d),\qquad
+  W^-:=(-\infty,X^-)\times(0,d),\qquad
+  W^+:=(X^+,\infty)\times(0,d).
+\]
+人工端口为
+\[
+  \Gamma^-:=\{X^-\}\times(0,d),\qquad
+  \Gamma^+:=\{X^+\}\times(0,d).
+\]
+记 $s^-=-1$、$s^+=1$。若 $L^\pm>0$ 是相应半波导的横向周期，则从端口向外编号的胞元及胞元界面为
+\begin{align*}
+  \mathcal C_j^\pm
+  &:=\bigl\{(x,y)\in B:(j-1)L^\pm<s^\pm(x-X^\pm)<jL^\pm\bigr\},
+  &&j\in\N,\\
+  \Gamma_j^\pm
+  &:=\bigl\{(x,y)\in B:s^\pm(x-X^\pm)=jL^\pm\bigr\},
+  &&j\in\N_0,
+\end{align*}
+从而 $\Gamma_0^\pm=\Gamma^\pm$，并且除胞元界面外，$W^\pm=\bigcup_{j\geq1}\overline{\mathcal C_j^\pm}$。
+
+中心胞元含有一个有界夹杂 $\Omega^0\Subset\mathcal C^0$。相应半波导中的参考夹杂 $\Omega_1^\pm\Subset\mathcal C_1^\pm$ 周期重复，即
+\[
+  \Omega_j^\pm:=\Omega_1^\pm+s^\pm(j-1)L^\pm e_x,
+  \qquad e_x=(1,0).
+\]
+假设所有夹杂边界均为 $C^2$，且它们与胞元边界之间有一致的正距离。物理材料界面为
+\[
+  \Upsilon^0:=\partial\Omega^0,\qquad
+  \Upsilon^\pm:=\bigcup_{j\geq1}\partial\Omega_j^\pm,\qquad
+  \Upsilon:=\Upsilon^0\cup\Upsilon^-\cup\Upsilon^+.
+\]
+对于标量 TM 模型，令 $\rho=n^2$ 为折射率平方：
+\begin{equation}
+  \rho(x,y)=
+  \begin{cases}
+    (n^0)^2,&(x,y)\in\Omega^0,\\
+    (n^\pm)^2,&(x,y)\in\Omega_j^\pm\text{，其中某个 }j\geq1,\\
+    1,&\text{其他情形},
+  \end{cases}
+  \qquad 0<\rho_-\leq \rho\leq \rho_+<\infty.
+  \label{eq:material}
+\end{equation}
+下文定义不变地适用于更一般的正分片常数半波导系数。
+
+固定实 Bloch 准动量 $\beta\in[-\pi/d,\pi/d)$。对于任意具有两条水平边 $y=0$ 和 $y=d$ 的条带状区域 $D$，定义
+\begin{equation}
+  H^1_\beta(D):=
+  \bigl\{u\in H^1(D):
+  \left.u\right|_{y=d}
+  =e^{\ii\beta d}\left.u\right|_{y=0}\bigr\},
+  \label{eq:H1beta}
+\end{equation}
+其中边界限制均理解为 Sobolev 迹。这是继承 $H^1(D)$ 范数的闭子空间。在型层面不施加法向导数的准周期性；对于算子定义域中的函数，该性质自动成立。
+
+把竖直端口与 $(0,d)$ 等同，由此定义端口迹空间。令
+\[
+  \beta_m:=\beta+\frac{2\pi m}{d},\qquad
+  \psi_m(y):=d^{-1/2}e^{\ii\beta_my},\qquad m\in\Z,
+\]
+则对 $s\in\R$ 定义
+\begin{equation}
+  H^s_\beta(\Gamma):=
+  \left\{f=\sum_{m\in\Z}f_m\psi_m:
+  \sum_{m\in\Z}\langle\beta_m\rangle^{2s}|f_m|^2<\infty\right\},
+  \qquad \langle t\rangle=(1+t^2)^{1/2}.
+  \label{eq:port-Sobolev}
+\end{equation}
+因此，在 $L^2(0,d)$ 配对的延拓意义下，$H^{-1/2}_\beta(\Gamma)$ 是 $H^{1/2}_\beta(\Gamma)$ 的反对偶空间。我们使用乘积 Cauchy 空间
+\begin{equation}
+  \mathcal H(\Gamma^\pm)
+  :=H^{1/2}_\beta(\Gamma^\pm)\times H^{-1/2}_\beta(\Gamma^\pm).
+  \label{eq:Cauchy-space}
+\end{equation}
+
+\subsection{导模与 \texorpdfstring{$\beta$}{beta}-表述}
+
+固定 $\beta\in[-\pi/d,\pi/d)$。按照 Fliss~\cite[(2.4)]{Fliss2013} 的表述，波数 $k>0$ 处的一个\emph{导模}是满足下列问题的非零场 $u\in H^1(B)$：
+\begin{equation}
+  \left\{
+  \begin{aligned}
+    -\frac{1}{\rho}\Delta u&=k^2u&&\text{于 }B,\\
+    \left.u\right|_{y=d}
+      &=e^{\ii\beta d}\left.u\right|_{y=0},\\
+    \left.\partial_yu\right|_{y=d}
+      &=e^{\ii\beta d}\left.\partial_yu\right|_{y=0}.
+  \end{aligned}
+  \right.
+  \label{eq:guided-mode-Fliss}
+\end{equation}
+条件 $u\in H^1(B)$ 已经包含无界 $x$ 方向上的平方可积性。因此，横向约束属于导模的定义，而逐点衰减或指数衰减则是在谱隙中推出的结论。
+
+本文采用\emph{$\beta$-表述}：给定 $\beta$，求波数 $k>0$。准确地说，本文所求的问题为
+\begin{equation}
+  \boxed{\quad
+  \text{求 }k>0\text{ 及 }u\in D(A(\beta)),\ u\neq0,
+  \quad A(\beta)u=k^2u.\quad}
+  \tag{$E^\beta$}
+  \label{eq:beta-formulation}
+\end{equation}
+\addtocounter{equation}{1}
+引入该表述所使用的 Sobolev 空间
+\begin{equation}
+  H^1(\Delta,B):=\{u\in H^1(B):\Delta u\in L^2(B)\},
+  \label{eq:H1-Delta}
+\end{equation}
+并令
+\begin{equation}
+  A(\beta):=-\frac{1}{\rho}\Delta,
+  \qquad
+  D(A(\beta)):=\left\{u\in H^1(\Delta,B):
+  \begin{array}{l}
+    \left.u\right|_{y=d}
+      =e^{\ii\beta d}\left.u\right|_{y=0},\\[-1mm]
+    \left.\partial_yu\right|_{y=d}
+      =e^{\ii\beta d}\left.\partial_yu\right|_{y=0}
+  \end{array}\right\}.
+  \label{eq:Abeta}
+\end{equation}
+根据 \cite[Section~3]{Fliss2013} 中的闭型论证，算子 $A(\beta)$ 在
+\begin{equation}
+  H:=L^2(B,\rho\,\dd x\dd y),
+  \qquad \langle u,v\rangle_H:=\int_B\rho\,u\overline v\,\dd x\dd y
+  \label{eq:weighted-Hilbert-space}
+\end{equation}
+中自伴且非负。
+
+\begin{definition}[固定 $\beta$ 的导模]
+\label{def:guided-space}
+对于固定的 $\beta$ 和 $k>0$，问题 \eqref{eq:beta-formulation} 的特征空间为
+\begin{equation}
+  \mathcal G(k,\beta)
+  :=\ker(A(\beta)-k^2I).
+  \label{eq:guided-space}
+\end{equation}
+其中的非零元素恰为 \eqref{eq:guided-mode-Fliss} 所定义的导模，其几何重数为
+\begin{equation}
+  m_{\mathrm g}(k,\beta):=\dim\mathcal G(k,\beta).
+  \label{eq:geometric-multiplicity}
+\end{equation}
+\end{definition}
+
+\begin{proposition}[等价的弱形式与传输形式]
+\label{prop:weak-strong}
+设 $\rho$ 由 \eqref{eq:material} 给出，且所有界面均为 $C^2$。场 $u$ 属于 $\mathcal G(k,\beta)$，当且仅当 $u\in H^1_\beta(B)$ 且
+\begin{equation}
+  \int_B\nabla u\cdot\nabla\overline v\,\dd x\dd y
+  =k^2\int_B\rho\,u\overline v\,\dd x\dd y
+  \qquad\forall v\in H^1_\beta(B).
+  \label{eq:guided-weak-form}
+\end{equation}
+每个这样的场在远离界面处局部属于 $H^2$，并满足
+\begin{align}
+  \Delta u+k^2\rho u&=0&&\text{于 }B\setminus\Upsilon,\label{eq:strong-pde}\\
+  [u]_{\Upsilon}&=0,&[\partial_\nu u]_{\Upsilon}&=0,\label{eq:TM-jumps}\\
+  \left.u\right|_{y=d}
+    &=e^{\ii\beta d}\left.u\right|_{y=0},&
+  \left.\partial_yu\right|_{y=d}
+    &=e^{\ii\beta d}\left.\partial_yu\right|_{y=0},
+    \label{eq:strong-quasi}
+\end{align}
+其中，在每个物理界面上可任选一个方向一致的单位法向量 $\nu$，$[\cdot]$ 表示从 $\nu$ 一侧取得的迹减去另一侧的迹。反之，若一个分片 $H^2_{\mathrm{loc}}$ 场属于 $H^1(B)$ 且满足 \eqref{eq:strong-pde}--\eqref{eq:strong-quasi}，则它属于 $\mathcal G(k,\beta)$。
+\end{proposition}
+\status{背景结果。}
+\begin{proofroadmap}
+算子方程与 \eqref{eq:guided-weak-form} 的等价性来自加权空间 $H$ 中的 Green 恒等式。全局 $H^1$ 正则性给出每个光滑界面两侧 Dirichlet 迹的连续性；在两种材料一侧分别分部积分，可见分布界面源恰在两侧法向导数相等时消失。水平边界项由准周期性抵消，标准传输正则性给出分片局部 $H^2$ 正则性。反向结论由同一计算倒推得到。适用的背景工具汇总于 \cite[Chapters~3--4]{McLean2000}。
+
+相关内部笔记为
+\path{research/planning/muller-cauchy/notes/spaces.md} 和
+\path{research/planning/muller-cauchy/notes/trace-glue.md}。
+最低可接受结论是在不主张材料交汇处全局分片 $H^2$ 正则性的前提下，证明分布意义的等价性；当前的光滑、分离几何已经排除了此类交汇。
+\end{proofroadmap}
+\begin{proof}
+先证明算子形式与弱形式等价，再恢复传输条件。
+
+\emph{步骤 1：算子方程推出弱方程。}
+设 $u\in\mathcal G(k,\beta)$。于是
+$-\Delta u=k^2\rho u$ 在 $L^2(B)$ 中成立，并且 $u$ 的 Dirichlet 迹与
+法向导数迹在两条水平边界上都满足 $\beta$-准周期条件。先取沿 $x$ 方向具有
+有界支集的 $v\in H^1_\beta(B)$。在包含该支集的有界条带上应用 Green 恒等式，
+得到
+\[
+  \int_B\nabla u\cdot\nabla\overline v
+  =k^2\int_B\rho u\overline v.
+\]
+事实上，竖直截断边界上没有边界项；$y=0$ 与 $y=d$ 上的边界项则由于
+$u$、$\partial_yu$ 和 $v$ 的迹带有相同的准周期相位而相互抵消。上述测试函数
+在 $H^1_\beta(B)$ 中稠密，因此由两侧积分的连续性，
+\eqref{eq:guided-weak-form} 对每个 $v\in H^1_\beta(B)$ 都成立。
+
+\emph{步骤 2：弱方程推出算子方程。}
+反之，设 $u\in H^1_\beta(B)$ 满足 \eqref{eq:guided-weak-form}。先取紧支集光滑
+测试函数，便在分布意义下得到
+\[
+  -\Delta u=k^2\rho u.
+\]
+由于 $\rho u\in L^2(B)$，故 $u\in H^1(\Delta,B)$，从而 $y=0,d$ 上的弱
+法向导数迹均有定义。对沿 $x$ 方向具有有界支集的
+$v\in H^1_\beta(B)$ 应用 Green 恒等式，并使用上述分布方程，只剩
+\[
+  \pair{\partial_yu|_{y=d}}{v|_{y=d}}
+  -\pair{\partial_yu|_{y=0}}{v|_{y=0}}=0.
+\]
+由于 $v|_{y=d}=e^{\ii\beta d}v|_{y=0}$，且 $y=0$ 上的迹可在
+$H^{1/2}(\R)$ 中任意选取，上式恰好给出
+\[
+  \partial_yu|_{y=d}
+  =e^{\ii\beta d}\partial_yu|_{y=0}
+  \quad\text{于 }H^{-1/2}.
+\]
+相应的 Dirichlet 条件已经包含在 $u\in H^1_\beta(B)$ 中。因此
+$u\in D(A(\beta))$ 且 $A(\beta)u=k^2u$，即
+$u\in\mathcal G(k,\beta)$。
+
+\emph{步骤 3：传输条件与局部正则性。}
+对一个弱解，上述分布方程的右端局部属于 $L^2$。内部椭圆正则性表明，在
+每个材料子区域中远离其边界处有 $u\in H^2_{\mathrm{loc}}$。又因 $u$ 是一个
+全局 $H^1$ 函数，所以它在 $\Upsilon$ 每个连通分支两侧的 Dirichlet 迹相等。
+在某个界面的小邻域内取测试函数，并在界面两侧分别对分布方程分部积分。
+体积分由 \eqref{eq:strong-pde} 抵消，只留下
+\[
+  \pair{[\partial_\nu u]_{\Upsilon}}{\varphi}_{\Upsilon}=0
+  \qquad\forall\varphi\in H^{1/2}(\Upsilon)
+\]
+在该界面分支上局部成立。因此 \eqref{eq:TM-jumps} 中的两个关系均成立；
+\eqref{eq:strong-quasi} 已由步骤 1--2 得到。
+
+\emph{步骤 4：由传输形式反推。}
+现设 $u\in H^1(B)$ 分片属于 $H^2_{\mathrm{loc}}$，并满足
+\eqref{eq:strong-pde}--\eqref{eq:strong-quasi}。对沿 $x$ 方向具有有界支集的
+$\beta$-准周期测试函数，在与其支集相交的有限多个材料区域中分别分部积分。
+Dirichlet 迹给出一个全局 $H^1$ 场；界面项由
+$[\partial_\nu u]_{\Upsilon}=0$ 抵消；两条水平边界上的项由
+\eqref{eq:strong-quasi} 抵消。于是得到 \eqref{eq:guided-weak-form}，再由稠密性
+将其推广到整个 $H^1_\beta(B)$。同一计算还表明分片 Laplace 算子不产生界面
+分布，故
+$\Delta u=-k^2\rho u\in L^2(B)$。因此 $u\in D(A(\beta))$ 且
+$A(\beta)u=k^2u$，反向结论得证。
+\end{proof}
+
+\begin{remark}[TE 极化]
+本文仅研究 TM 模型。标量 TE 约化的主部为散度形式，例如 $-\nabla\cdot(\rho^{-1}\nabla u)=k^2u$；此时 \eqref{eq:TM-jumps} 应由加权法向通量 $\rho^{-1}\partial_\nu u$ 的连续性取代。这会改变型、余法向迹和积分方程权重，因此不能在本文中把它仅视为记号替换。
+\end{remark}
+
+\subsection{本质谱、公共带隙与扫描区间}
+
+对每个 $\star\in\{-,+\}$，把 $W^\star$ 中的系数沿 $x$ 方向周期延拓到整个
+条带 $B$，并将该延拓记为 $\rho^\star$。相应的完整周期算子为
+\begin{equation}
+  A^\star(\beta):=-\frac{1}{\rho^\star}\Delta,\qquad
+  D(A^\star(\beta)):=D(A(\beta)),
+  \label{eq:background-operators}
+\end{equation}
+它作用于 $H^\star:=L^2(B,\rho^\star\,\dd x\dd y)$。因此，
+$A^\star(\beta)$ 是 $\star$ 半波导在整个 $x$ 方向上的周期延拓算子，而不是在端口
+施加了人工边界条件的半波导算子。
+
+在第一胞元 $\mathcal C_1^\star$ 上引入向外的胞元坐标；其中 $\star=-$ 时
+$X^\star=X^-$，$\star=+$ 时 $X^\star=X^+$：
+\[
+  t^\star:=s^\star(x-X^\star)\in(0,L^\star),
+  \qquad \partial_{t^\star}=s^\star\partial_x.
+\]
+于是 $\Gamma_0^\star$ 上 $t^\star=0$，而 $\Gamma_1^\star$ 上
+$t^\star=L^\star$。对于
+\[
+  \theta\in\mathbb B^\star
+  :=\left[-\frac{\pi}{L^\star},\frac{\pi}{L^\star}\right),
+\]
+在 $L^2(\mathcal C_1^\star,\rho^\star\,\dd x\dd y)$ 中定义 Floquet 纤维算子
+\[
+\begin{aligned}
+  A^\star(\beta,\theta)u
+  &:=-\frac{1}{\rho^\star}\Delta u,\\
+  D(A^\star(\beta,\theta))
+  :=\Bigl\{u\in H^1(\Delta,\mathcal C_1^\star):{}&
+  \left.u\right|_{\Gamma_1^\star}
+    =e^{\ii\theta L^\star}\left.u\right|_{\Gamma_0^\star},\\
+  &\left.\partial_{t^\star}u\right|_{\Gamma_1^\star}
+    =e^{\ii\theta L^\star}
+      \left.\partial_{t^\star}u\right|_{\Gamma_0^\star},\\
+  &\left.u\right|_{y=d}
+    =e^{\ii\beta d}\left.u\right|_{y=0},\\
+  &\left.\partial_yu\right|_{y=d}
+    =e^{\ii\beta d}\left.\partial_yu\right|_{y=0}
+  \Bigr\}.
+\end{aligned}
+\]
+这里
+$H^1(\Delta,\mathcal C_1^\star)
+:=\{u\in H^1(\mathcal C_1^\star):\Delta u\in
+L^2(\mathcal C_1^\star)\}$。函数值等式在 $H^{1/2}$ 中理解，导数等式在相应的
+弱 $H^{-1/2}$ 迹空间中理解。每个纤维算子自伴且具有紧预解式。将其按重数重复的
+特征值记为 $\lambda_n^\star(\beta,\theta)$，$n\geq1$。
+
+Fliss~\cite[Proposition~3.1, especially equations~(3.3)--(3.4)]{Fliss2013}
+给出了这一标量周期问题的 Floquet--Bloch 能带表示以及能带函数的连续性。分别
+用于左右两个周期延拓，可得
+\begin{equation}
+  \Sigma_\star(\beta)
+  :=\sigma(A^\star(\beta))
+  =\sigma_{\mathrm{ess}}(A^\star(\beta))
+  =\bigcup_{n\geq1}
+    \bigl\{\lambda_n^\star(\beta,\theta):
+    \theta\in\mathbb B^\star\bigr\},
+  \qquad \star\in\{-,+\}.
+  \label{eq:background-bands}
+\end{equation}
+Fliss 采用 $\omega^2$ 作为谱参数；在本文记号中同一谱参数为
+$\lambda=k^2$。若左右周期、胞元或材料系数不同，则必须分别计算
+\eqref{eq:background-bands} 中的两个谱。
+
+把左右正谱轴上各自带隙的非空有界连通分支写为
+\[
+  G_m^-(\beta)
+  :=\bigl(a_m^-(\beta),b_m^-(\beta)\bigr),
+  \qquad
+  G_n^+(\beta)
+  :=\bigl(a_n^+(\beta),b_n^+(\beta)\bigr).
+\]
+它们的公共带隙是非空交集
+\begin{equation}
+\begin{aligned}
+  G_{mn}(\beta)
+  &:=G_m^-(\beta)\cap G_n^+(\beta)\\
+  &=\left(
+    \max\{a_m^-(\beta),a_n^+(\beta)\},
+    \min\{b_m^-(\beta),b_n^+(\beta)\}
+    \right),
+  \label{eq:common-gap-intersection}
+\end{aligned}
+\end{equation}
+其非空的充要条件为
+\[
+  \max\{a_m^-(\beta),a_n^+(\beta)\}
+  <\min\{b_m^-(\beta),b_n^+(\beta)\}.
+\]
+把所有这样的区间重新编号为
+$G_j(\beta)=(a_j(\beta),b_j(\beta))$，
+$1\leq j\leq N(\beta)$；下文假设 $N(\beta)\geq1$。
+
+作为对照，De~Nittis 等人~
+\cite[Proposition~3.10 and Lemma~3.12]{DeNittisEtAl2021}
+对左右具有不同渐近周期矩阵权重的一维一阶 Maxwell 算子证明了
+$\sigma_{\mathrm{ess}}(M)=\sigma(M_\ell)\cup\sigma(M_r)$；该文还用
+Zhislin 序列刻画其 Weyl 本质谱。这个结果为两端周期连接结构提供了谱并集公式的
+结构性依据，但它本身并不证明当前二维标量二阶条带算子的相应结论。
+\Cref{app:essential-spectrum} 把该文的局部化机制适配到当前条带，再结合左右两个
+独立的 Floquet--Bloch 刻画 \eqref{eq:background-bands} 给出证明。
+
+\begin{theorem}[两个不同周期半波导对应的本质谱]
+\label{thm:two-ended-essential-spectrum}
+\label{prop:asymmetric-essential-spectrum}
+在 \eqref{eq:material} 的几何与系数假设下，连接算子的 Weyl 本质谱为
+\begin{equation}
+  \sigma_{\mathrm{ess}}(A(\beta))
+  =\Sigma_{\mathrm{ess}}(\beta)
+  :=\Sigma_-(\beta)\cup\Sigma_+(\beta).
+  \label{eq:projected-spectrum}
+\end{equation}
+特别地，不要求左右周期相等，也不要求两个周期系数相同。
+\end{theorem}
+
+完整证明以及其中使用的局部紧性、Zhislin 序列和单侧周期 Weyl 序列引理见
+\Cref{app:essential-spectrum}。
+
+\begin{corollary}[固定 $\beta$ 时的可取扫描区间]
+\label{cor:admissible-scan-intervals}
+\label{prop:admissible-scan-intervals}
+若 $k^2$ 是 $A(\beta)$ 位于该本质谱之外的孤立 $L^2$ 特征值，则
+\[
+  k^2\notin\Sigma_-(\beta)\cup\Sigma_+(\beta).
+\]
+因此，寻找通常离散带隙模时，实频率的候选扫描集合为
+\begin{equation}
+  \mathcal K(\beta)
+  :=\left\{k>0:
+  k^2\notin\Sigma_-(\beta)\cup\Sigma_+(\beta)\right\}
+  =\bigcup_{j=1}^{N(\beta)}
+    \bigl(\sqrt{a_j(\beta)},\sqrt{b_j(\beta)}\bigr).
+  \label{eq:admissible-k-scan}
+\end{equation}
+等价地，$k^2$ 必须落在两个完整周期半波导延拓算子的公共带隙中。这只是扫描的
+必要条件，并不声称任一给定公共带隙内一定存在特征值。
+\end{corollary}
+\begin{proof}
+由 \Cref{thm:two-ended-essential-spectrum}，位于本质谱之外的孤立特征值不可能
+属于任一周期谱。在正谱轴上，
+\[
+  \bigl((0,\infty)\setminus\Sigma_-(\beta)\bigr)
+  \cap
+  \bigl((0,\infty)\setminus\Sigma_+(\beta)\bigr)
+  =(0,\infty)\setminus
+  \bigl(\Sigma_-(\beta)\cup\Sigma_+(\beta)\bigr),
+\]
+所以允许的谱参数区间是左右带隙的交集，而不是并集。对于指标对 $(m,n)$，
+由 \eqref{eq:common-gap-intersection} 和 $\lambda=k^2$ 可得
+\[
+  k\in\left(
+  \sqrt{\max\{a_m^-(\beta),a_n^+(\beta)\}},
+  \sqrt{\min\{b_m^-(\beta),b_n^+(\beta)\}}
+  \right),
+\]
+条件是上面的严格端点不等式成立。
+\end{proof}
+
+\begin{remark}[数值实现结论]
+固定 $\beta$ 后，实际扫描流程如下：
+\begin{enumerate}[leftmargin=*]
+  \item 扫描 $\theta\in\mathbb B^-$ 并求解左胞元 Bloch 问题，组装
+  $\Sigma_-(\beta)$；
+  \item 独立扫描 $\theta\in\mathbb B^+$ 并求解右胞元 Bloch 问题，组装
+  $\Sigma_+(\beta)$；
+  \item 分别构造两侧的带隙族；
+  \item 按照 \eqref{eq:common-gap-intersection} 求左右带隙的交集；
+  \item 对所得 $k^2$ 区间开平方；以及
+  \item 只在这些候选 $k$ 区间内运行传输特征值或最小奇异值扫描。
+\end{enumerate}
+左右周期 $L^-$、$L^+$、单胞和材料系数均可不同，因此通常不能复用同一个 Bloch
+计算。本文带隙策略所寻找的普通离散 $L^2$ 局域模只能以这些公共带隙中的点为
+候选，但任何候选区间内都不保证存在特征值。
+\end{remark}
+
+\begin{remark}[嵌入与阈值现象]
+扫描集合 \eqref{eq:admissible-k-scan} 针对位于本质谱之外的普通离散 $L^2$
+特征值，即带隙模。它不覆盖嵌入特征值、连续谱中的束缚态、阈值特征值或带边
+共振。这些对象若存在，可能满足
+$k^2\in\Sigma_-(\beta)\cup\Sigma_+(\beta)$，需要单独分析。因此，所有位于本质谱
+之外的孤立特征值都必须落在公共带隙中；该陈述并非对所有可能特征值的分类。
+\end{remark}
+
+原有的耦合/切断预解式详细论证，包括闭型、公共预解点、Weyl 定理与紧性路线，
+已移至
+\path{archive/essential_spectrum_resolvent_argument.tex}。该文件仅作为技术性
+证明尝试保留，不会载入本文。
+
+\begin{proposition}[公共带隙中的离散谱]
+\label{prop:gap-discrete-spectrum}
+对每个 $j$，集合 $\sigma(A(\beta))\cap G_j(\beta)$ 只由有限重孤立特征值组成。这些特征值只能在
+$a_j(\beta)$ 或 $b_j(\beta)$ 处聚集。
+\end{proposition}
+\begin{proof}
+由 \Cref{thm:two-ended-essential-spectrum}，区间 $G_j(\beta)$ 与自伴算子
+$A(\beta)$ 的本质谱不交。标准自伴谱理论给出上述
+结论；Fliss~\cite[Proposition~3.3]{Fliss2013} 在左右背景相同的情形使用了同一结论。
+\end{proof}
+
+为得到后文使用的一致估计，选取一个公共带隙 $G_{j_*}(\beta)$，并在其中选取一个
+相对紧的开窗
+\begin{equation}
+  I_\beta=(\lambda_-,\lambda_+),\qquad
+  \overline{I_\beta}\subset G_{j_*}(\beta),\qquad
+  \overline{I_\beta}\cap\Sigma_{\mathrm{ess}}(\beta)=\varnothing.
+  \label{eq:strict-gap}
+\end{equation}
+特征值问题 \eqref{eq:beta-formulation} 本身对所有 $k>0$ 都有定义；限制
+$k^2\in I_\beta$ 只在后文的 Cauchy 关系分析中施加。它同时保证：任何谱点都是
+离散导模特征值；两个半波导都不存在传播 Bloch 通道；稳定/不稳定分解具有一致
+谱分离。若要研究整个带隙，可以用这样的窗口覆盖它，并单独处理能带边缘。
+
+\begin{proposition}[两个不同半波导情形下的局域化]
+\label{prop:asymmetric-localization}
+若 $k^2\in G_j(\beta)$ 是 $A(\beta)$ 的特征值，则每个相应特征函数在两个横向方向上均指数衰减。
+\end{proposition}
+\begin{proof}
+把 \cite[Proposition~3.3 and Theorem~3.5]{Fliss2013} 的加权预解式论证分别用于两个端部。更具体地说，$k^2$ 到 $\sigma(A^-(\beta))$ 和 $\sigma(A^+(\beta))$ 的距离均为正，因而可以在 $W^-$ 上采用小指数共轭 $e^{-\alpha_-x}$，在 $W^+$ 上采用 $e^{\alpha_+x}$，同时保持两个背景预解式有界。在每个端口附近作截断后，特征值方程的右端具有紧支撑；上述共轭预解式估计遂分别给出两个半波导上的指数加权 $H^1$ 界。把两端估计通过有界中心胞元拼接，即得双侧指数衰减。逐点衰减再由局部椭圆正则性推出。
+\end{proof}
+
+因此，对于带隙特征函数，非正式条件 $u(x,y)\to0$（$x\to\pm\infty$）是一个推论，而不是导模的泛函定义。

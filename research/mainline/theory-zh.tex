@@ -1,0 +1,123 @@
+% Purpose:
+%   Provide a complete Chinese translation of the continuous theory draft for
+%   guided modes in periodic line-defect waveguides.
+% Main workflow:
+%   Preserve the original theorem structure, formulas, labels, and citations
+%   while translating all explanatory prose into academic Chinese.
+% Based on:
+%   draft/theory/theory.tex.
+% Main changes:
+%   Uses Chinese document typography and consistently writes the central and
+%   positive/negative half-guide labels as superscripts.
+% Numerical goal:
+%   Serve as a Chinese theoretical reference for the continuous operator and
+%   quotient-kernel framework; this file performs no numerical computation.
+
+\documentclass[11pt,UTF8,fontset=fandol]{ctexart}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,mathrsfs}
+\usepackage{bm}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xurl}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=green!35!black,
+  urlcolor=blue!60!black]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage[backend=biber,style=alphabetic,sorting=nyt,maxbibnames=8,
+  giveninits=true]{biblatex}
+
+\addbibresource{references.bib}
+
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{conjecture}[theorem]{猜想性强化结论}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{assumption}[theorem]{假设}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{注}
+\newtheorem*{proofremark}{注}
+
+\crefname{section}{节}{节}
+\Crefname{section}{第}{第}
+\crefformat{section}{第~#2#1#3~节}
+\Crefformat{section}{第~#2#1#3~节}
+\crefname{subsection}{小节}{小节}
+\Crefname{subsection}{第}{第}
+\crefname{theorem}{定理}{定理}
+\Crefname{theorem}{定理}{定理}
+\crefname{proposition}{命题}{命题}
+\Crefname{proposition}{命题}{命题}
+\crefname{lemma}{引理}{引理}
+\Crefname{lemma}{引理}{引理}
+\crefname{definition}{定义}{定义}
+\Crefname{definition}{定义}{定义}
+\crefname{conjecture}{猜想}{猜想}
+\Crefname{conjecture}{猜想}{猜想}
+\DefineBibliographyStrings{english}{
+  bibliography={参考文献},
+  references={参考文献}}
+
+\newenvironment{proofroadmap}
+  {\par\medskip\noindent\textit{证明路线图。}%
+   \begin{list}{}{\leftmargin=1.5em\rightmargin=1.5em}%
+   \item\small}
+  {\end{list}\medskip}
+
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Sone}{\mathbb{S}^{1}}
+\newcommand{\pair}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\status}[1]{\par\smallskip\noindent\textbf{状态：#1}\par\smallskip}
+\newcommand{\Gspace}{\mathcal{G}(k,\beta)}
+\newcommand{\Etracepm}{\mathcal{E}^{\pm}(k,\beta)}
+\newcommand{\Aop}{\mathbb{A}(k,\beta)}
+\newcommand{\Nrep}{\mathcal{N}_{\mathrm{rep}}(k,\beta)}
+\newcommand{\Rc}{\mathcal{R}_{\mathrm{c}}(k,\beta)}
+\newcommand{\Rg}{\mathcal{R}_{\mathrm{g}}(k,\beta)}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\ran}{\operatorname{ran}}
+\newcommand{\graph}{\operatorname{graph}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\ind}{\operatorname{ind}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\Span}{\operatorname{span}}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.2em}
+\setlength{\emergencystretch}{2em}
+\allowdisplaybreaks
+
+\title{周期线缺陷波导中导模的 M\"uller--Cauchy 关系框架\\
+\large 定理骨架与证明草稿}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+本文把二维周期线缺陷波导的导模问题表述为无限条带上的自伴特征值问题：固定 Bloch 准动量 $\beta$，求 $k>0$（等价地，求谱参数 $k^2$）。对于公共本质谱带隙中与带边紧分离的谱参数，平方可积性给出导引条件，而横向指数局域化是由此推出的结论，并非逐点边界条件。无界半波导由其出射 Cauchy 关系表示；这些关系通过稳定广义 Bloch 模态及其 Jordan 链刻画。在缺陷胞元内，M\"uller 型层势表示由齐次 Rayleigh 场增广。这些要素定义了一个连续的中心区--半波导算子；其商核预期与全局导模特征空间自然同构。本文是一份工作中的理论草稿：背景结果与需作适配的结果分别列出，尚未证明的表示定理和核识别步骤均附有简明的证明路线图。
+\end{abstract}
+
+\input{zh/s-intro}
+\input{zh/s-setting}
+\input{zh/s-cauchy}
+\input{zh/s-muller}
+\input{zh/s-results}
+\appendix
+\input{zh/a-essspec}
+
+\input{zh/a-rep-id}
+
+\printbibliography
+
+\end{document}

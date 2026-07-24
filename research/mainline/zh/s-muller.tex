@@ -1,0 +1,359 @@
+% Full title: Chinese Translation of M\"uller Representation and the Coupled Operator
+\section{M\"uller 表示与耦合算子}
+\label{sec:muller-coupling}
+
+\subsection{Rayleigh 展开与层势约定}
+
+令 $\nu$ 为 $\Upsilon^0=\partial\Omega^0$ 上从 $\Omega^0$ 指向背景区域的单位法向量。内、外迹定义为
+\[
+  \gamma^{\mathrm i}u(z):=\lim_{h\downarrow0}u(z-h\nu(z)),
+  \qquad
+  \gamma^{\mathrm e}u(z):=\lim_{h\downarrow0}u(z+h\nu(z)).
+\]
+沿 $\nu$ 方向的法向导数也使用相同的上标。二维出射基本解为
+\begin{equation}
+  \Phi_\kappa(x,z):=\frac{\ii}{4}H_0^{(1)}(\kappa|x-z|).
+  \label{eq:fundamental-solution}
+\end{equation}
+对 $x\notin\Upsilon^0$，定义
+\begin{align}
+  (S_\kappa\sigma)(x)&:=\int_{\Upsilon^0}\Phi_\kappa(x,z)\sigma(z)\dd s(z),
+  \label{eq:single-layer}\\
+  (D_\kappa\tau)(x)&:=\int_{\Upsilon^0}
+  \partial_{\nu(z)}\Phi_\kappa(x,z)\tau(z)\dd s(z).
+  \label{eq:double-layer}
+\end{align}
+在这些约定下，$\gamma_D^{\mathrm e}D_\kappa-\gamma_D^{\mathrm i}D_\kappa=I$，且 $\gamma_N^{\mathrm e}S_\kappa-\gamma_N^{\mathrm i}S_\kappa=-I$。
+
+令 $G^{\mathrm{qp}}_{k,\beta}$ 为竖直方向 $\beta$-准周期的出射 Green 函数，满足
+\[
+  G^{\mathrm{qp}}_{k,\beta}(x+de_y,z)
+  =e^{\ii\beta d}G^{\mathrm{qp}}_{k,\beta}(x,z),
+  \qquad (\Delta_x+k^2)G^{\mathrm{qp}}_{k,\beta}(x,z)=-\delta_z.
+\]
+在其例外集合之外，它由格点和表示为
+\begin{equation}
+  G^{\mathrm{qp}}_{k,\beta}(x,z)
+  =\sum_{\ell\in\Z}e^{\ii\beta\ell d}
+  \Phi_k(x,z+\ell d e_y),
+  \label{eq:qp-Green}
+\end{equation}
+必要时按标准的收敛延拓解释。把 \eqref{eq:single-layer}--\eqref{eq:double-layer} 中的 $\Phi_k$ 替换为 $G^{\mathrm{qp}}_{k,\beta}$，即可定义 $S^{\mathrm{qp}}_{k,\beta}$ 和 $D^{\mathrm{qp}}_{k,\beta}$。
+
+令
+\[
+  \gamma_m(k,\beta):=\sqrt{k^2-\beta_m^2},
+  \qquad \operatorname{Im}\gamma_m\geq0.
+\]
+若某个 $m$ 使 $\gamma_m=0$，则发生 Wood 异常。在非 Wood 参数处定义
+\begin{equation}
+  h^{1/2}_\beta:=
+  \left\{a=(a_m)_{m\in\Z}:
+  \sum_m\langle\beta_m\rangle|a_m|^2<\infty\right\},
+  \qquad
+  \Xi_\beta:=h^{1/2}_\beta\times h^{1/2}_\beta.
+  \label{eq:Rayleigh-space}
+\end{equation}
+对 $\xi=(\xi^\rightarrow,\xi^\leftarrow)\in\Xi_\beta$，中心胞元内的齐次 Rayleigh 重构为
+\begin{equation}
+  (\mathcal H_{k,\beta}\xi)(x,y)
+  :=\sum_{m\in\Z}\left[
+  \xi_m^\rightarrow e^{\ii\gamma_m(x-X^-)}
+  +\xi_m^\leftarrow e^{-\ii\gamma_m(x-X^+)}\right]\psi_m(y).
+  \label{eq:Rayleigh-reconstruction}
+\end{equation}
+\eqref{eq:Rayleigh-space} 中的权重同时控制 $H^{1/2}_\beta$ Dirichlet 迹和 $H^{-1/2}_\beta$ 法向迹。
+
+界面密度空间为
+\begin{equation}
+  \mathcal D^0:=H^{1/2}(\Upsilon^0)\times H^{-1/2}(\Upsilon^0),
+  \qquad \eta=(\tau,\sigma)\in\mathcal D^0,
+  \label{eq:density-space}
+\end{equation}
+其中 $\tau$ 是双层密度，$\sigma$ 是单层密度。为描述两个材料迹尚未匹配时的场，令
+\begin{equation}
+  H^1_{\beta,\mathrm{br}}(\mathcal C^0):=
+  H^1_\beta(\mathcal C^0\setminus\overline{\Omega^0})
+  \oplus H^1(\Omega^0).
+  \label{eq:center-broken-space}
+\end{equation}
+下标 ``br'' 表示\emph{在 $\Upsilon^0$ 处断开}：在下述传输残差被置零之前，两个分量具有相互独立的迹。令 $k^0:=n^0k$。中心区重构
+\begin{equation}
+  \mathcal R_{\mathrm c}(k,\beta):\mathcal D^0\times\Xi_\beta
+  \longrightarrow H^1_{\beta,\mathrm{br}}(\mathcal C^0)
+  \label{eq:center-reconstruction-map}
+\end{equation}
+定义为断开场 $u_{\eta,\xi}^{\mathrm c}$：
+\begin{equation}
+  u_{\eta,\xi}^{\mathrm c}(x)=
+  \begin{cases}
+  \mathcal H_{k,\beta}\xi(x)
+  +D^{\mathrm{qp}}_{k,\beta}\tau(x)
+  -S^{\mathrm{qp}}_{k,\beta}\sigma(x),
+  &x\in\mathcal C^0\setminus\overline{\Omega^0},\\
+  D_{k^0}\tau(x)-S_{k^0}\sigma(x),
+  &x\in\Omega^0.
+  \end{cases}
+  \label{eq:center-reconstruction}
+\end{equation}
+因此，外部场分量在竖直方向准周期，而有界内部场分量不需要单独的准周期条件。
+
+所有迹均沿固定法向 $\nu$ 取值，由此定义 M\"uller 传输残差：
+\begin{equation}
+\begin{split}
+  \mathcal M(k,\beta)(\eta,\xi):=
+  \bigl(&\gamma_D^{\mathrm e}u_{\eta,\xi}^{\mathrm c}
+         -\gamma_D^{\mathrm i}u_{\eta,\xi}^{\mathrm c},\\
+        &\gamma_N^{\mathrm e}u_{\eta,\xi}^{\mathrm c}
+         -\gamma_N^{\mathrm i}u_{\eta,\xi}^{\mathrm c}\bigr)
+  \in\mathcal H_{\Upsilon^0},
+  \qquad
+  \mathcal H_{\Upsilon^0}:=H^{1/2}(\Upsilon^0)\times H^{-1/2}(\Upsilon^0).
+\end{split}
+\label{eq:Muller-residual}
+\end{equation}
+这一迹定义无需依赖未写明的矩阵约定，就固定了每个半单位项的符号。利用跳跃关系展开它，即得到 M\"uller 块。令
+\begin{equation}
+  \mathcal Z_{\mathrm c}(k,\beta):=\ker\mathcal M(k,\beta),
+  \qquad
+  \mathcal N_{\mathrm c}(k,\beta):=
+  \mathcal Z_{\mathrm c}(k,\beta)\cap\ker\mathcal R_{\mathrm c}(k,\beta).
+  \label{eq:center-nullspaces}
+\end{equation}
+因此，$\mathcal N_{\mathrm c}$ 恰好包含所有满足传输方程、却生成零物理中心区场的中心区代数表示。
+
+令 $\mathcal S_{\mathrm c}(k,\beta)$ 为 $H^1_\beta(\mathcal C^0)$ 中满足 $\Upsilon^0$ 上物理 TM 传输条件、但在 $\Gamma^\pm$ 上不施加边界条件的分片 Helmholtz 场空间。定义表示例外集合 $\mathfrak E_{\mathrm{rep}}(\beta)$ 为以下集合之并：
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+  \item Wood 参数 $\gamma_m(k,\beta)=0$；
+  \item 所选准周期 Green 函数的极点或未定义参数；
+  \item 互补交换波数传输问题不唯一可解的参数，其中内部波数为 $k$、外部波数为 $k^0$。
+\end{enumerate}
+即便参数不在这一明确列出的集合中，下文商空间仍保留可能存在的表示零空间。
+
+\begin{theorem}[中心胞元 M\"uller--Rayleigh 表示]
+\label{thm:center-representation}
+设 $k^2\in I_\beta$ 且 $k\notin\mathfrak E_{\mathrm{rep}}(\beta)$。$\mathcal R_{\mathrm c}(k,\beta)$ 在 $\mathcal Z_{\mathrm c}(k,\beta)$ 上的限制满射到 $\mathcal S_{\mathrm c}(k,\beta)$。因此，它诱导线性同构
+\begin{equation}
+  \mathcal Z_{\mathrm c}(k,\beta)/\mathcal N_{\mathrm c}(k,\beta)
+  \xrightarrow{\ \cong\ }\mathcal S_{\mathrm c}(k,\beta),
+  \qquad [\eta,\xi]\longmapsto\mathcal R_{\mathrm c}(k,\beta)(\eta,\xi).
+  \label{eq:center-quotient-isomorphism}
+\end{equation}
+这里不主张密度唯一。密度唯一性等价于附加结论 $\mathcal N_{\mathrm c}(k,\beta)=\{0\}$。
+\end{theorem}
+\status{适配与证明目标。}
+\begin{proofroadmap}
+在 $\Gamma^-$ 和 $\Gamma^+$ 的齐次邻域中，从给定中心区场提取两个齐次 Rayleigh 分量。减去它们按 \eqref{eq:Rayleigh-reconstruction} 所作的延拓；余项满足出射单胞元表示的假设。应用准周期外部 Green 恒等式和自由空间内部 Green 恒等式，并依照 \cite[Theorem~4 and Appendix~A, Lemmas~9--10]{BarnettGreengard2010} 构造互补交换波数场。在该计算中，外部双层算子是 $D^{\mathrm{qp}}_{k,\beta}$，夹杂双层算子则是 $D_{k^0}$；在外部消去恒等式中使用 $D^{\mathrm{qp}}_{k^0,\beta}$ 会造成核不匹配，必须避免。
+
+物理场映射的满射性是实质性结论。一旦证明它，商空间同构便由第一同构定理推出。密度核必须借助跳跃关系、互补场和 Calder\'on 投影范围另行分析；\cite[Lemmas~2.2--2.6]{HiptmairMoiolaSpence2022} 中的传输边界积分方程分析说明，物理解的唯一性定理并不能自动推出密度唯一性。
+
+详细内部指引见 \path{research/planning/muller-cauchy/notes/layers.md}，以及 \path{research/planning/muller-cauchy/p-proofs.md} 中名为 ``corrected center representation'' 和 ``density-to-field kernel characterization'' 的待证事项。最低可接受结果是模去一个有限维遗漏的齐次扇区后得到满射；只有在所述正则集合上证明 $\mathcal N_{\mathrm c}=\{0\}$ 后，才能接受不取商的定理。
+\end{proofroadmap}
+\begin{proof}
+写
+$u=(u^{\mathrm e},u^{\mathrm i})\in\mathcal S_{\mathrm c}(k,\beta)$，
+其中两项分别是外部与夹杂内部的分量。我们构造
+$(\eta,\xi)\in\mathcal Z_{\mathrm c}(k,\beta)$，使其重构场恰为 $u$。
+
+\emph{步骤 1：分离入射的齐次 Rayleigh 场。}
+由于 $\Omega^0\Subset\mathcal C^0$，两个端口都具有齐次材料邻域。在任一
+这样的邻域中，$u^{\mathrm e}$ 关于模态 $\psi_m$ 的 Fourier 系数满足
+\[
+  \partial_x^2u_m+\gamma_m^2u_m=0.
+\]
+非 Wood 假设给出 $\gamma_m\neq0$，故该解具有唯一的右行/左行分解。记左端口
+邻域中的右行系数为 $a_m^{-,\rightarrow}$，右端口邻域中的左行系数为
+$a_m^{+,\leftarrow}$；相位基点分别取为 $X^-$ 和 $X^+$。若
+$(f_m^\pm,p_m^\pm)$ 分别是两个端口上 Dirichlet 迹与 $\partial_x$ 迹的
+Fourier 系数，则
+\[
+  a_m^{-,\rightarrow}
+  =\frac12\left(f_m^-+\frac{p_m^-}{\ii\gamma_m}\right),
+  \qquad
+  a_m^{+,\leftarrow}
+  =\frac12\left(f_m^+-\frac{p_m^+}{\ii\gamma_m}\right).
+\]
+迹定理给出 $f^\pm\in h^{1/2}_\beta$ 与
+$p^\pm\in h^{-1/2}_\beta$。此外，对充分大的 $|m|$ 有
+$|\gamma_m|\asymp\langle\beta_m\rangle$；剩余指标只有有限多个，并且其中
+没有 $\gamma_m=0$。因此
+\[
+  \xi:=\bigl((a_m^{-,\rightarrow})_m,
+             (a_m^{+,\leftarrow})_m\bigr)\in\Xi_\beta.
+\]
+令 $h:=\mathcal H_{k,\beta}\xi$，$w:=u^{\mathrm e}-h$。在左端口邻域中，
+$w$ 只含左行模态；在右端口邻域中，$w$ 只含右行模态，因为从另一端口发出的
+$h$ 分量在本端口只贡献相应的出射分量。将这些模态级数穿过两个端口继续延拓，
+便得到 $w$ 在 $B\setminus\overline{\Omega^0}$ 上的延拓；它满足竖直方向
+$\beta$-准周期的方程 $(\Delta+k^2)w=0$，并在两个无穷端均为出射场。
+
+\emph{步骤 2：两组 Green 表示恒等式。}
+始终使用固定法向量 $\nu$，并简记
+\[
+  P_\kappa(f,q):=D_\kappa f-S_\kappa q,
+  \qquad
+  P^{\mathrm{qp}}_{k,\beta}(f,q)
+  :=D^{\mathrm{qp}}_{k,\beta}f-S^{\mathrm{qp}}_{k,\beta}q.
+\]
+先在截断的准周期条带上应用 Green 第二恒等式，再通过极限吸收过程取出射极限，
+得到
+\[
+  P^{\mathrm{qp}}_{k,\beta}
+  (\gamma_D^{\mathrm e}w,\gamma_N^{\mathrm e}w)
+  =w
+  \quad\text{于 }B\setminus\overline{\Omega^0}.
+\]
+对 $\Omega^0$ 中满足 $(\Delta+k^2)z=0$ 的解 $z$ 应用同一恒等式，得到消去关系
+\[
+  P^{\mathrm{qp}}_{k,\beta}
+  (\gamma_D^{\mathrm i}z,\gamma_N^{\mathrm i}z)=0
+  \quad\text{于 }B\setminus\overline{\Omega^0}.
+\]
+对于波数 $k^0$ 的自由空间核，相应恒等式为
+\begin{align*}
+  P_{k^0}(\gamma_D^{\mathrm i}z,\gamma_N^{\mathrm i}z)
+  &=-z&&\text{于 }\Omega^0,\\
+  P_{k^0}(\gamma_D^{\mathrm e}z,\gamma_N^{\mathrm e}z)
+  &=0&&\text{于 }\Omega^0,
+\end{align*}
+其中后一式中的 $z$ 是出射外部场。符号由 \eqref{eq:single-layer} 前规定的跳跃
+约定确定。这些恒等式是
+\cite[Appendix~A, Lemmas~9--10]{BarnettGreengard2010} 所用恒等式的单周期
+版本：竖直边界项由 $\beta$-准周期性抵消，两个无穷端的项则由出射极限吸收
+过程消去。
+
+\emph{步骤 3：构造公共 M\"uller 密度。}
+在 $\Upsilon^0$ 上令
+\[
+  f:=\gamma_D^{\mathrm e}u^{\mathrm e}
+    =\gamma_D^{\mathrm i}u^{\mathrm i},
+  \qquad
+  q:=\gamma_N^{\mathrm e}u^{\mathrm e}
+    =\gamma_N^{\mathrm i}u^{\mathrm i},
+\]
+并记 $h_D:=\gamma_Dh$、$h_N:=\gamma_Nh$。于是 $w$ 的外部 Cauchy 数据为
+$(f-h_D,q-h_N)$。考虑下列互补交换波数传输问题：
+\begin{align*}
+  (\Delta+k^2)v^{\mathrm i}&=0
+    &&\text{于 }\Omega^0,\\
+  (\Delta+(k^0)^2)v^{\mathrm e}&=0
+    &&\text{于 }\R^2\setminus\overline{\Omega^0},
+\end{align*}
+其中 $v^{\mathrm e}$ 满足 Sommerfeld 条件，并具有跳跃
+\begin{align*}
+  \gamma_D^{\mathrm e}v^{\mathrm e}
+  -\gamma_D^{\mathrm i}v^{\mathrm i}&=2f-h_D,\\
+  \gamma_N^{\mathrm e}v^{\mathrm e}
+  -\gamma_N^{\mathrm i}v^{\mathrm i}&=2q-h_N.
+\end{align*}
+由 $\mathfrak E_{\mathrm{rep}}(\beta)$ 定义中的第 (iii) 项以及
+$k\notin\mathfrak E_{\mathrm{rep}}(\beta)$，该问题对这些允许的迹数据具有唯一解。
+定义
+\begin{align*}
+  \tau
+  &:=f-h_D+\gamma_D^{\mathrm i}v^{\mathrm i}
+    =-f+\gamma_D^{\mathrm e}v^{\mathrm e},\\
+  \sigma
+  &:=q-h_N+\gamma_N^{\mathrm i}v^{\mathrm i}
+    =-q+\gamma_N^{\mathrm e}v^{\mathrm e}.
+\end{align*}
+这两组等式恰由所指定的两个跳跃得到；迹映射性质还给出
+$(\tau,\sigma)\in\mathcal D^0$。
+
+令 $\eta=(\tau,\sigma)$。利用上面的两个准周期恒等式，重构场的外部分量为
+\begin{align*}
+  h+P^{\mathrm{qp}}_{k,\beta}(\tau,\sigma)
+  &=h+P^{\mathrm{qp}}_{k,\beta}(f-h_D,q-h_N)\\
+  &\quad
+    +P^{\mathrm{qp}}_{k,\beta}
+      (\gamma_D^{\mathrm i}v^{\mathrm i},
+       \gamma_N^{\mathrm i}v^{\mathrm i})\\
+  &=h+w=u^{\mathrm e}.
+\end{align*}
+再利用 $\tau,\sigma$ 的另一组表达式和上面的两个自由空间恒等式，重构场的
+内部分量为
+\begin{align*}
+  P_{k^0}(\tau,\sigma)
+  &=-P_{k^0}(f,q)
+    +P_{k^0}(\gamma_D^{\mathrm e}v^{\mathrm e},
+             \gamma_N^{\mathrm e}v^{\mathrm e})\\
+  &=u^{\mathrm i}.
+\end{align*}
+因此 $\mathcal R_{\mathrm c}(k,\beta)(\eta,\xi)=u$。由于 $u$ 满足物理传输条件，
+它的两个跳跃均为零，故
+$\mathcal M(k,\beta)(\eta,\xi)=0$，且
+$(\eta,\xi)\in\mathcal Z_{\mathrm c}(k,\beta)$。满射性得证。
+
+\emph{步骤 4：转到商空间。}
+由 \eqref{eq:center-nullspaces}，
+$\mathcal R_{\mathrm c}|_{\mathcal Z_{\mathrm c}}$ 的核恰为
+$\mathcal N_{\mathrm c}$。第一同构定理遂给出
+\eqref{eq:center-quotient-isomorphism}。这一论证既不需要也不主张
+$\mathcal N_{\mathrm c}$ 为零。
+\end{proof}
+
+\subsection{连续耦合算子}
+
+中心区重构的端口迹是有界映射
+\begin{equation}
+  \Pi^\pm(k,\beta):=\Tr^{0,\pm}\mathcal R_{\mathrm c}(k,\beta):
+  \mathcal D^0\times\Xi_\beta\longrightarrow\mathcal H(\Gamma^\pm).
+  \label{eq:center-port-map}
+\end{equation}
+该定义同时包含层势贡献与齐次 Rayleigh 贡献。半波导映射 $\mathcal F^\pm$ 和 $Q^\pm$ 已在 \eqref{eq:field-synthesis}--\eqref{eq:trace-synthesis} 中定义。
+
+\begin{definition}[耦合 M\"uller--Cauchy 算子与表示零空间]
+\label{def:coupled-operator}
+定义代数定义域与残差值域为
+\begin{align}
+  \mathcal X(k,\beta)
+  &:=\mathcal D^0\times\Xi_\beta\times
+  \mathcal K_s^-\times\mathcal K_s^+,
+  \label{eq:coupled-domain}\\
+  \mathcal Y(k,\beta)
+  &:=\mathcal H_{\Upsilon^0}\times
+  \mathcal H(\Gamma^-)\times\mathcal H(\Gamma^+).
+  \label{eq:coupled-codomain}
+\end{align}
+对 $x=(\eta,\xi,c^-,c^+)\in\mathcal X(k,\beta)$，令
+\begin{equation}
+  \mathbb A(k,\beta)x:=
+  \begin{bmatrix}
+  \mathcal M(k,\beta)(\eta,\xi)\\
+  \Pi^-(k,\beta)(\eta,\xi)-Q^-(k,\beta)c^-\\
+  \Pi^+(k,\beta)(\eta,\xi)-Q^+(k,\beta)c^+
+  \end{bmatrix}
+  \in\mathcal Y(k,\beta).
+  \label{eq:coupled-operator}
+\end{equation}
+第一行是 $\Upsilon^0$ 上的物理传输失配；第二、三行分别是左、右端口上完整的面向中心区 Cauchy 数据失配。
+
+令
+\begin{equation}
+  H^1_{\beta,\mathrm{br}}(B):=
+  H^1_\beta(W^- )\oplus
+  H^1_\beta(\mathcal C^0\setminus\overline{\Omega^0})
+  \oplus H^1(\Omega^0)
+  \oplus H^1_\beta(W^+).
+  \label{eq:global-broken-space}
+\end{equation}
+全局断开场重构为
+\begin{equation}
+  \mathcal R_{\mathrm g}(k,\beta)x:=
+  \begin{cases}
+    \mathcal F^-(k,\beta)c^-,&\text{于 }W^-,\\
+    \mathcal R_{\mathrm c}(k,\beta)(\eta,\xi),&\text{于 }\mathcal C^0,\\
+    \mathcal F^+(k,\beta)c^+,&\text{于 }W^+.
+  \end{cases}
+  \label{eq:global-reconstruction}
+\end{equation}
+对一般 $x$，它是断开场；当 $x\in\ker\mathbb A(k,\beta)$ 时，它是全局 $H^1_\beta(B)$ 场。最后，定义表示诱发的零空间
+\begin{equation}
+  \mathcal N_{\mathrm{rep}}(k,\beta):=
+  \left\{x\in\ker\mathbb A(k,\beta):
+  \mathcal R_{\mathrm g}(k,\beta)x=0
+  \text{ 于 }H^1_{\beta,\mathrm{br}}(B)\right\}.
+  \label{eq:Nrep-definition}
+\end{equation}
+因此，$\mathbb A$ 是完全定义的代数耦合，而 $\mathcal N_{\mathrm{rep}}$ 精确记录其核中不承载任何物理场的向量。这两个符号均不是某个未明确指定的数值矩阵的简写。
+\end{definition}
