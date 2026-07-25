@@ -1,0 +1,4 @@
+interface:
+  display_name: "Notation Discipline"
+  short_description: "Keep mathematical notation transparent and necessary"
+  default_prompt: "Use $notation-discipline to simplify mathematical notation without reducing rigor or proof detail."
