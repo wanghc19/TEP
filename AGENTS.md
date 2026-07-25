@@ -18,7 +18,7 @@ experiments on periodic waveguides and related eigenvalue problems.
 - Preserve function input/output interfaces unless explicitly requested.
 - Write comments in English and use 2-space indentation.
 - Prefer local helper functions with `LOCAL_` prefixes.
-- For theorem proofs or proof audits, use `$rigorous-theorem-proof` unless the
+- For theorem proofs or proof audits, use `$rigorous-proof` unless the
   user explicitly opts out.
 
 ## MATLAB source documentation

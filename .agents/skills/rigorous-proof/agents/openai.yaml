@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rigorous Proof"
+  short_description: "Rigorous source-verified mathematical proofs"
+  default_prompt: "Use $rigorous-proof to prove, review, repair, or rewrite this mathematical result with source verification."
