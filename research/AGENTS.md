@@ -5,17 +5,23 @@ This file applies under `research/`; the repository-root `AGENTS.md` also applie
 ## Reading order
 
 For theoretical tasks, read the root `AGENTS.md`, then `README.md`, `STATUS.md`,
-`NOTATION.md`, relevant `mainline/` files, and finally relevant planning or project
-files. Do not read the whole repository when the task is narrower.
+and `NOTATION.md`, followed by only the relevant planning or project files. Read
+an archived mainline only when the task explicitly selects that archive or its
+Git tag. Do not read the whole repository when the task is narrower.
 
 ## Authority
 
-Use this order: `mainline/` > `NOTATION.md` > `projects/` > `planning/` > `pre/`
-> `legacy/`.
+When an active `mainline/` exists, use this order: `mainline/` > `NOTATION.md` >
+`projects/` > `planning/` > `pre/` > `legacy/`. There is currently no active
+`mainline/`.
 
 - `mainline/` governs current theory and notation but may contain proof gaps or
-  unproved propositions and is not automatically ready for `draft/`.
-- `NOTATION.md` indexes mainline notation; it does not define a second system.
+  unproved propositions and is not automatically ready for `draft/`; create it
+  only after a new unified direction has been explicitly reviewed.
+- `NOTATION.md` currently indexes the frozen Müller--Cauchy notation; it does not
+  govern a new direction or define a second system.
+- `archive/` is non-authoritative historical material unless a task explicitly
+  selects an archive or frozen Git version.
 - Do not promote project conclusions into the mainline without explicit review.
 - Planning files govern strategy, not formal mathematics.
 - `pre/` contains stage-specific presentations; use `legacy/` only for explicitly
@@ -25,12 +31,13 @@ Use this order: `mainline/` > `NOTATION.md` > `projects/` > `planning/` > `pre/`
 
 ## Notation
 
-- Use current `mainline/` notation; do not retain inferior notation merely to
-  match old drafts, presentations, or code variables.
+- When an active `mainline/` exists, use its notation. Otherwise use notation
+  local to the selected project or planning task and do not silently inherit the
+  frozen archive's notation.
 - Never silently change notation, definitions, assumptions, theorem status, or
   citation sources.
-- When changing mainline notation, check mainline-wide consistency, English and
-  Chinese agreement, `NOTATION.md`, and directly related project files.
+- When changing an active mainline's notation, check mainline-wide consistency,
+  English and Chinese agreement, `NOTATION.md`, and directly related project files.
 - Do not force theory symbols and code variables to match at this stage.
 - Code tasks must name the governing theory file or Git version and add a
   theory-to-code map when needed.
@@ -43,8 +50,10 @@ Use this order: `mainline/` > `NOTATION.md` > `projects/` > `planning/` > `pre/`
 - Do not create a directory for each proposition, lemma, audit item, or small task.
 - Avoid overlapping `README`, `STATUS`, `SUMMARY`, and `PLAN` files.
 - After long tasks update `STATUS.md`; record new direction decisions in
-  `DECISIONS.md`; record notation, citation, bilingual, and rigor issues in
-  `mainline/review-log.md`.
+  `DECISIONS.md`. Record notation, citation, bilingual, and rigor issues in an
+  active `mainline/review-log.md`, or in the selected project's status material
+  when no active mainline exists. Do not edit a frozen review log unless the task
+  explicitly concerns that archive.
 - Do not copy long proofs or complete literature content into collaboration files.
 
 ## Temporary material
@@ -52,8 +61,9 @@ Use this order: `mainline/` > `NOTATION.md` > `projects/` > `planning/` > `pre/`
 - Put disposable derivations, audits, extracted text, conversions, and unclassified
   outputs in `tmp/`; it is non-authoritative and normally untracked.
 - Never keep durable results, accepted decisions, or established theory in `tmp/`.
-- Move useful material to `mainline/` for accepted theory, `planning/` for strategy,
-  or `projects/` for multi-stage investigations.
+- Move useful material to `planning/` for strategy or `projects/` for multi-stage
+  investigations. Move accepted theory to `mainline/` only after a unified
+  direction has been explicitly reviewed and activated.
 - Create a project directory only for a multi-file or multi-session investigation.
 
 ## Naming

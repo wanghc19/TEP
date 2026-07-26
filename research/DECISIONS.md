@@ -7,7 +7,7 @@
 - **决定：** 直接半波导 DtN 暂不替换当前主线的出射 Cauchy 关系。若恢复原型工作，优先采用保留中心未知量 `(eta, xi)`、只替换端口行的 Scheme A；局部胞元 Riccati/QZ 是主要研究路线，scattering-to-DtN 只作诊断。
 - **理由：** 严格无耗散情形存在单位圆传播分支，Dirichlet 投影也可能奇异或病态；关系表述更稳健。
 - **证据：** `research/projects/half-guide-dtn/STATUS.md`，`research/projects/half-guide-dtn/DECISIONS.md`。
-- **影响：** 该专题未整合进 `research/mainline/`；后续需先完成周期障碍半导和完整耦合。
+- **影响：** 该专题未整合进后来冻结的 Müller--Cauchy 主线；后续需先完成周期障碍半导和完整耦合。
 - **状态：** Revisitable；当前为 paused。
 
 ## 2026-07-14 阶段：修正单胞表示命题
@@ -32,7 +32,7 @@
 - **理由：** 这同时处理 DtN 图失效、普通特征向量不完备和表示密度零空间三类风险。
 - **证据：** `research/planning/muller-cauchy/README.md`，`research/planning/muller-cauchy/scope.md`，`research/planning/muller-cauchy/p-theorems.md`。
 - **影响：** 已整合到主线第 3--5 节。
-- **状态：** 当前主线 formulation；若有更强唯一性定理可强化，不应静默改写。
+- **状态：** 冻结主线采用的 formulation；若恢复该路线并获得更强唯一性定理，可以显式强化，但不应静默改写归档。
 
 ## 2026-07-21 阶段：Fredholm 仅作条件性强化
 
@@ -42,11 +42,11 @@
 - **影响：** Fredholm 结论保持 conjectural，不是当前主定理的前提。
 - **状态：** Revisitable。
 
-## 当前阶段：范围差异需重新确认
+## 冻结主线遗留事项：范围差异需重新确认
 
-- **事项：** 路线图冻结的首个证明包排除了不同左右周期端，而当前主线第 2 节和附录 A 已显式处理两种不同周期端。
-- **证据：** `research/planning/muller-cauchy/scope.md`；`research/mainline/en/s-setting.tex`；`research/mainline/en/a-essspec.tex`。
-- **处理：** 按权威顺序，当前理论任务以主线为准；但应审计第 3--5 节的模态与耦合假设是否也完整支持非对称端，再决定是否把路线图范围正式扩展。
+- **事项：** 路线图冻结的首个证明包排除了不同左右周期端，而冻结主线第 2 节和附录 A 已显式处理两种不同周期端。
+- **证据：** `research/planning/muller-cauchy/scope.md`；`research/archive/muller-cauchy-2026-07/en/s-setting.tex`；`research/archive/muller-cauchy-2026-07/en/a-essspec.tex`。
+- **处理：** 若恢复该路线，应审计第 3--5 节的模态与耦合假设是否也完整支持非对称端，再决定是否把路线图范围正式扩展。
 - **状态：** `needs review`，不是已补写的历史决定。
 
 ## 2026-07-24 协作政策：进入草稿必须人工审核
@@ -55,3 +55,18 @@
 - **理由：** 专题完成、主线存在陈述和论文可发表性是三个不同层级。
 - **影响：** 每次晋升都需明确人工审核，并同步 `research/STATUS.md`、本文件和必要的主线审计记录。
 - **状态：** 当前协作规则。
+
+## 2026-07-26 阶段：冻结 Müller--Cauchy 主线并暂不指定新方向
+
+- **决定：** 暂停 Müller--Cauchy 统一理论路线，把原 `research/mainline/` 移至
+  `research/archive/muller-cauchy-2026-07/`，并以 Git 标签
+  `mainline-muller-cauchy-2026-07-26` 固定移动前的精确状态。新的研究方向尚未确定，
+  因此暂不建立新分支，也不建立空的 `research/mainline/`。
+- **理由：** Git 标签解决版本可恢复性，顶层归档目录解决文件结构中的权威歧义；
+  在方向未明确时提前命名分支或主线会制造虚假的研究承诺。
+- **证据：** 标签 `mainline-muller-cauchy-2026-07-26`；
+  `research/archive/muller-cauchy-2026-07/README.md`；`research/STATUS.md`。
+- **影响：** 当前 `research/` 没有统一数学主线。归档及其符号索引只在任务明确指定
+  时生效；零散方向讨论进入 `planning/`，形成多轮专题后进入 `projects/`，经人工
+  审核后才可重新建立 `mainline/`。
+- **状态：** Revisitable；新方向形成或旧路线恢复时必须新增决定记录。
