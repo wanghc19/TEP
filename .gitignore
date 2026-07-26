@@ -55,5 +55,8 @@ research/**/tmp/
 research/**/logs/
 research/**/checkpoints/
 
-# reference
-ref/*
+# Reference library: track only the catalog and BibTeX index
+ref/**
+!ref/README.md
+!ref/reference.bib
+!ref/AGENTS.md
