@@ -46,9 +46,9 @@
 $\pm$ 半波导的出射 Cauchy 关系为
 \begin{equation}
   \mathcal E^\pm(k,\beta)
-  :=\left\{\Tr^{0,\pm} w:w\in
-  \mathcal U^\pm(k,\beta)\right\}
-  \subset\mathcal H(\Gamma^\pm).
+  :=\left\{(f,g)\in\mathcal H(\Gamma^\pm):
+  \text{存在 }w\in\mathcal U^\pm(k,\beta)
+  \text{ 使得 }(f,g)=\Tr^{0,\pm}w\right\}.
   \label{eq:outgoing-relation}
 \end{equation}
 它是完整 Dirichlet--Neumann 数据对的一个线性子空间，并不预先假设它是某个算子的图。Dirichlet 与 Neumann 投影分别为
@@ -342,17 +342,153 @@ $e\in\mathscr T^\star(k,\beta)$，令 $v_e$ 表示具有参考端口迹 $e$ 的�
 $\Gamma_0^\star$。分别取 $\star=-$ 和 $\star=+$ 即得到
 $\mathscr T^\pm(k,\beta)$ 与 $T^\pm(k,\beta)$。$T^\pm$ 的有界性，以及局部迹范数与解范数的等价性，均属于移位框架的假设。
 
-\begin{lemma}[公共本质谱带隙排除传播乘子]
+\begin{lemma}[公共本质谱带隙排除单位模 Bloch 特征乘子]
 \label{lem:gap-unit-circle}
-假设理想波导在横向周期方向上的 Floquet 变换有效，且非零解迹对应非零 Bloch 解。若 $k^2\in I_\beta$，则
+固定 $\star\in\{-,+\}$，并把 $H^\star$ 中的函数用外向坐标
+$t^\star$ 表示。对沿 $t^\star$ 方向紧支撑的函数定义胞元 Floquet 变换
+\[
+  (\mathscr F_{\mathrm{FB}}^\star u)(\theta;t^\star,y)
+  :=\left(\frac{L^\star}{2\pi}\right)^{1/2}
+  \sum_{m\in\Z}e^{-\ii\theta mL^\star}
+  u(t^\star+mL^\star,y),
+  \qquad \theta\in\mathbb B^\star,
+  \quad 0<t^\star<L^\star.
+\]
+在\Cref{sec:functional-setting} 的周期性、正性和有界性假设下，该变换延拓为酉映射
+\[
+  \mathscr F_{\mathrm{FB}}^\star:H^\star
+  \longrightarrow
+  \int_{\mathbb B^\star}^{\oplus}
+  L^2(\mathcal C_1^\star,\rho^\star\,\dd x\dd y)\dd\theta,
+\]
+并给出算子的连续直和（直积分）分解
+\[
+  \mathscr F_{\mathrm{FB}}^\star A^\star(\beta)
+  (\mathscr F_{\mathrm{FB}}^\star)^{-1}
+  =\int_{\mathbb B^\star}^{\oplus}
+  A^\star(\beta,\theta)\dd\theta.
+\]
+此外，对任意 $\lambda\in\Complex$ 和
+$e\in\mathscr T^\star(k,\beta)\setminus\{0\}$，有
+\[
+  T^\star(k,\beta)e=\lambda e
+  \quad\Longleftrightarrow\quad
+  v_e(t^\star+L^\star,y)=\lambda v_e(t^\star,y)
+  \quad\text{于 }B.
+\]
+因此，若 $k^2\in I_\beta$，则
 \begin{equation}
-  \sigma(T^\pm(k,\beta))\cap\Sone=\varnothing.
+  \sigma_{\mathrm p}(T^\pm(k,\beta))\cap\Sone=\varnothing,
+  \qquad
+  \sigma_{\mathrm p}(T):=
+  \{\lambda\in\Complex:\ker(T-\lambda\mathrm{id})\neq\{0\}\}.
   \label{eq:no-unit-multiplier}
 \end{equation}
 \end{lemma}
 \status{Floquet 理论的背景推论。}
 \begin{proof}
-若存在模为一的乘子，可将其写为 $\lambda=e^{\ii\theta L^\pm}$，其中 $\theta$ 是实横向准动量。相应非零解满足单胞元横向 Bloch 条件，并使 $k^2$ 属于理想波导的 $\theta$-纤维谱。Floquet 直积分分解随即给出 $k^2\in\sigma(A^\pm(\beta))\subset\Sigma_{\mathrm{ess}}(\beta)$，这与 \eqref{eq:strict-gap} 矛盾。这正是公共本质谱带隙中不存在传播半波导通道的谱意义。
+\emph{步骤 1：构造 Floquet 变换并分解理想周期算子。}
+系数 $\rho^\star$ 实值、属于 $L^\infty(B)$、具有正下界，并且沿
+$t^\star$ 以 $L^\star$ 为周期。上式中的和对沿 $t^\star$ 紧支撑的函数只有有限项；
+关于离散胞元指标 $m$ 应用 Fourier 级数的 Parseval 等式，得到
+\[
+  \lVert u\rVert_{H^\star}^2
+  =\int_{\mathbb B^\star}
+  \lVert(\mathscr F_{\mathrm{FB}}^\star u)(\theta)\rVert_
+  {L^2(\mathcal C_1^\star,\rho^\star\,\dd x\dd y)}^2\dd\theta.
+\]
+相应的逆变换由
+\[
+  u(t^\star+mL^\star,y)
+  =\left(\frac{L^\star}{2\pi}\right)^{1/2}
+  \int_{\mathbb B^\star}e^{\ii\theta mL^\star}
+  (\mathscr F_{\mathrm{FB}}^\star u)(\theta;t^\star,y)\dd\theta
+\]
+给出，其中 $m\in\Z$ 且 $0<t^\star<L^\star$。Fourier 级数的完备性表明该逆变换
+在相应 $L^2$ 空间上有定义。因此 $\mathscr F_{\mathrm{FB}}^\star$ 由稠密子空间
+唯一延拓为从
+$H^\star$ 到
+\[
+  \int_{\mathbb B^\star}^{\oplus}
+  L^2(\mathcal C_1^\star,\rho^\star\,\dd x\dd y)\dd\theta
+\]
+的酉映射。指标平移给出
+\[
+  (\mathscr F_{\mathrm{FB}}^\star u)
+  (\theta;t^\star+L^\star,y)
+  =e^{\ii\theta L^\star}
+  (\mathscr F_{\mathrm{FB}}^\star u)(\theta;t^\star,y),
+\]
+而 $y$ 方向的 $\beta$-准周期条件不受该变换影响。
+
+$A^\star(\beta)$ 的闭型为
+\[
+  \mathfrak a^\star(u,v)
+  :=\int_B\nabla u\cdot\nabla\overline v\,\dd x\dd y,
+\]
+其型定义域是满足 $y$ 方向 $\beta$-准周期条件的 $H^1$ 空间。
+由于 $\rho^\star$ 和微分表达式均以 $L^\star$ 为周期，
+$\mathscr F_{\mathrm{FB}}^\star$ 把该闭型分解为具有上述
+$t^\star$-Bloch 边界条件的胞元闭型的直积分。由闭型所对应自伴算子的唯一性，得到
+\[
+  \mathscr F_{\mathrm{FB}}^\star A^\star(\beta)
+  (\mathscr F_{\mathrm{FB}}^\star)^{-1}
+  =\int_{\mathbb B^\star}^{\oplus}
+  A^\star(\beta,\theta)\dd\theta.
+\]
+这些假设与结论也正是 Fliss~
+\cite[Proposition~3.1, especially equations~(3.3)--(3.4)]{Fliss2013}
+用于同类标量周期条带所得的 Floquet--Bloch 分解。特别地，
+\[
+  \sigma(A^\star(\beta))
+  =\bigcup_{\theta\in\mathbb B^\star}
+  \sigma(A^\star(\beta,\theta)),
+\]
+其中每个纤维算子自伴且具有紧预解式。一般直积分算子的谱要由纤维谱的本质闭包
+描述，不能仅由形式上的直积分等式直接写成普通并集。这里把
+$\mathbb B^\star$ 的两个端点按 Bloch 相位识别后视为紧致一维环面；上述文献的
+Proposition~3.1 结合式~\textup{(3.3)--(3.4)} 已对本问题的这类周期椭圆算子证明了
+所写的普通并集等式，其中式~\textup{(3.4)} 还给出各能带函数关于 $\theta$ 的连续性。
+
+\emph{步骤 2：证明非零特征迹与非零 Bloch 解的对应。}
+任取 $e\in\mathscr T^\star(k,\beta)\setminus\{0\}$，并设
+$T^\star e=\lambda e$。令
+\[
+  z(t^\star,y):=
+  v_e(t^\star+L^\star,y)-\lambda v_e(t^\star,y).
+\]
+由 $\rho^\star$ 的周期性，$z$ 仍是满足
+\eqref{eq:ideal-strip-solutions} 的 $H^1_{\mathrm{loc}}(B)$ 弱解。
+按照 \eqref{eq:translation-operator} 中把 $\Gamma_1^\star$ 周期识别回
+$\Gamma_0^\star$ 的约定，$z$ 在 $\Gamma_0^\star$ 上的完整 Cauchy 迹为
+\[
+  \left.\Tr^{0,\star}z\right|_{\Gamma_0^\star}
+  =T^\star e-\lambda e=0.
+\]
+参考端口上的完整 Cauchy 迹唯一决定理想双侧条带解，故 $z=0$，即
+\[
+  v_e(t^\star+L^\star,y)=\lambda v_e(t^\star,y).
+\]
+反之，若该 Bloch 等式成立，取 $\Gamma_0^\star$ 上的完整 Cauchy 迹便得到
+$T^\star e=\lambda e$。此外，若 $v_e=0$，则 $e=0$；若 $e=0$，上述完整
+Cauchy 数据唯一性又给出 $v_e=0$。因此这里的非零迹恰好对应非零 Bloch 解。
+
+\emph{步骤 3：用公共带隙排除单位模特征乘子。}
+反设存在
+$\lambda\in\sigma_{\mathrm p}(T^\star(k,\beta))\cap\Sone$。则存在
+$e\in\mathscr T^\star(k,\beta)\setminus\{0\}$ 使
+$T^\star e=\lambda e$。因为 $|\lambda|=1$，可取
+$\theta\in\mathbb B^\star$ 使
+$\lambda=e^{\ii\theta L^\star}$。步骤 2 给出非零 Bloch 解 $v_e$。其在
+$\mathcal C_1^\star$ 上的限制满足 $t^\star$ 方向的
+$\theta$-Bloch 条件、$y$ 方向的 $\beta$-准周期条件以及
+\[
+  A^\star(\beta,\theta)v_e=k^2v_e.
+\]
+因此 $k^2\in\sigma(A^\star(\beta,\theta))$，再由上述谱恒等式得
+$k^2\in\sigma(A^\star(\beta))=\Sigma_\star(\beta)$。这与
+$k^2\in I_\beta$ 及严格公共带隙条件 \eqref{eq:strict-gap} 矛盾。
+由于 $\star\in\{-,+\}$ 任意，\eqref{eq:no-unit-multiplier} 对左右两个平移算子均成立。
 \end{proof}
 
 乘子 $\lambda\in\Complex$ 的广义 Bloch 迹链是有限序列 $e_0,\ldots,e_{m-1}\in\mathscr T^\pm$，满足
