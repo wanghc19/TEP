@@ -4,7 +4,7 @@
 
 ## 2026-07-13 阶段：DtN 只作为独立可行性路线
 
-- **决定：** 直接半波导 DtN 暂不替换当前主线的出射 Cauchy 关系。若恢复原型工作，优先采用保留中心未知量 `(eta, xi)`、只替换端口行的 Scheme A；局部胞元 Riccati/QZ 是主要研究路线，scattering-to-DtN 只作诊断。
+- **决定：** 直接半波导 DtN 暂不替换当前主线的出射 Cauchy 关系。若恢复原型工作，优先采用保留中心未知量 $(\eta,\xi)$、只替换端口行的 Scheme A；局部胞元 Riccati/QZ 是主要研究路线，scattering-to-DtN 只作诊断。
 - **理由：** 严格无耗散情形存在单位圆传播分支，Dirichlet 投影也可能奇异或病态；关系表述更稳健。
 - **证据：** `research/projects/half-guide-dtn/STATUS.md`，`research/projects/half-guide-dtn/DECISIONS.md`。
 - **影响：** 该专题未整合进后来冻结的 Müller--Cauchy 主线；后续需先完成周期障碍半导和完整耦合。
@@ -15,7 +15,7 @@
 - **决定：** 不再把原始“齐次背景场加公共密度层势且无条件唯一”的表述当作定理。区分总是可用的直接 Green 表示与需要互补交换波数问题可解性的公共密度 Müller 表示，并显式保留表示零空间或商空间。
 - **理由：** 原表述遗漏 Wood 阈值、广义阈值解和互补问题的谱条件；密度唯一性不等于物理场唯一性。
 - **证据：** `research/projects/cell-representation/proof-log.md`，`research/projects/cell-representation/README.md`，`research/projects/cell-representation/open-questions.md`。
-- **影响：** 修正的波数配对、表示例外集合、`N_c` 和商空间结构已写入主线第 4 节及附录 B；其完整严格性仍为 `needs review`。
+- **影响：** 修正的波数配对、表示例外集合、$N_c$ 和商空间结构已写入主线第 4 节及附录 B；其完整严格性仍为 `needs review`。
 - **状态：** 当前 formulation 决定已采用；具体假设可重审。
 
 ## 2026-07-20 阶段：收窄创新性主张
@@ -28,7 +28,7 @@
 
 ## 2026-07-21 阶段：关系优先、广义模态、商空间默认
 
-- **决定：** 半波导外部对象以闭 Cauchy 关系为主，DtN 仅是正则图坐标；模态必须包含广义 Floquet 模态与 Jordan 链；第一主定理默认采用 `ker A / N_rep` 与导模空间的同构，不取商版本必须另证 `N_rep={0}`。
+- **决定：** 半波导外部对象以闭 Cauchy 关系为主，DtN 仅是正则图坐标；模态必须包含广义 Floquet 模态与 Jordan 链；第一主定理默认采用 $\ker A/N_{\mathrm{rep}}$ 与导模空间的同构，不取商版本必须另证 $N_{\mathrm{rep}}=\{0\}$。
 - **理由：** 这同时处理 DtN 图失效、普通特征向量不完备和表示密度零空间三类风险。
 - **证据：** `research/planning/muller-cauchy/README.md`，`research/planning/muller-cauchy/scope.md`，`research/planning/muller-cauchy/p-theorems.md`。
 - **影响：** 已整合到主线第 3--5 节。
@@ -70,3 +70,126 @@
   时生效；零散方向讨论进入 `planning/`，形成多轮专题后进入 `projects/`，经人工
   审核后才可重新建立 `mainline/`。
 - **状态：** Revisitable；新方向形成或旧路线恢复时必须新增决定记录。
+
+## 2026-07-26 阶段：启动特征值后验误差范围界定
+
+- **决定：** 在 `research/projects/eig-apost/` 启动 Deep Research `socratic`
+  范围界定，调查偏工程实现的特征值后验误差方向；当前只建立 Phase 1 材料清单、
+  研究边界和用户问题，不建立新 `mainline/`。
+- **理由：** 仓库已有 transmission eigenvalue、line-defect guided mode 和 cell Bloch
+  multiplier 三类数值对象，现有 residual、$\sigma_{\min}$ 和分辨率收敛记录不能在未选定
+  误差对象与参考真值前合并成一个后验误差命题。
+- **证据：** 用户本次研究方向要求；`research/projects/eig-apost/p-scope.md`；
+  `research/projects/eig-apost/phase1-scope/materials.md`。
+- **影响：** 冻结主线、现有 MATLAB 文件和旧草稿保持不变；既有理论命题和数值候选
+  均不作为新专题的已知真理。
+- **状态：** Active scoping；研究问题确认后再决定是否进入 Phase 2，不代表已选定
+  新统一方向。
+
+## 2026-07-26 阶段：确认后验误差 RQ 与 DtN-first 调查顺序
+
+- **决定：** 研究问题限定为 Fliss (2013) $\beta$-formulation 中 fixed-$\beta$
+  line-defect guided-mode eigenvalue 的 BIE 后验误差估计；目标是预测
+  $|k_h-k_*|$ 的量级。RQ 不预设无穷远条件采用 DtN 或 trace-subspace。
+- **方法顺序：** Phase 1--2 先调查 DtN+BIE estimator 的理论与初步可行性；如果可行，
+  再考虑向已有 trace-subspace 实现扩展。该顺序是可修订的调查承诺，不是理论结论。
+- **参考真值：** 优先要求两个或更多独立高精度方法对 $k_*$ 的有效数字一致；若不可得，
+  至少使用一篇经核验的可靠文献所报告的参考数据。
+- **范围：** 首阶段只考虑非 Wood、lead multipliers 与单位圆分离、孤立简单点谱；
+  不以定性 indicator 或宽泛 certified upper bound 为目标。
+- **证据：** 用户的两轮 Socratic 范围确认；
+  `research/projects/eig-apost/phase1-scope/rq-summary.md`。
+- **状态：** Active Methodology Reflection；尚未通过文献核验或数值可行性门。
+
+## 2026-07-26 阶段：half-guide DtN 定义与 BIE 切入点
+
+- **决定：** 在本专题中先按 Fliss 的半波导边值问题独立定义 DtN；不从现有
+  trace-subspace 反向命名 DtN。传播/Riccati、recursive doubling 和稳定模态只作为
+  计算构造或交叉验证。
+- **BIE 切入点：** 第一候选是由 BIE 生成 unit-cell DtN/RtR map，再用 Riccati 或
+  doubling 得到半波导 map；不预设现有 `A_QP` 无需新增 port representation 即可完成。
+- **依据：** Fliss (2013) PDF pp. 11, 13, 18--20；Joly--Li--Fliss (2006) PDF
+  pp. 8--10, 19；Coatléven (2012) PDF pp. 8--10, 19；Yuan--Lu--Antoine (2008)；
+  Petropoulos--Turc (2025)。详见 `research/projects/eig-apost/phase2-sources/`。
+- **限制：** 现有证据只建立定义和构造可行性；未建立目标穿透介质 cell map、
+  half-guide map 的离散误差传播或 guided eigenvalue estimator。
+- **状态：** Active investigation；Phase 3 前仍需 nonlinear eigenvalue perturbation
+  文献核验。
+
+## 2026-07-26 阶段：首版 estimator 以 simple-root projected correction 为核心
+
+- **决定：** 首版不把 $\sigma_{\min}$ 或两个 DtN 层级的直接差值单独称为 eigenvalue
+  error estimator。核心候选采用左右零向量投影的 nonlinear simple-root correction，
+  分母显式包含 `k` 导数；两级 correction 首先解释为相邻层级根位移。
+- **强度目标：** 论文最低目标是 asymptotically quantitative estimator，并在独立
+  reference truth 上报告 effectivity；不以只有排序功能的 indicator 为终点，也暂不
+  强求可能很宽的 certified upper bound。
+- **限制：** 只有在三层 refinement 支持 saturation/geometric-tail model 后，才能把
+  相邻层级 correction 转换为到精确 DtN 的剩余误差估计。当前尚未选择具体 DtN
+  hierarchy，也未验证 BIE--DtN operator hypotheses。
+- **证据：** Güttel--Tisseur (2017)、Moskow (2015)、Bindel--Hood (2013)、Zhang
+  (2023) 的原文核验；`research/projects/eig-apost/phase2-sources/r-nep-error.md`。
+- **状态：** Revisitable research design；不是已证明定理。
+
+## 2026-07-26 阶段：以 finite-tail doubling 隔离首个 DtN 误差源
+
+- **决定：** 首版固定 single-cell BIE、Rayleigh port space 和其他离散，只令 finite
+  periodic tail 的 cell count $N=2^j$ 增长。由 finite-segment scattering map 施加
+  structure-preserving terminal closure，再经 Cayley transform 得到 $\Lambda_j$，把
+  $j$ 作为唯一主 refinement parameter。
+- **代码接口：** 复用 `bloch.construct_S` 和 `A_QP` 生成 single-cell scattering
+  blocks；首版 infinity treatment 不调用 `bloch.solve_modes` 或 outgoing
+  trace-subspace selection。
+- **理由：** 这直接对应用户优先研究的非周期方向无穷远截断；Ehrhardt--Sun--Zheng
+  (2009) 为 stop-band finite-tail StS/doubling limit 提供原文先例，当前范围又明确远离
+  unit-circle multipliers。
+- **验证限制：** doubling 与 QZ/Riccati 共享 cell map，只能交叉验证 infinity
+  treatment；整个 $k_*$ 仍需独立 FEM/supercell 或明确降级的 reference status。
+- **证据：** `research/projects/eig-apost/phase2-sources/r-bie-dtn.md`；
+  `research/projects/eig-apost/phase3-analysis/s-dtn-chain.md`。
+- **状态：** Active analysis choice；经 code-convention audit 后才可实施。
+
+## 2026-07-26 阶段：实根层级采用结构保持闭合并增加 root qualification
+
+- **决定：** 用于实 $k$ eigenvalue estimator 的 finite-tail sequence 首先采用远端
+  homogeneous Dirichlet，另以冻结的 real Robin condition 交叉检查。远端
+  zero-incoming scattering sequence 只用于 half-guide map limit；除非另行求复根，
+  不把它的实轴最小奇异值极小点当作有限层特征值。
+- **理由：** zero-incoming finite segment 一般仍向人工外部介质泄漏，其 nonlinear
+  root 可能离开实轴；此时沿实轴扫描只得到 singular-value minimum，simple-root
+  correction 的前提不成立。
+- **estimator 影响：** coarse scan 仅定位候选，局部 nonlinear solve 必须确认
+  $F_j(k_j)$ 的实际简单零点。对于 $N_{j+1}=2N_j$ 的层级，primary candidate 改为
+  $\eta_j=|\delta_j|$；只有 next-root prediction 与 doubling separation gates 都通过，
+  才解释为到精确 root 的 remaining-error estimator。
+- **证据：** scattering port 代数审计；
+  `research/projects/eig-apost/phase3-analysis/s-root.md`；
+  `research/projects/eig-apost/phase3-analysis/s-estimator.md`。
+- **状态：** Active analysis choice；尚未证明 map convergence 或 effectivity。
+
+## 2026-07-26 阶段：Phase 2b novelty gate 有条件通过
+
+- **决定：** fixed-$\beta$ line-defect guided-mode eigenvalue 的 BIE--DtN 后验误差
+  选题以 `PASS WITH CONDITIONS` 通过 search-bounded novelty gate。允许继续低成本
+  Phase 3 理论与验证设计，但不建立新 `research/mainline/`，不进入 MATLAB prototype，
+  也不冻结 priority claim。
+- **已知重合：** fixed-$\beta$ DtN/RtR 导模 formulation、BIE cell boundary map、
+  Riccati/doubling、开放导模域截断先验界、一般 photonic/fiber eigenvalue estimator、
+  DtN-truncated NEP convergence 和周期散射 DtN posterior term 均已有先例。C1--C3
+  只能作为背景或适配。
+- **候选核心：** 只保留 numerical half-guide DtN error 到 guided eigenvalue shift 的
+  computable estimator，以及 simple-root projected correction 的量级有效性或
+  effectivity，即 C4--C5 在 C1 精确对象上的交叉。
+- **条件：** 补齐 Bonnet-Ben Dhia--Gmati (1995)、Djellouli et al. (2000) 与 Leclerc
+  et al. (2026) 全文；投稿前更新 forward citations；先完成 root qualification、
+  independent-reference ladder 与 BIE boundary saturation 检查。共享同一 BIE cell
+  map 的 doubling/QZ/Riccati 一致性不视为独立真值。
+- **条件更新（2026-07-27）：** Bonnet-Ben Dhia--Gmati (1995) 与 Djellouli et al.
+  (2000) 已完成全文核验；两者强化了“一般 boundary-truncation eigenvalue estimate
+  已有先例”的判断，但未覆盖 computable posterior half-guide DtN $k$-shift estimator
+  或 simple-root effectivity。当前只剩 Leclerc et al. (2026) 全文受 HAL embargo。
+- **证据：** `research/projects/eig-apost/phase2b-novelty/r-gate.md`；
+  `research/projects/eig-apost/phase2b-novelty/claim-matrix.md`；
+  `research/projects/eig-apost/phase2b-novelty/r-sources.md`。
+- **状态：** Revisitable；若补充全文覆盖 C1--C5，或候选量不能超越 convergence
+  indicator，应改为 `REVISE` 或 `STOP`。

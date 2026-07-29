@@ -29,6 +29,13 @@ When an active `mainline/` exists, use this order: `mainline/` > `NOTATION.md` >
 - `draft/` is a downstream writing target, not an authority, unless a task selects
   a frozen draft version.
 
+## Literature
+
+- If a reference must be downloaded, use a lawful public full text and save it
+  through the repository-root `ref/ref_data/` as
+  `<FirstAuthorSurname><PublicationYear>.pdf`, appending `a`, `b`, and so on for
+  collisions; verify its identity before use.
+
 ## Notation
 
 - When an active `mainline/` exists, use its notation. Otherwise use notation
@@ -55,6 +62,9 @@ When an active `mainline/` exists, use this order: `mainline/` > `NOTATION.md` >
   when no active mainline exists. Do not edit a frozen review log unless the task
   explicitly concerns that archive.
 - Do not copy long proofs or complete literature content into collaboration files.
+- When writing research notes, add Obsidian wikilinks (`[[...]]`) for substantive
+  connections to relevant concept, literature, experiment, or report notes; avoid
+  decorative links and use vault-relative paths when filenames are ambiguous.
 
 ## Temporary material
 

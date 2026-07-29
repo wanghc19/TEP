@@ -6,15 +6,19 @@
 
 当前没有活动中的统一理论主线。原 Müller--Cauchy 主线已于 2026-07-26 冻结在
 Git 标签 `mainline-muller-cauchy-2026-07-26`，并移至
-`research/archive/muller-cauchy-2026-07/`。新的研究方向尚未确定；在形成可以明确
-命名且经过审核的统一框架以前，不建立空的 `mainline/` 作为占位。
+`research/archive/muller-cauchy-2026-07/`。`research/projects/eig-apost/` 已确认
+fixed-$\beta$ line-defect guided-mode eigenvalue 后验误差的 research question，并已
+完成 Phase 2b novelty gate，verdict 为 `PASS WITH CONDITIONS`。Phase 3 只进行 gate
+允许的低成本理论与验证设计，不构成新的统一主线。在形成可以明确命名且经过审核的
+统一框架以前，不建立空的 `mainline/` 作为占位。
 
 ## 层级
 
 - `archive/`：冻结的历史主线和其他归档材料。除非任务明确指定某一归档或 Git
   标签，否则它们不是当前数学表述和符号的权威来源。
-- `projects/`：独立专题研究、文献检索和 Codex 长任务输出。当前包含半波导 DtN
-  可行性研究、单胞表示研究和论文创新性审计。每个专题的结论只在其自身范围内有效。
+- `projects/`：独立专题研究、文献检索和 Codex 长任务输出。当前包含特征值后验误差
+  范围界定、半波导 DtN 可行性研究、单胞表示研究和论文创新性审计。每个专题的结论
+  只在其自身范围内有效。
 - `planning/`：尚未形成具体专题的新想法、研究路线、证明依赖、风险、备选结果和
   未来工作安排。它负责规划，不替代正式数学陈述。
 - `mainline/`：仅在出现经人工审核的活动统一理论时建立；届时它重新成为

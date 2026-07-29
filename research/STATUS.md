@@ -1,15 +1,16 @@
 # Research status
 
-更新日期：2026-07-26。
+更新日期：2026-07-27。
 
 状态词含义：`established in archived mainline` 仅表示冻结主线给出了论证，不等于已完成独立来源核验；`needs review` 表示已有陈述或证明草案但仍需严格审计；`tentative` 表示研究性判断；`unresolved` 表示尚未解决。
 
 ## 当前阶段
 
-此前的统一目标是在固定实数准周期参数 `beta` 下研究二维周期线缺陷波导的导模，
+此前的统一目标是在固定实数准周期参数 $\beta$ 下研究二维周期线缺陷波导的导模，
 并建立中心胞元 Müller--Rayleigh 表示与左右周期半波导出射 Cauchy 关系之间的连续
-耦合。该路线现已暂停；当前尚未确定新的统一研究方向，也没有活动中的
-`research/mainline/`。
+耦合。该路线现已暂停；当前把 fixed-$\beta$ line-defect guided-mode eigenvalue 的
+numerical half-guide DtN 后验误差作为专题候选方向，但尚未通过理论与数值可行性门，
+也没有活动中的 `research/mainline/`。
 
 原主线冻结于 Git 标签 `mainline-muller-cauchy-2026-07-26`，文件移至
 `research/archive/muller-cauchy-2026-07/`。冻结版本主要考虑实数 `k`、严格公共
@@ -20,6 +21,7 @@
 
 | 状态 | 专题 | 实际结论 |
 |---|---|---|
+| active investigation | `research/projects/eig-apost/` | 已确认 fixed-$\beta$ line-defect guided-mode eigenvalue 的后验误差 RQ；Phase 2b novelty gate 已完成，verdict 为 `PASS WITH CONDITIONS`。Bonnet-Ben Dhia--Gmati (1995) 与 Djellouli et al. (2000) 全文进一步确认一般 boundary-truncation eigenvalue estimate 已有先例；候选缺口仅为 periodic half-guide numerical DtN error 到 $k$-shift 的 computable posterior estimator 与 simple-root effectivity。尚无已证明 estimator、独立 $k_{\mathrm{ref}}$ 或 MATLAB prototype。 |
 | paused archive | `research/archive/muller-cauchy-2026-07/` | 冻结的 Müller--广义 Bloch--Cauchy 主线；商空间版本的核/场等价仍有未闭合的外部定理适配和表示论前提。 |
 | paused | `research/projects/half-guide-dtn/` | Stage 1 完成了符号审计、齐次半导 DtN/Riccati 验证和耦合方案建议；周期障碍半导、完整中心耦合及 MATLAB 最终验证尚未完成。该路线未整合进冻结主线。 |
 | completed project | `research/projects/cell-representation/` | 专题任务已完成：原始无条件猜想过强；给出了直接 Green 表示和带显式正则性、非 Wood 及互补问题条件的修正版。其纠正后的表示结构和商空间策略已进入冻结主线，但其中的表示定理仍为 `needs review`。 |
@@ -28,7 +30,7 @@
 
 ## 冻结主线中相对确定的结果
 
-- `established in archived mainline`：固定 `beta` 的加权自伴算子框架，以及弱形式与分片传输形式的等价。
+- `established in archived mainline`：固定 $\beta$ 的加权自伴算子框架，以及弱形式与分片传输形式的等价。
 - `established in archived mainline; source review pending`：两种周期端的本质谱为左右背景谱之并，冻结主线附录 A 给出证明；严格公共带隙是该归档中扫描与局域化框架的基础。
 - `established as framework choice`：出射对象首先作为 Cauchy 关系处理；只有 Dirichlet 投影可逆时才写成 DtN 图。
 - `established as necessary formulation choice`：一般情形必须允许广义 Floquet 模态和 Jordan 链，不能只使用普通 Bloch 特征向量。
@@ -53,6 +55,8 @@
 4. 归档中的未证明结论、待核验引用和中英文差异保持原有成熟度，不因归档而自动升级或失效。
 5. 新方向形成后，应更新 `research/DECISIONS.md`、本文件和 `research/README.md`，再决定是否建立新的 `research/mainline/`。
 
-当前没有预设的下一研究方向。冻结路线若被恢复，其优先事项仍是单位圆全谱排除、
+当前活动专题是偏工程实现的特征值后验误差研究。Phase 2b 已以
+`PASS WITH CONDITIONS` 完成，只允许进入受条件约束的 Phase 3 低成本理论与验证
+设计，不升级为统一研究方向。冻结路线若被恢复，其优先事项仍是单位圆全谱排除、
 广义 Floquet/Riesz 基适配、中心表示满射性和表示零空间刻画；具体记录见
 `research/archive/muller-cauchy-2026-07/review-log.md`。
