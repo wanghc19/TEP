@@ -18,6 +18,8 @@ experiments on periodic waveguides and related eigenvalue problems.
 - Preserve function input/output interfaces unless explicitly requested.
 - Write comments in English and use 2-space indentation.
 - Prefer local helper functions with `LOCAL_` prefixes.
+- The project's Python virtual environment is the Conda environment `octave`;
+  activate it with `conda activate octave`.
 - In repository Markdown files only, use `$$...$$` for display math and `$...$`
   for inline math; inside math delimiters, write Greek letters with LaTeX
   commands such as `\beta`, not bare names such as `beta` or literal Unicode
@@ -73,6 +75,8 @@ experiments on periodic waveguides and related eigenvalue problems.
 
 ## Validation
 
+- Put experimental code created during an agent's independent exploration in
+  the repository-root `test/` directory.
 - Do not run MATLAB automatically. Let the user perform final MATLAB validation,
   and never claim MATLAB was run unless it actually was.
 - Codex may use Octave for rough sanity checks. Prefer non-interactive commands
