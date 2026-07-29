@@ -20,6 +20,7 @@ bloch_test_empty_cell      % End-to-end test: empty-defect Bloch matching system
 tep_1d_scan_local          % Recursive local scan for the 1D waveguide TEP
 tep_edc_scan_local         % Recursive local scan for the empty-defect-cell cavity eigenproblem
 scat_edc_ps                % Point-source forced scattering in an empty-defect cell
+tep_edc_projected_gap_scan % Pre-scan: find k intervals where the lead crystal has no x-propagating Bloch multiplier
 test_qpgreen_axis_swap     % Smoke test: qpgreen_mfs y-periodic axis-swap consistency
 ```
 
@@ -117,6 +118,20 @@ Model abbreviations: `1d`, `edc` (empty defect cell), `mc` (missing column), `le
 Task abbreviations: `scan`, `local`, `global`, `test`, `ps` (point-source), `trmatch` (trace matching), `conv` (convergence).
 
 Package functions inside `+pkg/` do not need top-level prefixes.
+
+## Research workspace
+
+The `research/` directory holds theoretical work still under investigation, with its own authority hierarchy and rules (see `research/AGENTS.md`). Key structure:
+
+- `research/archive/` — frozen historical mainlines (non-authoritative unless a task explicitly selects them)
+- `research/projects/` — independent专题 investigations; currently active: `eig-apost/` (BIE-DtN posterior error estimator for guided-mode eigenvalues)
+- `research/planning/` — nascent ideas and research strategy
+- `research/tmp/` — disposable derivations (normally untracked)
+
+The Müller-Cauchy unified theory mainline is frozen at git tag `mainline-muller-cauchy-2026-07-26` and moved to `research/archive/muller-cauchy-2026-07/`. There is currently no active `research/mainline/`. Do not create one without explicit review.
+
+Literature PDFs referenced by research tasks are accessed through the repo-root
+`ref/ref_data/` directory and named `<FirstAuthorSurname><PublicationYear>.pdf`.
 
 ## Code conventions (from AGENTS.md)
 

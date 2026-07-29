@@ -83,9 +83,9 @@ Never present an uninspected literature claim as verified. Never apply a result
 with an unmet hypothesis. Mark unavailable-source dependencies as conditional
 and unresolved.
 
-Store task literature in the mathematical project's `ref/` directory, never in
-this skill's `references/` directory. The latter contains workflow instructions
-only.
+Store task literature in the location prescribed by the mathematical project's
+instructions. In this repository, use `ref/ref_data/`. Never store literature
+in this skill's `references/` directory; it contains workflow instructions only.
 
 For long arguments, use purpose-specific steps such as definitions, hypothesis
 verification, theorem application, and deduction of the target. Add a separate

@@ -12,7 +12,7 @@ Report at the end of every pass:
 8. each reference used and exact result number;
 9. printed and PDF pages for verified book citations;
 10. references downloaded during this pass;
-11. references absent from local `ref/`;
+11. references absent from the project-prescribed local literature location;
 12. steps still awaiting verification;
 13. remaining proof gaps; and
 14. preliminary or completed literature status.
@@ -24,8 +24,8 @@ Source file: not provided; the theorem was supplied by the user in the current c
 ```
 
 For each missing reference, also give complete bibliographic information, a
-stable accessible URL, why it could not be downloaded, its suggested `ref/`
-filename, and the dependent proof steps.
+stable accessible URL, why it could not be downloaded, its suggested local
+literature filename, and the dependent proof steps.
 
 Add the mode-specific information:
 

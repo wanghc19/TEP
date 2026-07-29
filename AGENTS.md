@@ -18,6 +18,12 @@ experiments on periodic waveguides and related eigenvalue problems.
 - Preserve function input/output interfaces unless explicitly requested.
 - Write comments in English and use 2-space indentation.
 - Prefer local helper functions with `LOCAL_` prefixes.
+- In repository Markdown files only, use `$$...$$` for display math and `$...$`
+  for inline math; inside math delimiters, write Greek letters with LaTeX
+  commands such as `\beta`, not bare names such as `beta` or literal Unicode
+  glyphs such as `β`. This rule does not apply to Codex chat replies: use the
+  chat renderer's default math delimiters and standard LaTeX symbols there, and
+  do not rely on macros or symbols defined in local files.
 - For theorem proofs or proof audits, use `$rigorous-proof` unless the
   user explicitly opts out.
 

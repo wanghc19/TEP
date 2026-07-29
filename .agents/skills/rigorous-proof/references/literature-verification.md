@@ -5,15 +5,16 @@ claim as verified.
 
 ## Locate and store sources
 
-Use `ref/` at the root of the current mathematical project for task literature.
-Never store task literature in the skill's `references/` directory.
+Use the literature location prescribed by the current mathematical project's
+instructions. In this repository, use `ref/ref_data/`. Never store task
+literature in the skill's `references/` directory.
 
 Before using an external result:
 
-1. Check `ref/` for the intended source.
+1. Check `ref/ref_data/` for the intended source.
 2. If absent, search lawful public sources such as publisher and journal sites,
    DOI pages, arXiv, author sites, and institutional repositories.
-3. Download an available lawful public full text into `ref/`.
+3. Download an available lawful public full text into `ref/ref_data/`.
 4. Never bypass a paywall, login, CAPTCHA, or access control or use an obviously
    unauthorized source.
 

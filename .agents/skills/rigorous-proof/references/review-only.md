@@ -3,8 +3,9 @@
 Use this workflow only after selecting **Review only** mode.
 
 Do not modify the proof under review. Reading local references and downloading
-lawful public references into the project's `ref/` directory are permitted;
-list every downloaded file in the completion report.
+lawful public references into the project-prescribed literature location are
+permitted; in this repository, use `ref/ref_data/`. List every downloaded file
+in the completion report.
 
 ## Review workflow
 
