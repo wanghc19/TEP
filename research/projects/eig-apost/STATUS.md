@@ -1,17 +1,20 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-07-27。
+更新日期：2026-07-30。
 
 ## 当前状态
 
 - 工作流：Academic Research Suite / Deep Research。
 - 阶段：Phase 1 Scoping、Phase 2 feasibility investigation 与 Phase 2b novelty gate
-  已完成；Phase 2b verdict 为 `PASS WITH CONDITIONS`。Phase 3 只允许受 gate 条件约束
-  的低成本理论与验证设计。
+  已完成；Phase 2b verdict 为 `PASS WITH CONDITIONS`。Phase 3 已完成一轮受条件约束
+  的 root-search 与 estimator 设计及 adversarial review。Phase 4 已完成方法汇总稿、
+  skeptic 审查、数学修订和 PDF 交付。
 - 状态：`active investigation`。
-- 阶段门：Phase 2 与 Phase 2b 均为 `PASS WITH CONDITIONS`；允许建立误差分解、
-  最小证明义务和实验协议，不允许在未验证前实现 prototype、冻结 priority claim 或
-  声称 estimator 成立。
+- 阶段门：Phase 4 文稿审查 verdict 为 `PASS WITH CONDITIONS`，项目研究门仍为
+  `REVISE`。复根搜索方案和一阶 tail estimator 在明确假设下
+  可实现且数学自洽；augmented formulation 等价性、analytic implementation、
+  map convergence 与 reliable remainder 尚未闭合，不能声称已有 unconditional 或
+  certified estimator。
 
 ## 已完成
 
@@ -45,7 +48,8 @@
   直接消元核对两段 scattering 组合公式；尚未用实际 MATLAB cell map 核对。
 - 已明确区分实轴 $\sigma_{\min}$ 极小点、离散 NEP 实际零点和精确 guided eigenvalue；
   root qualification 失败时不得报告 eigenvalue estimator。
-- 已把 $\eta_j=\lvert \delta_j \rvert$ 设为 doubling hierarchy 的 primary candidate，并把
+- 已把 $\eta_j=\lvert \delta_j^{\mathrm{map}} \rvert$ 设为 doubling hierarchy 的 primary
+  candidate，并把
   “effectivity 趋近 1”列为需要证明/反驳的核心发表命题，而非当前结论。
 - 已建立 `phase2b-novelty/`，冻结 C1--C6 claim decomposition、检索边界、证据等级和
   `PASS / PASS WITH CONDITIONS / REVISE / STOP` 判据。
@@ -69,11 +73,53 @@
 - 已在 `phase2b-novelty/r-gate.md` 中补充 C1--C6 的操作性定义，区分连续真根 $k_*$、
   固定 BIE/port 离散的极限根 $k_{\infty,h}$ 与 finite-tail 根 $k_{j,h}$，并解释
   projected correction、effectivity index 与 asymptotically exact estimator。
+- 已按 ARS deep-research Phase 3 continuation 完成一轮 researcher/skeptic 并行调查与
+  交叉复核；skeptic 充当 falsification-oriented human challenger。
+- 已核验 Güttel--Tisseur 的 simple-root perturbation、bordered implicit determinant、
+  Beyn contour method 与 argument-principle root count；Fliss 的 half-guide DtN/Riccati
+  定义与 convergence statements 已定位到原文。Ehrhardt 的 finite scattering/doubling
+  只作为数值先例，不作为当前二维 BIE convergence theorem。
+- 已把 root 搜索具体化为固定公共表示的 augmented finite-tail NEP：实轴 scan 只定位，
+  anchored analytic Rayleigh chart 保证局部解析性，小型 pole-free contour 隔离一个
+  complex root，bordered implicit determinant Newton 完成 refinement。
+- 已识别当前 `bloch.rayleigh_channels` 的 pointwise principal-square-root convention
+  不适合 complex analytic root search；实现时必须改用从 physical seed 延拓的局部分支。
+- 已修正 estimator 的层级含义与符号：
+  $\delta_j^{\mathrm{map}}$ 一阶预测 $k_{j+1,h}-k_{j,h}$，在
+  $e_{j+1}=o(e_j)$ 时估计 coarse tail
+  $|k_{j,h}-k_{\infty,h}|$，不估计 fine-level tail。
+- 已把未收敛 root defect、map correction 与 total next-level predictor 分开，并给出
+  simple-root $C^1$ expansion 下 effectivity 趋于 $1$ 的条件化推导。
+- 已给出依赖独立 saturation bound 与 correction remainder 的严格区间；同时以精确
+  oscillatory scalar counterexample 证明有限个 observed ratios 不能生成 certificate。
+- 已用一个非正规 `2 x 2` manufactured NEP 检查 correction 的符号和渐近 effectivity，
+  并用 oscillatory scalar hierarchy 检查 false-asymptotic gate；这些是 Python
+  algebraic sanity checks，不是项目 MATLAB validation。
+- 已由 writer 把 Phase 2--3 的理论和实现协议整理为
+  `phase4-report/method.tex`，并用 XeLaTeX 生成 13 页 `output/pdf/method.pdf`。
+- 已由独立 skeptic 逐式核对 augmented equations、analytic chart、bordered Newton、
+  projected correction、coarse/fine 解释、条件 effectivity 证明和 reliable interval；
+  writer 未改变 researcher 的核心数学逻辑。
+- 已按 skeptic 初轮 `REVISE` 意见补入同维 $F_{\infty,h}$ scattering-block lift、
+  far-block 一致可逆性与 kernel bridge 条件、完整 doubling Schur pole gate、Fliss DtN
+  的谱适用域，以及紧圆盘上的 $C^1$ 范数；delta-audit verdict 为
+  `PASS WITH CONDITIONS`。
+- 已清理 active notation conflicts：center extractors 改记为 $\mathcal E_L,\mathcal E_R$，
+  三个标量反例与主 NEP 符号分离，并内联双侧 DtN map-difference 诊断。
+- 已完成 PDF 逐页渲染检查；没有公式裁切、页面重叠或重复参考文献标题。未运行 MATLAB
+  或 Octave，未产生项目数值结果。
 
 ## 尚未进行
 
 - 尚未把文献中的一阶 correction 假设验证到当前 BIE--DtN operator family，也没有
   可计算 remainder 或可靠性上界。
+- 已写出 candidate $(n+8p)\times(n+8p)$ block system 与 equation count，但尚未逐行
+  映射到实际 center BIE/extractor blocks，也未证明 kernel--finite-field equivalence
+  或排除 representation nullspace 与 one-cell BIE poles 的伪根。
+- 尚未实现 analytic Rayleigh branch chart、contour count、bordered complex Newton 或
+  adjacent-level root matching。
+- 尚未从 map-convergence theorem、stable-subspace estimate 或其他独立来源得到
+  $\bar q<1$；observed doubling ratios 只能作 empirical diagnostic。
 - 未冻结首版 cell port formulation，也未确认现有 `A_QP` 能否原样生成所需 cell
   DtN/RtR map。
 - 尚未冻结 benchmark 参数、independent reference solver 或最终论文大纲。
@@ -86,8 +132,9 @@
 
 ## 当前门槛
 
-当前门槛是按 [[research/projects/eig-apost/phase2b-novelty/r-gate|Phase 2b gate]]
-进入条件化 Phase 3：先调查 map perturbation、simple-root transfer、computable
-remainder 或可验证 tail assumption，冻结 independent-reference ladder，并在任何
-effectivity 结论前完成 root qualification 与 BIE boundary saturation 检查。仍不进入
-MATLAB prototype，不创建 `research/mainline/`，也不使用绝对优先权表述。
+Phase 4 文稿自身为 `PASS WITH CONDITIONS`，但项目门槛仍是 `REVISE`：先把 candidate
+square augmented operator 映射到实际 BIE blocks，
+静态核对并证明 kernel equivalence，再实现 analytic branch、contour isolation 和
+bordered complex root solver。只有这些
+通过后才验证 projected correction；只有独立建立 saturation/remainder bound 后才报告
+reliable interval。仍不创建 `research/mainline/`，也不使用绝对优先权表述。

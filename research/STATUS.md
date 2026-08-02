@@ -1,6 +1,6 @@
 # Research status
 
-更新日期：2026-07-27。
+更新日期：2026-07-30。
 
 状态词含义：`established in archived mainline` 仅表示冻结主线给出了论证，不等于已完成独立来源核验；`needs review` 表示已有陈述或证明草案但仍需严格审计；`tentative` 表示研究性判断；`unresolved` 表示尚未解决。
 
@@ -21,7 +21,7 @@ numerical half-guide DtN 后验误差作为专题候选方向，但尚未通过�
 
 | 状态 | 专题 | 实际结论 |
 |---|---|---|
-| active investigation | `research/projects/eig-apost/` | 已确认 fixed-$\beta$ line-defect guided-mode eigenvalue 的后验误差 RQ；Phase 2b novelty gate 已完成，verdict 为 `PASS WITH CONDITIONS`。Bonnet-Ben Dhia--Gmati (1995) 与 Djellouli et al. (2000) 全文进一步确认一般 boundary-truncation eigenvalue estimate 已有先例；候选缺口仅为 periodic half-guide numerical DtN error 到 $k$-shift 的 computable posterior estimator 与 simple-root effectivity。尚无已证明 estimator、独立 $k_{\mathrm{ref}}$ 或 MATLAB prototype。 |
+| active investigation | `research/projects/eig-apost/` | Phase 4 已把固定公共表示的 augmented complex NEP、coarse finite-tail projected correction、条件 effectivity 证明和数值实现协议整理为 13 页方法稿，并经 skeptic delta-audit 得到文稿 verdict `PASS WITH CONDITIONS`。项目研究门仍为 `REVISE`：同维 exact-map lift 的 block convergence 与 kernel bridge、analytic branch/完整 pole-ledger contour solver、remainder、独立 $k_{\mathrm{ref}}$ 与 MATLAB prototype 均未完成，observed doubling ratios 不能充当 certificate。 |
 | paused archive | `research/archive/muller-cauchy-2026-07/` | 冻结的 Müller--广义 Bloch--Cauchy 主线；商空间版本的核/场等价仍有未闭合的外部定理适配和表示论前提。 |
 | paused | `research/projects/half-guide-dtn/` | Stage 1 完成了符号审计、齐次半导 DtN/Riccati 验证和耦合方案建议；周期障碍半导、完整中心耦合及 MATLAB 最终验证尚未完成。该路线未整合进冻结主线。 |
 | completed project | `research/projects/cell-representation/` | 专题任务已完成：原始无条件猜想过强；给出了直接 Green 表示和带显式正则性、非 Wood 及互补问题条件的修正版。其纠正后的表示结构和商空间策略已进入冻结主线，但其中的表示定理仍为 `needs review`。 |
@@ -55,8 +55,10 @@ numerical half-guide DtN 后验误差作为专题候选方向，但尚未通过�
 4. 归档中的未证明结论、待核验引用和中英文差异保持原有成熟度，不因归档而自动升级或失效。
 5. 新方向形成后，应更新 `research/DECISIONS.md`、本文件和 `research/README.md`，再决定是否建立新的 `research/mainline/`。
 
-当前活动专题是偏工程实现的特征值后验误差研究。Phase 2b 已以
-`PASS WITH CONDITIONS` 完成，只允许进入受条件约束的 Phase 3 低成本理论与验证
-设计，不升级为统一研究方向。冻结路线若被恢复，其优先事项仍是单位圆全谱排除、
+当前活动专题是偏工程实现的特征值后验误差研究。Phase 4 方法稿、skeptic 审查与 PDF
+交付已完成；文稿为 `PASS WITH CONDITIONS`，项目门仍为 `REVISE`。下一步是先闭合
+augmented operator equivalence 与同维 exact-map lift，再实现带完整 pole ledger 的
+analytic complex root solver；在此以前不升级为统一研究方向。
+冻结路线若被恢复，其优先事项仍是单位圆全谱排除、
 广义 Floquet/Riesz 基适配、中心表示满射性和表示零空间刻画；具体记录见
 `research/archive/muller-cauchy-2026-07/review-log.md`。

@@ -24,20 +24,32 @@ tolerance；失败时不进入 guided-mode coupling。
 
 1. 为 $E_{\mathrm{defect}}$ 建立保留 BIE 的 center-cell formulation。
 2. 明确 center boundary unknowns 与 port Dirichlet traces 的 ordering/scaling。
-3. 组装 $F_j(k)$，并用两个独立 sign tests 检查左右 DtN。
-4. 保留现有 trace-subspace code 只作 cross-check，不复制其 definition。
+3. 把 center-port 与 far-port incoming/outgoing amplitudes 保留为 unknown，直接组装
+   augmented $F_{j,h}(k)$；不先消去 terminal equations 或作 Cayley transform。
+4. 核对 equation/unknown count，证明 augmented kernel 与 finite-tail guided field 等价，
+   并排除 center representation nullspace 与 one-cell BIE poles 产生的伪根。
+5. 用两个独立 sign tests 检查左右 port Cauchy convention；保留 reduced DtN 与现有
+   trace-subspace code 只作 well-conditioned cross-check。
 
 成功条件：相同 $j$、相同 port basis 下矩阵维数固定，$F_{j+1}-F_j$ 可直接形成。
 
 ## Stage C: root and estimator
 
-1. 用 coarse scan 只定位候选；局部 nonlinear singularity solve 求实际 $k_j$，不得把
-   $\sigma_{\min}$ 极小点直接当根。
-2. 从 SVD 取得 unit-norm $x_j,y_j$。
-3. 对 $y_j^*F_j'(k_j)x_j$ 做 derivative-step convergence test。
-4. 计算 $\delta_j$，再计算实际 $k_{j+1}$ 检查 first-order prediction。
-5. 只有 root qualification 与 doubling gate 都通过，才把 $\eta_j=\lvert \delta_j \rvert$ 报告为
-   remaining-error estimator。
+1. 用 coarse real-axis scan 只定位候选，不把 $\sigma_{\min}$ 极小点直接当根。
+2. 在候选周围建立 anchored analytic $\gamma_m(k)$ chart；contour 避开 Wood points、
+   Green-function cuts 和 BIE poles。
+3. 用 argument-principle/Beyn contour count 隔离一个 root，再用 bordered implicit
+   determinant Newton 求 complex $k_{j,h}$；至少两个初值收敛一致。
+4. 从 SVD 取得 unit-norm $x_j,y_j$，检查左右 residual、second singular-value gap、
+   border rcond、center participation 和 adjacent-level branch overlap。
+5. 对 $y_j^*F_{j,h}'(k_{j,h})x_j$ 做 $s,s/2,s/4$ derivative-step test，导数包含全部
+   $k$ dependence。
+6. 分别计算 $\delta_j^{\mathrm{root}}$、$\delta_j^{\mathrm{map}}$ 与
+   $\delta_j^{\mathrm{tot}}$，再计算 matched $k_{j+1,h}$ 检查 signed first-order prediction。
+7. root qualification 通过后可把
+   $\eta_j=|\delta_j^{\mathrm{map}}|$ 报告为
+   `conditional/empirical coarse-tail estimator`；只有独立得到
+   $\bar q<1$ 与 correction remainder 上界时才输出 reliable interval。
 
 两道 gate 的具体判据见
 [[research/projects/eig-apost/phase3-analysis/s-root|root qualification]] 与
@@ -49,7 +61,12 @@ tolerance；失败时不进入 guided-mode coupling。
 2. 运行 DtN/trace-subspace whole-root internal cross-check。
 3. 获得独立 FEM/supercell reference 或明确降级 reference status。
 4. 固定 DtN 后运行 `ntot` falsification。
-5. 生成预注册表格，不手工删除失败点。
+5. 运行 manufactured tests：实轴 singular-value dip 无实根、level-dependent scaling、
+   nonnormal simple NEP、oscillatory false-$q$ gate、branch-crossing 和
+   termination-localized state。
+6. 分开报告 tail effectivity 与 total effectivity，并对数值 root/correction errors
+   作 inflation。
+7. 生成预注册表格，不手工删除失败点。
 
 ## Stop conditions
 
@@ -58,6 +75,8 @@ tolerance；失败时不进入 guided-mode coupling。
 - Schur/Cayley matrices 系统性病态；
 - $\delta_j$ 不能预测 next-level root shift；
 - 只能得到稳定的实轴 $\sigma_{\min}$ 极小点，不能确认 $F_j$ 的简单零点；
+- contour root count 对 contour 缩放、branch chart 或 quadrature 不稳定；
+- augmented kernel-equivalence 或 square regularity 无法建立；
 - BIE `ntot` test 显示共同误差大于 DtN tail；
 - reference uncertainty 与待估计误差同量级。
 
