@@ -1,0 +1,13 @@
+status=REPRODUCED
+pass=1
+relative_difference=0
+tolerance=1e-13
+manifest_equal=1
+execution_manifest_complete=1
+baseline_artifact_bundle_complete=1
+source_copy_equal=1
+shared_fingerprints_equal=1
+projector_fingerprints_equal=1
+operational_label=SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS
+root_readiness=BLOCKED_UPSTREAM_PROVENANCE
+physical_root_ready=STOP
