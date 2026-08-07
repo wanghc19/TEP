@@ -7,29 +7,35 @@
 - 工作流：Academic Research Suite / Deep Research，现处于受审查的数值实现阶段。
 - 阶段：Phase 1--4 已完成范围、来源、novelty、理论方案和方法稿；随后完成三个
   Octave implementation checkpoints：manufactured NEP、Half-guide map 和
-  Augmented BIE / center coupling。
+  Augmented BIE / center coupling，并完成一次 Root-readiness early-stop proxy
+  diagnostic。
 - 状态：`active investigation`。
 - 阶段门：manufactured root/correction pipeline 为窄范围 `GO`，Half-guide map 为
-  Stage 1 `GO`，Augmented BIE 为 `STAGE2_DISCRETE_ALGEBRA_GO`；但总门仍为
-  `ROOT_READY=STOP`。现有证据只支持固定离散代数、单点 interface smoke 和条件经验
-  estimator，不支持真实 guided eigenvalue、连续 kernel--field equivalence、
-  unconditional effectivity 或 certified interval。
+  Stage 1 `GO`，Augmented BIE 为 `STAGE2_DISCRETE_ALGEBRA_GO`；Root-readiness 诊断为
+  `REVISE / BLOCKED_UPSTREAM_PROVENANCE`，总门仍为 `ROOT_READY=STOP`。现有证据只支持
+  固定离散代数、离散对象兼容和条件经验 estimator 的算法原型，不支持真实 guided
+  eigenvalue、连续 kernel--field equivalence、unconditional effectivity 或 certified
+  interval。
 
 ## 实现 checkpoint
 
 | Checkpoint | 结果 | 已验证 | 明确未验证 |
 |---|---|---|---|
 | Manufactured NEP | `GO`; `conditional/empirical` | 固定维数 contour count、bordered Newton、root qualification、projected correction 和四个负例；末级 tail effectivity 为 `0.999987793` | BIE/DtN、branch cut、pole、representation kernel、common discretization error |
-| Half-guide map | Stage 1 `GO` | 非交换 Redheffer/terminal/Cayley 次序、exact analytic cell、固定 $k=0.10$ 的 EDC same-cell QZ/doubling smoke 和负例传播；Case B 最终误差 $1.93\times10^{-15}$ | 独立 PDE truth、频率区间、asymmetric/defective cases、map convergence theorem；artifact-level 仅 `PARTIALLY_REPRODUCIBLE` |
+| Half-guide map | Stage 1 `GO` | 非交换 Redheffer/terminal/Cayley 次序、exact analytic cell、固定 $k=0.10$ 的中心圆形介质夹杂单胞（旧报告称 `EDC cell`）same-cell QZ/doubling smoke 和负例传播；Case B 最终误差 $1.93\times10^{-15}$ | 独立 PDE truth、频率区间、asymmetric/defective cases、map convergence theorem；artifact-level 仅 `PARTIALLY_REPRODUCIBLE` |
 | Augmented BIE | `STAGE2_DISCRETE_ALGEBRA_GO`; `ROOT_READY=STOP` | 固定九块 $(n+8p)$ assembly、scaled density coordinate、raw/reduced Schur agreement、七级 availability 与 failure ledger；unchanged-source 复现差为 $0$ | 连续表示单射性、kernel--field equivalence、pole-free analytic neighborhood、root/eigenvalue/estimator |
+| Root-readiness proxy diagnostic | `REVISE / BLOCKED_UPSTREAM_PROVENANCE`; `PHYSICAL_ROOT_READY=STOP` | 受控诊断和 source-aware 双跑；$10^{-5}$ object gate 的 78 个 downstream rows 与 3 个 resolution rows 全部通过；aggregate max $1.90\times10^{-9}$；projector/source fingerprints 重现 | production 内部 $A_{\mathrm{pr}},b_{\mathrm{pr}}$ 不可观测；三个 $10^{-11}$ mirrored-output gates 失败；未运行 complex disk、CR、root、Newton、eigenvalue 或 estimator |
 
 实现权威入口为
 [[research/projects/eig-apost/implementation/design|manufactured NEP design]]、
 [[research/projects/eig-apost/implementation/half_guide_map|Half-guide map design]] 和
 [[research/projects/eig-apost/implementation/aug-bie|Augmented BIE design]]；相应独立审查为
 [[research/projects/eig-apost/implementation/nep-review|manufactured NEP review]]、
-[[research/projects/eig-apost/implementation/half_guide_review|Half-guide review]] 和
-[[research/projects/eig-apost/implementation/aug-bie-review|Augmented BIE review]]。
+[[research/projects/eig-apost/implementation/half_guide_review|Half-guide review]]、
+[[research/projects/eig-apost/implementation/aug-bie-review|Augmented BIE review]] 和
+[[research/projects/eig-apost/implementation/root_readiness_review|Root-readiness review]]；
+本轮数值解释见
+[[research/projects/eig-apost/implementation/root_result|Root-readiness result]]。
 
 ## 已完成
 
@@ -132,6 +138,16 @@
   ellipse/circle interface smoke、七个 finite-tail levels、availability/failure negatives
   与 source-aware unchanged-source rerun 均通过。最大 actual raw Schur error 为
   $3.16\times10^{-17}$，wrong-coordinate mutation mismatch 为 $7.22\times10^{-2}$。
+- 已在 `test/root-ready/` 完成 Root-readiness early-stop proxy diagnostic 及两次最终
+  unchanged-source Octave 运行。修正后的 $10^{-5}$ object-compatibility gate 中 78/78
+  downstream rows 和 3/3 resolution rows 通过，aggregate max 为
+  $1.898508\times10^{-9}$；rank 126/144 的 projector fingerprints、直接调用源码清单和
+  数值向量完全复现。
+- 已确认当前 `kernel.precomp_proxy` 接口不暴露其内部实际消费的
+  $A_{\mathrm{pr}},b_{\mathrm{pr}}$；测试只能镜像构造并比较输出。coefficient、proxy
+  field 与 residual 的三个 $10^{-11}$ gates 分别以 $2.798540\times10^{-7}$、
+  $5.531552\times10^{-10}$ 和 $1.250388\times10^{-9}$ 失败，因而没有启动 root-stage
+  计算。
 - 已识别并在 Stage 2 局部规避 variable-speed geometry 的 density-scaling mismatch；
   production `bloch.construct_S` 与 `scat_ld_lead_in` 尚未全局修改或验证。
 - MATLAB 尚未运行；上述数值证据均由 Conda `octave` 环境产生，实验代码只位于
@@ -152,6 +168,9 @@
   reliable eigenvalue interval 或真实二维缺陷波导的 estimator effectivity。
 - 尚未修复并回归验证 production variable-speed density scaling；当前 ellipse 的修正
   只存在于 `test/aug-bie/` 的实验路径。
+- 尚未通过一个非行为改变的 diagnostic interface 捕获或结构性共享 production 实际
+  消费的 $A_{\mathrm{pr}},b_{\mathrm{pr}}$；在获得修改 package helper 的明确授权以前，
+  test-local cloned constructor 不能关闭该 provenance gap。
 - 尚未建立独立 $k_{\mathrm{ref}}$、BIE/port refinement、MATLAB parity 或真实缺陷晶体
   waveguide benchmark。
 - Leclerc et al. (2026) 的 HAL manuscript 尚处于 embargo；在全文核验与投稿前
@@ -159,9 +178,51 @@
 
 ## 当前门槛
 
-本轮离散实现 checkpoint 已关闭并可提交；下一阶段尚未开始。进入真实 root search 前，
-必须先关闭 continuous center-BIE kernel--field/representation gate，并冻结一个避开 Wood、
-BIE、terminal 和 raw-Schur poles 的 analytic search neighborhood。随后才可实现 anchored
-Rayleigh chart、contour isolation、bordered Newton 与 adjacent-level matching；这些通过后
-才测试真实 projected correction。只有再独立建立 saturation/remainder bound 后，才可把
-结果称为 reliable interval。仍不创建 `research/mainline/`，也不使用绝对优先权表述。
+本轮受控诊断已完成并可作为 `REVISE / BLOCKED` 结果提交，但下一科学阶段未获授权。
+最小下一步是以不改变数值行为的接口捕获或结构性共享 production 实际消费的
+$A_{\mathrm{pr}},b_{\mathrm{pr}}$，在不改变冻结阈值的前提下重跑并再次审查；这需要用户
+明确允许修改 package helper。其后仍估计有五个主要 empirical stages：proxy provenance
+closure、full analytic root-readiness、real root isolation、empirical correction 和
+real-case validation。约三阶段后才可能得到首个 qualified discrete root，全部五阶段后才
+可能形成可信的真实二维 eigenvalue + empirical estimator case。continuous
+kernel--field/representation、saturation/remainder 和 validated error-budget certification
+仍是另外至少三个理论/验证门。仍不创建 `research/mainline/`，也不使用绝对优先权表述。
+
+## 新 session handoff
+
+- 唯一允许写入的 worktree 是 `/Users/whc/Documents/Work/epost`，当前分支为
+  `codex/epost`，本阶段基准提交为 `d699ae9`。不得修改主分支所在目录，也不得删除该
+  worktree。
+- 新 session 应先读取仓库根目录与 `research/` 下的 `AGENTS.md`，再读取本文件、
+  [[research/projects/eig-apost/implementation/README|implementation stage overview]]、
+  [[research/projects/eig-apost/implementation/root_readiness|Root-readiness design]]、
+  [[research/projects/eig-apost/implementation/root_result|result]]、
+  [[research/projects/eig-apost/implementation/root_readiness_review|review]]、
+  `implementation/SYMBOL.md` 和 `test/root-ready/output/report.md`。
+- `root_readiness_review.md` 的 Section K 是当前 verdict；更早的 `PENDING` 状态和
+  Section J 初版实现问题只作为审计历史保留。`root_result.md` 与 review 当前标为
+  `STALE`，原因仅是权威运行后设计文件增加了状态说明，不表示数值证据被推翻。
+- 保持 Researcher + Engineer + Skeptic 多 subagent 协作：Researcher 冻结数学和实验
+  设计，Engineer 只在获准路径实现并复现，Skeptic 在实现前后独立只读审查；主 agent
+  负责综合、持久化审查和 handoff。
+- 当前权威状态为 `ROOT_READINESS=BLOCKED_UPSTREAM_PROVENANCE`、
+  `ROOT_READINESS_SAMPLED_DISCRETE_GO=0`、`PHYSICAL_ROOT_READY=STOP`。$10^{-5}$
+  object gate 通过不能覆盖三个 $10^{-11}$ mirrored-output 失败，也不能解释成真实 root
+  或 estimator。
+- 下一步仅允许先设计 production-consumed $A_{mathrm{pr}},b_{mathrm{pr}}$ 的结构共享或
+  可观测接口。最小候选是给 `kernel.precomp_proxy` 增加只在请求时返回 $A,b$ 的可选第二
+  输出，并保持现有单输出路径行为不变；但未经用户明确授权，不得修改该 helper 或任何
+  `test/` 外 package 代码，也不得启动 scan、disk、CR、root、Newton 或 estimator。
+- 当前 intended changes 包括 `research/README.md`、`research/STATUS.md`、本专题的
+  README/STATUS/SYMBOL、三个 Root-readiness 文档和 `test/root-ready/` 中的代码及可审计
+  CSV/Markdown/TXT 输出。`results.mat`、`run.log` 继续忽略；未跟踪的
+  `.codex/agents/*.toml` 与本阶段无关，不得纳入提交。
+- 最近权威 Octave 运行命令为
+  `conda run -n octave octave --quiet --no-gui --eval "addpath('test/root-ready'); run_root_ready_diagnostic();"`；
+  exit code 为 0，最终状态为 `REPRODUCED`，数值相对差为 0，source manifest 与 projector
+  fingerprints 在两次权威运行之间均一致。运行后 `root_readiness.md` 只增加了
+  post-experiment status note，所以当前设计文件哈希已不同于运行时 manifest；数值证据
+  未改变，但当前完整 worktree manifest 应标为 `STALE`。MATLAB 尚未运行。
+
+在得到修改 package helper 的明确授权以前，新 session 应停在接口设计与审查，不得把
+当前失败绕过、降级或通过放宽阈值处理。

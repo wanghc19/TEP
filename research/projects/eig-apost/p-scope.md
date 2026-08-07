@@ -2,6 +2,16 @@
 
 # Phase 1 scoping plan
 
+> **Status: COMPLETED / HISTORICAL PHASE 1 PLAN.** 本文件保留项目启动时的范围选择、
+> Phase 1 工作包和进入 Phase 2 的原始门槛，作为
+> [[research/DECISIONS|research decisions]] 中启动 `eig-apost` 专题的决策证据。下文的
+> “当前”“仍需”等措辞应按 Phase 1 当时的时间点阅读，不代表现行任务状态。已确认的
+> Research Question 见
+> [[research/projects/eig-apost/phase1-scope/rq-summary|RQ summary]]，Phase 1 方法输出见
+> [[research/projects/eig-apost/phase1-scope/p-method|Methodology Blueprint]]；当前阶段、
+> 阻塞项和下一步以 [[research/projects/eig-apost/STATUS|project STATUS]] 及
+> [[research/projects/eig-apost/implementation/README|implementation stage overview]] 为准。
+
 ## 目标
 
 把“偏工程实现和特征值后验误差”收敛成一个可由现有代码支撑、可构造数值证据、
@@ -58,3 +68,26 @@
 RQ 已由用户确认并记录在 `phase1-scope/rq-summary.md`。Layer 2 的初始方法承诺是先调查
 DtN+BIE estimator，再考虑向已有 trace-subspace 实现扩展；该顺序仍需方法反思和
 Phase 2 文献证据检验。
+
+## 阶段关闭说明
+
+Phase 1 的五个主要范围决定均已关闭：谱对象选为 fixed-$\beta$ line-defect guided-mode
+eigenvalue；误差目标选为预测 $\lvert k_h-k_*\rvert$ 量级的 a posteriori estimator；
+首版参数范围限制在非 Wood、单位圆分离和孤立简单点谱；reference truth 要求尽量独立的
+高精度 formulation；贡献强度目标为可检验的 quantitative estimator，而不是只有排序
+作用的 indicator。
+
+对应的 Phase 1 产物为：
+
+- [[research/projects/eig-apost/phase1-scope/materials|materials]]：启动时的代码、结果和
+  本地来源入口清单；
+- [[research/projects/eig-apost/phase1-scope/rq-summary|RQ summary]]：用户确认的研究问题、
+  FINER 自评和范围边界；
+- [[research/projects/eig-apost/phase1-scope/p-method|Methodology Blueprint]]：进入来源调查
+  前的方法承诺和停止规则；
+- [[research/projects/eig-apost/phase1-scope/r-da1|Devil's Advocate Checkpoint 1]]：对范围
+  与方法选择的第一轮反方审查。
+
+此后已完成 Phase 2 来源核验、Phase 2b novelty gate、Phase 3 数学与实验设计、Phase 4
+方法稿，以及 I0--I3 数值实现 checkpoint。它们不回写到本历史计划；完整演进路线统一在
+[[research/projects/eig-apost/implementation/README|implementation stage overview]] 维护。

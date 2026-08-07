@@ -10,7 +10,10 @@
 并建立中心胞元 Müller--Rayleigh 表示与左右周期半波导出射 Cauchy 关系之间的连续
 耦合。该路线现已暂停；当前把 fixed-$\beta$ line-defect guided-mode eigenvalue 的
 numerical half-guide DtN 后验误差作为专题候选方向。其 manufactured NEP、Half-guide
-map 与 Augmented BIE 离散实现门已经通过；但最终理论与数值可行性门仍未通过，连续
+map 与 Augmented BIE 离散实现门已经通过；Root-readiness early-stop proxy diagnostic
+已经完成但 verdict 为 `REVISE / BLOCKED_UPSTREAM_PROVENANCE`。冻结的 $10^{-5}$ 对象
+兼容门通过，但 production 内部 $A_{\mathrm{pr}},b_{\mathrm{pr}}$ 在当前接口下不可观测，
+且三个 $10^{-11}$ mirrored-output gates 失败。最终理论与数值可行性门仍未通过，连续
 理论、真实 root 和 estimator 尚未建立，也没有活动中的 `research/mainline/`。
 
 原主线冻结于 Git 标签 `mainline-muller-cauchy-2026-07-26`，文件移至
@@ -22,7 +25,7 @@ map 与 Augmented BIE 离散实现门已经通过；但最终理论与数值可�
 
 | 状态 | 专题 | 实际结论 |
 |---|---|---|
-| active investigation | `research/projects/eig-apost/` | Phase 4 方法稿为 `PASS WITH CONDITIONS`；manufactured NEP 与 Half-guide map 为窄范围 `GO`，Augmented BIE 为 `STAGE2_DISCRETE_ALGEBRA_GO`。证据支持固定维数搜索/校正流程、half-guide map 代数和固定离散 center coupling，但 `ROOT_READY=STOP`：连续 kernel--field/representation gate、analytic branch 与完整 pole-ledger root solver、remainder、独立 $k_{\mathrm{ref}}$ 和 MATLAB parity 均未完成。 |
+| active investigation | `research/projects/eig-apost/` | Phase 4 方法稿为 `PASS WITH CONDITIONS`；manufactured NEP 与 Half-guide map 为窄范围 `GO`，Augmented BIE 为 `STAGE2_DISCRETE_ALGEBRA_GO`。Root-readiness 受控诊断可复现且 $10^{-5}$ object gate 通过，但内部 $A_{\mathrm{pr}},b_{\mathrm{pr}}$ provenance 不可观测，三个 $10^{-11}$ output gates 失败，故为 `REVISE / BLOCKED_UPSTREAM_PROVENANCE`，`ROOT_READY=STOP`。真实 root、estimator、连续 kernel--field/representation gate、analytic branch、pole ledger、独立 $k_{\mathrm{ref}}$ 和 MATLAB parity 均未完成。 |
 | paused archive | `research/archive/muller-cauchy-2026-07/` | 冻结的 Müller--广义 Bloch--Cauchy 主线；商空间版本的核/场等价仍有未闭合的外部定理适配和表示论前提。 |
 | paused | `research/projects/half-guide-dtn/` | Stage 1 完成了符号审计、齐次半导 DtN/Riccati 验证和耦合方案建议；周期障碍半导、完整中心耦合及 MATLAB 最终验证尚未完成。该路线未整合进冻结主线。 |
 | completed project | `research/projects/cell-representation/` | 专题任务已完成：原始无条件猜想过强；给出了直接 Green 表示和带显式正则性、非 Wood 及互补问题条件的修正版。其纠正后的表示结构和商空间策略已进入冻结主线，但其中的表示定理仍为 `needs review`。 |
@@ -57,10 +60,12 @@ map 与 Augmented BIE 离散实现门已经通过；但最终理论与数值可�
 5. 新方向形成后，应更新 `research/DECISIONS.md`、本文件和 `research/README.md`，再决定是否建立新的 `research/mainline/`。
 
 当前活动专题是偏工程实现的特征值后验误差研究。Phase 4 方法稿及三个 Octave
-implementation checkpoints 已完成；最新离散门为 `STAGE2_DISCRETE_ALGEBRA_GO`，但
-`ROOT_READY=STOP`。下一步先闭合 continuous center-BIE kernel--field equivalence、
-representation injectivity 和 pole-free analytic neighborhood，再实现 anchored branch、
-contour isolation 与 complex root matching；在此以前不升级为统一研究方向。
+implementation checkpoints 已完成，Root-readiness controlled diagnostic 已以可复现的
+`REVISE / BLOCKED_UPSTREAM_PROVENANCE` 结果结束，`ROOT_READY=STOP`。下一步必须先让
+production 实际消费的 $A_{\mathrm{pr}},b_{\mathrm{pr}}$ 可观测或结构共享，并在冻结阈值下
+重跑；修改 package helper 需要用户明确授权。之后才可推进 analytic neighborhood、
+anchored branch、contour isolation 与 complex root matching；在此以前不升级为统一研究
+方向。
 冻结路线若被恢复，其优先事项仍是单位圆全谱排除、
 广义 Floquet/Riesz 基适配、中心表示满射性和表示零空间刻画；具体记录见
 `research/archive/muller-cauchy-2026-07/review-log.md`。

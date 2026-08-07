@@ -266,3 +266,98 @@ Dirichlet.
   conditional elimination fails. NaN is restricted to undefined derived quantities.
 - Inverse notation in formulas never authorizes an explicit matrix inverse; use the
   stated linear solve.
+
+## Root-readiness diagnostic ledger
+
+This section applies only to
+[[research/projects/eig-apost/implementation/root_readiness|the root-readiness design]]
+and `test/root-ready/root_ready_diagnostic.m`. It records the corrected diagnostic
+implementation and does not change the manufactured NEP, Stage 1, or Stage 2 meanings
+above. The solver labels are `production_actual`, `pinv_default`, and
+`ratio_rank_rseed` for the production output, mirrored pointwise solve, and selected
+seed-frozen reduced chart, respectively.
+
+### Production-interface boundary
+
+The test constructs a mirrored $A_{\mathrm{pr}}(k),b_{\mathrm{pr}}(k)$ and compares
+observable coefficients, proxy fields, residuals, and downstream objects with production
+outputs. `kernel.precomp_proxy` does not expose its internal matrix or right-hand side.
+Accordingly, gate `production_internal_A_b_identity` has `availability = false`, and its
+stable reason is `NOT_OBSERVABLE_WITH_CURRENT_INTERFACE`. No entrywise or bytewise
+identity of the production-internal $A_{\mathrm{pr}},b_{\mathrm{pr}}$ is claimed.
+
+### Stable objects and actual variables
+
+| Mathematical or numerical object | Actual test variable | Scope and meaning |
+|---|---|---|
+| Mirrored $A_{\mathrm{pr}}(k)$ | `proxy_A`; local `A` | Matrix returned by `LOCAL_build_proxy_system`; it is not the unexposed production-internal matrix. |
+| Mirrored $b_{\mathrm{pr}}(k)$ | `proxy_b`; local `b` | Right-hand side returned by `LOCAL_build_proxy_system`; it is not the unexposed production-internal right-hand side. |
+| Production proxy and coefficients | `production_proxy`, `production_coefficients`; local `production_c` | Observable output of `kernel.precomp_proxy` and its flattened coefficient vector. |
+| Mirrored pointwise coefficients | `c_pinv` | `pinv(A) * b` for the mirrored system; compared with `production_coefficients`. |
+| Explicit full-SVD coefficients | `c_svd` | Minimum-norm coefficient vector formed from the current thin SVD. |
+| $U_0,\Sigma_0,V_0$ | `U_seed`, `s_seed`, `V_seed`; `seed_data(ic).U`, `.s`, `.V` | Thin SVD at the fixed real seed `cfg.k_seed`. |
+| $r,U_r,V_r$ | `ratio_rank`, `U_r`, `V_r` | Rank selected once by `cfg.ratio_rank_threshold` and the corresponding frozen seed columns. |
+| $U_r^*A_{\mathrm{pr}}V_r$, $U_r^*b_{\mathrm{pr}}$ | `reduced_A`, `reduced_b` | Reduced Petrov--Galerkin system at the current $k$. |
+| $a_r(k),c_r(k)=V_ra_r(k)$ | `a_r`, `c_r` | Reduced and lifted coefficients for `ratio_rank_rseed`. |
+| $U_rU_r^*,V_rV_r^*$ | `P_left`, `P_right`; `results.projectors(idx).left`, `.right` | Phase-invariant frozen projectors for the base or refined proxy configuration. |
+| Projector representation fingerprint | `projector_fingerprints`; `results.projector_fingerprints` | Rank, dimensions, traces, Frobenius norms, idempotence errors, weighted checksums, and left/right SHA-256 values written to `projector-fingerprint.csv`. |
+| Sampled proxy field | `production_field`, `ev.field` | Stacked Green potential, gradient, and Hessian samples returned by `LOCAL_field_vector`. |
+| Defect/bulk $A_{\mathrm{QP}}$ | `A_QP`; `data.A_QP` | Correctly scaled center BIE matrix used only for the downstream object comparison. |
+| Defect/bulk $R_L,T_{LR},T_{RL},R_R$ | `data.R_L`, `.T_LR`, `.T_RL`, `.R_R` | Corrected scattering blocks compared between production and selected proxy paths. |
+
+### Residual and compatibility diagnostics
+
+| Diagnostic | Actual test variable or field | Definition or role |
+|---|---|---|
+| $r_{\mathrm{pr}}=A_{\mathrm{pr}}c-b_{\mathrm{pr}}$ | `residual` | Mirrored-system residual for the coefficient vector under evaluation. |
+| Projected residual | `projected_residual`; `ev.projected_residual` | Normalized residual of `reduced_A * a_r = reduced_b`; unavailable for the production-output row. |
+| $r_{\mathrm{full}}$ | `full_residual`; `ev.full_residual` | `norm(residual,2) / max(1,norm(b,2))`. |
+| $r_{\mathrm{fullsys}}$ | `ev.full_system_backward` | `norm(residual,2) / max(1,norm(A,2)*norm(coefficients,2)+norm(b,2))`. |
+| Shifted off-collocation residuals | `off_rows`; fields `qp_value_residual`, `qp_derivative_residual`, `top_value_residual`, `top_derivative_residual`, `bottom_value_residual`, `bottom_derivative_residual`, `combined_residual` | Independent half-grid-shifted diagnostics with no post-hoc pass threshold. |
+| Coefficient-output mismatch | `production_coefficient_error`; aggregate `constructor_observed` | Mirrored `pinv_default` coefficients versus `production_actual` coefficients. |
+| Proxy-field-output mismatch | `production_proxy_field_error`; aggregate `constructor_field_observed` | Mirrored and production Green potential/gradient/Hessian output vectors. |
+| Residual-output mismatch | `residual_identity`; aggregate `residual_observed` | Absolute difference of production and mirrored normalized full residuals. |
+| Base/refined Green compatibility | `resolution_rows`; fields `green_pot_diff`, `green_grad_diff`, `green_hess_diff`, `status` | Per-node selected-chart comparison; every row is `PASS` or `FAIL`. |
+| Production/selected object compatibility | `downstream_rows`; fields `geometry`, `quantity`, `relative_difference`, `status` | Per-object comparison for Green potential/gradient/Hessian, defect/bulk $A_{\mathrm{QP}}$, and all four scattering blocks. |
+| Aggregate object gates | `resolution_observed`, `downstream_observed`, `all_object_observed`; corresponding `*_pass` variables | Maxima and Boolean conjunctions used by the three object-compatibility gates. |
+| Unchanged-source reproducibility | `results.repro_vector`, `results.reproducibility` | Numeric-vector, direct-source-manifest, and projector-fingerprint repeat checks. |
+
+All relative matrix and field differences use `LOCAL_relmat(actual, expected)`, namely
+the Frobenius norm of `actual - expected` divided by
+`max(1,norm(expected,'fro'))`.
+
+### Fixed thresholds
+
+| Purpose | Actual variable | Frozen value |
+|---|---|---|
+| Ratio-rank selection | `cfg.ratio_rank_threshold` | `1e-8` |
+| Three observable mirrored-output gates | `cfg.constructor_tol` | `1e-11` |
+| Every Green, $A_{\mathrm{QP}}$, and scattering compatibility row | `cfg.object_compatibility_tol` | `1e-5` |
+| Unchanged-source numeric repeat | `results.reproducibility.tolerance` | `1e-13` |
+
+There is no threshold for `off_collocation_readiness`; it remains unavailable with
+`PENDING_REVIEW`. Projector repeatability requires equal non-placeholder SHA-256 values
+through `projector_fingerprints_equal` and also includes its numeric fingerprint fields
+in `results.repro_vector`.
+
+### Stable gates and status labels
+
+| Gate | Stable failure or unavailability label |
+|---|---|
+| `production_internal_A_b_identity` | `NOT_OBSERVABLE_WITH_CURRENT_INTERFACE` |
+| `mirrored_constructor_coefficient_output_reproduction` | `MIRRORED_CONSTRUCTOR_COEFFICIENT_OUTPUT_REPRODUCTION_FAILURE` |
+| `mirrored_constructor_proxy_field_output_reproduction` | `MIRRORED_CONSTRUCTOR_PROXY_FIELD_OUTPUT_REPRODUCTION_FAILURE` |
+| `mirrored_constructor_residual_output_reproduction` | `MIRRORED_CONSTRUCTOR_RESIDUAL_OUTPUT_REPRODUCTION_FAILURE` |
+| `off_collocation_readiness` | `PENDING_REVIEW` |
+| `object_compatibility_resolution` | `OBJECT_COMPATIBILITY_RESOLUTION_FAILURE` |
+| `object_compatibility_downstream` | `OBJECT_COMPATIBILITY_DOWNSTREAM_FAILURE` |
+| `object_compatibility_all` | `OBJECT_COMPATIBILITY_FAILURE` |
+| `source_provenance` | `SOURCE_PROVENANCE_FAILURE` |
+
+Individual computed-object rows use only `PASS` or `FAIL`; solver rows use `COMPUTED` or
+`UNAVAILABLE`. The diagnostic-level labels are `PROXY_DIAGNOSTIC_COMPLETE`,
+`BLOCKED_UPSTREAM_PROVENANCE`,
+`BLOCKED_MIRRORED_CONSTRUCTOR_OUTPUT_REPRODUCTION`, and `STOP`. Dormant scan, disk,
+Cauchy--Riemann, root, Newton, adjacent-level, and estimator stages are
+`NOT_RUN_UPSTREAM_STOP`. Reproducibility uses `BASELINE_CREATED`,
+`REPRODUCIBILITY_FAILURE`, or `REPRODUCED`.
