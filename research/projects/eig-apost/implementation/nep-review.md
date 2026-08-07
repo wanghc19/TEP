@@ -1,4 +1,6 @@
-# Skeptic review
+<!-- Review of the manufactured 2-by-2 nonlinear eigenvalue experiment -->
+
+# Manufactured NEP implementation skeptic review
 
 ## Material Passport
 
@@ -8,8 +10,14 @@
 - Verification Status: `INDEPENDENTLY REVIEWED`
 - Version Label: `eig-apost-manufactured-v1.2`
 - Repro Lock: `test/eig-apost-nep/output/reproducibility.txt`
+- Audit Target:
+  [[research/projects/eig-apost/implementation/design|manufactured NEP design]] and
+  [[research/projects/eig-apost/implementation/experiment_plan|experiment plan]]
+- Provenance Note: the locked evidence predates the filename normalization from
+  `review.md` to `nep-review.md`; historical run configurations intentionally retain the
+  original path and hash.
 
-## Stage 1: pre-implementation review
+## Pre-implementation review
 
 ### Decision
 
@@ -102,7 +110,7 @@ weakening the gate. If the formal run still fails, further adaptive tuning is pr
 - Actual BIE block mapping, augmented kernel equivalence, map convergence, and physical
   guided-mode validation remain unresolved.
 
-## Stage 2: post-experiment review
+## Post-experiment review
 
 ### Decision before the reproducibility gate
 

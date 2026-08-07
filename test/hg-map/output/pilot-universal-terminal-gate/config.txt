@@ -1,0 +1,20 @@
+experiment=half-guide-map-stage-1
+levels=[0 1 2 3 4 5 6]
+N_values=[1 2 4 8 16 32 64]
+closures=zero,dirichlet,robin
+zeta=1
+qz_pair_tol=9.9999999999999998e-13
+unit_gap_min=0.10000000000000001
+rcond_min=1e-10
+solve_residual_max=9.9999999999999994e-12
+qz_residual_max=1e-10
+case_A_K=2
+case_A_rho=0.6,0.8
+case_A_gamma=1,2
+case_B=beta:0.8,kext:0.10,n:3,kint:0.30,radius:0.4,L:2,d:2*pi,M:7,K:15,ntot:60,X_L:-1,X_R:1
+case_B_proxy=periodic_axis:y,H:1.8,proxy_dist:0.7,N_side:40,N_top:40,N_proxy_edge:24,M_pw:8,absorption:none
+case_A_fingerprint=case=A;K=2;block_order=RL,TRL;TLR,RR;m=[0 1];gamma_re=[1 2];gamma_im=[0 0];phase_origin=walls;basis=rayleigh_unit_amplitude;scaling=none;walls=[-0.5,0.5];terminal=three_frozen_closures
+case_B_fingerprint=case=B;K=15;block_order=RL,TRL;TLR,RR;m=[-7 -6 -5 -4 -3 -2 -1 0 1 2 3 4 5 6 7];gamma_re=[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0];gamma_im=[6.1991934959315476 5.1990383726223834 4.1988093550434034 3.1984371183438953 2.1977260975835913 1.1958260743101399 0.17320508075688767 0.7937253933193773 1.7972200755611429 2.7982137159266443 3.7986839826445156 4.7989582202807304 5.7991378669591915 6.7992646661238298 7.7993589480161765];phase_origin=walls;basis=rayleigh_unit_amplitude;scaling=none;walls=[-1,1];terminal=three_frozen_closures
+construct_S_calls=1
+solve_modes_calls=0
+explicit_inv_calls=0

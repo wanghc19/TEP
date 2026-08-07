@@ -1,0 +1,7 @@
+formal_command=perl -e 'alarm shift; exec @ARGV' 1800 conda run -n octave octave --quiet --no-gui --eval "addpath(''/Users/whc/Documents/Work/epost/test/hg-map''); results=run_hg_map_experiment();"
+hard_timeout_seconds=1800
+poll_interval_seconds=30_or_less
+previous_available=0
+comparison_status=NO_BASELINE_FIRST_RUN
+max_abs_difference=NaN
+current_vector=[1.7354009700373862e-17 3.5142630203632684e-16 6.8428189931427147e-17 5.1580988823611963e-17 0.17561551508508505 5.0633960362273547e-16 4.9650683064945434e-17 0.49999999999999989 0.17320508075688767 0.2393990276418704 5.6994661280452895e-16 1.9266782965176101e-15 0 0.27904375432103523 0]

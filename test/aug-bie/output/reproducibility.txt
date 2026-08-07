@@ -1,0 +1,9 @@
+status=REPRODUCED
+pass=1
+relative_difference=0
+tolerance=9.9999999999999998e-13
+unchanged_source_required=true
+source_manifest_equal=1
+source_hash_manifest=config.txt
+manifest_scope=specification;symbol_appendix;BIE_helpers;experiment;wrapper
+command=perl -e 'alarm shift; exec @ARGV' 1800 conda run -n octave octave --quiet --no-gui --eval "addpath('/Users/whc/Documents/Work/epost/test/aug-bie'); results=run_aug_bie_experiment();"

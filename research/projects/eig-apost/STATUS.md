@@ -1,20 +1,35 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-07-30。
+更新日期：2026-08-07。
 
 ## 当前状态
 
-- 工作流：Academic Research Suite / Deep Research。
-- 阶段：Phase 1 Scoping、Phase 2 feasibility investigation 与 Phase 2b novelty gate
-  已完成；Phase 2b verdict 为 `PASS WITH CONDITIONS`。Phase 3 已完成一轮受条件约束
-  的 root-search 与 estimator 设计及 adversarial review。Phase 4 已完成方法汇总稿、
-  skeptic 审查、数学修订和 PDF 交付。
+- 工作流：Academic Research Suite / Deep Research，现处于受审查的数值实现阶段。
+- 阶段：Phase 1--4 已完成范围、来源、novelty、理论方案和方法稿；随后完成三个
+  Octave implementation checkpoints：manufactured NEP、Half-guide map 和
+  Augmented BIE / center coupling。
 - 状态：`active investigation`。
-- 阶段门：Phase 4 文稿审查 verdict 为 `PASS WITH CONDITIONS`，项目研究门仍为
-  `REVISE`。复根搜索方案和一阶 tail estimator 在明确假设下
-  可实现且数学自洽；augmented formulation 等价性、analytic implementation、
-  map convergence 与 reliable remainder 尚未闭合，不能声称已有 unconditional 或
-  certified estimator。
+- 阶段门：manufactured root/correction pipeline 为窄范围 `GO`，Half-guide map 为
+  Stage 1 `GO`，Augmented BIE 为 `STAGE2_DISCRETE_ALGEBRA_GO`；但总门仍为
+  `ROOT_READY=STOP`。现有证据只支持固定离散代数、单点 interface smoke 和条件经验
+  estimator，不支持真实 guided eigenvalue、连续 kernel--field equivalence、
+  unconditional effectivity 或 certified interval。
+
+## 实现 checkpoint
+
+| Checkpoint | 结果 | 已验证 | 明确未验证 |
+|---|---|---|---|
+| Manufactured NEP | `GO`; `conditional/empirical` | 固定维数 contour count、bordered Newton、root qualification、projected correction 和四个负例；末级 tail effectivity 为 `0.999987793` | BIE/DtN、branch cut、pole、representation kernel、common discretization error |
+| Half-guide map | Stage 1 `GO` | 非交换 Redheffer/terminal/Cayley 次序、exact analytic cell、固定 $k=0.10$ 的 EDC same-cell QZ/doubling smoke 和负例传播；Case B 最终误差 $1.93\times10^{-15}$ | 独立 PDE truth、频率区间、asymmetric/defective cases、map convergence theorem；artifact-level 仅 `PARTIALLY_REPRODUCIBLE` |
+| Augmented BIE | `STAGE2_DISCRETE_ALGEBRA_GO`; `ROOT_READY=STOP` | 固定九块 $(n+8p)$ assembly、scaled density coordinate、raw/reduced Schur agreement、七级 availability 与 failure ledger；unchanged-source 复现差为 $0$ | 连续表示单射性、kernel--field equivalence、pole-free analytic neighborhood、root/eigenvalue/estimator |
+
+实现权威入口为
+[[research/projects/eig-apost/implementation/design|manufactured NEP design]]、
+[[research/projects/eig-apost/implementation/half_guide_map|Half-guide map design]] 和
+[[research/projects/eig-apost/implementation/aug-bie|Augmented BIE design]]；相应独立审查为
+[[research/projects/eig-apost/implementation/nep-review|manufactured NEP review]]、
+[[research/projects/eig-apost/implementation/half_guide_review|Half-guide review]] 和
+[[research/projects/eig-apost/implementation/aug-bie-review|Augmented BIE review]]。
 
 ## 已完成
 
@@ -45,7 +60,8 @@
 - 已建立 Phase 3 目录并写入 DtN 数据链、分层误差预算、projected correction、
   effectivity criteria、双椭圆 benchmark 和未来实现路线。
 - 已按当前 port convention 推导左右 finite-tail DtN 的法向符号，并用独立随机复矩阵
-  直接消元核对两段 scattering 组合公式；尚未用实际 MATLAB cell map 核对。
+  直接消元核对两段 scattering 组合公式；随后已在 Half-guide Stage 1 用现有 one-cell
+  BIE/scattering 接口完成固定参数的 Octave smoke 核对。
 - 已明确区分实轴 $\sigma_{\min}$ 极小点、离散 NEP 实际零点和精确 guided eigenvalue；
   root qualification 失败时不得报告 eigenvalue estimator。
 - 已把 $\eta_j=\lvert \delta_j^{\mathrm{map}} \rvert$ 设为 doubling hierarchy 的 primary
@@ -106,35 +122,46 @@
   `PASS WITH CONDITIONS`。
 - 已清理 active notation conflicts：center extractors 改记为 $\mathcal E_L,\mathcal E_R$，
   三个标量反例与主 NEP 符号分离，并内联双侧 DtN map-difference 诊断。
-- 已完成 PDF 逐页渲染检查；没有公式裁切、页面重叠或重复参考文献标题。未运行 MATLAB
-  或 Octave，未产生项目数值结果。
+- 已完成 PDF 逐页渲染检查；没有公式裁切、页面重叠或重复参考文献标题。
+- 已在 `test/eig-apost-nep/` 完成 manufactured `2 x 2` analytic NEP 的 Octave 实现、
+  两次确定性复现和 skeptic 审查；该实验只关闭有限维算法门。
+- 已在 `test/hg-map/` 完成 Half-guide map Stage 1：非交换代数、exact analytic cell、
+  固定物理 smoke、Wood/Robin/order 负例和数值向量复现均通过；完整 artifact-byte
+  reproducibility 尚未建立。
+- 已在 `test/aug-bie/` 完成 Augmented BIE Stage 2：A1/A2 manufactured oracles、实际
+  ellipse/circle interface smoke、七个 finite-tail levels、availability/failure negatives
+  与 source-aware unchanged-source rerun 均通过。最大 actual raw Schur error 为
+  $3.16\times10^{-17}$，wrong-coordinate mutation mismatch 为 $7.22\times10^{-2}$。
+- 已识别并在 Stage 2 局部规避 variable-speed geometry 的 density-scaling mismatch；
+  production `bloch.construct_S` 与 `scat_ld_lead_in` 尚未全局修改或验证。
+- MATLAB 尚未运行；上述数值证据均由 Conda `octave` 环境产生，实验代码只位于
+  `test/` 下。
 
 ## 尚未进行
 
-- 尚未把文献中的一阶 correction 假设验证到当前 BIE--DtN operator family，也没有
-  可计算 remainder 或可靠性上界。
-- 已写出 candidate $(n+8p)\times(n+8p)$ block system 与 equation count，但尚未逐行
-  映射到实际 center BIE/extractor blocks，也未证明 kernel--finite-field equivalence
-  或排除 representation nullspace 与 one-cell BIE poles 的伪根。
-- 尚未实现 analytic Rayleigh branch chart、contour count、bordered complex Newton 或
-  adjacent-level root matching。
-- 尚未从 map-convergence theorem、stable-subspace estimate 或其他独立来源得到
-  $\bar q<1$；observed doubling ratios 只能作 empirical diagnostic。
-- 未冻结首版 cell port formulation，也未确认现有 `A_QP` 能否原样生成所需 cell
-  DtN/RtR map。
-- 尚未冻结 benchmark 参数、independent reference solver 或最终论文大纲。
-- 尚未证明 structure-preserving finite-tail map convergence、doubling superlinear root
-  separation 或 primary estimator 的 effectivity。
-- 未审定任何连续理论命题、谱等价命题或离散正确性结论。
-- 未运行 MATLAB 或 Octave，未修改任何 MATLAB 文件。
+- 尚未证明实际 center BIE 表示的连续 kernel--field equivalence、排除 zero-field
+  representation nullspace，或给出 root-search domain 上的一致 injectivity/pole-free
+  条件；fixed-$k$ raw/reduced Schur agreement 不能替代这些命题。
+- 尚未实现 anchored analytic Rayleigh branch chart、完整 contour pole ledger、complex
+  contour isolation、bordered root refinement 和 adjacent-level root matching。当前
+  pointwise principal-square-root convention 不得直接用于 complex analytic search。
+- 尚未证明 finite-tail half-guide map convergence、得到独立 saturation 常数
+  $\bar q<1$，也没有 computable correction remainder；observed doubling ratios 仍只能
+  作为 empirical diagnostic。
+- 尚未把一阶 correction 假设验证到当前 BIE--DtN operator family，因而不能报告
+  reliable eigenvalue interval 或真实二维缺陷波导的 estimator effectivity。
+- 尚未修复并回归验证 production variable-speed density scaling；当前 ellipse 的修正
+  只存在于 `test/aug-bie/` 的实验路径。
+- 尚未建立独立 $k_{\mathrm{ref}}$、BIE/port refinement、MATLAB parity 或真实缺陷晶体
+  waveguide benchmark。
 - Leclerc et al. (2026) 的 HAL manuscript 尚处于 embargo；在全文核验与投稿前
   citation update 完成以前，不冻结 priority claim。
 
 ## 当前门槛
 
-Phase 4 文稿自身为 `PASS WITH CONDITIONS`，但项目门槛仍是 `REVISE`：先把 candidate
-square augmented operator 映射到实际 BIE blocks，
-静态核对并证明 kernel equivalence，再实现 analytic branch、contour isolation 和
-bordered complex root solver。只有这些
-通过后才验证 projected correction；只有独立建立 saturation/remainder bound 后才报告
-reliable interval。仍不创建 `research/mainline/`，也不使用绝对优先权表述。
+本轮离散实现 checkpoint 已关闭并可提交；下一阶段尚未开始。进入真实 root search 前，
+必须先关闭 continuous center-BIE kernel--field/representation gate，并冻结一个避开 Wood、
+BIE、terminal 和 raw-Schur poles 的 analytic search neighborhood。随后才可实现 anchored
+Rayleigh chart、contour isolation、bordered Newton 与 adjacent-level matching；这些通过后
+才测试真实 projected correction。只有再独立建立 saturation/remainder bound 后，才可把
+结果称为 reliable interval。仍不创建 `research/mainline/`，也不使用绝对优先权表述。

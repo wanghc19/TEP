@@ -1,0 +1,29 @@
+experiment=half-guide-map-stage-1
+levels=[0 1 2 3 4 5 6]
+N_values=[1 2 4 8 16 32 64]
+closures=zero,dirichlet,robin
+zeta=0.69999999999999996
+resonant_negative_zeta=1
+qz_pair_tol=9.9999999999999998e-13
+unit_gap_min=0.10000000000000001
+rcond_min=1e-10
+solve_residual_max=9.9999999999999994e-12
+qz_residual_max=1e-10
+case_A_K=2
+case_A_rho=0.6,0.8
+case_A_gamma=1,2
+case_B=beta:0.8,kext:0.10,n:3,kint:0.30,radius:0.4,L:2,d:2*pi,M:7,K:15,ntot:60,X_L:-1,X_R:1
+case_B_proxy=periodic_axis:y,H:1.8,proxy_dist:0.7,N_side:40,N_top:40,N_proxy_edge:24,M_pw:8,absorption:none
+case_A_fingerprint=case=A;K=2;block_order=RL,TRL;TLR,RR;m=[0 1];gamma_re=[1 2];gamma_im=[0 0];phase_origin=walls;basis=rayleigh_unit_amplitude;scaling=none;walls=[-0.5,0.5];C0=[0 0;0 0];CD=[-1 0;0 -1];CR_re=[0.34228187919463088 0;0 0.78173719376391981];CR_im=[-0.93959731543624159 0;0 -0.62360801781737185]
+case_B_fingerprint=case=B;K=15;block_order=RL,TRL;TLR,RR;m=[-7 -6 -5 -4 -3 -2 -1 0 1 2 3 4 5 6 7];gamma_re=[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0];gamma_im=[6.1991934959315476 5.1990383726223834 4.1988093550434034 3.1984371183438953 2.1977260975835913 1.1958260743101399 0.17320508075688767 0.7937253933193773 1.7972200755611429 2.7982137159266443 3.7986839826445156 4.7989582202807304 5.7991378669591915 6.7992646661238298 7.7993589480161765];phase_origin=walls;basis=rayleigh_unit_amplitude;scaling=none;walls=[-1,1];C0=[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0];CD=[-1 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 -1 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 -1 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 -1 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 -1 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 -1 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 -1 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 -1 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 -1 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 -1 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 -1 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1];CR_re=[0.7970777307774336 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0.76267318305684484 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0.71421627205013039 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0.64088172836946078 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0.51686254916658358 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0.2615356340061748 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 -0.6032888846529505 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0.062746066806228337 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0.43937660372788329 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0.59979574900581722 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0.68879787835707873 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0.74540632172169363 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0.78458681310371547 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0.81331502989564131 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.83528169494161997];CR_im=[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+construct_S_calls=1
+solve_modes_calls=0
+explicit_inv_calls=0
+source_half_guide_map_path=/Users/whc/Documents/Work/epost/research/projects/eig-apost/implementation/half_guide_map.md
+source_half_guide_map_sha256=1e4084a6ca91e0a6fb39964eb728e269d27f806f0da9385d76184d05c069029b
+source_SYMBOL_path=/Users/whc/Documents/Work/epost/research/projects/eig-apost/implementation/SYMBOL.md
+source_SYMBOL_sha256=828fea773d54b26459b6c15a3e32efe6a9356b011037fda48d3cd169256b727f
+source_construct_S_path=/Users/whc/Documents/Work/epost/+bloch/construct_S.m
+source_construct_S_sha256=8d1b8c1eea60dbd8d5ecefd8cca71a8a781ac8e0ae152f988a87b80beaa45704
+source_experiment_path=/Users/whc/Documents/Work/epost/test/hg-map/hg_map_experiment.m
+source_experiment_sha256=ad85e8889a538fb1023e6ce7aff5e05f1d128f7f9f243a8885d608a58e0f11a1

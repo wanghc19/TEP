@@ -207,7 +207,8 @@ exit codes and final hashes are stored in `reproducibility.txt`.
 
 ### Evidence reviewed
 
-The Researcher reviewed the frozen design, symbol ledger, experiment plan, Skeptic review,
+The Researcher reviewed the frozen design, symbol ledger, experiment plan,
+[[research/projects/eig-apost/implementation/nep-review|manufactured NEP skeptic review]],
 implementation, retained `pilot-01` and `formal-01` evidence, and final numeric artifacts.
 No additional computation was performed for this analysis.
 

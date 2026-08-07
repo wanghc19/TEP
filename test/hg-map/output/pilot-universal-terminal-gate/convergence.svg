@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="430" viewBox="0 0 900 430">
+<rect width="100%" height="100%" fill="white"/>
+<text x="450" y="28" text-anchor="middle" font-size="18">Half-guide map convergence</text>
+<rect x="55" y="55" width="370" height="315" fill="none" stroke="black"/>
+<text x="240" y="45" text-anchor="middle" font-size="15">Case A</text>
+<polyline fill="none" stroke="#1f77b4" stroke-width="1.5" points="55.000,360.156 116.667,348.919 178.333,325.524 240.000,278.139 301.667,183.314 363.333,67.326 425.000,67.326 "/>
+<polyline fill="none" stroke="#d62728" stroke-width="1.5" points="55.000,360.156 116.667,348.919 178.333,325.524 240.000,278.139 301.667,183.314 363.333,59.811 425.000,59.811 "/>
+<polyline fill="none" stroke="#2ca02c" stroke-width="1.5" points="55.000,361.656 116.667,349.405 178.333,325.557 240.000,278.139 301.667,183.314 363.333,67.326 425.000,67.326 "/>
+<polyline fill="none" stroke="#9467bd" stroke-width="1.5" points="55.000,361.656 116.667,349.405 178.333,325.557 240.000,278.139 301.667,183.314 363.333,59.811 425.000,59.811 "/>
+<polyline fill="none" stroke="#ff7f0e" stroke-width="1.5" points="55.000,370.000 116.667,370.000 178.333,370.000 240.000,370.000 301.667,370.000 363.333,67.326 425.000,67.326 "/>
+<polyline fill="none" stroke="#17becf" stroke-width="1.5" points="55.000,370.000 116.667,370.000 178.333,370.000 240.000,370.000 301.667,370.000 363.333,59.811 425.000,59.811 "/>
+<text x="240" y="390" text-anchor="middle" font-size="11">levels 0 through 6</text>
+<rect x="485" y="55" width="370" height="315" fill="none" stroke="black"/>
+<text x="670" y="45" text-anchor="middle" font-size="15">Case B</text>
+<polyline fill="none" stroke="#1f77b4" stroke-width="1.5" points="485.000,333.907 546.667,328.274 608.333,317.079 670.000,294.699 731.667,249.940 793.333,160.423 855.000,65.712 "/>
+<polyline fill="none" stroke="#d62728" stroke-width="1.5" points="485.000,333.907 546.667,328.274 608.333,317.079 670.000,294.699 731.667,249.940 793.333,160.422 855.000,80.295 "/>
+<polyline fill="none" stroke="#2ca02c" stroke-width="1.5" points="485.000,364.553 546.667,358.870 608.333,347.632 670.000,325.236 731.667,280.476 793.333,190.959 855.000,65.712 "/>
+<polyline fill="none" stroke="#9467bd" stroke-width="1.5" points="485.000,364.553 546.667,358.870 608.333,347.632 670.000,325.236 731.667,280.476 793.333,190.959 855.000,80.295 "/>
+<polyline fill="none" stroke="#ff7f0e" stroke-width="1.5" points="485.000,361.664 546.667,356.025 608.333,344.802 670.000,322.411 731.667,277.651 793.333,188.134 855.000,65.712 "/>
+<polyline fill="none" stroke="#17becf" stroke-width="1.5" points="485.000,361.664 546.667,356.025 608.333,344.802 670.000,322.411 731.667,277.651 793.333,188.134 855.000,80.295 "/>
+<text x="670" y="390" text-anchor="middle" font-size="11">levels 0 through 6</text>
+</svg>
