@@ -10,11 +10,12 @@
 并建立中心胞元 Müller--Rayleigh 表示与左右周期半波导出射 Cauchy 关系之间的连续
 耦合。该路线现已暂停；当前把 fixed-$\beta$ line-defect guided-mode eigenvalue 的
 numerical half-guide DtN 后验误差作为专题候选方向。其 manufactured NEP、Half-guide
-map 与 Augmented BIE 离散实现门已经通过；Root-readiness early-stop proxy diagnostic
-已经完成但 verdict 为 `REVISE / BLOCKED_UPSTREAM_PROVENANCE`。冻结的 $10^{-5}$ 对象
-兼容门通过，但 production 内部 $A_{\mathrm{pr}},b_{\mathrm{pr}}$ 在当前接口下不可观测，
-且三个 $10^{-11}$ mirrored-output gates 失败。最终理论与数值可行性门仍未通过，连续
-理论、真实 root 和 estimator 尚未建立，也没有活动中的 `research/mainline/`。
+map 与 Augmented BIE 离散实现门已经通过；历史 Root-readiness diagnostic 之后完成的
+source-derived proxy provenance-closure 经审查为 `PASS WITH CONDITIONS`，只授权进入
+full analytic complex-$k$ Root-readiness。production 内部
+$A_{\mathrm{pr}},b_{\mathrm{pr}}$ 仍不可直接观测，`PHYSICAL_ROOT_READY=STOP`。最终理论
+与数值可行性门仍未通过，连续理论、真实 root 和 estimator 尚未建立，也没有活动中的
+`research/mainline/`。
 
 原主线冻结于 Git 标签 `mainline-muller-cauchy-2026-07-26`，文件移至
 `research/archive/muller-cauchy-2026-07/`。冻结版本主要考虑实数 `k`、严格公共
@@ -25,7 +26,7 @@ map 与 Augmented BIE 离散实现门已经通过；Root-readiness early-stop pr
 
 | 状态 | 专题 | 实际结论 |
 |---|---|---|
-| active investigation | `research/projects/eig-apost/` | Phase 4 方法稿为 `PASS WITH CONDITIONS`；manufactured NEP 与 Half-guide map 为窄范围 `GO`，Augmented BIE 为 `STAGE2_DISCRETE_ALGEBRA_GO`。Root-readiness 受控诊断可复现且 $10^{-5}$ object gate 通过，但内部 $A_{\mathrm{pr}},b_{\mathrm{pr}}$ provenance 不可观测，三个 $10^{-11}$ output gates 失败，故为 `REVISE / BLOCKED_UPSTREAM_PROVENANCE`，`ROOT_READY=STOP`。真实 root、estimator、连续 kernel--field/representation gate、analytic branch、pole ledger、独立 $k_{\mathrm{ref}}$ 和 MATLAB parity 均未完成。 |
+| active investigation | `research/projects/eig-apost/` | Phase 4 方法稿为 `PASS WITH CONDITIONS`；manufactured NEP 与 Half-guide map 为窄范围 `GO`，Augmented BIE 为 `STAGE2_DISCRETE_ALGEBRA_GO`。source-derived provenance-closure 在 6 个 shared systems/30 个 solver rows 上保持原门槛并双跑复现，Skeptic verdict 为 `PASS WITH CONDITIONS`；只允许进入 full analytic complex-$k$ Root-readiness，`PHYSICAL_ROOT_READY=STOP`。真实 root、estimator、连续 kernel--field/representation gate、analytic branch、pole ledger、独立 $k_{\mathrm{ref}}$ 和 MATLAB parity 均未完成。 |
 | paused archive | `research/archive/muller-cauchy-2026-07/` | 冻结的 Müller--广义 Bloch--Cauchy 主线；商空间版本的核/场等价仍有未闭合的外部定理适配和表示论前提。 |
 | paused | `research/projects/half-guide-dtn/` | Stage 1 完成了符号审计、齐次半导 DtN/Riccati 验证和耦合方案建议；周期障碍半导、完整中心耦合及 MATLAB 最终验证尚未完成。该路线未整合进冻结主线。 |
 | completed project | `research/projects/cell-representation/` | 专题任务已完成：原始无条件猜想过强；给出了直接 Green 表示和带显式正则性、非 Wood 及互补问题条件的修正版。其纠正后的表示结构和商空间策略已进入冻结主线，但其中的表示定理仍为 `needs review`。 |
@@ -60,12 +61,12 @@ map 与 Augmented BIE 离散实现门已经通过；Root-readiness early-stop pr
 5. 新方向形成后，应更新 `research/DECISIONS.md`、本文件和 `research/README.md`，再决定是否建立新的 `research/mainline/`。
 
 当前活动专题是偏工程实现的特征值后验误差研究。Phase 4 方法稿及三个 Octave
-implementation checkpoints 已完成，Root-readiness controlled diagnostic 已以可复现的
-`REVISE / BLOCKED_UPSTREAM_PROVENANCE` 结果结束，`ROOT_READY=STOP`。下一步必须先让
-production 实际消费的 $A_{\mathrm{pr}},b_{\mathrm{pr}}$ 可观测或结构共享，并在冻结阈值下
-重跑；修改 package helper 需要用户明确授权。之后才可推进 analytic neighborhood、
-anchored branch、contour isolation 与 complex root matching；在此以前不升级为统一研究
-方向。
+implementation checkpoints 已完成；source-derived proxy provenance-closure 在保留
+production internal-array 不可观测边界的前提下通过，Skeptic 只授权下一步 full analytic
+complex-$k$ Root-readiness。下一阶段必须冻结 analytic neighborhood、anchored branch、
+fixed chart、factor/pole ledger、full-matrix Cauchy--Riemann 和 mandatory negatives；在其
+通过以前不得启动 contour isolation、complex root matching 或 estimator，也不升级为统一
+研究方向。
 冻结路线若被恢复，其优先事项仍是单位圆全谱排除、
 广义 Floquet/Riesz 基适配、中心表示满射性和表示零空间刻画；具体记录见
 `research/archive/muller-cauchy-2026-07/review-log.md`。

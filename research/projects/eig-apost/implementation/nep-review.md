@@ -164,3 +164,9 @@ manufactured claim. The next high-value task is the actual augmented operator: c
 row-by-row BIE/lead-block mapping, common representation, pole ledger, and kernel--field
 equivalence. A non-collinear nonnormal NEP benchmark is needed only before expanding the
 claim to general left-vector-sensitive projected corrections.
+
+## Open-problem handoff
+
+Current goal-relative classifications and cheapest follow-up checks are maintained in
+[[research/projects/eig-apost/implementation/open-problems#I0|the I0 open-problem ledger]].
+The historical review above is unchanged and is not retroactively reclassified.

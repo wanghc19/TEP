@@ -576,3 +576,9 @@ frequencies, asymmetric leads, clustered or weakly separated multipliers,
 poorly conditioned graph blocks, and an independent physical DtN reference
 remain unverified.  These gaps prohibit broader physical conclusions but do
 not contradict the stated one-point internal result.
+
+## Open-problem handoff
+
+Current goal-relative classifications and cheapest follow-up checks are maintained in
+[[research/projects/eig-apost/implementation/open-problems#I1|the I1 open-problem ledger]].
+The historical review above is unchanged and is not retroactively reclassified.

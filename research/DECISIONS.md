@@ -193,3 +193,21 @@
   `research/projects/eig-apost/phase2b-novelty/r-sources.md`。
 - **状态：** Revisitable；若补充全文覆盖 C1--C5，或候选量不能超越 convergence
   indicator，应改为 `REVISE` 或 `STOP`。
+
+## 2026-08-07 协作政策：Skeptic 按工程目标分级并集中维护 open problems
+
+- **决定：** `eig-apost` 当前以得到可运行、可复现、在真实案例上可检验的 empirical
+  estimator 和偏工程论文为目标。Skeptic 必须把问题分为 `BLOCKER`、
+  `IMPORTANT CAVEAT`、`MINOR CAVEAT`；只有未解决的 blocker 可以停止阶段。
+- **审查深度：** 不因问题具有数学趣味就展开旁支。只有当问题会改变当前验收门、使
+  结果不可解释或阻止下一项必要计算时才继续调查；能用廉价 numerical sanity check
+  充分约束时，优先做该检查而不是开启理论研究。
+- **记录方式：** 每个 stage review 末尾只保留 handoff 链接，未解决事项集中写入
+  [[research/projects/eig-apost/implementation/open-problems|open-problem ledger]]，并记录
+  category、blocking scope、cheapest next check 和 status，避免 review 之间重复清单漂移。
+- **影响：** continuous proof、certification 和广泛参数稳健性仍可作为 caveat 或未来
+  工作；除非当前 claim 明确依赖，它们不再自动阻止工程 estimator pipeline。
+- **证据：** 用户对论文定位和 Skeptic 行为的明确修订；`research/AGENTS.md`；
+  `.codex/agents/skeptic.toml`。
+- **状态：** 当前协作规则；若未来目标改为 theorem-level 或 certified paper，应重新
+  校准 blocker 定义。

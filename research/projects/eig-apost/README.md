@@ -2,15 +2,16 @@
 
 本专题用于把仓库中的周期波导特征值计算，转向偏工程实现的特征值后验误差分析与
 数值认证研究。当前按 Academic Research Suite 的 Deep Research 工作流推进，已经
-形成受条件约束的方法稿、完成三个离散实现 checkpoint，并完成一次未通过的
-Root-readiness 受控诊断，但尚未形成可提升为统一主线的理论或真实 estimator，也不是新的
-`research/mainline/`。
+形成受条件约束的方法稿、完成三个离散实现 checkpoint，并在历史受控诊断之后完成
+source-derived proxy provenance closure；但尚未形成可提升为统一主线的理论或真实
+estimator，也不是新的 `research/mainline/`。
 
 ## 权威和边界
 
 - 状态：`active investigation`；Phase 2b novelty gate 与 Phase 3--4 方法设计已完成，
-  当前离散实现达到 `STAGE2_DISCRETE_ALGEBRA_GO`。Root-readiness 受控诊断完成但
-  verdict 为 `REVISE / BLOCKED_UPSTREAM_PROVENANCE`，总门仍为 `ROOT_READY=STOP`。
+  当前离散实现达到 `STAGE2_DISCRETE_ALGEBRA_GO`。source-derived provenance closure
+  为 `PASS WITH CONDITIONS`，只授权进入 full analytic complex-$k$ Root-readiness；
+  `PHYSICAL_ROOT_READY=STOP`。
 - 本目录只管理新专题；不续写或改写冻结的 Müller--Cauchy 主线。
 - 归档理论、旧草稿中的命题和现有数值候选均不得被预设为正确。
 - 生产 MATLAB/package 代码保持未修改；实验实现和生成结果只位于仓库根目录 `test/`
@@ -72,6 +73,7 @@ eig-apost/
     half_guide_review.md
     aug-bie.md
     aug-bie-review.md
+    open-problems.md
     root_readiness.md
     root_result.md
     root_readiness_review.md
@@ -81,11 +83,13 @@ eig-apost/
 带条件 checkpoint。Phase 2b novelty gate 已完成，verdict 为 `PASS WITH CONDITIONS`：
 后续 Phase 3--4 已给出 fixed-representation root search 与条件 estimator，并形成方法稿。
 Octave 实验随后依次关闭 manufactured NEP、Half-guide map 与 Augmented BIE 的有限维
-implementation gates，并完成 Root-readiness early-stop proxy diagnostic。修正后的
-$10^{-5}$ object-compatibility gate 全部通过，但 production 内部实际消费的
-$A_{\mathrm{pr}},b_{\mathrm{pr}}$ 在当前接口下不可观测，三个 $10^{-11}$ mirrored-output
-gates 失败。它们不冻结 priority claim，也不把候选公式升级为连续定理或 certified
-estimator；真实 root search 尚未获准。
+implementation gates。历史 Root-readiness early-stop diagnostic 的 $10^{-5}$ object
+gate 通过，但独立 mirrored constructor 的三个 $10^{-11}$ output gates 失败。新的
+provenance-closure 用 source-exact test-local copy 和同一 cache-derived $A,b$ 数据链重跑
+原门槛，6 个 shared systems/30 个 solver rows 全部闭合，双跑数值差为 0，并由 Skeptic
+给出 `PASS WITH CONDITIONS`。production 内部数组仍不可直接观测；该结论不冻结
+priority claim，也不把候选公式升级为连续定理或 certified estimator。下一步只能进行
+full analytic complex-$k$ Root-readiness，真实 root isolation 尚未获准。
 
 ## 当前入口
 
@@ -105,10 +109,15 @@ estimator；真实 root search 尚未获准。
 - `implementation/README.md`：从 Phase 1 范围界定到 I3 Root-readiness 的阶段概述，逐项
   解释每个阶段全称、目的、已验证内容、未验证边界和后续依赖；长时间离开项目后应先读
   这一页。
+- `implementation/open-problems.md`：按阶段维护 `BLOCKER`、`IMPORTANT CAVEAT` 和
+  `MINOR CAVEAT`，记录各问题的 blocking scope、最低成本检查和状态；只有未解决的
+  blocker 能停止当前工程路线。见
+  [[research/projects/eig-apost/implementation/open-problems|open-problem ledger]]。
 - `implementation/`：当前理论到代码的设计、符号表、实验计划和分阶段独立审查；
   最新证据与最终 delta verdict 分别见
   [[research/projects/eig-apost/implementation/root_result|Root-readiness result]] 和
   [[research/projects/eig-apost/implementation/root_readiness_review|Root-readiness review]]。
 - `test/eig-apost-nep/`、`test/hg-map/`、`test/aug-bie/`、`test/root-ready/`：四个互相
-  独立的 Octave 实验或受控诊断及可审计输出。当前交接、claim boundary 和下一门槛以
+  独立的 Octave 实验或受控诊断及可审计输出；I3 的当前权威输出在
+  `test/root-ready/provenance-closure/output/`。当前交接、claim boundary 和下一门槛以
   [[research/projects/eig-apost/STATUS|project STATUS]] 为准。

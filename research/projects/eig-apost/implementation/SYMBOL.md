@@ -361,3 +361,110 @@ Individual computed-object rows use only `PASS` or `FAIL`; solver rows use `COMP
 Cauchy--Riemann, root, Newton, adjacent-level, and estimator stages are
 `NOT_RUN_UPSTREAM_STOP`. Reproducibility uses `BASELINE_CREATED`,
 `REPRODUCIBILITY_FAILURE`, or `REPRODUCED`.
+
+## Provenance-closure addendum ledger
+
+This section applies only to the pre-execution addendum in
+[[research/projects/eig-apost/implementation/root_readiness|the Root-readiness design]]
+and the future `test/root-ready/provenance-closure/` experiment. It does not alter the
+manufactured NEP, Half-guide Stage 1, Augmented BIE Stage 2, or completed controlled-
+diagnostic meanings above.
+
+### Necessary notation distinction
+
+The source-exact test-local copy returns
+$A_{\mathrm{pr}}^{\mathrm{copy}}(k)$ and
+$b_{\mathrm{pr}}^{\mathrm{copy}}(k)$. The `copy` superscript is introduced only to keep
+these returned arrays distinct from the unmodified package's internal arrays, which are
+not directly observable. No symbol is introduced for those unobserved arrays.
+
+Gate `production_internal_A_b_identity` therefore retains
+`availability = false` and status `NOT_DIRECTLY_OBSERVED`, with stable reason
+`NOT_OBSERVABLE_WITH_CURRENT_INTERFACE`. The new operational gate has a different name
+and must never overwrite or alias this field.
+
+### Source-copy and shared-system variables
+
+| Mathematical or numerical object | Frozen code variable or artifact | Scope and meaning |
+|---|---|---|
+| Source-exact copied helper | `LOCAL_precomp_proxy_instrumented` | Test-local function copied from the frozen package; it may differ executably only in its declaration. |
+| Package public output | `proxy_package` | Observable `kernel.precomp_proxy` result used only as a same-process anchor. |
+| Copied public output | `proxy_copy` | Public proxy struct returned by the source-exact copy. |
+| $A_{\mathrm{pr}}^{\mathrm{copy}}(k)$ | `A_shared` | Collocation matrix returned from the copied function and passed unchanged to every comparison solver. |
+| $b_{\mathrm{pr}}^{\mathrm{copy}}(k)$ | `b_shared` | Right-hand side returned from the copied function and passed unchanged to every comparison solver. |
+| Copied production-path coefficients | `coeffs_copy` | Existing local `coeffs` returned by the copied function. |
+| Flattened copied proxy coefficients | `coeffs_from_proxy_copy` | `[proxy_copy.q(:); proxy_copy.C_up(:); proxy_copy.C_down(:)]`; bitwise cross-check for `coeffs_copy`. |
+| Shared matrix raw-byte fingerprint | `A_shared_sha256` | SHA-256 of the frozen raw-byte payload for `A_shared`. |
+| Shared right-hand-side raw-byte fingerprint | `b_shared_sha256` | SHA-256 of the frozen raw-byte payload for `b_shared`. |
+| Package full-source fingerprint | `package_source_sha256` | Must equal `3a16825064e5762f3486373fee702e94c34fa3cfdfb3b774f78f3b27eb2f9a60`. |
+| Package executable-body fingerprint | `package_body_sha256` | Must equal `eb116bc9a359b9a50d6804891939cdfeb2b6a17eacb8a6a2a3a8e7d29bebd82c`. |
+| Copied executable-body fingerprint | `copy_body_sha256` | Must equal `package_body_sha256` before any numerical gate runs. |
+| Raw package body bytes | `package_body_bytes` | Binary-mode `uint8` span from the frozen configuration marker through the newline after `proxy.C_down`; no EOL normalization or text recoding. |
+| Raw copied body bytes | `copy_body_bytes` | Binary-mode `uint8` span with the same markers; compared and hashed directly against `package_body_bytes`. |
+| Environment solver branch | `minimum_norm_solver_branch` | Same-process result of `exist('lsqminnorm','file')`; identical for package and copied calls. |
+| Source-copy transform record | `source_transform` | Exact declaration change plus non-executable help-text allowance; no arithmetic-body change. |
+| Synthetic mutation result | `synthetic_source_mutation` | In-memory `1i/4` to `1i/5` mutation that must be rejected without execution. |
+| Cached frequency record | `system_cache(ic,ik)` | Sole package/copy call record at one proxy configuration and frequency; contains public outputs and the copied `A_shared`, `b_shared`, and `coeffs_copy`. |
+| Cached seed index | `seed_index` | Unique index satisfying `cfg.k_nodes(seed_index) == cfg.k_seed`; its cached `A_shared` supplies the seed SVD without a second constructor call. |
+| Frozen solver labels | `cfg.expected_solver_labels` | Exact ordered set `package_public_anchor`, `copy_production`, `pinv_default`, `explicit_svd_pinv_tol`, `ratio_rank_rseed`. |
+| Expected row counts | `cfg.expected_shared_rows`, `cfg.expected_solver_rows_per_system`, `cfg.expected_solver_rows` | Respectively `6`, `5`, and `30`; used for bidirectional exact coverage. |
+| Primary Green source | `cfg.primary_source` | Frozen value `[0,0]`, serialized in `config.txt` as a cross-check of the unchanged hardcoded `src` in the source-exact body; it is not a new function input. |
+| Green probe arrays | `cfg.green_sources`, `cfg.green_targets` | Frozen $2\times3$ source and $2\times4$ target matrices used by the value/gradient/Hessian comparison. |
+| Channel-order identifier | `cfg.channel_order` | Stable label `RAYLEIGH_NATIVE_ORDER`; no channel permutation is allowed between objects or runs. |
+| Density-scaling identifier | `cfg.density_scaling` | Stable text containing the exact `h`, `speed`, and `density_scale` formulas frozen in the design. |
+| Shifted residual identifier | `cfg.off_collocation_rule` | Stable label `SHIFTED_DENSIFIED_MIDPOINT_2X`; diagnostic-only and never a solver collocation system. |
+| Historical projector comparison | `historical_projector_comparison` | Non-gating row-matched report against read-only `test/root-ready/output/results.mat`, including availability, rank/dimensions, relative differences, and recomputed raw-byte equality. |
+| In-progress evidence root | `cfg.staging_output_root` | `test/root-ready/provenance-closure/output.inprogress/`; the only writable output tree before final publication. |
+| Final evidence root | `cfg.output_root` | `test/root-ready/provenance-closure/output/`; created only by the final atomic rename. |
+| Required artifact set | `cfg.required_artifacts` | Exact per-run list frozen in the design, including `historical-projector.csv` and `completion.marker`. |
+| Completion marker | `completion.marker` | Last file written in a validated run bundle; records version, run, artifact-bundle pass, final label, and non-marker artifact SHA-256 values. |
+
+The raw-byte payload used for `A_shared_sha256` and `b_shared_sha256` starts with class,
+dimensions, and machine-endianness metadata. It then appends the raw IEEE-754 bytes of
+the column-major real part followed by the raw bytes of the column-major imaginary part.
+It never hashes MAT-file serialization.
+
+### Source-copy gate variables
+
+| Gate | Boolean or observed field | Frozen meaning |
+|---|---|---|
+| `package_source_lock` | `package_source_lock_pass` | Full package source has the pre-registered SHA-256. |
+| `source_exact_copy_body` | `source_exact_copy_body_pass` | Copied executable block is byte-identical and has the frozen body hash. |
+| `source_copy_context_independence` | `source_copy_context_independence_pass` | Forbidden name/output-count/stack/random/global/dynamic-evaluation constructs are absent and the solver branch is shared. |
+| `execution_manifest_complete` | `execution_manifest_complete_pass` | Every direct-call manifest path is a distinct existing regular file with a valid lowercase SHA-256 and no sentinel digest. |
+| `package_copy_public_output_bitwise` | `package_copy_public_output_bitwise_pass` | Fields `q`, `Z`, `H`, `C_up`, and `C_down` are bitwise equal. |
+| `copy_coefficients_bitwise` | `copy_coefficients_bitwise_pass` | `coeffs_copy` and `coeffs_from_proxy_copy` are bitwise equal. |
+| `shared_A_b_raw_fingerprints` | `shared_A_b_raw_fingerprints_pass` | Exact bidirectional row coverage holds and every one of the five solver rows stores its unique constructor's `A_shared_sha256` and `b_shared_sha256`. |
+| `synthetic_source_mutation_rejected` | `synthetic_source_mutation_rejected_pass` | The deterministic arithmetic-token mutation triggers the body-mismatch gate before execution. |
+| `two_run_reproducibility` | `two_run_reproducibility_pass` | Numeric, source/body, manifest, shared-array, and projector evidence agrees between the preserved baseline and repeat. |
+| `artifact_bundle_complete` | `artifact_bundle_complete_pass` | The closed log and all frozen artifacts pass staging-tree validation before the completion marker and atomic publication. |
+| Source-derived aggregate | `source_derived_shared_A_b_provenance_pass` | Conjunction of every required provenance, manifest, unchanged numerical, object, negative, reproduction, and artifact-bundle gate. |
+
+The three existing `mirrored_constructor_*_output_reproduction` gate names retain
+threshold `cfg.constructor_tol = 1e-11`. The resolution and per-object compatibility
+gates retain `cfg.object_compatibility_tol = 1e-5`. The ratio-rank rule remains
+`cfg.ratio_rank_threshold = 1e-8`, and two-run numeric reproduction remains `1e-13`.
+No new threshold is assigned to off-collocation readiness.
+
+### Stable provenance-closure labels
+
+| Gate or state | Stable label |
+|---|---|
+| Unobserved production-internal arrays | `NOT_DIRECTLY_OBSERVED` with reason `NOT_OBSERVABLE_WITH_CURRENT_INTERFACE` |
+| Package full-source mismatch | `PACKAGE_SOURCE_DRIFT` |
+| Copied executable-body mismatch | `SOURCE_COPY_BODY_MISMATCH` |
+| Forbidden context dependence | `SOURCE_COPY_CONTEXT_DEPENDENCE` |
+| Missing, failed, duplicate, or invalid direct-call manifest record | `EXECUTION_MANIFEST_INCOMPLETE` |
+| Public package/copy output mismatch | `PACKAGE_COPY_PUBLIC_OUTPUT_MISMATCH` |
+| Copied coefficient extraction mismatch | `COPY_COEFFICIENT_EXTRACTION_MISMATCH` |
+| Shared-array fingerprint mismatch | `SHARED_A_B_FINGERPRINT_MISMATCH` |
+| Synthetic mutation not rejected | `SOURCE_MUTATION_NOT_REJECTED` |
+| Two-run mismatch | `PROVENANCE_REPRODUCIBILITY_FAILURE` |
+| Missing, partial, inconsistent, unmarked, or unpublished artifact bundle | `ARTIFACT_BUNDLE_INCOMPLETE` |
+| Operational aggregate pass | `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS` |
+
+`SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS` means only that the frozen copied arithmetic
+is source-exact, its public output is a same-process bitwise match to the package, and all
+test-local comparison solvers consume one fingerprinted returned pair. It never means
+`production_internal_A_b_identity = true` and never authorizes a complex disk, root,
+eigenvalue, correction, estimator, effectivity, or certification claim.

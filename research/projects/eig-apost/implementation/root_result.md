@@ -2,6 +2,11 @@
 
 # Root-readiness controlled diagnostic result
 
+> **Reader precedence:** Section I is the current provenance-closure result. The
+> `STALE` passport and `REVISE-BLOCKED` verdict below apply to the earlier controlled
+> diagnostic retained in Sections A--H; Section I has its own current passport, evidence
+> lock, and claim boundary.
+
 ## Material Passport
 
 - Origin Skill: academic-research-suite/experiment-agent
@@ -302,3 +307,201 @@ The smallest reviewer decision is whether the proposed instrumented capture trul
 the production-system provenance gap and explains or resolves the three failed observable
 output gates. The $10^{-5}$ gate is now correctly reinstated and passed, but it cannot
 override those blockers. The correct action boundary remains `REVISE / ROOT SEARCH STOP`.
+
+## I. Provenance-closure post-experiment update
+
+### I.1 Update passport and authority
+
+- Origin Skill: academic-research-suite/experiment-agent
+- Origin Mode: validate / post-experiment analysis
+- Origin Date: 2026-08-07
+- Verification Status: ANALYZED — RESEARCHER OPERATIONAL-PROVENANCE PASS /
+  INDEPENDENT SKEPTIC REVIEW PENDING
+- Version Label: eig-apost-provenance-closure-result-v1.1
+- Frozen Design:
+  [[research/projects/eig-apost/implementation/root_readiness|Root-readiness design]],
+  specifically the `eig-apost-provenance-closure-v1.1` addendum
+- Symbol Authority:
+  [[research/projects/eig-apost/implementation/SYMBOL|Symbol and code-variable ledger]]
+- Evidence Root: `test/root-ready/provenance-closure/output/`
+
+Sections A--H above are retained as the historical analysis of the earlier mirrored-
+constructor diagnostic. They are not rewritten as passes. This section analyzes the new
+source-exact-copy baseline/repeat bundle and is the current Researcher result for the
+operational provenance question only.
+
+### I.2 Question, exclusions, and method
+
+The provenance-closure experiment asks whether a test-local copy of the frozen
+`kernel.precomp_proxy` executable body can expose its already existing local arrays
+$A_{\mathrm{pr}}^{\mathrm{copy}}(k)$ and
+$b_{\mathrm{pr}}^{\mathrm{copy}}(k)$, reproduce the unmodified package public output in
+the same process, and make those returned arrays the single shared input to all five
+comparison solvers. It does **not** ask whether the unmodified production call exposes
+its internal arrays.
+
+The analysis compared the published baseline and repeat artifacts against the frozen
+v1.1 gates. It checked completion-marker hashes, exact row coverage, the direct-call
+manifest, source/body hashes, shared-array fingerprints, solver outputs, sampled object
+compatibility, the synthetic negative, and unchanged-source reproduction. No numerical
+experiment was rerun during this analysis.
+
+As required by the frozen design, the experiment excludes a complex-$k$ chart, branch
+continuation, candidate disk, Cauchy--Riemann test, contour count, Newton iteration,
+root/eigenvalue, adjacent-level correction, estimator, and effectivity calculation.
+
+### I.3 Numerical evidence
+
+| Evidence item | Observation | Status |
+|---|---:|---|
+| Transactional artifacts | baseline marker covers 13 non-marker artifacts; repeat marker covers 27; all recorded SHA-256 values independently match the published files | `ESTABLISHED` |
+| Runtime | baseline $6.4742$ s; repeat $6.6299$ s; frozen limit $3600$ s | `PASS` |
+| Package source lock | `3a168250...2f9a60` | `PASS` |
+| Source-exact executable body | package/copy body hash `eb116bc9...bd82c`; raw body-byte equality `1` | `PASS` |
+| Source-copy controls | context-independence, copy-structure, and synthetic mutation rejection all equal `1` | `PASS` |
+| Direct-call manifest | exactly 11 expected names, 11 valid recorded source hashes, and exact set equality | `PASS` |
+| Shared-system coverage | 6 constructor rows, 5 exact solver labels per row, 30 solver rows total; one $A$ and one $b$ fingerprint per group | `PASS` |
+| Package/copy public output | bitwise equality at all six base/refined-frequency systems | `PASS` |
+| Copy coefficient extraction | bitwise equality between returned `coeffs` and flattened copied proxy output | `PASS` |
+| Three copied-output reproduction gates | maximum coefficient, proxy-field, and common-residual differences are all exactly $0$ | `PASS` |
+| Ratio-chart ranks | base/refined ranks $126/144$, reproduced projector fingerprints | `PASS` |
+| Resolution compatibility | maximum $1.898507\times10^{-9}<10^{-5}$; 3/3 rows pass | `PASS` |
+| Downstream compatibility | maximum $1.670931\times10^{-9}<10^{-5}$; 78/78 rows pass | `PASS` |
+| Selected ratio-chart off-collocation diagnostic | maximum recorded gate value $5.911454\times10^{-8}$; no frozen pass threshold | `PENDING_REVIEW / NON-GATING` |
+| Unchanged-source repeat | relative numeric difference $0<10^{-13}$; manifests, source/body records, shared fingerprints, and current projector fingerprints agree | `REPRODUCED` |
+| Historical projectors | ranks and dimensions agree, but left/right projectors differ by about $10^{-10}$; declared non-gating | `DIFFERENT / NON-GATING` |
+| Production-internal system identity | not returned by the unmodified interface | `NOT_DIRECTLY_OBSERVED` |
+
+The baseline correctly records `PENDING_REPEAT` and an operational blocked label because
+the repeat did not yet exist. The repeat then records
+`SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS`, `FINAL_COMPLETE_PASS`, and a reproduced
+bundle. This baseline-to-repeat state change is required by the two-run protocol; it is
+not numerical disagreement.
+
+### I.4 Mathematical claim boundary
+
+**ESTABLISHED:** `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS` is supported for the frozen
+source, inputs, and recorded Octave process. It means precisely that:
+
+1. the copied executable arithmetic has the frozen raw body bytes;
+2. the unmodified package and copied implementation return bitwise-equal public proxy
+   data at the six sampled systems;
+3. all comparison solvers consume one copy-returned pair
+   $A_{\mathrm{pr}}^{\mathrm{copy}},b_{\mathrm{pr}}^{\mathrm{copy}}$ per system, with
+   reproduced raw-array fingerprints; and
+4. the sampled resolution and downstream objects satisfy the unchanged $10^{-5}$ gate.
+
+**ESTABLISHED UNAVAILABLE:**
+`production_internal_A_b_identity=NOT_DIRECTLY_OBSERVED`, with reason
+`NOT_OBSERVABLE_WITH_CURRENT_INTERFACE`. Source-exact copied arithmetic and bitwise
+public-output equality do not turn the copy-returned arrays into direct observations of
+the arrays consumed inside the unmodified package call. In particular, this result must
+not be restated as
+$A_{\mathrm{pr}}^{\mathrm{copy}}=A_{\mathrm{pr}}^{\mathrm{production}}$ or
+$b_{\mathrm{pr}}^{\mathrm{copy}}=b_{\mathrm{pr}}^{\mathrm{production}}$ by measurement.
+
+**NOT ESTABLISHED:** three real frequencies do not imply a holomorphic complex-$k$
+family, a pole-free disk, continuous kernel--field equivalence, representation
+injectivity, or absence of spurious roots. No root, guided eigenvalue, error correction,
+estimator, effectivity index, reliable interval, or certification claim follows from
+this pass.
+
+### I.5 Operational blocker decision
+
+**CONDITIONAL GO TO THE NEXT DESIGN GATE.** The new evidence resolves the narrower
+**operational source-derived shared-system provenance blocker** that the v1.1 addendum
+was designed to test. It does not resolve, and does not claim to resolve, the unavailable
+production-internal identity question.
+
+The published files intentionally retain
+`ROOT_READINESS=BLOCKED_UPSTREAM_PROVENANCE`,
+`ROOT_READINESS_SAMPLED_DISCRETE_GO=0`, and `PHYSICAL_ROOT_READY=STOP`, because the
+frozen transaction required those labels to remain unchanged until post-result
+Researcher/Skeptic review. The Researcher evidence supports lifting the operational
+provenance blocker only if the independent Skeptic accepts the bundle and this claim
+boundary. Even after that acceptance, authorization extends only to a separate full
+analytic root-readiness design and implementation. It does not extend to root isolation.
+
+### I.6 Work still required for a real root and estimator
+
+1. **Complex-$k$ analytic consistency:** one anchored square-root chart must be injected
+   into every port, proxy, Green, center-BIE, and lead-BIE path; the compression and
+   dimensions must remain fixed on a candidate disk; factor, branch, mutation, and
+   full-matrix Cauchy--Riemann gates must pass.
+2. **Discrete root qualification:** after analytic readiness, a separate frozen-disk
+   experiment must establish a count-one contour, converge bordered Newton, qualify a
+   simple transverse root, and match it across levels. Real-axis minima alone are not
+   roots.
+3. **Empirical a posteriori correction:** matched adjacent-level roots, a stable
+   projected derivative, map/root corrections, next-level shift agreement, and
+   effectivity against an independently resolved $k_{\infty,h}^{\mathrm{ref}}$ remain
+   uncomputed.
+4. **Real-case validation and certification:** independent proxy/BIE/port refinement,
+   a resolved half-guide reference, MATLAB parity, and representative modes are still
+   required. Continuous kernel--field equivalence, saturation, correction remainder,
+   and validated numerical-error bounds remain separate theory/validated-numerics gates.
+
+### I.7 Exact next stage
+
+The next stage is **Full analytic root-readiness**, beginning with a separately reviewed
+and frozen experiment design extracted from the dormant re-entry protocol in the v1.1
+design. Its target is the double-ellipse case with $\beta=0.8$, scan interval
+$[0.04,0.18]$, $n_{\mathrm{ref}}=3$, levels $j=0,3,4$, and the accepted
+source-derived proxy chart. The stage must, without post-result retuning:
+
+1. anchor every $\gamma_m(k)$ branch at one real seed and inject the same continuation
+   through all square-root consumers, with branch algebra and continuation errors at
+   most $10^{-12}$;
+2. run the 29-point real locator at $j=3$, require a strict interior dip with
+   $s(k)\le10^{-3}$ and neighboring values at least $1.5s(k)$, then perform two
+   nine-point refinements using one frozen compression;
+3. require center participation at least $10^{-3}$ and refinement overlap at least
+   $0.9$;
+4. test the three base ranks $r_{\mathrm{seed}}-2$, $r_{\mathrm{seed}}-1$,
+   $r_{\mathrm{seed}}$ and the predeclared 48/48/28/order-10 proxy refinement, including
+   the frozen chart-spread and boundary-separation conditions;
+5. test disk radii $r_0,r_0/2,r_0/4$ in that order on nested 16/32 boundary nodes, the
+   center, and eight half-radius nodes, recording every branch, proxy, BIE, doubling,
+   terminal, far-block, $K_{ee}$, representation, and separation ledger at
+   $j=0,3,4$;
+6. run the full-matrix Cauchy--Riemann stencils at $j=0,4$ and require the final defects
+   and derivative spreads to be at most $10^{-6}$ with the prescribed refinement trend;
+   and
+7. pass all mandatory branch, adaptive-solve/compression, antiholomorphic, singular-
+   factor, hidden-pole, representation-nullspace, and circle-fallback negatives.
+
+The maximum positive outcome of this next stage is
+`ROOT_READINESS_SAMPLED_DISCRETE_GO`, while `PHYSICAL_ROOT_READY=STOP` remains. Any
+missing path, representation drift, material chart spread, unavailable sampled node, or
+failed Cauchy--Riemann/negative gate stops the program before contour integration. Only
+after this stage passes may a separate discrete root-isolation experiment be frozen.
+
+### I.8 Updated distance estimate
+
+Subject to a Skeptic pass, provenance closure completes the former first remaining
+empirical stage. Approximately **four major empirical stages** remain to a credible
+real-case eigenvalue plus an empirical estimator: full analytic root-readiness, discrete
+root isolation, empirical adjacent-level correction, and real-case validation. The
+earliest qualified discrete root is therefore two stages away. Reliable certification
+remains farther because the continuous and validated-numerics gates in I.6 are not
+included in that four-stage empirical count.
+
+### I.9 Review handoff
+
+1. **Claim:** the v1.1 source-derived operational provenance gates pass.
+   **Status:** `ESTABLISHED`. **Weakest step:** source-exactness is revision- and
+   process-specific; the manifest is direct-call only and MATLAB parity was not tested.
+2. **Claim:** the operational upstream provenance blocker can be lifted.
+   **Status:** `CONDITIONAL` on independent Skeptic acceptance. **Smallest downgrade:**
+   retain `BLOCKED_UPSTREAM_PROVENANCE` if marker integrity, source-copy independence,
+   shared-array coverage, or the aggregate logic is found defective.
+3. **Claim:** production-internal $A_{\mathrm{pr}},b_{\mathrm{pr}}$ identity was observed.
+   **Status:** `REFUTED AS A DESCRIPTION OF THIS EXPERIMENT`; the correct status is
+   `NOT_DIRECTLY_OBSERVED`.
+4. **Claim:** the object evidence supports a complex analytic chart or root.
+   **Status:** `NOT ESTABLISHED`. **Smallest next falsification:** execute the separately
+   frozen analytic-readiness positives and mandatory negatives before any contour code.
+5. **Claim:** four empirical stages remain to the requested real eigenvalue-and-estimator
+   case.
+   **Status:** `PROVISIONAL RECOMMENDATION`; failures of branch continuation, chart
+   sensitivity, contour isolation, or level matching may split those stages.

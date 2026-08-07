@@ -24,6 +24,12 @@
 状态以及 design/result/review/test 入口。不得只留下缩写、目录名或 `GO`/`STOP` 标签而不
 解释其含义；状态变化应保留审计历史，并在本页明确哪个 verdict 最新。
 
+所有尚未解决但与当前工程目标有关的问题统一维护在
+[[research/projects/eig-apost/implementation/open-problems|open-problem ledger]]。每次
+stage review 后只追加指向对应 stage 小节的 handoff 链接，不在各 review 重复复制一份会
+逐渐漂移的清单。只有 ledger 中未解决的 `BLOCKER` 能停止当前阶段；`IMPORTANT CAVEAT`
+和 `MINOR CAVEAT` 用于论文披露、廉价 sanity check 或后续稳健性工作。
+
 ## 从起点到当前位置
 
 ```text
@@ -34,9 +40,12 @@
   -> I0: manufactured root-and-correction algorithm
   -> I1: finite-tail half-guide DtN map
   -> I2: augmented BIE center coupling
-  -> I3: Root-readiness proxy/provenance gate
-       [current: REVISE / BLOCKED_UPSTREAM_PROVENANCE]
-  -> future: analytic root isolation -> empirical estimator -> real-case validation
+  -> I3a: Root-readiness proxy diagnostic
+       [historical result: REVISE / BLOCKED_UPSTREAM_PROVENANCE]
+  -> I3b: Source-derived proxy provenance closure
+       [current: PASS WITH CONDITIONS / GO TO FULL ANALYTIC ROOT-READINESS ONLY]
+  -> future: full analytic root-readiness -> root isolation
+             -> empirical estimator -> real-case validation
 ```
 
 ## 研究准备阶段：Phase 1--4
@@ -67,6 +76,7 @@
 - 状态：`GO`，但仅为 `conditional/empirical` manufactured-algorithm evidence。
 - 入口：[[research/projects/eig-apost/implementation/design|I0 design]]；
   [[research/projects/eig-apost/implementation/nep-review|I0 review]]；
+  [[research/projects/eig-apost/implementation/open-problems#I0|I0 open problems]]；
   `test/eig-apost-nep/output/report.md`。
 
 ### I1 — Finite-tail Half-guide Dirichlet-to-Neumann Map
@@ -91,6 +101,7 @@ half-guide，不是另一个数学对象。
 - 入口：[[research/projects/eig-apost/implementation/half_guide_map|I1 design]]；
   [[research/projects/eig-apost/implementation/half_guide_result|I1 result]]；
   [[research/projects/eig-apost/implementation/half_guide_review|I1 review]]；
+  [[research/projects/eig-apost/implementation/open-problems#I1|I1 open problems]]；
   `test/hg-map/output/report.md`。
 
 ### I2 — Augmented Boundary Integral Equation and Center Coupling
@@ -114,53 +125,62 @@ equations 组装成同一固定维数矩阵。
 - 状态：离散代数 `GO`，但 `ROOT_READY=STOP`。
 - 入口：[[research/projects/eig-apost/implementation/aug-bie|I2 design]]；
   [[research/projects/eig-apost/implementation/aug-bie-review|I2 review]]；
+  [[research/projects/eig-apost/implementation/open-problems#I2|I2 open problems]]；
   `test/aug-bie/output/report.md`。
 
-### I3 — Root-readiness Gate and Quasiperiodic Proxy Provenance Diagnostic
+### I3 — Root-readiness Gate and Quasiperiodic Proxy Provenance Diagnostics
 
 全称含义：**进入真实根搜索前的准备门，以及准周期 Green proxy system 的来源与固定表示
 诊断**。它检查当前 BIE/proxy 计算能否形成一个在 complex $k$ 上可追踪、固定坐标、来源
 一致的 matrix evaluator；它本身不搜索根。
 
-- 做了什么：在 $k=0.095,0.100,0.105$ 比较 production output、mirrored pointwise
-  pseudoinverse、显式奇异值分解（Singular Value Decomposition, SVD）和 seed-frozen
-  reduced chart；记录 collocation 与 shifted
-  off-collocation residual、base/refined proxy resolution、Green potential/gradient/Hessian、
-  defect/bulk $A_{\mathrm{QP}}$ 和 scattering blocks；保存 rank 126/144 projectors 的数值
-  fingerprint 与 source manifest，并完成 unchanged-source 双跑。
-- 通过了什么：冻结的 $10^{-5}$ object-compatibility gate 中 78/78 downstream rows 和
-  3/3 resolution rows 通过，aggregate maximum 为 $1.898508\times10^{-9}$；两次权威运行
-  的数值向量、当时的 direct-call source manifest 和 projector fingerprints 一致。
-- 失败或未通过什么：production 内部实际消费的 $A_{\mathrm{pr}},b_{\mathrm{pr}}$ 在当前
-  接口下不可观测；coefficient、proxy field、residual 三个 $10^{-11}$ mirrored-output gates
-  分别以 $2.798540\times10^{-7}$、$5.531552\times10^{-10}$、
-  $1.250388\times10^{-9}$ 失败。off-collocation readiness 没有冻结阈值，仍为
-  `PENDING_REVIEW`。
+- 做了什么：第一轮受控诊断在 $k=0.095,0.100,0.105$ 比较 production output、独立
+  mirrored constructor、显式 SVD 和 seed-frozen reduced chart，并记录 base/refined
+  proxy、Green、$A_{\mathrm{QP}}$、scattering 和 projector/source fingerprints。随后在
+  `test/` 内建立 source-exact instrumented copy：锁定 package 与 executable-body 字节，
+  让复制体返回其已有的 $A,b$，并使每个样本的五类 solver rows 使用同一 cache-derived
+  $A,b$；保留旧门槛、加入 synthetic source mutation negative、completion marker 与
+  baseline/repeat 原子发布。
+- 通过了什么：provenance-closure 覆盖 base/refined 与三个实频率的 6 个 shared systems
+  和 30 个 solver rows；package/copy public output、复制体系数、proxy field 和 residual
+  差异均为 0。冻结的 $10^{-5}$ object gate 中 78/78 downstream rows 与 3/3 resolution
+  rows 通过，aggregate maximum 为 $1.898507\times10^{-9}$；两次运行数值差为 0，
+  direct-call manifest、shared-system 和 projector fingerprints 一致。
+- 仍未通过或未验证什么：production 调用内部实际消费的
+  $A_{\mathrm{pr}},b_{\mathrm{pr}}$ 仍为 `NOT_DIRECTLY_OBSERVED`，所以通过标签只能是
+  source-derived operational provenance。off-collocation readiness 没有冻结阈值，
+  historical projectors 也只作非门控诊断；MATLAB parity 尚未运行。
 - 没有运行什么：没有 candidate scan、complex disk、Cauchy--Riemann consistency test、
   pole ledger、contour root count、Newton、eigenvalue 或 estimator。
-- 状态：诊断执行完成，但科学 verdict 为 `REVISE / BLOCKED_UPSTREAM_PROVENANCE`；
-  `ROOT_READINESS_SAMPLED_DISCRETE_GO=0`，`PHYSICAL_ROOT_READY=STOP`。
+- 状态：第一轮独立 mirrored-constructor 诊断的历史 verdict 保持
+  `REVISE / BLOCKED_UPSTREAM_PROVENANCE`；新的 provenance-closure 经 Researcher、
+  Engineer 和 Skeptic 审查为 `PASS WITH CONDITIONS`，gate decision 为
+  `GO -- FULL_ANALYTIC_COMPLEX_K_ROOT_READINESS ONLY`。这只解除进入下一设计门的
+  operational provenance 阻塞；`PHYSICAL_ROOT_READY=STOP`，仍没有 root 或 estimator。
 - 入口：[[research/projects/eig-apost/implementation/root_readiness|I3 design]]；
   [[research/projects/eig-apost/implementation/root_result|I3 result]]；
-  [[research/projects/eig-apost/implementation/root_readiness_review|I3 review，Section K
-  是当前 verdict]]；`test/root-ready/output/report.md`。
+  [[research/projects/eig-apost/implementation/root_readiness_review|I3 review，Section L
+  是当前 verdict]]；
+  [[research/projects/eig-apost/implementation/open-problems#I3|I3 open problems]]；
+  `test/root-ready/provenance-closure/output/repeat/report.md`。
 
-运行后只给 I3 design 增加了 post-experiment status note，因此当前 design hash 与运行时
-manifest 不同。数值证据没有被改写，但当前完整 worktree manifest 应视为 `STALE`；不能
-把“两次权威运行彼此复现”扩大成“当前所有文件仍与运行 manifest 相同”。
+较早的 `test/root-ready/output/` 受控诊断在运行后发生过 design status-note 漂移，因此
+其完整 worktree manifest 保持 `STALE`。新的 provenance-closure v1.1 把冻结 design 纳入
+11 项 direct-call manifest；本轮收尾只更新 result/review/status/handoff，不改冻结 design，
+所以新运行锁保持有效。两次复现仍只说明冻结离散实现一致，不能替代数学正确性证明。
 
 ## 后续阶段：距离真实特征值和 estimator 还有什么
 
 | 顺序 | 阶段全称 | 具体要完成的工作 | 完成后才允许声称什么 |
 |---:|---|---|---|
-| P1 | **Production Proxy-System Provenance Closure（production proxy system 来源闭合）** | 经用户明确授权后，让 `kernel.precomp_proxy` 可选返回其实际消费的 $A_{\mathrm{pr}},b_{\mathrm{pr}}$，或让 production 与诊断结构性共享同一 constructor；保持单输出行为不变，在不放宽阈值下重跑并审查。 | 获得可审计的共同 proxy system 和候选固定 chart；仍没有 root。 |
+| P1 | **Source-derived Proxy-System Provenance Closure（源码派生的 proxy system 来源闭合）** | 已在 `test/` 内完成 source-exact copy、同一 $A,b$ 数据链、原阈值双跑和独立审查；production 内部数组仍不可直接观测。 | `PASS WITH CONDITIONS`；只授权 P2，仍没有 root。 |
 | P2 | **Full Analytic Root-readiness on a Complex Wavenumber Domain（复波数域上的完整解析根准备门）** | 冻结 anchored Rayleigh square-root branches、固定维数 $F_{j,h}(k)$、complex candidate disk、Cauchy--Riemann consistency、所有 BIE/terminal/Schur/proxy factors 的 pole/conditioning ledger 和反解析负例。 | 只在所有门通过后授权 contour root isolation；仍不是 physical truth。 |
 | P3 | **Actual Double-Ellipse Root Isolation and Simple-root Qualification（真实双椭圆离散根隔离与简单根资格判定）** | 实轴扫描只作 locator；用 complex contour count 隔离一个根，用 bordered Newton refinement，并在相邻 tail levels 匹配同一 root，检查左右 null vectors、transverse derivative 和 conditioning。 | 首个 qualified discrete eigenvalue candidate；还不是独立验证的真实 guided eigenvalue。 |
 | P4 | **Empirical A Posteriori Eigenvalue Correction and Effectivity（经验型特征值后验校正与有效性）** | 计算 matched $k_{j,h}$ hierarchy、projected map correction、root-solve correction、next-level shift consistency；用高分辨率 $k_{\infty,h}^{\mathrm{ref}}$ 比较 effectivity。 | 条件化、经验型 finite-tail estimator；没有 saturation/remainder 证明时不能称 certified interval。 |
 | P5 | **Independent Real-case Validation（真实案例的独立验证）** | 做 proxy/BIE/port refinement、独立 half-guide/reference calculation、可行的外部 benchmark、代表性 eigenmode 检查和 MATLAB parity；分别量化 root、spatial、port、proxy 与 reference uncertainty。 | 若结果一致，可形成可信的真实二维 eigenvalue + empirical estimator case study。 |
 
-预计 P3 完成后才可能出现首个 qualified discrete root；P1--P5 全部完成后才可能形成可信
-的真实二维特征值与 empirical estimator 案例。若目标升级为 certified error interval，
+P1 已完成。预计 P2--P3 完成后才可能出现首个 qualified discrete root；剩余 P2--P5
+四个阶段全部完成后才可能形成可信的真实二维特征值与 empirical estimator 案例。若目标升级为 certified error interval，
 还需要另外闭合 continuous center-BIE kernel--field equivalence / injectivity、half-guide
 map saturation bound 与 correction remainder，以及 validated total error budget。
 
@@ -187,13 +207,15 @@ map saturation bound 与 correction remainder，以及 validated total error bud
 
 1. 想快速恢复当前工作：先读本文件，再读
    [[research/projects/eig-apost/STATUS|project STATUS]]。
-2. 想理解为什么当前停在 Root-readiness：读
-   [[research/projects/eig-apost/implementation/root_result|I3 result]] 和
-   [[research/projects/eig-apost/implementation/root_readiness_review|I3 review Section K]]。
+2. 想理解为什么当前只允许进入 full analytic Root-readiness：读
+   [[research/projects/eig-apost/implementation/root_result|I3 result Section I]] 和
+   [[research/projects/eig-apost/implementation/root_readiness_review|I3 review Section L]]。
 3. 想继续下一次实现：读
    [[research/projects/eig-apost/implementation/root_readiness|I3 frozen design]]、
    [[research/projects/eig-apost/implementation/SYMBOL|symbol/code ledger]] 和
-   `test/root-ready/output/gate.csv`；未经用户明确授权，不得修改 `test/` 外 package helper。
+   [[research/projects/eig-apost/implementation/open-problems#I4|I4 open problems]]，再读
+   `test/root-ready/provenance-closure/output/repeat/gate.csv`；下一步必须先单独冻结并审查
+   complex-$k$ 解析准备实验，不能直接启动 contour/root/estimator。
 4. 想追溯 estimator 的数学来源：读
    [[research/projects/eig-apost/phase3-analysis/s-root|root qualification]]、
    [[research/projects/eig-apost/phase3-analysis/s-estimator|candidate estimator]] 和

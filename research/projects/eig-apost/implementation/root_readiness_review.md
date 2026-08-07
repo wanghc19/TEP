@@ -5,11 +5,10 @@
 > **Correction:** the previous `STOP` finding based on a corrupted interactive proxy
 > reconstruction is retracted; this replacement verdict governs.
 >
-> **Reader precedence:** Section K is the current corrective delta verdict. Earlier
-> `PENDING` states and Section J's first-run implementation findings are retained as audit
-> history. A post-run status-only note later changed the design file hash, so this review
-> is marked `STALE` for manifest freshness; the frozen gates and reviewed numerical values
-> were not changed.
+> **Reader precedence:** Section L is the current provenance-closure post-run verdict.
+> Earlier `PENDING` states, Section J's first-run findings, and Section K's corrective
+> delta are retained as audit history. The `STALE` passport below applies to that earlier
+> controlled-diagnostic review; Section L has its own current passport and evidence lock.
 
 ## Material Passport
 
@@ -252,3 +251,231 @@ The authoritative state should remain `ROOT_READINESS=BLOCKED_UPSTREAM_PROVENANC
 root-search stage is not authorized. Only a structural interface/provenance repair that
 makes the consumed production $A,b$ observable or genuinely shared, followed by an
 unchanged-threshold rerun and review, is authorized.
+
+## L. Provenance-closure post-run review
+
+### Material Passport
+
+- Origin Skill: academic-research-suite/experiment-agent
+- Origin Mode: post-run independent validation
+- Origin Date: 2026-08-07
+- Verification Status: CURRENT / ARTIFACTS AND DATA FLOW INDEPENDENTLY INSPECTED / NOT
+  INDEPENDENTLY RERUN
+- Review Status: PASS WITH CONDITIONS / GO TO FULL ANALYTIC COMPLEX-K ROOT-READINESS ONLY
+- Version Label: eig-apost-provenance-closure-post-run-review-v1.0
+- Repro Lock: `eig-apost-provenance-closure-v1.1`; package SHA-256
+  `3a16825064e5762f3486373fee702e94c34fa3cfdfb3b774f78f3b27eb2f9a60`; executable-body
+  SHA-256 `eb116bc9a359b9a50d6804891939cdfeb2b6a17eacb8a6a2a3a8e7d29bebd82c`
+- Audit Target:
+  `test/root-ready/provenance-closure/output/`, its implementation, and the
+  [[research/projects/eig-apost/implementation/root_readiness#Pre-execution provenance-closure addendum|frozen provenance-closure addendum]]
+- Claim Boundary: source-derived shared-system provenance at six frozen real-axis
+  samples; no direct production-internal $A,b$, complex-$k$ analyticity, root,
+  eigenvalue, correction, or estimator claim
+
+### L.A. Audit frame
+
+The question is whether the completed provenance-closure experiment supports the narrow
+label `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS` strongly enough to enter a separately
+designed full analytic complex-$k$ root-readiness experiment. The claimed contribution
+is test infrastructure: a source-exact copy exposes the already existing collocation
+arrays, every comparison solver receives the same copy-returned pair, and the old
+numerical tolerances are retained. It is not a change to the mathematical model in
+[[research/projects/eig-apost/implementation/design|the frozen algorithm design]].
+
+Success requires the frozen source/body locks, same-process bitwise public-output
+agreement, exact solver-row coverage by shared-array fingerprints, all three
+$10^{-11}$ gates, all three $10^{-5}$ object gates, the mutation negative, two-run
+reproduction, and complete marked artifacts. It also requires that off-collocation and
+historical-projector results remain non-gating and that no root-stage computation ran.
+The authoritative materials examined were the provenance addendum, the package source,
+the instrumented copy, `provenance_closure_diagnostic.m`, both completed output trees,
+their markers, `reproducibility.txt`, and the historical controlled-diagnostic findings
+in Sections J--K.
+
+The reconstructed dependency chain is
+
+$$
+\text{source/body lock}
+\Longrightarrow \text{source-exact copied arithmetic}
+\Longrightarrow \text{bitwise public-output match}
+\Longrightarrow \text{one cached copy-returned }(A,b)\text{ per sample}
+\Longrightarrow \text{five fingerprint-matched solver rows}
+\Longrightarrow \text{frozen numerical gates}
+\Longrightarrow \text{narrow operational provenance label}.
+$$
+
+The final implication stops there. It does not imply a holomorphic complex-$k$ family,
+a pole-free disk, a guided root, or a posteriori error control.
+
+### L.B. Verdict
+
+**PASS WITH CONDITIONS; gate decision: `GO -- FULL_ANALYTIC_COMPLEX_K_ROOT_READINESS
+ONLY`, high confidence for the frozen Octave artifact and moderate confidence outside
+that environment.** The source-derived operational claim is defensible: the copied body
+is byte-exact, the package and copy public outputs agree bitwise at all six frozen
+samples, the implementation caches six returned systems and records exactly five
+fingerprint-matched solver rows per system, every retained numerical gate passes, and
+the two completed runs reproduce. `GO` authorizes only the next analytic-readiness
+design and experiment. It does not authorize root isolation and does not mean that an
+eigenvalue or estimator exists.
+
+### L.C. Strongest challenge
+
+The manifest, marker, and repeat checks are generated and validated largely by the same
+driver, so they cannot independently establish mathematical correctness. Two identical
+runs can reproduce the same mistake. This does not overturn the narrow verdict because
+an independent post-run inspection rehashed the frozen package/body and all eleven
+direct-call manifest files, validated all 13 baseline and 27 repeat marker entries,
+checked the cache-to-solver data flow, and found the baseline/repeat tabular evidence
+identical. It remains decisive against any stronger claim: only an independently
+specified complex-$k$ test can establish the next analytic property.
+
+### L.D. Findings
+
+1. **MAJOR -- operational provenance is defensible only with its frozen scope.**
+   Location: the addendum's “Question and operational claim,” the instrumented copy,
+   `output/repeat/source-copy.csv`, and `output/repeat/report.md`. Evidence: the package
+   and copy executable spans are byte-identical with the frozen body hash; the allowed
+   transform changes only the declaration/output list and help text; forbidden
+   context-sensitive constructs are absent; the common solver branch is `pinv`; and all
+   six package/copy public outputs are bitwise equal. Consequence: the copy is a valid
+   source-derived oracle for this frozen experiment, but
+   `production_internal_A_b_identity` remains unavailable with reason
+   `NOT_OBSERVABLE_WITH_CURRENT_INTERFACE`. Uncertainty: MATLAB parity, another package
+   revision, or another process environment is untested. Decisive test for the stronger
+   claim: expose and fingerprint the arrays from the package call itself; until then the
+   stronger claim must remain prohibited.
+
+2. **MAJOR -- manifest/marker/repeat evidence is integrity evidence, not a proof of the
+   mathematics.** Location: both `completion.marker` files,
+   `output/reproducibility.txt`, and the driver's finalization helpers. Evidence: the
+   repeat reports zero relative difference, equal manifests, shared-array and projector
+   fingerprints, and complete bundles; independent digest checks match all marker
+   entries and all eleven current direct-call sources. Consequence: stale, partial, or
+   accidentally mixed output is ruled out, while a common-mode algorithmic error is
+   not. Uncertainty: the manifest is intentionally `DIRECT_PROJECT_CALLS_ONLY`, not
+   transitive. Decisive test: keep an external read-only verifier or a second independent
+   implementation for the future analytic gate.
+
+3. **OBSERVATION -- the five solver rows genuinely use one returned $A,b$ value per
+   sample.** Location: `provenance_closure_diagnostic.m`, the six rows of
+   `output/repeat/shared-system.csv`, and the thirty rows of
+   `output/repeat/solver-comparison.csv`. Evidence: each package/copy pair is called once
+   and cached; the seed SVD uses the cached seed; all five solver evaluations receive the
+   cached `A_shared,b_shared`; bidirectional validation enforces the exact five-label set
+   and the unique matching fingerprints. No hash mismatch, duplicate, missing, or extra
+   row was found. Consequence: the previous independently reconstructed-system defect is
+   not present in this comparison path. Decisive falsifier: any solver-row fingerprint
+   differing from its unique shared-system row.
+
+4. **OBSERVATION -- the old tolerances were preserved and passed on the new path.**
+   Location: `output/repeat/gate.csv`. Evidence: the three constructor-output thresholds
+   remain $10^{-11}$ and have observed error zero; the resolution, downstream, and
+   aggregate object thresholds remain $10^{-5}$ with maxima
+   $1.8985069017516266\times10^{-9}$,
+   $1.6709312536070531\times10^{-9}$, and
+   $1.8985069017516266\times10^{-9}$. Consequence: no post-result tolerance relaxation
+   explains the pass. The older failures in Sections J--K remain valid for the older,
+   independently reconstructed arithmetic path and are not rewritten as passes.
+
+5. **OBSERVATION -- off-collocation and historical projectors were not promoted to
+   gates.** Location: `gate.csv`, `off-collocation.csv`, and
+   `historical-projector.csv`. Evidence: off-collocation has no threshold,
+   `availability=0`, and `PENDING_REVIEW` despite the reported maximum
+   $5.9114540325227302\times10^{-8}$; historical base/refined projectors are labeled
+   `DIFFERENT` and `NON_GATING_HISTORICAL_DIAGNOSTIC` and do not enter the required-gate
+   vector. Consequence: neither diagnostic is being used to manufacture the provenance
+   pass. Decisive falsifier: either quantity appearing in the aggregate required-gate
+   conjunction without a new preregistered review.
+
+6. **MINOR -- raw-array hashes prove equality of recorded values, not physical memory
+   identity.** Location: shared-system fingerprint generation and solver-row checks.
+   Evidence: the driver passes the cached variables into all solver evaluations and
+   records matching class/dimension/endianness-aware hashes. Consequence: “same $A,b$”
+   is defensible as the same returned numeric values and data lineage, which is the
+   relevant mathematical meaning; it should not be described as an address-level alias.
+   Decisive test: none is needed unless a future claim depends on memory aliasing.
+
+7. **OBSERVATION -- the paper's mathematical logic and notation were not changed.**
+   The experiment changes only how a pre-existing proxy collocation system is observed
+   in test code. The superscript in
+   $A_{\mathrm{pr}}^{\mathrm{copy}},b_{\mathrm{pr}}^{\mathrm{copy}}$ is necessary to
+   prevent conflation with unobserved production internals; no historical projector or
+   diagnostic residual is inserted into the estimator theory.
+
+8. **OBSERVATION -- ARS statistical-fallacy scan completed 11/11.** Simpson's paradox,
+   ecological fallacy, Berkson's paradox, collider bias, base-rate neglect, regression
+   to the mean, survivorship bias, correlation/causation, and reverse causality are not
+   applicable because this deterministic gate makes no grouped, population, causal, or
+   probabilistic inference. Look-elsewhere and garden-of-forking-paths risks are
+   contained here by frozen samples, thresholds, and the explicit absence of a search;
+   they become live risks when the complex domain and root-search region are chosen.
+
+### L.E. Implementation audit
+
+No specification-to-code mismatch was found in the audited provenance gates. The source
+verifier uses binary reads and exact byte spans; the driver checks the resolved package
+path, unique manifest paths, digest syntax, the mutation negative, exact solver-row
+coverage, artifact headers/counts, and write-last markers before publication. The output
+retains all required rows, and no `output.inprogress/` tree is presented as final
+evidence.
+
+The remaining numerical risks are outside this gate: pointwise square-root sign
+correction need not define a holomorphic branch on a complex disk; a frozen real-axis
+rank need not remain separated on that disk; small sampled object mismatches do not give
+continuous kernel--field equivalence; and Octave bitwise agreement does not establish
+MATLAB agreement. Untested edge cases include branch thresholds, proxy-rank changes,
+near-singular reduced factors, complex frequencies, and a disk touching a pole or a
+Rayleigh threshold.
+
+### L.F. What survived
+
+The following claims remain defensible:
+
+1. the source-exact copy implements the frozen package arithmetic at the audited body
+   level and reproduces the package's public result at all six frozen samples;
+2. all test-local solver variants are compared on one cache-derived pair per sample;
+3. the unchanged $10^{-11}$ and $10^{-5}$ gates pass on that path;
+4. the two published runs and their recorded fingerprints reproduce; and
+5. the result is a narrow plumbing/provenance advance that leaves the proposed
+   eigenvalue search and estimator mathematics unchanged.
+
+### L.G. Minimal resolution and next gate
+
+No further provenance repair is required before the next stage. The smallest authorized
+next step is a separately frozen full analytic complex-$k$ root-readiness experiment
+that:
+
+1. rechecks the package/body and environment locks on every run;
+2. preregisters the complex disk, outgoing Rayleigh branch continuation, fixed rank and
+   projectors, pole/factor ledger, and stop conditions before sampling;
+3. establishes factor conditioning and a pole-free admissible domain;
+4. passes full-matrix Cauchy--Riemann/derivative checks and mandatory antiholomorphic and
+   branch-breaking negatives; and
+5. receives a new skeptic review before any contour count, Newton solve, or root claim.
+
+This is a `GO` to analytic root-readiness, not to root isolation.
+
+### L.H. Open gaps and blockers
+
+There is **no remaining blocker to entering the full analytic complex-$k$
+root-readiness stage under the conditions above**. The following remain blockers to a
+real eigenvalue-and-estimator case: direct production-internal $A,b$ observation if that
+stronger provenance claim is demanded; transitive-dependency and MATLAB parity checks;
+a validated analytic branch and pole-free complex domain; stable chart/rank and
+conditioned factors throughout that domain; a reviewed contour count and isolated
+guided root; adjacent-level matching and empirical correction; independent reference
+truth; and estimator reliability/effectivity evidence. The current output explicitly
+ran none of the scan, disk, Cauchy--Riemann, contour, Newton, eigenvalue, correction, or
+estimator stages.
+
+## Open-problem handoff
+
+Current goal-relative classifications, blocking scopes, and cheapest follow-up checks are
+maintained in
+[[research/projects/eig-apost/implementation/open-problems#I3|the I3 open-problem ledger]]
+and
+[[research/projects/eig-apost/implementation/open-problems#I4|the next-stage I4 ledger]].
+Section L remains the authoritative historical verdict for the completed provenance gate;
+the ledger controls prioritization, not a retroactive change of evidence.

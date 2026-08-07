@@ -9,11 +9,12 @@ Git 标签 `mainline-muller-cauchy-2026-07-26`，并移至
 `research/archive/muller-cauchy-2026-07/`。`research/projects/eig-apost/` 已确认
 fixed-$\beta$ line-defect guided-mode eigenvalue 后验误差的 research question，并已
 完成 Phase 2b novelty gate、Phase 3--4 方法设计和三个离散实现 checkpoint。最新结果为
-`STAGE2_DISCRETE_ALGEBRA_GO`；随后 Root-readiness controlled diagnostic 以
-`REVISE / BLOCKED_UPSTREAM_PROVENANCE` 结束，`ROOT_READY=STOP`。对象兼容性通过不构成
-真实 eigenvalue estimator，也不构成新的统一主线；production 内部 proxy system 的
-provenance gap 关闭前不得进入 root search。在形成可以明确命名且经过审核的统一框架
-以前，不建立空的 `mainline/` 作为占位。
+`STAGE2_DISCRETE_ALGEBRA_GO`；历史 Root-readiness diagnostic 之后的 source-derived
+proxy provenance-closure 经审查为 `PASS WITH CONDITIONS`，只授权进入 full analytic
+complex-$k$ Root-readiness，`PHYSICAL_ROOT_READY=STOP`。该 provenance 结果不构成真实
+eigenvalue estimator，也不构成新的统一主线；在 analytic branch、fixed chart、
+factor/pole ledger 和 full-matrix Cauchy--Riemann gates 通过前不得进入 root isolation。
+在形成可以明确命名且经过审核的统一框架以前，不建立空的 `mainline/` 作为占位。
 
 ## 层级
 

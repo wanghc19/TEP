@@ -417,3 +417,9 @@ estimator claim。
   隔离修正，不授权修改 production helper。
 - 未审查 root isolation、root conditioning、adjacent-level matching、estimator 或独立物理
   reference。
+
+## Open-problem handoff
+
+按当前工程论文目标重新评估的分类和最小后续检查统一维护在
+[[research/projects/eig-apost/implementation/open-problems#I2|I2 open-problem ledger]]。
+以上历史审查原文保持不变，不作追溯性改判。
