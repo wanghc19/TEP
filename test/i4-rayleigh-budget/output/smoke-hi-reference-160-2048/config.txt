@@ -1,0 +1,17 @@
+experiment_id=i4-rayleigh-budget-timing-v1
+profile=smoke
+output_label=smoke-hi-reference-160-2048
+grid_status=FROZEN_GRID_PARTIAL_GATE_IMPLEMENTATION
+decision_labels_enabled=0
+k=1.8603695988
+beta=0.5
+s=1
+ntot=160
+Ny_wall=2048
+M_in=8
+M_out=70
+square_M_values=[0 1 2 3 4 5 6 7 8]
+square_reference_M=8
+doubling_levels=[0 1 2 3 4 5 6]
+max_runtime_seconds=5400
+command=perl -e 'alarm shift; exec @ARGV' 5400 conda run -n octave octave --quiet --no-gui --eval "addpath('/Users/whc/Documents/Work/epost/test/i4-rayleigh-budget'); results=run_i4_rayleigh_budget('smoke');"

@@ -1,0 +1,2 @@
+profile,M_in,K_in,M_out,K_out,min_abs_gamma,solve_relative_residual,extractor_error_L_D,extractor_error_R_D,extractor_error_L_N,extractor_error_R_N,extractor_validation_error,extractor_validation_pass,status,M_trace,M_trace_status
+"smoke",8,17,70,141,1.7919193743411763,2.6466802796437826e-15,1.0958605396566605e-07,3.7257047655281212e-07,1.3150535929836237e-07,1.2281411656087306e-07,3.7257047655281212e-07,0,"TIMING_EVIDENCE_RECORDED_NO_M_TRACE_DECISION",NaN,"INCONCLUSIVE_REFERENCE_LEVEL_PENDING"

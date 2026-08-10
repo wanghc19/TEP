@@ -1,0 +1,2 @@
+profile,M_in,K_in,M_out,K_out,min_abs_gamma,solve_relative_residual,extractor_error_L_D,extractor_error_R_D,extractor_error_L_N,extractor_error_R_N,extractor_validation_error,extractor_validation_pass,status,M_trace,M_trace_status
+"core",20,41,70,141,1.7919193743411763,3.3204351721724078e-15,2.9317154971874878e-07,1.7610003738340845e-07,1.9705383745738347e-07,1.5073023244197459e-07,2.9317154971874878e-07,0,"TIMING_EVIDENCE_RECORDED_NO_M_TRACE_DECISION",NaN,"INCONCLUSIVE_REFERENCE_LEVEL_PENDING"

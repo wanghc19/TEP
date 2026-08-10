@@ -1,0 +1,9 @@
+ntot_action_tolerance=9.9999999999999995e-08
+ntot_action_tolerance_source=paired_high_case_config
+ntot_pair_count=3
+ntot_pair_provenance=ntot-action-ledger.csv:low_output_label->high_output_label
+pair_1=batch-case-core-low-d0p10-k1p860369599-low->batch-case-central-hi-d0p10-k1p860369599-high
+pair_2=batch-case-core-low-d0p20-k1p860369599-low->batch-case-central-hi-d0p20-k1p860369599-high
+pair_3=batch-case-core-low-d0p30-k1p860369599-low->batch-case-central-hi-d0p30-k1p860369599-high
+ntot_action_pass_definition=qz_maps_available_both&&classification_preserved&&max_action_change<=ntot_action_tolerance
+combined_pair_gate_pass_definition=same_M_gates_pass&&ntot_action_pass
