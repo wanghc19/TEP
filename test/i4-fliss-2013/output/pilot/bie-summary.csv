@@ -1,0 +1,5 @@
+model_id,case_id,case_name,beta,reference_k,s,refractive_index,k_left,k_right,num_successful,num_failed,num_gap_samples,best_dip_k,best_normalized_sigma,best_raw_sigma,maximum_bloch_residual,bloch_residual_pass,dip_warning,classification,root_claim
+sharp-disk-bie-diagnostic-v1,1,strong-control,0.5,1.8614510468986285,1,4.1231056256176606,1.55,2.1499999999999999,0,0,0,NaN,NaN,NaN,3.2807124059593185e-05,0,0,real-axis-singular-value-diagnostic,0
+sharp-disk-bie-diagnostic-v1,1,strong-control,0.5,1.8614510468986285,0.5,3,1.55,2.1499999999999999,5,0,0,NaN,NaN,NaN,2.2040946052119598e-05,0,0,real-axis-singular-value-diagnostic,0
+sharp-disk-bie-diagnostic-v1,2,weak-control,1.4199999999999999,3.234192325759246,1,4.1231056256176606,2.8999999999999999,3.5499999999999998,3,0,0,NaN,NaN,NaN,2.2908893898637397e-05,0,0,real-axis-singular-value-diagnostic,0
+sharp-disk-bie-diagnostic-v1,2,weak-control,1.4199999999999999,3.234192325759246,0.5,3,2.8999999999999999,3.5499999999999998,7,0,0,NaN,NaN,NaN,4.729988262691242e-06,0,0,real-axis-singular-value-diagnostic,0

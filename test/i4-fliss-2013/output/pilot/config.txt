@@ -1,0 +1,26 @@
+experiment_id=i4-fliss-2013-dual-track-v1
+schema_version=1
+profile=pilot
+max_runtime_seconds=10800
+command=perl -e 'alarm shift; exec @ARGV' 10800 conda run -n octave octave --quiet --no-gui --eval "addpath('/Users/whc/Documents/Work/epost/test/i4-fliss-2013'); results=run_i4_fliss_experiment('pilot');"
+comparison_scope=side-by-side-only
+track_a_model_id=fliss-smooth-fd-v1
+track_a_points_per_cell=24
+track_a_theta_count=25
+track_a_spatial_coarse_points_per_cell=unavailable
+track_a_num_bands=12
+track_a_strip_nev=6
+track_a_tail_cells=[8 12]
+track_a_beta=[0.5 1.4199999999999999]
+track_a_reference_omega2=[3.4649999999999999 10.460000000000001]
+track_a_control_role=primary-paper-gate|diagnostic-only
+track_a_contrast_continuation_run=0
+track_b_model_id=sharp-disk-bie-diagnostic-v1
+track_b_claim_scope=real-axis-singular-value-diagnostic-only
+track_b_radius=0.20000000000000001
+track_b_s_values=[1 0.5]
+track_b_ntot=32
+track_b_M=6
+track_b_num_k=17
+track_b_num_refine=7
+track_b_root_claim_allowed=0
