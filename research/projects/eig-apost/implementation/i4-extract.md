@@ -602,3 +602,50 @@ Because SLP--D does not pass the mandatory $10^{-8}$ coefficient and
 $2\times10^{-9}$ self-change gates, SLP--N, DLP--D, and DLP--N are
 `NOT_RUN_PREREQUISITE`.  Linton function-value agreement does not certify
 Ewald gradients or Hessians; these derivatives remain a downstream blocker.
+
+## MATLAB analytic-derivative and fixed-system follow-up
+
+The new test-only experiment `test/i4-three-path-derivatives/` removes the last
+sentence above as a point-level uncertainty, but it does not remove the wall
+blocker.  MATLAB R2023b uses the repository-root `Faddeeva_erfc.mexmaca64` and
+replays the five Linton values with maximum error $5.07\times10^{-11}$.  The
+analytic Ewald gradient and Hessian derived from the same real/reciprocal
+formula pass value-only Richardson differences, an independent Rayleigh
+derivative sum, the Helmholtz residual, mixed-derivative symmetry,
+source/target signs, and independent $a,M_1,M_2,N$ refinements at the frozen
+$2\times10^{-9}$ point gate.
+
+The MATLAB package path is locked to `lsqminnorm` and the exact repository
+files.  Its project function values now agree with Ewald to
+$5.14\times10^{-10}$, confirming that it is markedly better than the Octave
+fallback for values.  Nevertheless, at the negative-separation hold-out the
+normalized errors in $G_{xx},G_{xy},G_{yy}$ are respectively
+$1.46\times10^{-8}$, $1.60\times10^{-8}$, and $1.59\times10^{-8}$.  The pilot
+therefore stops before every wall matrix.
+
+A separate point-only diagnostic reuses one exact $A,b$.  The physical
+$y$-periodic wrapper and a manually swapped computational $x$ call agree
+exactly.  The package Hessian agrees with Richardson differences of the same
+package field to at worst $2.12\times10^{-11}$, and its Helmholtz residual is
+about $6.9\times10^{-15}$.  Thus the wrapper and Hessian formula are not the
+failed objects.  In contrast, fixed-$A,b$ solver outputs have maximum spread
+$3.04\times10^{-8}$; default `lsqminnorm` has relative residual
+$7.79\times10^{-8}$.  A test-local relative-$10^{-14}$ truncated SVD has
+maximum Ewald point error $2.90\times10^{-11}$, but it is only a candidate
+rank policy and cannot silently replace the public package solver.
+
+After replacing the over-strong six-component global point gate by the actual
+per-action dependencies, the full MATLAB SLP--D action is certified.  Its
+maximum E--P/P--R coefficient error is $4.33\times10^{-10}$ and its largest P
+proxy self-change is $3.97\times10^{-10}$.  SLP--N closes its coefficient
+triangle to $5.58\times10^{-9}$ and E--R to $9.61\times10^{-16}$, but its P
+proxy self-changes for Nside, Ntop, and Nedge are respectively
+$6.56\times10^{-9}$, $2.58\times10^{-9}$, and $1.09\times10^{-8}$.  The
+current decision is therefore
+`SLP_N_UNCERTIFIED_P_GX_PROXY_SELF_CONVERGENCE`.  DLP--D and DLP--N are
+`NOT_RUN_SLP_N_PREREQUISITE`.
+
+The Hessian rank/tolerance sensitivity remains a downstream DLP--N blocker,
+not the first sequential failure.  The cheapest next test is a targeted
+P/SLP--N $G_x$ proxy ladder based at joint level $(160,160,80,32)$; it should
+not recompute already-passed Ewald, Rayleigh, boundary, or wall refinements.

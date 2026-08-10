@@ -1,6 +1,6 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-08-09。
+更新日期：2026-08-10。
 
 ## 当前状态
 
@@ -19,19 +19,26 @@
   real/reciprocal decomposition 复现 Linton Tables 2--5 的五个函数值，再对同一冻结圆周
   密度比较 Ewald full kernel、package MFS 和 Rayleigh extractor。Ewald--Rayleigh 的
   single-layer Dirichlet 系数在当前正间距、实数非 Wood 参数上闭合到
-  $6.10\times10^{-16}$，而所有含 MFS 的比较在低阶模态达到
-  $4.69\times10^{-8}$；在 Linton 五个原始点上，MFS 与合格 Ewald 的最大差也达到
-  $6.01\times10^{-8}$。MFS 四个 proxy 参数的单变量变化为
-  $3.72\times10^{-8}$--$7.52\times10^{-8}$。因此当前 value-level blocker 已独立定位到
-  augmented-MFS/proxy/solver path；导数 Ewald 与其余 wall Cauchy data 尚未启动。
+  $6.10\times10^{-16}$。新的 MATLAB derivative qualification 继续使用根目录
+  `Faddeeva_erfc.mexmaca64`，Linton 五点最大误差为 $5.07\times10^{-11}$；解析 Ewald
+  gradient/Hessian 通过 value-only Richardson、Rayleigh derivative、Helmholtz、mixed
+  derivative、source/target sign 及 Ewald 单轴加密。package `lsqminnorm` 的五个项目函数值
+  最大误差降到 $5.14\times10^{-10}$，但负横向分离 hold-out 的三个 Hessian 分量仍为
+  $1.46\times10^{-8}$--$1.60\times10^{-8}$。将过强的全六分量门修正为
+  action-specific dependencies 后，full SLP--D 三路径及全部加密门通过；SLP--N 的三路径
+  系数也通过，但 package $G_x$ wall action 对 $N_{\mathrm{side}},N_{\mathrm{top}},
+  N_{\mathrm{proxy,edge}}$ 的单轴变化分别为 $6.56\times10^{-9}$、$2.58\times10^{-9}$、
+  $1.09\times10^{-8}$，未过 $2\times10^{-9}$。因此当前 sequential blocker 是
+  `SLP_N_UNCERTIFIED_P_GX_PROXY_SELF_CONVERGENCE`；Hessian rank/tolerance sensitivity
+  保留为 DLP--N 的下游 blocker。
 - 状态：`active investigation`。
 - 阶段门：manufactured root/correction pipeline 为窄范围 `GO`，Half-guide map 为
   Stage 1 `GO`，Augmented BIE 为 `STAGE2_DISCRETE_ALGEBRA_GO`；provenance-closure 为
   `PASS WITH CONDITIONS`，其 operational label 为
   `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS`。当前 I4 verdict 为
   `PARTIAL SUCCESS -- I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
-  EWALD_VALUE_REFERENCE_CERTIFIED / SLP_D_EWALD_RAYLEIGH_PASS /
-  OCTAVE_AUGMENTED_MFS_PROXY_SOLVER_PATH_BLOCKED`；
+  EWALD_VALUE_REFERENCE_CERTIFIED / EWALD_DERIVATIVE_REFERENCE_CERTIFIED /
+  SLP_D_CERTIFIED / SLP_N_UNCERTIFIED_P_GX_PROXY_SELF_CONVERGENCE`；
   I5 root isolation 不获授权，`PHYSICAL_ROOT_READY=STOP`。现有证据支持一个可信的
   exact-profile finite-strip eigenvalue candidate，但不支持 qualified BIE root、
   连续 kernel--field equivalence、unconditional effectivity 或 certified interval。
@@ -45,7 +52,7 @@
 | Augmented BIE | `STAGE2_DISCRETE_ALGEBRA_GO`; `ROOT_READY=STOP` | 固定九块 $(n+8p)$ assembly、scaled density coordinate、raw/reduced Schur agreement、七级 availability 与 failure ledger；unchanged-source 复现差为 $0$ | 连续表示单射性、kernel--field equivalence、pole-free analytic neighborhood、root/eigenvalue/estimator |
 | Root-readiness proxy diagnostic and provenance closure | `PASS WITH CONDITIONS`; `GO` only to full analytic complex-$k$ Root-readiness; `PHYSICAL_ROOT_READY=STOP` | 历史受控诊断的 $10^{-5}$ object gate 通过；新 source-exact copy 在 6 个 shared systems/30 个 solver rows 上使三个原 $10^{-11}$ output gates 以 0 误差通过；双跑数值差为 0，manifest/shared/projector fingerprints 一致 | production 内部 $A_{\mathrm{pr}},b_{\mathrm{pr}}$ 仍不可直接观测；off-collocation 与 historical projectors 非门控；未运行 complex disk、CR、root、Newton、eigenvalue 或 estimator |
 | Historical double-ellipse full analytic complex-$k$ Root-readiness | evidence `PASS WITH CONDITIONS`; scientific `REPRODUCIBLE STOP / NO_SCREENED_DIP` | 29/29 locator 点 available；$s(k)$ 从 $0.2083091449$ 严格降至 $s(0.18)=0.03539366850$；baseline/repeat 全表数值差为 0 | 已被新主模型取代；没有 interior dip 或 seed，chart/disk/factor/full-$F$ CR 未运行 |
-| Revised I4 Fliss missing-column benchmark, Rayleigh budget and three-path kernel audit | `PARTIAL SUCCESS`; `I4_FD_CANDIDATE_READY`; `BIE_RAYLEIGH_BUDGET_SCREENED`; `EWALD_VALUE_REFERENCE_CERTIFIED`; `SLP_D_EWALD_RAYLEIGH_PASS`; `OCTAVE_AUGMENTED_MFS_PROXY_SOLVER_PATH_BLOCKED`; `PHYSICAL_ROOT_READY=STOP` | exact smooth profile 的 N80 strip 候选 $\lambda_h=3.460975044$；sharp-disk candidate windows 为 $[5,20]$、$[19,20]$；真 Ewald 复现 Linton 五个表值的最大误差为 $5.07\times10^{-11}$，项目点 Ewald--Rayleigh 误差为 $1.11\times10^{-16}$；同一冻结密度的 Ewald--Rayleigh SLP--D 系数最大差为 $6.10\times10^{-16}$；$n_{\mathrm{tot}}$、$N_y$ 与 Ewald 各轴加密均通过 | Bessel closed form 与 extractor 共用 modal kernel，旧一致性不再当作独立谱闭环；Octave fallback `pinv(A)` 下 P-path 在 Linton 同点最大误差为 $6.01\times10^{-8}$，SLP--D pairwise 最大误差为 $4.69\times10^{-8}$，四个 proxy 单轴变化均失败；内部原因仍可能是 solver backend、proxy basis 或 collocation；Ewald derivative、其余 D/N、$M_{\mathrm{trace}}$、locator、root 与 estimator 未运行或未认证 |
+| Revised I4 Fliss missing-column benchmark, Rayleigh budget and three-path kernel audit | `PARTIAL SUCCESS`; `I4_FD_CANDIDATE_READY`; `BIE_RAYLEIGH_BUDGET_SCREENED`; `EWALD_VALUE_REFERENCE_CERTIFIED`; `EWALD_DERIVATIVE_REFERENCE_CERTIFIED`; `SLP_D_CERTIFIED`; `SLP_N_UNCERTIFIED_P_GX_PROXY_SELF_CONVERGENCE`; `PHYSICAL_ROOT_READY=STOP` | exact smooth profile 的 N80 strip 候选 $\lambda_h=3.460975044$；sharp-disk candidate windows 为 $[5,20]$、$[19,20]$；MATLAB 真 Ewald 复现 Linton 五个表值的最大误差为 $5.07\times10^{-11}$，解析 gradient/Hessian 的独立点门全部通过；full SLP--D 的 E--P/P--R 最大系数误差为 $4.33\times10^{-10}$，P proxy self 最大为 $3.97\times10^{-10}$ | SLP--N 的 E--P/P--R 最大系数误差 $5.58\times10^{-9}$ 虽通过，但 P proxy self 在 Nside/Ntop/Nedge 为 $6.56\times10^{-9}$、$2.58\times10^{-9}$、$1.09\times10^{-8}$；DLP--D/DLP--N 按顺序未运行。Hessian fixed-$A,b$ solver spread $3.04\times10^{-8}$ 是 DLP--N 下游 blocker；$M_{\mathrm{trace}}$、locator、root 与 estimator 未认证 |
 
 实现权威入口为
 [[research/projects/eig-apost/implementation/design|manufactured NEP design]]、
@@ -230,13 +237,36 @@ proxy-solver 收敛诊断见
   relative $\tau=3\times10^{-16}$ 时把三个冻结点降到 $3.95\times10^{-12}$，但同阈值
   `pinv(A,tol)` 产生 $5.98\times10^{-5}$，因此不能把问题简化为 cutoff-only，也未授权
   derivative/Hessian/wall 验证。
+- 新 `test/i4-three-path-derivatives/` 已完成 MATLAB Ewald 解析导数资格化。Linton
+  Tables 2--5 五点最大误差仍为 $5.07\times10^{-11}$；value-only Richardson、独立
+  Rayleigh derivative、Helmholtz residual、mixed-derivative symmetry、source/target sign
+  以及 $a,M_1,M_2,N$ 单变量加密均通过。此结论认证 point-level Ewald gradient/Hessian，
+  不自动认证 wall layer actions。
+- MATLAB pilot 锁定根目录 MEX、package `lsqminnorm` 和三个 package 精确路径。项目函数值
+  最大误差为 $5.14\times10^{-10}$；全部一阶导数通过，但 `holdout_B` 的
+  $G_{xx},G_{xy},G_{yy}$ 分别为 $1.46\times10^{-8}$、$1.60\times10^{-8}$、
+  $1.59\times10^{-8}$，因此在 wall 前以 `P_POINT_KERNEL_UNCERTIFIED` 早停。
+- 独立 fixed-$A,b$ 点诊断中 physical-y wrapper 与手工交换后的 computational-x 调用
+  逐分量误差为 0；package Hessian 与同一 P 场的 Richardson gradient-FD 最坏误差为
+  $2.12\times10^{-11}$。默认 `lsqminnorm` residual 为 $7.79\times10^{-8}$，不同 solver
+  的六元组 spread 为 $3.04\times10^{-8}$。relative-$10^{-14}$ economy-SVD 的最坏
+  Ewald 点误差为 $2.90\times10^{-11}$，但它只证明 rank/tolerance 是决定变量，不能
+  静默替代 public package 路径。该问题是 DLP--N 的下游 Hessian blocker，不覆盖较早
+  action 的 component-specific 资格。
+- action-specific full run 中 SLP--D 全部通过：E--P/P--R 最大系数误差为
+  $4.33\times10^{-10}$，P proxy self 最大为 $3.97\times10^{-10}$，因此旧 full SLP--D
+  P-path blocker 已关闭。SLP--N 的系数三角、$n_{\mathrm{tot}}$、$N_y$、Ewald、tail 和
+  $M_{\mathrm{pw}}$ 加密均通过，但 P 的 Nside/Ntop/Nedge self changes 分别为
+  $6.56\times10^{-9}$、$2.58\times10^{-9}$、$1.09\times10^{-8}$。当前 blocker 是
+  `SLP_N_UNCERTIFIED_P_GX_PROXY_SELF_CONVERGENCE`；DLP--D/DLP--N 按用户冻结顺序未运行。
 - Researcher 与 Skeptic 均只认可 screening 结果，不授权 real-axis locator 或 complex
   root isolation。
   `production_internal_A_b_identity=NOT_DIRECTLY_OBSERVED` 作为 claim boundary 保持不变。
 - 已识别并在 Stage 2 局部规避 variable-speed geometry 的 density-scaling mismatch；
   production `bloch.construct_S` 与 `scat_ld_lead_in` 尚未全局修改或验证。
-- MATLAB 尚未运行；上述数值证据均由 Conda `octave` 环境产生，实验代码只位于
-  `test/` 下。
+- MATLAB R2023b 已运行 derivative qualification、pilot、point-only solver diagnostic
+  和 action-specific full wall run；full run 在 SLP--N proxy self gate 早停，
+  DLP--D/DLP--N 未运行。所有新增实验代码和产物只位于 `test/` 下。
 
 ## 尚未进行
 
@@ -270,21 +300,22 @@ proxy-solver 收敛诊断见
 blocker，并给出 $\lambda_h=3.460975044$ 的可信 FD 候选；这已经反驳“该 missing-column
 模型普遍无解”的怀疑，但不是 qualified root。
 
-当前最小下一步仍是 OP-I4-1f，但不再依赖 Bessel--extractor 共享-kernel 证据。不得再盲加
-boundary $n$ 或 wall $N_y$。最便宜的决定性检查是把既有 relative
-$\tau=3\times10^{-16}$ economy-SVD backend/reconstruction 完全冻结在 test-local copy 中，
-不使用 hold-out 调参，先计算本轮两个 off-axis hold-out point values，再只重放一次
-$n_{\mathrm{tot}}=128,N_y=256$ 的 SLP--D authority wall。若 point 的
-$2\times10^{-9}$ 门和 coefficient 的 $10^{-8}$ 门都通过，再对同一 solver policy 做
-roundoff-equivalent assembly 与四个 proxy 单轴加密；否则直接区分 solver path 与 proxy
-basis/collocation limitation。只有 SLP--D 闭合后才实现并认证解析 Ewald gradient/Hessian，
-依次运行 SLP--N、DLP--D、DLP--N。随后才处理 OP-I4-1e 的 block-balanced
+当前最小下一步仍是 OP-I4-1f，但对象已收窄为 SLP--N 的 P/$G_x$ proxy self closure。
+以 joint $(N_{\mathrm{side}},N_{\mathrm{top}},N_{\mathrm{edge}},M_{\mathrm{pw}})
+=(160,160,80,32)$ 为候选 authority，只重算 P/SLP--N wall coefficients，依次单轴测试
+Nedge 96、Nside 200、Ntop 200、$M_{\mathrm{pw}}=40$；首项失败即早停，保持原
+$2\times10^{-9}$ self 与 $10^{-8}$ coefficient 门。已有 fixed-$A,b$ 的 $G_x$ solver spread
+为 $1.37\times10^{-9}$，尚不足以先开启 Hessian tolerance 分支；只有 targeted ladder
+继续失败时，才在 joint 与失败 level 上比较 explicit-`lsqminnorm` rank policy。
+SLP--N 关闭后才按原顺序进入 DLP--D；DLP--N 还需关闭 Hessian rank/tolerance blocker。
+随后处理 OP-I4-1e 的 block-balanced
 $A_{\mathrm{def}}$/scanner integration。Fliss smooth Gaussian 只提供尺度参考，不得当作
 sharp-disk root 或 reference。
 
-从当前 sharp-disk 路径计，约三个阶段可观察到可解释的实轴 candidate：MFS SLP--D
-solver closure、Ewald derivative/full wall Cauchy data 与 $M_{\mathrm{trace}}$ closure、
-block-balanced $A_{\mathrm{def}}$ 加 bounded locator。再加 full analytic complex-$k$
+从当前 sharp-disk 路径计，约三个阶段可观察到可解释的实轴 candidate：SLP--N
+P/$G_x$ proxy closure、其余 DLP--D/DLP--N wall Cauchy data 与
+$M_{\mathrm{trace}}$ closure、block-balanced $A_{\mathrm{def}}$ 加 bounded locator。
+再加 full analytic complex-$k$
 readiness 与 contour/Newton qualification，约五个阶段才可能得到 qualified root；第六
 阶段才产生 empirical estimator，第七阶段才得到 independent high-resolution reference
 effectivity。
@@ -315,8 +346,8 @@ continuous kernel--field/representation、saturation/remainder 和 validated tot
   `test/root-ready/analytic-readiness/output/repeat/report.md` 与 `locator.csv`。
 - I4 当前 verdict 是
   `PARTIAL SUCCESS -- I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
-  EWALD_VALUE_REFERENCE_CERTIFIED / SLP_D_EWALD_RAYLEIGH_PASS /
-  OCTAVE_AUGMENTED_MFS_PROXY_SOLVER_PATH_BLOCKED`；
+  EWALD_VALUE_REFERENCE_CERTIFIED / EWALD_DERIVATIVE_REFERENCE_CERTIFIED /
+  SLP_D_CERTIFIED / SLP_N_UNCERTIFIED_P_GX_PROXY_SELF_CONVERGENCE`；
   `REPRODUCIBLE STOP / NO_SCREENED_DIP` 只描述历史双椭圆实验。I3 的
   `root_readiness_review.md` Section L 与 `root_result.md` Section I 继续作为 provenance
   历史边界；不得把 I3 的下一阶段授权覆盖当前 BIE blocker。
@@ -329,21 +360,21 @@ continuous kernel--field/representation、saturation/remainder 和 validated tot
 - 当前权威 operational provenance 状态仍保留
   `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS`，但更新的阶段 gate 是
   `I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
-  EWALD_VALUE_REFERENCE_CERTIFIED / SLP_D_EWALD_RAYLEIGH_PASS /
-  OCTAVE_AUGMENTED_MFS_PROXY_SOLVER_PATH_BLOCKED`；
+  EWALD_VALUE_REFERENCE_CERTIFIED / EWALD_DERIVATIVE_REFERENCE_CERTIFIED /
+  SLP_D_CERTIFIED / SLP_N_UNCERTIFIED_P_GX_PROXY_SELF_CONVERGENCE`；
   `production_internal_A_b_identity=NOT_DIRECTLY_OBSERVED` 和
   `PHYSICAL_ROOT_READY=STOP` 保持不变。不得解释成 qualified root 或 estimator。
-- 下一步仅允许由 Researcher 冻结 economy-SVD solver policy，Engineer 在新的 test-only
-  follow-up 中先运行本轮两个 hold-out point values 和一次 authority SLP--D wall，Skeptic
-  在运行前后审查。不得用 hold-out 重选 solver，不得调宽 $10^{-8}$ coefficient 或
-  $2\times10^{-9}$ reference-change 门。只有 SLP--D 闭合后才实现 Ewald analytic
-  gradient/Hessian 与其余 wall $D/N$ actions；不得重新运行 legacy affine scan绕过 blocker。
+- 下一步仅允许上述 targeted P/$G_x$ proxy ladder；首项 Nedge refinement 失败即停止并
+  转入 joint/failed-level 的 explicit solver-rank 诊断。不得放宽门、重算已通过的 E/R 与
+  quadrature ladders，或越过 SLP--N 直接运行 DLP--D/DLP--N。
 - 当前新增内容位于 `test/i4-rayleigh-budget/`、`test/i4-extract/`、
-  `test/i4-three-path/` 与本专题 STATUS/README/ledger/report 文档；package 源码未修改。
-  MATLAB 尚未运行。三路径 qualification、pilot 和 canonical SLP--D 的 Octave exit code
-  均为 0；canonical 用时 $531.181285$ s。
+  `test/i4-three-path/`、`test/i4-three-path-derivatives/` 与本专题
+  STATUS/README/ledger/report 文档；package 源码未修改。MATLAB R2023b qualification、
+  action-specific pilot、full wall run 与 point-only fixed-system diagnostic 已运行；full
+  用时 $129.258171$ s，并在 SLP--N proxy self gate 早停。历史 Octave canonical 用时
+  $531.181285$ s。
 
-新 session 应从冻结 economy-SVD solver path 的 hold-out point value 与 authority
-SLP--D closure 开始，不得直接启动 derivative wall actions、实轴 scan、complex disk、
+新 session 应从 targeted P/SLP--N $G_x$ proxy ladder 开始，不得直接启动 DLP--D、
+DLP--N、实轴 scan、complex disk、
 contour、root 或 estimator，也不得把三个 in-sample point values 升级为 certified wall
 trace，或把 source-derived provenance 升级为 production 内部数组已观测。

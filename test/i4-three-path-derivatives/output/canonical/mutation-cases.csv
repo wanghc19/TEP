@@ -1,0 +1,7 @@
+"mutation","point","component","error","gate","expected_failure","failed_as_expected","note"
+"wrong_project_sign","holdout_B","G","0.55466647441967232","2.0000000000000001e-09","1","1","opposite global sign"
+"missing_signed_Gx","holdout_B","Gx","0.77575003316516955","2.0000000000000001e-09","1","1","negative-DX holdout kills missing sx"
+"missing_signed_Gxy","holdout_B","Gxy","2.498106173060568","2.0000000000000001e-09","1","1","negative-DX holdout kills missing sx"
+"left_wall_normal_flip","holdout_B","Gx","0.77575003316516955","2.0000000000000001e-09","1","1","outward wall normal is mandatory"
+"source_normal_sign","holdout_B","Gx","0.77575003316516955","2.0000000000000001e-09","1","1","source gradient must be minus target gradient"
+"normalized_as_raw_N","holdout_B","N_raw","0.45486032889323591","2.0000000000000001e-09","1","1","raw Neumann must retain i*gamma scaling"

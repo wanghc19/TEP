@@ -228,17 +228,28 @@ contour count 或 root solve。
   Fourier projection，与 Rayleigh extractor 的 SLP--D 系数最大差为
   $6.10\times10^{-16}$。因此当前参数的 value-level label 更新为
   `EWALD_VALUE_REFERENCE_CERTIFIED / SLP_D_EWALD_RAYLEIGH_PASS`。
-- package MFS 在项目 point 上最大误差为 $4.89\times10^{-8}$，在相同 Linton 五点上与
+- 历史 Octave package MFS 在项目 point 上最大误差为 $4.89\times10^{-8}$，在相同 Linton 五点上与
   合格 Ewald 的最大差为 $6.01\times10^{-8}$；SLP--D 中所有含 MFS 的比较
   最大误差为 $4.69\times10^{-8}$。四个 proxy 参数的单轴变化均超过
   $2\times10^{-9}$，而 boundary/wall quadrature 变化约为 $2.8\times10^{-11}$。
-  当前 blocker 因而细化为 `OCTAVE_AUGMENTED_MFS_PROXY_SOLVER_PATH_BLOCKED`；三角关系只隔离
-  当前 Octave P path，尚不区分 solver backend、proxy basis 或 collocation。SLP--N、
-  DLP--D、DLP--N 按早停
-  规则未运行，Ewald derivative 尚未获得资格。
+  当时的 blocker 标签为 `OCTAVE_AUGMENTED_MFS_PROXY_SOLVER_PATH_BLOCKED`；该三角关系只隔离
+  Octave P path，未区分 solver backend、proxy basis 或 collocation。后续 MATLAB 结果见下两项。
 - economy-SVD 在三个冻结点达到约 $10^{-12}$，但同 nominal cutoff 的 Octave `pinv(A,tol)`
   产生约 $10^{-5}$ 误差；所以尚不能把修复写成“调小 cutoff”，也不授权 wall $D/N$ 或
   $M_{\mathrm{trace}}$ claim。
+- 新 `test/i4-three-path-derivatives/` 在 MATLAB R2023b 中认证了 Ewald analytic
+  gradient/Hessian：Linton 五点最大误差仍为 $5.07\times10^{-11}$，独立 Richardson、
+  Rayleigh derivative、Helmholtz、mixed/source-target 与 Ewald 单轴加密门全部通过。
+- MATLAB package `lsqminnorm` 的函数值最大误差降到 $5.14\times10^{-10}$，但一个负分离
+  hold-out 的三个 Hessian 分量仍为 $1.46\times10^{-8}$--$1.60\times10^{-8}$，因此在
+  wall 前早停。fixed-$A,b$ 诊断排除了 wrapper 与 Hessian 公式，测得 solver spread
+  $3.04\times10^{-8}$；这保留为 DLP--N 的下游 solver-rank blocker。test-local
+  relative-$10^{-14}$ SVD 的 $2.90\times10^{-11}$ Ewald 误差仍未授权替换 package。
+- action-specific full run 已认证 SLP--D：E--P/P--R 最大系数误差
+  $4.33\times10^{-10}$，P proxy self 最大 $3.97\times10^{-10}$。SLP--N coefficient triangle
+  通过到 $5.58\times10^{-9}$，但 P 的 Nside/Ntop/Nedge self changes 为
+  $6.56\times10^{-9}$、$2.58\times10^{-9}$、$1.09\times10^{-8}$，故当前 blocker 是
+  `SLP_N_UNCERTIFIED_P_GX_PROXY_SELF_CONVERGENCE`；DLP--D/DLP--N 按顺序未运行。
 - 当前综合状态是 `PARTIAL SUCCESS`：已观察到第一个可信 real-case FD eigenvalue
   candidate，但 `PHYSICAL_ROOT_READY=STOP`，I5 仍不获授权。权威当前入口为
   [[research/projects/eig-apost/implementation/i4-fliss|I4 Fliss benchmark]]、

@@ -1,0 +1,7 @@
+"stage","classification","status","pass","note"
+"stage0_base","MANDATORY","DIAGNOSTIC_PREREQUISITE_REPRODUCED","1","B- value/gradient pass and all three Hessians reproduce known failure."
+"stage1_wrapper_parity","MANDATORY","NEGATIVE_DX_WRAPPER_CERTIFIED","1","Physical y wrapper against the manually swapped x-periodic call."
+"stage1_transverse_parity","IMPORTANT","UP_DOWN_APPROXIMATION_ASYMMETRY","0","Diagnostic only: parity failure does not implicate the wrapper or stop."
+"stage2_package_fd","MANDATORY","PAIRMAT_FORMULA_CERTIFIED","1","Package value/gradient FD, R9 authority, R8--R9 self, Helmholtz."
+"stage3_solver_sensitivity","MANDATORY","SOLVER_SENSITIVITY_UNCERTIFIED","0","One exact A,b; package closure, lsqminnorm, QR, and fixed SVD cuts."
+"stage4_proxy_ladder","MANDATORY","NOT_RUN_PREREQUISITE","0","Stopped after SOLVER_SENSITIVITY_UNCERTIFIED."

@@ -1,0 +1,6 @@
+"gate","value","scope"
+"linton","5.0000000000000003e-10","published value replay"
+"point","2.0000000000000001e-09","analytic/FD/Rayleigh/identity"
+"self","2.0000000000000001e-09","all retained refinement changes"
+"coefficient","1e-08","absolute raw coefficient pairs"
+"projection","9.9999999999999998e-13","pure Fourier projection"

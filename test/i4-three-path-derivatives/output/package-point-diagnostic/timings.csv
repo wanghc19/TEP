@@ -1,0 +1,3 @@
+"stage","seconds","note"
+"base_precomp","0.19405700000000001","one fixed base proxy reused through stages 0--3"
+"total","0.55124766666666669","measured diagnostic wall-clock time"
