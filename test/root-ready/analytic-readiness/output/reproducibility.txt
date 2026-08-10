@@ -1,0 +1,16 @@
+status=REPRODUCED
+pass=1
+numeric_relative_difference=0
+manifest_equal=1
+branch_fingerprints_equal=1
+chart_projectors_equal=1
+selected_disk_equal=1
+gate_classifications_equal=1
+sampled_equal=1
+factors_equal=1
+branches_equal=1
+cr_equal=1
+charts_equal=1
+locator_equal=1
+disks_equal=1
+negatives_equal=1

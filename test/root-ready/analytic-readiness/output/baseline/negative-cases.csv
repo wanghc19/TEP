@@ -1,0 +1,12 @@
+id,name,measured,threshold,detected,raw_F_preserved,physical_interpretation_available,fixture_k_real,fixture_k_imag,fixture_dimension,projector_left_hash,projector_right_hash,projector_difference,raw_F_fingerprint,pole_k_real,pole_k_imag,sampled_domain_status,pole_free_claim,downstream_available,checker,pass,status
+"N1","POINTWISE_SQRT_CR_REJECTION",1.000000000003858,0.001,1,0,0,NaN,NaN,NaN,"","",NaN,"",NaN,NaN,"","",0,"",1,"FULL_F_CR_DEFECT"
+"N2","ADAPTIVE_PINV_CR_REJECTION",1.9590400766288096,0.001,1,0,0,NaN,NaN,NaN,"","",NaN,"",NaN,NaN,"","",0,"",1,"FULL_F_CR_DEFECT"
+"N3","ADAPTIVE_RECOMPRESSION_REJECTED",NaN,NaN,0,0,0,NaN,NaN,NaN,"","",NaN,"",NaN,NaN,"","",0,"",0,"NOT_RUN_UPSTREAM_STOP"
+"N4","OUTER_GREEN_PRINCIPAL_ROOT_REJECTED",NaN,NaN,0,0,0,NaN,NaN,NaN,"","",NaN,"",NaN,NaN,"","",0,"",0,"NOT_RUN_UPSTREAM_STOP"
+"N5","FLIPPED_GAMMA_FINGERPRINT_REJECTED",1,1,1,0,0,NaN,NaN,NaN,"","",NaN,"",NaN,NaN,"","",0,"",1,"BRANCH_FINGERPRINT_MISMATCH"
+"N6","FULL_240_ANTI_ANALYTIC_MUTATION_REJECTED",NaN,NaN,0,0,0,NaN,NaN,NaN,"","",NaN,"",NaN,NaN,"","",0,"",0,"NOT_RUN_UPSTREAM_STOP"
+"N7","FORCED_PROXY_FACTOR_POLE",NaN,NaN,0,0,0,NaN,NaN,NaN,"","",NaN,"",NaN,NaN,"","",0,"",0,"NOT_RUN_UPSTREAM_STOP"
+"N8","HIDDEN_INTERIOR_POLE_DISCLOSED",NaN,NaN,0,0,0,NaN,NaN,NaN,"","",NaN,"",NaN,NaN,"","",0,"",0,"NOT_RUN_UPSTREAM_STOP"
+"N9","ZERO_FIELD_REPRESENTATION_DETECTED",NaN,NaN,0,0,0,NaN,NaN,NaN,"","",NaN,"",NaN,NaN,"","",0,"",0,"NOT_RUN_UPSTREAM_STOP"
+"N10","RCOND_AVAILABILITY_TRANSITION",1,1,1,0,0,NaN,NaN,NaN,"","",NaN,"",NaN,NaN,"","",0,"",1,"DETERMINISTIC_AVAILABILITY_TRANSITION"
+"N11","CIRCLE_BULK_TARGET_GO_FORBIDDEN",0,1,0,0,0,NaN,NaN,NaN,"","",NaN,"",NaN,NaN,"","",0,"",0,"NOT_RUN_UPSTREAM_STOP"
