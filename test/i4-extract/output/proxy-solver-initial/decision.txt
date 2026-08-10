@@ -1,0 +1,10 @@
+decision=INVALID_REFERENCE_OR_REBUILD
+status=SUPERSEDED_PRESERVED_SUMMARY
+total_seconds=4.3996489048004150e+00
+reference_eligibility=1.1123893155135927e-16
+preflight_coefficient_diff_high=6.2832465583012923e-04
+preflight_field_diff_high=6.5722870643501456e-08
+preflight_coefficient_diff_higher=5.206317e-04
+preflight_field_diff_higher=2.168344e-08
+full_initial_ledgers_preserved=0
+reason=Initial ledgers were overwritten by the exact-order rerun before the preservation request arrived.

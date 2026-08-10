@@ -1,0 +1,3 @@
+"stage","classification","status","pass","note"
+"SLP-D","BLOCKER","SLP_D_UNCERTIFIED",0,"E-R closes while both pairs containing P fail; the current Octave P path is isolated, but its internal cause remains unresolved."
+"SLP-N/DLP-D/DLP-N","IMPORTANT CAVEAT","NOT_RUN_PREREQUISITE",0.0000000000000000e+00,"SLP-D failed, so derivative layers are stopped."

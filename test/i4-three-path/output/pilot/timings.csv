@@ -1,0 +1,8 @@
+"stage","seconds","note"
+"proxy_precomp",5.5345988273620605e-01,"package kernel.precomp_proxy"
+"ewald_wall_L",4.7714805603027344e-01,"2048 source-target interactions"
+"mfs_wall_L",7.7030897140502930e-01,"2048 source-target interactions"
+"ewald_wall_R",5.1836204528808594e-01,"2048 source-target interactions"
+"mfs_wall_R",7.6824188232421875e-01,"2048 source-target interactions"
+"pilot_three_path",3.1052079200744629e+00,"includes proxy precomputation and both walls"
+"total",3.1270070075988770e+00,"measured wall-clock time"

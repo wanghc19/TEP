@@ -1,0 +1,12 @@
+decision=CUTOFF_CAUSAL_AND_CLOSED
+status=SUPERSEDED_PRE_SAME_BACKEND_SUMMARY
+total_seconds=6.6841368675231934e+00
+chosen_manual_tau=2.9999999999999999e-16
+default_tol_definition=max(size(A))*eps(s1)
+default_rank_high=185
+default_rank_higher=214
+restored_directions_reported=40
+default_point_error=4.5181876387821917e-08
+selected_point_error=3.9495213947885755e-12
+selected_improvement=1.1439835836169861e+04
+note=Superseded because Octave documented default pinv uses max(size(A))*norm(A)*eps.

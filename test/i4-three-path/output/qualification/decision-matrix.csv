@@ -1,0 +1,3 @@
+"stage","classification","status","pass","note"
+"qualification","MINOR CAVEAT","EWALD_REFERENCE_CERTIFIED",1,"Qualification certifies value-only Ewald and projection conventions."
+"SLP-N/DLP-D/DLP-N","IMPORTANT CAVEAT","NOT_RUN_PREREQUISITE",0.0000000000000000e+00,"Derivative layers are outside this qualification stage."
