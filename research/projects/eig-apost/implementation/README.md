@@ -5,8 +5,8 @@
 - Origin Skill: academic-research-suite/experiment-agent
 - Origin Mode: handoff
 - Origin Date: 2026-08-07
-- Verification Status: UNVERIFIED
-- Version Label: eig-apost-stage-overview-v1.0
+- Verification Status: VERIFIED THROUGH I4 THREE-PATH VALUE AUDIT
+- Version Label: eig-apost-stage-overview-v1.3
 - Repro Lock: null
 
 本文件是 `eig-apost` 专题从研究问题到当前数值实现状态的导航页。它回答“每一阶段为何
@@ -15,7 +15,7 @@
 [[research/projects/eig-apost/STATUS|project STATUS]] 为准。
 
 研究 Phase 编号和 implementation checkpoint 编号是两套不同序列：Phase 1--4 表示从
-问题界定到方法稿的研究流程；I0--I3 表示把方法逐步转成代码实验的实现流程。
+问题界定到方法稿的研究流程；I0--I4 表示把方法逐步转成代码实验的实现流程。
 
 ## 维护规则
 
@@ -43,8 +43,12 @@ stage review 后只追加指向对应 stage 小节的 handoff 链接，不在各
   -> I3a: Root-readiness proxy diagnostic
        [historical result: REVISE / BLOCKED_UPSTREAM_PROVENANCE]
   -> I3b: Source-derived proxy provenance closure
-       [current: PASS WITH CONDITIONS / GO TO FULL ANALYTIC ROOT-READINESS ONLY]
-  -> future: full analytic root-readiness -> root isolation
+       [passed prerequisite: PASS WITH CONDITIONS]
+  -> I4: Full analytic complex-k root-readiness
+       [historical double ellipse: REPRODUCIBLE STOP / NO_SCREENED_DIP]
+       [current Fliss benchmark: FD CANDIDATE READY]
+       [sharp disk: RAYLEIGH BUDGET SCREENED / TRACE EXTRACTOR BLOCKED]
+  -> future: extractor closure + balanced A_def -> locator -> analytic readiness -> root isolation
              -> empirical estimator -> real-case validation
 ```
 
@@ -58,7 +62,7 @@ stage review 后只追加指向对应 stage 小节的 handoff 链接，不在各
 | **Phase 3 — Mathematical Error Decomposition, Root Qualification, and Experiment Design（误差分解、根资格判定和实验设计）** | 把文献结论转成可实现、可反驳的算法：怎样区分实轴奇异值低谷和真实根，怎样定义 estimator，怎样分离误差来源。 | 设计 fixed-representation augmented nonlinear eigenvalue problem、anchored analytic branch、contour count、bordered Newton、adjacent-level projected correction、error budget、双椭圆 benchmark 和 independent-reference ladder。所有 estimator/effectivity 结论保持条件化。 | [[research/projects/eig-apost/phase3-analysis/README|Phase 3 overview]]；[[research/projects/eig-apost/phase3-analysis/s-root|root qualification]]；[[research/projects/eig-apost/phase3-analysis/s-estimator|candidate estimator]] |
 | **Phase 4 — Integrated Method Draft and Mathematical Review（综合方法稿与数学审查）** | 将 Phase 2--3 的定义、算法、条件和停止规则整理成一次性可读的方法文稿，并检查 writer 是否改变数学逻辑。 | 形成 `method.tex`；独立 Skeptic 检查 root search、augmented equations、projected correction、coarse/fine error 含义和 reliable-interval 条件，最终为 `PASS WITH CONDITIONS`。它是方法设计，不是已验证的真实案例。 | [[research/projects/eig-apost/phase4-report/method.tex|integrated method draft]] |
 
-## 数值实现阶段：I0--I3
+## 数值实现阶段：I0--I4
 
 ### I0 — Manufactured Nonlinear Eigenvalue Problem Root-and-Correction Prototype
 
@@ -169,18 +173,94 @@ equations 组装成同一固定维数矩阵。
 11 项 direct-call manifest；本轮收尾只更新 result/review/status/handoff，不改冻结 design，
 所以新运行锁保持有效。两次复现仍只说明冻结离散实现一致，不能替代数学正确性证明。
 
+### I4 — Full Analytic Complex-Wavenumber Root-readiness
+
+全称含义：**完整复波数解析根准备门**。它试图先由实轴 locator 选择一个候选，再冻结
+anchored Rayleigh branch、proxy chart/rank 和小复圆盘，检查 factor availability、完整
+$240\times240$ 增广矩阵的 Cauchy--Riemann consistency 以及 N1--N11 负例；它仍不做
+contour count 或 root solve。
+
+- 做了什么：在 `test/root-ready/analytic-readiness/` 建立 source-derived、
+  branch-injected test evaluator，冻结双椭圆几何、29 点实轴 locator、两套 proxy、四个
+  chart、三种半径、三层 finite-tail、full-$F$ CR、factor/pole ledger、实际-object
+  negatives 和事务化 baseline/repeat。package 源码未修改。
+- 得到了什么：两次 Octave 运行均成功发布，所有复现 equality flag 为 1，数值相对差为
+  0。29 个 locator 点全部 available，但 $s(k)$ 从 $0.2083091449$ 严格下降到右端点的
+  $0.03539366850$；没有 strict interior minimum，且最小值约为冻结 $10^{-3}$ 门限的
+  $35.4$ 倍。结果是 `REPRODUCIBLE STOP / NO_SCREENED_DIP`。
+- 没有验证什么：没有 seed，因此 chart、disk、factor 和 CR ledger 均未运行；只有
+  N1、N2、N5、N10 四个上游独立负例执行，其余七个为 `NOT_RUN_UPSTREAM_STOP`。没有
+  contour、root、eigenvalue 或 estimator。
+- 状态：证据为 `PASS WITH CONDITIONS`，科学阶段为 `STOP`；
+  `PHYSICAL_ROOT_READY=STOP`，I5 不获授权。
+- 入口：[[research/projects/eig-apost/implementation/i4-readiness|I4 design]]；
+  [[research/projects/eig-apost/implementation/i4-result|I4 result]]；
+  [[research/projects/eig-apost/implementation/i4-review|I4 review]]；
+  [[research/projects/eig-apost/implementation/open-problems#I4|I4 open problems]]；
+  `test/root-ready/analytic-readiness/output/repeat/report.md`。
+
+用户随后把当前主模型改为相同左右周期端与 Fliss missing-column geometry；上述双椭圆
+结论降为历史负例。替换 benchmark 在 `test/i4-fliss-2013/` 保持两个模型严格分离：
+
+- Track A 使用 Fliss period-one smooth Gaussian coefficient。N80 finite strip 得到
+  $\lambda_h=3.460975044$，相对论文值差 $0.116\%$；八/十二周期尾长相对位移
+  $2.32\times10^{-7}$，mass overlap 为 $0.99999991$。N80/N120 targeted edge check 得到
+  uncertainty $7.91\times10^{-4}$、safe gap $(1.981350,5.386819)$、candidate margin
+  $1.479625$，四个门全部通过。状态为
+  `TRACK_A_PROJECTED_GAP_CONFIRMED / I4_FD_CANDIDATE_READY`。
+- Track B 使用 $n=\sqrt{17}$ 的 sharp disk 作为独立 BIE benchmark。新的 21 点
+  Rayleigh-budget screening 把旧 transmission-rank/affine 失败降为历史路径：canonical
+  $\delta=0.30$ 与 small-clearance $\delta=0.10$ 的 projective QZ/doubling core 在
+  $M=5{:}20$ 的 same-$M$ gates 未观察失败，并分别给出 $[5,20]$、$[19,20]$
+  right-censored candidate windows。$\delta=0.20$ 的目标 $k$ 有两个 neutral pairs，属于
+  projected-band parameter point。
+- 三个 high direct-wall/extractor errors 仍为 $4.28\times10^{-8}$--$1.50\times10^{-7}$，
+  未过 $10^{-8}$，所以严格 $M_{\mathrm{trace}}$、$M_{\mathrm{stable}}$ 与 global interval
+  均为 `NA / NA / NOT_CERTIFIED`。当前 operational label 为
+  `BIE_RAYLEIGH_BUDGET_SCREENED / TRACE_EXTRACTOR_BLOCKED`。
+- canonical extractor-only closure 见
+  [[research/projects/eig-apost/implementation/i4-extract|I4 spectral extraction closure]]。
+  其中 Bessel closed form 与 package extractor 共用 Rayleigh modal kernel；二者一致性只
+  验证 modal integral 公式与实现，不再视为 qpgreen 谱表示的独立认证。
+- 新 `test/i4-three-path/` 使用 Linton 式 (2.65) 的真 Ewald real/reciprocal split。Tables
+  2--5 五个值最大误差为 $5.07\times10^{-11}$，项目点 Ewald--Rayleigh 最大误差为
+  $1.11\times10^{-16}$。对同一冻结密度，完整 Ewald kernel 先做圆周积分再做 wall
+  Fourier projection，与 Rayleigh extractor 的 SLP--D 系数最大差为
+  $6.10\times10^{-16}$。因此当前参数的 value-level label 更新为
+  `EWALD_VALUE_REFERENCE_CERTIFIED / SLP_D_EWALD_RAYLEIGH_PASS`。
+- package MFS 在项目 point 上最大误差为 $4.89\times10^{-8}$，在相同 Linton 五点上与
+  合格 Ewald 的最大差为 $6.01\times10^{-8}$；SLP--D 中所有含 MFS 的比较
+  最大误差为 $4.69\times10^{-8}$。四个 proxy 参数的单轴变化均超过
+  $2\times10^{-9}$，而 boundary/wall quadrature 变化约为 $2.8\times10^{-11}$。
+  当前 blocker 因而细化为 `OCTAVE_AUGMENTED_MFS_PROXY_SOLVER_PATH_BLOCKED`；三角关系只隔离
+  当前 Octave P path，尚不区分 solver backend、proxy basis 或 collocation。SLP--N、
+  DLP--D、DLP--N 按早停
+  规则未运行，Ewald derivative 尚未获得资格。
+- economy-SVD 在三个冻结点达到约 $10^{-12}$，但同 nominal cutoff 的 Octave `pinv(A,tol)`
+  产生约 $10^{-5}$ 误差；所以尚不能把修复写成“调小 cutoff”，也不授权 wall $D/N$ 或
+  $M_{\mathrm{trace}}$ claim。
+- 当前综合状态是 `PARTIAL SUCCESS`：已观察到第一个可信 real-case FD eigenvalue
+  candidate，但 `PHYSICAL_ROOT_READY=STOP`，I5 仍不获授权。权威当前入口为
+  [[research/projects/eig-apost/implementation/i4-fliss|I4 Fliss benchmark]]、
+  [[research/projects/eig-apost/implementation/i4-rayleigh|I4 Rayleigh budget]] 和
+  [[research/projects/eig-apost/implementation/open-problems#I4|I4 ledger]]。
+
 ## 后续阶段：距离真实特征值和 estimator 还有什么
 
 | 顺序 | 阶段全称 | 具体要完成的工作 | 完成后才允许声称什么 |
 |---:|---|---|---|
 | P1 | **Source-derived Proxy-System Provenance Closure（源码派生的 proxy system 来源闭合）** | 已在 `test/` 内完成 source-exact copy、同一 $A,b$ 数据链、原阈值双跑和独立审查；production 内部数组仍不可直接观测。 | `PASS WITH CONDITIONS`；只授权 P2，仍没有 root。 |
-| P2 | **Full Analytic Root-readiness on a Complex Wavenumber Domain（复波数域上的完整解析根准备门）** | 冻结 anchored Rayleigh square-root branches、固定维数 $F_{j,h}(k)$、complex candidate disk、Cauchy--Riemann consistency、所有 BIE/terminal/Schur/proxy factors 的 pole/conditioning ledger 和反解析负例。 | 只在所有门通过后授权 contour root isolation；仍不是 physical truth。 |
-| P3 | **Actual Double-Ellipse Root Isolation and Simple-root Qualification（真实双椭圆离散根隔离与简单根资格判定）** | 实轴扫描只作 locator；用 complex contour count 隔离一个根，用 bordered Newton refinement，并在相邻 tail levels 匹配同一 root，检查左右 null vectors、transverse derivative 和 conditioning。 | 首个 qualified discrete eigenvalue candidate；还不是独立验证的真实 guided eigenvalue。 |
-| P4 | **Empirical A Posteriori Eigenvalue Correction and Effectivity（经验型特征值后验校正与有效性）** | 计算 matched $k_{j,h}$ hierarchy、projected map correction、root-solve correction、next-level shift consistency；用高分辨率 $k_{\infty,h}^{\mathrm{ref}}$ 比较 effectivity。 | 条件化、经验型 finite-tail estimator；没有 saturation/remainder 证明时不能称 certified interval。 |
-| P5 | **Independent Real-case Validation（真实案例的独立验证）** | 做 proxy/BIE/port refinement、独立 half-guide/reference calculation、可行的外部 benchmark、代表性 eigenmode 检查和 MATLAB parity；分别量化 root、spatial、port、proxy 与 reference uncertainty。 | 若结果一致，可形成可信的真实二维 eigenvalue + empirical estimator case study。 |
+| P2a | **Trace/Extractor Closure and Stable Projective Port Representation（迹提取闭合与稳定投影式端口表示）** | value-level Ewald--Rayleigh SLP--D 已通过；当前先关闭 MFS solver 的 hold-out/authority SLP--D，再认证 Ewald gradient/Hessian 与其余 D/N actions、$M_{\mathrm{trace}}$，最后完成 block-balanced $A_{\mathrm{def}}$/scanner integration。 | 全部子门通过后只授权一个 bounded real-axis locator；仍没有 root。 |
+| P2b | **Preregistered Real-axis Locator（预注册实轴定位）** | 只在相邻 $M$ 与相同网格上寻找共同的严格内点 dip；拒绝 endpoint/global fallback，并保持 Gaussian 与 sharp disk 结果分离。 | 只提供 analytic-readiness 的候选 seed。 |
+| P2c | **Full Analytic Root-readiness on a Complex Wavenumber Domain（复波数域上的完整解析根准备门）** | 用新 seed 冻结 anchored Rayleigh branches、固定维数 $F_{j,h}(k)$、complex disk、Cauchy--Riemann consistency、所有 factors 的 ledger 和完整负例。 | 只在所有门通过后授权 contour root isolation。 |
+| P3 | **Actual Root Isolation and Simple-root Qualification（真实离散根隔离与简单根资格判定）** | 用 complex contour count 隔离一个根，用 bordered Newton refinement，并在相邻 tail levels 匹配同一 root，检查左右 null vectors、transverse derivative 和 conditioning。 | 首个 qualified discrete root；还不是独立 reference truth。 |
+| P4 | **Empirical A Posteriori Eigenvalue Correction（经验型特征值后验校正）** | 计算 matched $k_{j,h}$ hierarchy、projected map correction、root-solve correction 和 next-level shift consistency。 | 条件化、经验型 finite-tail estimator。 |
+| P5 | **Independent Reference and Effectivity（独立参考值与有效性）** | 建立高分辨率独立 reference、量化 reference uncertainty，并报告多层 effectivity、失败例、MATLAB parity 与 proxy/BIE/port/spatial refinement。 | 可信的真实二维 eigenvalue + empirical estimator/effectivity case study。 |
 
-P1 已完成。预计 P2--P3 完成后才可能出现首个 qualified discrete root；剩余 P2--P5
-四个阶段全部完成后才可能形成可信的真实二维特征值与 empirical estimator 案例。若目标升级为 certified error interval，
+P1 已完成，Track A 的可信 FD 候选也已观察到；原双椭圆 P2 只保留为历史负例。当前
+sharp-disk 路径约三个阶段可得到可解释的 real-axis candidate，约五个阶段可得到
+qualified root，第六阶段产生 empirical estimator，第七阶段完成 independent reference
+effectivity。Fliss Gaussian 仍是不同模型，只提供尺度参考。若目标升级为 certified error interval，
 还需要另外闭合 continuous center-BIE kernel--field equivalence / injectivity、half-guide
 map saturation bound 与 correction remainder，以及 validated total error budget。
 
@@ -207,15 +287,20 @@ map saturation bound 与 correction remainder，以及 validated total error bud
 
 1. 想快速恢复当前工作：先读本文件，再读
    [[research/projects/eig-apost/STATUS|project STATUS]]。
-2. 想理解为什么当前只允许进入 full analytic Root-readiness：读
-   [[research/projects/eig-apost/implementation/root_result|I3 result Section I]] 和
-   [[research/projects/eig-apost/implementation/root_readiness_review|I3 review Section L]]。
+2. 想理解为什么当前不能进入 root isolation：读
+   [[research/projects/eig-apost/implementation/i4-fliss|current I4 Fliss benchmark]]、
+   [[research/projects/eig-apost/implementation/i4-rayleigh|current I4 Rayleigh budget]]、
+   [[research/projects/eig-apost/implementation/i4-result|historical I4 result]] 和
+   [[research/projects/eig-apost/implementation/i4-review|historical I4 review]]。
 3. 想继续下一次实现：读
-   [[research/projects/eig-apost/implementation/root_readiness|I3 frozen design]]、
+   [[research/projects/eig-apost/implementation/i4-fliss|current benchmark]]、
+   [[research/projects/eig-apost/implementation/i4-rayleigh|current Rayleigh budget]]、
    [[research/projects/eig-apost/implementation/SYMBOL|symbol/code ledger]] 和
    [[research/projects/eig-apost/implementation/open-problems#I4|I4 open problems]]，再读
-   `test/root-ready/provenance-closure/output/repeat/gate.csv`；下一步必须先单独冻结并审查
-   complex-$k$ 解析准备实验，不能直接启动 contour/root/estimator。
+   `test/i4-rayleigh-budget/output/batch-all/global-summary.txt` 与
+   `test/i4-extract/output/canonical/report.md`；下一步只能先关闭 proxy solver 的 hold-out
+   point/derivative gate，再做一次 wall validation，不能直接启动 locator、contour、root
+   或 estimator。
 4. 想追溯 estimator 的数学来源：读
    [[research/projects/eig-apost/phase3-analysis/s-root|root qualification]]、
    [[research/projects/eig-apost/phase3-analysis/s-estimator|candidate estimator]] 和

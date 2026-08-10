@@ -1,6 +1,6 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-08-07。
+更新日期：2026-08-09。
 
 ## 当前状态
 
@@ -11,13 +11,29 @@
   Octave implementation checkpoints：manufactured NEP、Half-guide map 和
   Augmented BIE / center coupling。Root-readiness 的第一轮 early-stop diagnostic
   保留为历史负结果，后续 source-derived proxy provenance-closure 已完成并通过独立审查。
+  I4 首轮双椭圆 full analytic complex-$k$ baseline/repeat 在 locator 处得到可复现的
+  `NO_SCREENED_DIP`，现保留为历史负例。当前主模型已改为相同周期端与 Fliss
+  missing-column geometry；新的 exact-profile FD track 找到可信 projected-gap 候选，
+  sharp-disk BIE track 已完成 21 点 Rayleigh-budget screening：旧 transmission-rank/
+  affine blocker 被 projective ordered-QZ/doubling core 取代。最新三路径诊断先用真 Ewald
+  real/reciprocal decomposition 复现 Linton Tables 2--5 的五个函数值，再对同一冻结圆周
+  密度比较 Ewald full kernel、package MFS 和 Rayleigh extractor。Ewald--Rayleigh 的
+  single-layer Dirichlet 系数在当前正间距、实数非 Wood 参数上闭合到
+  $6.10\times10^{-16}$，而所有含 MFS 的比较在低阶模态达到
+  $4.69\times10^{-8}$；在 Linton 五个原始点上，MFS 与合格 Ewald 的最大差也达到
+  $6.01\times10^{-8}$。MFS 四个 proxy 参数的单变量变化为
+  $3.72\times10^{-8}$--$7.52\times10^{-8}$。因此当前 value-level blocker 已独立定位到
+  augmented-MFS/proxy/solver path；导数 Ewald 与其余 wall Cauchy data 尚未启动。
 - 状态：`active investigation`。
 - 阶段门：manufactured root/correction pipeline 为窄范围 `GO`，Half-guide map 为
   Stage 1 `GO`，Augmented BIE 为 `STAGE2_DISCRETE_ALGEBRA_GO`；provenance-closure 为
   `PASS WITH CONDITIONS`，其 operational label 为
-  `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS`。Skeptic 只授权
-  `GO -- FULL_ANALYTIC_COMPLEX_K_ROOT_READINESS ONLY`；尚未通过完整 analytic
-  Root-readiness，`PHYSICAL_ROOT_READY=STOP`。现有证据不支持真实 guided eigenvalue、
+  `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS`。当前 I4 verdict 为
+  `PARTIAL SUCCESS -- I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
+  EWALD_VALUE_REFERENCE_CERTIFIED / SLP_D_EWALD_RAYLEIGH_PASS /
+  OCTAVE_AUGMENTED_MFS_PROXY_SOLVER_PATH_BLOCKED`；
+  I5 root isolation 不获授权，`PHYSICAL_ROOT_READY=STOP`。现有证据支持一个可信的
+  exact-profile finite-strip eigenvalue candidate，但不支持 qualified BIE root、
   连续 kernel--field equivalence、unconditional effectivity 或 certified interval。
 
 ## 实现 checkpoint
@@ -28,6 +44,8 @@
 | Half-guide map | Stage 1 `GO` | 非交换 Redheffer/terminal/Cayley 次序、exact analytic cell、固定 $k=0.10$ 的中心圆形介质夹杂单胞（旧报告称 `EDC cell`）same-cell QZ/doubling smoke 和负例传播；Case B 最终误差 $1.93\times10^{-15}$ | 独立 PDE truth、频率区间、asymmetric/defective cases、map convergence theorem；artifact-level 仅 `PARTIALLY_REPRODUCIBLE` |
 | Augmented BIE | `STAGE2_DISCRETE_ALGEBRA_GO`; `ROOT_READY=STOP` | 固定九块 $(n+8p)$ assembly、scaled density coordinate、raw/reduced Schur agreement、七级 availability 与 failure ledger；unchanged-source 复现差为 $0$ | 连续表示单射性、kernel--field equivalence、pole-free analytic neighborhood、root/eigenvalue/estimator |
 | Root-readiness proxy diagnostic and provenance closure | `PASS WITH CONDITIONS`; `GO` only to full analytic complex-$k$ Root-readiness; `PHYSICAL_ROOT_READY=STOP` | 历史受控诊断的 $10^{-5}$ object gate 通过；新 source-exact copy 在 6 个 shared systems/30 个 solver rows 上使三个原 $10^{-11}$ output gates 以 0 误差通过；双跑数值差为 0，manifest/shared/projector fingerprints 一致 | production 内部 $A_{\mathrm{pr}},b_{\mathrm{pr}}$ 仍不可直接观测；off-collocation 与 historical projectors 非门控；未运行 complex disk、CR、root、Newton、eigenvalue 或 estimator |
+| Historical double-ellipse full analytic complex-$k$ Root-readiness | evidence `PASS WITH CONDITIONS`; scientific `REPRODUCIBLE STOP / NO_SCREENED_DIP` | 29/29 locator 点 available；$s(k)$ 从 $0.2083091449$ 严格降至 $s(0.18)=0.03539366850$；baseline/repeat 全表数值差为 0 | 已被新主模型取代；没有 interior dip 或 seed，chart/disk/factor/full-$F$ CR 未运行 |
+| Revised I4 Fliss missing-column benchmark, Rayleigh budget and three-path kernel audit | `PARTIAL SUCCESS`; `I4_FD_CANDIDATE_READY`; `BIE_RAYLEIGH_BUDGET_SCREENED`; `EWALD_VALUE_REFERENCE_CERTIFIED`; `SLP_D_EWALD_RAYLEIGH_PASS`; `OCTAVE_AUGMENTED_MFS_PROXY_SOLVER_PATH_BLOCKED`; `PHYSICAL_ROOT_READY=STOP` | exact smooth profile 的 N80 strip 候选 $\lambda_h=3.460975044$；sharp-disk candidate windows 为 $[5,20]$、$[19,20]$；真 Ewald 复现 Linton 五个表值的最大误差为 $5.07\times10^{-11}$，项目点 Ewald--Rayleigh 误差为 $1.11\times10^{-16}$；同一冻结密度的 Ewald--Rayleigh SLP--D 系数最大差为 $6.10\times10^{-16}$；$n_{\mathrm{tot}}$、$N_y$ 与 Ewald 各轴加密均通过 | Bessel closed form 与 extractor 共用 modal kernel，旧一致性不再当作独立谱闭环；Octave fallback `pinv(A)` 下 P-path 在 Linton 同点最大误差为 $6.01\times10^{-8}$，SLP--D pairwise 最大误差为 $4.69\times10^{-8}$，四个 proxy 单轴变化均失败；内部原因仍可能是 solver backend、proxy basis 或 collocation；Ewald derivative、其余 D/N、$M_{\mathrm{trace}}$、locator、root 与 estimator 未运行或未认证 |
 
 实现权威入口为
 [[research/projects/eig-apost/implementation/design|manufactured NEP design]]、
@@ -38,7 +56,13 @@
 [[research/projects/eig-apost/implementation/aug-bie-review|Augmented BIE review]] 和
 [[research/projects/eig-apost/implementation/root_readiness_review|Root-readiness review]]；
 本轮数值解释见
-[[research/projects/eig-apost/implementation/root_result|Root-readiness result]]。
+[[research/projects/eig-apost/implementation/root_result|I3 Root-readiness result]]、
+[[research/projects/eig-apost/implementation/i4-result|I4 result]] 和
+[[research/projects/eig-apost/implementation/i4-review|I4 review]]；当前替换 benchmark 见
+[[research/projects/eig-apost/implementation/i4-fliss|I4 Fliss benchmark]]，最新 BIE port
+预算见 [[research/projects/eig-apost/implementation/i4-rayleigh|I4 Rayleigh budget]]，谱提取与
+proxy-solver 收敛诊断见
+[[research/projects/eig-apost/implementation/i4-extract|I4 spectral extraction closure]]。
 
 ## 已完成
 
@@ -159,8 +183,55 @@
   $6.4742$ s 和 $6.6299$ s；repeat 数值相对差为 0，11 项 direct-call manifest、
   shared-system 和 projector fingerprints 全部一致，原子发布与 marker hashes 经
   Engineer 独立复算通过。
-- Researcher 的结果为 `CONDITIONAL GO TO THE NEXT DESIGN GATE`；Skeptic 的最终 verdict
-  为 `PASS WITH CONDITIONS`，只授权 full analytic complex-$k$ Root-readiness。
+- 已在 `test/root-ready/analytic-readiness/` 完成 I4 source-derived branch-injected
+  evaluator、29 点 locator、fixed-chart/disk/CR/factor/negative 的 fail-closed 管线和
+  transactional baseline/repeat。两次权威 Octave 运行 exit code 均为 0，所有科学表
+  完全复现，aggregate numeric difference 为 0，19 项 direct-source manifest 与双 marker
+  验证通过。
+- I4 在 locator 处得到 `NO_SCREENED_DIP`：29/29 点 available，$s(k)$ 在
+  $[0.04,0.18]$ 上严格下降，从 $0.2083091449$ 到右端点的 $0.03539366850$。没有 strict
+  interior minimum，最小值仍约为 $10^{-3}$ 门限的 $35.4$ 倍，因此 chart、complex disk、
+  factor ledger、full-$F$ CR 和七个依赖 seed 的 negatives 均按协议未运行。
+- I4 Researcher 分析和 Skeptic post-run review 均认定 STOP 有效且可解释：证据为
+  `PASS WITH CONDITIONS`，科学结论为 `REPRODUCIBLE STOP / NO_SCREENED_DIP`，I5 不获
+  授权。该结论现只作为历史双椭圆 negative 保存。
+- 已在 `test/i4-fliss-2013/` 完成 Fliss missing-column 双轨 benchmark。exact smooth FD
+  baseline 给出主候选 $\lambda_h=3.460975044$，中心质量比例 $0.4959$、端部比例
+  $6.97\times10^{-10}$、八/十二周期尾长相对位移 $2.32\times10^{-7}$；相对论文值差
+  $0.116\%$。
+- targeted N80/N120 edge confirmation 得到 $\varepsilon_{80,120}=7.91\times10^{-4}$、
+  safe gap $(1.981350,5.386819)$ 和 candidate margin $1.479625$，四个冻结门全部通过，
+  因而状态为 `TRACK_A_PROJECTED_GAP_CONFIRMED / I4_FD_CANDIDATE_READY`。
+- sharp-disk 旧 affine/逐模态 pencil diagnostics 保留为历史失败路径。新的 projective
+  ordered-QZ/doubling core 完成 15 个 $(\delta,k)$ low cases、三个尺度控制和三个 high
+  pairs；canonical $\delta=0.30$ 与 small-clearance $\delta=0.10$ 分别观察到
+  $[5,20]$、$[19,20]$ right-censored candidate windows。$\delta=0.20$ 在目标 $k$ 有两个
+  neutral pairs，属于 parameter-specific projected-band 情形，不记作算法失败。
+- 三个 high extractor errors 为 $1.499\times10^{-7}$、$4.282\times10^{-8}$ 和
+  $1.438\times10^{-7}$，均未过 $10^{-8}$。因此全局
+  `M_trace=NA / M_stable=NA / interval=NOT_CERTIFIED`，状态为
+  `BIE_RAYLEIGH_BUDGET_SCREENED / TRACE_EXTRACTOR_BLOCKED`。
+- canonical extractor-only 实验中的 Bessel closed form 与 package extractor 都直接使用
+  Rayleigh modal kernel；它们的一致性只验证同一个 modal integral 的闭式公式、梯形求积
+  和代码实现，不再作为 qpgreen 谱表示或 sum--integral interchange 的独立闭环。
+- 新 `test/i4-three-path/` 实验以 Linton 式 (2.65) 的真 Ewald split 建立独立 value
+  reference：Tables 2--5 五点最大误差 $5.07\times10^{-11}$，项目点
+  Ewald--Rayleigh 最大误差 $1.11\times10^{-16}$。同一冻结密度先经完整 Ewald kernel
+  积分再做 wall Fourier projection，与 Rayleigh extractor 的 SLP--D 系数最大差为
+  $6.10\times10^{-16}$。这只在当前实数非 Wood、clearance $0.3$ 和冻结密度/模态范围内
+  通过，不自动推广到导数、复杂 $k$ 或一般曲线。
+- package MFS 在五个 canonical/hold-out point 上最大误差为 $4.89\times10^{-8}$，在
+  Linton 五个原始点上最大误差为 $6.01\times10^{-8}$；SLP--D
+  中 Ewald--MFS 和 MFS--Rayleigh 最大误差为 $4.69\times10^{-8}$。分别只加密
+  $N_{\mathrm{side}},N_{\mathrm{top}},N_{\mathrm{proxy,edge}},M_{\mathrm{pw}}$ 时，系数变化为
+  $7.52,5.99,3.72,4.45\times10^{-8}$，而 $n_{\mathrm{tot}}$ 与 $N_y$ 变化仅约
+  $2.8\times10^{-11}$。当前 blocker 因而定位为 Octave augmented-MFS/proxy/solver path。
+- cheap solver diagnostic 证明默认 `pinv` path 复现上述 point error；economy-SVD 在
+  relative $\tau=3\times10^{-16}$ 时把三个冻结点降到 $3.95\times10^{-12}$，但同阈值
+  `pinv(A,tol)` 产生 $5.98\times10^{-5}$，因此不能把问题简化为 cutoff-only，也未授权
+  derivative/Hessian/wall 验证。
+- Researcher 与 Skeptic 均只认可 screening 结果，不授权 real-axis locator 或 complex
+  root isolation。
   `production_internal_A_b_identity=NOT_DIRECTLY_OBSERVED` 作为 claim boundary 保持不变。
 - 已识别并在 Stage 2 局部规避 variable-speed geometry 的 density-scaling mismatch；
   production `bloch.construct_S` 与 `scat_ld_lead_in` 尚未全局修改或验证。
@@ -172,8 +243,11 @@
 - 尚未证明实际 center BIE 表示的连续 kernel--field equivalence、排除 zero-field
   representation nullspace，或给出 root-search domain 上的一致 injectivity/pole-free
   条件；fixed-$k$ raw/reduced Schur agreement 不能替代这些命题。
-- 尚未实现 anchored analytic Rayleigh branch chart、完整 contour pole ledger、complex
-  contour isolation、bordered root refinement 和 adjacent-level root matching。当前
+- 尚未在当前 Fliss/sharp-disk 替换 benchmark 的 selected disk 上执行 anchored analytic
+  Rayleigh chart、fixed-rank factor ledger、full-$F$ CR 和完整 negatives；当前因
+  trace/extractor reference 与 balanced $A_{\mathrm{def}}$/scanner blockers 没有可解释的
+  BIE locator。尚未进行 complex
+  contour isolation、bordered root refinement 和 adjacent-level root matching。package
   pointwise principal-square-root convention 不得直接用于 complex analytic search。
 - 尚未证明 finite-tail half-guide map convergence、得到独立 saturation 常数
   $\bar q<1$，也没有 computable correction remainder；observed doubling ratios 仍只能
@@ -192,15 +266,31 @@
 
 ## 当前门槛
 
-本轮 provenance-closure 已完成并经独立审查为 `PASS WITH CONDITIONS`。最小下一步是
-单独冻结并审查 full analytic complex-$k$ Root-readiness：统一 anchored branch，固定
-chart/rank，冻结 candidate disk，检查 full-matrix Cauchy--Riemann consistency、factor/pole
-ledger 和 mandatory negatives。仍估计有四个主要 empirical stages：full analytic
-root-readiness、real root isolation、empirical correction 和 real-case validation。约两阶段
-后才可能得到首个 qualified discrete root，四阶段全部完成后才可能形成可信的真实二维
-eigenvalue + empirical estimator case。continuous
-kernel--field/representation、saturation/remainder 和 validated error-budget certification
-仍是另外至少三个理论/验证门。仍不创建 `research/mainline/`，也不使用绝对优先权表述。
+当前不再延伸历史双椭圆 locator。Fliss exact-profile Track A 已关闭经验 projected-gap
+blocker，并给出 $\lambda_h=3.460975044$ 的可信 FD 候选；这已经反驳“该 missing-column
+模型普遍无解”的怀疑，但不是 qualified root。
+
+当前最小下一步仍是 OP-I4-1f，但不再依赖 Bessel--extractor 共享-kernel 证据。不得再盲加
+boundary $n$ 或 wall $N_y$。最便宜的决定性检查是把既有 relative
+$\tau=3\times10^{-16}$ economy-SVD backend/reconstruction 完全冻结在 test-local copy 中，
+不使用 hold-out 调参，先计算本轮两个 off-axis hold-out point values，再只重放一次
+$n_{\mathrm{tot}}=128,N_y=256$ 的 SLP--D authority wall。若 point 的
+$2\times10^{-9}$ 门和 coefficient 的 $10^{-8}$ 门都通过，再对同一 solver policy 做
+roundoff-equivalent assembly 与四个 proxy 单轴加密；否则直接区分 solver path 与 proxy
+basis/collocation limitation。只有 SLP--D 闭合后才实现并认证解析 Ewald gradient/Hessian，
+依次运行 SLP--N、DLP--D、DLP--N。随后才处理 OP-I4-1e 的 block-balanced
+$A_{\mathrm{def}}$/scanner integration。Fliss smooth Gaussian 只提供尺度参考，不得当作
+sharp-disk root 或 reference。
+
+从当前 sharp-disk 路径计，约三个阶段可观察到可解释的实轴 candidate：MFS SLP--D
+solver closure、Ewald derivative/full wall Cauchy data 与 $M_{\mathrm{trace}}$ closure、
+block-balanced $A_{\mathrm{def}}$ 加 bounded locator。再加 full analytic complex-$k$
+readiness 与 contour/Newton qualification，约五个阶段才可能得到 qualified root；第六
+阶段才产生 empirical estimator，第七阶段才得到 independent high-resolution reference
+effectivity。
+continuous kernel--field/representation、saturation/remainder 和 validated total error budget
+仍是更强 certification 的另外问题。仍不创建 `research/mainline/`，也不使用绝对优先权
+表述。
 
 ## 新 session handoff
 
@@ -209,42 +299,51 @@ kernel--field/representation、saturation/remainder 和 validated error-budget c
   worktree。
 - 新 session 应先读取仓库根目录与 `research/` 下的 `AGENTS.md`，再读取本文件、
   [[research/projects/eig-apost/implementation/README|implementation stage overview]]、
-  [[research/projects/eig-apost/implementation/root_readiness|Root-readiness design]]、
-  [[research/projects/eig-apost/implementation/root_result|result]]、
-  [[research/projects/eig-apost/implementation/root_readiness_review|review]]、
+  [[research/projects/eig-apost/implementation/i4-fliss|current I4 Fliss benchmark]]、
+  [[research/projects/eig-apost/implementation/i4-rayleigh|current I4 Rayleigh budget]]、
+  [[research/projects/eig-apost/implementation/i4-readiness|I4 design]]、
+  [[research/projects/eig-apost/implementation/i4-result|I4 result]]、
+  [[research/projects/eig-apost/implementation/i4-review|I4 review]]、
   `implementation/SYMBOL.md`、
   [[research/projects/eig-apost/implementation/open-problems|open-problem ledger]] 和
-  `test/root-ready/provenance-closure/output/repeat/report.md`。
-- `root_readiness_review.md` 的 Section L 是当前 verdict；Section J--K 与更早状态只作
-  审计历史。`root_result.md` 的 Section I 是当前 provenance-closure 分析。较早
-  `test/root-ready/output/` manifest 保持 `STALE`，但新的 v1.1 provenance-closure
-  manifest 仍锁定，因为本轮运行后没有再修改冻结 design。
+  `test/i4-rayleigh-budget/README.md`、
+  `test/i4-rayleigh-budget/output/batch-all/global-summary.txt`、
+  `case-summary.csv`、`ntot-action-ledger.csv` 与 `gate-summary.txt`，再读
+  `test/i4-fliss-2013/output/baseline/report.md`、
+  `output/targeted-edge-confirm/report.md` 与
+  `output/bie-bidirectional-pencil/report.md`。历史证据入口仍为
+  `test/root-ready/analytic-readiness/output/repeat/report.md` 与 `locator.csv`。
+- I4 当前 verdict 是
+  `PARTIAL SUCCESS -- I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
+  EWALD_VALUE_REFERENCE_CERTIFIED / SLP_D_EWALD_RAYLEIGH_PASS /
+  OCTAVE_AUGMENTED_MFS_PROXY_SOLVER_PATH_BLOCKED`；
+  `REPRODUCIBLE STOP / NO_SCREENED_DIP` 只描述历史双椭圆实验。I3 的
+  `root_readiness_review.md` Section L 与 `root_result.md` Section I 继续作为 provenance
+  历史边界；不得把 I3 的下一阶段授权覆盖当前 BIE blocker。
 - 保持 Researcher + Engineer + Skeptic 多 subagent 协作：Researcher 冻结数学和实验
   设计，Engineer 只在获准路径实现并复现，Skeptic 在实现前后独立只读审查。Skeptic
   必须按当前工程目标区分 `BLOCKER`、`IMPORTANT CAVEAT`、`MINOR CAVEAT`，只有
   blocker 能停止阶段，并优先建议廉价 numerical sanity check；主 agent 负责综合、更新
   [[research/projects/eig-apost/implementation/open-problems|open-problem ledger]] 和
   handoff。
-- 当前权威 operational 状态为
-  `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS`；Skeptic gate 为
-  `GO -- FULL_ANALYTIC_COMPLEX_K_ROOT_READINESS ONLY`，同时
+- 当前权威 operational provenance 状态仍保留
+  `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS`，但更新的阶段 gate 是
+  `I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
+  EWALD_VALUE_REFERENCE_CERTIFIED / SLP_D_EWALD_RAYLEIGH_PASS /
+  OCTAVE_AUGMENTED_MFS_PROXY_SOLVER_PATH_BLOCKED`；
   `production_internal_A_b_identity=NOT_DIRECTLY_OBSERVED` 和
-  `PHYSICAL_ROOT_READY=STOP` 保持不变。不得解释成真实 root 或 estimator。
-- 下一步仅允许由 Researcher 先冻结 full analytic complex-$k$ Root-readiness 设计，
-  Engineer 依设计在新 `test/` 实验目录实现，Skeptic 在实现前后审查。只有 anchored
-  branch、固定 chart、disk/CR、factor/pole ledger 和 negatives 全部通过后，才可另开
-  root-isolation 阶段；当前唯一针对该进入条件的 blocker 是 ledger 中的 `OP-I4-1`。
-- 当前 intended changes 包括本专题的 README/STATUS/SYMBOL、Root-readiness
-  design/result/review、implementation overview，以及
-  `test/root-ready/provenance-closure/` 中的代码及可审计 CSV/Markdown/TXT 输出。
-  `results.mat`、`run.log` 继续忽略；未跟踪的
-  `.codex/agents/*.toml` 与本阶段无关，不得纳入提交。
-- 最近两次权威 Octave 命令分别为
-  `conda run -n octave octave --quiet --no-gui --eval "addpath('test/root-ready/provenance-closure'); run_provenance_closure('baseline');"`
-  和同一命令的 `repeat` 模式；两者 exit code 均为 0。repeat 最终状态为
-  `REPRODUCED`，数值相对差为 0，source/shared/projector fingerprints 一致。MATLAB
-  尚未运行，因为 Octave 已正确完成冻结实验。
+  `PHYSICAL_ROOT_READY=STOP` 保持不变。不得解释成 qualified root 或 estimator。
+- 下一步仅允许由 Researcher 冻结 economy-SVD solver policy，Engineer 在新的 test-only
+  follow-up 中先运行本轮两个 hold-out point values 和一次 authority SLP--D wall，Skeptic
+  在运行前后审查。不得用 hold-out 重选 solver，不得调宽 $10^{-8}$ coefficient 或
+  $2\times10^{-9}$ reference-change 门。只有 SLP--D 闭合后才实现 Ewald analytic
+  gradient/Hessian 与其余 wall $D/N$ actions；不得重新运行 legacy affine scan绕过 blocker。
+- 当前新增内容位于 `test/i4-rayleigh-budget/`、`test/i4-extract/`、
+  `test/i4-three-path/` 与本专题 STATUS/README/ledger/report 文档；package 源码未修改。
+  MATLAB 尚未运行。三路径 qualification、pilot 和 canonical SLP--D 的 Octave exit code
+  均为 0；canonical 用时 $531.181285$ s。
 
-新 session 应从 full analytic complex-$k$ Root-readiness 的设计与 pre-review 开始，不得
-直接启动 contour/root/estimator，也不得把 source-derived provenance 升级为 production
-内部数组已观测。
+新 session 应从冻结 economy-SVD solver path 的 hold-out point value 与 authority
+SLP--D closure 开始，不得直接启动 derivative wall actions、实轴 scan、complex disk、
+contour、root 或 estimator，也不得把三个 in-sample point values 升级为 certified wall
+trace，或把 source-derived provenance 升级为 production 内部数组已观测。

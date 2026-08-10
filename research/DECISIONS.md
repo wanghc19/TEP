@@ -211,3 +211,44 @@
   `.codex/agents/skeptic.toml`。
 - **状态：** 当前协作规则；若未来目标改为 theorem-level 或 certified paper，应重新
   校准 blocker 定义。
+
+## 2026-08-08 阶段：I4 改用相同周期端与 Fliss 缺列模型
+
+- **决定：** I4 不再以左右 half-guide 介质柱形状不同的双椭圆配置作为主真实案例，
+  改为左右完全相同的二维完美周期介质，并把中心一整列替换为背景介质。主正对照采用
+  Fliss (2013) 的 period-one 光滑 Gaussian 系数和 missing-column geometry；只在
+  `test/i4-fliss-2013/` 实现新的实验代码。
+- **模型分层：** Fliss 光滑 profile 由独立的稀疏离散 Track A 复现。现有 BIE 只能处理
+  分片常数界面，因此半径 $0.2$、折射率 $\sqrt{17}$ 的圆柱只作为单独标记的 Track B
+  sharp-disk surrogate；不得把 Track B 的结果称为 Fliss 复现或用于论文值的误差门。
+- **谱域：** 固定 $\beta$ 后，projected gap 由完美周期背景的离散 Floquet--Bloch bands
+  计算；所有数值结果写成 $\sigma_{\mathrm{ess}}^h(\beta)$，并通过空间、Bloch 网格和
+  局部带边加密给出经验 edge uncertainty。Fliss 对称胞元使 classical half-guide DtN
+  的额外 Dirichlet 例外点不作为该正对照的主障碍。
+- **I4 边界：** 本轮先寻找可信 projected gap 和 center-localized 特征值候选，再决定是否
+  启动 complex-$k$ analytic chart 与 root isolation。实轴 $\sigma_{\min}$ dip 仍只是
+  locator；未通过 contour/root qualification 前不得称为特征值或 estimator。
+- **证据：** 用户明确更改当前实验模型；Fliss (2013) Sections 3--5；
+  `research/projects/eig-apost/phase4-report/output/pdf/method.pdf`；
+  [[research/projects/eig-apost/implementation/open-problems#I4|I4 ledger]]。
+- **状态：** Active replacement benchmark；旧双椭圆 I4 结果保留为历史负例，不再决定
+  新主模型是否存在候选。
+
+## 2026-08-08 阶段：Fliss FD 候选通过，BIE 停在投影子空间门
+
+- **决定：** 接受 exact smooth-profile Track A 的
+  `TRACK_A_PROJECTED_GAP_CONFIRMED / I4_FD_CANDIDATE_READY`，但不把该候选升级为
+  qualified root。sharp-disk Track B 因双向 pencil residual 与 reciprocal pairing 失败，
+  冻结为 `BIE_PROJECTIVE_SUBSPACE_BLOCKED`；不运行已实现的 legacy M4/M5 实轴 scan。
+- **理由：** N80/N120 targeted edge check 给出
+  $\varepsilon_{80,120}=7.91\times10^{-4}<10^{-3}$、safe gap
+  $(1.981350,5.386819)$ 和 candidate margin $1.479625$，与 N80 strip 的
+  $\lambda_h=3.460975044$、极小 tail drift 和中心局域性共同构成可信 FD 候选。另一方面，
+  BIE M5 虽恢复满秩且条件良好的两侧 traces，forward/reverse residual 仍为
+  $3.15\times10^{-6}/9.43\times10^{-4}$，pairing defect 为 $1.58\times10^{-5}$，不能用
+  trace normalization 或调宽阈值消除。
+- **下一步：** test-local 实现带 Rayleigh 物理尺度平衡的 projective ordered-QZ 或等价
+  deflating-subspace port bases，先通过单点与相邻 $k,M$ 的 subspace gates，再恢复实轴
+  locator。若最终案例坚持 exact Fliss Gaussian，另需 model-consistent infinite-domain
+  evaluator；不得把 sharp-disk root 迁移为 Gaussian root。
+- **状态：** Track A partial success；Track B blocker open；`PHYSICAL_ROOT_READY=STOP`。

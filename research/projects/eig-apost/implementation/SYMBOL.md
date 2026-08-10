@@ -468,3 +468,65 @@ is source-exact, its public output is a same-process bitwise match to the packag
 test-local comparison solvers consume one fingerprinted returned pair. It never means
 `production_internal_A_b_identity = true` and never authorizes a complex disk, root,
 eigenvalue, correction, estimator, effectivity, or certification claim.
+
+## I4 analytic root-readiness ledger
+
+This section applies only to
+[[research/projects/eig-apost/implementation/i4-readiness|the I4 full analytic
+complex-wavenumber Root-readiness design]] and the corresponding test-local experiment.
+It does not change the I0--I3 meanings above.
+
+### Representation invariant
+
+The representation identifier is `eig-apost-i4-readiness-v1.0`. Within one frozen
+chart, the two ellipse geometries, density coordinate, port/proxy orders, branch seed and
+mode ordering, proxy rank and projectors, nine augmented row/column groups, terminal
+closure, and matrix dimensions are fixed. Only the sampled $k$ and finite-tail level
+$j\in\{0,3,4\}$ vary.
+
+The implementation label is `SOURCE_DERIVED_BRANCH_INJECTED_TEST_EVALUATOR`. It is not
+a source-exact copy of package arithmetic and does not alter the I3 status
+`production_internal_A_b_identity=NOT_DIRECTLY_OBSERVED`.
+
+### Mathematical objects and code variables
+
+| Mathematical or numerical object | Required code variable | Meaning |
+|---|---|---|
+| real locator center $k_c$ | `candidate_center` | Final strict-interior real locator after two frozen refinements. |
+| port/proxy orders $m$ | `branch_orders` | Frozen integer ordering for one branch provider. |
+| $\beta_m$ | `branch_beta_m` | Frozen transverse wavenumbers in the same order. |
+| seed $\gamma_{m,c}$ | `branch_gamma_seed` | Physical outgoing/decaying values selected once at $k_c$. |
+| continued $\gamma_m(k)$ | `branch_gamma` | Anchored logarithmic continuation supplied to every consumer. |
+| branch descriptor | `branch_fingerprint` | Seed, order, formula, provider source, and raw-value fingerprint. |
+| $A_{\mathrm{pr}}(k),b_{\mathrm{pr}}(k)$ | `proxy_A`, `proxy_b` | Test-local branch-injected proxy collocation system. |
+| $U_r,V_r,r$ | `proxy_U`, `proxy_V`, `proxy_rank` | One seed-frozen Petrov--Galerkin chart. |
+| $a_r,c_r$ | `proxy_reduced_coefficients`, `proxy_coefficients` | Reduced and lifted fixed-chart coefficients. |
+| $r_P,r_{P,\mathrm{back}},r_{\mathrm{full}}$ | `proxy_projected_residual`, `proxy_projected_backward`, `proxy_full_residual` | Frozen collocation residual definitions. |
+| shifted residuals $r_q,r_{\mathrm{off}}$ | `off_block_residuals`, `off_combined_residual` | `SHIFTED_DENSIFIED_MIDPOINT_2X` branch-injected diagnostics. |
+| candidate disk $\mathcal D(k_c,r)$ | `candidate_disk` | One attempt among $r_0,r_0/2,r_0/4$. |
+| disk attempt state | `disk_attempt` | Radius index, node coverage, first failure, and acceptance state. |
+| $F_{j,h}^{\mathrm{aug}}(k)$ | `F_aug` | Fixed $240\times240$ test-local augmented matrix. |
+| $s(k)$ | `relative_sigma_min` | Real locator or boundary separation diagnostic only. |
+| maximum $e_{ab}$ | `relative_full_F_chart_spread` | Maximum pairwise full-matrix spread over the declared chart/node/level scope. |
+| $D_x,D_y,e_{\mathrm{CR}}$ | `derivative_real`, `derivative_imag`, `cr_defect` | Full-$F$ centered-difference analytic-consistency diagnostics. |
+| factor/pole record | `factor_ledger` | Role, raw-inversion flag, rcond, residual, availability, and failure. |
+| mandatory negative record | `negative_cases` | Exact N1--N11 outcome and whether the common checker rejected it. |
+
+### Stable I4 labels
+
+- `SOURCE_DERIVED_BRANCH_INJECTED_TEST_EVALUATOR`
+- `NO_SCREENED_DIP`
+- `REPRESENTATION_DRIFT`
+- `SCALING_COORDINATE_MISMATCH`
+- `PROXY_COMPRESSION_POLE`
+- `FULL_F_CR_DEFECT`
+- `HIDDEN_INTERIOR_POLE_UNEXCLUDED`
+- `ZERO_FIELD_REPRESENTATION`
+- `CIRCLE_LEAD_INTERFACE_SMOKE`
+- `SAMPLED_DOMAIN_AVAILABLE`
+- `ROOT_READINESS_SAMPLED_DISCRETE_STOP`
+- `ROOT_READINESS_SAMPLED_DISCRETE_GO`
+
+`ROOT_READINESS_SAMPLED_DISCRETE_GO` authorizes only a separately frozen I5 design.
+Every I4 outcome retains `PHYSICAL_ROOT_READY=STOP`; no I4 variable represents a root,
+eigenvalue, correction, estimator, effectivity, or certified interval.
