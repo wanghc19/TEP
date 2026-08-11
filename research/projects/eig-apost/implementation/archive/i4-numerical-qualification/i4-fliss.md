@@ -7,7 +7,7 @@
 - Origin Date: 2026-08-08
 - Verification Status: PARTIAL SUCCESS; TRACK A CANDIDATE READY; TRACK B BLOCKED
 - Version Label: eig-apost-i4-fliss-v1.0
-- Governing Method: [[research/projects/eig-apost/phase4-report/method|conditional method]]
+- Governing Method: [[research/projects/eig-apost/phase4-report/method.tex|conditional method]]
 - Open Problems: [[research/projects/eig-apost/implementation/open-problems#I4|I4 ledger]]
 
 ## Scope decision
@@ -176,5 +176,5 @@ is also required; the sharp-disk surrogate cannot inherit the Track A candidate.
 
 The benchmark does not provide a fixed analytic chart, pole-free complex disk, contour
 root count, bordered Newton root, eigenvalue estimator, or effectivity. Those objects
-remain downstream gates in [[research/projects/eig-apost/implementation/i4-result|the
+remain downstream gates in [[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-result|the
 historical I4 result]] and the project ledger.

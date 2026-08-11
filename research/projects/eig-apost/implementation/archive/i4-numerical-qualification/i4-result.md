@@ -7,7 +7,7 @@
 - Origin Date: 2026-08-07
 - Verification Status: VERIFIED FOR REPRODUCIBLE STOP
 - Version Label: eig-apost-i4-result-v1.0
-- Governing Design: [[research/projects/eig-apost/implementation/i4-readiness|I4 readiness design]]
+- Governing Design: [[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-readiness|I4 readiness design]]
 - Repro Lock: baseline/repeat direct-source manifest and worktree lock
 
 ## Result

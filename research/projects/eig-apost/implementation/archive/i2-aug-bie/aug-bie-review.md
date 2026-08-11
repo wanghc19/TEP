@@ -8,14 +8,14 @@
 
 - **Audit target:** Researcher 的 2026-08-02 `Stage2 PRE-REVIEW FROZEN` handoff、同日
   blocker-resolution revision 及其落盘版本
-  [[research/projects/eig-apost/implementation/aug-bie|Augmented BIE Stage 2 design]]，以及
+  [[research/projects/eig-apost/implementation/archive/i2-aug-bie/aug-bie|Augmented BIE Stage 2 design]]，以及
   Engineer 的 `test/aug-bie/aug_bie_experiment.m`、wrapper 与最终 stable evidence bundle。
 - **Claimed contribution:** 构造固定维数的九块 augmented matrix，通过一个直接 raw Schur
   路径与一个 reduced center-scattering 路径核对 center coupling、远端 Dirichlet 闭合和
   level-dependent lead blocks。
 - **Current stage:** Stage 2 离散代数实施与 formal rerun 完成；未授权 root search。
 - **Authority:** 当前无 active mainline。项目级权威依次取
-  [[research/projects/eig-apost/phase4-report/method|Phase 4 method]]、
+  [[research/projects/eig-apost/phase4-report/method.tex|Phase 4 method]]、
   [[research/projects/eig-apost/phase3-analysis/s-root|root formulation]]、
   [[research/projects/eig-apost/phase3-analysis/p-implement|implementation route]] 与
   [[research/projects/eig-apost/STATUS|project status]]；本轮 frozen handoff 是待审设计，
@@ -182,7 +182,7 @@ representation。Phase 4 已明确把 kernel--field equivalence 和 representati
 
 ### 7. MAJOR, RESOLVED — 旧 A1 的 transmission-swap negative 是 no-op
 
-- **Location:** [[research/projects/eig-apost/implementation/aug-bie|aug-bie v1.0]] 的 A1
+- **Location:** [[research/projects/eig-apost/implementation/archive/i2-aug-bie/aug-bie|aug-bie v1.0]] 的 A1
   lead table 与 mandatory falsification cases。
 - **Evidence:** 旧 A1 冻结 $T_{LR}^-=T_{RL}^-=T_{LR}^+=T_{RL}^+=I$。因此字面交换
   $T_{LR}$ 与 $T_{RL}$ 不改变任何 primitive block、augmented matrix 或 known-vector
@@ -403,7 +403,7 @@ estimator claim。
 ## H. Open gaps
 
 - frozen handoff/revision 已落盘为
-  [[research/projects/eig-apost/implementation/aug-bie|aug-bie v1.0]]，并经逐节核对；已审
+  [[research/projects/eig-apost/implementation/archive/i2-aug-bie/aug-bie|aug-bie v1.0]]，并经逐节核对；已审
   blocks、metrics 或 gates 后续不得静默改变。
 - Engineer 已用 Octave 完成最终 source-changed baseline 和 unchanged-source repeat；本
   skeptic 只用 Octave 读取 `results.mat`，没有独立重跑实验。最终输出的数值、

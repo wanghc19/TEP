@@ -16,7 +16,7 @@ Section 4, and the center-coupling section of
 [[research/projects/eig-apost/phase4-report/method.tex|the report method]]. The finite-lead
 block convention and Dirichlet termination formulas come from
 [[research/projects/eig-apost/phase3-analysis/s-dtn-chain|the DtN computation chain]] and
-[[research/projects/eig-apost/implementation/half_guide_map|half-guide map Stage 1]]. The
+[[research/projects/eig-apost/implementation/archive/i1-finite-tail/half_guide_map|half-guide map Stage 1]]. The
 implementation boundary comes from
 [[research/projects/eig-apost/phase3-analysis/p-implement|the implementation route]].
 

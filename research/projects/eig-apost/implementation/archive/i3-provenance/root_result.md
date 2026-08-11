@@ -23,9 +23,9 @@
   `1e-13`, identical direct-call source manifests, and identical projector fingerprints
 - Git Base: `d699ae9ffa2d9f9a23c0d1cdd58fffc00357162b`
 - Design Authority:
-  [[research/projects/eig-apost/implementation/root_readiness|Root-readiness design]]
+  [[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness|Root-readiness design]]
 - Pre-implementation Review:
-  [[research/projects/eig-apost/implementation/root_readiness_review|Root-readiness review]]
+  [[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness_review|Root-readiness review]]
 - Downstream Theory:
   [[research/projects/eig-apost/phase3-analysis/s-root|Root qualification]] and
   [[research/projects/eig-apost/phase3-analysis/s-estimator|Candidate estimator]]
@@ -319,7 +319,7 @@ override those blockers. The correct action boundary remains `REVISE / ROOT SEAR
   INDEPENDENT SKEPTIC REVIEW PENDING
 - Version Label: eig-apost-provenance-closure-result-v1.1
 - Frozen Design:
-  [[research/projects/eig-apost/implementation/root_readiness|Root-readiness design]],
+  [[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness|Root-readiness design]],
   specifically the `eig-apost-provenance-closure-v1.1` addendum
 - Symbol Authority:
   [[research/projects/eig-apost/implementation/SYMBOL|Symbol and code-variable ledger]]

@@ -11,8 +11,8 @@
 - Version Label: `eig-apost-manufactured-v1.2`
 - Repro Lock: `test/eig-apost-nep/output/reproducibility.txt`
 - Audit Target:
-  [[research/projects/eig-apost/implementation/design|manufactured NEP design]] and
-  [[research/projects/eig-apost/implementation/experiment_plan|experiment plan]]
+  [[research/projects/eig-apost/implementation/archive/i0-manufactured/design|manufactured NEP design]] and
+  [[research/projects/eig-apost/implementation/archive/i0-manufactured/experiment_plan|experiment plan]]
 - Provenance Note: the locked evidence predates the filename normalization from
   `review.md` to `nep-review.md`; historical run configurations intentionally retain the
   original path and hash.

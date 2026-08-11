@@ -42,7 +42,7 @@ complex disk 或 root isolation。现行方法见
 
 **Manufactured Nonlinear Eigenvalue Problem Root-and-Correction Prototype。**
 历史审查见
-[[research/projects/eig-apost/implementation/nep-review|I0 review]]。
+[[research/projects/eig-apost/implementation/archive/i0-manufactured/nep-review|I0 review]]。
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
@@ -52,7 +52,7 @@ complex disk 或 root isolation。现行方法见
 ## I1
 
 **Legacy Finite-tail Half-guide-map Algebra。**历史审查见
-[[research/projects/eig-apost/implementation/half_guide_review|I1 review]]。
+[[research/projects/eig-apost/implementation/archive/i1-finite-tail/half_guide_review|I1 review]]。
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
@@ -62,7 +62,7 @@ complex disk 或 root isolation。现行方法见
 ## I2
 
 **Augmented Boundary Integral Equation and Center Coupling。**历史审查见
-[[research/projects/eig-apost/implementation/aug-bie-review|I2 review]]。
+[[research/projects/eig-apost/implementation/archive/i2-aug-bie/aug-bie-review|I2 review]]。
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
@@ -72,7 +72,7 @@ complex disk 或 root isolation。现行方法见
 ## I3
 
 **Root-readiness Proxy Diagnostic and Source-derived Provenance Closure。**当前审查见
-[[research/projects/eig-apost/implementation/root_readiness_review#L. Provenance-closure post-run review|I3 review Section L]]。
+[[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness_review#L. Provenance-closure post-run review|I3 review Section L]]。
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
@@ -85,11 +85,11 @@ complex disk 或 root isolation。现行方法见
 **Full Analytic Complex-Wavenumber Root-readiness。**首轮双椭圆实验的
 `REPRODUCIBLE STOP / NO_SCREENED_DIP` 保留为历史负例。当前主模型已按用户决定改为
 Fliss 相同周期端与 missing-column geometry；最新 Track A/Track B 结果见
-[[research/projects/eig-apost/implementation/i4-fliss|I4 Fliss benchmark]]。最新 sharp-disk
+[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-fliss|I4 Fliss benchmark]]。最新 sharp-disk
 Rayleigh-budget 诊断见
-[[research/projects/eig-apost/implementation/i4-rayleigh|I4 Rayleigh budget]]；最新谱提取与
+[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-rayleigh|I4 Rayleigh budget]]；最新谱提取与
 proxy-solver 诊断见
-[[research/projects/eig-apost/implementation/i4-extract|I4 spectral extraction closure]]。
+[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-extract|I4 spectral extraction closure]]。
 当前 I4 数值工作因 M0 方法重构暂停；下表保留既有数值证据和未来排程，不构成继续
 $A_{\mathrm{def}}$/locator 的授权。
 

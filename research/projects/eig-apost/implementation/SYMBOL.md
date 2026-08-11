@@ -1,5 +1,29 @@
 # Symbol and code-variable ledger
 
+## Cross-stage abbreviations and objects
+
+本节由原 implementation overview 的速查表迁入；只集中已有定义，不改变各阶段原有数学
+含义或 verdict。
+
+| 缩写或代码名 | 全称 | 在本项目中的含义 |
+|---|---|---|
+| RQ | Research Question，研究问题 | 本专题要回答的单句问题；当前指 fixed-$\beta$ 线缺陷导模波数的后验误差估计。 |
+| NEP | Nonlinear Eigenvalue Problem，非线性特征值问题 | 矩阵或算子 $F(k)$ 对谱参数 $k$ 非线性依赖，目标是寻找 $F(k)$ 的非平凡核。 |
+| DtN | Dirichlet-to-Neumann map，Dirichlet 到 Neumann 映射 | 给定半波导边界 Dirichlet trace，返回面向中心区约定下的有符号 Neumann trace。 |
+| RtR | Robin-to-Robin map，Robin 到 Robin 映射 | 将一组 Robin 边界数据映到另一组 Robin 数据；在 BIE/scattering 接口文献中作为 DtN 的替代坐标。 |
+| BIE | Boundary Integral Equation，边界积分方程 | 用边界密度表示 center cell 或 one-cell scattering field。 |
+| HG / hg-map | Half-guide / half-guide map，半波导映射 | 左或右半无限周期波导在中心截面上的反射或 DtN 对象；不是新的独立方程。 |
+| EDC cell | 仓库旧代码和报告中的历史 fixture 标签；可靠英文展开未记录 | 本项目中具体指 $k=0.10$、折射率比 3、中心圆形介质夹杂的 one-cell BIE/scattering smoke fixture；不得仅凭缩写推断其他含义。 |
+| QZ | Generalized Schur decomposition，广义 Schur 分解 | 当前主离散链中从 one-cell generalized pencil 计算 stable/unstable deflating subspaces；finite-tail/doubling 才只作 cross-check。 |
+| SVD | Singular Value Decomposition，奇异值分解 | 用于提取最小奇异方向、数值秩和 seed-frozen proxy subspaces。 |
+| CR | Cauchy--Riemann consistency，Cauchy--Riemann 一致性 | 诊断 complex-$k$ evaluator 是否表现为解析函数；有限差分通过不等于严格解析证明。 |
+| $A_{\mathrm{QP}}$ | Quasiperiodic BIE matrix，准周期边界积分矩阵 | 由 proxy Green construction 生成的 center/cell BIE 离散矩阵。 |
+| $\mathcal F(k)$ | Physical center--DtN operator function，物理中心域--DtN 算子函数 | 在 BIE representation、截断和 QZ 前定义；真实 guided eigenvalue 由 $\ker\mathcal F(k)\ne\{0\}$ 定义。 |
+| $D_{s,M},N_{s,M}$ | Decaying Cauchy-data blocks，衰减 Cauchy 数据的 Dirichlet/Neumann blocks | 由右 stable、左 unstable ordered-QZ deflating subspaces 转换得到；只有 $D_{s,M}$ chart 安全时才形成 $N_{s,M}D_{s,M}^{-1}$。 |
+| $F_{j,h}^{\mathrm{aug}}$ | Legacy augmented finite-tail matrix | 历史上把 center 和有限 tails 放在同一 block order；2026-08-11 后只作 cross-check/reference sequence。 |
+| `GO` | 该阶段冻结的窄范围验收门通过 | 只对该阶段明确列出的离散对象有效，不能自动向后续阶段传播。 |
+| `STOP` / `BLOCKED` | 上游条件未满足，后续量不可解释或不可计算 | 必须修复并重新审查；不得用调阈值或跳过检查绕过。 |
+
 ## Notation policy
 
 This ledger is frozen before implementation. Each mathematical object has one primary code
@@ -166,7 +190,7 @@ level and segment length change.
 ## Augmented BIE Stage 2 ledger
 
 This section applies only to
-[[research/projects/eig-apost/implementation/aug-bie|the Stage 2 augmented BIE design]].
+[[research/projects/eig-apost/implementation/archive/i2-aug-bie/aug-bie|the Stage 2 augmented BIE design]].
 It does not change the manufactured NEP or Stage 1 meanings above.
 
 ### Representation invariant
@@ -270,7 +294,7 @@ Dirichlet.
 ## Root-readiness diagnostic ledger
 
 This section applies only to
-[[research/projects/eig-apost/implementation/root_readiness|the root-readiness design]]
+[[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness|the root-readiness design]]
 and `test/root-ready/root_ready_diagnostic.m`. It records the corrected diagnostic
 implementation and does not change the manufactured NEP, Stage 1, or Stage 2 meanings
 above. The solver labels are `production_actual`, `pinv_default`, and
@@ -365,7 +389,7 @@ Cauchy--Riemann, root, Newton, adjacent-level, and estimator stages are
 ## Provenance-closure addendum ledger
 
 This section applies only to the pre-execution addendum in
-[[research/projects/eig-apost/implementation/root_readiness|the Root-readiness design]]
+[[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness|the Root-readiness design]]
 and the future `test/root-ready/provenance-closure/` experiment. It does not alter the
 manufactured NEP, Half-guide Stage 1, Augmented BIE Stage 2, or completed controlled-
 diagnostic meanings above.
@@ -472,7 +496,7 @@ eigenvalue, correction, estimator, effectivity, or certification claim.
 ## I4 analytic root-readiness ledger
 
 This section applies only to
-[[research/projects/eig-apost/implementation/i4-readiness|the I4 full analytic
+[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-readiness|the I4 full analytic
 complex-wavenumber Root-readiness design]] and the corresponding test-local experiment.
 It does not change the I0--I3 meanings above.
 

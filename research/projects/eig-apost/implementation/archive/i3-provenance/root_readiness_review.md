@@ -20,7 +20,7 @@
 - Version Label: eig-apost-root-readiness-review-v1.2-handoff
 - Repro Lock: null
 - Audit Target:
-  [[research/projects/eig-apost/implementation/root_readiness|Root-readiness design]]
+  [[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness|Root-readiness design]]
 
 ## A. Audit frame
 
@@ -268,7 +268,7 @@ unchanged-threshold rerun and review, is authorized.
   SHA-256 `eb116bc9a359b9a50d6804891939cdfeb2b6a17eacb8a6a2a3a8e7d29bebd82c`
 - Audit Target:
   `test/root-ready/provenance-closure/output/`, its implementation, and the
-  [[research/projects/eig-apost/implementation/root_readiness#Pre-execution provenance-closure addendum|frozen provenance-closure addendum]]
+  [[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness#Pre-execution provenance-closure addendum|frozen provenance-closure addendum]]
 - Claim Boundary: source-derived shared-system provenance at six frozen real-axis
   samples; no direct production-internal $A,b$, complex-$k$ analyticity, root,
   eigenvalue, correction, or estimator claim
@@ -281,7 +281,7 @@ designed full analytic complex-$k$ root-readiness experiment. The claimed contri
 is test infrastructure: a source-exact copy exposes the already existing collocation
 arrays, every comparison solver receives the same copy-returned pair, and the old
 numerical tolerances are retained. It is not a change to the mathematical model in
-[[research/projects/eig-apost/implementation/design|the frozen algorithm design]].
+[[research/projects/eig-apost/implementation/archive/i0-manufactured/design|the frozen algorithm design]].
 
 Success requires the frozen source/body locks, same-process bitwise public-output
 agreement, exact solver-row coverage by shared-array fingerprints, all three

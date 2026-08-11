@@ -14,9 +14,9 @@
 The question is whether the implemented one-cell scattering to finite-tail reflection and
 DtN chain meets the frozen Stage 1 gates, and whether center coupling may begin. The
 acceptance authority is
-[[research/projects/eig-apost/implementation/half_guide_map|the frozen Stage 1 design]],
+[[research/projects/eig-apost/implementation/archive/i1-finite-tail/half_guide_map|the frozen Stage 1 design]],
 with [[research/projects/eig-apost/implementation/SYMBOL|the local symbol ledger]] and
-[[research/projects/eig-apost/implementation/half_guide_review|the pre-implementation skeptic review]]
+[[research/projects/eig-apost/implementation/archive/i1-finite-tail/half_guide_review|the pre-implementation skeptic review]]
 fixing the claim boundary. The implementation and evidence inspected were
 `test/hg-map/hg_map_experiment.m`, `test/hg-map/run_hg_map_experiment.m`,
 `+bloch/construct_S.m`, and every file under `test/hg-map/output/`, including the preserved

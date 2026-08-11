@@ -7,7 +7,7 @@
 - Origin Date: 2026-08-07
 - Verification Status: VERIFIED
 - Version Label: eig-apost-i4-review-v1.0
-- Reviewed Result: [[research/projects/eig-apost/implementation/i4-result|I4 result]]
+- Reviewed Result: [[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-result|I4 result]]
 
 ## Verdict
 

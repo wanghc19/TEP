@@ -115,8 +115,8 @@ full analytic complex-$k$ Root-readiness，真实 root isolation 尚未获准。
   [[research/projects/eig-apost/implementation/open-problems|open-problem ledger]]。
 - `implementation/`：当前理论到代码的设计、符号表、实验计划和分阶段独立审查；
   最新证据与最终 delta verdict 分别见
-  [[research/projects/eig-apost/implementation/root_result|Root-readiness result]] 和
-  [[research/projects/eig-apost/implementation/root_readiness_review|Root-readiness review]]。
+  [[research/projects/eig-apost/implementation/archive/i3-provenance/root_result|Root-readiness result]] 和
+  [[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness_review|Root-readiness review]]。
 - `test/eig-apost-nep/`、`test/hg-map/`、`test/aug-bie/`、`test/root-ready/`：四个互相
   独立的 Octave 实验或受控诊断及可审计输出；I3 的当前权威输出在
   `test/root-ready/provenance-closure/output/`。当前交接、claim boundary 和下一门槛以

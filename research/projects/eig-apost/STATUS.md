@@ -83,21 +83,21 @@
 | Revised I4 Fliss missing-column benchmark, Rayleigh budget and three-path kernel audit | `PARTIAL SUCCESS`; `I4_FD_CANDIDATE_READY`; `BIE_RAYLEIGH_BUDGET_SCREENED`; `EWALD_VALUE_REFERENCE_CERTIFIED`; `EWALD_DERIVATIVE_REFERENCE_CERTIFIED`; `SLP_D_N_CERTIFIED_PROXY_RATIO_0P2`; `DLP_D_N_MTRACE48_CERTIFIED`; `PHYSICAL_ROOT_READY=STOP` | exact smooth profile 的 N80 strip 候选 $\lambda_h=3.460975044$；sharp-disk candidate windows 为 $[5,20]$、$[19,20]$；MATLAB 真 Ewald value/gradient/Hessian reference 通过；共同 $p/d=0.2$ 的四个 SLP/DLP wall actions 在 Ewald/MFS/Rayleigh 三路径上通过。DLP--D/DLP--N 最大 coefficient 误差为 $1.39\times10^{-14}$/$1.19\times10^{-13}$，DLP 四轴 self 最坏为 $1.40\times10^{-13}$，半网格有限带测试认证当前 $M_{\mathrm{trace}}=48$ | 认证只覆盖当前几何、实数非 Wood 点、两制造密度与有限 $M_{\mathrm{ref}}=96$；没有完成额外 $n_{\mathrm{tot}}/N_y$/Ewald wall ladder。package proxy 列表有一个重复角点，rank/edge-tail 仅为诊断。balanced $A_{\mathrm{def}}$/scanner、locator、root 与 estimator 未认证 |
 
 实现权威入口为
-[[research/projects/eig-apost/implementation/design|manufactured NEP design]]、
-[[research/projects/eig-apost/implementation/half_guide_map|Half-guide map design]] 和
-[[research/projects/eig-apost/implementation/aug-bie|Augmented BIE design]]；相应独立审查为
-[[research/projects/eig-apost/implementation/nep-review|manufactured NEP review]]、
-[[research/projects/eig-apost/implementation/half_guide_review|Half-guide review]]、
-[[research/projects/eig-apost/implementation/aug-bie-review|Augmented BIE review]] 和
-[[research/projects/eig-apost/implementation/root_readiness_review|Root-readiness review]]；
+[[research/projects/eig-apost/implementation/archive/i0-manufactured/design|manufactured NEP design]]、
+[[research/projects/eig-apost/implementation/archive/i1-finite-tail/half_guide_map|Half-guide map design]] 和
+[[research/projects/eig-apost/implementation/archive/i2-aug-bie/aug-bie|Augmented BIE design]]；相应独立审查为
+[[research/projects/eig-apost/implementation/archive/i0-manufactured/nep-review|manufactured NEP review]]、
+[[research/projects/eig-apost/implementation/archive/i1-finite-tail/half_guide_review|Half-guide review]]、
+[[research/projects/eig-apost/implementation/archive/i2-aug-bie/aug-bie-review|Augmented BIE review]] 和
+[[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness_review|Root-readiness review]]；
 本轮数值解释见
-[[research/projects/eig-apost/implementation/root_result|I3 Root-readiness result]]、
-[[research/projects/eig-apost/implementation/i4-result|I4 result]] 和
-[[research/projects/eig-apost/implementation/i4-review|I4 review]]；当前替换 benchmark 见
-[[research/projects/eig-apost/implementation/i4-fliss|I4 Fliss benchmark]]，最新 BIE port
-预算见 [[research/projects/eig-apost/implementation/i4-rayleigh|I4 Rayleigh budget]]，谱提取与
+[[research/projects/eig-apost/implementation/archive/i3-provenance/root_result|I3 Root-readiness result]]、
+[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-result|I4 result]] 和
+[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-review|I4 review]]；当前替换 benchmark 见
+[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-fliss|I4 Fliss benchmark]]，最新 BIE port
+预算见 [[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-rayleigh|I4 Rayleigh budget]]，谱提取与
 proxy-solver 收敛诊断见
-[[research/projects/eig-apost/implementation/i4-extract|I4 spectral extraction closure]]。
+[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-extract|I4 spectral extraction closure]]。
 
 ## 已完成
 
