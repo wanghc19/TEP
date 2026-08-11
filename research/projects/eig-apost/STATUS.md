@@ -4,9 +4,12 @@
 
 ## 当前状态
 
-- **2026-08-11 supersession：** I4 数值工作立即暂停。不得继续组装
-  $A_{\mathrm{def}}$、运行 locator、DtN wall experiment、complex disk 或 root
-  isolation。当前阶段为 `METHOD_RECONSTRUCTION / I4_NUMERICS_PAUSED`。
+- **2026-08-11 新路线 I1 discrete-design update：** I1 数值工作仍暂停。本轮没有组装
+  $A_{\mathrm{def}}$，也没有运行 locator、DtN wall experiment、complex disk 或 root
+  isolation。当前 empty-center 的离散设计已由两项独立 Skeptic 审查到
+  design-level `BLOCKER = 0`，verdict 为 `I1_A_DEF_DESIGN_PASS_WITH_CONDITIONS`。下一里程碑
+  只授权在新 `test/` 目录实现 static algebraic assembly oracle；production DtN、
+  $A_{\mathrm{def}}'$、任何 $k$ scan 和 root 工作仍不获授权。
 - 当前连续主路线为
   `exact half-guide PDE -> continuous DtN -> continuous center BIE--DtN operator
   \(\mathcal F(k)\) -> BIE/Fourier one-cell pencil -> ordered-QZ stable graph ->
@@ -17,6 +20,11 @@
   以后只作 cross-check、reference sequence 或 tail diagnostic，不定义主问题或主 estimator。
 - 现行理论稿为
   [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]；
+  该稿现已加入 original/reversed 双 QZ pass、projective infinite-pair policy、双向
+  Sylvester separation、absolute chart-margin gates，以及当前 empty-center 的
+  $2K\times2K$ safe-DtN 和 $4K\times4K$ full-graph 公式。设计与审查见
+  [[research/projects/eig-apost/implementation/i1/design|I1 discrete design]] 和
+  [[research/projects/eig-apost/implementation/i1/review|I1 design review]]。
   two-level projected difference 在没有独立 saturation/remainder 前只称
   next-level correction，不称 remaining-error estimator。
 - 本次权威变化记录于
@@ -56,18 +64,19 @@
   将 $M_{\mathrm{trace}}=48$ 的最坏误差和 omitted energy 分别压到
   $7.08\times10^{-12}$ 与 $5.00\times10^{-13}$。OP-I4-1h 与 OP-I4-6 因而在当前制造
   密度、实数非 Wood 参数和有限 $M_{\mathrm{ref}}=96$ 意义下关闭。
-- 状态：`active investigation -- numerical work paused for method reconstruction`。
+- 状态：`active investigation -- I1 discrete design passed; numerical work remains paused`。
 - 历史阶段门（均不构成当前实现授权）：manufactured root/correction pipeline 曾为窄范围
   `GO`，finite-tail Half-guide map 曾为 Stage 1 `GO`，Augmented BIE 曾为
   `STAGE2_DISCRETE_ALGEBRA_GO`；provenance-closure 曾为
   `PASS WITH CONDITIONS`，其 operational label 为
-  `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS`。当前 I4 verdict 为
+  `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS`。历史 I4 numerical verdict 为
   `PARTIAL SUCCESS -- I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
   EWALD_VALUE_REFERENCE_CERTIFIED / EWALD_DERIVATIVE_REFERENCE_CERTIFIED /
   SLP_D_N_CERTIFIED_PROXY_RATIO_0P2 / DLP_D_N_MTRACE48_CERTIFIED`；这些标签现只作为
-  已完成的离散数值证据保留，不构成继续实现的授权。OP-I4-1e 的旧授权已被方法重构
-  决定撤销；$A_{\mathrm{def}}$、scanner、real-axis locator 与 I5 root isolation 均不获授权，
-  `PHYSICAL_ROOT_READY=STOP`。现有证据支持一个可信的
+  已完成的离散数值证据保留，不构成继续实现的授权。OP-I4-1e 中旧矩阵的授权已被方法重构
+  决定撤销并由新路线 I1 设计取代；$A_{\mathrm{def}}$、scanner、real-axis locator 与 I2 root isolation 均不获授权，
+  `PHYSICAL_ROOT_READY=STOP`。新的 $A_{\mathrm{def}}^{D/G}$ 只完成理论设计，尚无实际
+  assembly matrix、qualified production half-guide graph 或 derivative。现有证据支持一个可信的
   exact-profile finite-strip eigenvalue candidate，但不支持 qualified BIE root、
   连续 kernel--field equivalence、unconditional effectivity 或 certified interval。
 
@@ -81,6 +90,7 @@
 | Root-readiness proxy diagnostic and provenance closure | `PASS WITH CONDITIONS`; historical `GO` to full analytic complex-$k$ Root-readiness, revoked 2026-08-11; `PHYSICAL_ROOT_READY=STOP` | 历史受控诊断的 $10^{-5}$ object gate 通过；新 source-exact copy 在 6 个 shared systems/30 个 solver rows 上使三个原 $10^{-11}$ output gates 以 0 误差通过；双跑数值差为 0，manifest/shared/projector fingerprints 一致 | production 内部 $A_{\mathrm{pr}},b_{\mathrm{pr}}$ 仍不可直接观测；off-collocation 与 historical projectors 非门控；未运行 complex disk、CR、root、Newton、eigenvalue 或 estimator |
 | Historical double-ellipse full analytic complex-$k$ Root-readiness | evidence `PASS WITH CONDITIONS`; scientific `REPRODUCIBLE STOP / NO_SCREENED_DIP` | 29/29 locator 点 available；$s(k)$ 从 $0.2083091449$ 严格降至 $s(0.18)=0.03539366850$；baseline/repeat 全表数值差为 0 | 已被新主模型取代；没有 interior dip 或 seed，chart/disk/factor/full-$F$ CR 未运行 |
 | Revised I4 Fliss missing-column benchmark, Rayleigh budget and three-path kernel audit | `PARTIAL SUCCESS`; `I4_FD_CANDIDATE_READY`; `BIE_RAYLEIGH_BUDGET_SCREENED`; `EWALD_VALUE_REFERENCE_CERTIFIED`; `EWALD_DERIVATIVE_REFERENCE_CERTIFIED`; `SLP_D_N_CERTIFIED_PROXY_RATIO_0P2`; `DLP_D_N_MTRACE48_CERTIFIED`; `PHYSICAL_ROOT_READY=STOP` | exact smooth profile 的 N80 strip 候选 $\lambda_h=3.460975044$；sharp-disk candidate windows 为 $[5,20]$、$[19,20]$；MATLAB 真 Ewald value/gradient/Hessian reference 通过；共同 $p/d=0.2$ 的四个 SLP/DLP wall actions 在 Ewald/MFS/Rayleigh 三路径上通过。DLP--D/DLP--N 最大 coefficient 误差为 $1.39\times10^{-14}$/$1.19\times10^{-13}$，DLP 四轴 self 最坏为 $1.40\times10^{-13}$，半网格有限带测试认证当前 $M_{\mathrm{trace}}=48$ | 认证只覆盖当前几何、实数非 Wood 点、两制造密度与有限 $M_{\mathrm{ref}}=96$；没有完成额外 $n_{\mathrm{tot}}/N_y$/Ewald wall ladder。package proxy 列表有一个重复角点，rank/edge-tail 仅为诊断。balanced $A_{\mathrm{def}}$/scanner、locator、root 与 estimator 未认证 |
+| Current I1 discrete $A_{\mathrm{def}}$ design | `I1_A_DEF_DESIGN_PASS_WITH_CONDITIONS`; `DESIGN_BLOCKER_COUNT=0`; `NUMERICS_PAUSED` | current empty center 的 $2K$ safe-DtN 和 $4K$ full-graph 公式；original/reversed QZ reference planes；regular infinite-pair policy；seed-cluster continuation；双向 Sylvester separation；absolute Dirichlet/Robin chart margins；common-$M$ dual transport；legacy block mapping；两项独立 Skeptic 复审 | 尚无 assembly matrix、production `DIF`、analytic graph tangent 或 $A_{\mathrm{def}}'$。只授权下一里程碑的新 test-local static assembly oracle；DtN wall、locator、complex disk、root 仍停止 |
 
 实现权威入口为
 [[research/projects/eig-apost/implementation/archive/i0-manufactured/design|manufactured NEP design]]、
@@ -193,6 +203,12 @@ proxy-solver 收敛诊断见
   三个标量反例与主 NEP 符号分离，并内联双侧 DtN map-difference 诊断。
 - 历史 finite-tail PDF 曾完成逐页渲染检查；当前连续 DtN/BIE `method.pdf` 已重新生成并
   另行检查。
+- 已在唯一活动目录 `implementation/i1/` 冻结离散 $A_{\mathrm{def}}$ 设计。两位
+  独立 Skeptic 先后发现并促成修复 left reversed-pair reference、双向 `DIF/sep`、
+  seed-cluster continuation 和 ratio-only chart gate；最终均报告 design-level blocker 为
+  0。稳定定义已同步写入 `method.tex`，16 页 `method.pdf` 已重新构建并逐页渲染检查。
+- 本轮未调用 Engineer、未修改或运行 `test/`、未修改 package 源码，也未组装任何实际
+  $A_{\mathrm{def}}$。下一阶段只允许新 test-local static assembly oracle。
 - 已在 `test/eig-apost-nep/` 完成 manufactured `2 x 2` analytic NEP 的 Octave 实现、
   两次确定性复现和 skeptic 审查；该实验只关闭有限维算法门。
 - 已在 `test/hg-map/` 完成 Half-guide map Stage 1：非交换代数、exact analytic cell、
@@ -331,9 +347,10 @@ proxy-solver 收敛诊断见
   $\|\Lambda-E_M\Lambda_{h,M}Q_M\|_{H^{1/2}\to H^{-1/2}}\to0$ 对一阶非紧 DtN 和有限秩
   lift 通常不可能。尚需在 projected consistency + eigentrace regularity、principal-symbol
   subtraction + compact remainder、或 regular Galerkin convergence 三条路线中证明一条。
-- 尚未执行新的 $A_{\mathrm{def}}$ 设计、locator、selected complex disk、anchored analytic
-  Rayleigh chart、factor/pole ledger、full-$F$ CR、contour isolation、bordered root refinement
-  或 adjacent-level root matching；这些工作目前均未获授权。
+- 新的 $A_{\mathrm{def}}^{D/G}$ 理论设计已完成并通过两项审查，但尚未组装。locator、
+  selected complex disk、anchored analytic Rayleigh chart、factor/pole ledger、full-$F$ CR、
+  contour isolation、bordered root refinement 或 adjacent-level root matching 仍未执行且
+  未获授权。
 - 尚未得到独立 saturation 常数和 computable correction remainder；相邻层差只能称
   next-level correction，不能称 remaining-error estimator。
 - 尚未修复并回归验证 production variable-speed density scaling；当前 ellipse 的修正
@@ -348,21 +365,24 @@ proxy-solver 收敛诊断见
 
 ## 当前门槛
 
-当前门是 `METHOD_RECONSTRUCTION / I4_NUMERICS_PAUSED`。现行方法已经具备正确层级：
+当前门是 `I1_A_DEF_DESIGN_PASS_WITH_CONDITIONS / I1_NUMERICS_PAUSED`。现行方法已经具备正确层级：
 physical half-guide PDE 定义 exact $\Lambda_\pm$，physical center variational pencil
 $\mathcal F(k)$ 在截断前定义真实根，continuous BIE 只作待证明的等价 realization，
 ordered QZ 只计算 finite pencil 的 deflating subspace。旧 finite-tail 方法已降为 legacy。
 
-恢复 I4 前必须关闭 [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]]
-中的 OP-M0-1--OP-M0-4。最便宜的顺序是：先冻结 concrete half-guide/BIE spaces、法向和
-analytic-domain exceptions；再完成 physical/BIE kernel bridge；随后写出 one-cell
-scattering pencil 到左右 Cauchy blocks 的 theory-to-code map 和 `DIF/sep`/chart gates；最后
-选定 projected DtN 到 continuous spectral approximation 的可证明路线。OP-M0-5 的
+恢复新路线 I1 的 production 数值与 locator 前仍必须关闭
+[[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]] 中的
+OP-M0-1--OP-M0-4。one-cell pencil、左右 Cauchy blocks 和 design-level
+`DIF/sep`/chart gates 已完成；最便宜的下一步仅是 test-local static assembly oracle。其后
+仍需完成 concrete analytic-domain exceptions、physical/BIE kernel bridge、production
+separation/graph-tangent qualification，并选定 projected DtN 到 continuous spectral
+approximation 的可证明路线。OP-M0-5 的
 saturation/remainder 是 `IMPORTANT CAVEAT`，不阻止先寻找 qualified discrete root，但会
 阻止 remaining-error/certification claim。
 
-因此不得把当前状态描述为“只差 balanced $A_{\mathrm{def}}$”。关闭四个 M0 blocker 后，
-还需依次完成：M1 新 $A_{\mathrm{def}}$ 与 no-pollution consistency、M2 locator/analytic
+因此不得把当前状态描述为“只差 balanced $A_{\mathrm{def}}$”。static assembly oracle
+通过后仍需关闭四个 M0 blocker，并依次完成：M1 production $A_{\mathrm{def}}$ 与
+no-pollution consistency、M2 locator/analytic
 readiness、M3 root isolation、M4 two-level correction、M5 independent reference/effectivity。
 既有 Fliss FD candidate 和 SLP/DLP/$M_{\mathrm{trace}}$ 数值证据继续保留，但不缩短上述
 理论—离散桥接链。仍不创建 `research/mainline/`，也不使用绝对优先权表述。
@@ -378,17 +398,20 @@ readiness、M3 root isolation、M4 two-level correction、M5 independent referen
   [[research/projects/eig-apost/phase1-scope/p-method|Phase 1 analytical framework]]、
   [[research/projects/eig-apost/phase2-sources/synthesis-dtn|DtN source synthesis]]、
   [[research/projects/eig-apost/phase2-sources/r-nep-error|NEP error sources]]、
+  [[research/projects/eig-apost/implementation/i1/design|current I1 discrete design]]、
+  [[research/projects/eig-apost/implementation/i1/review|current I1 review]]、
   [[research/projects/eig-apost/phase4-report/method.tex|current continuous method]]、
   [[research/projects/eig-apost/phase4-report/legacy-tail.tex|legacy finite-tail formulation]] 和
   [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]]。Phase 1--2 文件
   保持历史原文，不因本次重构回写。
-- I4 当前 verdict 是
+- 新路线 I1 当前 verdict 是
+  `I1_A_DEF_DESIGN_PASS_WITH_CONDITIONS`，并保留历史 I4 数值标签
   `PARTIAL SUCCESS -- I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
   EWALD_VALUE_REFERENCE_CERTIFIED / EWALD_DERIVATIVE_REFERENCE_CERTIFIED /
   SLP_D_N_CERTIFIED_PROXY_RATIO_0P2 / DLP_D_N_MTRACE48_CERTIFIED`；
   `REPRODUCIBLE STOP / NO_SCREENED_DIP` 只描述历史双椭圆实验。I3 的
   `root_readiness_review.md` Section L 与 `root_result.md` Section I 继续作为 provenance
-  历史边界；不得把 I3 的下一阶段授权覆盖当前 BIE blocker。
+  历史边界；不得把历史 I3 的下一阶段授权覆盖当前 BIE blocker。
 - 保持 Researcher + Engineer + Skeptic 多 subagent 协作：方法重构期以 Researcher 为主；
   Engineer 只在 TeX 构建或必要一致性检查时介入，Skeptic 独立只读审查。Skeptic
   必须按当前工程目标区分 `BLOCKER`、`IMPORTANT CAVEAT`、`MINOR CAVEAT`，只有
@@ -402,8 +425,10 @@ readiness、M3 root isolation、M4 two-level correction、M5 independent referen
   SLP_D_N_CERTIFIED_PROXY_RATIO_0P2 / DLP_D_N_MTRACE48_CERTIFIED`；
   `production_internal_A_b_identity=NOT_DIRECTLY_OBSERVED` 和
   `PHYSICAL_ROOT_READY=STOP` 保持不变。不得解释成 qualified root 或 estimator。
-- 当前不授权 OP-I4-1e 的实现。下一步只允许关闭 OP-M0-1--OP-M0-4；在此之前不得组装
-  $A_{\mathrm{def}}$，不得运行 bounded locator、DtN wall、complex disk、contour 或 root。
+- 新路线 I1 下一里程碑授权 OP-CI1-1 的最窄实现：只在新的 `test/` 目录组装 static algebraic oracle，
+  使用 manufactured graph inputs 与小型 exact Sylvester separation，验证维数、Schur、
+  basis、符号和 chart negatives。不得运行 production DtN wall、bounded locator、
+  complex disk、contour 或 root，也不得返回 production $A_{\mathrm{def}}'$。
 - 当前新增内容位于 `test/i4-rayleigh-budget/`、`test/i4-extract/`、
   `test/i4-three-path/`、`test/i4-three-path-derivatives/`、`test/i4-proxy-rule/`、
   `test/i4-dlp-trace/` 与本专题
@@ -413,7 +438,8 @@ readiness、M3 root isolation、M4 two-level correction、M5 independent referen
   $95.539849$ s 并通过顺序门。
   历史 Octave canonical 用时 $531.181285$ s。
 
-新 session 应从 OP-M0-1 的 concrete exact-DtN/analytic-domain contract 和 OP-M0-2 的
-physical/BIE kernel bridge 开始。不得以 balanced matrix 或固定点数值 sanity check 跳过
-连续—离散证明义务，也不得把当前有限 $M_{\mathrm{ref}}=96$ 制造密度认证外推为完整
+新 session 若调用 Engineer，应只实现上述 static assembly oracle；理论侧继续处理
+OP-M0-1 的 concrete exact-DtN/analytic-domain contract 和 OP-M0-2 的 physical/BIE
+kernel bridge。不得以 balanced matrix 或固定点数值 sanity check 跳过连续—离散证明义务，
+也不得把当前有限 $M_{\mathrm{ref}}=96$ 制造密度认证外推为完整
 $H^{1/2}\to H^{-1/2}$ operator-norm convergence。

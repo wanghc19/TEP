@@ -24,6 +24,41 @@
 | `GO` | 该阶段冻结的窄范围验收门通过 | 只对该阶段明确列出的离散对象有效，不能自动向后续阶段传播。 |
 | `STOP` / `BLOCKED` | 上游条件未满足，后续量不可解释或不可计算 | 必须修复并重新审查；不得用调阈值或跳过检查绕过。 |
 
+## Current I1 discrete design ledger
+
+本节只对应
+[[research/projects/eig-apost/implementation/i1/design|current I1 design]]。历史阶段
+后文的同名对象保留其原作用域；新实现必须使用本节的 row/column order 和法向。
+
+| Mathematical object | Frozen implementation name | Size | Current meaning |
+|---|---|---:|---|
+| $M$ | `trace_order` | scalar | Physical wall Fourier order; distinct from $M_{\mathrm{pw}}$ and any historical manufactured-density $M_{\mathrm{trace}}$. |
+| $K=2M+1$ | `trace_count` | scalar | Number of retained modes in order $m=-M{:}M$. |
+| $G_{D,M},G_{N,M}$ | `gram_dirichlet`, `gram_neumann` | $K\times K$ | Discrete $H^{1/2}$ and $H^{-1/2}$ Gram matrices. |
+| $\Gamma(k)$ | `Gamma` | $K\times K$ | Anchored longitudinal-wavenumber diagonal. |
+| $E(k)$ | `center_phase` | $K\times K$ | Cross-center phase $\operatorname{diag}(e^{\mathrm{i}\gamma_mW})$; no $E^{-1}$ is used. |
+| $A_{\mathrm{sc}},B_{\mathrm{sc}}$ | `A_sc`, `B_sc` | $2K\times2K$ | One-cell generalized pair with state $(a^L,b^L)$. |
+| $(\alpha,\vartheta)$ | `qz_alpha`, `qz_theta` | length $2K$ | Projective generalized eigenvalue pair; regular $\vartheta=0$ is allowed, $(0,0)$ is not. |
+| $Z_+,Z_-$ | `frame_plus`, `frame_minus` | $2K\times K$ | Independently ordered and reference-plane-transported right/left decaying frames. |
+| $D_{s,\pm},N_{s,\pm}$ | `D_graph_minus/plus`, `N_graph_minus/plus` | $K\times K$ | Center-outward discrete half-guide Cauchy blocks. |
+| $\operatorname{sep}_{\pm,u},\operatorname{sep}_{\pm,l}$ | `qz_sep_plus/minus` | two scalars per pass | Exact two-direction generalized Sylvester separations; LAPACK `DIF` estimates are recorded separately as diagnostics. |
+| $\Lambda_{\pm,h,M}$ | `dtn_minus`, `dtn_plus` | $K\times K$ | Safe-chart right-solve $N_{s,\pm}D_{s,\pm}^{-1}$; absent when chart is unsafe. |
+| $R_{\eta,\pm}$ | `rtr_minus`, `rtr_plus` | $K\times K$ | Fixed $\eta=1$ Robin realization when its chart is safe. |
+| $\operatorname{margin}_{D/R}$ | `chart_margin` | scalar per side/chart | Absolute minimum singular value of the graph-normalized Dirichlet or Robin projection; detects a nearly vertical graph. |
+| $\operatorname{cond}_{D/R}$ | `chart_solve_condition` | scalar per side/chart | Separate solve condition diagnostic; it cannot replace `chart_margin`. |
+| $q=(a_c^-,b_c^+)^{\mathsf T}$ | `center_incident` | $2K$ | Current empty-center unknown, each amplitude anchored at its own wall. |
+| $c_-,c_+$ | `graph_coeff_minus`, `graph_coeff_plus` | $K$ each | Coordinates in the left/right QZ Cauchy subspaces. |
+| $A_{\mathrm{def}}^D$ | `A_def_dtn` | $2K\times2K$ | Current safe-DtN matrix; rows left port then right port. |
+| $A_{\mathrm{def}}^G$ | `A_def_graph` | $4K\times4K$ | Current full Cauchy-relation matrix; rows left D/N then right D/N. |
+| $A_{\mathrm{def}}'$ | `dA_def_dk` | same as selected realization | Derivative of the unbalanced, fixed-frame matrix; production output remains unavailable until a graph-tangent provider is qualified. |
+| $L_0,R_0$ | `balance_left`, `balance_right` | square | Seed-frozen invertible coordinate maps; never part of the physical root definition. |
+
+Stable realization labels are `DIRICHLET_DTN`, `ROBIN_RTR`, and `CAUCHY_RELATION`.
+`QUALIFIED_HALF_GUIDE_GRAPH=false` is mandatory when adjacent-level cell error or qualified
+two-direction `DIF/sep` evidence is unavailable. `DERIVATIVE_AVAILABLE=false` is mandatory
+until an analytic graph-tangent provider is separately reviewed. No new implementation may overload the historical
+finite-tail $F_{j,h}^{\mathrm{aug}}$ name for $A_{\mathrm{def}}^{D/G}$.
+
 ## Notation policy
 
 This ledger is frozen before implementation. Each mathematical object has one primary code

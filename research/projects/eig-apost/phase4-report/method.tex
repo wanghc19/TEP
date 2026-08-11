@@ -302,29 +302,67 @@ regularity、维数、phase origin 和 normalization 必须作为离散数据记
 
 \subsection{ordered QZ 和 stable deflating subspace}
 
-在一个固定 real gap 点，right-decaying multipliers 满足 $|\lambda|<1$，left-decaying
-方向对应 positive-$x$ pencil 的 $|\lambda|>1$ cluster。只有当 pencil regular、没有
-infinite/indeterminate pair、两个 clusters 各有 $K_M$ 维且与单位圆分离时，才进行
-ordered QZ。令
+在一个固定 real gap 点，以 projective pair $(\alpha,\vartheta)$ 分类广义特征值：
+right-decaying multipliers 满足 $|\alpha|<|\vartheta|$，left-decaying 方向对应
+positive-$x$ pencil 的 $|\alpha|>|\vartheta|$ cluster。regular infinite pair
+$\vartheta=0$ 属于后一 cluster，不得一概删除；只有 numerically indeterminate pair、
+neutral pair、pencil irregularity 或错误的 cluster count 才直接失败。浮点实现先检查
+$r=(|\alpha|^2+|\vartheta|^2)^{1/2}$，只有 $r$ 超过包含 QZ backward error 的冻结阈值后
+才形成 normalized projective pair。
+
+左右图使用两次独立 ordering。右侧对 $(A_{\mathrm{sc}},B_{\mathrm{sc}})$ 排序，其
+right Schur frame 是 ordinary cell 左墙的
+$z_L=(a^L,b^L)^{\mathsf T}$。左侧对 reversed relation
+
+\[
+  B_{\mathrm{sc}}z_R=\mu A_{\mathrm{sc}}z_R,
+  \qquad \mu=1/\lambda,
+\]
+
+独立排序，其 stable right Schur frame 直接是 ordinary cell 右墙、即接触左 lead 的
+$z_R=(a^R,b^R)^{\mathsf T}$。因此 regular $\lambda=\infty$ 只成为 regular
+$\mu=0$，不需要乘以或除以 multiplier 做参考面搬运。令
 \[
   Z_s=\begin{bmatrix}A_s\\B_s\end{bmatrix},
-  \qquad |\lambda|<1,
+  \qquad Z_s\text{ at the left cell wall},
   \qquad
   Z_u=\begin{bmatrix}A_u\\B_u\end{bmatrix},
-  \qquad |\lambda|>1
+  \qquad Z_u\text{ at the right cell wall}
 \]
-分别是 right stable 和 positive-$x$ unstable right deflating subspace 的正交基。
-需要两次独立 ordering；不能把一次 upper-triangular QZ 的 trailing Schur vectors 自动
-当成 invariant subspace。
+分别表示右、左 decaying Cauchy graph 的 amplitude frames。$Z_u$ 的下标保留历史命名，
+但它来自 reversed-pair stable pass。一次 QZ 的 trailing Schur vectors 不得自动当成另一
+物理图。
 
-ordered QZ 是有限矩阵的计算方法。LAPACK 的 xTGSEN 文档明确把 reordered leading
+modulus classification 只在 real seed 选取 isolated clusters。进入一个 complex-$k$
+disk 后必须延拓同一 deflating subspaces；逐点 count、unit-circle margin 和 overlap 只作
+no-crossing gates，不能触发 pointwise reordering 或换支。任一 separation/count/overlap
+失败时整个 disk unavailable。
+
+ordered QZ 是有限矩阵的计算方法。对 original/reversed 两个 passes 分别保留 selected
+stable block $(S_{\sigma,s},T_{\sigma,s})$ 及同一 pass 的 complementary diagonal block
+$(S_{\sigma,c},T_{\sigma,c})$，$\sigma\in\{+,-\}$。两个 generalized Sylvester directions
+分别是
+\[
+\begin{aligned}
+  \mathcal L_{\sigma,u}(R,L)
+  &=(S_{\sigma,s}R-LS_{\sigma,c},
+     T_{\sigma,s}R-LT_{\sigma,c}),\\
+  \mathcal L_{\sigma,l}(R,L)
+  &=(S_{\sigma,c}R-LS_{\sigma,s},
+     T_{\sigma,c}R-LT_{\sigma,s}).
+\end{aligned}
+\]
+资格诊断必须记录两方向的 separation，并保守使用二者较小值。LAPACK 的 xTGSEN 文档明确把 reordered leading
 Schur vectors解释为相应 deflating subspaces，并以 generalized Sylvester separation
 的 reciprocal estimates 衡量 selected/unselected clusters 的条件性
 \cite{LAPACKTGSEN}。Stewart 对 $Az=\lambda Bz$ 给出了 deflating-subspace perturbation
 bounds\cite{Stewart1972}。因此本项目的误差门必须记录 cluster separation 或
-LAPACK-style \texttt{DIF/sep}；单独记录
+LAPACK-style 双向 \texttt{DIF/sep}、所用 norm、\texttt{IJOB}、\texttt{PL/PR} 和
+\texttt{INFO}。估计值只称 numerical diagnostic，不能冒充 certified lower bound；单独记录
 $\min_\lambda||\lambda|-1|$ 只是分类 margin，不是一般非正规 pencil 的完整
-subspace condition number。
+subspace condition number。若 production separation backend 尚未资格化，只允许小型
+exact-Sylvester assembly oracle，并返回
+\texttt{QUALIFIED\_HALFGUIDE\_GRAPH=false}。
 
 \subsection{Cauchy blocks 和 safe Dirichlet chart}
 
@@ -337,14 +375,39 @@ $-\ii\Gamma(a-b)$，其中 $\Gamma=\operatorname{diag}(\gamma_m)$。因此定义
   D_{s,-}&=A_u+B_u,
   &N_{s,-}&=-\ii\Gamma(A_u-B_u).\label{eq:left-cauchy}
 \end{align}
-这里 $Z_s$ 在右 half-guide 的中心接口参考面解释；$Z_u$ 是 positive-$x$ unstable
-subspace，故向负胞元方向衰减，并须搬运到左 half-guide 的中心接口参考面。若 QZ basis
-最初记录在相邻胞元的另一参考面，这一搬运必须作为共同可逆列变换显式记录；它不改变
-$\operatorname{range}[D_{s,-};N_{s,-}]$，但漏记其相位会改变 theory-to-code map。左式的
-负号来自中心域外法向 $\nu_-=-e_x$，不是由镜像对称性推断。
-这一步把 amplitude deflating subspace 转成物理 Cauchy-data subspace。只有
-$D_{s,\pm}$ 方阵且 Dirichlet chart 具有可接受的最小奇异值/reciprocal condition
-estimate 时，才显式形成
+这里 $Z_s$ 是 original pass 的左胞元墙 state，$Z_u$ 是 reversed pass 的右胞元墙
+state；二者已经分别位于接触右、左 lead 的接口参考面。对应的实现标签是
+\[
+  Z_s:\ \texttt{LEFT\_CELL\_WALL},
+  \qquad
+  Z_u:\ \texttt{RIGHT\_CELL\_WALL}.
+\]
+实现不得再用 $\lambda$ 或 $1/\lambda$ 搬运 $Z_u$。左式的负号来自中心域外法向
+$\nu_-=-e_x$，不是由镜像对称性推断。
+
+在一个固定 complex disk 上，先延拓 seed 的 isolated subspace，再消除 QZ column gauge。
+在 seed 选择固定 row extractor $H_\pm$ 后，使用
+\[
+  \widehat Z_\pm(k)
+  =Z_\pm(k)\bigl(H_\pm Z_\pm(k)\bigr)^{-1}.
+\]
+$H_\pm$ 不得在 disk 内重新选行。谱簇 overlap 或固定行 overlap 失败即停止。
+逐点 SVD/Procrustes alignment 不能定义 analytic frame。
+这一步把 amplitude deflating subspace 转成物理 Cauchy-data subspace。令
+$G_{D,M},G_{N,M}$ 为离散 $H^{1/2}$、$H^{-1/2}$ Gram matrices，并定义
+\[
+  G_{G,\pm}=D_{s,\pm}^*G_{D,M}D_{s,\pm}
+  +N_{s,\pm}^*G_{N,M}N_{s,\pm},
+  \qquad
+  \overline D_{s,\pm}
+  =G_{D,M}^{1/2}D_{s,\pm}G_{G,\pm}^{-1/2}.
+\]
+chart transversality 由 absolute margin
+$\sigma_{\min}(\overline D_{s,\pm})$ 控制，right solve roundoff 另由
+$\kappa(\overline D_{s,\pm})$ 控制。ratio-only
+reciprocal condition 不能替代 absolute margin：$D=\varepsilon,N=1$ 的 scalar graph
+虽有 condition number $1$，但 Dirichlet chart 明显趋于垂直。只有 absolute margin、
+graph-error/margin 和 solve-condition gates 同时通过时，才显式形成
 \begin{equation}
   \Lambda_{\pm,h,M}(k)
   =N_{s,\pm,M}(k)D_{s,\pm,M}(k)^{-1},
@@ -392,6 +455,9 @@ $N_s+\ii\eta J_MD_s$ 安全时使用 Robin chart
 \[
   (N_s-\ii\eta J_MD_s)(N_s+\ii\eta J_MD_s)^{-1}.
 \]
+当前 nondimensional 首选冻结 $\eta=1$；其安全性同样使用
+$G_{N,M}^{1/2}(N_s+\ii\eta J_MD_s)G_G^{-1/2}$ 的 absolute minimum singular value
+控制 transversality，并另记 solve condition。不能在 disk 内动态换 $\eta$ 或 chart。
 连续层相应使用固定 isomorphism $J:X_\pm\to Y_\pm$；若不记录 $J_M$ 及其跨层
 compatibility，$D_s$ 与 $N_s$ 的直接相加没有坐标无关的含义。
 两者都只是式\eqref{eq:exact-graph} 的离散坐标，不是新的 continuous DtN definition。
@@ -419,19 +485,125 @@ bases 下的矩阵才记为
 \[
   A_{\mathrm{def},h,M}(k).
 \]
+
+当前 I4 sharp-disk missing-column 模型的 center column 是 homogeneous empty column，
+因此 center density dimension 为 $n=0$。令 $K=K_M$、$W=X_R-X_L$，并记
+\[
+  E_c(k)=\operatorname{diag}
+  \bigl(e^{\ii\gamma_m(k)W}\bigr),
+  \qquad
+  q=\begin{bmatrix}a_c^-\\b_c^+\end{bmatrix}
+  \in\mathbb C^{2K},
+\]
+其中两个 incoming amplitudes 分别锚定在自己的 center wall。center Cauchy rows 为
+\[
+\begin{aligned}
+  D_-&=[I\ \ E_c]q,&
+  N_-&=[-\ii\Gamma\ \ \ii\Gamma E_c]q,\\
+  D_+&=[E_c\ \ I]q,&
+  N_+&=[\ii\Gamma E_c\ \ -\ii\Gamma]q.
+\end{aligned}
+\]
+当两个 Dirichlet charts 都安全时，column order 为 $(a_c^-,b_c^+)$、row order 为
+`left port, right port` 的未平衡矩阵是
+\begin{equation}
+  A_{\mathrm{def},h,M}^{D}(k)=
+  \begin{bmatrix}
+    -(\ii\Gamma+\Lambda_{-,h,M})
+    &(\ii\Gamma-\Lambda_{-,h,M})E_c\\
+    (\ii\Gamma-\Lambda_{+,h,M})E_c
+    &-(\ii\Gamma+\Lambda_{+,h,M})
+  \end{bmatrix}
+  \in\mathbb C^{2K\times2K}.
+  \label{eq:empty-dtn-adef}
+\end{equation}
+它正是 $N_\pm-\Lambda_{\pm,h,M}D_\pm=0$ 的 coefficient matrix。若 chart 不安全，
+保留 graph coordinates $c_-,c_+$，column order
+$(a_c^-,b_c^+,c_-,c_+)$ 与 row order `left D, left N, right D, right N` 给出
+\begin{equation}
+  A_{\mathrm{def},h,M}^{G}(k)=
+  \begin{bmatrix}
+    I&E_c&-D_{s,-}&0\\
+    -\ii\Gamma&\ii\Gamma E_c&-N_{s,-}&0\\
+    E_c&I&0&-D_{s,+}\\
+    \ii\Gamma E_c&-\ii\Gamma&0&-N_{s,+}
+  \end{bmatrix}
+  \in\mathbb C^{4K\times4K}.
+  \label{eq:empty-graph-adef}
+\end{equation}
+当 $D_{s,-},D_{s,+}$ 可逆时，对 $c_-,c_+$ 做 exact Schur elimination 就得到
+式\eqref{eq:empty-dtn-adef}。式\eqref{eq:empty-graph-adef} 不含 exponentially growing
+$E_c^{-1}$；它与历史 $M=5$ 时的 $44\times44$ matrix 只有尺寸相同，half-guide rows
+和 amplitude anchoring 已经不同。
+
+未来若 center inclusion 使 $n>0$，才引入 scaled density $\xi\in\mathbb C^n$ 和
+\[
+  A_c\xi+B_La_c^-+B_Rb_c^+=0.
+\]
+令 $D_{\xi,\pm},N_{\xi,\pm}\in\mathbb C^{K\times n}$ 为完整
+density-to-wall Cauchy maps，并在 unknown order $(\xi,a_c^-,b_c^+)$ 上定义
+\[
+\begin{aligned}
+ C_{D,-}&=[D_{\xi,-}\ \ I\ \ E_c],&
+ C_{N,-}&=[N_{\xi,-}\ \ -\ii\Gamma\ \ \ii\Gamma E_c],\\
+ C_{D,+}&=[D_{\xi,+}\ \ E_c\ \ I],&
+ C_{N,+}&=[N_{\xi,+}\ \ \ii\Gamma E_c\ \ -\ii\Gamma].
+\end{aligned}
+\]
+则 conditional safe-DtN extension 为
+\begin{equation}
+  A_{\mathrm{def},h,M}^{D}=
+  \begin{bmatrix}
+    A_c&B_L&B_R\\
+    C_{N,-}-\Lambda_{-,h,M}C_{D,-}\\
+    C_{N,+}-\Lambda_{+,h,M}C_{D,+}
+  \end{bmatrix}
+  \in\mathbb C^{(n+2K)\times(n+2K)}.
+  \label{eq:general-dtn-adef}
+\end{equation}
+它的 full graph parent 使用 unknown order
+$(\xi,a_c^-,b_c^+,c_-,c_+)$，先放 $A_c,B_L,B_R$ row，再放左右 D/N matching rows，
+尺寸为 $(n+4K)\times(n+4K)$；消去 $c_\pm$ 精确得到
+式\eqref{eq:general-dtn-adef}。旧 extractors 只在共同 phase/mode/density coordinates 下
+给出
+$D_{\xi,-}=\mathcal E_L$、$N_{\xi,-}=\ii\Gamma\mathcal E_L$、
+$D_{\xi,+}=\mathcal E_R$、$N_{\xi,+}=\ii\Gamma\mathcal E_R$，其中
+$\mathcal E_{L/R}=\mathcal E_{L/R}^{\mathrm{phys}}D_h^{-1}$。这一 $n>0$ extension
+仍受 continuous kernel--field bridge 限制，不属于当前 empty-center claim。
+
 这才是未来 $A_{\mathrm{def}}$ 的定义：它首先是 $\cF_{\mathrm{BIE}}(k)$ 的离散矩阵；只有
 kernel--field bridge 和 regular approximation 成立后，才可称为 physical
 $\cF(k)$ 的离散表示。为排除 spectral pollution，除 consistency 外还必须证明 uniform
 stability/discrete inf--sup 或相应 resolvent convergence。它不以自身的近奇异性定义新的
-连续谱问题。若
+连续谱问题。
+
+在 anchored Rayleigh branch 上，
+\[
+  \gamma_m'(k)=\frac{k}{\gamma_m(k)},
+  \qquad E_c'(k)=\ii W\Gamma'(k)E_c(k),
+  \qquad
+  \Lambda_{\pm,h,M}'
+  =(N_{s,\pm}'-\Lambda_{\pm,h,M}D_{s,\pm}')D_{s,\pm}^{-1}.
+\]
+$A_{\mathrm{def}}'$ 必须包含 center blocks、$\Gamma$、$E_c$、continued deflating
+subspace、chart 和 DtN/RtR 的全部导数。当前尚未冻结 analytic subspace-tangent solver，
+故 production 接口必须返回
+\[
+  \texttt{DERIVATIVE\_AVAILABLE}=\texttt{false}.
+\]
+manufactured-frame finite differences 只能作未来 oracle，不能定义该导数。
+
+若
 $L_{h,M}$、$R_{h,M}$ 可逆，block-balanced matrix
 \[
   \widetilde A_{\mathrm{def},h,M}(k)
   =L_{h,M}(k)A_{\mathrm{def},h,M}(k)R_{h,M}(k)
 \]
-只是 residual 和 unknown 的坐标变换。它不改变 pointwise kernel/root；若 balancing
-依赖 $k$ 或 level，则导数、左右向量和 two-level comparison 必须一致地包含这些变换，
-不能把 balancing 写入真实 eigenvalue 的定义。
+只是 residual 和 unknown 的坐标变换。首版在一个 disk 上使用 seed-frozen
+$L_0,R_0$，于是 $\widetilde A'=L_0A'R_0$；右向量和左 row covector 分别按
+$x=R_0\widetilde x$、$\ell^*=\widetilde\ell^*L_0$ 搬回。它不改变 pointwise
+kernel/root；若 balancing 依赖 $k$ 或 level，则导数、左右向量和 two-level comparison
+必须一致地包含完整 product rule，不能把 balancing 写入真实 eigenvalue 的定义。
 
 \section{operator-level 误差分解}
 
@@ -440,7 +612,10 @@ $L_{h,M}$、$R_{h,M}$ 可逆，block-balanced matrix
 令 $Q_M^D:X_\pm\to\mathbb C^{K_M}$ 是 Dirichlet Fourier coefficient map，
 $E_M^D:\mathbb C^{K_M}\to X_\pm$ 是 synthesis；$Q_M^N,E_M^N$ 是与
 $X_\pm$--$Y_\pm$ duality 相容的 Neumann maps。系数空间分别使用离散
-$H^{1/2}$ 和 $H^{-1/2}$ 加权范数。精确 DtN 在该有限 trace space 上的压缩是
+$H^{1/2}$ 和 $H^{-1/2}$ 加权范数。系数 duality 冻结为
+$\langle n,d\rangle_{N,D}=d^*n$。若 $P_{M\to M'}^D$ 是 $M'>M$ 的 Dirichlet
+zero-padding，则 dual-compatible Neumann restriction 必须是
+$R_{M'\to M}^N=(P_{M\to M'}^D)^*$；不能另选未记录的截断。精确 DtN 在该有限 trace space 上的压缩是
 \begin{equation}
   \Lambda_{\pm,M}^{\mathrm{ex}}(k)
   :=Q_M^N\Lambda_\pm(k)E_M^D:
@@ -772,18 +947,21 @@ finite-tail projected correction 的全部历史推导。它在新路线中只�
 它不再定义 exact-half-guide lift，不再把 $k_{\infty,h}$ 当作连续谱对象，也不再以
 finite-tail level difference 定义主 estimator。
 
-\section{恢复数值 I4 前的最小理论门}
+\section{恢复 production I4 前的最小理论门}
 
-新框架已经足以重新设计 $A_{\mathrm{def}}$ 的 block roles，但尚未授权组装或 locator。
-恢复 I4 前至少需要关闭以下 formulation blockers。
+新框架已经冻结 $A_{\mathrm{def}}^{D/G}$ 的 block roles，并通过两项独立 design review。
+下一步只授权 test-local static assembly oracle；production half-guide、导数和 locator 仍未
+授权。恢复 production I4 前至少需要关闭以下 formulation blockers。
 \begin{enumerate}
   \item 冻结式\eqref{eq:continuous-pencil} 的具体中心 BIE spaces、wall trace rows、
   source/target normal signs 和 Fliss/code sign map；先保持 physical
   式\eqref{eq:continuous-pencil} 为真实问题，再给出 BIE kernel--field equivalence 的证明
   或明确的数值论文级替代门。
-  \item 写出 package/test one-cell scattering blocks 到式\eqref{eq:cell-pencil}、
-  式\eqref{eq:right-cauchy}--\eqref{eq:left-cauchy} 的逐块 theory-to-code map；预注册
-  regularity、stable/unstable count、\texttt{DIF/sep} 和 graph residual gates。
+  \item 用 static oracle 实现式\eqref{eq:cell-pencil}、
+  式\eqref{eq:right-cauchy}--\eqref{eq:left-cauchy} 和
+  式\eqref{eq:empty-dtn-adef}--\eqref{eq:empty-graph-adef} 的逐块 map；随后另行资格化
+  production original/reversed QZ、双向 \texttt{DIF/sep}、graph residual 和固定
+  subspace tangent。unit-circle gap 不能替代这些对象。
   \item 对每个 $k$ 选择 safe DtN chart；否则改用增广 Cauchy relation 或 Robin
   realization。冻结 impedance map $J_M$，不能在 Dirichlet chart 失效后继续形成
   $N_sD_s^{-1}$。
@@ -795,8 +973,8 @@ finite-tail level difference 定义主 estimator。
   任何 $\sigma_{\min}$ dip。
 \end{enumerate}
 
-全部门关闭以后，I4 才能按“构造一个由式\eqref{eq:continuous-pencil} 派生的 balanced
-matrix evaluator，再做 bounded locator 和 analytic-disk readiness”的顺序恢复。
+全部 production 门关闭以后，I4 才能按“构造一个由式\eqref{eq:continuous-pencil} 派生的
+balanced matrix evaluator，再做 bounded locator 和 analytic-disk readiness”的顺序恢复。
 operator convergence、saturation 和 certified remainder 可以晚于第一个真实 root，
 但若它们未闭合，后续结果只能是 qualified discrete root 和 empirical correction，
 不能声称 theorem-level estimator 或 certified interval。

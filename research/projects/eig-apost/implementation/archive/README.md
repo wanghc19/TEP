@@ -12,7 +12,7 @@
 | [[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/README\|I4 numerical qualification]] | 历史数值资格与部件证据；I4 数值暂停 | [[test/README#I4-ANALYTIC-READINESS-V1\|I4 analytic readiness]] 至 [[test/README#I4-DLP-TRACE-V1\|I4 DLP/trace]] 的统一索引 |
 
 当前路线和阅读入口见
-[[research/projects/eig-apost/implementation/current/README|current implementation guidance]]；
+[[research/projects/eig-apost/implementation/README|current implementation guidance]]；
 未解决问题仍只在
 [[research/projects/eig-apost/implementation/open-problems|top-level ledger]] 维护。
 
