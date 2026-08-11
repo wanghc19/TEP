@@ -17,8 +17,8 @@ Cayley/DtN 离散代数。历史 Stage 1 verdict 保留，但它不再定义精�
 
 ## 实验产物入口
 
-- 实验目录：`test/hg-map/`
-- 报告：[[test/hg-map/output/report|half-guide map report]]
+- 统一入口：[[test/README#I1-HG-MAP-V1|I1-HG-MAP-V1 half-guide map experiment]]。
+- 当前物理路径、入口函数和权威报告只在统一实验索引维护。
 
 ## 复用和替代关系
 

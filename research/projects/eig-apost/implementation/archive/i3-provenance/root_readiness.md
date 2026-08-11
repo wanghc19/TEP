@@ -12,8 +12,8 @@
 - Git Base: d699ae9ffa2d9f9a23c0d1cdd58fffc00357162b
 
 This document freezes the experiment immediately after
-[[research/projects/eig-apost/implementation/archive/i2-aug-bie/aug-bie-review|the Stage 2 augmented BIE
-review]]. Its governing mathematical sources are
+[[research/projects/eig-apost/implementation/archive/i2-aug-bie/aug-bie-review|the Stage 2 augmented BIE review]].
+Its governing mathematical sources are
 [[research/projects/eig-apost/phase3-analysis/s-root|root qualification]],
 [[research/projects/eig-apost/phase3-analysis/s-estimator|the candidate estimator]], and
 [[research/projects/eig-apost/phase4-report/method.tex|the Phase 4 method]]. The target
@@ -30,8 +30,8 @@ this version.
 > controlled diagnostic is complete; see
 > [[research/projects/eig-apost/implementation/archive/i3-provenance/root_result|the post-experiment result]]
 > and
-> [[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness_review|the Root-readiness
-> review]]. The operational state is
+> [[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness_review|the Root-readiness review]].
+> The operational state is
 > `ROOT_READINESS=BLOCKED_UPSTREAM_PROVENANCE` and `PHYSICAL_ROOT_READY=STOP` because
 > the production helper's internal $A_{\mathrm{pr}},b_{\mathrm{pr}}$ identity remains
 > `NOT_OBSERVABLE_WITH_CURRENT_INTERFACE`. The next root-search stage is not authorized.
@@ -562,8 +562,7 @@ saturation and remainder bounds specified in the Phase 3 estimator analysis.
 - Governing Result:
   [[research/projects/eig-apost/implementation/archive/i3-provenance/root_result|Root-readiness result]]
 - Governing Review:
-  [[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness_review|Root-readiness
-  review]]
+  [[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness_review|Root-readiness review]]
 - Symbol Authority:
   [[research/projects/eig-apost/implementation/SYMBOL|Symbol and code-variable ledger]]
 

@@ -176,5 +176,6 @@ is also required; the sharp-disk surrogate cannot inherit the Track A candidate.
 
 The benchmark does not provide a fixed analytic chart, pole-free complex disk, contour
 root count, bordered Newton root, eigenvalue estimator, or effectivity. Those objects
-remain downstream gates in [[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-result|the
-historical I4 result]] and the project ledger.
+remain downstream gates in
+[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-result|the historical I4 result]]
+and the project ledger.

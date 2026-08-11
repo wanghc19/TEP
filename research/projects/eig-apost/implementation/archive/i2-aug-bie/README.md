@@ -14,9 +14,8 @@ I2 是历史 augmented BIE 与 finite-tail center coupling 的离散代数阶段
 
 ## 实验产物入口
 
-- 实验目录：`test/aug-bie/`
-- 入口函数：`test/aug-bie/run_aug_bie_experiment.m`
-- 报告：[[test/aug-bie/output/report|augmented BIE report]]
+- 统一入口：[[test/README#I2-AUG-BIE-V1|I2-AUG-BIE-V1 augmented BIE experiment]]。
+- 当前物理路径、入口函数和权威报告只在统一实验索引维护。
 
 ## 复用和替代关系
 

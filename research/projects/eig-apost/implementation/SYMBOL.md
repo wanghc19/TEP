@@ -496,8 +496,8 @@ eigenvalue, correction, estimator, effectivity, or certification claim.
 ## I4 analytic root-readiness ledger
 
 This section applies only to
-[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-readiness|the I4 full analytic
-complex-wavenumber Root-readiness design]] and the corresponding test-local experiment.
+[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-readiness|the I4 full analytic complex-wavenumber Root-readiness design]]
+and the corresponding test-local experiment.
 It does not change the I0--I3 meanings above.
 
 ### Representation invariant

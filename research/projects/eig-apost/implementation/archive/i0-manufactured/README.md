@@ -17,9 +17,8 @@ guided mode。当前仍可作为 root/correction 算法单元测试，但不支�
 
 ## 实验产物入口
 
-- 实验说明：[[test/eig-apost-nep/README|test/eig-apost-nep/]]
-- 入口函数：`test/eig-apost-nep/run_manufactured_nep.m`
-- 报告：[[test/eig-apost-nep/output/report|manufactured NEP report]]
+- 统一入口：[[test/README#I0-NEP-V1|I0-NEP-V1 manufactured NEP experiment]]。
+- 当前物理路径、入口函数和权威报告只在统一实验索引维护。
 
 ## 复用和替代关系
 

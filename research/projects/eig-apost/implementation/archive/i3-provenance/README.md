@@ -17,10 +17,9 @@
 
 ## 实验产物入口
 
-- 受控诊断：`test/root-ready/output/`
-- provenance closure：`test/root-ready/provenance-closure/output/`
-- 最终 repeat 报告：
-  [[test/root-ready/provenance-closure/output/repeat/report|provenance repeat report]]
+- 受控诊断：[[test/README#I3-PROXY-DIAG-V1|I3-PROXY-DIAG-V1]]。
+- 最终 provenance closure：[[test/README#I3-PROVENANCE-V1|I3-PROVENANCE-V1]]。
+- 当前物理路径、入口函数和权威 repeat 报告只在统一实验索引维护。
 
 ## 复用和替代关系
 

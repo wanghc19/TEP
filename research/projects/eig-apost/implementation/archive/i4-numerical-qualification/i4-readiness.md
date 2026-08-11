@@ -17,8 +17,8 @@
 
 This document freezes the smallest full analytic complex-$k$ experiment needed to
 resolve `OP-I4-1`. It instantiates the dormant re-entry protocol in
-[[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness|the I3 Root-readiness
-design]] after the accepted source-derived provenance closure. The governing root
+[[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness|the I3 Root-readiness design]]
+after the accepted source-derived provenance closure. The governing root
 qualification logic remains
 [[research/projects/eig-apost/phase3-analysis/s-root|the Phase 3 root protocol]] and
 [[research/projects/eig-apost/phase4-report/method.tex|the integrated method]].

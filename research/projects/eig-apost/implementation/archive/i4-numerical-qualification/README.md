@@ -25,15 +25,25 @@ DtN wall、locator、complex disk 或 root isolation。
 ## 实验产物入口
 
 - 历史 analytic readiness：
-  [[test/root-ready/analytic-readiness/output/repeat/report|repeat report]]
-- Fliss benchmark：[[test/i4-fliss-2013/README|test/i4-fliss-2013/]]
-- Rayleigh budget：[[test/i4-rayleigh-budget/README|test/i4-rayleigh-budget/]]
-- extraction/proxy diagnostics：[[test/i4-extract/README|test/i4-extract/]]
-- Ewald value audit：[[test/i4-three-path/README|test/i4-three-path/]]
-- derivative/action audit：
-  [[test/i4-three-path-derivatives/README|test/i4-three-path-derivatives/]]
-- singularity-aware proxy rule：[[test/i4-proxy-rule/README|test/i4-proxy-rule/]]
-- DLP and trace qualification：[[test/i4-dlp-trace/README|test/i4-dlp-trace/]]
+  [[test/README#I4-ANALYTIC-READINESS-V1|I4-ANALYTIC-READINESS-V1]]。
+- Fliss finite-difference 与 sharp-disk diagnostics：
+  [[test/README#I4-FLISS-BASE-V1|I4-FLISS-BASE-V1]]、
+  [[test/README#I4-FLISS-EDGE-V1|I4-FLISS-EDGE-V1]]、
+  [[test/README#I4-SHARP-PENCIL-V1|I4-SHARP-PENCIL-V1]]、
+  [[test/README#I4-BIDIR-PENCIL-V1|I4-BIDIR-PENCIL-V1]]。
+- Rayleigh budget：[[test/README#I4-RAYLEIGH-BUDGET-V1|I4-RAYLEIGH-BUDGET-V1]]。
+- extraction 与 solver diagnostics：[[test/README#I4-EXTRACT-V1|I4-EXTRACT-V1]]、
+  [[test/README#I4-PROXY-SOLVER-V1|I4-PROXY-SOLVER-V1]]。
+- Ewald/MFS/Rayleigh value、derivative 与 action audits：
+  [[test/README#I4-THREE-PATH-V1|I4-THREE-PATH-V1]]、
+  [[test/README#I4-DERIVATIVE-ACTIONS-V1|I4-DERIVATIVE-ACTIONS-V1]]、
+  [[test/README#I4-PACKAGE-POINT-V1|I4-PACKAGE-POINT-V1]]。
+- singularity-aware proxy rule：
+  [[test/README#I4-PROXY-RULE-V1|I4-PROXY-RULE-V1]]。
+- DLP and trace qualification：
+  [[test/README#I4-DLP-TRACE-V1|I4-DLP-TRACE-V1]]。
+
+当前物理路径、入口函数和权威报告只在统一实验索引维护。
 
 ## 复用和替代关系
 
