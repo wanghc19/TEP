@@ -1,0 +1,3 @@
+"object","status","category","note"
+"production_separation","NOT_EVALUATED_CAVEAT","IMPORTANT CAVEAT","No dense or matrix-free Sylvester operator is formed or applied."
+"locator_root","NOT_AUTHORIZED","BLOCKER","Static I1.2 does not run a locator, contour, root isolation, or estimator."

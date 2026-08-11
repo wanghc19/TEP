@@ -1,0 +1,40 @@
+# Half-guide to A-def pilot report
+
+- Status: `I1_2_PASS_LOW_ORDER`
+- Manufactured K: `3`
+- Real K: `11 (M=5), 17 (M=8)`
+- Algebra tolerance: `6.6613381477509392e-13`
+- Mutation threshold: `1e-08`
+- `derivative_available`: `false`
+- Runtime: `MATLAB 23.2.0.2365128 (R2023b)`
+- Git SHA: `807e9ed559c8e2f471d1e3e6eefe9dd80f3e89c6`
+- Real scope: `LOW_ORDER_M5_M8_NOT_PRODUCTION_MTRACE48`
+- Config snapshot: `K=3, W=0.42999999999999999, graph_error=1.0000000000000001e-18, unsafe_D=9.9999999999999998e-13`
+
+| Category | Gate | Status | Pass |
+|---|---|---|---:|
+| manufactured | dimensions | PASS | 1 |
+| manufactured | cell_pair_formula | PASS | 1 |
+| manufactured | left_right_cauchy_signs | PASS | 1 |
+| manufactured | graph_dtn_schur | PASS | 1 |
+| manufactured | graph_basis_invariance | PASS | 1 |
+| manufactured | safe_dirichlet_chart | PASS | 1 |
+| manufactured | unsafe_dirichlet_retains_graph | PASS | 1 |
+| manufactured | projective_pair_policy | PASS | 1 |
+| manufactured | projective_scaling | PASS | 1 |
+| manufactured | registered_negatives | PASS | 1 |
+| real | cell_input_provenance | PASS | 1 |
+| real | reference_wall_labels | PASS | 1 |
+| real | real_qz | PASS | 1 |
+| real | real_reference_wall | PASS | 1 |
+| real | wall_graph_swap | PASS | 1 |
+| real | real_halfguide_graph | PASS | 1 |
+| real | m5_m8_action | PASS | 1 |
+| real | real_dtn | PASS | 1 |
+| real | real_adef | PASS | 1 |
+
+Preflight status is `PASS`; later real gates retain their recorded statuses above.
+
+This pilot contains no locator, root claim, or estimator.
+The input provenance is generator self-attestation checked by source hashes; it is not an independent solver audit.
+M=5/8 is a low-order mechanism test and does not authorize production M_trace=48.
