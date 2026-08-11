@@ -5,8 +5,8 @@
 - Origin Skill: academic-research-suite/experiment-agent
 - Origin Mode: handoff
 - Origin Date: 2026-08-07
-- Verification Status: VERIFIED THROUGH I4 THREE-PATH VALUE AUDIT
-- Version Label: eig-apost-stage-overview-v1.3
+- Verification Status: METHOD RECONSTRUCTION REVIEWED; I4 NUMERICS PAUSED
+- Version Label: eig-apost-stage-overview-v1.4
 - Repro Lock: null
 
 本文件是 `eig-apost` 专题从研究问题到当前数值实现状态的导航页。它回答“每一阶段为何
@@ -38,8 +38,8 @@ stage review 后只追加指向对应 stage 小节的 handoff 链接，不在各
   -> search-bounded 新颖性门
   -> root / estimator 数学方案
   -> I0: manufactured root-and-correction algorithm
-  -> I1: finite-tail half-guide DtN map
-  -> I2: augmented BIE center coupling
+  -> I1: legacy finite-tail half-guide-map algebra
+  -> I2: legacy augmented finite-tail center coupling
   -> I3a: Root-readiness proxy diagnostic
        [historical result: REVISE / BLOCKED_UPSTREAM_PROVENANCE]
   -> I3b: Source-derived proxy provenance closure
@@ -47,9 +47,12 @@ stage review 后只追加指向对应 stage 小节的 handoff 链接，不在各
   -> I4: Full analytic complex-k root-readiness
        [historical double ellipse: REPRODUCIBLE STOP / NO_SCREENED_DIP]
        [current Fliss benchmark: FD CANDIDATE READY]
-       [sharp disk: RAYLEIGH BUDGET SCREENED / TRACE EXTRACTOR BLOCKED]
-  -> future: extractor closure + balanced A_def -> locator -> analytic readiness -> root isolation
-             -> empirical estimator -> real-case validation
+       [sharp disk: SLP/DLP and finite M_trace screens passed]
+  -> M0: continuous DtN/BIE method reconstruction
+       [current: exact PDE-defined DtN -> continuous F(k) -> discrete QZ/DtN]
+       [I4 NUMERICS PAUSED; finite-tail formulation is legacy/cross-check]
+  -> future after M0 blockers: redesign A_def -> locator -> analytic readiness
+             -> root isolation -> empirical correction -> independent reference
 ```
 
 ## 研究准备阶段：Phase 1--4
@@ -60,7 +63,7 @@ stage review 后只追加指向对应 stage 小节的 handoff 链接，不在各
 | **Phase 2 — Source Investigation for Dirichlet-to-Neumann Maps, Boundary Integral Equations, and Nonlinear Eigenvalue Error（DtN、BIE 与非线性特征值误差的来源调查）** | 核验 half-guide DtN 的定义与构造、BIE 到 Robin-to-Robin map（RtR，Robin 数据到 Robin 数据的边界映射）的接口，以及 simple nonlinear eigenvalue correction 的理论来源。 | 区分 DtN 的边值问题定义与 Riccati/doubling 构造；核验 BIE cell map、半波导传播和 simple-root perturbation 依据；明确相邻层级差必须在 saturation/remainder 条件下才能解释为剩余误差。 | [[research/projects/eig-apost/phase2-sources/README|Phase 2 overview]]；[[research/projects/eig-apost/phase2-sources/synthesis-dtn|source synthesis]] |
 | **Phase 2b — Search-bounded Novelty Gate（有检索边界的新颖性门）** | 判断候选贡献是否只是已有 BIE、DtN、doubling 或通用 estimator 的重新组合。 | 结论为 `PASS WITH CONDITIONS`。不能宣称一般导模 estimator、BIE cell map 或 doubling 本身新颖；可继续研究的窄缺口是 numerical half-guide DtN error 到 fixed-$\beta$ guided eigenvalue shift 的 computable correction/effectivity。 | [[research/projects/eig-apost/phase2b-novelty/README|novelty overview]]；[[research/projects/eig-apost/phase2b-novelty/r-gate|novelty verdict]] |
 | **Phase 3 — Mathematical Error Decomposition, Root Qualification, and Experiment Design（误差分解、根资格判定和实验设计）** | 把文献结论转成可实现、可反驳的算法：怎样区分实轴奇异值低谷和真实根，怎样定义 estimator，怎样分离误差来源。 | 设计 fixed-representation augmented nonlinear eigenvalue problem、anchored analytic branch、contour count、bordered Newton、adjacent-level projected correction、error budget、双椭圆 benchmark 和 independent-reference ladder。所有 estimator/effectivity 结论保持条件化。 | [[research/projects/eig-apost/phase3-analysis/README|Phase 3 overview]]；[[research/projects/eig-apost/phase3-analysis/s-root|root qualification]]；[[research/projects/eig-apost/phase3-analysis/s-estimator|candidate estimator]] |
-| **Phase 4 — Integrated Method Draft and Mathematical Review（综合方法稿与数学审查）** | 将 Phase 2--3 的定义、算法、条件和停止规则整理成一次性可读的方法文稿，并检查 writer 是否改变数学逻辑。 | 形成 `method.tex`；独立 Skeptic 检查 root search、augmented equations、projected correction、coarse/fine error 含义和 reliable-interval 条件，最终为 `PASS WITH CONDITIONS`。它是方法设计，不是已验证的真实案例。 | [[research/projects/eig-apost/phase4-report/method.tex|integrated method draft]] |
+| **Phase 4 — Continuous DtN/BIE Method Reconstruction（连续 DtN/BIE 方法重构）** | 恢复 Phase 1--2 的方法承诺：连续 DtN 和连续耦合算子必须先于有限 trace、QZ、doubling 和矩阵。 | 现行 `method.tex` 先定义精确 half-guide DtN、连续 $\mathcal F(k)$、outgoing Cauchy graph 和离散 QZ--DtN 链；旧的 finite-tail/doubling 稿完整归档为 superseded legacy。当前是受审查的理论设计，不是 root 或 estimator 结果。 | [[research/projects/eig-apost/phase4-report/method.tex|current continuous method]]；[[research/projects/eig-apost/phase4-report/legacy-tail.tex|legacy finite-tail formulation]] |
 
 ## 数值实现阶段：I0--I4
 
@@ -83,11 +86,11 @@ stage review 后只追加指向对应 stage 小节的 handoff 链接，不在各
   [[research/projects/eig-apost/implementation/open-problems#I0|I0 open problems]]；
   `test/eig-apost-nep/output/report.md`。
 
-### I1 — Finite-tail Half-guide Dirichlet-to-Neumann Map
+### I1 — Legacy Finite-tail Half-guide-map Algebra
 
-全称含义：**由有限周期尾段逼近半无限波导的 Dirichlet-to-Neumann map（Dirichlet 数据到
-外法向导数的映射）**。旧称 `hg-map` 或 `Half-guide map`；这里的 `HG` 只是
-half-guide，不是另一个数学对象。
+全称含义：**有限周期尾段的 half-guide-map 离散代数实验**。旧称 `hg-map` 或
+`Half-guide map`；这里的 `HG` 只是 half-guide。2026-08-11 supersession 后，本实验只作
+same-cell infinity-treatment cross-check，不定义精确 DtN，也不再承担主 estimator 层级。
 
 - 做了什么：从 one-cell scattering blocks 出发，实现非交换 Redheffer composition、
   recursive doubling、zero-incoming/Dirichlet/Robin terminal closure 和 Cayley transform；
@@ -101,7 +104,8 @@ half-guide，不是另一个数学对象。
   不是独立 physical DtN truth；没有 center defect coupling、频率区间证明、map
   convergence theorem、eigenvalue 或 estimator。仓库历史材料没有给出 `EDC` 的可靠全称，
   因此本概述不猜测其展开，而用实际 fixture 的几何和材料含义描述它。
-- 状态：Stage 1 `GO`；artifact-level reproducibility 仍为部分完成。
+- 状态：历史 Stage 1 `GO`；只保留为 legacy/cross-check，artifact-level reproducibility
+  仍为部分完成。
 - 入口：[[research/projects/eig-apost/implementation/half_guide_map|I1 design]]；
   [[research/projects/eig-apost/implementation/half_guide_result|I1 result]]；
   [[research/projects/eig-apost/implementation/half_guide_review|I1 review]]；
@@ -111,7 +115,7 @@ half-guide，不是另一个数学对象。
 ### I2 — Augmented Boundary Integral Equation and Center Coupling
 
 全称含义：**增广边界积分方程（Augmented Boundary Integral Equation, Augmented BIE）与
-缺陷中心胞元—左右有限周期尾段耦合**。旧称 `aug-bie` 或 `Center coupling`；其目标不是
+缺陷中心胞元—左右有限周期尾段耦合**。旧称 `aug-bie` 或 `Center coupling`；其历史目标不是
 再造一个 BIE，而是把 center BIE、Rayleigh port amplitudes 和 finite-tail scattering
 equations 组装成同一固定维数矩阵。
 
@@ -126,7 +130,8 @@ equations 组装成同一固定维数矩阵。
 - 没有验证什么：没有证明 continuous BIE kernel--field equivalence 或 representation
   injectivity；实际 ellipse 是 unscreened interface smoke；没有 analytic neighborhood、
   complex root、eigenvalue 或 estimator。
-- 状态：离散代数 `GO`，但 `ROOT_READY=STOP`。
+- 状态：历史离散代数 `GO`，但该 finite-tail matrix 不再定义当前主问题，
+  `ROOT_READY=STOP`。
 - 入口：[[research/projects/eig-apost/implementation/aug-bie|I2 design]]；
   [[research/projects/eig-apost/implementation/aug-bie-review|I2 review]]；
   [[research/projects/eig-apost/implementation/open-problems#I2|I2 open problems]]；
@@ -158,9 +163,10 @@ equations 组装成同一固定维数矩阵。
   pole ledger、contour root count、Newton、eigenvalue 或 estimator。
 - 状态：第一轮独立 mirrored-constructor 诊断的历史 verdict 保持
   `REVISE / BLOCKED_UPSTREAM_PROVENANCE`；新的 provenance-closure 经 Researcher、
-  Engineer 和 Skeptic 审查为 `PASS WITH CONDITIONS`，gate decision 为
-  `GO -- FULL_ANALYTIC_COMPLEX_K_ROOT_READINESS ONLY`。这只解除进入下一设计门的
-  operational provenance 阻塞；`PHYSICAL_ROOT_READY=STOP`，仍没有 root 或 estimator。
+  Engineer 和 Skeptic 审查为 `PASS WITH CONDITIONS`；当时的历史 gate decision 为
+  `GO -- FULL_ANALYTIC_COMPLEX_K_ROOT_READINESS ONLY`，已于 2026-08-11 被方法重构决定
+  撤销。这一旧标签不再授权进入数值设计门；`PHYSICAL_ROOT_READY=STOP`，仍没有 root
+  或 estimator。
 - 入口：[[research/projects/eig-apost/implementation/root_readiness|I3 design]]；
   [[research/projects/eig-apost/implementation/root_result|I3 result]]；
   [[research/projects/eig-apost/implementation/root_readiness_review|I3 review，Section L
@@ -274,24 +280,30 @@ contour count 或 root solve。
   [[research/projects/eig-apost/implementation/i4-rayleigh|I4 Rayleigh budget]] 和
   [[research/projects/eig-apost/implementation/open-problems#I4|I4 ledger]]。
 
+2026-08-11 起 I4 数值工作暂停，进入 M0 理论方法重构。上述 Ewald/MFS/Rayleigh 与
+$M_{\mathrm{trace}}$ 结果继续作为离散部件证据，但不再授权组装 $A_{\mathrm{def}}$、运行
+locator、DtN wall experiment 或 root isolation。现行主链见
+[[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]；旧的
+finite-tail/doubling 主链见
+[[research/projects/eig-apost/phase4-report/legacy-tail.tex|superseded legacy formulation]]。
+
 ## 后续阶段：距离真实特征值和 estimator 还有什么
 
 | 顺序 | 阶段全称 | 具体要完成的工作 | 完成后才允许声称什么 |
 |---:|---|---|---|
-| P1 | **Source-derived Proxy-System Provenance Closure（源码派生的 proxy system 来源闭合）** | 已在 `test/` 内完成 source-exact copy、同一 $A,b$ 数据链、原阈值双跑和独立审查；production 内部数组仍不可直接观测。 | `PASS WITH CONDITIONS`；只授权 P2，仍没有 root。 |
-| P2a | **Trace/Extractor Closure and Stable Projective Port Representation（迹提取闭合与稳定投影式端口表示）** | Ewald value/gradient/Hessian、共同 $p/d=0.2$ 的四个 SLP/DLP actions 与有限 $M_{\mathrm{trace}}=48$ 已通过；当前只剩 block-balanced $A_{\mathrm{def}}$/scanner integration。 | balanced/scanner 子门通过后只授权一个 bounded real-axis locator；仍没有 root。 |
-| P2b | **Preregistered Real-axis Locator（预注册实轴定位）** | 只在相邻 $M$ 与相同网格上寻找共同的严格内点 dip；拒绝 endpoint/global fallback，并保持 Gaussian 与 sharp disk 结果分离。 | 只提供 analytic-readiness 的候选 seed。 |
-| P2c | **Full Analytic Root-readiness on a Complex Wavenumber Domain（复波数域上的完整解析根准备门）** | 用新 seed 冻结 anchored Rayleigh branches、固定维数 $F_{j,h}(k)$、complex disk、Cauchy--Riemann consistency、所有 factors 的 ledger 和完整负例。 | 只在所有门通过后授权 contour root isolation。 |
-| P3 | **Actual Root Isolation and Simple-root Qualification（真实离散根隔离与简单根资格判定）** | 用 complex contour count 隔离一个根，用 bordered Newton refinement，并在相邻 tail levels 匹配同一 root，检查左右 null vectors、transverse derivative 和 conditioning。 | 首个 qualified discrete root；还不是独立 reference truth。 |
-| P4 | **Empirical A Posteriori Eigenvalue Correction（经验型特征值后验校正）** | 计算 matched $k_{j,h}$ hierarchy、projected map correction、root-solve correction 和 next-level shift consistency。 | 条件化、经验型 finite-tail estimator。 |
-| P5 | **Independent Reference and Effectivity（独立参考值与有效性）** | 建立高分辨率独立 reference、量化 reference uncertainty，并报告多层 effectivity、失败例、MATLAB parity 与 proxy/BIE/port/spatial refinement。 | 可信的真实二维 eigenvalue + empirical estimator/effectivity case study。 |
+| M0 | **Continuous DtN/BIE Method Reconstruction（连续 DtN/BIE 方法重构）** | 冻结精确 DtN、连续 $\mathcal F(k)$、one-cell pencil 到 discrete graph/DtN 的桥接、公共 trace space 和误差分解；关闭 ledger 中 OP-M0-1--OP-M0-4。 | 只建立重新设计离散 $A_{\mathrm{def}}$ 的理论合同；仍没有 root。 |
+| M1 | **Discrete $A_{\mathrm{def}}$ Redesign and Operator-level Consistency（离散矩阵重设计与算子层一致性）** | 让 $A_{\mathrm{def}}$ 成为 $\mathcal F_{h,M}(k)$ 的矩阵表示；验证 primal/adjoint、QZ separation、safe chart 或 augmented graph，以及相邻 $(h,M)$ level 的一致性。 | 通过后才可授权 bounded real-axis locator。 |
+| M2 | **Locator and Analytic Root-readiness（定位与解析根准备门）** | 先做可解释的实轴定位，再冻结 anchored branches、fixed chart/rank、complex disk、CR 与 factor/pole ledger。 | 只在全部门通过后授权 contour root isolation。 |
+| M3 | **Actual Root Isolation and Simple-root Qualification（真实离散根隔离与简单根资格判定）** | 隔离一个根、bordered Newton refinement，并检查左右 null vectors、$y^*\mathcal F'(k)x$ 和相邻层匹配。 | 首个 qualified discrete root；还不是连续 reference truth。 |
+| M4 | **Two-level Eigenvalue Correction（两层特征值校正）** | 在公共 trace space/prolongation 上计算 $\mathcal F_{h_1,M_1}-\mathcal F_{h_0,M_0}$ 的左右向量投影并核对 actual next-level shift。 | 首先只得到 next-level correction；附加 saturation/remainder 后才可解释 remaining error。 |
+| M5 | **Independent Reference and Effectivity（独立参考值与有效性）** | 建立可复现的高分辨率独立 reference、量化 reference uncertainty，并报告多层 correction、失败例和全误差预算。 | 可信真实二维 eigenvalue 与 empirical correction/effectivity case study。 |
 
-P1 与 P2a 的 trace/extractor 子门已完成，Track A 的可信 FD 候选也已观察到；原双椭圆
-P2 只保留为历史负例。当前 sharp-disk 路径约一个阶段可得到可解释的 real-axis
-candidate，约三个阶段可得到 qualified root，第四阶段产生 empirical estimator，第五阶段
-完成 independent reference effectivity。Fliss Gaussian 仍是不同模型，只提供尺度参考。若目标升级为 certified error interval，
-还需要另外闭合 continuous center-BIE kernel--field equivalence / injectivity、half-guide
-map saturation bound 与 correction remainder，以及 validated total error budget。
+既有 trace/extractor 子门已完成，Track A 的可信 FD 候选也已观察到；原双椭圆路径只保留
+为历史负例。当前处于 M0，不能再用“只差一个 balanced $A_{\mathrm{def}}$”描述剩余距离。
+关闭 M0 的四个理论 blocker 后才进入 M1；随后至少还需 locator/readiness、qualified root、
+two-level correction 和 independent reference 四层工作。Fliss Gaussian 仍是不同模型，只
+提供尺度参考。若目标升级为 certified interval，还需证明 saturation/remainder 和经过验证的
+total error budget。
 
 ## 缩写和对象速查
 
@@ -304,11 +316,13 @@ map saturation bound 与 correction remainder，以及 validated total error bud
 | BIE | Boundary Integral Equation，边界积分方程 | 用边界密度表示 center cell 或 one-cell scattering field。 |
 | HG / hg-map | Half-guide / half-guide map，半波导映射 | 左或右半无限周期波导在中心截面上的反射或 DtN 对象；不是新的独立方程。 |
 | EDC cell | 仓库旧代码和报告中的历史 fixture 标签；可靠英文展开未记录 | 本项目中具体指 $k=0.10$、折射率比 3、中心圆形介质夹杂的 one-cell BIE/scattering smoke fixture；不得仅凭缩写推断其他含义。 |
-| QZ | Generalized Schur decomposition，广义 Schur 分解 | 从 scattering pencil 的稳定/不稳定 invariant subspace 构造 half-guide map 的 same-cell cross-check。 |
+| QZ | Generalized Schur decomposition，广义 Schur 分解 | 当前主离散链中从 one-cell generalized pencil 计算 stable/unstable deflating subspaces；finite-tail/doubling 才只作 cross-check。 |
 | SVD | Singular Value Decomposition，奇异值分解 | 用于提取最小奇异方向、数值秩和 seed-frozen proxy subspaces。 |
 | CR | Cauchy--Riemann consistency，Cauchy--Riemann 一致性 | 诊断 complex-$k$ evaluator 是否表现为解析函数；有限差分通过不等于严格解析证明。 |
 | $A_{\mathrm{QP}}$ | Quasiperiodic BIE matrix，准周期边界积分矩阵 | 由 proxy Green construction 生成的 center/cell BIE 离散矩阵。 |
-| $F_{j,h}^{\mathrm{aug}}$ | Augmented finite-tail nonlinear eigenvalue matrix | 把 center density、center/far port amplitudes 和左右 finite-tail equations 放在同一固定 block order 中。 |
+| $\mathcal F(k)$ | Physical center--DtN operator function，物理中心域--DtN 算子函数 | 在 BIE representation、截断和 QZ 前定义；真实 guided eigenvalue 由 $\ker\mathcal F(k)\ne\{0\}$ 定义。 |
+| $D_{s,M},N_{s,M}$ | Decaying Cauchy-data blocks，衰减 Cauchy 数据的 Dirichlet/Neumann blocks | 由右 stable、左 unstable ordered-QZ deflating subspaces 转换得到；只有 $D_{s,M}$ chart 安全时才形成 $N_{s,M}D_{s,M}^{-1}$。 |
+| $F_{j,h}^{\mathrm{aug}}$ | Legacy augmented finite-tail matrix | 历史上把 center 和有限 tails 放在同一 block order；2026-08-11 后只作 cross-check/reference sequence。 |
 | `GO` | 该阶段冻结的窄范围验收门通过 | 只对该阶段明确列出的离散对象有效，不能自动向后续阶段传播。 |
 | `STOP` / `BLOCKED` | 上游条件未满足，后续量不可解释或不可计算 | 必须修复并重新审查；不得用调阈值或跳过检查绕过。 |
 
@@ -316,21 +330,15 @@ map saturation bound 与 correction remainder，以及 validated total error bud
 
 1. 想快速恢复当前工作：先读本文件，再读
    [[research/projects/eig-apost/STATUS|project STATUS]]。
-2. 想理解为什么当前不能进入 root isolation：读
-   [[research/projects/eig-apost/implementation/i4-fliss|current I4 Fliss benchmark]]、
-   [[research/projects/eig-apost/implementation/i4-rayleigh|current I4 Rayleigh budget]]、
-   [[research/projects/eig-apost/implementation/i4-result|historical I4 result]] 和
-   [[research/projects/eig-apost/implementation/i4-review|historical I4 review]]。
-3. 想继续下一次实现：读
-   [[research/projects/eig-apost/implementation/i4-fliss|current benchmark]]、
-   [[research/projects/eig-apost/implementation/i4-rayleigh|current Rayleigh budget]]、
-   [[research/projects/eig-apost/implementation/SYMBOL|symbol/code ledger]] 和
-   [[research/projects/eig-apost/implementation/open-problems#I4|I4 open problems]]，再读
-   `test/i4-rayleigh-budget/output/batch-all/global-summary.txt` 与
-   `test/i4-extract/output/canonical/report.md`；下一步只能先关闭 proxy solver 的 hold-out
-   point/derivative gate，再做一次 wall validation，不能直接启动 locator、contour、root
-   或 estimator。
-4. 想追溯 estimator 的数学来源：读
-   [[research/projects/eig-apost/phase3-analysis/s-root|root qualification]]、
-   [[research/projects/eig-apost/phase3-analysis/s-estimator|candidate estimator]] 和
-   [[research/projects/eig-apost/phase4-report/method.tex|integrated method draft]]。
+2. 想理解当前主方法：读
+   [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]，再对照
+   [[research/projects/eig-apost/phase4-report/legacy-tail.tex|superseded finite-tail formulation]]。
+3. 想继续理论工作：读
+   [[research/projects/eig-apost/implementation/open-problems#M0|M0 open problems]]、
+   [[research/projects/eig-apost/phase2-sources/synthesis-dtn|DtN source synthesis]] 和
+   [[research/projects/eig-apost/phase2-sources/r-nep-error|NEP error sources]]。在 OP-M0-1--4
+   关闭前，不得组装 $A_{\mathrm{def}}$ 或运行 locator、DtN wall、contour、root。
+4. 想追溯已完成的数值部件证据：读
+   [[research/projects/eig-apost/implementation/i4-fliss|I4 Fliss benchmark]]、
+   [[research/projects/eig-apost/implementation/i4-rayleigh|I4 Rayleigh budget]] 和
+   [[research/projects/eig-apost/implementation/i4-extract|I4 spectral extraction closure]]。

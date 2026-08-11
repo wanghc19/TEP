@@ -21,6 +21,23 @@
 - 每次 stage review 后由主 agent 合并 Skeptic handoff；Skeptic 保持只读。状态只使用
   `OPEN`、`SCHEDULED`、`RESOLVED` 或 `WONT-FIX FOR CURRENT CLAIM`。
 
+## M0
+
+**Continuous DtN/BIE Method Reconstruction。**2026-08-11 起 I4 数值工作暂停；本节的
+formulation blockers 关闭前，不得组装 $A_{\mathrm{def}}$，也不得运行 locator、DtN wall、
+complex disk 或 root isolation。现行方法见
+[[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]；旧路线见
+[[research/projects/eig-apost/phase4-report/legacy-tail.tex|superseded finite-tail formulation]]。
+
+| ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
+|---|---|---|---|---|---|
+| OP-M0-1 | `BLOCKER` | 精确 half-guide DtN 已由 PDE 定义，但选定 complex-$k$ 域上的 holomorphy、projected gap/Dirichlet spectrum/Wood/BIE pole 分离，以及项目法向与 Fliss/code 符号映射尚未形成一个已证明合同。 | 阻止把 complex-$k$ discrete map 解释为同一精确 $\Lambda_\pm(k)$ 的近似，也阻止 $\mathcal F'(k)$ 的理论定义进入实现。 | 对具体 sharp-disk model 写出左右 half-guide BVP、法向和 code coefficient convention；证明或引用一个覆盖所选小域的 analytic solution-operator lemma，并列明例外集。 | `OPEN` |
+| OP-M0-2 | `BLOCKER` | physical variational pencil $\mathcal F(k)$ 已先于截断定义；但 continuous BIE schema 的 representation completeness、injectivity、kernel--field equivalence、Fredholm index 和 adjoint pairing 尚未证明。 | 阻止把 BIE matrix 的非平凡核等同于真实 guided mode；固定矩阵的 field-energy 或 raw/reduced agreement 不能关闭它。 | 冻结实际 center layer-potential representation 与 spaces，证明 physical/BIE kernels 双向对应；若首篇只作数值论文，至少预注册 spurious-density negative、field-energy、boundary residual 和 refinement-overlap 替代门，并明确降级 claim。 | `OPEN` |
+| OP-M0-3 | `BLOCKER` | 尚无 continuous one-cell relation 到 BIE/Fourier generalized pencil 的 primal/adjoint $C^1$ consistency，也无 ordered-QZ stable/unstable cluster 在所选域内维数固定、regular 且以 generalized Sylvester `DIF/sep` 一致分离的证明。unsafe Dirichlet chart 还需 Cauchy relation 或带固定 impedance/Riesz map 的 Robin realization。 | 阻止由 QZ deflating subspace构造可解释的 discrete DtN/graph，也阻止重设计 $A_{\mathrm{def}}$。unit-circle distance 和 same-cell doubling/QZ agreement 均不充分。 | 写出 package/test scattering blocks 到 pencil、左右 Cauchy blocks和法向的逐块 map；在 theory level 冻结 regularity/count/`DIF`/chart gates，并区分 finite-pencil QZ backward error 与 continuous-to-Fourier truncation error。 | `OPEN` |
+| OP-M0-4 | `BLOCKER` | 原目标 $\|\Lambda-E_M\Lambda_{h,M}Q_M\|_{H^{1/2}\to H^{-1/2}}\to0$ 对一阶非紧 DtN 和有限秩 lift 通常不可能。当前必须在 projected consistency + eigentrace regularity、principal-symbol subtraction + compact remainder、或 regular Galerkin/graph convergence 三条路线中选定并证明一条，同时冻结公共 trace prolongation/dual restriction。 | 阻止把两层矩阵差解释为 $\mathcal F-\mathcal F_{h,M}$ 或 $\mathcal F'-\mathcal F'_{h,M}$ 的算子误差，也阻止 Moskow compact-operator theorem 的直接套用。 | 先证明 retained modes 上 $\Lambda_{h,M}\approx Q_M^N\Lambda E_M^D$；随后对实际 primal/adjoint eigentraces估计 weighted tail。只有证明公共 principal part 后，才改走 compact-remainder norm route。 | `OPEN` |
+| OP-M0-5 | `IMPORTANT CAVEAT` | 相邻层 projected difference 只有 next-level correction 含义；独立 saturation 常数和 correction remainder 尚无来源或证明。 | 不阻止在 M0--M3 后寻找 qualified discrete root，也不阻止报告 empirical next-level correction；阻止称 remaining-error estimator、certified interval 或无条件 effectivity。 | 用至少三个匹配离散 levels 和独立高分辨率 reference 报告 observed ratios 与 remainder；未证明前保持 `next-level correction` 命名。 | `OPEN` |
+| OP-M0-6 | `MINOR CAVEAT` | 旧“有限多个 cells + 远端闭合 + doubling”曾被放在主方法位置。 | 双重方法权威会使真实谱对象和 estimator 含义漂移。 | 已完整归档为 legacy，并在当前 method/STATUS/README 中降为 cross-check、reference sequence 或 tail diagnostic。 | `RESOLVED` |
+
 ## I0
 
 **Manufactured Nonlinear Eigenvalue Problem Root-and-Correction Prototype。**
@@ -34,13 +51,13 @@
 
 ## I1
 
-**Finite-tail Half-guide Dirichlet-to-Neumann Map。**历史审查见
+**Legacy Finite-tail Half-guide-map Algebra。**历史审查见
 [[research/projects/eig-apost/implementation/half_guide_review|I1 review]]。
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
-| OP-I1-1 | `IMPORTANT CAVEAT` | doubling 与 QZ 共享同一 one-cell map，不是独立 physical DtN truth。 | 限制 half-guide accuracy 的独立性陈述；不阻止使用该 map 搜索候选 root。 | 在两个附近的非 Wood 实频率，把高-$j$ finite-tail map 与 QZ limit 及一个更高分辨率 cell map 比较。 | `OPEN` |
-| OP-I1-2 | `IMPORTANT CAVEAT` | 尚无严格 saturation 常数或 half-guide map remainder bound。 | 不阻止 empirical estimator；阻止 certified interval 或无条件 reliability claim。 | 在至少三个连续 $j$ levels 记录 map/root shift ratios，并用下一层实际 shift 检查预测。 | `SCHEDULED` |
+| OP-I1-1 | `IMPORTANT CAVEAT` | doubling 与 QZ 共享同一 one-cell map，不是独立 physical DtN truth。 | 限制 legacy infinity-treatment cross-check 的独立性；该 map 不再授权搜索当前 root。 | 只有把 finite-tail 作为可选 tail diagnostic 时，才在两个非 Wood 实频率与 QZ limit 及更高分辨率 cell map 比较。 | `SCHEDULED` |
+| OP-I1-2 | `IMPORTANT CAVEAT` | 尚无严格 finite-tail saturation 常数或 remainder bound。 | 不阻止 continuous DtN 主路线；阻止把 legacy level difference 称为 remaining-error estimator。 | 只有论文保留 tail diagnostic 时才记录至少三个 $j$ levels；否则由 OP-M0-5 统一管理 estimator 限制。 | `SCHEDULED` |
 
 ## I2
 
@@ -73,14 +90,16 @@ Rayleigh-budget 诊断见
 [[research/projects/eig-apost/implementation/i4-rayleigh|I4 Rayleigh budget]]；最新谱提取与
 proxy-solver 诊断见
 [[research/projects/eig-apost/implementation/i4-extract|I4 spectral extraction closure]]。
+当前 I4 数值工作因 M0 方法重构暂停；下表保留既有数值证据和未来排程，不构成继续
+$A_{\mathrm{def}}$/locator 的授权。
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
 | OP-I4-1a | `MINOR CAVEAT` | 历史双椭圆的 29 点 locator 在 $[0.04,0.18]$ 上严格单调下降，没有 screened interior dip。 | 不再阻止当前 Fliss missing-column 主模型；只限制对旧双椭圆 family 的结论。 | 保留原 baseline/repeat，不再为当前项目连续追扫旧区间。 | `WONT-FIX FOR CURRENT MODEL` |
 | OP-I4-1b | `MINOR CAVEAT` | 旧 affine/逐模态路径把高阶 transmission 数值降秩解释成模态丢失。新 projective ordered-QZ/doubling 诊断在 canonical $\delta=0.30$ 和 small-clearance $\delta=0.10$ 上通过所有 same-$M$ 门到测试上界 $M=20$；即使 $41\times41$ transmission block 在相对阈值 $10^{-10}$ 下秩仅为 7，deflating subspaces 仍完整可用。 | 旧路径不再阻止当前 projective 路线；$M=20$ 只是 right-censored pass-through，不能称为已知 $M_{\mathrm{stable}}$ 上界。 | 保留 transmission tolerance sweep 为 ledger，不再以 raw rank 或逐模态 pairing 停止 projective path。只有扩展到 $M>20$ 或新参数时才复查 same-$M$ gates。 | `RESOLVED` |
 | OP-I4-1c | `IMPORTANT CAVEAT` | Track A 是精确 Fliss smooth Gaussian profile，Track B 是 radius-$0.2$ sharp disk；两者没有同一离散算子或 root identity。用户已选择 sharp-disk missing-column 作为独立 BIE benchmark，Fliss track 只提供尺度和参数参考。 | 不阻止寻找 sharp-disk 自身的 root；阻止把 Track A 的 $\lambda_h=3.460975044$ 当成 sharp-disk root 或 estimator reference。 | sharp-disk 路线必须生成 own locator、root hierarchy 和 reference；只有论文要声称复现 exact Fliss profile 时才实现 model-consistent smooth-profile infinite-domain evaluator。 | `OPEN` |
-| OP-I4-1d | `BLOCKER` | 新模型尚无 selected complex-$k$ disk 上的 anchored Rayleigh branch、fixed chart/rank、factor/pole ledger、full-$F$ CR 和完整实际-object negatives。 | 直接阻止 contour count 和 bordered Newton root isolation。 | 只有 OP-I4-1f 与 OP-I4-1e 关闭并得到可解释的 sharp-disk 实轴 locator 后，才冻结一个小 disk 运行完整 analytic readiness。 | `SCHEDULED` |
-| OP-I4-1e | `BLOCKER` | 当前双向 M5 的 $44\times44$ $A_{\mathrm{def}}$ 在相对阈值下数值秩仅为 8，normalized singular value 为 $1.18\times10^{-17}$；已实现的 M4/M5 scan 仍调用 legacy affine `solve_modes`，没有接入双向/deflating-subspace bases。 | 即使先修复 port subspace residual，现有 locator matrix 与 scanner 仍可能因 $E,E^{-1}$ 和变量块尺度失衡产生结构性假 dip。 | 对 $A_{\mathrm{def}}$ 做物理块级 row/column equilibration，在预注册非候选点排除秩坍缩；随后把 scanner 实际接到通过门的双向/deflating bases，再运行 bounded scan。 | `OPEN` |
+| OP-I4-1d | `BLOCKER` | 新模型尚无 selected complex-$k$ disk 上的 anchored Rayleigh branch、fixed chart/rank、factor/pole ledger、full-$F$ CR 和完整实际-object negatives。 | 直接阻止 contour count 和 bordered Newton root isolation。 | 只有 OP-M0-1--4、重新设计的 OP-I4-1e 和可解释 locator 全部关闭后，才冻结一个小 disk 运行完整 analytic readiness。 | `SCHEDULED` |
+| OP-I4-1e | `BLOCKER` | 历史双向 M5 的 $44\times44$ $A_{\mathrm{def}}$ 数值秩仅为 8，且 scanner 调用 legacy affine `solve_modes`；更重要的是，该矩阵按 superseded finite-tail formulation 组装，不是现行 physical $\mathcal F(k)$ 的已证明表示。 | 现有 locator matrix 的近奇异性既可能来自尺度失衡，也没有 continuous-to-discrete 解释；不得只做 balancing 后恢复扫描。 | 先关闭 OP-M0-1--4，再按 physical $\mathcal F\to\mathcal F_{\mathrm{BIE}}\to\mathcal F_{h,M}$ 重设计 block roles、adjoint pairing和 safe graph/chart。随后才做 block equilibration 与非候选 anti-collapse sanity check。 | `SCHEDULED` |
 | OP-I4-1f | `BLOCKER` | 历史 $p/d=0.7$ 把 proxy 竖边放到 $|x|=1.2d$，越过 $G_{\mathrm{QP}}-G_0$ 最近镜像奇点 $|x|=d$，并产生 SLP--N 的 $10^{-8}$ 级单轴变化。新 `test/i4-proxy-rule/` 在不修改 package、固定 MATLAB `lsqminnorm` 和唯一预注册 $p/d=0.2$ 后重跑：SLP--N 的 E--P/P--R 最大误差为 $3.42\times10^{-14}$/$3.47\times10^{-14}$，Nedge/Nside/Ntop/$M_{\mathrm{pw}}$ self 分别为 $4.14\times10^{-14}$、$2.12\times10^{-14}$、$3.03\times10^{-14}$、$1.61\times10^{-13}$；同一配置的 SLP--D 也通过。 | 原 SLP--N sequential blocker 已关闭；这只认证当前几何、频率、两密度与 SLP--D/N，不认证 DLP、$M_{\mathrm{trace}}$、DtN 或 root。 | 保留奇点感知规则 $0<p<d/2$ 和当前 $p/d=0.2$ 的条件性范围；下一步只运行 DLP--D 专项。package proxy 列表重复左下角并缺失右上角，故 rank/edge-DFT tail 仅作非门诊断，最终若修改 package 再单独回归。 | `RESOLVED` |
 | OP-I4-1h | `BLOCKER` | `test/i4-dlp-trace/` 在共同 $p/d=0.2$、public MATLAB `lsqminnorm` 下按 DLP--D、DLP--N 顺序通过。DLP--D/DLP--N 三路径最大 coefficient 误差为 $1.39\times10^{-14}$/$1.19\times10^{-13}$；DLP--N 四轴 wall self 最坏为 $1.40\times10^{-13}$。三点 Hessian Ewald 误差最坏为 $5.41\times10^{-14}$，mixed/source-target FD 最坏为 $5.58\times10^{-10}$，五个预期 rank 全部复现。 | 历史 $p/d=0.7$ Hessian/solver spread 不再阻止当前 $p/d=0.2$ DLP Cauchy-data；这只认证当前参数、两制造密度和 public solver，不是任意参数的 rank theorem。 | 保持当前 solver/proxy 哈希与顺序门；参数、geometry 或 solver 变化时重跑 point/self 和 DLP wall，禁止把本结果外推。 | `RESOLVED` |
 | OP-I4-1g | `IMPORTANT CAVEAT` | $\delta=0.20$、$k=1.8603695988$ 的 low/high pencil 在所有测试 $M$ 上都有两个 neutral pairs；$M=20$ 的 unit-circle gap 约 $3.05\times10^{-9}$，因此 decaying/growing ordered maps 不可用。 | 阻止在该参数点使用 half-guide decaying DtN，也阻止跨 $\delta$ 的统一窗口；不阻止 canonical $\delta=0.30$ 路线，因为其 stable/unstable split 清晰。 | 只有选择 $\delta=0.20$ 作为 root 模型时，才做 projected-band scan 与 $k+\mathrm{i}\eta$ limiting-absorption continuation；当前先避开该 point。 | `SCHEDULED` |

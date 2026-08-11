@@ -1,6 +1,6 @@
 # Research status
 
-更新日期：2026-08-07。
+更新日期：2026-08-11。
 
 状态词含义：`established in archived mainline` 仅表示冻结主线给出了论证，不等于已完成独立来源核验；`needs review` 表示已有陈述或证明草案但仍需严格审计；`tentative` 表示研究性判断；`unresolved` 表示尚未解决。
 
@@ -10,12 +10,14 @@
 并建立中心胞元 Müller--Rayleigh 表示与左右周期半波导出射 Cauchy 关系之间的连续
 耦合。该路线现已暂停；当前把 fixed-$\beta$ line-defect guided-mode eigenvalue 的
 numerical half-guide DtN 后验误差作为专题候选方向。其 manufactured NEP、Half-guide
-map 与 Augmented BIE 离散实现门已经通过；历史 Root-readiness diagnostic 之后完成的
-source-derived proxy provenance-closure 经审查为 `PASS WITH CONDITIONS`，只授权进入
-full analytic complex-$k$ Root-readiness。production 内部
-$A_{\mathrm{pr}},b_{\mathrm{pr}}$ 仍不可直接观测，`PHYSICAL_ROOT_READY=STOP`。最终理论
-与数值可行性门仍未通过，连续理论、真实 root 和 estimator 尚未建立，也没有活动中的
-`research/mainline/`。
+map 与 Augmented BIE 离散实现门已经通过；历史 Root-readiness diagnostic 及其后续
+Ewald/MFS/Rayleigh、SLP/DLP 和有限 $M_{\mathrm{trace}}$ 结果保留为离散数值证据。
+2026-08-11 起 I4 数值工作暂停，当前改为 continuous DtN/BIE method reconstruction：
+精确 DtN 由半无限 PDE 定义，physical center pencil $\mathcal F(k)$ 先于 BIE、QZ 和矩阵。
+旧 finite-tail/doubling 主方法已降为 legacy/cross-check。当前不得组装
+$A_{\mathrm{def}}$，不得运行 DtN wall、locator、complex disk 或 root isolation；
+`PHYSICAL_ROOT_READY=STOP`。连续—离散桥接、真实 root 和 estimator 尚未建立，也没有
+活动中的 `research/mainline/`。
 
 原主线冻结于 Git 标签 `mainline-muller-cauchy-2026-07-26`，文件移至
 `research/archive/muller-cauchy-2026-07/`。冻结版本主要考虑实数 `k`、严格公共
@@ -26,7 +28,7 @@ $A_{\mathrm{pr}},b_{\mathrm{pr}}$ 仍不可直接观测，`PHYSICAL_ROOT_READY=S
 
 | 状态 | 专题 | 实际结论 |
 |---|---|---|
-| active investigation | `research/projects/eig-apost/` | Phase 4 方法稿为 `PASS WITH CONDITIONS`；manufactured NEP 与 Half-guide map 为窄范围 `GO`，Augmented BIE 为 `STAGE2_DISCRETE_ALGEBRA_GO`。source-derived provenance-closure 在 6 个 shared systems/30 个 solver rows 上保持原门槛并双跑复现，Skeptic verdict 为 `PASS WITH CONDITIONS`；只允许进入 full analytic complex-$k$ Root-readiness，`PHYSICAL_ROOT_READY=STOP`。真实 root、estimator、连续 kernel--field/representation gate、analytic branch、pole ledger、独立 $k_{\mathrm{ref}}$ 和 MATLAB parity 均未完成。 |
+| active investigation / I4 numerics paused | `research/projects/eig-apost/` | 当前 Phase 4 重构稿以 PDE-defined exact DtN 和 physical $\mathcal F(k)$ 为连续主对象；continuous BIE 是待证明的 realization，ordered QZ 只计算 finite-pencil deflating subspace。旧 finite-tail 稿完整归档为 legacy。既有 implementation checkpoints 与三路径数值门保留为历史/部件证据，但不授权 $A_{\mathrm{def}}$ 或 locator。恢复 I4 前须关闭项目 ledger 的 OP-M0-1--OP-M0-4；真实 root、next-level correction、remaining-error estimator 和独立 $k_{\mathrm{ref}}$ 均未完成。 |
 | paused archive | `research/archive/muller-cauchy-2026-07/` | 冻结的 Müller--广义 Bloch--Cauchy 主线；商空间版本的核/场等价仍有未闭合的外部定理适配和表示论前提。 |
 | paused | `research/projects/half-guide-dtn/` | Stage 1 完成了符号审计、齐次半导 DtN/Riccati 验证和耦合方案建议；周期障碍半导、完整中心耦合及 MATLAB 最终验证尚未完成。该路线未整合进冻结主线。 |
 | completed project | `research/projects/cell-representation/` | 专题任务已完成：原始无条件猜想过强；给出了直接 Green 表示和带显式正则性、非 Wood 及互补问题条件的修正版。其纠正后的表示结构和商空间策略已进入冻结主线，但其中的表示定理仍为 `needs review`。 |
@@ -60,13 +62,13 @@ $A_{\mathrm{pr}},b_{\mathrm{pr}}$ 仍不可直接观测，`PHYSICAL_ROOT_READY=S
 4. 归档中的未证明结论、待核验引用和中英文差异保持原有成熟度，不因归档而自动升级或失效。
 5. 新方向形成后，应更新 `research/DECISIONS.md`、本文件和 `research/README.md`，再决定是否建立新的 `research/mainline/`。
 
-当前活动专题是偏工程实现的特征值后验误差研究。Phase 4 方法稿及三个 Octave
-implementation checkpoints 已完成；source-derived proxy provenance-closure 在保留
-production internal-array 不可观测边界的前提下通过，Skeptic 只授权下一步 full analytic
-complex-$k$ Root-readiness。下一阶段必须冻结 analytic neighborhood、anchored branch、
-fixed chart、factor/pole ledger、full-matrix Cauchy--Riemann 和 mandatory negatives；在其
-通过以前不得启动 contour isolation、complex root matching 或 estimator，也不升级为统一
-研究方向。
+当前活动专题是偏工程实现的特征值后验误差研究，但数值 I4 已暂停。下一阶段不是
+full analytic Root-readiness，而是关闭 continuous exact-DtN domain、physical/BIE
+kernel bridge、one-cell pencil/ordered-QZ uniform separation 与正确的 projected/regular
+approximation topology 四个 formulation blockers。只有这些门关闭并重新设计
+$A_{\mathrm{def}}$ 后，才可重新申请 locator 和 analytic-disk readiness；此前不得启动
+任何 DtN wall、locator、contour、complex root matching 或 estimator 计算，也不升级为
+统一研究方向。
 冻结路线若被恢复，其优先事项仍是单位圆全谱排除、
 广义 Floquet/Riesz 基适配、中心表示满射性和表示零空间刻画；具体记录见
 `research/archive/muller-cauchy-2026-07/review-log.md`。

@@ -4,10 +4,29 @@
 
 ## 当前状态
 
-- 工作流：Academic Research Suite / Deep Research，现处于受审查的数值实现阶段。
+- **2026-08-11 supersession：** I4 数值工作立即暂停。不得继续组装
+  $A_{\mathrm{def}}$、运行 locator、DtN wall experiment、complex disk 或 root
+  isolation。当前阶段为 `METHOD_RECONSTRUCTION / I4_NUMERICS_PAUSED`。
+- 当前连续主路线为
+  `exact half-guide PDE -> continuous DtN -> continuous center BIE--DtN operator
+  \(\mathcal F(k)\) -> BIE/Fourier one-cell pencil -> ordered-QZ stable graph ->
+  discrete DtN/augmented graph -> matrix representation`。真实 guided eigenvalue 由
+  $\ker\mathcal F(k)\ne\{0\}$ 定义；QZ 只计算离散 stable deflating subspace。
+- 旧的“有限多个 cells + 远端闭合 + doubling”方法完整归档为
+  [[research/projects/eig-apost/phase4-report/legacy-tail.tex|superseded finite-tail formulation]]，
+  以后只作 cross-check、reference sequence 或 tail diagnostic，不定义主问题或主 estimator。
+- 现行理论稿为
+  [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]；
+  two-level projected difference 在没有独立 saturation/remainder 前只称
+  next-level correction，不称 remaining-error estimator。
+- 本次权威变化记录于
+  [[research/projects/eig-apost/DECISIONS|2026-08-11 decision record]]；Phase 1--2 历史
+  文件保持原文。
+- 工作流：Academic Research Suite / Deep Research，现处于受审查的理论方法重构阶段。
 - 论文定位：以可运行、可复现、具有代表性真实案例的 empirical estimator 为当前目标；
   theorem-level certification 是更强的未来方向，不作为默认阶段门。
-- 阶段：Phase 1--4 已完成范围、来源、novelty、理论方案和方法稿；随后完成三个
+- 阶段：Phase 1--3 已完成范围、来源、novelty 和历史理论方案；旧 Phase 4 finite-tail
+  方法稿已 supersede，当前 Phase 4 为连续 DtN/BIE 方法重构。此前已完成三个
   Octave implementation checkpoints：manufactured NEP、Half-guide map 和
   Augmented BIE / center coupling。Root-readiness 的第一轮 early-stop diagnostic
   保留为历史负结果，后续 source-derived proxy provenance-closure 已完成并通过独立审查。
@@ -37,16 +56,17 @@
   将 $M_{\mathrm{trace}}=48$ 的最坏误差和 omitted energy 分别压到
   $7.08\times10^{-12}$ 与 $5.00\times10^{-13}$。OP-I4-1h 与 OP-I4-6 因而在当前制造
   密度、实数非 Wood 参数和有限 $M_{\mathrm{ref}}=96$ 意义下关闭。
-- 状态：`active investigation`。
-- 阶段门：manufactured root/correction pipeline 为窄范围 `GO`，Half-guide map 为
-  Stage 1 `GO`，Augmented BIE 为 `STAGE2_DISCRETE_ALGEBRA_GO`；provenance-closure 为
+- 状态：`active investigation -- numerical work paused for method reconstruction`。
+- 历史阶段门（均不构成当前实现授权）：manufactured root/correction pipeline 曾为窄范围
+  `GO`，finite-tail Half-guide map 曾为 Stage 1 `GO`，Augmented BIE 曾为
+  `STAGE2_DISCRETE_ALGEBRA_GO`；provenance-closure 曾为
   `PASS WITH CONDITIONS`，其 operational label 为
   `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS`。当前 I4 verdict 为
   `PARTIAL SUCCESS -- I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
   EWALD_VALUE_REFERENCE_CERTIFIED / EWALD_DERIVATIVE_REFERENCE_CERTIFIED /
-  SLP_D_N_CERTIFIED_PROXY_RATIO_0P2 / DLP_D_N_MTRACE48_CERTIFIED`；
-  现在允许进入 OP-I4-1e 的 block-balanced $A_{\mathrm{def}}$/scanner integration，
-  但该门通过前仍不允许实际 real-axis locator；I5 root isolation 不获授权，
+  SLP_D_N_CERTIFIED_PROXY_RATIO_0P2 / DLP_D_N_MTRACE48_CERTIFIED`；这些标签现只作为
+  已完成的离散数值证据保留，不构成继续实现的授权。OP-I4-1e 的旧授权已被方法重构
+  决定撤销；$A_{\mathrm{def}}$、scanner、real-axis locator 与 I5 root isolation 均不获授权，
   `PHYSICAL_ROOT_READY=STOP`。现有证据支持一个可信的
   exact-profile finite-strip eigenvalue candidate，但不支持 qualified BIE root、
   连续 kernel--field equivalence、unconditional effectivity 或 certified interval。
@@ -56,9 +76,9 @@
 | Checkpoint | 结果 | 已验证 | 明确未验证 |
 |---|---|---|---|
 | Manufactured NEP | `GO`; `conditional/empirical` | 固定维数 contour count、bordered Newton、root qualification、projected correction 和四个负例；末级 tail effectivity 为 `0.999987793` | BIE/DtN、branch cut、pole、representation kernel、common discretization error |
-| Half-guide map | Stage 1 `GO` | 非交换 Redheffer/terminal/Cayley 次序、exact analytic cell、固定 $k=0.10$ 的中心圆形介质夹杂单胞（旧报告称 `EDC cell`）same-cell QZ/doubling smoke 和负例传播；Case B 最终误差 $1.93\times10^{-15}$ | 独立 PDE truth、频率区间、asymmetric/defective cases、map convergence theorem；artifact-level 仅 `PARTIALLY_REPRODUCIBLE` |
+| Legacy finite-tail Half-guide map | Stage 1 historical `GO` | 非交换 Redheffer/terminal/Cayley 次序、exact analytic cell、固定 $k=0.10$ 的中心圆形介质夹杂单胞（旧报告称 `EDC cell`）same-cell QZ/doubling smoke 和负例传播；Case B 最终误差 $1.93\times10^{-15}$ | 只作 discrete infinity-treatment cross-check；不定义连续 DtN，缺独立 PDE truth、operator convergence 与 $C^1$ error control |
 | Augmented BIE | `STAGE2_DISCRETE_ALGEBRA_GO`; `ROOT_READY=STOP` | 固定九块 $(n+8p)$ assembly、scaled density coordinate、raw/reduced Schur agreement、七级 availability 与 failure ledger；unchanged-source 复现差为 $0$ | 连续表示单射性、kernel--field equivalence、pole-free analytic neighborhood、root/eigenvalue/estimator |
-| Root-readiness proxy diagnostic and provenance closure | `PASS WITH CONDITIONS`; `GO` only to full analytic complex-$k$ Root-readiness; `PHYSICAL_ROOT_READY=STOP` | 历史受控诊断的 $10^{-5}$ object gate 通过；新 source-exact copy 在 6 个 shared systems/30 个 solver rows 上使三个原 $10^{-11}$ output gates 以 0 误差通过；双跑数值差为 0，manifest/shared/projector fingerprints 一致 | production 内部 $A_{\mathrm{pr}},b_{\mathrm{pr}}$ 仍不可直接观测；off-collocation 与 historical projectors 非门控；未运行 complex disk、CR、root、Newton、eigenvalue 或 estimator |
+| Root-readiness proxy diagnostic and provenance closure | `PASS WITH CONDITIONS`; historical `GO` to full analytic complex-$k$ Root-readiness, revoked 2026-08-11; `PHYSICAL_ROOT_READY=STOP` | 历史受控诊断的 $10^{-5}$ object gate 通过；新 source-exact copy 在 6 个 shared systems/30 个 solver rows 上使三个原 $10^{-11}$ output gates 以 0 误差通过；双跑数值差为 0，manifest/shared/projector fingerprints 一致 | production 内部 $A_{\mathrm{pr}},b_{\mathrm{pr}}$ 仍不可直接观测；off-collocation 与 historical projectors 非门控；未运行 complex disk、CR、root、Newton、eigenvalue 或 estimator |
 | Historical double-ellipse full analytic complex-$k$ Root-readiness | evidence `PASS WITH CONDITIONS`; scientific `REPRODUCIBLE STOP / NO_SCREENED_DIP` | 29/29 locator 点 available；$s(k)$ 从 $0.2083091449$ 严格降至 $s(0.18)=0.03539366850$；baseline/repeat 全表数值差为 0 | 已被新主模型取代；没有 interior dip 或 seed，chart/disk/factor/full-$F$ CR 未运行 |
 | Revised I4 Fliss missing-column benchmark, Rayleigh budget and three-path kernel audit | `PARTIAL SUCCESS`; `I4_FD_CANDIDATE_READY`; `BIE_RAYLEIGH_BUDGET_SCREENED`; `EWALD_VALUE_REFERENCE_CERTIFIED`; `EWALD_DERIVATIVE_REFERENCE_CERTIFIED`; `SLP_D_N_CERTIFIED_PROXY_RATIO_0P2`; `DLP_D_N_MTRACE48_CERTIFIED`; `PHYSICAL_ROOT_READY=STOP` | exact smooth profile 的 N80 strip 候选 $\lambda_h=3.460975044$；sharp-disk candidate windows 为 $[5,20]$、$[19,20]$；MATLAB 真 Ewald value/gradient/Hessian reference 通过；共同 $p/d=0.2$ 的四个 SLP/DLP wall actions 在 Ewald/MFS/Rayleigh 三路径上通过。DLP--D/DLP--N 最大 coefficient 误差为 $1.39\times10^{-14}$/$1.19\times10^{-13}$，DLP 四轴 self 最坏为 $1.40\times10^{-13}$，半网格有限带测试认证当前 $M_{\mathrm{trace}}=48$ | 认证只覆盖当前几何、实数非 Wood 点、两制造密度与有限 $M_{\mathrm{ref}}=96$；没有完成额外 $n_{\mathrm{tot}}/N_y$/Ewald wall ladder。package proxy 列表有一个重复角点，rank/edge-tail 仅为诊断。balanced $A_{\mathrm{def}}$/scanner、locator、root 与 estimator 未认证 |
 
@@ -102,9 +122,9 @@ proxy-solver 收敛诊断见
   saturation/tail assumption 才能代表剩余误差。
 - 已把当前需要的公开全文统一保存并核验于 `ref/ref_data/`；临时渲染仍留在
   `research/tmp/`。
-- 已选定首版单参数 DtN hierarchy：固定 BIE/cell scattering 离散，只令 finite-tail
-  cell count $N=2^j$ 增长；实根 sequence 采用远端 Dirichlet/real-Robin 结构保持闭合，
-  zero-incoming sequence 只作 half-guide map 交叉核验。
+- 历史 Phase 3 曾选定首版 finite-tail hierarchy：固定 BIE/cell scattering 离散，只令
+  cell count $N=2^j$ 增长。2026-08-11 起该选择已被 supersede，只保留为 cross-check、
+  reference sequence 或 tail diagnostic，不再称精确 DtN hierarchy。
 - 已建立 Phase 3 目录并写入 DtN 数据链、分层误差预算、projected correction、
   effectivity criteria、双椭圆 benchmark 和未来实现路线。
 - 已按当前 port convention 推导左右 finite-tail DtN 的法向符号，并用独立随机复矩阵
@@ -159,18 +179,20 @@ proxy-solver 收敛诊断见
 - 已用一个非正规 `2 x 2` manufactured NEP 检查 correction 的符号和渐近 effectivity，
   并用 oscillatory scalar hierarchy 检查 false-asymptotic gate；这些是 Python
   algebraic sanity checks，不是项目 MATLAB validation。
-- 已由 writer 把 Phase 2--3 的理论和实现协议整理为
-  `phase4-report/method.tex`，并用 XeLaTeX 生成 13 页 `output/pdf/method.pdf`。
-- 已由独立 skeptic 逐式核对 augmented equations、analytic chart、bordered Newton、
+- 历史 writer 曾把 Phase 2--3 的 finite-tail 理论和实现协议整理为旧
+  `phase4-report/method.tex`；该 13 页版本现完整归档为
+  `phase4-report/legacy-tail.tex`，不删除推导和审查记录。
+- 历史独立 skeptic 曾逐式核对 augmented equations、analytic chart、bordered Newton、
   projected correction、coarse/fine 解释、条件 effectivity 证明和 reliable interval；
   writer 未改变 researcher 的核心数学逻辑。
-- 已按 skeptic 初轮 `REVISE` 意见补入同维 $F_{\infty,h}$ scattering-block lift、
+- 历史稿曾按 skeptic 初轮 `REVISE` 意见补入同维 $F_{\infty,h}$ scattering-block lift、
   far-block 一致可逆性与 kernel bridge 条件、完整 doubling Schur pole gate、Fliss DtN
   的谱适用域，以及紧圆盘上的 $C^1$ 范数；delta-audit verdict 为
   `PASS WITH CONDITIONS`。
-- 已清理 active notation conflicts：center extractors 改记为 $\mathcal E_L,\mathcal E_R$，
+- 历史稿曾清理 notation conflicts：center extractors 改记为 $\mathcal E_L,\mathcal E_R$，
   三个标量反例与主 NEP 符号分离，并内联双侧 DtN map-difference 诊断。
-- 已完成 PDF 逐页渲染检查；没有公式裁切、页面重叠或重复参考文献标题。
+- 历史 finite-tail PDF 曾完成逐页渲染检查；当前连续 DtN/BIE `method.pdf` 已重新生成并
+  另行检查。
 - 已在 `test/eig-apost-nep/` 完成 manufactured `2 x 2` analytic NEP 的 Octave 实现、
   两次确定性复现和 skeptic 审查；该实验只关闭有限维算法门。
 - 已在 `test/hg-map/` 完成 Half-guide map Stage 1：非交换代数、exact analytic cell、
@@ -296,20 +318,24 @@ proxy-solver 收敛诊断见
 
 ## 尚未进行
 
-- 尚未证明实际 center BIE 表示的连续 kernel--field equivalence、排除 zero-field
-  representation nullspace，或给出 root-search domain 上的一致 injectivity/pole-free
-  条件；fixed-$k$ raw/reduced Schur agreement 不能替代这些命题。
-- 尚未在当前 Fliss/sharp-disk 替换 benchmark 的 selected disk 上执行 anchored analytic
-  Rayleigh chart、fixed-rank factor ledger、full-$F$ CR 和完整 negatives；当前因
-  trace/extractor reference 已在冻结制造对象上关闭，但 balanced $A_{\mathrm{def}}$/scanner
-  blocker 尚未关闭，因而仍没有可解释的 BIE locator。尚未进行 complex
-  contour isolation、bordered root refinement 和 adjacent-level root matching。package
-  pointwise principal-square-root convention 不得直接用于 complex analytic search。
-- 尚未证明 finite-tail half-guide map convergence、得到独立 saturation 常数
-  $\bar q<1$，也没有 computable correction remainder；observed doubling ratios 仍只能
-  作为 empirical diagnostic。
-- 尚未把一阶 correction 假设验证到当前 BIE--DtN operator family，因而不能报告
-  reliable eigenvalue interval 或真实二维缺陷波导的 estimator effectivity。
+- 尚未证明 exact half-guide solution operator 与 $\Lambda_\pm(k)$ 在所选复邻域上的
+  holomorphy，也未把 projected gap、half-guide Dirichlet spectrum、Wood threshold、cell
+  poles 和 BIE representation poles 分成一个完整 analytic-domain ledger。
+- 尚未证明 physical variational pencil $\mathcal F(k)$ 与 continuous BIE schema 的
+  representation completeness、injectivity、kernel--field equivalence、Fredholm index 和
+  adjoint consistency；因此 BIE matrix kernel 还不能等同于真实 guided mode。
+- 尚未证明 continuous one-cell relation 到 BIE/Fourier generalized pencil 的 primal/adjoint
+  $C^1$ consistency，也未得到 stable/unstable cluster 的 uniform `DIF/sep`、safe chart 或
+  带固定 impedance/Riesz map 的 Cauchy-relation/Robin 合同。
+- 原先要求的
+  $\|\Lambda-E_M\Lambda_{h,M}Q_M\|_{H^{1/2}\to H^{-1/2}}\to0$ 对一阶非紧 DtN 和有限秩
+  lift 通常不可能。尚需在 projected consistency + eigentrace regularity、principal-symbol
+  subtraction + compact remainder、或 regular Galerkin convergence 三条路线中证明一条。
+- 尚未执行新的 $A_{\mathrm{def}}$ 设计、locator、selected complex disk、anchored analytic
+  Rayleigh chart、factor/pole ledger、full-$F$ CR、contour isolation、bordered root refinement
+  或 adjacent-level root matching；这些工作目前均未获授权。
+- 尚未得到独立 saturation 常数和 computable correction remainder；相邻层差只能称
+  next-level correction，不能称 remaining-error estimator。
 - 尚未修复并回归验证 production variable-speed density scaling；当前 ellipse 的修正
   只存在于 `test/aug-bie/` 的实验路径。
 - 尚未直接捕获 production 调用内部实际消费的
@@ -322,24 +348,24 @@ proxy-solver 收敛诊断见
 
 ## 当前门槛
 
-当前不再延伸历史双椭圆 locator。Fliss exact-profile Track A 已关闭经验 projected-gap
-blocker，并给出 $\lambda_h=3.460975044$ 的可信 FD 候选；这已经反驳“该 missing-column
-模型普遍无解”的怀疑，但不是 qualified root。
+当前门是 `METHOD_RECONSTRUCTION / I4_NUMERICS_PAUSED`。现行方法已经具备正确层级：
+physical half-guide PDE 定义 exact $\Lambda_\pm$，physical center variational pencil
+$\mathcal F(k)$ 在截断前定义真实根，continuous BIE 只作待证明的等价 realization，
+ordered QZ 只计算 finite pencil 的 deflating subspace。旧 finite-tail 方法已降为 legacy。
 
-OP-I4-1f、OP-I4-1h 与 OP-I4-6 已在冻结范围内关闭。当前最小下一步是 OP-I4-1e 的
-block-balanced $A_{\mathrm{def}}$/scanner integration：先对物理块做 row/column
-equilibration，在预注册非候选点排除结构性秩坍缩，并把 scanner 真正接到已通过的
-projective ordered-QZ/deflating bases。只有该门通过后才允许一个 bounded real-axis
-locator。Fliss smooth Gaussian 只提供尺度参考，不得当作 sharp-disk root 或 reference。
+恢复 I4 前必须关闭 [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]]
+中的 OP-M0-1--OP-M0-4。最便宜的顺序是：先冻结 concrete half-guide/BIE spaces、法向和
+analytic-domain exceptions；再完成 physical/BIE kernel bridge；随后写出 one-cell
+scattering pencil 到左右 Cauchy blocks 的 theory-to-code map 和 `DIF/sep`/chart gates；最后
+选定 projected DtN 到 continuous spectral approximation 的可证明路线。OP-M0-5 的
+saturation/remainder 是 `IMPORTANT CAVEAT`，不阻止先寻找 qualified discrete root，但会
+阻止 remaining-error/certification claim。
 
-从当前 sharp-disk 路径计，再完成 block-balanced $A_{\mathrm{def}}$/scanner integration
-并运行 bounded locator，一个阶段后即可观察到可解释的实轴 candidate。再加 full
-analytic complex-$k$ readiness 与 contour/Newton qualification，约三个阶段才可能得到
-qualified root；第四阶段才产生 empirical estimator，第五阶段才得到 independent
-high-resolution reference effectivity。
-continuous kernel--field/representation、saturation/remainder 和 validated total error budget
-仍是更强 certification 的另外问题。仍不创建 `research/mainline/`，也不使用绝对优先权
-表述。
+因此不得把当前状态描述为“只差 balanced $A_{\mathrm{def}}$”。关闭四个 M0 blocker 后，
+还需依次完成：M1 新 $A_{\mathrm{def}}$ 与 no-pollution consistency、M2 locator/analytic
+readiness、M3 root isolation、M4 two-level correction、M5 independent reference/effectivity。
+既有 Fliss FD candidate 和 SLP/DLP/$M_{\mathrm{trace}}$ 数值证据继续保留，但不缩短上述
+理论—离散桥接链。仍不创建 `research/mainline/`，也不使用绝对优先权表述。
 
 ## 新 session handoff
 
@@ -348,20 +374,14 @@ continuous kernel--field/representation、saturation/remainder 和 validated tot
   worktree。
 - 新 session 应先读取仓库根目录与 `research/` 下的 `AGENTS.md`，再读取本文件、
   [[research/projects/eig-apost/implementation/README|implementation stage overview]]、
-  [[research/projects/eig-apost/implementation/i4-fliss|current I4 Fliss benchmark]]、
-  [[research/projects/eig-apost/implementation/i4-rayleigh|current I4 Rayleigh budget]]、
-  [[research/projects/eig-apost/implementation/i4-readiness|I4 design]]、
-  [[research/projects/eig-apost/implementation/i4-result|I4 result]]、
-  [[research/projects/eig-apost/implementation/i4-review|I4 review]]、
-  `implementation/SYMBOL.md`、
-  [[research/projects/eig-apost/implementation/open-problems|open-problem ledger]] 和
-  `test/i4-rayleigh-budget/README.md`、
-  `test/i4-rayleigh-budget/output/batch-all/global-summary.txt`、
-  `case-summary.csv`、`ntot-action-ledger.csv` 与 `gate-summary.txt`，再读
-  `test/i4-fliss-2013/output/baseline/report.md`、
-  `output/targeted-edge-confirm/report.md` 与
-  `output/bie-bidirectional-pencil/report.md`。历史证据入口仍为
-  `test/root-ready/analytic-readiness/output/repeat/report.md` 与 `locator.csv`。
+  [[research/projects/eig-apost/phase1-scope/questions|Phase 1 commitments]]、
+  [[research/projects/eig-apost/phase1-scope/p-method|Phase 1 analytical framework]]、
+  [[research/projects/eig-apost/phase2-sources/synthesis-dtn|DtN source synthesis]]、
+  [[research/projects/eig-apost/phase2-sources/r-nep-error|NEP error sources]]、
+  [[research/projects/eig-apost/phase4-report/method.tex|current continuous method]]、
+  [[research/projects/eig-apost/phase4-report/legacy-tail.tex|legacy finite-tail formulation]] 和
+  [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]]。Phase 1--2 文件
+  保持历史原文，不因本次重构回写。
 - I4 当前 verdict 是
   `PARTIAL SUCCESS -- I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
   EWALD_VALUE_REFERENCE_CERTIFIED / EWALD_DERIVATIVE_REFERENCE_CERTIFIED /
@@ -369,8 +389,8 @@ continuous kernel--field/representation、saturation/remainder 和 validated tot
   `REPRODUCIBLE STOP / NO_SCREENED_DIP` 只描述历史双椭圆实验。I3 的
   `root_readiness_review.md` Section L 与 `root_result.md` Section I 继续作为 provenance
   历史边界；不得把 I3 的下一阶段授权覆盖当前 BIE blocker。
-- 保持 Researcher + Engineer + Skeptic 多 subagent 协作：Researcher 冻结数学和实验
-  设计，Engineer 只在获准路径实现并复现，Skeptic 在实现前后独立只读审查。Skeptic
+- 保持 Researcher + Engineer + Skeptic 多 subagent 协作：方法重构期以 Researcher 为主；
+  Engineer 只在 TeX 构建或必要一致性检查时介入，Skeptic 独立只读审查。Skeptic
   必须按当前工程目标区分 `BLOCKER`、`IMPORTANT CAVEAT`、`MINOR CAVEAT`，只有
   blocker 能停止阶段，并优先建议廉价 numerical sanity check；主 agent 负责综合、更新
   [[research/projects/eig-apost/implementation/open-problems|open-problem ledger]] 和
@@ -382,8 +402,8 @@ continuous kernel--field/representation、saturation/remainder 和 validated tot
   SLP_D_N_CERTIFIED_PROXY_RATIO_0P2 / DLP_D_N_MTRACE48_CERTIFIED`；
   `production_internal_A_b_identity=NOT_DIRECTLY_OBSERVED` 和
   `PHYSICAL_ROOT_READY=STOP` 保持不变。不得解释成 qualified root 或 estimator。
-- 下一步允许进入 OP-I4-1e 的 block-balanced $A_{\mathrm{def}}$/scanner integration；
-  该门通过前不得运行 bounded locator，更不得运行 complex disk、contour 或 root。
+- 当前不授权 OP-I4-1e 的实现。下一步只允许关闭 OP-M0-1--OP-M0-4；在此之前不得组装
+  $A_{\mathrm{def}}$，不得运行 bounded locator、DtN wall、complex disk、contour 或 root。
 - 当前新增内容位于 `test/i4-rayleigh-budget/`、`test/i4-extract/`、
   `test/i4-three-path/`、`test/i4-three-path-derivatives/`、`test/i4-proxy-rule/`、
   `test/i4-dlp-trace/` 与本专题
@@ -393,8 +413,7 @@ continuous kernel--field/representation、saturation/remainder 和 validated tot
   $95.539849$ s 并通过顺序门。
   历史 Octave canonical 用时 $531.181285$ s。
 
-新 session 应从 OP-I4-1e 的 block-balanced $A_{\mathrm{def}}$/scanner integration 开始；
-其非候选点秩与实际 scanner 接线门通过后才运行 bounded real-axis scan。不得直接启动
-complex disk、contour、root 或 estimator，也不得把当前有限 $M_{\mathrm{ref}}=96$ 制造
-密度认证外推为所有解密度的无限尾定理，或把 source-derived provenance 升级为
-production 内部数组已观测。
+新 session 应从 OP-M0-1 的 concrete exact-DtN/analytic-domain contract 和 OP-M0-2 的
+physical/BIE kernel bridge 开始。不得以 balanced matrix 或固定点数值 sanity check 跳过
+连续—离散证明义务，也不得把当前有限 $M_{\mathrm{ref}}=96$ 制造密度认证外推为完整
+$H^{1/2}\to H^{-1/2}$ operator-norm convergence。

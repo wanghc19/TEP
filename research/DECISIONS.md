@@ -2,6 +2,25 @@
 
 这里只记录能由现有文件支持的研究决定。`Revisitable` 表示将来可在新证明或新证据下重新审议。
 
+## 2026-08-11 阶段：eig-apost 恢复 continuous DtN/BIE 主层级并暂停 I4 数值
+
+- **决定：** 精确 half-guide DtN 只由半无限边值问题定义；physical center variational
+  pencil $\mathcal F(k)$ 在 BIE representation、Fourier truncation、ordered QZ、doubling
+  和矩阵之前定义真实 guided eigenvalue。continuous BIE 只作待证明的等价 realization，
+  ordered QZ 只作 discrete deflating-subspace 计算。
+- **旧路线：** “有限多个 cells + 远端闭合 + doubling”的完整方法归档为
+  `research/projects/eig-apost/phase4-report/legacy-tail.tex`。它以后只作 same-cell
+  cross-check、reference sequence 或 tail diagnostic，不定义主问题或主 estimator。
+- **误差路线：** 不再要求 finite-rank Fourier lift 在完整
+  $H^{1/2}\to H^{-1/2}$ operator norm 下逼近一阶非紧 DtN。当前候选是 projected
+  consistency + eigentrace regularity、principal-part subtraction + compact remainder，
+  或 regular Galerkin/graph convergence。相邻层差默认只称 next-level correction。
+- **行动边界：** I4 数值工作暂停；OP-M0-1--OP-M0-4 关闭前不得组装
+  $A_{\mathrm{def}}$，不得运行 DtN wall、locator、complex disk 或 root isolation。
+- **证据：** `research/projects/eig-apost/phase4-report/method.tex`；项目 `STATUS.md`、
+  implementation `README.md` 和 `open-problems.md`；Researcher/Skeptic 方法审查。
+- **状态：** Active method reconstruction；Phase 1--2 历史文件保持原文。
+
 ## 2026-07-13 阶段：DtN 只作为独立可行性路线
 
 - **决定：** 直接半波导 DtN 暂不替换当前主线的出射 Cauchy 关系。若恢复原型工作，优先采用保留中心未知量 $(\eta,\xi)$、只替换端口行的 Scheme A；局部胞元 Riccati/QZ 是主要研究路线，scattering-to-DtN 只作诊断。
