@@ -1,0 +1,7 @@
+"stage","seconds","note"
+"precomp_base",0.120048375,"public kernel.precomp_proxy using package lsqminnorm path"
+"precomp_Nedge",0.13470299999999999,"public kernel.precomp_proxy using package lsqminnorm path"
+"precomp_Nside",0.10654524999999999,"public kernel.precomp_proxy using package lsqminnorm path"
+"precomp_Ntop",0.12561029166666668,"public kernel.precomp_proxy using package lsqminnorm path"
+"precomp_Mpw",0.093872958333333339,"public kernel.precomp_proxy using package lsqminnorm path"
+"total",2.5625662916666667,"measured wall-clock time"

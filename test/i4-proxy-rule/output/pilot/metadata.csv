@@ -1,0 +1,7 @@
+"key","observed","expected","pass","note"
+"runtime_and_solver","MATLAB|/Applications/MATLAB_R2023b.app/toolbox/matlab/matfun/lsqminnorm.m","MATLAB|nonempty lsqminnorm",1,"Octave pinv is forbidden as scientific authority."
+"precomp_proxy_path","/Users/whc/Documents/Work/epost/+kernel/precomp_proxy.m","/Users/whc/Documents/Work/epost/+kernel/precomp_proxy.m",1,"3a16825064e5762f3486373fee702e94c34fa3cfdfb3b774f78f3b27eb2f9a60"
+"pairmat_path","/Users/whc/Documents/Work/epost/+kernel/qpgreen_mfs_pairmat.m","/Users/whc/Documents/Work/epost/+kernel/qpgreen_mfs_pairmat.m",1,"ed37808e707d679aa5dc43197a043107b176c7bb6a7c909741371b505e095f0d"
+"package_hashes","3a16825064e5762f3486373fee702e94c34fa3cfdfb3b774f78f3b27eb2f9a60|ed37808e707d679aa5dc43197a043107b176c7bb6a7c909741371b505e095f0d","3a16825064e5762f3486373fee702e94c34fa3cfdfb3b774f78f3b27eb2f9a60|ed37808e707d679aa5dc43197a043107b176c7bb6a7c909741371b505e095f0d",1,"Both public package files are locked before the pilot."
+"coefficient_authority_sha256","31a383c0467b9dd107ea443c1e86b239216801a36024a78028f58e03eda05e47","31a383c0467b9dd107ea443c1e86b239216801a36024a78028f58e03eda05e47",1,"/Users/whc/Documents/Work/epost/test/i4-three-path-derivatives/output/canonical/coefficient-comparison.csv"
+"point_authority_sha256","3c8df6f3bf77b93919792393c54a5f3d183cc05d0a918e6b5ab6860f2dd50ddd","3c8df6f3bf77b93919792393c54a5f3d183cc05d0a918e6b5ab6860f2dd50ddd",1,"/Users/whc/Documents/Work/epost/test/i4-three-path-derivatives/output/package-point-diagnostic/diagnostic.csv"

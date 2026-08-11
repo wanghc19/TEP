@@ -641,11 +641,67 @@ proxy self-change is $3.97\times10^{-10}$.  SLP--N closes its coefficient
 triangle to $5.58\times10^{-9}$ and E--R to $9.61\times10^{-16}$, but its P
 proxy self-changes for Nside, Ntop, and Nedge are respectively
 $6.56\times10^{-9}$, $2.58\times10^{-9}$, and $1.09\times10^{-8}$.  The
-current decision is therefore
+historical decision was therefore
 `SLP_N_UNCERTIFIED_P_GX_PROXY_SELF_CONVERGENCE`.  DLP--D and DLP--N are
 `NOT_RUN_SLP_N_PREREQUISITE`.
 
+The preceding paragraph records the historical $p/d=0.7$ sequential stop.
 The Hessian rank/tolerance sensitivity remains a downstream DLP--N blocker,
-not the first sequential failure.  The cheapest next test is a targeted
-P/SLP--N $G_x$ proxy ladder based at joint level $(160,160,80,32)$; it should
-not recompute already-passed Ewald, Rayleigh, boundary, or wall refinements.
+not an explanation that may be substituted for the SLP--N source-placement
+test below.
+
+## Singularity-aware proxy placement follow-up
+
+The Researcher separated source placement from resolution before running a
+new wall calculation.  In computational coordinates the package represents
+the near field as $G_0$ plus a proxy approximation to
+$G_{\mathrm{QP}}-G_0$.  Its nearest omitted-image singularities are at
+$(\pm d,0)$, while the collocation sides are at $x=\pm d/2$.  The historical
+`proxy_dist/d=0.7` therefore puts the proxy sides at $|x|=1.2d$, beyond those
+singularities.  The only prospective replacement was frozen at $p/d=0.2$,
+which puts the proxy sides at $|x|=0.7d$ and leaves margin $0.3d$.
+
+This rule is motivated by analytic-continuation results for the MFS and by
+periodic proxy-source placement, but its transfer to the package rectangular
+MFS--Rayleigh system is conditional rather than theorem-level.  The primary
+sources are Barnett--Betcke (2008), DOI
+[10.1016/j.jcp.2008.04.008](https://doi.org/10.1016/j.jcp.2008.04.008), Cho--
+Barnett (2015), DOI
+[10.1364/OE.23.001775](https://doi.org/10.1364/OE.23.001775), and Barnett--
+Greengard (2010), DOI
+[10.1016/j.jcp.2010.05.029](https://doi.org/10.1016/j.jcp.2010.05.029).
+The oversampling and small-norm-solve boundary additionally uses Adcock--
+Huybrechs (2020), DOI
+[10.1007/s00041-020-09796-w](https://doi.org/10.1007/s00041-020-09796-w), and
+Huybrechs--Olteanu (2019), DOI
+[10.1016/j.wavemoti.2018.06.001](https://doi.org/10.1016/j.wavemoti.2018.06.001).
+The exact claim-to-source map is frozen in
+[[test/i4-proxy-rule/design|the proxy-rule experiment design]]. No Ewald error
+was used to choose among proxy distances.
+
+The test-only implementation is `test/i4-proxy-rule/`.  It forces MATLAB
+`lsqminnorm`, locks the package and frozen E/R authority hashes, and uses base
+$(120,120,64,24)$ followed by the independent Nedge, Nside, Ntop, and
+$M_{\mathrm{pw}}$ refinements.  The original point, coefficient, and
+self-change gates remain $2\times10^{-9}$, $10^{-8}$, and
+$2\times10^{-9}$.  The pilot records all six training and midpoint-shifted
+hold-out residual blocks, the singular spectrum, coefficient norms, proxy
+edge diagnostics, and internal plane-wave tails without building a wall.
+
+The final canonical result is
+`SLP_D_N_CERTIFIED_PROXY_RATIO_0P2`.  SLP--D has maximum E--P/P--R errors
+$1.64\times10^{-14}$/$1.66\times10^{-14}$.  SLP--N has maximum E--P/P--R
+errors $3.42\times10^{-14}$/$3.47\times10^{-14}$, and its Nedge, Nside,
+Ntop, and $M_{\mathrm{pw}}$ self changes are respectively
+$4.14\times10^{-14}$, $2.12\times10^{-14}$, $3.03\times10^{-14}$, and
+$1.61\times10^{-13}$.  The final rerun took $69.037429$ s and records the
+driver/config SHA-256 values in its report.  Thus OP-I4-1f is closed for the
+current geometry, frequency, two densities, and SLP actions.
+
+Two limitations remain explicit.  First, the package proxy list repeats the
+lower-left corner and omits the upper-right corner, producing an exact
+duplicate column; rank and edgewise DFT tails are diagnostic only.  Second,
+the band $24<|m|\le48$ screens the current SLP output but does not certify the
+omitted infinite tail or DLP actions.  The next permitted calculation is a
+$p/d=0.2$ DLP--D point/self and wall-action experiment.  DLP--N,
+$M_{\mathrm{trace}}$, DtN, and the locator remain blocked by their own gates.

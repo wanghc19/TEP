@@ -1,0 +1,5 @@
+"level","component","maximum_change","gate","pass","point_count","note"
+"Nedge","Gx",2.5419804179525621e-14,2.0000000000000001e-09,1,2,"base-to-single-axis change over both frozen points"
+"Nside","Gx",1.2836886208488526e-14,2.0000000000000001e-09,1,2,"base-to-single-axis change over both frozen points"
+"Ntop","Gx",1.858854950797466e-14,2.0000000000000001e-09,1,2,"base-to-single-axis change over both frozen points"
+"Mpw","Gx",7.6385462041184648e-14,2.0000000000000001e-09,1,2,"base-to-single-axis change over both frozen points"
