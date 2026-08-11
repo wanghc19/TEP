@@ -225,7 +225,7 @@ level and segment length change.
 ## Augmented BIE Stage 2 ledger
 
 This section applies only to
-[[research/projects/eig-apost/implementation/archive/i2-aug-bie/aug-bie|the Stage 2 augmented BIE design]].
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i2-aug-bie/aug-bie|the Stage 2 augmented BIE design]].
 It does not change the manufactured NEP or Stage 1 meanings above.
 
 ### Representation invariant
@@ -329,8 +329,8 @@ Dirichlet.
 ## Root-readiness diagnostic ledger
 
 This section applies only to
-[[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness|the root-readiness design]]
-and `test/root-ready/root_ready_diagnostic.m`. It records the corrected diagnostic
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i3-provenance/root_readiness|the root-readiness design]]
+and `test/archive/legacy-route-v1/root-ready/root_ready_diagnostic.m`. It records the corrected diagnostic
 implementation and does not change the manufactured NEP, Stage 1, or Stage 2 meanings
 above. The solver labels are `production_actual`, `pinv_default`, and
 `ratio_rank_rseed` for the production output, mirrored pointwise solve, and selected
@@ -424,8 +424,8 @@ Cauchy--Riemann, root, Newton, adjacent-level, and estimator stages are
 ## Provenance-closure addendum ledger
 
 This section applies only to the pre-execution addendum in
-[[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness|the Root-readiness design]]
-and the future `test/root-ready/provenance-closure/` experiment. It does not alter the
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i3-provenance/root_readiness|the Root-readiness design]]
+and the archived `test/archive/legacy-route-v1/root-ready/provenance-closure/` experiment. It does not alter the
 manufactured NEP, Half-guide Stage 1, Augmented BIE Stage 2, or completed controlled-
 diagnostic meanings above.
 
@@ -472,9 +472,9 @@ and must never overwrite or alias this field.
 | Channel-order identifier | `cfg.channel_order` | Stable label `RAYLEIGH_NATIVE_ORDER`; no channel permutation is allowed between objects or runs. |
 | Density-scaling identifier | `cfg.density_scaling` | Stable text containing the exact `h`, `speed`, and `density_scale` formulas frozen in the design. |
 | Shifted residual identifier | `cfg.off_collocation_rule` | Stable label `SHIFTED_DENSIFIED_MIDPOINT_2X`; diagnostic-only and never a solver collocation system. |
-| Historical projector comparison | `historical_projector_comparison` | Non-gating row-matched report against read-only `test/root-ready/output/results.mat`, including availability, rank/dimensions, relative differences, and recomputed raw-byte equality. |
-| In-progress evidence root | `cfg.staging_output_root` | `test/root-ready/provenance-closure/output.inprogress/`; the only writable output tree before final publication. |
-| Final evidence root | `cfg.output_root` | `test/root-ready/provenance-closure/output/`; created only by the final atomic rename. |
+| Historical projector comparison | `historical_projector_comparison` | Non-gating row-matched report against read-only `test/archive/legacy-route-v1/root-ready/output/results.mat`, including availability, rank/dimensions, relative differences, and recomputed raw-byte equality. |
+| In-progress evidence root | `cfg.staging_output_root` | Historical configured path `test/root-ready/provenance-closure/output.inprogress/`; the frozen artifact now lives under `test/archive/legacy-route-v1/`. |
+| Final evidence root | `cfg.output_root` | Historical configured path `test/root-ready/provenance-closure/output/`; the frozen artifact now lives under `test/archive/legacy-route-v1/`. |
 | Required artifact set | `cfg.required_artifacts` | Exact per-run list frozen in the design, including `historical-projector.csv` and `completion.marker`. |
 | Completion marker | `completion.marker` | Last file written in a validated run bundle; records version, run, artifact-bundle pass, final label, and non-marker artifact SHA-256 values. |
 
@@ -531,7 +531,7 @@ eigenvalue, correction, estimator, effectivity, or certification claim.
 ## I4 analytic root-readiness ledger
 
 This section applies only to
-[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-readiness|the I4 full analytic complex-wavenumber Root-readiness design]]
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i4-numerical-qualification/i4-readiness|the I4 full analytic complex-wavenumber Root-readiness design]]
 and the corresponding test-local experiment.
 It does not change the I0--I3 meanings above.
 

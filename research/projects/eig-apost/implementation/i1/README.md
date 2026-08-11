@@ -41,9 +41,10 @@ analyticity 和 regular spectral approximation 证明缺口仍由
 [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]] 管理。
 
 历史 numerical qualification 可作为部件证据，但不等于当前 $A_{\mathrm{def}}$ 已通过。
-统一实验入口见 [[test/README#I4-DLP-TRACE-V1|I4-DLP-TRACE-V1]]；旧 augmented-BIE 和
+统一历史实验入口见
+[[test/archive/legacy-route-v1/README#I4-DLP-TRACE-V1|I4-DLP-TRACE-V1]]；旧 augmented-BIE 和
 finite-tail 只从
-[[research/projects/eig-apost/implementation/archive/README|archive index]] 追溯。
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/README|legacy route v1]] 追溯。
 
 ## 推荐阅读顺序
 

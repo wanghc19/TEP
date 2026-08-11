@@ -54,11 +54,11 @@
   $1.46\times10^{-8}$--$1.60\times10^{-8}$。将过强的全六分量门修正为
   action-specific dependencies 后，历史 $p/d=0.7$ run 的 full SLP--D 通过，而 SLP--N
   出现 $10^{-8}$ 级 proxy self failure。Researcher 随后识别出该 source curve 越过最近
-  周期镜像奇点；新 `test/i4-proxy-rule/` 只预注册 $p/d=0.2$，固定 MATLAB
+  周期镜像奇点；新 `test/archive/legacy-route-v1/i4-proxy-rule/` 只预注册 $p/d=0.2$，固定 MATLAB
   `lsqminnorm`、原科学门与四个单轴 refinement。最终 canonical 中 SLP--N 的
   E--P/P--R 最大误差为 $3.42\times10^{-14}$/$3.47\times10^{-14}$，四轴 self 最大为
   $1.61\times10^{-13}$；共同配置下 SLP--D 也通过。因此 OP-I4-1f 已关闭。随后新的
-  `test/i4-dlp-trace/` 严格按 DLP--D、DLP--N、$M_{\mathrm{trace}}$ 顺序运行：DLP--D 与
+  `test/archive/legacy-route-v1/i4-dlp-trace/` 严格按 DLP--D、DLP--N、$M_{\mathrm{trace}}$ 顺序运行：DLP--D 与
   DLP--N 的三路径最大 coefficient 误差分别为 $1.39\times10^{-14}$ 与
   $1.19\times10^{-13}$，四轴 wall self 最坏为 $1.40\times10^{-13}$；独立半网格重构
   将 $M_{\mathrm{trace}}=48$ 的最坏误差和 omitted energy 分别压到
@@ -93,21 +93,21 @@
 | Current I1 discrete $A_{\mathrm{def}}$ design | `I1_A_DEF_DESIGN_PASS_WITH_CONDITIONS`; `DESIGN_BLOCKER_COUNT=0`; `NUMERICS_PAUSED` | current empty center 的 $2K$ safe-DtN 和 $4K$ full-graph 公式；original/reversed QZ reference planes；regular infinite-pair policy；seed-cluster continuation；双向 Sylvester separation；absolute Dirichlet/Robin chart margins；common-$M$ dual transport；legacy block mapping；两项独立 Skeptic 复审 | 尚无 assembly matrix、production `DIF`、analytic graph tangent 或 $A_{\mathrm{def}}'$。只授权下一里程碑的新 test-local static assembly oracle；DtN wall、locator、complex disk、root 仍停止 |
 
 实现权威入口为
-[[research/projects/eig-apost/implementation/archive/i0-manufactured/design|manufactured NEP design]]、
-[[research/projects/eig-apost/implementation/archive/i1-finite-tail/half_guide_map|Half-guide map design]] 和
-[[research/projects/eig-apost/implementation/archive/i2-aug-bie/aug-bie|Augmented BIE design]]；相应独立审查为
-[[research/projects/eig-apost/implementation/archive/i0-manufactured/nep-review|manufactured NEP review]]、
-[[research/projects/eig-apost/implementation/archive/i1-finite-tail/half_guide_review|Half-guide review]]、
-[[research/projects/eig-apost/implementation/archive/i2-aug-bie/aug-bie-review|Augmented BIE review]] 和
-[[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness_review|Root-readiness review]]；
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i0-manufactured/design|manufactured NEP design]]、
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i1-finite-tail/half_guide_map|Half-guide map design]] 和
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i2-aug-bie/aug-bie|Augmented BIE design]]；相应独立审查为
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i0-manufactured/nep-review|manufactured NEP review]]、
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i1-finite-tail/half_guide_review|Half-guide review]]、
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i2-aug-bie/aug-bie-review|Augmented BIE review]] 和
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i3-provenance/root_readiness_review|Root-readiness review]]；
 本轮数值解释见
-[[research/projects/eig-apost/implementation/archive/i3-provenance/root_result|I3 Root-readiness result]]、
-[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-result|I4 result]] 和
-[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-review|I4 review]]；当前替换 benchmark 见
-[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-fliss|I4 Fliss benchmark]]，最新 BIE port
-预算见 [[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-rayleigh|I4 Rayleigh budget]]，谱提取与
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i3-provenance/root_result|I3 Root-readiness result]]、
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i4-numerical-qualification/i4-result|I4 result]] 和
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i4-numerical-qualification/i4-review|I4 review]]；当前替换 benchmark 见
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i4-numerical-qualification/i4-fliss|I4 Fliss benchmark]]，最新 BIE port
+预算见 [[research/projects/eig-apost/implementation/archive/legacy-route-v1/i4-numerical-qualification/i4-rayleigh|I4 Rayleigh budget]]，谱提取与
 proxy-solver 收敛诊断见
-[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-extract|I4 spectral extraction closure]]。
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i4-numerical-qualification/i4-extract|I4 spectral extraction closure]]。
 
 ## 已完成
 
@@ -209,16 +209,16 @@ proxy-solver 收敛诊断见
   0。稳定定义已同步写入 `method.tex`，16 页 `method.pdf` 已重新构建并逐页渲染检查。
 - 本轮未调用 Engineer、未修改或运行 `test/`、未修改 package 源码，也未组装任何实际
   $A_{\mathrm{def}}$。下一阶段只允许新 test-local static assembly oracle。
-- 已在 `test/eig-apost-nep/` 完成 manufactured `2 x 2` analytic NEP 的 Octave 实现、
+- 已在 `test/archive/legacy-route-v1/eig-apost-nep/` 完成 manufactured `2 x 2` analytic NEP 的 Octave 实现、
   两次确定性复现和 skeptic 审查；该实验只关闭有限维算法门。
-- 已在 `test/hg-map/` 完成 Half-guide map Stage 1：非交换代数、exact analytic cell、
+- 已在 `test/archive/legacy-route-v1/hg-map/` 完成 Half-guide map Stage 1：非交换代数、exact analytic cell、
   固定物理 smoke、Wood/Robin/order 负例和数值向量复现均通过；完整 artifact-byte
   reproducibility 尚未建立。
-- 已在 `test/aug-bie/` 完成 Augmented BIE Stage 2：A1/A2 manufactured oracles、实际
+- 已在 `test/archive/legacy-route-v1/aug-bie/` 完成 Augmented BIE Stage 2：A1/A2 manufactured oracles、实际
   ellipse/circle interface smoke、七个 finite-tail levels、availability/failure negatives
   与 source-aware unchanged-source rerun 均通过。最大 actual raw Schur error 为
   $3.16\times10^{-17}$，wrong-coordinate mutation mismatch 为 $7.22\times10^{-2}$。
-- 已在 `test/root-ready/` 完成历史 Root-readiness early-stop proxy diagnostic 及两次
+- 已在 `test/archive/legacy-route-v1/root-ready/` 完成历史 Root-readiness early-stop proxy diagnostic 及两次
   unchanged-source Octave 运行。修正后的 $10^{-5}$ object-compatibility gate 中 78/78
   downstream rows 和 3/3 resolution rows 通过，aggregate max 为
   $1.898508\times10^{-9}$；rank 126/144 的 projector fingerprints、直接调用源码清单和
@@ -228,7 +228,7 @@ proxy-solver 收敛诊断见
   field 与 residual 的三个 $10^{-11}$ gates 分别以 $2.798540\times10^{-7}$、
   $5.531552\times10^{-10}$ 和 $1.250388\times10^{-9}$ 失败，因而没有启动 root-stage
   计算。
-- 已在 `test/root-ready/provenance-closure/` 完成 source-exact test-local copy、
+- 已在 `test/archive/legacy-route-v1/root-ready/provenance-closure/` 完成 source-exact test-local copy、
   共享 $A,b$ cache、原阈值 gate、synthetic mutation negative 和 transactional
   baseline/repeat。6 个 shared systems 对应 30 个 solver rows；复制体与 package public
   output bitwise 一致，三个原 $10^{-11}$ output gates 的差异均为 0。
@@ -236,7 +236,7 @@ proxy-solver 收敛诊断见
   $6.4742$ s 和 $6.6299$ s；repeat 数值相对差为 0，11 项 direct-call manifest、
   shared-system 和 projector fingerprints 全部一致，原子发布与 marker hashes 经
   Engineer 独立复算通过。
-- 已在 `test/root-ready/analytic-readiness/` 完成 I4 source-derived branch-injected
+- 已在 `test/archive/legacy-route-v1/root-ready/analytic-readiness/` 完成 I4 source-derived branch-injected
   evaluator、29 点 locator、fixed-chart/disk/CR/factor/negative 的 fail-closed 管线和
   transactional baseline/repeat。两次权威 Octave 运行 exit code 均为 0，所有科学表
   完全复现，aggregate numeric difference 为 0，19 项 direct-source manifest 与双 marker
@@ -248,7 +248,7 @@ proxy-solver 收敛诊断见
 - I4 Researcher 分析和 Skeptic post-run review 均认定 STOP 有效且可解释：证据为
   `PASS WITH CONDITIONS`，科学结论为 `REPRODUCIBLE STOP / NO_SCREENED_DIP`，I5 不获
   授权。该结论现只作为历史双椭圆 negative 保存。
-- 已在 `test/i4-fliss-2013/` 完成 Fliss missing-column 双轨 benchmark。exact smooth FD
+- 已在 `test/archive/legacy-route-v1/i4-fliss-2013/` 完成 Fliss missing-column 双轨 benchmark。exact smooth FD
   baseline 给出主候选 $\lambda_h=3.460975044$，中心质量比例 $0.4959$、端部比例
   $6.97\times10^{-10}$、八/十二周期尾长相对位移 $2.32\times10^{-7}$；相对论文值差
   $0.116\%$。
@@ -267,7 +267,7 @@ proxy-solver 收敛诊断见
 - canonical extractor-only 实验中的 Bessel closed form 与 package extractor 都直接使用
   Rayleigh modal kernel；它们的一致性只验证同一个 modal integral 的闭式公式、梯形求积
   和代码实现，不再作为 qpgreen 谱表示或 sum--integral interchange 的独立闭环。
-- 新 `test/i4-three-path/` 实验以 Linton 式 (2.65) 的真 Ewald split 建立独立 value
+- 新 `test/archive/legacy-route-v1/i4-three-path/` 实验以 Linton 式 (2.65) 的真 Ewald split 建立独立 value
   reference：Tables 2--5 五点最大误差 $5.07\times10^{-11}$，项目点
   Ewald--Rayleigh 最大误差 $1.11\times10^{-16}$。同一冻结密度先经完整 Ewald kernel
   积分再做 wall Fourier projection，与 Rayleigh extractor 的 SLP--D 系数最大差为
@@ -283,7 +283,7 @@ proxy-solver 收敛诊断见
   relative $\tau=3\times10^{-16}$ 时把三个冻结点降到 $3.95\times10^{-12}$，但同阈值
   `pinv(A,tol)` 产生 $5.98\times10^{-5}$，因此不能把问题简化为 cutoff-only，也未授权
   derivative/Hessian/wall 验证。
-- 新 `test/i4-three-path-derivatives/` 已完成 MATLAB Ewald 解析导数资格化。Linton
+- 新 `test/archive/legacy-route-v1/i4-three-path-derivatives/` 已完成 MATLAB Ewald 解析导数资格化。Linton
   Tables 2--5 五点最大误差仍为 $5.07\times10^{-11}$；value-only Richardson、独立
   Rayleigh derivative、Helmholtz residual、mixed-derivative symmetry、source/target sign
   以及 $a,M_1,M_2,N$ 单变量加密均通过。此结论认证 point-level Ewald gradient/Hessian，
@@ -305,7 +305,7 @@ proxy-solver 收敛诊断见
   $M_{\mathrm{pw}}$ 加密均通过，但 P 的 Nside/Ntop/Nedge self changes 分别为
   $6.56\times10^{-9}$、$2.58\times10^{-9}$、$1.09\times10^{-8}$。该历史 run 的 blocker 是
   `SLP_N_UNCERTIFIED_P_GX_PROXY_SELF_CONVERGENCE`；DLP--D/DLP--N 按用户冻结顺序未运行。
-- 新 `test/i4-proxy-rule/` 没有继续加密历史 $p/d=0.7$，而是按最近周期镜像奇点先验
+- 新 `test/archive/legacy-route-v1/i4-proxy-rule/` 没有继续加密历史 $p/d=0.7$，而是按最近周期镜像奇点先验
   唯一冻结 $p/d=0.2$。MATLAB pilot 的两个 $G_x$ 点 Ewald 误差最坏为
   $2.18\times10^{-14}$，training/错位 hold-out residual 为 $10^{-12}$--$10^{-11}$。
   canonical 的 SLP--D/SLP--N E--P 最大误差为 $1.64\times10^{-14}$、
@@ -313,7 +313,7 @@ proxy-solver 收敛诊断见
   $4.14\times10^{-14}$、$2.12\times10^{-14}$、$3.03\times10^{-14}$、
   $1.61\times10^{-13}$。最终源码哈希写入 report 后复跑用时 $69.037429$ s，故
   `SLP_D_N_CERTIFIED_PROXY_RATIO_0P2` 与 OP-I4-1f 正式关闭。
-- 新 `test/i4-dlp-trace/` 在任何 wall matrix 前完成 1.71 s MATLAB pilot。三个冻结点的
+- 新 `test/archive/legacy-route-v1/i4-dlp-trace/` 在任何 wall matrix 前完成 1.71 s MATLAB pilot。三个冻结点的
   $G_x,G_y$ 对 Ewald 最大误差为 $7.88\times10^{-14}$，四轴 point self 最坏为
   $7.64\times10^{-14}$；五个 level 的 rank 精确复现 $(302,328,302,302,330)$，且 public
   `lsqminnorm` residual 与 duplicate-column minimum-norm sanity 全部通过。95.539849 s
@@ -354,7 +354,7 @@ proxy-solver 收敛诊断见
 - 尚未得到独立 saturation 常数和 computable correction remainder；相邻层差只能称
   next-level correction，不能称 remaining-error estimator。
 - 尚未修复并回归验证 production variable-speed density scaling；当前 ellipse 的修正
-  只存在于 `test/aug-bie/` 的实验路径。
+  只存在于 `test/archive/legacy-route-v1/aug-bie/` 的实验路径。
 - 尚未直接捕获 production 调用内部实际消费的
   $A_{\mathrm{pr}},b_{\mathrm{pr}}$；本轮关闭的是冻结源码与 Octave 环境中的
   source-derived operational provenance，而不是更强的 runtime internal-array identity。
@@ -429,9 +429,11 @@ readiness、M3 root isolation、M4 two-level correction、M5 independent referen
   使用 manufactured graph inputs 与小型 exact Sylvester separation，验证维数、Schur、
   basis、符号和 chart negatives。不得运行 production DtN wall、bounded locator、
   complex disk、contour 或 root，也不得返回 production $A_{\mathrm{def}}'$。
-- 当前新增内容位于 `test/i4-rayleigh-budget/`、`test/i4-extract/`、
-  `test/i4-three-path/`、`test/i4-three-path-derivatives/`、`test/i4-proxy-rule/`、
-  `test/i4-dlp-trace/` 与本专题
+- 历史新增内容现归档于 `test/archive/legacy-route-v1/i4-rayleigh-budget/`、
+  `test/archive/legacy-route-v1/i4-extract/`、`test/archive/legacy-route-v1/i4-three-path/`、
+  `test/archive/legacy-route-v1/i4-three-path-derivatives/`、
+  `test/archive/legacy-route-v1/i4-proxy-rule/`、
+  `test/archive/legacy-route-v1/i4-dlp-trace/` 与本专题
   STATUS/README/ledger/report 文档；package 源码未修改。MATLAB R2023b qualification、
   action-specific pilot、历史 early-stop full wall run、point-only fixed-system diagnostic、
   proxy-rule pilot/full 与 DLP/trace pilot/full 已运行；最终 DLP/trace full 用时

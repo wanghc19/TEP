@@ -28,12 +28,13 @@ implementation/
 │   ├── design.md
 │   └── review.md
 └── archive/
-    ├── README.md
-    ├── i0-manufactured/
-    ├── i1-finite-tail/
-    ├── i2-aug-bie/
-    ├── i3-provenance/
-    └── i4-numerical-qualification/
+    └── legacy-route-v1/
+        ├── README.md
+        ├── i0-manufactured/
+        ├── i1-finite-tail/
+        ├── i2-aug-bie/
+        ├── i3-provenance/
+        └── i4-numerical-qualification/
 ```
 
 - [[research/projects/eig-apost/implementation/i1/README|i1/]]：当前新路线的唯一活动阶段，
@@ -44,10 +45,11 @@ implementation/
   数学对象、code variable 和稳定标签。
 - [[research/projects/eig-apost/implementation/open-problems|open-problems.md]]：本专题唯一
   open-problem ledger；明确区分当前新路线与历史实验编号。
-- [[research/projects/eig-apost/implementation/archive/README|archive/]]：保存历史 I0--I4
-  的完整 design、result 和 review；旧编号和 verdict 不构成当前授权。
-- [[test/README|test experiment index]]：以稳定 Experiment ID 映射所有 eig-apost
-  实验的物理路径、入口和权威报告。
+- [[research/projects/eig-apost/implementation/archive/legacy-route-v1/README|legacy route v1]]：
+  保存旧路线 I0--I4 的完整 design、result、review 和原索引；旧编号和 verdict 不构成
+  当前授权。
+- [[test/README|current test index]]：记录新路线实验状态；当前尚无新路线实验。旧实验统一
+  由 [[test/archive/legacy-route-v1/README|legacy experiment index]] 保存。
 
 ## 阶段文档规则
 
@@ -57,8 +59,8 @@ implementation/
 `review.md` 记录阶段级审查与授权边界。
 
 具体实验的代码、配置、报告和产物仍保存在 `test/`，implementation 只负责索引与综合。
-历史阶段继续保存在 `archive/`；不得把新路线 I1--I4 的编号机械写回历史 I1--I4 文档、
-实验 ID 或冻结 verdict。
+历史阶段统一保存在 `archive/legacy-route-v1/`；不得把新路线 I1--I4 的编号机械写回旧
+I1--I4 文档、实验 ID 或冻结 verdict。
 
 ## 推荐阅读顺序
 
@@ -76,20 +78,24 @@ implementation/
 7. [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]：阅读
    当前数学方法。
 8. [[research/projects/eig-apost/implementation/SYMBOL|symbol and code-variable ledger]] 和
-   [[test/README|unified experiment index]]：查询符号与实验权威报告。
+   [[test/README|current experiment index]]：查询符号与新路线实验状态。
 9. 只有需要追溯历史设计、结果和审查时，再进入
-   [[research/projects/eig-apost/implementation/archive/README|archive index]]。
+   [[research/projects/eig-apost/implementation/archive/legacy-route-v1/README|legacy route v1]]。
 
-## 历史阶段简介
+## Legacy route v1 证据边界
 
-- `archive/i0-manufactured/`：有限维 manufactured NEP root/correction 原型；实验入口
-  [[test/README#I0-NEP-V1|I0-NEP-V1]]。
-- `archive/i1-finite-tail/`：`SUPERSEDED / LEGACY` 的 finite-tail half-guide map；实验入口
-  [[test/README#I1-HG-MAP-V1|I1-HG-MAP-V1]]。
-- `archive/i2-aug-bie/`：历史 augmented-BIE coupling；center BIE 部件可能复用，旧
-  coupling 必须替换。实验入口 [[test/README#I2-AUG-BIE-V1|I2-AUG-BIE-V1]]。
-- `archive/i3-provenance/`：`RETIRED AS CURRENT GATE / HISTORICAL PROVENANCE EVIDENCE`；
-  实验入口 [[test/README#I3-PROVENANCE-V1|I3-PROVENANCE-V1]]。
-- `archive/i4-numerical-qualification/`：历史 Fliss、Rayleigh、Ewald/MFS/extractor、
-  SLP/DLP 和 $M_{\mathrm{trace}}$ 部件证据；最后顺序资格实验为
-  [[test/README#I4-DLP-TRACE-V1|I4-DLP-TRACE-V1]]。
+被新路线取代的是 finite-tail/远端闭合对 half-guide 的主定义、旧 augmented-BIE/
+finite-tail coupling，以及旧 $A_{\mathrm{def}}$/locator 授权链。它们不再定义当前谱问题
+或 estimator。
+
+仍可参考的 legacy 证据包括 manufactured NEP 算法 oracle、center-BIE block/scaling 和
+provenance 机制、Fliss 参数窗口、Rayleigh budget 与失败负例，以及冻结参数下的 Linton
+Ewald value/gradient/Hessian、MATLAB `lsqminnorm`、`proxy_dist/d=0.2`、四种 SLP/DLP
+action 的 Ewald/MFS/Rayleigh 三路径比较和有限 $M_{\mathrm{trace}}=48$ screen。后两类只
+认证冻结几何、制造密度、solver 和有限 $M_{\mathrm{ref}}=96$，不是当前 DtN、任意 solved
+density、无限尾或 root 的认证。
+
+具体报告与原始产物统一从
+[[test/archive/legacy-route-v1/README|legacy experiment index]] 进入；implementation 侧的
+阶段索引见
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/README|legacy route v1]]。

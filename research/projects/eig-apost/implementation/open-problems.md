@@ -92,7 +92,7 @@ production DtN wall、locator、complex disk 或 root isolation。现行方法�
 
 **Manufactured Nonlinear Eigenvalue Problem Root-and-Correction Prototype。**
 历史审查见
-[[research/projects/eig-apost/implementation/archive/i0-manufactured/nep-review|I0 review]]。
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i0-manufactured/nep-review|I0 review]]。
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
@@ -102,7 +102,7 @@ production DtN wall、locator、complex disk 或 root isolation。现行方法�
 ## I1
 
 **Legacy Finite-tail Half-guide-map Algebra。**历史审查见
-[[research/projects/eig-apost/implementation/archive/i1-finite-tail/half_guide_review|I1 review]]。
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i1-finite-tail/half_guide_review|I1 review]]。
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
@@ -112,7 +112,7 @@ production DtN wall、locator、complex disk 或 root isolation。现行方法�
 ## I2
 
 **Augmented Boundary Integral Equation and Center Coupling。**历史审查见
-[[research/projects/eig-apost/implementation/archive/i2-aug-bie/aug-bie-review|I2 review]]。
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i2-aug-bie/aug-bie-review|I2 review]]。
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
@@ -122,7 +122,7 @@ production DtN wall、locator、complex disk 或 root isolation。现行方法�
 ## I3
 
 **Root-readiness Proxy Diagnostic and Source-derived Provenance Closure。**当前审查见
-[[research/projects/eig-apost/implementation/archive/i3-provenance/root_readiness_review#L. Provenance-closure post-run review|I3 review Section L]]。
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i3-provenance/root_readiness_review#L. Provenance-closure post-run review|I3 review Section L]]。
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
@@ -135,11 +135,11 @@ production DtN wall、locator、complex disk 或 root isolation。现行方法�
 **Full Analytic Complex-Wavenumber Root-readiness。**首轮双椭圆实验的
 `REPRODUCIBLE STOP / NO_SCREENED_DIP` 保留为历史负例。当前主模型已按用户决定改为
 Fliss 相同周期端与 missing-column geometry；最新 Track A/Track B 结果见
-[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-fliss|I4 Fliss benchmark]]。最新 sharp-disk
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i4-numerical-qualification/i4-fliss|I4 Fliss benchmark]]。最新 sharp-disk
 Rayleigh-budget 诊断见
-[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-rayleigh|I4 Rayleigh budget]]；最新谱提取与
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i4-numerical-qualification/i4-rayleigh|I4 Rayleigh budget]]；最新谱提取与
 proxy-solver 诊断见
-[[research/projects/eig-apost/implementation/archive/i4-numerical-qualification/i4-extract|I4 spectral extraction closure]]。
+[[research/projects/eig-apost/implementation/archive/legacy-route-v1/i4-numerical-qualification/i4-extract|I4 spectral extraction closure]]。
 该历史 I4 数值路线因 M0 方法重构暂停；下表保留既有数值证据和历史编号，不构成继续
 当前 I1 的 $A_{\mathrm{def}}$/locator 授权。
 
@@ -148,8 +148,8 @@ proxy-solver 诊断见
 | OP-I4-1a | `MINOR CAVEAT` | 历史双椭圆的 29 点 locator 在 $[0.04,0.18]$ 上严格单调下降，没有 screened interior dip。 | 不再阻止当前 Fliss missing-column 主模型；只限制对旧双椭圆 family 的结论。 | 保留原 baseline/repeat，不再为当前项目连续追扫旧区间。 | `WONT-FIX FOR CURRENT MODEL` |
 | OP-I4-1b | `MINOR CAVEAT` | 旧 affine/逐模态路径把高阶 transmission 数值降秩解释成模态丢失。新 projective ordered-QZ/doubling 诊断在 canonical $\delta=0.30$ 和 small-clearance $\delta=0.10$ 上通过所有 same-$M$ 门到测试上界 $M=20$；即使 $41\times41$ transmission block 在相对阈值 $10^{-10}$ 下秩仅为 7，deflating subspaces 仍完整可用。 | 旧路径不再阻止当前 projective 路线；$M=20$ 只是 right-censored pass-through，不能称为已知 $M_{\mathrm{stable}}$ 上界。 | 保留 transmission tolerance sweep 为 ledger，不再以 raw rank 或逐模态 pairing 停止 projective path。只有扩展到 $M>20$ 或新参数时才复查 same-$M$ gates。 | `RESOLVED` |
 | OP-I4-1c | `IMPORTANT CAVEAT` | Track A 是精确 Fliss smooth Gaussian profile，Track B 是 radius-$0.2$ sharp disk；两者没有同一离散算子或 root identity。用户已选择 sharp-disk missing-column 作为独立 BIE benchmark，Fliss track 只提供尺度和参数参考。 | 不阻止寻找 sharp-disk 自身的 root；阻止把 Track A 的 $\lambda_h=3.460975044$ 当成 sharp-disk root 或 estimator reference。 | sharp-disk 路线必须生成 own locator、root hierarchy 和 reference；只有论文要声称复现 exact Fliss profile 时才实现 model-consistent smooth-profile infinite-domain evaluator。 | `OPEN` |
-| OP-I4-1f | `BLOCKER` | 历史 $p/d=0.7$ 把 proxy 竖边放到 $|x|=1.2d$，越过 $G_{\mathrm{QP}}-G_0$ 最近镜像奇点 $|x|=d$，并产生 SLP--N 的 $10^{-8}$ 级单轴变化。新 `test/i4-proxy-rule/` 在不修改 package、固定 MATLAB `lsqminnorm` 和唯一预注册 $p/d=0.2$ 后重跑：SLP--N 的 E--P/P--R 最大误差为 $3.42\times10^{-14}$/$3.47\times10^{-14}$，Nedge/Nside/Ntop/$M_{\mathrm{pw}}$ self 分别为 $4.14\times10^{-14}$、$2.12\times10^{-14}$、$3.03\times10^{-14}$、$1.61\times10^{-13}$；同一配置的 SLP--D 也通过。 | 原 SLP--N sequential blocker 已关闭；这只认证当前几何、频率、两密度与 SLP--D/N，不认证 DLP、$M_{\mathrm{trace}}$、DtN 或 root。 | 保留奇点感知规则 $0<p<d/2$ 和当前 $p/d=0.2$ 的条件性范围；下一步只运行 DLP--D 专项。package proxy 列表重复左下角并缺失右上角，故 rank/edge-DFT tail 仅作非门诊断，最终若修改 package 再单独回归。 | `RESOLVED` |
-| OP-I4-1h | `BLOCKER` | `test/i4-dlp-trace/` 在共同 $p/d=0.2$、public MATLAB `lsqminnorm` 下按 DLP--D、DLP--N 顺序通过。DLP--D/DLP--N 三路径最大 coefficient 误差为 $1.39\times10^{-14}$/$1.19\times10^{-13}$；DLP--N 四轴 wall self 最坏为 $1.40\times10^{-13}$。三点 Hessian Ewald 误差最坏为 $5.41\times10^{-14}$，mixed/source-target FD 最坏为 $5.58\times10^{-10}$，五个预期 rank 全部复现。 | 历史 $p/d=0.7$ Hessian/solver spread 不再阻止当前 $p/d=0.2$ DLP Cauchy-data；这只认证当前参数、两制造密度和 public solver，不是任意参数的 rank theorem。 | 保持当前 solver/proxy 哈希与顺序门；参数、geometry 或 solver 变化时重跑 point/self 和 DLP wall，禁止把本结果外推。 | `RESOLVED` |
+| OP-I4-1f | `BLOCKER` | 历史 $p/d=0.7$ 把 proxy 竖边放到 $|x|=1.2d$，越过 $G_{\mathrm{QP}}-G_0$ 最近镜像奇点 $|x|=d$，并产生 SLP--N 的 $10^{-8}$ 级单轴变化。归档实验 `test/archive/legacy-route-v1/i4-proxy-rule/` 在不修改 package、固定 MATLAB `lsqminnorm` 和唯一预注册 $p/d=0.2$ 后重跑：SLP--N 的 E--P/P--R 最大误差为 $3.42\times10^{-14}$/$3.47\times10^{-14}$，Nedge/Nside/Ntop/$M_{\mathrm{pw}}$ self 分别为 $4.14\times10^{-14}$、$2.12\times10^{-14}$、$3.03\times10^{-14}$、$1.61\times10^{-13}$；同一配置的 SLP--D 也通过。 | 原 SLP--N sequential blocker 已关闭；这只认证当前几何、频率、两密度与 SLP--D/N，不认证 DLP、$M_{\mathrm{trace}}$、DtN 或 root。 | 保留奇点感知规则 $0<p<d/2$ 和当前 $p/d=0.2$ 的条件性范围；下一步只运行 DLP--D 专项。package proxy 列表重复左下角并缺失右上角，故 rank/edge-DFT tail 仅作非门诊断，最终若修改 package 再单独回归。 | `RESOLVED` |
+| OP-I4-1h | `BLOCKER` | 归档实验 `test/archive/legacy-route-v1/i4-dlp-trace/` 在共同 $p/d=0.2$、public MATLAB `lsqminnorm` 下按 DLP--D、DLP--N 顺序通过。DLP--D/DLP--N 三路径最大 coefficient 误差为 $1.39\times10^{-14}$/$1.19\times10^{-13}$；DLP--N 四轴 wall self 最坏为 $1.40\times10^{-13}$。三点 Hessian Ewald 误差最坏为 $5.41\times10^{-14}$，mixed/source-target FD 最坏为 $5.58\times10^{-10}$，五个预期 rank 全部复现。 | 历史 $p/d=0.7$ Hessian/solver spread 不再阻止当前 $p/d=0.2$ DLP Cauchy-data；这只认证当前参数、两制造密度和 public solver，不是任意参数的 rank theorem。 | 保持当前 solver/proxy 哈希与顺序门；参数、geometry 或 solver 变化时重跑 point/self 和 DLP wall，禁止把本结果外推。 | `RESOLVED` |
 | OP-I4-1g | `IMPORTANT CAVEAT` | $\delta=0.20$、$k=1.8603695988$ 的 low/high pencil 在所有测试 $M$ 上都有两个 neutral pairs；$M=20$ 的 unit-circle gap 约 $3.05\times10^{-9}$，因此 decaying/growing ordered maps 不可用。 | 阻止在该参数点使用 half-guide decaying DtN，也阻止跨 $\delta$ 的统一窗口；不阻止 canonical $\delta=0.30$ 路线，因为其 stable/unstable split 清晰。 | 只有选择 $\delta=0.20$ 作为 root 模型时，才做 projected-band scan 与 $k+\mathrm{i}\eta$ limiting-absorption continuation；当前先避开该 point。 | `SCHEDULED` |
 | OP-I4-2 | `IMPORTANT CAVEAT` | Track A 候选仅在 N80 finite strip 上计算；N80/N120 加密的是相邻 band edges，不是 defect eigenpair。 | 不阻止 `I4_FD_CANDIDATE_READY`，但阻止声称 defect eigenvalue 已完成空间收敛。 | 需要增强证据时，只算 strong case 的 N120 八周期尾条带并与 N80 八周期结果比较。 | `SCHEDULED` |
 | OP-I4-3 | `IMPORTANT CAVEAT` | smooth-profile contrast continuation 未运行；新 Fliss 证据尚无 baseline/repeat 字节级复现和 MATLAB parity。 | 不阻止当前单点候选身份；限制参数稳健性与跨环境复现主张。 | root path 恢复后再对最小必要配置做一次 unchanged-source repeat 和命令行 MATLAB parity；continuation 只在论文需要时运行。 | `SCHEDULED` |
