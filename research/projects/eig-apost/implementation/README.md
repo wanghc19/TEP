@@ -258,6 +258,16 @@ contour count 或 root solve。
   $1.61\times10^{-13}$。因此 `SLP_D_N_CERTIFIED_PROXY_RATIO_0P2` 关闭 OP-I4-1f。
   此结论不认证 DLP、$M_{\mathrm{trace}}$、DtN 或 locator；package proxy 源列表的重复
   左下角使 rank 与 edge-DFT tail 只能作为非门诊断。
+- 新 `test/i4-dlp-trace/` 延续相同 $p/d=0.2$、public MATLAB `lsqminnorm`、两制造密度
+  与 $10^{-8}/2\times10^{-9}$ 原门，严格按 DLP--D、DLP--N、$M_{\mathrm{trace}}$
+  顺序执行。DLP--D/DLP--N 三路径最大 coefficient 误差为
+  $1.39\times10^{-14}$/$1.19\times10^{-13}$，DLP--N 四轴 wall self 最坏为
+  $1.40\times10^{-13}$。保存的完整墙场在半网格 hold-out 上以 $M=48$ 重构时最坏误差
+  为 $7.08\times10^{-12}$，$48<|m|\le96$ omitted energy 最坏为
+  $5.00\times10^{-13}$。因此 `DLP_D_N_MTRACE48_CERTIFIED` 在当前几何、实数非 Wood
+  参数、两密度和有限 $M_{\mathrm{ref}}=96$ 范围内关闭 OP-I4-1h/OP-I4-6；这不是任意
+  BIE 解密度的无限尾定理。额外 $n_{\mathrm{tot}}/N_y$/Ewald wall ladders 未运行，列为
+  `IMPORTANT CAVEAT`，不覆盖此前 point derivative qualification。
 - 当前综合状态是 `PARTIAL SUCCESS`：已观察到第一个可信 real-case FD eigenvalue
   candidate，但 `PHYSICAL_ROOT_READY=STOP`，I5 仍不获授权。权威当前入口为
   [[research/projects/eig-apost/implementation/i4-fliss|I4 Fliss benchmark]]、
@@ -269,17 +279,17 @@ contour count 或 root solve。
 | 顺序 | 阶段全称 | 具体要完成的工作 | 完成后才允许声称什么 |
 |---:|---|---|---|
 | P1 | **Source-derived Proxy-System Provenance Closure（源码派生的 proxy system 来源闭合）** | 已在 `test/` 内完成 source-exact copy、同一 $A,b$ 数据链、原阈值双跑和独立审查；production 内部数组仍不可直接观测。 | `PASS WITH CONDITIONS`；只授权 P2，仍没有 root。 |
-| P2a | **Trace/Extractor Closure and Stable Projective Port Representation（迹提取闭合与稳定投影式端口表示）** | Ewald value/gradient/Hessian 与共同 $p/d=0.2$ 的 SLP--D/N 已通过；当前依次认证 DLP--D、DLP--N、独立 $M_{\mathrm{trace}}$，最后完成 block-balanced $A_{\mathrm{def}}$/scanner integration。 | 全部子门通过后只授权一个 bounded real-axis locator；仍没有 root。 |
+| P2a | **Trace/Extractor Closure and Stable Projective Port Representation（迹提取闭合与稳定投影式端口表示）** | Ewald value/gradient/Hessian、共同 $p/d=0.2$ 的四个 SLP/DLP actions 与有限 $M_{\mathrm{trace}}=48$ 已通过；当前只剩 block-balanced $A_{\mathrm{def}}$/scanner integration。 | balanced/scanner 子门通过后只授权一个 bounded real-axis locator；仍没有 root。 |
 | P2b | **Preregistered Real-axis Locator（预注册实轴定位）** | 只在相邻 $M$ 与相同网格上寻找共同的严格内点 dip；拒绝 endpoint/global fallback，并保持 Gaussian 与 sharp disk 结果分离。 | 只提供 analytic-readiness 的候选 seed。 |
 | P2c | **Full Analytic Root-readiness on a Complex Wavenumber Domain（复波数域上的完整解析根准备门）** | 用新 seed 冻结 anchored Rayleigh branches、固定维数 $F_{j,h}(k)$、complex disk、Cauchy--Riemann consistency、所有 factors 的 ledger 和完整负例。 | 只在所有门通过后授权 contour root isolation。 |
 | P3 | **Actual Root Isolation and Simple-root Qualification（真实离散根隔离与简单根资格判定）** | 用 complex contour count 隔离一个根，用 bordered Newton refinement，并在相邻 tail levels 匹配同一 root，检查左右 null vectors、transverse derivative 和 conditioning。 | 首个 qualified discrete root；还不是独立 reference truth。 |
 | P4 | **Empirical A Posteriori Eigenvalue Correction（经验型特征值后验校正）** | 计算 matched $k_{j,h}$ hierarchy、projected map correction、root-solve correction 和 next-level shift consistency。 | 条件化、经验型 finite-tail estimator。 |
 | P5 | **Independent Reference and Effectivity（独立参考值与有效性）** | 建立高分辨率独立 reference、量化 reference uncertainty，并报告多层 effectivity、失败例、MATLAB parity 与 proxy/BIE/port/spatial refinement。 | 可信的真实二维 eigenvalue + empirical estimator/effectivity case study。 |
 
-P1 已完成，Track A 的可信 FD 候选也已观察到；原双椭圆 P2 只保留为历史负例。当前
-sharp-disk 路径约两个阶段可得到可解释的 real-axis candidate，约四个阶段可得到
-qualified root，第五阶段产生 empirical estimator，第六阶段完成 independent reference
-effectivity。Fliss Gaussian 仍是不同模型，只提供尺度参考。若目标升级为 certified error interval，
+P1 与 P2a 的 trace/extractor 子门已完成，Track A 的可信 FD 候选也已观察到；原双椭圆
+P2 只保留为历史负例。当前 sharp-disk 路径约一个阶段可得到可解释的 real-axis
+candidate，约三个阶段可得到 qualified root，第四阶段产生 empirical estimator，第五阶段
+完成 independent reference effectivity。Fliss Gaussian 仍是不同模型，只提供尺度参考。若目标升级为 certified error interval，
 还需要另外闭合 continuous center-BIE kernel--field equivalence / injectivity、half-guide
 map saturation bound 与 correction remainder，以及 validated total error budget。
 

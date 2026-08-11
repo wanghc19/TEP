@@ -1,6 +1,6 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-08-10。
+更新日期：2026-08-11。
 
 ## 当前状态
 
@@ -30,9 +30,13 @@
   周期镜像奇点；新 `test/i4-proxy-rule/` 只预注册 $p/d=0.2$，固定 MATLAB
   `lsqminnorm`、原科学门与四个单轴 refinement。最终 canonical 中 SLP--N 的
   E--P/P--R 最大误差为 $3.42\times10^{-14}$/$3.47\times10^{-14}$，四轴 self 最大为
-  $1.61\times10^{-13}$；共同配置下 SLP--D 也通过。因此 OP-I4-1f 已关闭，当前 sequential
-  blocker 前移到尚未运行的 DLP--D；Hessian rank/tolerance sensitivity 保留为 DLP--N
-  的下游 blocker。
+  $1.61\times10^{-13}$；共同配置下 SLP--D 也通过。因此 OP-I4-1f 已关闭。随后新的
+  `test/i4-dlp-trace/` 严格按 DLP--D、DLP--N、$M_{\mathrm{trace}}$ 顺序运行：DLP--D 与
+  DLP--N 的三路径最大 coefficient 误差分别为 $1.39\times10^{-14}$ 与
+  $1.19\times10^{-13}$，四轴 wall self 最坏为 $1.40\times10^{-13}$；独立半网格重构
+  将 $M_{\mathrm{trace}}=48$ 的最坏误差和 omitted energy 分别压到
+  $7.08\times10^{-12}$ 与 $5.00\times10^{-13}$。OP-I4-1h 与 OP-I4-6 因而在当前制造
+  密度、实数非 Wood 参数和有限 $M_{\mathrm{ref}}=96$ 意义下关闭。
 - 状态：`active investigation`。
 - 阶段门：manufactured root/correction pipeline 为窄范围 `GO`，Half-guide map 为
   Stage 1 `GO`，Augmented BIE 为 `STAGE2_DISCRETE_ALGEBRA_GO`；provenance-closure 为
@@ -40,8 +44,10 @@
   `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS`。当前 I4 verdict 为
   `PARTIAL SUCCESS -- I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
   EWALD_VALUE_REFERENCE_CERTIFIED / EWALD_DERIVATIVE_REFERENCE_CERTIFIED /
-  SLP_D_N_CERTIFIED_PROXY_RATIO_0P2`；
-  I5 root isolation 不获授权，`PHYSICAL_ROOT_READY=STOP`。现有证据支持一个可信的
+  SLP_D_N_CERTIFIED_PROXY_RATIO_0P2 / DLP_D_N_MTRACE48_CERTIFIED`；
+  现在允许进入 OP-I4-1e 的 block-balanced $A_{\mathrm{def}}$/scanner integration，
+  但该门通过前仍不允许实际 real-axis locator；I5 root isolation 不获授权，
+  `PHYSICAL_ROOT_READY=STOP`。现有证据支持一个可信的
   exact-profile finite-strip eigenvalue candidate，但不支持 qualified BIE root、
   连续 kernel--field equivalence、unconditional effectivity 或 certified interval。
 
@@ -54,7 +60,7 @@
 | Augmented BIE | `STAGE2_DISCRETE_ALGEBRA_GO`; `ROOT_READY=STOP` | 固定九块 $(n+8p)$ assembly、scaled density coordinate、raw/reduced Schur agreement、七级 availability 与 failure ledger；unchanged-source 复现差为 $0$ | 连续表示单射性、kernel--field equivalence、pole-free analytic neighborhood、root/eigenvalue/estimator |
 | Root-readiness proxy diagnostic and provenance closure | `PASS WITH CONDITIONS`; `GO` only to full analytic complex-$k$ Root-readiness; `PHYSICAL_ROOT_READY=STOP` | 历史受控诊断的 $10^{-5}$ object gate 通过；新 source-exact copy 在 6 个 shared systems/30 个 solver rows 上使三个原 $10^{-11}$ output gates 以 0 误差通过；双跑数值差为 0，manifest/shared/projector fingerprints 一致 | production 内部 $A_{\mathrm{pr}},b_{\mathrm{pr}}$ 仍不可直接观测；off-collocation 与 historical projectors 非门控；未运行 complex disk、CR、root、Newton、eigenvalue 或 estimator |
 | Historical double-ellipse full analytic complex-$k$ Root-readiness | evidence `PASS WITH CONDITIONS`; scientific `REPRODUCIBLE STOP / NO_SCREENED_DIP` | 29/29 locator 点 available；$s(k)$ 从 $0.2083091449$ 严格降至 $s(0.18)=0.03539366850$；baseline/repeat 全表数值差为 0 | 已被新主模型取代；没有 interior dip 或 seed，chart/disk/factor/full-$F$ CR 未运行 |
-| Revised I4 Fliss missing-column benchmark, Rayleigh budget and three-path kernel audit | `PARTIAL SUCCESS`; `I4_FD_CANDIDATE_READY`; `BIE_RAYLEIGH_BUDGET_SCREENED`; `EWALD_VALUE_REFERENCE_CERTIFIED`; `EWALD_DERIVATIVE_REFERENCE_CERTIFIED`; `SLP_D_N_CERTIFIED_PROXY_RATIO_0P2`; `PHYSICAL_ROOT_READY=STOP` | exact smooth profile 的 N80 strip 候选 $\lambda_h=3.460975044$；sharp-disk candidate windows 为 $[5,20]$、$[19,20]$；MATLAB 真 Ewald 复现 Linton 五个表值的最大误差为 $5.07\times10^{-11}$，解析 gradient/Hessian 的独立点门全部通过；共同 $p/d=0.2$ 的 SLP--D/SLP--N E--P 最大误差分别为 $1.64\times10^{-14}$、$3.42\times10^{-14}$，四轴 self 最坏为 $1.61\times10^{-13}$ | 认证只覆盖当前几何、实数非 Wood 点、两密度和 SLP--D/N；DLP--D/DLP--N 未运行。package proxy 列表有一个重复角点，rank/edge-tail 仅为诊断。Hessian fixed-$A,b$ solver spread $3.04\times10^{-8}$ 仍是 DLP--N 下游 blocker；$M_{\mathrm{trace}}$、locator、root 与 estimator 未认证 |
+| Revised I4 Fliss missing-column benchmark, Rayleigh budget and three-path kernel audit | `PARTIAL SUCCESS`; `I4_FD_CANDIDATE_READY`; `BIE_RAYLEIGH_BUDGET_SCREENED`; `EWALD_VALUE_REFERENCE_CERTIFIED`; `EWALD_DERIVATIVE_REFERENCE_CERTIFIED`; `SLP_D_N_CERTIFIED_PROXY_RATIO_0P2`; `DLP_D_N_MTRACE48_CERTIFIED`; `PHYSICAL_ROOT_READY=STOP` | exact smooth profile 的 N80 strip 候选 $\lambda_h=3.460975044$；sharp-disk candidate windows 为 $[5,20]$、$[19,20]$；MATLAB 真 Ewald value/gradient/Hessian reference 通过；共同 $p/d=0.2$ 的四个 SLP/DLP wall actions 在 Ewald/MFS/Rayleigh 三路径上通过。DLP--D/DLP--N 最大 coefficient 误差为 $1.39\times10^{-14}$/$1.19\times10^{-13}$，DLP 四轴 self 最坏为 $1.40\times10^{-13}$，半网格有限带测试认证当前 $M_{\mathrm{trace}}=48$ | 认证只覆盖当前几何、实数非 Wood 点、两制造密度与有限 $M_{\mathrm{ref}}=96$；没有完成额外 $n_{\mathrm{tot}}/N_y$/Ewald wall ladder。package proxy 列表有一个重复角点，rank/edge-tail 仅为诊断。balanced $A_{\mathrm{def}}$/scanner、locator、root 与 estimator 未认证 |
 
 实现权威入口为
 [[research/projects/eig-apost/implementation/design|manufactured NEP design]]、
@@ -269,14 +275,24 @@ proxy-solver 收敛诊断见
   $4.14\times10^{-14}$、$2.12\times10^{-14}$、$3.03\times10^{-14}$、
   $1.61\times10^{-13}$。最终源码哈希写入 report 后复跑用时 $69.037429$ s，故
   `SLP_D_N_CERTIFIED_PROXY_RATIO_0P2` 与 OP-I4-1f 正式关闭。
+- 新 `test/i4-dlp-trace/` 在任何 wall matrix 前完成 1.71 s MATLAB pilot。三个冻结点的
+  $G_x,G_y$ 对 Ewald 最大误差为 $7.88\times10^{-14}$，四轴 point self 最坏为
+  $7.64\times10^{-14}$；五个 level 的 rank 精确复现 $(302,328,302,302,330)$，且 public
+  `lsqminnorm` residual 与 duplicate-column minimum-norm sanity 全部通过。95.539849 s
+  canonical 随后按顺序认证 DLP--D、DLP--N 与 $M_{\mathrm{trace}}=48$。DLP--D/DLP--N
+  E--P 最大误差为 $1.39\times10^{-14}$/$1.19\times10^{-13}$，DLP--N 最坏四轴 wall self
+  为 $1.40\times10^{-13}$；四个 SLP/DLP actions 在 $|m|\le96$ 的逐模态三角全部通过。
+  半网格直接 E/P 墙场的 $M=48$ 最坏重构误差为 $7.08\times10^{-12}$，omitted energy
+  为 $5.00\times10^{-13}$。完整产物含 9,264 个 coefficient rows 与 49,152 个 wall
+  samples；OP-I4-1h 和 OP-I4-6 在冻结范围内关闭。
 - Researcher 与 Skeptic 均只认可 screening 结果，不授权 real-axis locator 或 complex
   root isolation。
   `production_internal_A_b_identity=NOT_DIRECTLY_OBSERVED` 作为 claim boundary 保持不变。
 - 已识别并在 Stage 2 局部规避 variable-speed geometry 的 density-scaling mismatch；
   production `bloch.construct_S` 与 `scat_ld_lead_in` 尚未全局修改或验证。
-- MATLAB R2023b 已运行 derivative qualification、pilot、point-only solver diagnostic、
-  历史 action-specific early-stop wall run，以及新的 singularity-aware proxy-rule pilot/full。
-  DLP--D/DLP--N 仍未运行。所有新增实验代码和产物只位于 `test/` 下。
+- MATLAB R2023b 已运行 derivative qualification、point-only solver diagnostic、
+  历史 action-specific early-stop wall run、singularity-aware proxy-rule pilot/full，以及
+  新 DLP/trace pilot/full。所有新增实验代码和产物只位于 `test/` 下。
 
 ## 尚未进行
 
@@ -285,8 +301,8 @@ proxy-solver 收敛诊断见
   条件；fixed-$k$ raw/reduced Schur agreement 不能替代这些命题。
 - 尚未在当前 Fliss/sharp-disk 替换 benchmark 的 selected disk 上执行 anchored analytic
   Rayleigh chart、fixed-rank factor ledger、full-$F$ CR 和完整 negatives；当前因
-  trace/extractor reference 与 balanced $A_{\mathrm{def}}$/scanner blockers 没有可解释的
-  BIE locator。尚未进行 complex
+  trace/extractor reference 已在冻结制造对象上关闭，但 balanced $A_{\mathrm{def}}$/scanner
+  blocker 尚未关闭，因而仍没有可解释的 BIE locator。尚未进行 complex
   contour isolation、bordered root refinement 和 adjacent-level root matching。package
   pointwise principal-square-root convention 不得直接用于 complex analytic search。
 - 尚未证明 finite-tail half-guide map convergence、得到独立 saturation 常数
@@ -310,21 +326,17 @@ proxy-solver 收敛诊断见
 blocker，并给出 $\lambda_h=3.460975044$ 的可信 FD 候选；这已经反驳“该 missing-column
 模型普遍无解”的怀疑，但不是 qualified root。
 
-OP-I4-1f 已关闭。当前最小下一步是 OP-I4-1h 的 DLP--D 专项：先在共同 $p/d=0.2$
-配置下做 $G_x,G_y$ point/self 检查并增加一个非镜像 hold-out；通过后只运行 DLP--D
-的 E/P/R wall action 与四个单轴门。DLP--D 通过后才启动 DLP--N 的 Hessian
-rank/tolerance qualification。$M_{\mathrm{trace}}=48$ 目前只有 SLP--D/N 的高阶带
-screen，仍需 wall-field reconstruction 与 omitted-tail 专项，不能称为已认证。
-随后处理 OP-I4-1e 的 block-balanced
-$A_{\mathrm{def}}$/scanner integration。Fliss smooth Gaussian 只提供尺度参考，不得当作
-sharp-disk root 或 reference。
+OP-I4-1f、OP-I4-1h 与 OP-I4-6 已在冻结范围内关闭。当前最小下一步是 OP-I4-1e 的
+block-balanced $A_{\mathrm{def}}$/scanner integration：先对物理块做 row/column
+equilibration，在预注册非候选点排除结构性秩坍缩，并把 scanner 真正接到已通过的
+projective ordered-QZ/deflating bases。只有该门通过后才允许一个 bounded real-axis
+locator。Fliss smooth Gaussian 只提供尺度参考，不得当作 sharp-disk root 或 reference。
 
-从当前 sharp-disk 路径计，约两个阶段可观察到可解释的实轴 candidate：其余
-DLP--D/DLP--N wall Cauchy data 与 $M_{\mathrm{trace}}$ closure、block-balanced
-$A_{\mathrm{def}}$ 加 bounded locator。再加 full analytic complex-$k$ readiness 与
-contour/Newton qualification，约四个阶段才可能得到 qualified root；第五阶段才产生
-empirical estimator，第六阶段才得到 independent high-resolution reference
-effectivity。
+从当前 sharp-disk 路径计，再完成 block-balanced $A_{\mathrm{def}}$/scanner integration
+并运行 bounded locator，一个阶段后即可观察到可解释的实轴 candidate。再加 full
+analytic complex-$k$ readiness 与 contour/Newton qualification，约三个阶段才可能得到
+qualified root；第四阶段才产生 empirical estimator，第五阶段才得到 independent
+high-resolution reference effectivity。
 continuous kernel--field/representation、saturation/remainder 和 validated total error budget
 仍是更强 certification 的另外问题。仍不创建 `research/mainline/`，也不使用绝对优先权
 表述。
@@ -353,7 +365,7 @@ continuous kernel--field/representation、saturation/remainder 和 validated tot
 - I4 当前 verdict 是
   `PARTIAL SUCCESS -- I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
   EWALD_VALUE_REFERENCE_CERTIFIED / EWALD_DERIVATIVE_REFERENCE_CERTIFIED /
-  SLP_D_N_CERTIFIED_PROXY_RATIO_0P2`；
+  SLP_D_N_CERTIFIED_PROXY_RATIO_0P2 / DLP_D_N_MTRACE48_CERTIFIED`；
   `REPRODUCIBLE STOP / NO_SCREENED_DIP` 只描述历史双椭圆实验。I3 的
   `root_readiness_review.md` Section L 与 `root_result.md` Section I 继续作为 provenance
   历史边界；不得把 I3 的下一阶段授权覆盖当前 BIE blocker。
@@ -367,20 +379,22 @@ continuous kernel--field/representation、saturation/remainder 和 validated tot
   `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS`，但更新的阶段 gate 是
   `I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
   EWALD_VALUE_REFERENCE_CERTIFIED / EWALD_DERIVATIVE_REFERENCE_CERTIFIED /
-  SLP_D_N_CERTIFIED_PROXY_RATIO_0P2`；
+  SLP_D_N_CERTIFIED_PROXY_RATIO_0P2 / DLP_D_N_MTRACE48_CERTIFIED`；
   `production_internal_A_b_identity=NOT_DIRECTLY_OBSERVED` 和
   `PHYSICAL_ROOT_READY=STOP` 保持不变。不得解释成 qualified root 或 estimator。
-- 下一步仅允许 $p/d=0.2$ 的 DLP--D point/self 与 wall-action 专项；不得同时运行
-  DLP--N、DtN 或 locator。DLP--D 通过后才设计 DLP--N Hessian rank policy，
-  $M_{\mathrm{trace}}$ 仍需独立重构/omitted-tail 认证。
+- 下一步允许进入 OP-I4-1e 的 block-balanced $A_{\mathrm{def}}$/scanner integration；
+  该门通过前不得运行 bounded locator，更不得运行 complex disk、contour 或 root。
 - 当前新增内容位于 `test/i4-rayleigh-budget/`、`test/i4-extract/`、
-  `test/i4-three-path/`、`test/i4-three-path-derivatives/`、`test/i4-proxy-rule/` 与本专题
+  `test/i4-three-path/`、`test/i4-three-path-derivatives/`、`test/i4-proxy-rule/`、
+  `test/i4-dlp-trace/` 与本专题
   STATUS/README/ledger/report 文档；package 源码未修改。MATLAB R2023b qualification、
-  action-specific pilot、历史 early-stop full wall run、point-only fixed-system diagnostic
-  与 proxy-rule pilot/full 已运行；最终 proxy-rule full 用时 $69.037429$ s 并全部通过。
+  action-specific pilot、历史 early-stop full wall run、point-only fixed-system diagnostic、
+  proxy-rule pilot/full 与 DLP/trace pilot/full 已运行；最终 DLP/trace full 用时
+  $95.539849$ s 并通过顺序门。
   历史 Octave canonical 用时 $531.181285$ s。
 
-新 session 应从 $p/d=0.2$ 的 DLP--D point/self 专项开始；通过后才运行 DLP--D wall。
-不得直接启动 DLP--N、DtN、实轴 scan、complex disk、
-contour、root 或 estimator，也不得把三个 in-sample point values 升级为 certified wall
-trace，或把 source-derived provenance 升级为 production 内部数组已观测。
+新 session 应从 OP-I4-1e 的 block-balanced $A_{\mathrm{def}}$/scanner integration 开始；
+其非候选点秩与实际 scanner 接线门通过后才运行 bounded real-axis scan。不得直接启动
+complex disk、contour、root 或 estimator，也不得把当前有限 $M_{\mathrm{ref}}=96$ 制造
+密度认证外推为所有解密度的无限尾定理，或把 source-derived provenance 升级为
+production 内部数组已观测。

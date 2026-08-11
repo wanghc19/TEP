@@ -705,3 +705,48 @@ the band $24<|m|\le48$ screens the current SLP output but does not certify the
 omitted infinite tail or DLP actions.  The next permitted calculation is a
 $p/d=0.2$ DLP--D point/self and wall-action experiment.  DLP--N,
 $M_{\mathrm{trace}}$, DtN, and the locator remain blocked by their own gates.
+
+### Sequential DLP and finite trace closure
+
+The follow-up `test/i4-dlp-trace/` froze the same physical geometry,
+$p/d=0.2$, MATLAB `lsqminnorm`, two manufactured circle densities, and the
+original $10^{-8}$ coefficient and $2\times10^{-9}$ self gates.  Its pilot
+added the nonmirror displacement $(0.263,0.173)$ and checked $G_x,G_y$ before
+any wall matrix.  The maximum base Ewald error and base-to-axis point change
+were $7.88\times10^{-14}$ and $7.64\times10^{-14}$.  The exact diagnostic
+ranks $(302,328,302,302,330)$, residuals, and minimum-norm duplicate-column
+symmetry were reproduced without changing the public solver.
+
+The full run then enforced the source and target normal conventions
+
+$$
+G_{n_s}=-(G_xn_{s,x}+G_yn_{s,y}),
+\qquad
+G_{n_tn_s}=n_{t,x}(-G_{xx}n_{s,x}-G_{xy}n_{s,y}),
+$$
+
+with Rayleigh input $[\rho;0]$ and raw Neumann coefficient
+$\mathrm{i}\gamma_mD_m$ on both walls.  DLP--D passed with maximum E--P,
+E--R, and P--R errors $1.39\times10^{-14}$,
+$3.69\times10^{-16}$, and $1.36\times10^{-14}$.  DLP--N passed with maxima
+$1.19\times10^{-13}$, $5.57\times10^{-16}$, and
+$1.19\times10^{-13}$.  Its worst package base-to-axis wall change was
+$1.40\times10^{-13}$.  All values are raw coefficients through $|m|\le96$.
+
+Only after both DLP actions passed, the saved complete SLP/DLP wall samples
+were projected at $M\in\{12,24,48,64,96\}$.  Ewald and package fields were
+also evaluated on an independently shifted half-grid.  At the preregistered
+candidate $M_{\mathrm{trace}}=48$, the worst direct half-grid reconstruction
+error was $7.08\times10^{-12}$, the worst omitted maximum was
+$1.11\times10^{-13}$, and the worst omitted coefficient energy was
+$5.00\times10^{-13}$.  The $48\to64$ and $64\to96$ reconstruction changes
+were at most $8.67\times10^{-13}$ and $2.28\times10^{-12}$.  Therefore the
+canonical status is `DLP_D_N_MTRACE48_CERTIFIED`, closing the sequential
+extractor/trace blocker for these manufactured actions.
+
+This is a finite numerical trace qualification at one real non-Wood
+parameter, not an infinite-tail theorem and not a statement about every BIE
+solution density.  Extra $n_{\mathrm{tot}}$, $N_y$, and Ewald wall ladders
+were not rerun and remain an `IMPORTANT CAVEAT`.  The next authorized work is
+the block-balanced $A_{\mathrm{def}}$/scanner integration in OP-I4-1e; the
+bounded real-axis locator remains sequentially blocked until that gate passes.
