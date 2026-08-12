@@ -55,6 +55,9 @@ research/**/tmp/
 research/**/logs/
 research/**/checkpoints/
 
+# Local experiment outputs (already tracked files remain tracked)
+test/**/output/
+
 # Reference library: track only the catalog and BibTeX index
 ref/**
 !ref/README.md

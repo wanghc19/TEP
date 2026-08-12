@@ -2,18 +2,18 @@
 
 ## 当前状态
 
-当前新路线处于 `I1_2_M48_PASS_WITH_CONDITIONS / I1_2_EMPIRICAL_READY`。精确
+当前新路线处于 `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_NESTED_GRID_CANDIDATE`。精确
 half-guide DtN 由半无限边值问题定义，连续中心算子 $\mathcal F(k)$ 在任何
 BIE/Fourier 截断和 ordered QZ 之前定义真实谱对象。现行数学权威是
 [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]，离散
 $A_{\mathrm{def}}$ 的设计与审查统一位于
 [[research/projects/eig-apost/implementation/i1/README|i1/]]。
 
-I1.2 的 manufactured、MATLAB $M=5,8$ mechanism 与 direct $M=48$ static arms 已在
-`test/i1/hg-adef/` 通过；$M=48$ 覆盖 original/reversed QZ、coarse/fine subspaces、
-代数 graph/chart、DtN action 与 $A_{\mathrm{def}}^{D/G}$ Schur 等价。本轮没有计算
-production separation，因此只允许经验型 I1.3 参数连续性、$A_{\mathrm{def}}'$ 开发和
-candidate reconnaissance；locator、complex disk、contour 和 root isolation 仍不获授权。
+I1.2 的 manufactured、MATLAB $M=5,8$ mechanism 与 direct $M=48$ static arms 已通过；
+I1.3 又完成 real-$k$ 连续性、分层筛查和 width-driven 局部加密，记录 fixed-$M=48$
+离散候选 $k=1.8327703475952146$ 与 $q=8.3200886232193094\times10^{-8}$。本轮没有
+计算 production separation，production derivative 也仍未资格化；locator、complex disk、
+contour 和 root isolation 不获授权。
 OP-M0-1--OP-M0-4 继续限制 physical/root 解释，最新行动边界以
 [[research/projects/eig-apost/STATUS|project STATUS]] 为准。
 
@@ -50,8 +50,8 @@ implementation/
 - [[research/projects/eig-apost/implementation/archive/legacy-route-v1/README|legacy route v1]]：
   保存旧路线 I0--I4 的完整 design、result、review 和原索引；旧编号和 verdict 不构成
   当前授权。
-- [[test/README|current test index]]：记录新路线实验状态；当前 I1.2 实验位于
-  `test/i1/hg-adef/`。旧实验统一
+- [[test/README|current test index]]：记录新路线 I1.2 与 I1.3 实验状态；当前实验位于
+  `test/i1/hg-adef/` 和 `test/i1/k-scan/`。旧实验统一
   由 [[test/archive/legacy-route-v1/README|legacy experiment index]] 保存。
 
 ## 阶段文档规则

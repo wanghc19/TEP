@@ -26,10 +26,16 @@ $$
 
 ## 当前边界
 
-I1.1 离散理论设计已以 `PASS WITH CONDITIONS` 通过。I1.2 的 test-local 联合实验保留
-manufactured 与 $M=5,8$ low-order oracle，并在 MATLAB 上直接完成 $M=48$、$K=97$
-coarse/fine static chain。one-cell、双向 QZ、subspace、代数 chart、DtN 和
-$A_{\mathrm{def}}^{D/G}$ 门全部通过，状态为 `I1_2_M48_PASS_WITH_CONDITIONS`。
-production separation 没有计算，只作为更强 perturbation claim 的 `IMPORTANT CAVEAT`。
-经验型 I1.3 参数连续性、$A_{\mathrm{def}}'$ 开发和 candidate reconnaissance 已获授权；
-locator 结论、contour 与 root isolation 继续停止。具体进度和四个 I1 里程碑见 I1 guide。
+I1.1 与 I1.2 均以 `PASS WITH CONDITIONS` 通过。I1.3 已在同一模型上完成 $M=48$
+参数连续性、粗细层 transport、$M=12\to24\to48$ 分层筛查和独立 width-driven 局部加密。
+新版局部实验在 15 层、33 个唯一 $k$ 点与 167 个 hard gates 全部通过后，以
+$7.6294\times10^{-7}$ 的最终区间宽度正常结束，记录 fixed-$M=48$ 离散候选
+$k=1.8327703475952146$、$q=8.3200886232193094\times10^{-8}$。coarse/fine 最小位置
+全程无漂移；最终三层仍明显变化，因此没有 $10^{-3}$ 平台。历史 v1 的 prominence
+design-gate stop 保留为设计负例，OP-CI1-7 已由 v2 关闭。
+
+graph-basis mutation 的有限差分门仍失败，因此 production derivative、Newton 和 correction
+不可用；production separation 也继续作为更强 perturbation claim 的 `IMPORTANT CAVEAT`。
+I1.4 本轮未开始且未获数值执行授权。下一步若另行授权，只能先预注册 anchored complex-$k$
+branch、fixed chart/rank、factor/pole ledger、CR 和实际对象负例；不得直接运行 locator、
+contour 或 root isolation。具体进度和四个 I1 里程碑见 I1 guide。

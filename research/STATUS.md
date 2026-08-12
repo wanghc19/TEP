@@ -1,6 +1,6 @@
 # Research status
 
-更新日期：2026-08-11。
+更新日期：2026-08-12。
 
 状态词含义：`established in archived mainline` 仅表示冻结主线给出了论证，不等于已完成独立来源核验；`needs review` 表示已有陈述或证明草案但仍需严格审计；`tentative` 表示研究性判断；`unresolved` 表示尚未解决。
 
@@ -12,11 +12,18 @@
 numerical half-guide DtN 后验误差作为专题候选方向。其 manufactured NEP、Half-guide
 map 与 Augmented BIE 离散实现门已经通过；历史 Root-readiness diagnostic 及其后续
 Ewald/MFS/Rayleigh、SLP/DLP 和有限 $M_{\mathrm{trace}}$ 结果保留为离散数值证据。
-2026-08-11 起 I4 数值工作暂停，当前改为 continuous DtN/BIE method reconstruction：
+2026-08-11 起旧 I4 数值工作暂停并完成 continuous DtN/BIE method reconstruction：
 精确 DtN 由半无限 PDE 定义，physical center pencil $\mathcal F(k)$ 先于 BIE、QZ 和矩阵。
-旧 finite-tail/doubling 主方法已降为 legacy/cross-check。当前不得组装
-$A_{\mathrm{def}}$，不得运行 DtN wall、locator、complex disk 或 root isolation；
-`PHYSICAL_ROOT_READY=STOP`。连续—离散桥接、真实 root 和 estimator 尚未建立，也没有
+旧 finite-tail/doubling 主方法已降为 legacy/cross-check。新路线 I1.1--I1.2 已完成
+离散设计和 static $A_{\mathrm{def}}$ 验证；I1.3 又完成 real-$k$ 连续性、分层筛查与
+width-driven $M=48$ 局部加密，阶段为 `PASS WITH CONDITIONS`。新版局部实验在 15 层、
+33 个唯一点和 167 个 hard gates 全部通过后，以
+$7.6294\times10^{-7}$ 的区间宽度正常结束，记录离散候选
+$k=1.8327703475952146$、$q=8.3200886232193094\times10^{-8}$。coarse/fine 最小位置
+全程无漂移；最终三个 $q$ 值仍明显变化，因此不是 $10^{-3}$ 平台。旧 prominence
+design-gate stop 保留为历史负例，原设计 blocker 已关闭；I1.4、locator、contour、Newton
+和 root isolation 本轮均未开始或授权。`PHYSICAL_ROOT_READY=STOP`。
+连续—离散桥接、production derivative、真实 root 和 estimator 尚未建立，也没有
 活动中的 `research/mainline/`。
 
 原主线冻结于 Git 标签 `mainline-muller-cauchy-2026-07-26`，文件移至
@@ -28,7 +35,7 @@ $A_{\mathrm{def}}$，不得运行 DtN wall、locator、complex disk 或 root iso
 
 | 状态 | 专题 | 实际结论 |
 |---|---|---|
-| active investigation / I4 numerics paused | `research/projects/eig-apost/` | 当前 Phase 4 重构稿以 PDE-defined exact DtN 和 physical $\mathcal F(k)$ 为连续主对象；continuous BIE 是待证明的 realization，ordered QZ 只计算 finite-pencil deflating subspace。旧 finite-tail 稿完整归档为 legacy。既有 implementation checkpoints 与三路径数值门保留为历史/部件证据，但不授权 $A_{\mathrm{def}}$ 或 locator。恢复 I4 前须关闭项目 ledger 的 OP-M0-1--OP-M0-4；真实 root、next-level correction、remaining-error estimator 和独立 $k_{\mathrm{ref}}$ 均未完成。 |
+| active investigation / new-route I1.3 complete with conditions; width-driven zoom passed | `research/projects/eig-apost/` | PDE-defined exact DtN 和 physical $\mathcal F(k)$ 是连续主对象；ordered QZ 只计算 finite-pencil deflating subspace。新路线 static $A_{\mathrm{def}}$、real-$k$ continuity 和 width-driven $M=48$ zoom 已通过经验门，并记录离散候选 $k=1.8327703475952146$、$q=8.32009\times10^{-8}$；FD mutation 门失败，production derivative 不可用。I1.4、locator/root、next-level correction、remaining-error estimator 和独立 $k_{\mathrm{ref}}$ 均未授权或未完成。 |
 | paused archive | `research/archive/muller-cauchy-2026-07/` | 冻结的 Müller--广义 Bloch--Cauchy 主线；商空间版本的核/场等价仍有未闭合的外部定理适配和表示论前提。 |
 | paused | `research/projects/half-guide-dtn/` | Stage 1 完成了符号审计、齐次半导 DtN/Riccati 验证和耦合方案建议；周期障碍半导、完整中心耦合及 MATLAB 最终验证尚未完成。该路线未整合进冻结主线。 |
 | completed project | `research/projects/cell-representation/` | 专题任务已完成：原始无条件猜想过强；给出了直接 Green 表示和带显式正则性、非 Wood 及互补问题条件的修正版。其纠正后的表示结构和商空间策略已进入冻结主线，但其中的表示定理仍为 `needs review`。 |
@@ -62,13 +69,12 @@ $A_{\mathrm{def}}$，不得运行 DtN wall、locator、complex disk 或 root iso
 4. 归档中的未证明结论、待核验引用和中英文差异保持原有成熟度，不因归档而自动升级或失效。
 5. 新方向形成后，应更新 `research/DECISIONS.md`、本文件和 `research/README.md`，再决定是否建立新的 `research/mainline/`。
 
-当前活动专题是偏工程实现的特征值后验误差研究，但数值 I4 已暂停。下一阶段不是
-full analytic Root-readiness，而是关闭 continuous exact-DtN domain、physical/BIE
-kernel bridge、one-cell pencil/ordered-QZ uniform separation 与正确的 projected/regular
-approximation topology 四个 formulation blockers。只有这些门关闭并重新设计
-$A_{\mathrm{def}}$ 后，才可重新申请 locator 和 analytic-disk readiness；此前不得启动
-任何 DtN wall、locator、contour、complex root matching 或 estimator 计算，也不升级为
-统一研究方向。
+当前活动专题是偏工程实现的特征值后验误差研究。width-driven v2 已关闭旧 prominence
+实验设计问题；最便宜的下一门是另行授权后预注册 I1.4 的 anchored complex-$k$ branch、
+fixed chart/rank、factor/pole ledger、CR 与必要负例。本轮不授权 locator、root、contour、
+Newton 或 estimator。continuous exact-DtN domain、physical/BIE kernel bridge、production
+derivative/separation 与 projected/regular approximation topology 继续限制物理 root 和
+estimator 声明，也不升级为统一研究方向。
 冻结路线若被恢复，其优先事项仍是单位圆全谱排除、
 广义 Floquet/Riesz 基适配、中心表示满射性和表示零空间刻画；具体记录见
 `research/archive/muller-cauchy-2026-07/review-log.md`。

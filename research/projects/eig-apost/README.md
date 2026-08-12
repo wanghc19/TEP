@@ -8,10 +8,11 @@ estimator，也不是新的 `research/mainline/`。
 
 ## 权威和边界
 
-- 状态：`active investigation`；Phase 2b novelty gate 与 Phase 3--4 方法设计已完成，
-  当前离散实现达到 `STAGE2_DISCRETE_ALGEBRA_GO`。source-derived provenance closure
-  为 `PASS WITH CONDITIONS`，只授权进入 full analytic complex-$k$ Root-readiness；
-  `PHYSICAL_ROOT_READY=STOP`。
+- 状态：`active investigation`；当前新路线 I1.3 为
+  `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_NESTED_GRID_CANDIDATE`。width-driven 局部
+  加密在 $7.6294\times10^{-7}$ 区间宽度处记录 fixed-$M=48$ 离散候选
+  $k=1.8327703475952146$、$q=8.3200886232193094\times10^{-8}$。这不是 locator root 或
+  eigenvalue；I1.4 尚未开始且须另行授权，`PHYSICAL_ROOT_READY=STOP`。
 - 本目录只管理新专题；不续写或改写冻结的 Müller--Cauchy 主线。
 - 归档理论、旧草稿中的命题和现有数值候选均不得被预设为正确。
 - 生产 MATLAB/package 代码保持未修改；实验实现和生成结果只位于仓库根目录 `test/`
@@ -88,8 +89,9 @@ gate 通过，但独立 mirrored constructor 的三个 $10^{-11}$ output gates �
 provenance-closure 用 source-exact test-local copy 和同一 cache-derived $A,b$ 数据链重跑
 原门槛，6 个 shared systems/30 个 solver rows 全部闭合，双跑数值差为 0，并由 Skeptic
 给出 `PASS WITH CONDITIONS`。production 内部数组仍不可直接观测；该结论不冻结
-priority claim，也不把候选公式升级为连续定理或 certified estimator。下一步只能进行
-full analytic complex-$k$ Root-readiness，真实 root isolation 尚未获准。
+priority claim，也不把候选公式升级为连续定理或 certified estimator。当前新路线又完成
+I1.1--I1.3，并记录上述 fixed-$M=48$ 离散候选；下一步只能在另行授权后预注册 I1.4
+complex-$k$ readiness，locator、contour 和真实 root isolation 尚未获准。
 
 ## 当前入口
 

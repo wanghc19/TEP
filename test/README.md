@@ -17,6 +17,32 @@ frozen outputs retain their recorded paths and hashes.
 | Status | `I1_2_M48_PASS_WITH_CONDITIONS / EMPIRICAL I1.3 READY` |
 | Implementation summary | [[research/projects/eig-apost/implementation/i1/README|current I1 guide]] |
 
+## I1-K-SCAN-V1
+
+| Field | Value |
+|---|---|
+| Experiment ID | `I1-K-SCAN-V1` |
+| Stage | I1.3 |
+| Purpose | Check real-$k$ continuity and carry one discrete candidate through $M=12\to24\to48$ |
+| Current path | `test/i1/k-scan/` |
+| Entry point | `tep_mc_scan('pilot')`, `tep_mc_scan('continuity')`, then `tep_mc_scan('full')` in MATLAB |
+| Authoritative report | [[test/i1/k-scan/output/full/report|MATLAB staged candidate report]]; continuity qualification is [[test/i1/k-scan/output/continuity/report|reported separately]]; the v1 zoom stop is preserved as [[test/i1/k-scan/output/zoom/report|historical design-gate evidence]] |
+| Status | `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_REAL_AXIS_CANDIDATE_RECORDED`; v1 zoom is frozen historical evidence |
+| Implementation summary | [[research/projects/eig-apost/implementation/i1/README|current I1 guide]] |
+
+## I1-K-SCAN-ZOOM-V2
+
+| Field | Value |
+|---|---|
+| Experiment ID | `I1-K-SCAN-ZOOM-V2` |
+| Stage | I1.3 |
+| Purpose | Refine the fixed-$M=48$ real-axis candidate until the evaluated interval width is below $10^{-6}$ without using prominence as a stop gate |
+| Current path | `test/i1/k-scan/` |
+| Entry point | `tep_mc_zoom2('pilot')`, then `tep_mc_zoom2('full')` in MATLAB |
+| Authoritative report | [[test/i1/k-scan/output/zoom2/report|MATLAB width-driven zoom report]] |
+| Status | `ZOOM2_M48_DISCRETE_GRID_COMPLETE / CANDIDATE ONLY` |
+| Implementation summary | [[research/projects/eig-apost/implementation/i1/README|current I1 guide]] |
+
 Future current-route experiments belong under `test/i1/` and receive an index entry only after
 they are designed and authorized. A legacy verdict never becomes a current stage gate.
 

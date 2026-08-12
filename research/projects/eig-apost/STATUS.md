@@ -1,9 +1,43 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-08-11。
+更新日期：2026-08-12。
 
 ## 当前状态
 
+- **2026-08-12 width-driven zoom v2：** `test/i1/k-scan/output/zoom2/` 在不改变
+  homogeneous missing-column 模型、$M=48$ trace 带宽和 coarse/fine 空间层的条件下，完成
+  15 个区间层与 33 个唯一 $k$ 点。167 个 hard gates 全部通过，最终已评估区间宽度为
+  $7.6293945294736432\times10^{-7}<10^{-6}$；coarse/fine 最小位置在全部层无漂移，最终
+  候选为 $k=1.8327703475952146$，物理 $s_1$ 分别为
+  $8.32008721372168\times10^{-8}$ 与 $8.3200886232193094\times10^{-8}$，物理
+  $\sigma_1$ 约为 $1.11983\times10^{-8}$。QZ 的
+  stable/unstable/neutral/indeterminate 计数始终为 97/97/0/0，regular-infinite count
+  为 87--88；最小 transport overlap 为 $0.9999959813$。最终三个 $q$ 值的相对变化为
+  $0.4691$ 与 $0.5582$，故不是
+  $10^{-3}$ 平台。verdict 为 `I1_3_PASS_WITH_CONDITIONS /
+  M48_DISCRETE_NESTED_GRID_CANDIDATE`；这不是 locator root 或 eigenvalue。
+- **2026-08-12 historical zoom v1 stop：** `test/i1/k-scan/output/zoom/` 的第一级保持
+  $k=1.83125$、$s_1=2.1640756292144498\times10^{-3}$。strict-interior minimum、
+  coarse/fine minimum drift、左右奇异向量 overlap、raw/physical index、
+  $\sigma_1/\sigma_2=0.0042345678386558434$、QZ、chart、branch 和 neighbor transport
+  全部通过；唯一失败项是 immediate-neighbor prominence
+  $1.0556203927304477<1.25$。本轮状态为 `STOP / DESIGN-GATE-INCONCLUSIVE`，权威报告是
+  `test/i1/k-scan/output/zoom/report.md`。该失败是 shrinking-grid 局部 prominence 门的
+  实验设计 blocker，不否定宽扫候选、matrix/QZ/chart，也不是 $10^{-3}$ plateau 证据；
+  现有两层数据不能判断后续是否会达到 $10^{-5}$ 以下。该 verdict 不追溯改写；其
+  shrinking-prominence 设计 blocker 已由独立 v2 关闭。
+- **2026-08-12 新路线 I1.3 update：** `test/i1/k-scan/` 在保持 sharp-disk periodic leads
+  与 homogeneous missing center column 不变的前提下，完成 MATLAB real-$k$ continuity 和
+  $M=12\to24\to48$ 分层筛查。$M=48$ continuity 的 stable/unstable 始终为 97/97，
+  neutral/indeterminate 始终为 0/0，最小相邻 subspace overlap 为 $0.999958$。
+  最终记录离散实轴候选 $k=1.83125$，其 $s_1=2.164\times10^{-3}$、prominence
+  $=3.112$、$\sigma_1/\sigma_2=4.235\times10^{-3}$；coarse/fine 最小左右奇异方向约为 1，
+  raw/physical 最低点一致。该点不是 locator root 或 eigenvalue。中心差分绝对收敛门通过，
+  但 graph-basis FD mutation 为 $3.65\times10^{-11}>10^{-12}$，故
+  `FD_DERIVATIVE_READY=false`。阶段 verdict 为
+  `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_REAL_AXIS_CANDIDATE_RECORDED`。随后 v2 zoom
+  把候选局部加密至 $k=1.8327703475952146$；当前 I1.4、contour、Newton 和 root isolation
+  均未开始或授权。
 - **2026-08-11 新路线 I1.2 direct-$M=48$ update：** `test/i1/hg-adef/` 保留已通过的
   manufactured 与 $M=5,8$ low-order mechanism oracle，并用 MATLAB `lsqminnorm` 直接生成
   $M=48$、$K=97$ coarse/fine one-cell maps。block absolute/action、full-pencil、
@@ -70,7 +104,7 @@
   将 $M_{\mathrm{trace}}=48$ 的最坏误差和 omitted energy 分别压到
   $7.08\times10^{-12}$ 与 $5.00\times10^{-13}$。OP-I4-1h 与 OP-I4-6 因而在当前制造
   密度、实数非 Wood 参数和有限 $M_{\mathrm{ref}}=96$ 意义下关闭。
-- 状态：`active investigation -- I1.2 M48 pass with conditions; empirical I1.3 authorized`。
+- 状态：`active investigation -- I1.3 pass with conditions; M48 discrete nested-grid candidate recorded; I1.4 not started or authorized`。
 - 历史阶段门（均不构成当前实现授权）：manufactured root/correction pipeline 曾为窄范围
   `GO`，finite-tail Half-guide map 曾为 Stage 1 `GO`，Augmented BIE 曾为
   `STAGE2_DISCRETE_ALGEBRA_GO`；provenance-closure 曾为
@@ -80,12 +114,12 @@
   EWALD_VALUE_REFERENCE_CERTIFIED / EWALD_DERIVATIVE_REFERENCE_CERTIFIED /
   SLP_D_N_CERTIFIED_PROXY_RATIO_0P2 / DLP_D_N_MTRACE48_CERTIFIED`；这些标签现只作为
   已完成的离散数值证据保留，不构成继续实现的授权。OP-I4-1e 中旧矩阵的授权已被方法重构
-  决定撤销并由新路线 I1 设计取代；direct $M=48$ static $A_{\mathrm{def}}$ 已通过经验门，
-  但 scanner、real-axis locator 结论与 I2 root isolation 均不获授权，
-  `PHYSICAL_ROOT_READY=STOP`。新的 $A_{\mathrm{def}}^{D/G}$ 现有 $M=5,8$ low-order 和
-  $M=48$ actual static oracle，但尚无 production separation、analytic derivative 或 complex-disk readiness。
-  现有证据支持一个可信的
-  exact-profile finite-strip eigenvalue candidate，但不支持 qualified BIE root、
+  决定撤销并由新路线 I1 设计取代；direct $M=48$ static $A_{\mathrm{def}}$ 与分层 real-axis
+  candidate screen 已通过经验门，但 real-axis locator 结论与 I2 root isolation 均不获授权，
+  `PHYSICAL_ROOT_READY=STOP`。新的 $A_{\mathrm{def}}^{D/G}$ 现有 $M=5,8$ low-order、
+  $M=48$ actual static oracle 和离散候选 $k=1.8327703475952146$，但尚无 production separation、
+  analytic derivative 或 complex-disk readiness。现有证据支持 exact-profile finite-strip
+  candidate 与 sharp-disk BIE 离散候选，但不支持 qualified BIE root、
   连续 kernel--field equivalence、unconditional effectivity 或 certified interval。
 
 ## 实现 checkpoint
@@ -99,6 +133,7 @@
 | Historical double-ellipse full analytic complex-$k$ Root-readiness | evidence `PASS WITH CONDITIONS`; scientific `REPRODUCIBLE STOP / NO_SCREENED_DIP` | 29/29 locator 点 available；$s(k)$ 从 $0.2083091449$ 严格降至 $s(0.18)=0.03539366850$；baseline/repeat 全表数值差为 0 | 已被新主模型取代；没有 interior dip 或 seed，chart/disk/factor/full-$F$ CR 未运行 |
 | Revised I4 Fliss missing-column benchmark, Rayleigh budget and three-path kernel audit | `PARTIAL SUCCESS`; `I4_FD_CANDIDATE_READY`; `BIE_RAYLEIGH_BUDGET_SCREENED`; `EWALD_VALUE_REFERENCE_CERTIFIED`; `EWALD_DERIVATIVE_REFERENCE_CERTIFIED`; `SLP_D_N_CERTIFIED_PROXY_RATIO_0P2`; `DLP_D_N_MTRACE48_CERTIFIED`; `PHYSICAL_ROOT_READY=STOP` | exact smooth profile 的 N80 strip 候选 $\lambda_h=3.460975044$；sharp-disk candidate windows 为 $[5,20]$、$[19,20]$；MATLAB 真 Ewald value/gradient/Hessian reference 通过；共同 $p/d=0.2$ 的四个 SLP/DLP wall actions 在 Ewald/MFS/Rayleigh 三路径上通过。DLP--D/DLP--N 最大 coefficient 误差为 $1.39\times10^{-14}$/$1.19\times10^{-13}$，DLP 四轴 self 最坏为 $1.40\times10^{-13}$，半网格有限带测试认证当前 $M_{\mathrm{trace}}=48$ | 认证只覆盖当前几何、实数非 Wood 点、两制造密度与有限 $M_{\mathrm{ref}}=96$；没有完成额外 $n_{\mathrm{tot}}/N_y$/Ewald wall ladder。package proxy 列表有一个重复角点，rank/edge-tail 仅为诊断。balanced $A_{\mathrm{def}}$/scanner、locator、root 与 estimator 未认证 |
 | Current I1.2 half-guide to $A_{\mathrm{def}}$ joint validation | `I1_2_M48_PASS_WITH_CONDITIONS`; `I1_2_EMPIRICAL_READY`; empirical I1.3 authorized | manufactured assembly；$M=5,8$ exact-small-sep mechanism；direct $M=48$ MATLAB `lsqminnorm` maps；双向 QZ 97/97 计数、projectors、代数 chart、DtN action 与 $A_{\mathrm{def}}^{D/G}$ Schur 门 | production separation 未计算，chart 不是 perturbation-certified；$A_{\mathrm{def}}'$ 尚未实现。locator、contour、root/eigenvalue 和 estimator 继续停止 |
+| Current I1.3 real-$k$ continuity, candidate reconnaissance and bounded zoom | `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_NESTED_GRID_CANDIDATE`; I1.4 not started | $M=48$ count/QZ/chart/subspace-coarse/fine continuity；中心差分二阶收敛；$M=12\to24\to48$ 分层筛查；v2 在 15 层、33 点、167 门全通过后得到 $k=1.8327703475952146$、$q=8.32009\times10^{-8}$，最终宽度 $7.6294\times10^{-7}$ | 固定 $M=48$ 不是 trace convergence；FD mutation 未过 $10^{-12}$，production derivative 不可用；anchored complex-$k$ branch、locator、contour、root 和 estimator 均未做 |
 
 实现权威入口为
 [[research/projects/eig-apost/implementation/archive/legacy-route-v1/i0-manufactured/design|manufactured NEP design]]、
@@ -377,25 +412,30 @@ proxy-solver 收敛诊断见
 
 ## 当前门槛
 
-当前门是 `I1_2_M48_PASS_WITH_CONDITIONS / I1_2_EMPIRICAL_READY`。现行方法已经具备正确层级：
+当前门是 `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_NESTED_GRID_CANDIDATE`。现行方法
+已经具备正确层级：
 physical half-guide PDE 定义 exact $\Lambda_\pm$，physical center variational pencil
 $\mathcal F(k)$ 在截断前定义真实根，continuous BIE 只作待证明的等价 realization，
 ordered QZ 只计算 finite pencil 的 deflating subspace。旧 finite-tail 方法已降为 legacy。
 
 direct $M=48$ one-cell pencil、左右 Cauchy blocks、manufactured/low-order mechanism、
-双向 QZ、coarse/fine graph、代数 chart、DtN 和 Schur 验证均已完成。最便宜的下一步是
-经验型 I1.3 的最小 real-$k$ stencil：检查 count/projector/chart 连续性并开发
-$A_{\mathrm{def}}'$，随后才可申请 candidate search 的 bounded real-axis sampling。
+双向 QZ、coarse/fine graph、代数 chart、DtN 和 Schur 验证均已完成。I1.3 进一步完成
+real-$k$ count/projector/chart 连续性和 width-driven candidate sampling，记录
+$k=1.8327703475952146$、$q=8.3200886232193094\times10^{-8}$。历史 v1 的
+shrinking-prominence stop 保留，但设计 blocker 已由独立 v2 关闭。最便宜的下一步是在
+另行授权后预注册 I1.4 anchored complex-$k$ readiness；本状态不授权 locator、contour
+或 root isolation。
 [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]] 的 OP-M0-1--4
 继续阻止真实 root/eigenvalue 与 theorem-level error claims；production separation/graph
 tangent 也保留为更强认证 caveat。OP-M0-5 的
 saturation/remainder 是 `IMPORTANT CAVEAT`，不阻止先寻找 qualified discrete root，但会
 阻止 remaining-error/certification claim。
 
-因此不得把当前状态描述为“已经找到 root”。static $M=48$ $A_{\mathrm{def}}$ 通过后，
-四个 M0 理论问题和 I1.3--I1.4 仍未完成；随后才可依次完成：M1 empirical
-$A_{\mathrm{def}}'$ 与 continuity、M2 locator/analytic
-readiness、M3 root isolation、M4 two-level correction、M5 independent reference/effectivity。
+因此不得把当前状态描述为“已经找到 root”；最终三个 $q$ 值仍显著变化，也不得描述为
+plateau。static $M=48$ $A_{\mathrm{def}}$ 与实轴 candidate 通过后，四个 M0 理论问题、
+production derivative 和 I1.4 仍未完成；随后才可
+依次完成：M2 locator/analytic readiness、M3 root isolation、M4 two-level correction、
+M5 independent reference/effectivity。
 既有 Fliss FD candidate 和 SLP/DLP/$M_{\mathrm{trace}}$ 数值证据继续保留，但不缩短上述
 理论—离散桥接链。仍不创建 `research/mainline/`，也不使用绝对优先权表述。
 
@@ -417,8 +457,9 @@ readiness、M3 root isolation、M4 two-level correction、M5 independent referen
   [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]]。Phase 1--2 文件
   保持历史原文，不因本次重构回写。
 - 新路线 I1 当前 verdict 是
-  `I1_2_M48_PASS_WITH_CONDITIONS / I1_2_EMPIRICAL_READY`；经验型 I1.3 已获授权，
-  locator/root 仍不获授权。历史 I4 数值标签仍保留为
+  `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_NESTED_GRID_CANDIDATE`；当前候选为
+  $k=1.8327703475952146$，I1.4、locator/root 均未开始或授权。历史 v1 zoom 的
+  `STOP / DESIGN-GATE-INCONCLUSIVE` 只作为不追溯改写的设计负例保留。历史 I4 数值标签仍保留为
   `PARTIAL SUCCESS -- I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
   EWALD_VALUE_REFERENCE_CERTIFIED / EWALD_DERIVATIVE_REFERENCE_CERTIFIED /
   SLP_D_N_CERTIFIED_PROXY_RATIO_0P2 / DLP_D_N_MTRACE48_CERTIFIED`；
@@ -439,10 +480,10 @@ readiness、M3 root isolation、M4 two-level correction、M5 independent referen
   `production_internal_A_b_identity=NOT_DIRECTLY_OBSERVED` 和
   `PHYSICAL_ROOT_READY=STOP` 保持不变。不得解释成 qualified root 或 estimator。
 - 新路线 I1.2 的 manufactured、MATLAB $M=5,8$ mechanism 和 direct $M=48$ static arms 已在
-  `test/i1/hg-adef/` 通过。下一步允许进入经验型 I1.3：只做最小 real-$k$ stencil、固定
-  branch/subspace/chart 连续性、经验型 $A_{\mathrm{def}}'$ 与 candidate reconnaissance。
-  production separation 继续作为 caveat；当前不得运行 contour、root isolation 或把任何
-  dip 称为真实 eigenvalue。
+  `test/i1/hg-adef/` 通过；I1.3 又在 `test/i1/k-scan/` 记录 fixed-$M=48$ 离散候选
+  $k=1.8327703475952146$。其 production derivative 因 FD mutation 门失败仍不可用。
+  下一步只可在另行授权后预注册 I1.4 anchored complex-$k$ readiness；当前不得运行
+  locator、contour、root isolation，也不得把该 dip 称为真实 eigenvalue。
 - 历史新增内容现归档于 `test/archive/legacy-route-v1/i4-rayleigh-budget/`、
   `test/archive/legacy-route-v1/i4-extract/`、`test/archive/legacy-route-v1/i4-three-path/`、
   `test/archive/legacy-route-v1/i4-three-path-derivatives/`、
@@ -454,8 +495,9 @@ readiness、M3 root isolation、M4 two-level correction、M5 independent referen
   $95.539849$ s 并通过顺序门。
   历史 Octave canonical 用时 $531.181285$ s。
 
-新 session 若调用 Engineer，应从经验型 I1.3 的最小 real-$k$ continuity/$A_{\mathrm{def}}'$
-实验继续，不得重复或绕开已经通过的 manufactured、low-order 与 direct $M=48$ static oracle；
+新 session 若调用 Engineer，只能在另行取得用户授权后从 I1.4 anchored complex-$k$
+readiness 的预注册开始，不得直接运行 locator/root，也不得重复或绕开已经通过的
+manufactured、low-order、direct $M=48$ static oracle 与 I1.3 实轴 candidate；
 理论侧继续处理 OP-M0-1 的 concrete exact-DtN/analytic-domain contract 和 OP-M0-2 的 physical/BIE
 kernel bridge。不得以 balanced matrix 或固定点数值 sanity check 跳过连续—离散证明义务，
 也不得把当前有限 $M_{\mathrm{ref}}=96$ 制造密度认证外推为完整
