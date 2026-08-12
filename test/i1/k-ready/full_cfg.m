@@ -1,0 +1,86 @@
+function out = full_cfg()
+%FULL_CFG Return the frozen I1.4 V3 full-run configuration.
+% Purpose:
+%   Extend cfg_v3 with the predeclared disk attempts, sampling geometry,
+%   Cauchy--Riemann stencil, engineering limits, and negative controls.
+% Output:
+%   out - Immutable settings for one explicitly selected full-run attempt.
+% Main algorithm:
+%   Preserve every V3 pilot model and gate, then add three exact radii and
+%   fixed index sets.  The runner must select one attempt per invocation;
+%   this configuration never authorizes an automatic attempt cascade.
+% Based on:
+%   cfg_v3.m and plan.md.
+% Numerical goal:
+%   Support sampled discrete root-readiness evidence without locator, contour,
+%   root, derivative-qualification, or estimator claims.
+
+  out = cfg_v3();
+  out.schema = 'TEP_I1_K_READY_FULL_V3';
+  out.experiment_id = 'I1-K-READY-FULL-V3';
+  out.claim_boundary = 'SAMPLED_DISCRETE_ROOT_READINESS_ONLY';
+
+  % Each MATLAB invocation receives one explicit attempt in 1:3.
+  out.radii = out.r0./[1,2,4];
+  out.attempt_limit = 3;
+  out.attempt_ids = 1:out.attempt_limit;
+  out.selected_attempt_marker = 'SELECTED_ATTEMPT';
+  out.selected_radius_marker = 'SELECTED_RADIUS';
+  out.run_one_attempt_per_invocation = true;
+  out.auto_cascade = false;
+
+  % The continuation tree is a centre-rooted star at fixed polar nodes.
+  out.half_angles = 2*pi*(0:7)/8;
+  out.boundary_angles = 2*pi*(0:31)/32;
+  out.nested16_indices = 1:2:32;
+  out.cardinal_indices = [1,9,17,25];
+  out.alternate_parent_indices = [25,1,9,17];
+
+  % CR uses h0=min(r/32,1e-4*max(1,abs(kstar))) and two halvings.
+  out.cr_h_ratios = [1,1/2,1/4];
+  out.cr_radius_divisor = 32;
+  out.cr_relative_cap = 1e-4;
+  out.cr_two_step_tol = 1e-6;
+  out.cr_rounding_floor = 100*eps;
+
+  % One attempt is fail-closed and append-only under its own subdirectory.
+  out.target_seconds_per_attempt = 1500;
+  out.hard_seconds_per_run = 1800;
+  % full-a1/attempt-1 was aborted after a source-race was detected.  Keep it
+  % immutable and publish the first source-frozen campaign under full-a2.
+  out.output_name = 'full-a2';
+  out.output_relative = fullfile('output',out.output_name);
+  out.attempt_output_pattern = 'attempt-%d';
+  out.fail_if_attempt_output_exists = true;
+  out.full_authorized = true;
+
+  % Negative controls use the same positive-path gates and fixed detectors.
+  out.negative_names = { ...
+    'consumer_pointwise_sqrt', ...
+    'offseed_proxy_adaptation', ...
+    'offseed_modulus_reselection', ...
+    'port_branch_sign_flip', ...
+    'proxy_branch_sign_flip', ...
+    'selected_complement_qz_swap', ...
+    'row_repivot_fingerprint_drift', ...
+    'near_vertical_dirichlet_graph', ...
+    'singular_reduced_proxy_factor', ...
+    'antiholomorphic_contamination', ...
+    'k_dependent_physical_weighting', ...
+    'wall_normal_mutation', ...
+    'reference_plane_mutation', ...
+    'transmission_swap', ...
+    'inverse_phase_mutation', ...
+    'row_order_mutation'};
+  out.negative_thresholds = struct( ...
+    'branch_error_max',out.branch_tol, ...
+    'forbidden_counter_max',0, ...
+    'qz_overlap_min',out.qz_overlap_min, ...
+    'fingerprint_drift_max',0, ...
+    'dirichlet_rcond_min',out.dirichlet_rcond_min, ...
+    'proxy_rcond_min',out.proxy_rcond_min, ...
+    'cr_defect_max',out.cr_tol, ...
+    'antiholomorphic_absolute_min',1e-3, ...
+    'antiholomorphic_good_multiplier',100, ...
+    'legacy_mutation_detectability_min',1e-8);
+end

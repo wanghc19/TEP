@@ -19,8 +19,8 @@ $$
 
 | Stage | 项目级目标 | 主要依赖 | 退出条件 |
 |---|---|---|---|
-| I1 | 把连续 DtN/BIE pencil 变成可审计的离散 $A_{\mathrm{def}}(k)$，并完成 half-guide graph/DtN、导数、解析 chart 和 locator readiness | 连续 $\mathcal F(k)$；合格 one-cell blocks；固定 Fourier trace space；ordered-QZ stable subspace 与 chart policy | 静态组装、经验型参数连续性与 $A_{\mathrm{def}}'$、平衡不变性和小复圆盘 readiness 通过；production separation 未完成时只作 caveat，不冒充扰动认证 |
-| I2 | 隔离并求出第一个真实离散 guided root，验证 simple-root 条件并跨相邻 levels 匹配 | 当前 I1 exit | count-one contour、收敛 root、非零左右导数配对和跨层 mode matching 通过 |
+| I1 | 把连续 DtN/BIE pencil 变成可审计的离散 $A_{\mathrm{def}}(k)$，并完成 half-guide graph/DtN、解析 chart 和 locator readiness | 连续 $\mathcal F(k)$；合格 one-cell blocks；固定 Fourier trace space；ordered-QZ stable subspace 与 chart policy | 静态组装、经验型参数连续性、平衡不变性和 sampled 小复圆盘 readiness 通过；若 $A_{\mathrm{def}}'$ 或 production separation 未完成，分别限制 derivative-based Newton 和 perturbation-certified claim，不阻止 derivative-free empirical isolation |
+| I2 | 隔离并求出第一个离散 guided root candidate，验证 simple-root 条件并跨相邻 levels 匹配 | 当前 I1 exit | count-one contour、收敛离散 root、非零左右导数配对和跨层 mode matching 通过；连续物理解释仍服从 M0 blockers |
 | I3 | 构造 next-level eigenvalue correction，并与高分辨率 reference 比较 effectivity | 当前 I2 matched roots；公共 trace transport | 至少三个匹配 levels、reference uncertainty、predicted/actual shift 和 effectivity 可复现；没有把未证明 saturation 冒充 certification |
 | I4 | 用独立参数、mode 或离散路径检验结论的可迁移性 | 当前 I3 representative case | 至少一个独立 real case、MATLAB parity 和独立高分辨率 reference 完成 |
 
@@ -34,8 +34,11 @@ $k=1.8327703475952146$、$q=8.3200886232193094\times10^{-8}$。coarse/fine 最�
 全程无漂移；最终三层仍明显变化，因此没有 $10^{-3}$ 平台。历史 v1 的 prominence
 design-gate stop 保留为设计负例，OP-CI1-7 已由 v2 关闭。
 
-graph-basis mutation 的有限差分门仍失败，因此 production derivative、Newton 和 correction
-不可用；production separation 也继续作为更强 perturbation claim 的 `IMPORTANT CAVEAT`。
-I1.4 本轮未开始且未获数值执行授权。下一步若另行授权，只能先预注册 anchored complex-$k$
-branch、fixed chart/rank、factor/pole ledger、CR 和实际对象负例；不得直接运行 locator、
-contour 或 root isolation。具体进度和四个 I1 里程碑见 I1 guide。
+graph-basis mutation 的有限差分门仍失败，因此 production derivative、derivative-based Newton
+和 correction 不可用；production separation 也继续作为更强 perturbation claim 的
+`IMPORTANT CAVEAT`。I1.4 已在 $r_0=3.8146972647368216\times10^{-7}$ 的冻结圆盘上完成
+sampled anchored branch、fixed chart/rank、factor/QZ/graph、loop closure、full-$F$ CR 和
+负例门。V4 所有 positive gates 通过，V5 以非对称 assembly oracle 闭合唯一因物理对称而
+不可辨识的 transmission swap，最终为 `PASS WITH CONDITIONS`。因此可以另行预注册
+derivative-free I2 contour/root isolation；当前仍没有 root、eigenvalue 或 estimator。具体
+进度和四个 I1 里程碑见 I1 guide。

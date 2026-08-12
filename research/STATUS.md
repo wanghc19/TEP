@@ -21,8 +21,10 @@ width-driven $M=48$ 局部加密，阶段为 `PASS WITH CONDITIONS`。新版局�
 $7.6294\times10^{-7}$ 的区间宽度正常结束，记录离散候选
 $k=1.8327703475952146$、$q=8.3200886232193094\times10^{-8}$。coarse/fine 最小位置
 全程无漂移；最终三个 $q$ 值仍明显变化，因此不是 $10^{-3}$ 平台。旧 prominence
-design-gate stop 保留为历史负例，原设计 blocker 已关闭；I1.4、locator、contour、Newton
-和 root isolation 本轮均未开始或授权。`PHYSICAL_ROOT_READY=STOP`。
+design-gate stop 保留为历史负例，原设计 blocker 已关闭。I1.4 随后在固定 $M=48$ 小复圆盘
+上完成 anchored branch、QZ/graph/DtN、factor、closure、CR 和负例门，阶段为
+`PASS WITH CONDITIONS`；它允许另行预注册 empirical I2 isolation，但没有运行 locator、
+contour 或 root，也不构成 eigenvalue。
 连续—离散桥接、production derivative、真实 root 和 estimator 尚未建立，也没有
 活动中的 `research/mainline/`。
 
@@ -35,7 +37,7 @@ design-gate stop 保留为历史负例，原设计 blocker 已关闭；I1.4、lo
 
 | 状态 | 专题 | 实际结论 |
 |---|---|---|
-| active investigation / new-route I1.3 complete with conditions; width-driven zoom passed | `research/projects/eig-apost/` | PDE-defined exact DtN 和 physical $\mathcal F(k)$ 是连续主对象；ordered QZ 只计算 finite-pencil deflating subspace。新路线 static $A_{\mathrm{def}}$、real-$k$ continuity 和 width-driven $M=48$ zoom 已通过经验门，并记录离散候选 $k=1.8327703475952146$、$q=8.32009\times10^{-8}$；FD mutation 门失败，production derivative 不可用。I1.4、locator/root、next-level correction、remaining-error estimator 和独立 $k_{\mathrm{ref}}$ 均未授权或未完成。 |
+| active investigation / new-route I1.4 complete with conditions; sampled discrete root readiness passed | `research/projects/eig-apost/` | PDE-defined exact DtN 和 physical $\mathcal F(k)$ 是连续主对象；ordered QZ 只计算 finite-pencil deflating subspace。新路线 static $A_{\mathrm{def}}$、real-$k$ continuity、width-driven $M=48$ zoom 和 sampled complex-$k$ readiness 已通过经验门，并保留离散候选 $k=1.8327703475952146$。另行预注册的 empirical I2 isolation 已获准作为下一步；locator/root、production derivative、next-level correction、remaining-error estimator 和独立 $k_{\mathrm{ref}}$ 均未完成。 |
 | paused archive | `research/archive/muller-cauchy-2026-07/` | 冻结的 Müller--广义 Bloch--Cauchy 主线；商空间版本的核/场等价仍有未闭合的外部定理适配和表示论前提。 |
 | paused | `research/projects/half-guide-dtn/` | Stage 1 完成了符号审计、齐次半导 DtN/Riccati 验证和耦合方案建议；周期障碍半导、完整中心耦合及 MATLAB 最终验证尚未完成。该路线未整合进冻结主线。 |
 | completed project | `research/projects/cell-representation/` | 专题任务已完成：原始无条件猜想过强；给出了直接 Green 表示和带显式正则性、非 Wood 及互补问题条件的修正版。其纠正后的表示结构和商空间策略已进入冻结主线，但其中的表示定理仍为 `needs review`。 |
@@ -70,9 +72,9 @@ design-gate stop 保留为历史负例，原设计 blocker 已关闭；I1.4、lo
 5. 新方向形成后，应更新 `research/DECISIONS.md`、本文件和 `research/README.md`，再决定是否建立新的 `research/mainline/`。
 
 当前活动专题是偏工程实现的特征值后验误差研究。width-driven v2 已关闭旧 prominence
-实验设计问题；最便宜的下一门是另行授权后预注册 I1.4 的 anchored complex-$k$ branch、
-fixed chart/rank、factor/pole ledger、CR 与必要负例。本轮不授权 locator、root、contour、
-Newton 或 estimator。continuous exact-DtN domain、physical/BIE kernel bridge、production
+实验设计问题，I1.4 又完成 sampled anchored complex-$k$ readiness。最便宜的下一门是另行
+预注册 derivative-free I2 contour/count；当前尚无 root/eigenvalue，且不授权
+derivative-based Newton 或 estimator。continuous exact-DtN domain、physical/BIE kernel bridge、production
 derivative/separation 与 projected/regular approximation topology 继续限制物理 root 和
 estimator 声明，也不升级为统一研究方向。
 冻结路线若被恢复，其优先事项仍是单位圆全谱排除、

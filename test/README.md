@@ -43,6 +43,19 @@ frozen outputs retain their recorded paths and hashes.
 | Status | `ZOOM2_M48_DISCRETE_GRID_COMPLETE / CANDIDATE ONLY` |
 | Implementation summary | [[research/projects/eig-apost/implementation/i1/README|current I1 guide]] |
 
+## I1-K-READY-V1
+
+| Field | Value |
+|---|---|
+| Experiment ID | `I1-K-READY-V1` |
+| Stage | I1.4 |
+| Purpose | Test whether the fixed-$M=48$ I1.3 dip belongs to one sampled, anchored complex-$k$ discrete family and survives branch, factor, QZ, graph/DtN, CR, closure, and negative gates |
+| Current path | `test/i1/k-ready/` |
+| Entry point | `run_v4`, followed by the source-locked negative closure `run_v5`, in MATLAB; new campaigns must use new output tags |
+| Authoritative report | [[test/i1/k-ready/output/v5-a1/report|V5 conditional closure]]; its frozen positive parent is [[test/i1/k-ready/output/v4-a1/report|V4 sampled-disk report]], whose sole failure remains the symmetry-inapplicable transmission-swap negative |
+| Status | `I1_4_PASS_WITH_CONDITIONS / SAMPLED_FIXED_M_DISCRETE_ROOT_READINESS`; candidate only, no locator/root/eigenvalue |
+| Implementation summary | [[research/projects/eig-apost/implementation/i1/README|current I1 guide]] |
+
 Future current-route experiments belong under `test/i1/` and receive an index entry only after
 they are designed and authorized. A legacy verdict never becomes a current stage gate.
 

@@ -8,12 +8,12 @@
 Git 标签 `mainline-muller-cauchy-2026-07-26`，并移至
 `research/archive/muller-cauchy-2026-07/`。`research/projects/eig-apost/` 已确认
 fixed-$\beta$ line-defect guided-mode eigenvalue 后验误差的 research question，并已
-完成 Phase 2b novelty gate、Phase 3--4 历史方法设计和离散部件验证。当前新路线 I1.3
+完成 Phase 2b novelty gate、Phase 3--4 历史方法设计和离散部件验证。当前新路线 I1.4
 为 `PASS WITH CONDITIONS`：fixed-$M=48$ width-driven 局部加密记录离散候选
 $k=1.8327703475952146$、$q=8.3200886232193094\times10^{-8}$，但这不是 locator root 或
-eigenvalue。I1.4 尚未开始且须另行授权；在 anchored complex-$k$ branch、fixed chart/rank、
-factor/pole ledger 和 Cauchy--Riemann 等 readiness gates 通过前不得进入 locator 或 root
-isolation，`PHYSICAL_ROOT_READY=STOP`。该结果也不构成真实 eigenvalue estimator 或新的
+eigenvalue。sampled anchored complex-$k$ branch、fixed chart/rank、factor ledger 和
+Cauchy--Riemann 等 readiness gates 已条件通过，允许另行预注册 empirical I2 isolation；
+locator/root 尚未运行，production derivative 与 estimator 仍不可用。该结果也不构成真实 eigenvalue estimator 或新的
 统一主线。
 在形成可以明确命名且经过审核的统一框架以前，不建立空的 `mainline/` 作为占位。
 

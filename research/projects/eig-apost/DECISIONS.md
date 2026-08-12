@@ -30,3 +30,11 @@
 - **History preservation.** Phase 1--2 files retain their original wording because they already
   record the DtN-first commitment and the distinction between definition and construction.
 
+### 2026-08-12 supersession note
+
+The numerical freeze above governed the 2026-08-11 method reconstruction. Later explicit user
+authorization established the current empirical I1 route. I1.1--I1.4 now pass with conditions at
+the sampled fixed-$M=48$ discrete level, so a separately preregistered derivative-free I2
+contour/root-isolation experiment is allowed. OP-M0-1--OP-M0-4 still block promotion of any
+discrete root to a physical eigenvalue or theorem-level claim; production $A_{\mathrm{def}}'$ and
+the estimator also remain unavailable.

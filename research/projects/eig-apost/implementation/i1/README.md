@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-状态为 `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_NESTED_GRID_CANDIDATE`。
+状态为 `I1_4_PASS_WITH_CONDITIONS / SAMPLED_FIXED_M_DISCRETE_ROOT_READINESS`。
 I1.2 的 $M=48$ static chain 保持通过；I1.3 在同一 homogeneous missing-column 模型上
 完成 real-$k$ 连续性、$M=12\to24\to48$ 分层筛查，以及独立预注册的 width-driven
 $M=48$ 局部加密。宽扫先记录 $k=1.83125$；新版局部加密在 15 个区间层、33 个唯一
@@ -20,12 +20,17 @@ raw/physical 最低点一致。局部和固定肩部 prominence 均只作诊断�
 v2 关闭。最终三个 $q$ 值仍以约 $46.9\%$ 和 $55.8\%$ 变化，故不是
 $10^{-3}$ 平台；最终分类为 `LE_1E3_MAGNITUDE`，而非 root-convergence 结论。
 
-该点只称 fixed-$M=48$ finite-dimensional real-axis candidate，不称 root 或 eigenvalue。
+该点只称 fixed-$M=48$ finite-dimensional root candidate，不称 root 或 eigenvalue。
 中心差分的绝对收敛、二阶比率及粗细层 action 已通过，但 graph-basis mutation 后的导数
 变化为 $3.65\times10^{-11}>10^{-12}$；因此 `FD_DERIVATIVE_READY=false`，导数只作诊断，
 不得进入 Newton、root correction 或 estimator。production separation 仍为
-`IMPORTANT CAVEAT`。I1.4 本轮未开始、未获数值执行授权；anchored complex-$k$ branch、
-fixed chart/rank、factor/pole ledger、CR 和实际对象负例仍是进入 locator/root 前的下一门。
+`IMPORTANT CAVEAT`。I1.4 在半径 $r_0=3.8146972647368216\times10^{-7}$ 的冻结小复圆盘上
+完成 anchored branch、seed-cluster continuation、fixed chart/rank、factor ledger、loop
+closure 和 full-$F$ CR 检查。V4 的全部 positive gates 通过；唯一 ordinary-negative
+failure 是 homogeneous 左右对称模型中不可辨识的 `transmission_swap`。V5 保留该物理负例
+为不适用，并用非对称 $K=3$ assembly oracle 闭合传输块顺序。因此当前候选允许进入另行
+预注册的经验型 I2 root isolation；I1.4 本身没有运行 locator、contour 或 root，也不授权
+derivative-based Newton、eigenvalue 或 estimator 声明。
 
 ## 本目录
 
@@ -45,7 +50,7 @@ fixed chart/rank、factor/pole ledger、CR 和实际对象负例仍是进入 loc
 | I1.1 理论设计 | 连续 $\mathcal F$ 对应、empty-center $A_{\mathrm{def}}^{D/G}$、符号、尺寸和失败策略 | `PASS WITH CONDITIONS` | design-level blocker 为 0 |
 | I1.2 half-guide 到 $A_{\mathrm{def}}$ 的联合验证 | 人工装配、真实 one-cell 双向 QZ、Cauchy graph/safe DtN 和两种 $A_{\mathrm{def}}$ 表示 | `PASS WITH CONDITIONS` | direct $M=48$ static empirical chain 通过；production separation 未计算但不阻止经验推进 |
 | I1.3 参数扰动、连续性和 $A_{\mathrm{def}}'$ | 固定分支、subspace transport、导数、adjoint/Gram 与平衡一致性 | `PASS WITH CONDITIONS` | width-driven $M=48$ candidate 通过；FD mutation 门失败，production derivative 仍不可用 |
-| I1.4 locator readiness | anchored branch、小复圆盘、factor/pole ledger、必要负例与 anti-collapse | `NOT STARTED / SEPARATE AUTHORIZATION REQUIRED` | 先预注册 anchored complex-$k$ readiness；本轮不运行 locator、contour 或 root isolation |
+| I1.4 locator readiness | anchored branch、小复圆盘、factor/pole ledger、必要负例与 anti-collapse | `PASS WITH CONDITIONS` | sampled fixed-$M=48$ readiness 通过；允许另行预注册 derivative-free I2 isolation，尚无 root/eigenvalue |
 
 ## 权威和证据边界
 
@@ -67,6 +72,9 @@ I1.2 当前实验入口与权威 MATLAB 报告分别为 `test/i1/hg-adef/README.
 预注册计划和权威报告分别为 `test/i1/k-scan/p-zoom2.md` 与
 `test/i1/k-scan/output/zoom2/report.md`，统一入口见
 [[test/README#I1-K-SCAN-ZOOM-V2|I1-K-SCAN-ZOOM-V2]]。
+I1.4 的统一入口为 [[test/README#I1-K-READY-V1|I1-K-READY-V1]]；最终条件闭合和其冻结
+positive parent 分别为 `test/i1/k-ready/output/v5-a1/report.md` 与
+`test/i1/k-ready/output/v4-a1/report.md`。V3/V4 的失败 verdict 均保持不变。
 统一历史实验入口见
 [[test/archive/legacy-route-v1/README#I4-DLP-TRACE-V1|I4-DLP-TRACE-V1]]；旧 augmented-BIE 和
 finite-tail 只从
