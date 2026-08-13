@@ -78,3 +78,112 @@ expanding this branch merely for theorem-level completeness.  Any next step--eit
 structure-preserving proof route or a local complex refinement confined to the I2.1 disk--is a
 method change requiring a new design, freeze and independent review; broad complex scanning
 remains rejected as the default.
+
+## 2026-08-13 — Continuous real spectrum, not finite exact Hermitian structure, governs the search axis
+
+- **Primary spectral object.** The target remains the positive real guided eigenvalue of the
+  self-adjoint continuous physical operator. The numerical matrices approximate that problem;
+  they do not decide whether the physical search is allowed to use real $k$.
+- **Route correction.** The I2.2 endpoint experiment correctly returned
+  `inertia=UNAVAILABLE`: without an exact finite Hermitian identity, the signs of a finite
+  matrix spectrum and an endpoint inertia jump have no theorem-level meaning. This limitation
+  applies to the inertia route only. It no longer blocks a derivative-free, bounded real-axis
+  search for an approximation to the continuous real eigenvalue.
+- **Default numerical route.** Reuse the I1.3/I2.1 local interval and the original unbalanced
+  $A_{\mathrm{def}}^D(k)$. Do not repeat a wide scan. Unless a separately qualified signed
+  scalar is available, use one-dimensional bounded minimization of
+  $\sigma_{\min}(A_{\mathrm{def}}^D(k))$, not a sign-changing bracket or an inertia surrogate.
+- **Qualification.** A real-axis minimizer is initially a constrained discrete approximation,
+  not automatically an exact zero of the non-Hermitian finite determinant. Qualification must
+  return to the original matrix and record left/right residuals, backward error, near-kernel
+  separation, all factor health, full-graph/Schur parity, nonzero field participation, boundary
+  matching, reproducibility, and a candidate-location/evaluator/solve uncertainty ledger. It is
+  called root uncertainty only after the I2.4 candidate-to-zero and slope gates pass.
+- **Role of structure diagnostics.** The observed finite Hermitian, reciprocity, and Lagrangian
+  defects are uncalibrated structure-consistency diagnostics and uncertainty-ledger components.
+  Converting them into root error requires refinement evidence, a nonzero derivative denominator,
+  and the continuous--discrete bridge. Exact finite
+  structure remains useful only if endpoint inertia is later revived as an optional
+  corroboration; it is not a prerequisite for the main root or estimator route.
+- **Fallback.** A local complex refinement inside the already isolated I2.1 disk is triggered
+  only if a persistent real-axis residual floor, candidate shifts inconsistent with the
+  evaluator/structure uncertainty ledger, or anomalous left/right near-kernel phase diagnostics
+  cannot be explained. Off-axis displacement is then measured by that diagnostic rather than
+  presumed from real-axis data. Broad complex-plane scanning remains out of
+  scope.
+- **Estimator mainline.** The active dependency is now
+  `continuous real eigenvalue -> discrete real-axis approximation -> consistency/discretization
+  error -> a posteriori eigenvalue correction and effectivity`. Continuous projected-gap,
+  half-guide, BIE kernel--field, regular-approximation, and no-pollution obligations still govern
+  promotion to a physical eigenvalue or a theorem-level bound; they do not prevent the next
+  qualified discrete computation.
+- **Candidate-to-zero gate.** A constrained real-axis minimizer does not directly enter the NEP
+  simple-root correction. Before I3 it must either be connected to a nearby qualified finite
+  simple zero with a controlled root correction (and any imaginary displacement), or be supplied
+  with a separately derived perturbation formula for constrained minimizers.
+
+The earlier I2.2 decision and its post-run verdict remain an immutable history of the inertia
+branch. This section supersedes only their use as the current root-search authorization.
+
+## 2026-08-13 — Candidate and continuous-error estimation supersede exact-discrete-root goals
+
+- **Only final goals.** The project now has only two final goals: propose a numerical candidate
+  for the continuous physical eigenvalue, and estimate the distance from that candidate to the
+  true continuous eigenvalue, ultimately seeking a computable upper bound.
+- **Candidate status.** A finite-precision candidate is not expected to equal either the true
+  continuous eigenvalue or an exact zero of a chosen finite matrix. Residual, structure,
+  discretization and representation discrepancies are error sources to identify and control,
+  not conceptual defects that must all vanish before a candidate may be reported.
+- **I2.2 role.** I2.2 reuses only the already selected I1.3 dip endpoints and checks whether a
+  consistently defined endpoint sign count exhibits an inertia-like jump. This is numerical
+  corroboration of candidate credibility. It neither repeats the scan nor proves a finite real
+  zero. The historical `inertia=UNAVAILABLE` result remains authoritative for a theorem-level
+  inertia claim; exact finite Hermitian structure is now OPTIONAL unless a later rigorous signed
+  crossing or enclosure specifically needs it.
+- **I2 handoff.** I2.3 aggregates the minimum anti-artifact evidence for the candidate. I2.4
+  records the error sources, uncertainties and comparable refinement data that I3 can consume.
+  Neither milestone has an exact-discrete-root exit condition.
+- **I3 mainline.** I3 follows
+  `candidate -> error sources -> computable estimate -> independent-truth validation ->
+  upper-bound feasibility`. A derivative, adjoint, transported mode or simple-root denominator
+  becomes mandatory only if the selected estimator formula actually consumes it.
+- **Upper-bound boundary.** A level difference is only an indicator or next-level correction.
+  It becomes an empirical eigenvalue-error estimator only after comparison with an independent
+  continuous-problem reference carrying its own uncertainty. It becomes a computable upper
+  bound only after an independently justified continuous--discrete bridge and remainder,
+  stability, saturation or enclosure control. Otherwise the required verdict is
+  `UPPER_BOUND_UNAVAILABLE`.
+- **Stage discipline.** Each main stage should have four formal milestones and must never exceed
+  five. Helpful checks that do not block the next necessary deliverable are `OPTIONAL` rather
+  than new stages.
+
+This decision supersedes the previous section's bounded-real-axis locator and candidate-to-zero
+requirements as the current project plan. It does not rewrite the I2.1 count result, the I2.2
+structure diagnostic, or any append-only numerical evidence.
+
+## 2026-08-13 — I2 is compressed to three independent numerical milestones
+
+- **Milestone count is not a target.** Four milestones remain a useful default for many stages,
+  but they are not a minimum. A stage must not invent a handoff milestone merely to reach four;
+  five remains the absolute maximum.
+- **I2.1 and I2.2 remain unchanged.** I2.1 retains the conditional finite-dimensional count-one
+  result. I2.2 retains the planned endpoint surrogate sign-count diagnostic and all historical
+  `NaN/UNAVAILABLE` inertia evidence.
+- **New I2.3.** The only remaining I2 experiment compares the same physical mode at
+  preregistered discretization orders. It freezes the physical object, level tuples, primary
+  refinement axis, candidate definition/localization rule and a common representation for mode
+  identity. It reports each candidate, signed and absolute drift, localization uncertainty and
+  the minimum residual, factor, field, boundary, reproducibility and mode-identity diagnostics.
+- **Interpretation.** Large, small, nonmonotone or unresolved drift are all valid outcomes.
+  Drift that cannot be separated from localization uncertainty is `DRIFT_UNRESOLVED`, not zero
+  drift or convergence. A mode swap or unresolved mode identity prevents interpretation as a
+  same-mode drift sequence.
+- **I2.4 is deleted from the active plan.** I2.3 output is the direct I3 input; no separate
+  error-ledger or handoff milestone is needed.
+- **I3 owns error analysis.** Identification and decomposition of spatial, trace, half-guide,
+  BIE/QZ, finite-structure, solve/localization and continuous--discrete errors now begin in I3,
+  together with estimator selection, independent-truth validation and upper-bound feasibility.
+
+This decision supersedes the immediately preceding decision's I2.3/I2.4 split and four-milestone
+stage rule. It changes planning only and does not modify historical designs, reviews, code or
+append-only outputs.

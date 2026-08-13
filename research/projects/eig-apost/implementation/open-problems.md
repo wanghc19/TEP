@@ -1,9 +1,10 @@
 # Eigenvalue a posteriori open-problem ledger
 
-本文件集中维护 `eig-apost` 各实现阶段仍与当前目标有关的问题。当前目标是一篇偏工程的
-论文：先得到可运行、可复现、在代表性真实案例上有数值效果的 eigenvalue estimator，
-并诚实说明适用范围；除非当前 claim 明确要求，不把 theorem-level certification 作为
-默认验收条件。
+本文件集中维护 `eig-apost` 各实现阶段仍与当前目标有关的问题。项目只有两个最终目标：
+提出 continuous physical eigenvalue candidate；估计该 candidate 到真实连续特征值的误差，
+并研究可计算上界。首个工程目标是带 independent-truth validation 的 empirical estimator；
+严格上界是后续明确研究方向，但在所需稳定性、remainder 和 continuous bridge 未建立前，
+不得把它伪装成已完成的 certification。
 
 各 review 保留其历史原文，只在末尾链接本 ledger。这里的分类按当前工程目标重新评估，
 不回写或伪造旧 verdict。最新阶段状态仍以
@@ -40,16 +41,17 @@ eigenvalue 声明。现行方法见
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
-| OP-M0-1 | `BLOCKER` | 精确 half-guide DtN 已由 PDE 定义，但选定 complex-$k$ 域上的 holomorphy、projected gap/Dirichlet spectrum/Wood/BIE pole 分离，以及项目法向与 Fliss/code 符号映射尚未形成一个已证明合同。 | 阻止把 complex-$k$ discrete map 解释为同一精确 $\Lambda_\pm(k)$ 的近似，也阻止 $\mathcal F'(k)$ 的理论定义进入实现。 | 对具体 sharp-disk model 写出左右 half-guide BVP、法向和 code coefficient convention；证明或引用一个覆盖所选小域的 analytic solution-operator lemma，并列明例外集。 | `OPEN` |
-| OP-M0-2 | `BLOCKER` | physical variational pencil $\mathcal F(k)$ 已先于截断定义；但 continuous BIE schema 的 representation completeness、injectivity、kernel--field equivalence、Fredholm index 和 adjoint pairing 尚未证明。 | 阻止把 BIE matrix 的非平凡核等同于真实 guided mode；固定矩阵的 field-energy 或 raw/reduced agreement 不能关闭它。 | 冻结实际 center layer-potential representation 与 spaces，证明 physical/BIE kernels 双向对应；若首篇只作数值论文，至少预注册 spurious-density negative、field-energy、boundary residual 和 refinement-overlap 替代门，并明确降级 claim。 | `OPEN` |
-| OP-M0-3 | `BLOCKER` | continuous one-cell relation 到 BIE/Fourier generalized pencil 的 primal/adjoint $C^1$ consistency 仍未证明，production `DIF/sep` backend 和 analytic graph tangent 也未资格化。有限维设计已冻结 original/reversed 两次 QZ、regular infinite pair、seed-cluster continuation、双向 Sylvester separation、absolute chart margin、Dirichlet/Robin/full-graph fallback 和 $A_{\mathrm{def}}^{D/G}$；I1.2 static arms、I1.3 real-$k$ projector/chart 连续性和 I1.4 sampled anchored complex-$k$ readiness 均已通过，但 FD graph-basis mutation 为 $3.65\times10^{-11}>10^{-12}$。 | 不阻止冻结点的经验矩阵解释、离散 candidate 或 derivative-free empirical isolation；阻止把有限维 graph/DtN 称为带扰动界的 production approximation，也阻止 production $A_{\mathrm{def}}'$、Newton correction、真实 root/eigenvalue 和 theorem-level estimator 声明。 | Newton 前冻结 roundoff-aware derivative mutation test，必要时资格化 structured `xTGSEN/xTGSYL` condition estimate 和 continuous $C^1$ bridge。 | `OPEN` |
-| OP-M0-4 | `BLOCKER` | 原目标 $\|\Lambda-E_M\Lambda_{h,M}Q_M\|_{H^{1/2}\to H^{-1/2}}\to0$ 对一阶非紧 DtN 和有限秩 lift 通常不可能。当前必须在 projected consistency + eigentrace regularity、principal-symbol subtraction + compact remainder、或 regular Galerkin/graph convergence 三条路线中选定并证明一条，同时冻结公共 trace prolongation/dual restriction。 | 阻止把两层矩阵差解释为 $\mathcal F-\mathcal F_{h,M}$ 或 $\mathcal F'-\mathcal F'_{h,M}$ 的算子误差，也阻止 Moskow compact-operator theorem 的直接套用。 | 先证明 retained modes 上 $\Lambda_{h,M}\approx Q_M^N\Lambda E_M^D$；随后对实际 primal/adjoint eigentraces估计 weighted tail。只有证明公共 principal part 后，才改走 compact-remainder norm route。 | `OPEN` |
-| OP-M0-5 | `IMPORTANT CAVEAT` | 相邻层 projected difference 只有 next-level correction 含义；独立 saturation 常数和 correction remainder 尚无来源或证明。 | 不阻止在 M0--M3 后寻找 qualified discrete root，也不阻止报告 empirical next-level correction；阻止称 remaining-error estimator、certified interval 或无条件 effectivity。 | 用至少三个匹配离散 levels 和独立高分辨率 reference 报告 observed ratios 与 remainder；未证明前保持 `next-level correction` 命名。 | `OPEN` |
+| OP-M0-1 | `BLOCKER` | 精确 half-guide DtN 已由 PDE 定义，但当前 sharp-disk 参数的 projected gap、实参数 half-guide 适定区间、Dirichlet/Wood 例外集和项目法向与 Fliss/code 符号映射尚未形成一个完整合同；选定 complex-$k$ 域上的 holomorphy 与 pole 分离另有缺口。 | 阻止把离散 candidate 提升为当前 sharp-disk continuous physical eigenvalue，也阻止未经补充就作 theorem-level derivative/complex-domain claim；不阻止以连续自伴实谱为依据在实轴上搜索 qualified discrete approximation。 | 先针对当前实参数窄区间核验 sharp-disk projected gap、half-guide well-posedness、法向和 coefficient convention；只有 local complex fallback 或定理级解析主张被触发时，再补 complex-domain analytic solution-operator lemma。 | `OPEN` |
+| OP-M0-2 | `BLOCKER` | physical variational pencil $\mathcal F(k)$ 已先于截断定义；但 continuous BIE schema 的 representation completeness、injectivity、kernel--field equivalence、Fredholm index 和 adjoint pairing 尚未证明。 | 阻止把有限维近核无条件等同于真实 guided mode，也阻止 certified physical estimator；不阻止在原始矩阵上用 field participation、boundary residual、representation parity 和 refinement overlap 资格化一个条件性离散 candidate。 | 冻结实际 center layer-potential representation 与 spaces，证明 physical/BIE kernels 双向对应；首篇工程结果先预注册 spurious-density negative、field-energy、boundary residual 和 refinement-overlap 替代门，并明确降级 claim。 | `OPEN` |
+| OP-M0-3 | `BLOCKER` | continuous one-cell relation 到 BIE/Fourier generalized pencil 的 primal/adjoint consistency 仍未证明，production `DIF/sep` backend 和 analytic graph tangent 也未资格化。有限维设计已冻结 original/reversed 两次 QZ、regular infinite pair、seed-cluster continuation、absolute chart margin、fallback 和 $A_{\mathrm{def}}^{D/G}$；既有 sampled checks 已通过，但 FD graph-basis mutation 仍失败。 | 不阻止提出和诊断 candidate；阻止把某个 derivative-based correction 无条件解释为 continuous eigenvalue error，也阻止 theorem-level上界。是否需要 production derivative、adjoint 或 separation，必须由 I3 选定 estimator 决定，不能预先扩张成 I2 blocker。 | I3 选定 estimator 后，只资格化公式实际消费的 derivative/adjoint/condition action；若选定路线不需要它们，保持 OPTIONAL。 | `OPEN` |
+| OP-M0-4 | `BLOCKER` | 原目标 $\|\Lambda-E_M\Lambda_{h,M}Q_M\|_{H^{1/2}\to H^{-1/2}}\to0$ 对一阶非紧 DtN 和有限秩 lift 通常不可能。当前必须在 projected consistency + eigentrace regularity、principal-symbol subtraction + compact remainder、或 regular Galerkin/graph convergence 三条路线中选定并证明一条，同时冻结公共 trace prolongation/dual restriction。 | 阻止把两层矩阵差直接解释为 continuous operator error，也阻止 Moskow compact-operator theorem、certified physical eigenvalue error 或 theorem-level estimator 的直接套用；不阻止先构造 matched discrete hierarchy 和 empirical next-level correction。 | 先在实际 primal/adjoint eigentraces与 retained modes 上检查公共 transport、projected difference 和 weighted tail；随后选择可证明的 consistency 路线。未闭合前把结果分解为离散/结构/求根误差并保持 empirical 标签。 | `OPEN` |
+| OP-M0-5 | `IMPORTANT CAVEAT` | 相邻层 projected difference 只有 next-level correction 含义；独立 saturation 常数和 correction remainder 尚无来源或证明。 | 不阻止 candidate、next-level correction 或 independent-truth-validated empirical estimator；只阻止 `computable upper bound`、certified interval 或 guaranteed effectivity。 | I3 先用独立 reference 检查 effectivity；上界研究再寻找 independently justified saturation/enclosure 和 computable remainder。observed ratios 不能单独升级为证明。 | `OPEN` |
 | OP-M0-6 | `MINOR CAVEAT` | 旧“有限多个 cells + 远端闭合 + doubling”曾被放在主方法位置。 | 双重方法权威会使真实谱对象和 estimator 含义漂移。 | 已完整归档为 legacy，并在当前 method/STATUS/README 中降为 cross-check、reference sequence 或 tail diagnostic。 | `RESOLVED` |
 
 ## Current route
 
-当前新路线的项目级编号为 I1--I4。为避免与历史 I1--I4 ledger ID 冲突，当前问题使用
+当前新路线的正式项目级编号为 I1--I3；I4 只保留 OPTIONAL 泛化验证方向。为避免与历史
+I1--I4 ledger ID 冲突，当前问题使用
 `OP-CI*` 前缀；旧 ID 只作历史引用。机械映射为：`OP-I4-1e -> OP-CI1-1`、
 `OP-I4-1d -> OP-CI1-2`、`OP-I5-1 -> OP-CI2-1`、`OP-I6-1/2 -> OP-CI3-1/2`、
 `OP-I7-1 -> OP-CI4-1`。当前阶段语义以本节和
@@ -75,31 +77,31 @@ eigenvalue 声明。现行方法见
 
 ### Current I2
 
-**Actual Root Isolation and Simple-root Qualification。**
+**Candidate Credibility and Cross-discretization Drift。**
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
-| OP-CI2-1 | `BLOCKER` | I2.1 `m1-a1` 已在冻结 fine、$M=48$、$K=97$ 的 $A_{\mathrm{def}}^D$ 上通过 factor-aware count：32/64 主 winding 均为 one，72 个非主 inverse/section factors 均为 zero winding，Skeptic verdict 为 `PASS WITH CONDITIONS`。原“没有 count-one contour”部分已关闭；尚未求出 root，也未检查 root residual、左右近核、非零场、root 处 factor health 或跨层 matching；simple-root derivative 另受 OP-CI1-6 限制。 | 不再阻止 I2.2 方向研究；仍阻止报告 root 坐标、qualified discrete mode、跨层 shift、continuous eigenvalue 或后验 correction。 | OP-CI2-4 的实轴 inertia 路线已停在理论门。若不另行证明 exact finite structure，则以 `m1-a1` 为 immutable parent，单独预注册仅限小圆盘的 local complex refinement、独立复现、root-point factor health、左右 residual、imaginary-part uncertainty、center/port field participation 与边界 matching；不得改写 I2.1 contour/阈值迎合结果。 | `OPEN` |
+| OP-CI2-1 | `BLOCKER` | I2.1 已在冻结 finite family 上通过 factor-aware count one，但尚未在预先冻结的不同离散阶数下得到同一物理 mode 的可比较 candidate 序列、漂移与定位不确定度。 | 阻止 I2.3 向 I3 提供可解释的 cross-discretization 数据；不阻止继续最低成本 endpoint diagnostic 或设计 I2.3。 | 完成 I2.2 jump/no-jump/unresolved 后，冻结离散阶数、单一 refinement axis、candidate 定义与公共 mode 表示，报告 signed/absolute drift、各层定位 uncertainty 及最低 residual/factor/field/boundary/mode-identity 检查；若漂移不能与组合 uncertainty 分离，则记 `DRIFT_UNRESOLVED`。无需先证明 exact finite root。 | `OPEN` |
 | OP-CI2-2 | `IMPORTANT CAVEAT` | I2.1 依赖 64 点 $k$、32 点 $\zeta$、双向 sampled Neumann guards 和嵌套 winding，而非连续边界 supremum 或严格闭盘无 pole 定理；未采样极窄 excursion 仍不能逻辑排除。 | 不阻止当前 conditional empirical finite-dimensional count one 或 I2.2；阻止把 I2.1 称为 certified pole-free theorem。 | I2.2 继续 fail-close 监测同一 branch/QZ/chart/factors；只有出现 nested inconsistency、弱 separation、近阈 guard 或 claim 升级时，才另行审查 $N_k=128$ 或严格界。 | `OPEN` |
-| OP-CI2-3 | `IMPORTANT CAVEAT` | I2.1 的 proxy reduced 最小 `rcond` 为 $1.0481727407734721\times10^{-8}$，只高于 $10^{-8}$ 门约 $4.82\%$；Riesz range difference 最大为 $6.989264130329236\times10^{-8}<10^{-7}$。当前冻结对象通过，但裕量有限。 | 不撤销 I2.1；阻止在 root 点、相邻 level 或新参数上直接继承 factor/chart readiness。 | I2.2 在 root 点重算全部 factor health 与 projector/chart 指标；若越门则停止并保留失败，不放宽阈值。 | `OPEN` |
-| OP-CI2-4 | `BLOCKER` | I2.2 已证明 $T$ 可逆实点上的 singularity/nullity 等价、whole-shoulder $T$ separation 和 center Hermitian identity，并完成两肩同对象 diagnostic：$T$ 明显可逆，$A$--$H$ identity 闭合到浮点精度，raw $H$/graph/DtN defects 为 $10^{-16}$ 量级。但 actual finite graph 的 exact Lagrangian/Hermitian identity 与 whole-interval same-family continuity 均未证明；inertia 因而为 `NaN/UNAVAILABLE`，阶段在 `I2_2_STOP_THEORY_GATE` 停止。 | 阻止把实轴 solver 冻结为正式路线或声称唯一 zero 已在实轴；不撤销 I2.1 count one，也不阻止另行审查小圆盘内 local complex refinement。 | 只有若 inertia 路线仍对当前目标必要，才另行设计结构保持离散 identity 与整区间 continuity 证明；否则停止扩张该支线，改为单独审查 I2.1 小圆盘内 local complex refinement，并直接报告 imaginary part 与 uncertainty。 | `OPEN` |
+| OP-CI2-3 | `IMPORTANT CAVEAT` | I2.1 proxy reduced `rcond` 与 Riesz range-difference 虽通过但余量有限。 | 不撤销 I2.1；意味着 I2.3 各离散阶数不能完全继承 factor readiness。只有直接相关 factor failure 才阻止该阶数 candidate 的漂移解释。 | 在每个冻结阶数复查最低必要的 factor/conditioning；不追加完整 contour 或 projector 理论。 | `OPEN` |
+| OP-CI2-4 | `IMPORTANT CAVEAT` | 历史 I2.2 preflight 的 exact finite Lagrangian/Hermitian 和 whole-interval proof 未闭合，故 raw $H$ 的 mathematical inertia 为 `NaN/UNAVAILABLE`。 | 继续阻止 strict inertia theorem、finite-real-zero claim 和手工对称化后的 root 解释；不阻止把明确标注的 endpoint sign-count/inertia-like jump 当作 candidate 可信度诊断。 | 停止扩张 exact finite-structure 证明。I2.2 只报告对象、structure defect、unresolved band 和 jump/no-jump；严格 inertia 证明列为 OPTIONAL。 | `WONT-FIX FOR CURRENT CLAIM` |
 
 ### Current I3
 
-**Empirical A Posteriori Correction and Effectivity。**
+**Continuous Eigenvalue Error Estimation and Upper-bound Feasibility。**
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
-| OP-CI3-1 | `BLOCKER` | 尚无 matched root hierarchy、resolved reference root 和 estimator effectivity。 | 阻止工程论文声称 estimator 能预测真实 eigenvalue error。 | 对同一 mode 计算至少三个 matched levels，以最高分辨率 reference 比较 predicted shift、actual next-level shift 和 effectivity。 | `OPEN` |
-| OP-CI3-2 | `IMPORTANT CAVEAT` | 尚无严格 saturation 与 correction-remainder bound。 | 不阻止 empirical estimator；只限制其被称为 certified 或 guaranteed。 | 报告 observed ratios、reference uncertainty 和失败案例，并把结论明确标为 empirical。 | `OPEN` |
+| OP-CI3-1 | `BLOCKER` | 尚未把 I2.3 的 cross-discretization candidate 漂移分解为定位/求解、空间/trace、half-guide、BIE/QZ、structure 和 continuous--discrete 等误差来源，也尚无能与 independent continuous-truth reference 比较的可计算 error indicator/estimator。 | 阻止项目回答 candidate 到真实连续特征值的误差；不要求先证明 candidate 是 exact finite root。若选定公式需要 derivative、adjoint、transport 或 simple-root 条件，再把这些条件提升为该公式的 blocker。 | I2 完成后先识别目标误差分量和最小 isolation/refinement 对照，再选择 estimator 路线；同时冻结带 uncertainty 的 independent reference。只预测 next-level shift 时保持 `correction/indicator` 标签。 | `OPEN` |
+| OP-CI3-2 | `IMPORTANT CAVEAT` | 尚无可计算上界所需的 continuous--discrete stability/no-pollution bridge、remainder 控制与 independently justified saturation/enclosure。 | 这是 Level-4 upper-bound claim blocker，不阻止 I3 以 independent-truth-validated empirical estimator 和 `UPPER_BOUND_UNAVAILABLE` 合法完成。 | 在 empirical effectivity 后单独审查 sufficient upper-bound route；若条件不成立，正式输出 `UPPER_BOUND_UNAVAILABLE`。 | `OPEN` |
 
 ### Current I4
 
-**Independent Real-case Validation。**
+**OPTIONAL Independent Validation。**
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
-| OP-CI4-1 | `IMPORTANT CAVEAT` | 单一参数/单一 mode 可能不足以说明工程稳健性，独立 reference 与 MATLAB parity 仍缺。 | 限制论文的可推广范围，但不必阻止第一份真实案例。 | 在第一案例跑通后增加一个附近参数或第二 mode，并执行一组 MATLAB parity 与独立高分辨率 reference。 | `OPEN` |
+| OP-CI4-1 | `IMPORTANT CAVEAT` | 单一参数/单一 mode 可能不足以说明可推广性。I3 所需的 independent truth reference 已并入主线；这里仅保留第二参数、第二 mode、MATLAB parity 和跨模型稳健性。 | 限制推广范围，但不阻止第一 candidate 的 error estimator 或上界可行性 verdict。 | 第一案例和 I3 跑通后，按论文 claim 选择最小扩展；不得提前形成正式 I4 blocker。 | `SCHEDULED` |
 
 ## Historical implementation stages
 

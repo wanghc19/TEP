@@ -115,6 +115,13 @@ Fliss 的 Proposition 3.1 证明其目标算子的 essential spectrum 正是这�
 Theorem 3.5 给出 gap 中 guided eigenfunction 的指数衰减
 \cite{Fliss2013}。
 
+对固定实 $\beta$，Fliss Proposition~3.1 的物理算子是 self-adjoint、positive；
+Proposition~3.3 进一步说明 projected gap 中的谱点是有限重孤立特征值。因此连续谱参数
+$\lambda=\omega^2$ 为实且非负，目标正频率 $k=\omega>0$ 位于实轴。这是数值方法优先
+在实轴上寻找近似的理论依据。它既不要求每个 MFS/BIE/QZ 离散矩阵在 exact arithmetic
+中 Hermitian，也不推出非结构保持离散 determinant 的 zero 精确落在实轴；后者的
+anti-Hermitian、reciprocity 和 nonnormal defects 属于离散一致性与误差分析。
+
 projected gap 与 Wood threshold 不是同一个对象。对 BIE 背景 Rayleigh 表示，令
 \[
   \alpha_m=\beta+\frac{2\pi m}{L_y},
@@ -687,8 +694,9 @@ restriction；未经 transport 的裸矩阵差不能进入 correction。
     one-cell & scattering blocks 或 pencil pair $(A_{\mathrm{sc}},B_{\mathrm{sc}})$ 的 $C^1$ 误差 & BIE/proxy/solver refinement、hold-out residual；$M_{\mathrm{pw}}$ 不等于 $M$ \\
     QZ subspace & exact stable/unstable graph 与 computed deflating subspace 的 gap & deflating residual、backward error、\texttt{DIF/sep}、cluster count；unit-circle margin 单独不充分 \\
     DtN chart & projected Cauchy-subspace error 经 $D_s^{-1}$ 传播后的 compressed DtN error & $\sigma_{\min}(D_s)$、式\eqref{eq:chart-identity}；unsafe 时改用 Cauchy relation/RtR \\
+    finite structure & continuous self-adjoint/flux identities 在 MFS/BIE/QZ graph 中的破坏 & raw anti-Hermitian、reciprocity/Lagrangian defect 与跨层变化；它们先是 uncalibrated structure diagnostics/uncertainty components，不是实轴搜索许可门 \\
     matrix/linear algebra & assembly、evaluation、QZ/solve 和 derivative error & rank policy、solve residual、precision repeat；不得静默换 solver \\
-    root solve & 已固定 $\cF_{h,M}$ 的 nonlinear solve error & projected residual、left/right derivative、contour isolation；不等于 operator discretization error \\
+    root solve & 已固定 $\cF_{h,M}$ 的 nonlinear solve error & 原矩阵左右 residual、backward error、近核分离与独立复现；实轴 constrained minimum 不自动等于 exact finite zero，也不等于 operator discretization error \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -889,6 +897,16 @@ root/linear-algebra error 另行报告。例如在近似根 $\widetilde k_\ell$�
   \widehat\cF_\ell'(\widetilde k_\ell)x_\ell,y_\ell\rangle}
 \]
 必须明显小于待解释的 discretization correction；否则 two-level effectivity 不可解释。
+若 $\widetilde k_\ell$ 只是实轴 constrained minimizer 而尚未桥接到 nearby finite simple
+zero，则式\eqref{eq:operator-correction}--\eqref{eq:two-level} 不能直接套用。此时必须二选一：
+在原始 analytic matrix family 上资格化 nearby simple zero，并把可能的 imaginary displacement
+与 $\delta_\ell^{\mathrm{root}}$ 纳入 uncertainty；或另行推导和审查 constrained-minimizer
+perturbation formula。finite exact Hermitian 不是这道门的必要条件。
+
+上述二选一只决定本节 simple-root correction 是否适用，不是项目必须证明 exact finite zero
+的总路线门。I3 也可以选择直接以 constrained candidate、独立 continuous-problem reference
+和可计算 enclosure 为对象的其他 estimator；此时只需资格化该 estimator 实际消费的输入，
+不得为了复用本节公式把 exact-discrete-root 身份倒置成最终目标。
 
 \section{理论依据和项目证明义务}
 
@@ -949,9 +967,12 @@ finite-tail level difference 定义主 estimator。
 
 \section{恢复 production I4 前的最小理论门}
 
-新框架已经冻结 $A_{\mathrm{def}}^{D/G}$ 的 block roles，并通过两项独立 design review。
-下一步只授权 test-local static assembly oracle；production half-guide、导数和 locator 仍未
-授权。恢复 production I4 前至少需要关闭以下 formulation blockers。
+新框架已经冻结 $A_{\mathrm{def}}^{D/G}$ 的 block roles，并完成 static assembly、sampled
+complex-$k$ readiness 与 finite count-one 实验。历史“只授权 test-local static assembly
+oracle”的限制已由后续用户授权和 I1--I2.1 证据 supersede。下面 formulation obligations
+继续限制 continuous physical eigenvalue、spectral-pollution exclusion、production
+derivative 和 theorem-level estimator 主张；它们不阻止在原始离散矩阵上设计
+claim-calibrated bounded real-axis candidate refinement。
 \begin{enumerate}
   \item 冻结式\eqref{eq:continuous-pencil} 的具体中心 BIE spaces、wall trace rows、
   source/target normal signs 和 Fliss/code sign map；先保持 physical
@@ -967,16 +988,27 @@ finite-tail level difference 定义主 estimator。
   $N_sD_s^{-1}$。
   \item 冻结 wall trace common space、prolongation/dual restriction、$M$ 与
   $M_{\mathrm{pw}}$ 的不同角色，以及 $\cF'$ 中所有 $k$ 依赖。
-  \item 选择并证明 projected consistency + eigentrace regularity、principal-part
+  \item 为 continuous physical eigenvalue、spectral-pollution exclusion 或 theorem-level
+  estimator 主张，选择并证明 projected consistency + eigentrace regularity、principal-part
   subtraction 或 regular Galerkin 三条 convergence route 之一；证明在该意义下
-  $\cF_{h,M}$ 是 $\cF$ 的一致离散，且 block balancing 仅为坐标变换。在此以前不解释
-  任何 $\sigma_{\min}$ dip。
+  $\cF_{h,M}$ 是 $\cF$ 的一致离散，且 block balancing 仅为坐标变换。在证明完成前，仍可
+  依赖预注册的原矩阵 residual、field participation、boundary matching、factor health 和
+  refinement-overlap 门报告 qualified discrete approximation，但必须保持 conditional/
+  empirical 标签。
 \end{enumerate}
 
-全部 production 门关闭以后，I4 才能按“构造一个由式\eqref{eq:continuous-pencil} 派生的
-balanced matrix evaluator，再做 bounded locator 和 analytic-disk readiness”的顺序恢复。
-operator convergence、saturation 和 certified remainder 可以晚于第一个真实 root，
-但若它们未闭合，后续结果只能是 qualified discrete root 和 empirical correction，
+连续 self-adjoint/positive 谱决定正频率搜索优先沿实轴。因而 bounded real-axis refinement
+可以先在未经手工对称化的原始 $A_{\mathrm{def}}^D$ 上进行，并把 finite structure defect、
+evaluator error、linear-algebra error 与 discretization shift 分账；exact finite Hermitian
+structure 只在使用 endpoint inertia 或 signed eigenvalue crossing 时是前置条件。没有合法
+signed scalar 时只能作 bounded nonnegative-residual minimization，不能冒充 sign bracket。
+local complex refinement 仅在持续 real-axis residual floor、candidate shift 与
+evaluator/structure uncertainty ledger 不相容或近核/phase 异常时另行触发，不是默认路线；
+off-axis displacement 只有进入该诊断后才是可观测量。
+
+operator convergence、saturation 和 certified remainder 可以晚于第一个 qualified discrete
+approximation，但若它们未闭合，后续结果只能是 qualified discrete approximation 和
+empirical correction，
 不能声称 theorem-level estimator 或 certified interval。
 
 \begin{thebibliography}{9}

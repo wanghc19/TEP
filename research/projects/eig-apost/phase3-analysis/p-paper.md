@@ -4,17 +4,27 @@
 
 状态：研究路线设计；不构成创新性、正确性或可发表性的既成结论。
 
+2026-08-13 路线复审说明：本页以下 finite-tail/doubling 论文路线已降为历史候选，不再是当前
+主稿方向。现行论文主线是 continuous self-adjoint real eigenvalue、DtN/BIE/QZ discrete
+approximation、consistency/discretization/structure error 与 posterior eigenvalue correction；
+权威以 [[research/projects/eig-apost/phase4-report/method.tex|continuous method]] 和
+[[research/projects/eig-apost/implementation/ROADMAP|implementation ROADMAP]] 为准。
+
 ## 1. Candidate contribution
 
-首篇论文的最聚焦候选贡献是：对 fixed-$\beta$、isolated simple guided mode，在固定
-BIE/port discretization 下，以 self-adjoint finite-tail doubling 构造 half-guide DtN
-层级，并用 nonlinear simple-root projected correction 给出 infinity-truncation
-eigenvalue error 的 asymptotically quantitative estimator。
+以下贡献只是一条 conditional simple-root branch，不是当前 I3 已冻结的 estimator 选择。若 I3
+最终选择其他直接面向 constrained candidate 或 enclosure 的路线，贡献表述必须随之改写。
+在该条件分支下，首篇论文的最聚焦候选贡献为：对 fixed-$\beta$、isolated simple guided mode，以
+exact-DtN continuous pencil 为物理对象，构造可审计的 BIE/QZ discrete hierarchy，并用
+nonlinear simple-root projected correction 预测 next-level eigenvalue shift；通过独立
+高分辨率 reference 评估 consistency/discretization correction 的 effectivity。finite
+Hermitian defect 是未校准的结构一致性 diagnostic/uncertainty component，不是实轴搜索的
+理论前提；其 root-error 含义仍需 refinement、非零 denominator 与 continuous bridge。
 
 论文不把 BIE、DtN、doubling、奇异值扫描或一般 NEP perturbation 单独宣称为新。候选
 新意只可能位于以下交叉处：
 
-`BIE cell map -> structure-preserving half-guide truncation -> guided-mode NEP -> computable projected estimator -> independent-reference effectivity`。
+`continuous real guided eigenvalue -> BIE/QZ discrete approximation -> matched roots and mode transport -> computable projected correction -> independent-reference effectivity`。
 
 其中 operator construction 与 estimator acceptance criteria 分别由
 [[research/projects/eig-apost/phase3-analysis/s-dtn-chain|DtN computation chain]] 和

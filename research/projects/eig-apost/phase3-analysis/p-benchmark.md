@@ -2,6 +2,12 @@
 
 # Benchmark plan
 
+2026-08-13 路线复审说明：本页的 ellipse/finite-tail benchmark 是历史候选，不再是当前 I2--I3
+默认 case。现行 benchmark 必须从已匹配的 sharp-disk discrete hierarchy 出发，以 continuous
+real eigenvalue 为目标，分列 consistency、spatial/trace discretization、finite structure、
+evaluator、root-solve 和 reference uncertainties；最新入口见
+[[research/projects/eig-apost/implementation/ROADMAP|implementation ROADMAP]]。
+
 ## 1. Geometry family
 
 目标几何是沿 $y$ 准周期、沿 $x$ 具有两个周期 half-leads 的 line-defect waveguide：

@@ -193,3 +193,46 @@ shoulder interval 的 same-family continuity；需要新的设计、freeze 和 S
 complex root refinement，直接报告 imaginary part、原 $A$ residual、factor health 和
 uncertainty；不得做大范围复扫描，也不得强行把 imaginary part 置零。该选择仍是全新的方法
 切换，本轮没有授权其设计、实现或运行。
+
+## 2026-08-13 总路线复审后的适用范围
+
+以上 verdict 仍是 I2.2 endpoint-inertia 支线的忠实历史审查，不作追溯改写：在没有 exact
+finite Hermitian identity 与整段同族连续性时，不能计算或解释 endpoint inertia，也不能用
+手工对称化矩阵制造 jump。总路线复审只修正了该结论曾被扩大使用的范围。
+
+底层 global physical operator 的自伴实谱，以及适定假设下 exact-DtN pencil 对该谱的表征，
+而不是某一版离散矩阵的 exact Hermitian 性，决定正频率搜索优先沿实轴进行。因此，本页的
+两个 proof blockers 现只阻止 inertia、signed-eigenvalue
+crossing 和“finite determinant zero 精确在实轴”的主张；它们不再阻止在 I1.3/I2.1 已冻结
+窄区间上，对未经手工对称化的原始 $A_{\mathrm{def}}^D$ 做 derivative-free bounded real-axis
+refinement。
+
+现行默认顺序改为：先取得 real-axis constrained discrete candidate，再在原始矩阵上检查左右
+residual、backward error、$\sigma_1/\sigma_2$、factor health、full-graph/Schur parity、非零
+center/port participation、boundary matching 与独立复现。near-Hermitian、reciprocity 和
+Lagrangian defects 只作为未校准结构 diagnostics/uncertainty components 记录，不单独定义
+成功，也不能直接换算为 root error。local complex refinement 也不再是 proof failure 后的
+默认路线；只有持续实轴 residual floor、candidate shift 与 uncertainty ledger 不相容或
+左右近核/phase 异常时，才可另行设计并审查。off-axis displacement 只有此后才能测量。
+最新行动边界见
+[[research/projects/eig-apost/implementation/i2/README|I2 guide]] 与
+[[research/projects/eig-apost/DECISIONS|decision ledger]]。
+
+## 2026-08-13 candidate--error 路线再次复审后的适用范围
+
+本页此前关于 raw finite $H$ 的结论继续保持：没有 exact finite Hermitian identity 时，历史
+实验不得把 NaN 改成 mathematical inertia，也不得从 near-Hermitian defect 推出严格实根。
+这仍是不可追溯改写的数值证据边界。
+
+当前项目不再把“证明 candidate 等于 nearby exact finite zero”或“完成 bounded root locator”
+作为 I2 的终点。I2.2 只复用 I1.3 已确定的左右端点，检查一个清楚标注对象、数值容差和
+unresolved band 的 endpoint sign-count/inertia-like quantity 是否出现 jump。即使观察到稳定
+jump，它也只提高 continuous physical eigenvalue candidate 的可信度；没有 jump、unresolved
+或不稳定同样是有效结果，不能通过移动端点或手工对称化解释来迎合预期。
+
+后续 I2.3 已压缩为一个明确的跨离散阶数 candidate 漂移实验：冻结不同离散阶数和统一定位
+规则，比较同一 physical mode，并报告漂移、定位 uncertainty 与最低原 evaluator、factor、
+field、boundary、mode-identity 和复现诊断。其输出直接进入 I3，不再另设 I2.4；误差来源的
+识别和分解属于 I3。exact finite structure、额外 contour、复数 refinement、derivative、
+adjoint、transport 和 denominator 只有在当前 estimator 或上界路线实际需要时才升级；它们
+不再由本历史 review 自动生成 blocker。

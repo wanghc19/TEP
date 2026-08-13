@@ -4,6 +4,14 @@
 
 状态：只读设计。当前未获授权修改 MATLAB；以下步骤用于后续单独实施任务。
 
+2026-08-13 路线复审说明：本页的 finite-tail Stage A--D 是历史实施方案，不再构成当前
+I2--I3 授权。现行顺序见
+[[research/projects/eig-apost/implementation/ROADMAP|implementation ROADMAP]]：continuous
+physical eigenvalue candidate $\to$ error sources $\to$ computable estimate $\to$ independent
+truth validation/upper-bound feasibility。下面 Stage A--D 的 finite-tail、matching、derivative 和
+complex protocol 均是历史或特定公式的条件方案，不得据此提前冻结 I2 之后的算法，也不得默认
+启动 complex search。
+
 ## Stage A: map-only prototype
 
 1. 复用 `bloch.construct_S`，不调用 `bloch.solve_modes`。
@@ -35,13 +43,13 @@ tolerance；失败时不进入 guided-mode coupling。
 
 ## Stage C: root and estimator
 
-1. 用 coarse real-axis scan 只定位候选，不把 $\sigma_{\min}$ 极小点直接当根。
-2. 在候选周围建立 anchored analytic $\gamma_m(k)$ chart；contour 避开 Wood points、
-   Green-function cuts 和 BIE poles。
-3. 用 argument-principle/Beyn contour count 隔离一个 root，再用 bordered implicit
-   determinant Newton 求 complex $k_{j,h}$；至少两个初值收敛一致。
-4. 从 SVD 取得 unit-norm $x_j,y_j$，检查左右 residual、second singular-value gap、
+1. 复用 I1/I2.1 已知窄区间与 count one，不重复 coarse real-axis scan。
+2. 在原始未手工对称化矩阵上做 derivative-free bounded real-axis residual minimization；没有
+   合法 signed scalar 时不称 sign bracket 或 bisection。
+3. 从 SVD 取得 unit-norm $x_j,y_j$，检查左右 residual、second singular-value gap、
    border rcond、center participation 和 adjacent-level branch overlap。
+4. 把 finite structure diagnostic、evaluator/linear-algebra error 与 candidate residual floor 分账；
+   只有无法解释时才另行设计已隔离小圆盘内的 local complex refinement。
 5. 对 $y_j^*F_{j,h}'(k_{j,h})x_j$ 做 $s,s/2,s/4$ derivative-step test，导数包含全部
    $k$ dependence。
 6. 分别计算 $\delta_j^{\mathrm{root}}$、$\delta_j^{\mathrm{map}}$ 与

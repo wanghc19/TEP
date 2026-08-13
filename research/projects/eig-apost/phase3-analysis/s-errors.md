@@ -2,6 +2,12 @@
 
 # Error budget
 
+2026-08-13 路线复审后，本页的 finite-tail E4 分层保留为历史实例；现行 I2--I3 的共同主线
+是 continuous real eigenvalue、discrete approximation、consistency/discretization error 与
+posterior correction。finite Hermitian/reciprocity defect 不再作为实轴搜索许可门，而应与
+root solve、linear algebra、evaluator 和跨层 discretization 分开记录。当前项目级误差定义以
+[[research/projects/eig-apost/phase4-report/method.tex|continuous method]] 为准。
+
 E4 的 operator construction 见
 [[research/projects/eig-apost/phase3-analysis/s-dtn-chain|DtN computation chain]]；E7--E8
 的通过条件分别见
@@ -19,7 +25,8 @@ E4 的 operator construction 见
 | E4 | finite-tail approximation to half-guide DtN | closure comparison、$\Lambda_{j+1}-\Lambda_j$、transmission decay | **首轮目标误差** |
 | E5 | doubling/terminal/Cayley linear algebra | Schur rcond、terminal rcond、$I+\widehat R_j$ rcond、solve residual | 设为远小于 E4 |
 | E6 | fixed-$k$ matrix evaluation | repeated evaluation、determinism | 设为远小于 E4 |
-| E7 | candidate-to-root qualification | singular residual、projected Newton defect、root repeatability | 单独压到 E4 以下 |
+| E6s | finite structure preservation | raw anti-Hermitian、reciprocity/Lagrangian defect、跨层变化 | 先作未校准 structure diagnostics/uncertainty components；不手工对称化，不作为实轴搜索许可门，换算 root error 仍需 refinement 与 slope |
+| E7 | candidate numerical qualification | 原矩阵 residual、near-kernel separation、field/factor/boundary checks、repeatability | 登记 candidate credibility 和 uncertainty；不要求证明 exact finite root |
 | E8 | first-order estimator remainder | correction-vs-next-root mismatch、tail ratio | 通过三层数据评价 |
 | E9 | reference truth uncertainty | independent-method spread | 与 effectivity 一起报告 |
 

@@ -5,6 +5,15 @@
 状态：Phase 3 条件化设计；下述搜索方案在列明的解析域、等价性与简单根假设下成立，
 但尚未在当前 BIE 离散上完成实现验证。
 
+2026-08-13 路线复审说明：本页的 complex-root protocol 是有限尾/一般非自伴离散的历史
+条件方案，不再定义当前 I2 的默认搜索方向。底层 global physical operator 的自伴、正谱在
+projected-gap/half-guide/exact-DtN 假设成立时说明目标正频率在实轴；当前 I2.2 只在 I1.3
+已经确定的端点检查 sign-count/inertia-like jump；随后由 I2.3 比较预先冻结的不同离散阶数下
+同一 physical mode 的 candidate 漂移，并把未归因的序列与不确定度直接交给 I3。本页不冻结
+locator 或误差分解。下面的标量反例继续限定强结论：实轴 dip、sign-count 诊断或
+constrained minimizer 都不能自动称为 exact finite root。复数诊断只能由以后明确观察到的异常
+另行触发，不作默认路线或正式 stage。
+
 ## 1. Three objects must remain distinct
 
 固定 $\beta$ 后，必须区分：
@@ -33,9 +42,11 @@ periodic tail，但有限 $j$ 的中心耦合一般不是自伴有界 eigenprobl
 离开实轴。若仍只在实轴扫描，得到的通常只是一个 singular-value minimum。
 
 Dirichlet 或预先冻结的 real Robin closure 仍可生成结构保持的 finite-tail
-cross-check，zero-incoming sequence 则用于 half-guide map 交叉验证。但在证明
-weighted-Hermitian structure 以前，三种 finite-level functions 的根都按复 $k$ 搜索，
-不能预设根留在实轴。
+cross-check，zero-incoming sequence 则用于 half-guide map 交叉验证。若要把 endpoint inertia
+或 signed-eigenvalue crossing 当成严格证据，必须先证明对应 weighted-Hermitian structure；
+但该证明不是以 continuous real spectrum 为依据进行 bounded real-axis approximation search
+的许可门。非结构保持 finite-level zero 仍可能离开实轴，故 constrained minimizer 必须连同
+residual floor 与结构误差报告。
 
 ## 3. Dirichlet-terminated reflection maps
 
@@ -159,9 +170,10 @@ $$
 避开 $k=0$、Wood points、Hankel/QP Green branch cuts 和 BIE poles。不得在 contour
 quadrature nodes 上分别重选 square-root branch。
 
-## 6. Search actual complex zeros
+## 6. Triggered local complex-zero diagnostic
 
-实轴 $\sigma_{\min}$ scan 只产生候选 $k_c$。随后：
+本节只在持续 real-axis residual floor、candidate shift 与 uncertainty ledger 不相容或
+近核/phase 异常时启用；它不是连续实谱问题的默认 locator。启用后：
 
 1. 取围绕 $k_c$ 的小型 pole-free complex contour，用 argument principle 或 Beyn
    moments 计算 root count；缩放 contour 后 count 必须稳定且等于 $1$；
@@ -179,10 +191,10 @@ quadrature nodes 上分别重选 square-root branch。
    $k\leftarrow k-f(k)/f'(k)$；
 4. 至少两个初值和一个 contour-moment 初值收敛到同一 complex root。
 
-一般 complex matrix function 的零点有两个实自由度；不能只对一个实 $k$ 解两条独立
-条件。即使物理目标应为实根，也先在复平面求解，再把
-$|\operatorname{Im}k|$ 与 matrix evaluation、branch continuation 和 root-solve error
-比较。若无法解释 imaginary part，只能报告 complex resonance candidate。
+一般 complex matrix function 的零点有两个实自由度；因此若该 fallback 被触发，必须把
+$|\operatorname{Im}k|$ 与 matrix evaluation、finite structure、branch continuation 和
+root-solve error 比较。若无法解释 imaginary part，只能报告 complex finite-matrix candidate，
+不能反向否定 continuous physical eigenvalue 的实性，也不能称 physical resonance。
 
 ## 7. How $k_j$ is qualified
 
@@ -221,8 +233,9 @@ contour isolation 与 bordered solve 后，候选 $k_j$ 至少通过：
   self-adjoint defect 和左右 null-vector conditioning。
 - reduced DtN/Schur eigenproblem 只在所有 elimination factors well-conditioned 时与
   augmented root 交叉核对。
-- 只有先证明或数值核验一个正定、与 $j$ 无关的 weight $W$ 满足
-  $WF_{j,h}(k)=F_{j,h}(k)^*W$，才可改用实轴 signed-eigenvalue/inertia search。普通
-  $\sigma_{\min}$ 极小点不能替代该结构条件。
+- 只有先证明一个正定、与 $j$ 无关的 weight $W$ 满足
+  $WF_{j,h}(k)=F_{j,h}(k)^*W$，才可把实轴 signed-eigenvalue/inertia 当成严格 crossing
+  证据。普通 $\sigma_{\min}$ 极小点不能替代该结构条件；但其 bounded minimization 可以在
+  独立 residual/field/factor/uncertainty 门下产生 qualified constrained approximation。
 - 若 Dirichlet 与 real Robin 的根差在 $j$ 增加时不下降，不能声称已隔离 infinity
   truncation；应先检查 port truncation、termination resonance 和 map composition。

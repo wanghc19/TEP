@@ -2,9 +2,19 @@
 
 # Candidate estimator
 
-适用前提：[[research/projects/eig-apost/phase3-analysis/s-root|root qualification]] 已通过。
-若当前点只是实轴 $\sigma_{\min}$ 极小点而不是 $F_j$ 的简单零点，本文件中的
-eigenvalue correction 不可用。
+2026-08-13 路线复审说明：本页的 finite-tail $j$ hierarchy 是历史条件模型。现行 I3 要把
+同一 continuous real eigenvalue 的 matched discrete approximations 作为输入，并分列 solve、
+linear-algebra、evaluator、finite-structure、spatial/trace discretization 与 continuous bridge
+uncertainties。只有在公共表示、mode identity、非零总导数分母和 root uncertainty 小于层间
+shift 后，才可复用下面的 simple-root correction 结构；没有 saturation/remainder 时仍只称
+empirical next-level correction。
+
+适用前提：只有在项目选择本页的 simple-root correction 时，才要求
+[[research/projects/eig-apost/phase3-analysis/s-root|root qualification]] 通过。若当前点只是
+实轴 $\sigma_{\min}$ 极小点而不是 $F_j$ 的简单零点，本页这一种 correction 不可用；这并不
+禁止 I3 选择直接面向 constrained candidate 与 continuous truth 的其他 error indicator 或
+enclosure 路线。现行项目级输入/输出边界见
+[[research/projects/eig-apost/implementation/i3/README|I3 guide]]。
 
 ## 1. Primary quantities
 

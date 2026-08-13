@@ -4,6 +4,18 @@
 
 ## 当前状态
 
+- **2026-08-13 candidate--error 总路线复审：**项目只保留两个最终目标：提出连续物理问题的
+  数值 eigenvalue candidate；估计该 candidate 到真实连续特征值的误差，并研究可计算上界。
+  底层 global physical operator 的自伴、正谱和适定条件下 exact-DtN 等价说明目标正频率
+  $k$ 位于实轴；这支持实轴优先，但不把任一 finite determinant zero 证明为精确实数。I2.2
+  当前只复用 I1.3 已确定的端点，检查一致定义的 endpoint sign count 是否出现稳定的
+  inertia-like jump，并同时报告 structure defect、unresolved band 与 jump/no-jump。它不重做
+  scan，不运行 locator，也不把 exact finite Hermitian 或 finite-real-zero 身份设为阶段目标。
+  I2.3 在预先冻结的不同离散阶数上比较同一物理 mode 的 candidate，报告漂移、定位
+  uncertainty 与最低 residual/factor/field/boundary/mode-identity 检查；输出直接进入 I3，
+  不再设置 I2.4。I3 再按 `candidate -> error sources -> computable estimate -> independent truth -> upper bound`
+  推进。exact finite structure、额外 contour、复数 refinement 以及未被 estimator 使用的
+  derivative/adjoint/transport 均为 OPTIONAL。
 - **2026-08-13 I2.2 实轴结构资格：**阶段 verdict 为
   `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE`。I2.1 的对称小圆盘内 count one
   若再结合冻结有限维零集的实轴 Schwarz 对称，便会迫使唯一 zero 位于实轴；但 continuous
@@ -31,8 +43,9 @@
   $450.64840354166665/7200$ s。结论只是在 sampled analytic/fixed-chart 经验资格下，圆盘内
   有一个按代数重数计的 finite-dimensional determinant zero；尚未定位 root、验证非零场、
   导数单根、continuous physical eigenvalue 或 estimator。I2.2 已完成最低实轴结构诊断但
-  未关闭 exact-Hermitian 门；下一门必须另行选择结构证明或小圆盘 local complex refinement，
-  不能自动启动 root solve。
+  未关闭 exact-Hermitian 门；该门只封闭 strict inertia theorem。下一门是只在既有端点检查
+  一致定义的 sign-count/inertia-like jump，作为 candidate 可信度诊断；不能自动启动 locator、
+  complex solve 或重做宽扫描。
 - **2026-08-12 新路线 I1.4 sampled complex-$k$ readiness：**
   `test/i1/k-ready/` 围绕 $k_*=1.8327703475952146$、
   $r_0=3.8146972647368216\times10^{-7}$ 运行固定 $M=48$、固定 frame/chart/rank 的
@@ -455,8 +468,9 @@ proxy-solver 收敛诊断见
 
 ## 当前门槛
 
-当前门是 `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`。现行方法
-已经具备正确层级：
+当前门是 `I2_1_PASS_WITH_CONDITIONS / I2_2_ENDPOINT_SURROGATE_SIGN_COUNT_ACTIVE`；历史
+I2.2 structure preflight 状态为 `I2_2_STOP_THEORY_GATE`，但它只否定 raw finite $H$ 的
+定理级 inertia 解释，不否定当前数值 endpoint diagnostic。现行方法已经具备正确层级：
 physical half-guide PDE 定义 exact $\Lambda_\pm$，physical center variational pencil
 $\mathcal F(k)$ 在截断前定义真实根，continuous BIE 只作待证明的等价 realization，
 ordered QZ 只计算 finite pencil 的 deflating subspace。旧 finite-tail 方法已降为 legacy。
@@ -471,25 +485,31 @@ shrinking-prominence stop 保留，但设计 blocker 已由独立 v2 关闭。I1
 实际 inverse factors 的 32/64 winding 为 zero，主 $A_{\mathrm{def}}^D$ 的 32/64 winding 为
 one，并经独立跑后审查条件通过。
 [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]] 的 OP-M0-1--4
-继续阻止真实 root/eigenvalue 与 theorem-level error claims；production separation/graph
-tangent 也保留为更强认证 caveat。OP-M0-5 的
-saturation/remainder 是 `IMPORTANT CAVEAT`，不阻止先寻找 qualified discrete root，但会
-阻止 remaining-error/certification claim。
+继续阻止把 candidate 提升为已证明的 continuous physical eigenvalue 和 theorem-level
+error claim；它们不阻止提出 candidate 或构造 empirical indicator。production separation/
+graph tangent 只在具体 estimator 实际需要时升级。OP-M0-5 的 saturation/remainder 是
+`IMPORTANT CAVEAT`，不阻止 next-level correction 或 independent-truth-validated empirical
+estimator，但会阻止 computable upper bound。
 
 因此可以说“该冻结有限维圆盘内条件性 count one”，但不得给出尚未计算的 root 坐标，也
 不得把它称为 derivative-qualified simple root 或 continuous physical eigenvalue。最终三个
 $q$ 值仍显著变化，也不得描述为 plateau。四个 M0 理论问题和 production derivative 仍未
-完成；I2.2 已资格化实直径上点态奇异等价表示，但 exact finite Hermitian 与 whole-interval
-same-family 证明失败关闭，endpoint inertia 不可用。下一步只能另行选择结构证明路线或 I2.1
-小圆盘内 local complex refinement，再设计左右近核与最低非伪根检查；随后才是跨层 matching、
-simple-root denominator、correction 和 independent reference/effectivity。
+完成；历史 I2.2 已资格化实直径上点态奇异等价表示，但 exact finite Hermitian 与
+whole-interval same-family 证明失败关闭，数学 inertia 不可用。当前 I2.2 不翻转该历史结论，
+只把预注册端点的 sign-count/inertia-like jump 当作 candidate 可信度诊断。随后 I2.3 在冻结
+离散阶数与统一 candidate 规则下，记录同一 mode 的 candidate 序列、signed/absolute drift、
+定位 uncertainty 与最低原始诊断；若 mode identity unresolved 或漂移不可分辨，则如实输出，
+不得称收敛。I3 接收这些原始事实，再识别 location/solve/evaluator、空间/trace、half-guide、
+BIE/QZ structure 和 continuous bridge 等误差来源，并决定 matching、derivative、adjoint、
+denominator 或 independent reference 中哪些是必需输入；不得为了复用某个 simple-root 公式，
+预先把 exact finite zero 身份设成项目终点。
 既有 Fliss FD candidate 和 SLP/DLP/$M_{\mathrm{trace}}$ 数值证据继续保留，但不缩短上述
 理论—离散桥接链。仍不创建 `research/mainline/`，也不使用绝对优先权表述。
 
 ## 新 session handoff
 
 - 唯一允许写入的 worktree 是 `/Users/whc/Documents/Work/epost`，当前分支为
-  `codex/epost`，本阶段基准提交为 `d699ae9`。不得修改主分支所在目录，也不得删除该
+  `codex/epost`，本轮路线复审基准提交为 `fcc38bd`。不得修改主分支所在目录，也不得删除该
   worktree。
 - 新 session 应先读取仓库根目录与 `research/` 下的 `AGENTS.md`，再读取本文件、
   [[research/projects/eig-apost/implementation/README|implementation stage overview]]、
@@ -500,6 +520,7 @@ simple-root denominator、correction 和 independent reference/effectivity。
   [[research/projects/eig-apost/implementation/i2/design-2-2|I2.2 frozen design]]、
   [[research/projects/eig-apost/implementation/i2/review-2-2|I2.2 independent review]]、
   [[test/i2/h-inertia/README|I2.2 experiment index]]、
+  [[research/projects/eig-apost/implementation/i3/README|I3 error-estimation guide]]、
   [[research/projects/eig-apost/phase1-scope/questions|Phase 1 commitments]]、
   [[research/projects/eig-apost/phase1-scope/p-method|Phase 1 analytical framework]]、
   [[research/projects/eig-apost/phase2-sources/synthesis-dtn|DtN source synthesis]]、
@@ -511,7 +532,7 @@ simple-root denominator、correction 和 independent reference/effectivity。
   [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]]。Phase 1--2 文件
   保持历史原文，不因本次重构回写。
 - 新路线当前 verdict 是
-  `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`；I1 dip 中心为
+  `I2_1_PASS_WITH_CONDITIONS / I2_2_ENDPOINT_SURROGATE_SIGN_COUNT_ACTIVE`；I1 dip 中心为
   $k=1.8327703475952146$，I2.1 已确认冻结圆盘内一个按代数重数计的 determinant zero，但
   尚未运行 root locator/refinement；历史 v1 zoom 的
   `STOP / DESIGN-GATE-INCONCLUSIVE` 只作为不追溯改写的设计负例保留。历史 I4 数值标签仍保留为
@@ -521,8 +542,9 @@ simple-root denominator、correction 和 independent reference/effectivity。
   `REPRODUCIBLE STOP / NO_SCREENED_DIP` 只描述历史双椭圆实验。I3 的
   `root_readiness_review.md` Section L 与 `root_result.md` Section I 继续作为 provenance
   历史边界；不得把历史 I3 的下一阶段授权覆盖当前 BIE blocker。
-- 保持 Researcher + Engineer + Skeptic 多 subagent 协作：方法重构期以 Researcher 为主；
-  Engineer 只在 TeX 构建或必要一致性检查时介入，Skeptic 独立只读审查。Skeptic
+- 路线、连续—离散理论与 proof obligation 审查默认采用 Researcher + Skeptic：Researcher
+  重建主线，Skeptic 独立检查本末倒置、过度证明和真实 blocker。Engineer 只在已有设计授权
+  后承担实现与资源核对，不得反向以某版代码结构定义理论路线。Skeptic
   必须按当前工程目标区分 `BLOCKER`、`IMPORTANT CAVEAT`、`MINOR CAVEAT`，只有
   blocker 能停止阶段，并优先建议廉价 numerical sanity check；主 agent 负责综合、更新
   [[research/projects/eig-apost/implementation/open-problems|open-problem ledger]] 和
@@ -535,18 +557,20 @@ simple-root denominator、correction 和 independent reference/effectivity。
   `production_internal_A_b_identity=NOT_DIRECTLY_OBSERVED` 和
   `PHYSICAL_ROOT_READY=STOP` 保持不变。这些历史状态不是当前阶段 gate；I2.1 的已完成 gate 是
   `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`，其后的 I2.2 状态为
-  `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE`。exact finite half-guide Hermitian 与
-  whole-interval same-family identity 尚未建立，inertia 与 root solve 均未授权。不得把任何历史标签解释成 qualified root 或
+  `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE`。该标签只描述历史 inertia 支线：exact finite
+  half-guide Hermitian 与 whole-interval same-family identity 尚未建立，inertia 未授权；它不再
+  被解释为禁止一维实轴 candidate refinement。不得把任何历史标签解释成 qualified root 或
   estimator。
 - 新路线 I1.2 的 manufactured、MATLAB $M=5,8$ mechanism 和 direct $M=48$ static arms 已在
   `test/i1/hg-adef/` 通过；I1.3 又在 `test/i1/k-scan/` 记录 fixed-$M=48$ 离散候选
   $k=1.8327703475952146$；I1.4 在 `test/i1/k-ready/` 达到 sampled fixed-$M=48$ readiness。
   I2.1 在 `test/i2/k-count/` 达到条件性 finite-dimensional count one。production derivative
   因 FD mutation 门失败仍不可用；I2.2 两肩 structure diagnostic 已完成并保留
-  exact-Hermitian 与 whole-interval blockers，未形成 inertia。只有另行关闭这些 proof gaps，
-  才能设计一维 root solve；否则只能另行审查 I2.1 小圆盘内局部 complex refinement、
-  root-point factor health、左右 residual 与非零场检查。当前仍不得报告 root 坐标或真实
-  eigenvalue。
+  exact-Hermitian 与 whole-interval caveats，未形成 mathematical inertia。当前 I2.2 只允许
+  在已确定端点继续做明确标注的 sign-count/inertia-like jump 可信度诊断，不重做扫描或定位。
+  I2.3 只做预注册跨离散阶数 candidate 漂移实验，其 candidate 序列、定位 uncertainty、最低
+  原始诊断和 mode-identity 结果直接作为 I3 输入；当前仍不得把 candidate 报告成 exact finite
+  real zero 或已证明的真实 eigenvalue，也不得自动转入复平面实验。
 - 历史新增内容现归档于 `test/archive/legacy-route-v1/i4-rayleigh-budget/`、
   `test/archive/legacy-route-v1/i4-extract/`、`test/archive/legacy-route-v1/i4-three-path/`、
   `test/archive/legacy-route-v1/i4-three-path-derivatives/`、
@@ -558,8 +582,9 @@ simple-root denominator、correction 和 independent reference/effectivity。
   $95.539849$ s 并通过顺序门。
   历史 Octave canonical 用时 $531.181285$ s。
 
-新 session 若调用 Engineer，只能在另行取得用户授权后从 I2.2 实轴结构资格和 root solve 的
-预注册开始，
+新 session 若调用 Engineer，只能在另行取得用户授权后，从 I2.2 已冻结端点的数值
+sign-count/inertia-like diagnostic 设计开始；不得重新扫描、定位、运行复数 refinement 或扩张
+exact finite-Hermitian 证明支线。
 不得重复或绕开已经通过的 manufactured、low-order、direct $M=48$ static oracle、I1.3
 实轴 candidate、I1.4 sampled readiness 与 I2.1 count-one result；
 理论侧继续处理 OP-M0-1 的 concrete exact-DtN/analytic-domain contract 和 OP-M0-2 的 physical/BIE
