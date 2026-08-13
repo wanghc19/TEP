@@ -69,6 +69,19 @@ frozen outputs retain their recorded paths and hashes.
 | Status | `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`; `smoke-a1` failure and `smoke-a2` readiness parent preserved |
 | Implementation summary | [[research/projects/eig-apost/implementation/i2/README|current I2 guide]] |
 
+## I2-H-STRUCTURE-DIAGNOSTIC-V1
+
+| Field | Value |
+|---|---|
+| Experiment ID | `I2-H-STRUCTURE-DIAGNOSTIC-V1` |
+| Stage | I2.2 |
+| Purpose | Check the same fine-$M=48$ I2.1 object's endpoint structure, object equivalence, and fail-close theory gates at the two frozen I1.3 L14 shoulders; no inertia is computed |
+| Current path | `test/i2/h-inertia/` |
+| Entry point | `check_h_struct('compact-a1')`; single MATLAB structure-diagnostic source, not run in this refactor; `check_h_inertia.m` is reserved for a future implementation that actually outputs endpoint inertia |
+| Experiment index | [[test/i2/h-inertia/README|I2.2 compact implementation and preserved run-history index]] |
+| Status | Historical `diag-a2`: `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE`; compact implementation is statically reviewed only and preserves `NaN/UNAVAILABLE` inertia while both theory qualifications remain false |
+| Implementation summary | [[research/projects/eig-apost/implementation/i2/README|current I2 guide]] |
+
 Future current-route experiments belong under the matching `test/i*/` stage directory and receive
 an index entry only after they are designed and authorized. A legacy verdict never becomes a
 current stage gate.

@@ -5,20 +5,29 @@
 - Origin Skill: `academic-research-suite / experiment-agent`
 - Origin Mode: `plan`
 - Origin Date: `2026-08-12`
-- Verification Status: `I2.1 PASS WITH CONDITIONS / I2.2 NOT STARTED`
+- Verification Status: `I2.1 PASS WITH CONDITIONS / I2.2 PASS WITH CONDITIONS, STOPPED AT THEORY GATE`
 - Version Label: `i2-project-plan-v2-compact`
 - Scope: 本页维护 I2 的四里程碑最小充分证据链和实际状态；具体实验仍须另行设计与审查。
 
 ## 当前状态与权威边界
 
-I2 当前状态为 `I2.1 PASS WITH CONDITIONS / I2.2 DESIGN NOT STARTED`。I2.1 已在冻结
+I2 当前状态为 `I2.1 PASS WITH CONDITIONS / I2.2 PASS WITH CONDITIONS /
+I2_2_STOP_THEORY_GATE`。I2.1 已在冻结
 fine、$M=48$、$K=97$ 的未平衡 $194\times194$ 矩阵族上完成 factor-aware contour count：
 指定 I1 dip 圆盘内的 determinant zero 代数计数为一。统一实验入口是
 [[test/i2/k-count/README|I2-K-COUNT-M1B-V1]]，独立结论与运行历史见
 [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]。
 
 该结论没有给出 root 坐标、几何/导数单根、非零物理场、跨层 matching 或 estimator；
-也不是连续 physical eigenvalue。I2.2 尚未设计或授权。
+也不是连续 physical eigenvalue。I2.2 已在
+[[research/projects/eig-apost/implementation/i2/design-2-2|design-2-2.md]] 中冻结理论与最低
+实验候选：$A$--$H$ 奇异等价、$T$ 全肩区间可逆和 center block Hermitian 已证明；actual
+finite half-guide 的 exact Lagrangian/Hermitian identity 未闭合。冻结的两端 structure
+diagnostic 已完成：$T$ 明显可逆、点态 $A$--$H$ identity 闭合到浮点精度，raw structure
+defects 为机器精度量级；但 inertia 按预注册规则返回 unavailable/NaN，并在
+`EXACT_HERMITIAN_NOT_ESTABLISHED` 停止。独立审查见
+[[research/projects/eig-apost/implementation/i2/review-2-2|review-2-2.md]]；不得把该诊断写成
+inertia jump 或实根，也不自动进入复平面求根。
 
 现行连续物理对象由
 [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]] 定义：
@@ -108,8 +117,9 @@ I2 承接以下 I1 正式收尾结果；数值证据以
 
 ### 后续实施前必须补齐的输入
 
-I2.1 已由冻结设计和独立审查完成。任何 I2.2--I2.4 实验开始前，仍需要一份另行审查的
-详细设计与预注册，并获得用户明确授权。后续设计至少要冻结：
+I2.1 已由冻结设计和独立审查完成；I2.2 的 endpoint diagnostic 也已按独立设计完成并停止在
+理论门。任何 I2.2 方法切换或 I2.3--I2.4 实验开始前，仍需要一份另行审查的详细设计与
+预注册，并获得用户明确授权。后续设计至少要冻结：
 
 1. 权威矩阵 evaluator、搜索域、root count 语义和 fail-closed 规则；
 2. 一个相邻离散层对及其公共表示、transport、normalization 和 scaling；
@@ -143,7 +153,7 @@ bound 已经建立。
 | Milestone | 内容 | 当前状态 | 下一门 |
 |---|---|---|---|
 | I2.1 同一离散对象上的单根隔离 | 合并对象合同、搜索域/evaluator 完整性和 count-one isolation | `PASS WITH CONDITIONS` | 条件性 finite-dimensional count one 已完成；允许另行设计 I2.2 |
-| I2.2 根求解与最低限度伪根排除 | 求出 fixed-level root，并检查 residual、复现、factor health 与非零场证据 | `NOT STARTED / NOT AUTHORIZED` | 只有根不是明显数值或表示伪影，才允许跨层比较 |
+| I2.2 根求解与最低限度伪根排除 | 先资格化同一对象的实轴 Hermitian/inertia 入口；通过后才另行求根 | `PASS WITH CONDITIONS / STOPPED AT THEORY GATE` | 两端 structure diagnostic 已完成；exact finite Hermitian 与 whole-interval same-family proof blocked，inertia 为 unavailable，root solve 未授权 |
 | I2.3 一个相邻层对上的 root/mode matching | 确认两层是同一谱对象，并分离实际 root shift 与求根噪声 | `PLANNED / NOT STARTED` | matching 通过后，才资格化 correction 分母 |
 | I2.4 correction 分母资格化与 I3 交接 | 资格化总导数作用、非零左右配对、共同 scaling 和最小交接包 | `PLANNED / NOT STARTED` | 四门全过后才允许另行规划 I3 |
 
@@ -175,6 +185,11 @@ inverse/section factors 均为 zero winding，预注册门全部通过。运行�
 
 ### I2.2 根求解与最低限度伪根排除
 
+- **默认方向：**先执行
+  [[research/projects/eig-apost/implementation/i2/design-2-2|实轴结构设计]] 中的最低
+  singularity-equivalent finite-self-adjoint/inertia 资格门。若通过，只在 I2.1 圆盘的实直径上
+  做一维定位；若失败，
+  先报告 blocker，复数求根也只限于已隔离小圆盘，不默认扩大成二维扫描。
 - **具体要解决什么问题：**在 count-one 区域内求出根，并确认结果不是 solver 停在 dip、
   消元 factor 的 pole、多个近核方向或只产生零物理场的代数奇异性。
 - **为什么必须做：**count one 只说明“区域内有一个”，不告诉根在哪里。小 residual 若与
@@ -291,8 +306,10 @@ PASS。若必须改变合同，应形成新的详细设计并重新审查。
 以下事项在项目级规划中保持开放；它们是在四个里程碑内部需要冻结的选择，不构成新的
 stage：
 
-1. **root solve 与复现。** 采用何种 derivative-free 求根方式、如何定义 evaluator/root
-   uncertainty，以及哪一种独立复现足够而不扩张成 solver benchmark。
+1. **实轴结构与 root solve。** 先资格化 $T$ 可逆实点上的奇异等价 Dirichlet-coordinate
+   mismatch、有限维 exact-arithmetic Hermitian identity、实现缺陷和 endpoint inertia；通过后
+   再选择一维 derivative-free bracketed solver、
+   root uncertainty 与最低独立复现。只有结构门失败时，才决定是否需要小圆盘内局部复求根。
 2. **最低非伪根门。** 当前 $n=0$ 模型下，哪一个 center/port field participation、边界
    residual 与 factor-health 组合足以排除明显伪根；出现异常时再启用 OPTIONAL 互证。
 3. **相邻层对与 transport。** 第二个 level 改变 $h$、$M$ 还是其中一项，以及 trial/test
@@ -317,15 +334,20 @@ stage：
 4. [[research/projects/eig-apost/implementation/i2/design|I2.1 frozen design]] 与
    [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]：已运行方法、独立
    verdict 和进入 I2.2 的边界。
-5. [[test/i2/k-count/README|I2.1 experiment index]]：唯一实验材料入口。
-6. [[research/projects/eig-apost/implementation/ROADMAP|current-route ROADMAP]]：I1--I4
+5. [[research/projects/eig-apost/implementation/i2/design-2-2|I2.2 frozen design]] 与
+   [[research/projects/eig-apost/implementation/i2/review-2-2|I2.2 review]]：理论证明、
+   diagnostic-only 实验、当前 blocker 和授权边界。
+6. [[test/i2/k-count/README|I2.1 experiment index]] 与
+   [[test/i2/h-inertia/README|I2.2 endpoint-structure experiment index]]：两阶段各自唯一的
+   实验材料入口。
+7. [[research/projects/eig-apost/implementation/ROADMAP|current-route ROADMAP]]：I1--I4
    依赖和正式 I2 退出条件。
-7. [[research/projects/eig-apost/implementation/open-problems#Current I2|Current I2 ledger]]
+8. [[research/projects/eig-apost/implementation/open-problems#Current I2|Current I2 ledger]]
    与 [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]]：当前 blocker
    与 caveat。
-8. [[research/projects/eig-apost/phase3-analysis/s-root|root qualification]]：dip、离散 root 与
+9. [[research/projects/eig-apost/phase3-analysis/s-root|root qualification]]：dip、离散 root 与
    continuous eigenvalue 的区分。
-9. [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]：I3
+10. [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]：I3
    correction 的对象、分母和现行数学边界。
 
 本页不把历史 Phase 3 finite-tail plan 或归档旧 I2 当作当前授权；只有明确追溯历史时才进入

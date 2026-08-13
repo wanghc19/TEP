@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-当前新路线处于 `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`。精确
+当前新路线处于 `I2_1_PASS_WITH_CONDITIONS / I2_2_STOP_THEORY_GATE`。精确
 half-guide DtN 由半无限边值问题定义，连续中心算子 $\mathcal F(k)$ 在任何
 BIE/Fourier 截断和 ordered QZ 之前定义真实谱对象。现行数学权威是
 [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]，离散
@@ -18,8 +18,13 @@ V5 条件闭合只解决对称模型无法识别的 transmission-order assembly 
 同一 fine、$M=48$ 圆盘上运行 factor-aware determinant winding：全部实际 inverse factors
 得到嵌套 zero winding，主 $A_{\mathrm{def}}^D$ 在 32/64 点网格上均得到 count one。该结果只
 是条件性 finite-dimensional algebraic zero count；尚未定位 root，production derivative 仍未
-资格化。下一阶段只允许另行设计 I2.2 root solve 和最低伪根排除，不能声称 continuous
-physical eigenvalue 或 estimator。
+资格化。Researcher--Skeptic 已把 I2.2 默认方向收紧为：先资格化实直径上奇异等价的有限维自伴
+Dirichlet-coordinate mismatch 与 endpoint inertia，再决定一维 root solve；不默认做复平面
+二维扫描。I2.2 的 diagnostic-only 两肩实验已完成并以
+`PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE` 收口：点态对象关系与 near-Hermitian
+diagnostics 通过实现检查，但 exact finite half-guide Hermitian 和 whole-interval same-family
+证明未闭合，故 inertia 返回 unavailable。不能声称
+continuous physical eigenvalue 或 estimator。
 OP-M0-1--OP-M0-4 继续限制 physical/root 解释，最新行动边界以
 [[research/projects/eig-apost/STATUS|project STATUS]] 为准。
 
@@ -38,7 +43,9 @@ implementation/
 ├── i2/
 │   ├── README.md
 │   ├── design.md
-│   └── review.md
+│   ├── design-2-2.md
+│   ├── review.md
+│   └── review-2-2.md
 └── archive/
     └── legacy-route-v1/
         ├── README.md
@@ -62,8 +69,9 @@ implementation/
 - [[research/projects/eig-apost/implementation/archive/legacy-route-v1/README|legacy route v1]]：
   保存旧路线 I0--I4 的完整 design、result、review 和原索引；旧编号和 verdict 不构成
   当前授权。
-- [[test/README|current test index]]：记录新路线 I1.2--I2.1 实验状态；当前实验位于
-  `test/i1/hg-adef/`、`test/i1/k-scan/`、`test/i1/k-ready/` 和 `test/i2/k-count/`。旧实验统一
+- [[test/README|current test index]]：记录新路线 I1.2--I2.2 实验状态；当前实验位于
+  `test/i1/hg-adef/`、`test/i1/k-scan/`、`test/i1/k-ready/`、`test/i2/k-count/` 和
+  `test/i2/h-inertia/`。旧实验统一
   由 [[test/archive/legacy-route-v1/README|legacy experiment index]] 保存。
 
 ## 阶段文档规则
@@ -85,8 +93,9 @@ I1--I4 文档、实验 ID 或冻结 verdict。
 3. [[research/projects/eig-apost/implementation/i1/README|current I1 guide]]：确认内部
    里程碑和授权边界。
 4. [[research/projects/eig-apost/implementation/i2/README|current I2 guide]] 与
-   [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]：确认 count-one 结果与
-   I2.2 入口。
+   [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]：确认 count-one 结果；
+   再读 [[research/projects/eig-apost/implementation/i2/design-2-2|I2.2 design]] 与
+   [[research/projects/eig-apost/implementation/i2/review-2-2|I2.2 review]]。
 5. [[research/projects/eig-apost/implementation/i1/design|discrete A-def design]]：阅读当前
    离散空间、QZ/graph/DtN 链和组装合同。
 6. [[research/projects/eig-apost/implementation/i1/review|current I1 review]]：核对审查结论

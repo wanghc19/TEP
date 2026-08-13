@@ -4,6 +4,21 @@
 
 ## 当前状态
 
+- **2026-08-13 I2.2 实轴结构资格：**阶段 verdict 为
+  `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE`。I2.1 的对称小圆盘内 count one
+  若再结合冻结有限维零集的实轴 Schwarz 对称，便会迫使唯一 zero 位于实轴；但 continuous
+  self-adjointness、I1/I2 unit-circle QZ gap 和 smooth Fliss Track A gap 都不能单独关闭这条
+  离散结构链。当前最低成本候选是在 $T$ 可逆实点与原矩阵奇异等价、右核可逆搬运的
+  Dirichlet-coordinate mismatch $H=A_{\mathrm{def}}^DT^{-1}$。当前已证明 $A$--$H$ 点态奇异
+  等价、$T$ 在冻结 nearest-shoulder interval 上可逆和 empty-center block Hermitian；实际
+  MFS/collocation/QZ half-guide graph 的 exact Lagrangian/Hermitian identity 未闭合。因此
+  Revision A 两端点 structure diagnostic 已实际完成：两端 $T$ 的 `rcond` 均为 $0.5$，
+  $\sigma_{\min}(T)\approx0.9958518$，$A=N_0-LT$ 与 $A=HT$ defects 为
+  $10^{-21}$--$10^{-19}$，raw $H$/graph/DtN structure defects 为 $10^{-16}$ 量级。后者只作
+  implementation diagnostic；两个 proof flags 仍为 false，因此 inertia 为 unavailable/NaN，
+  endpoint separation/jump 均 `NOT_REACHED`，没有运行 locator 或复扫描。详见
+  [[research/projects/eig-apost/implementation/i2/design-2-2|I2.2 design]] 与
+  [[research/projects/eig-apost/implementation/i2/review-2-2|independent review]]。
 - **2026-08-13 新路线 I2.1 同一离散对象单根隔离：**
   `test/i2/k-count/` 在冻结 fine、$M=48$、$K=97$ 的未平衡
   $194\times194$ $A_{\mathrm{def}}^D(k)$ 上完成 Method 1B factor-aware count。指定圆盘中心为
@@ -15,7 +30,9 @@
   $197.61942958831787$ MiB；含启动失败和两次 smoke 的累计正式预算为
   $450.64840354166665/7200$ s。结论只是在 sampled analytic/fixed-chart 经验资格下，圆盘内
   有一个按代数重数计的 finite-dimensional determinant zero；尚未定位 root、验证非零场、
-  导数单根、continuous physical eigenvalue 或 estimator。下一门是另行设计 I2.2。
+  导数单根、continuous physical eigenvalue 或 estimator。I2.2 已完成最低实轴结构诊断但
+  未关闭 exact-Hermitian 门；下一门必须另行选择结构证明或小圆盘 local complex refinement，
+  不能自动启动 root solve。
 - **2026-08-12 新路线 I1.4 sampled complex-$k$ readiness：**
   `test/i1/k-ready/` 围绕 $k_*=1.8327703475952146$、
   $r_0=3.8146972647368216\times10^{-7}$ 运行固定 $M=48$、固定 frame/chart/rank 的
@@ -160,7 +177,7 @@
 | Current I1.2 half-guide to $A_{\mathrm{def}}$ joint validation | `I1_2_M48_PASS_WITH_CONDITIONS`; `I1_2_EMPIRICAL_READY`; empirical I1.3 authorized | manufactured assembly；$M=5,8$ exact-small-sep mechanism；direct $M=48$ MATLAB `lsqminnorm` maps；双向 QZ 97/97 计数、projectors、代数 chart、DtN action 与 $A_{\mathrm{def}}^{D/G}$ Schur 门 | production separation 未计算，chart 不是 perturbation-certified；$A_{\mathrm{def}}'$ 尚未实现。locator、contour、root/eigenvalue 和 estimator 继续停止 |
 | Current I1.3 real-$k$ continuity, candidate reconnaissance and bounded zoom | `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_NESTED_GRID_CANDIDATE` | $M=48$ count/QZ/chart/subspace-coarse/fine continuity；中心差分二阶收敛；$M=12\to24\to48$ 分层筛查；v2 在 15 层、33 点、167 门全通过后得到 $k=1.8327703475952146$、$q=8.32009\times10^{-8}$，最终宽度 $7.6294\times10^{-7}$ | 固定 $M=48$ 不是 trace convergence；FD mutation 未过 $10^{-12}$，production derivative 不可用 |
 | Current I1.4 sampled complex-$k$ readiness | `I1_4_PASS_WITH_CONDITIONS / SAMPLED_FIXED_M_DISCRETE_ROOT_READINESS`; empirical I2 isolation ready | $r_0=3.8147\times10^{-7}$ disk；anchored branch/frame/chart/rank；82/820/164/164 node/factor/branch/QZ rows、8 closure、36 CR、6 CR-negative rows；V5 identifiable assembly-order closure | 未运行 locator/contour/root；固定 $M=48$ 不是 trace convergence；无 production separation、unsampled-pole theorem 或 $A_{\mathrm{def}}'$；对称 physical transmission labels 不可动态辨识 |
-| Current I2.1 factor-aware root count | `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`; I2.2 `DESIGN MAY BEGIN / NOT STARTED` | 32/64 主 winding 均为 one；72 个非主 inverse/section factors 均为 zero winding；26 gates、4096 k-arcs 与 4160 zeta-arcs 全通过；full 412.089 s、峰值 197.619 MiB | 未定位 zero，未验证左右近核、非零物理场、导数单根或跨层 matching；sampled screens 不是严格闭盘无 pole 定理；不能称 continuous eigenvalue 或 estimator |
+| Current I2.1 factor-aware root count / I2.2 endpoint structure | I2.1 `PASS WITH CONDITIONS`; I2.2 `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE` | I2.1 32/64 主 winding 均为 one；I2.2 已证明 $A$--$H$ 点态等价、whole-shoulder $T$ 可逆和 center Hermitian，且两端同对象 structure diagnostic 完整通过数值实现门 | actual finite half-guide exact Hermitian 与 whole-interval same-family identity blocked；inertia 为 unavailable，尚无实根、root 坐标、连续 eigenvalue 或 estimator |
 
 实现权威入口为
 [[research/projects/eig-apost/implementation/archive/legacy-route-v1/i0-manufactured/design|manufactured NEP design]]、
@@ -462,7 +479,9 @@ saturation/remainder 是 `IMPORTANT CAVEAT`，不阻止先寻找 qualified discr
 因此可以说“该冻结有限维圆盘内条件性 count one”，但不得给出尚未计算的 root 坐标，也
 不得把它称为 derivative-qualified simple root 或 continuous physical eigenvalue。最终三个
 $q$ 值仍显著变化，也不得描述为 plateau。四个 M0 理论问题和 production derivative 仍未
-完成；下一步是另行设计 I2.2 root solve、左右近核与最低非伪根检查，随后才是跨层 matching、
+完成；I2.2 已资格化实直径上点态奇异等价表示，但 exact finite Hermitian 与 whole-interval
+same-family 证明失败关闭，endpoint inertia 不可用。下一步只能另行选择结构证明路线或 I2.1
+小圆盘内 local complex refinement，再设计左右近核与最低非伪根检查；随后才是跨层 matching、
 simple-root denominator、correction 和 independent reference/effectivity。
 既有 Fliss FD candidate 和 SLP/DLP/$M_{\mathrm{trace}}$ 数值证据继续保留，但不缩短上述
 理论—离散桥接链。仍不创建 `research/mainline/`，也不使用绝对优先权表述。
@@ -478,6 +497,9 @@ simple-root denominator、correction 和 independent reference/effectivity。
   [[research/projects/eig-apost/implementation/i2/design|I2.1 frozen design]]、
   [[research/projects/eig-apost/implementation/i2/review|I2.1 independent review]]、
   [[test/i2/k-count/README|I2.1 experiment index]]、
+  [[research/projects/eig-apost/implementation/i2/design-2-2|I2.2 frozen design]]、
+  [[research/projects/eig-apost/implementation/i2/review-2-2|I2.2 independent review]]、
+  [[test/i2/h-inertia/README|I2.2 experiment index]]、
   [[research/projects/eig-apost/phase1-scope/questions|Phase 1 commitments]]、
   [[research/projects/eig-apost/phase1-scope/p-method|Phase 1 analytical framework]]、
   [[research/projects/eig-apost/phase2-sources/synthesis-dtn|DtN source synthesis]]、
@@ -511,15 +533,20 @@ simple-root denominator、correction 和 independent reference/effectivity。
   EWALD_VALUE_REFERENCE_CERTIFIED / EWALD_DERIVATIVE_REFERENCE_CERTIFIED /
   SLP_D_N_CERTIFIED_PROXY_RATIO_0P2 / DLP_D_N_MTRACE48_CERTIFIED`；
   `production_internal_A_b_identity=NOT_DIRECTLY_OBSERVED` 和
-  `PHYSICAL_ROOT_READY=STOP` 保持不变。这些历史状态不是当前阶段 gate；当前唯一阶段 gate 是
-  `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`，I2.2 仅允许另行
-  设计且尚未开始。不得把任何历史标签解释成 qualified root 或 estimator。
+  `PHYSICAL_ROOT_READY=STOP` 保持不变。这些历史状态不是当前阶段 gate；I2.1 的已完成 gate 是
+  `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`，其后的 I2.2 状态为
+  `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE`。exact finite half-guide Hermitian 与
+  whole-interval same-family identity 尚未建立，inertia 与 root solve 均未授权。不得把任何历史标签解释成 qualified root 或
+  estimator。
 - 新路线 I1.2 的 manufactured、MATLAB $M=5,8$ mechanism 和 direct $M=48$ static arms 已在
   `test/i1/hg-adef/` 通过；I1.3 又在 `test/i1/k-scan/` 记录 fixed-$M=48$ 离散候选
   $k=1.8327703475952146$；I1.4 在 `test/i1/k-ready/` 达到 sampled fixed-$M=48$ readiness。
   I2.1 在 `test/i2/k-count/` 达到条件性 finite-dimensional count one。production derivative
-  因 FD mutation 门失败仍不可用；下一步只能另行设计 I2.2 root solve、root-point factor
-  health、左右 residual 与非零场检查，当前仍不得报告 root 坐标或真实 eigenvalue。
+  因 FD mutation 门失败仍不可用；I2.2 两肩 structure diagnostic 已完成并保留
+  exact-Hermitian 与 whole-interval blockers，未形成 inertia。只有另行关闭这些 proof gaps，
+  才能设计一维 root solve；否则只能另行审查 I2.1 小圆盘内局部 complex refinement、
+  root-point factor health、左右 residual 与非零场检查。当前仍不得报告 root 坐标或真实
+  eigenvalue。
 - 历史新增内容现归档于 `test/archive/legacy-route-v1/i4-rayleigh-budget/`、
   `test/archive/legacy-route-v1/i4-extract/`、`test/archive/legacy-route-v1/i4-three-path/`、
   `test/archive/legacy-route-v1/i4-three-path-derivatives/`、
@@ -531,7 +558,8 @@ simple-root denominator、correction 和 independent reference/effectivity。
   $95.539849$ s 并通过顺序门。
   历史 Octave canonical 用时 $531.181285$ s。
 
-新 session 若调用 Engineer，只能在另行取得用户授权后从 I2.2 root solve 的预注册开始，
+新 session 若调用 Engineer，只能在另行取得用户授权后从 I2.2 实轴结构资格和 root solve 的
+预注册开始，
 不得重复或绕开已经通过的 manufactured、low-order、direct $M=48$ static oracle、I1.3
 实轴 candidate、I1.4 sampled readiness 与 I2.1 count-one result；
 理论侧继续处理 OP-M0-1 的 concrete exact-DtN/analytic-domain contract 和 OP-M0-2 的 physical/BIE

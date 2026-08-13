@@ -45,4 +45,6 @@ I2.1 随后在同一 fine、$M=48$ 对象和冻结圆盘上完成 Method 1B fact
 proxy、BIE、64 个 resolvents、fixed-section 和 Dirichlet factors 的嵌套 winding 均为 zero，
 主 $A_{\mathrm{def}}^D$ 的 32/64 winding 均为 one；最终为 `PASS WITH CONDITIONS`。这只
 隔离出一个按代数重数计的 finite-dimensional zero，尚未给出位置、导数单根、非零物理场、
-continuous eigenvalue 或 estimator。下一门是另行设计 I2.2 root solve 与最低伪根排除。
+continuous eigenvalue 或 estimator。I2.2 已完成实轴同奇异点表示的两肩端点 diagnostic，
+并以 `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE` 收口；exact Hermitian 和整段同族连续性
+仍未闭合，inertia 为 unavailable，root solve 未获授权。
