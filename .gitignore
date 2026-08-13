@@ -10,6 +10,7 @@
 # MATLAB generated / local artifacts
 *.asv
 *.mat
+*.sha256
 *.mexmaca64
 *.fig
 

@@ -77,22 +77,29 @@ experiments on periodic waveguides and related eigenvalue problems.
 
 - Put experimental code created during an agent's independent exploration in
   the repository-root `test/` directory.
-- Do not run MATLAB automatically. Let the user perform final MATLAB validation,
-  and never claim MATLAB was run unless it actually was.
-- Codex may use Octave for rough sanity checks. Prefer non-interactive commands
-  such as `conda run -n octave octave --eval "..."` or
+- Prefer MATLAB for numerical validation and run it non-interactively when
+  practical, for example with `matlab -batch "..."`. Never claim MATLAB was run
+  unless it actually was.
+- Validate MFS workflows and any code path that depends on MATLAB-specific
+  behavior such as `lsqminnorm` in MATLAB; an Octave result is not a substitute
+  for that validation.
+- Use Octave only as a fallback for rough compatibility or sanity checks when
+  MATLAB is unavailable or the check does not depend on MATLAB-specific
+  behavior. Prefer non-interactive commands such as
+  `conda run -n octave octave --eval "..."` or
   `conda run -n octave octave script_name.m`.
 - If interactive Octave is necessary, use `conda activate octave` followed by
   `octave --no-line-editing`.
 - For substantial new MATLAB files with local helpers, prefer function files
   with subfunctions; do not rely on script files with trailing local functions
-  for Octave validation.
+  when Octave fallback validation is needed.
 - Do not rely on Octave GUI features or plotting. Treat Octave results only as
-  compatibility and sanity checks, not final numerical validation.
-- After code edits, report what changed, the files/functions modified, Octave
-  commands and results, exact MATLAB commands for manual validation, and the
-  expected successful outcome.
-- Report any possible issues found by static inspection or Octave.
+  fallback compatibility and sanity checks, not final numerical validation.
+- After code edits, report what changed, the files/functions modified, the
+  MATLAB commands and results, and the expected successful outcome. If Octave
+  was used as a fallback, report its commands and results separately and state
+  what still requires MATLAB validation.
+- Report any possible issues found by static inspection, MATLAB, or Octave.
 
 ## Output contract
 

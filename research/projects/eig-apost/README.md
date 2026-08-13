@@ -8,12 +8,13 @@ estimator，也不是新的 `research/mainline/`。
 
 ## 权威和边界
 
-- 状态：`active investigation`；当前新路线 I1.4 为
-  `I1_4_PASS_WITH_CONDITIONS / SAMPLED_FIXED_M_DISCRETE_ROOT_READINESS`。width-driven 局部
-  加密在 $7.6294\times10^{-7}$ 区间宽度处记录 fixed-$M=48$ 离散候选
-  $k=1.8327703475952146$、$q=8.3200886232193094\times10^{-8}$。这不是 locator root 或
-  eigenvalue；sampled complex-$k$ readiness 已条件通过，允许另行预注册 empirical I2
-  isolation，但 locator/root 尚未运行，production derivative 和 estimator 仍不可用。
+- 状态：`active investigation`；当前新路线为
+  `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`。I1 的 width-driven
+  局部加密在 $7.6294\times10^{-7}$ 区间宽度处记录 fixed-$M=48$ dip 候选
+  $k=1.8327703475952146$、$q=8.3200886232193094\times10^{-8}$；I2.1 随后在同一冻结 fine
+  圆盘上得到主 determinant 的 32/64 嵌套 count one，并分别得到全部 inverse factors 的
+  zero winding。该结果没有给出 root 坐标，也不是 continuous eigenvalue；production
+  derivative 和 estimator 仍不可用，下一门是另行设计 I2.2 root solve 与最低伪根排除。
 - 本目录只管理新专题；不续写或改写冻结的 Müller--Cauchy 主线。
 - 归档理论、旧草稿中的命题和现有数值候选均不得被预设为正确。
 - 生产 MATLAB/package 代码保持未修改；实验实现和生成结果只位于仓库根目录 `test/`
@@ -66,19 +67,20 @@ eig-apost/
     method.tex
   implementation/
     README.md
-    design.md
+    ROADMAP.md
     SYMBOL.md
-    experiment_plan.md
-    nep-review.md
-    half_guide_map.md
-    half_guide_result.md
-    half_guide_review.md
-    aug-bie.md
-    aug-bie-review.md
     open-problems.md
-    root_readiness.md
-    root_result.md
-    root_readiness_review.md
+    i1/
+      README.md
+      design.md
+      report.md
+      review.md
+    i2/
+      README.md
+      design.md
+      review.md
+    archive/
+      legacy-route-v1/
 ```
 
 研究问题和 Methodology Blueprint 已确认，Phase 2 的 DtN/BIE/NEP 可行性调查已通过
@@ -90,9 +92,10 @@ gate 通过，但独立 mirrored constructor 的三个 $10^{-11}$ output gates �
 provenance-closure 用 source-exact test-local copy 和同一 cache-derived $A,b$ 数据链重跑
 原门槛，6 个 shared systems/30 个 solver rows 全部闭合，双跑数值差为 0，并由 Skeptic
 给出 `PASS WITH CONDITIONS`。production 内部数组仍不可直接观测；该结论不冻结
-priority claim，也不把候选公式升级为连续定理或 certified estimator。当前新路线又完成
-I1.1--I1.4，并记录上述 fixed-$M=48$ 离散候选和 sampled complex-disk readiness；下一步
-只能另行预注册 derivative-free I2 contour/root isolation，当前仍没有真实 root。
+priority claim，也不把候选公式升级为连续定理或 certified estimator。当前新路线已完成
+I1.1--I1.4，并以 I2.1 Method 1B 将上述 fixed-$M=48$ dip 圆盘条件性隔离为一个按代数重数
+计的 finite-dimensional zero。尚未定位该 zero、重构非零场或完成连续 kernel--field 桥；
+下一步只能另行预注册 I2.2，不得把当前结果称为真实 physical eigenvalue。
 
 ## 当前入口
 
@@ -109,17 +112,18 @@ I1.1--I1.4，并记录上述 fixed-$M=48$ 离散候选和 sampled complex-disk r
 - `phase3-analysis/`：误差分解、结构保持 finite-tail、root qualification、estimator、
   benchmark 与发表路线。
 - `phase4-report/method.tex`：经 writer 整理和 skeptic 数学审查的方法稿。
-- `implementation/README.md`：从 Phase 1 范围界定到 I3 Root-readiness 的阶段概述，逐项
+- `implementation/README.md`：当前 I1--I4 实现路线的阶段概述，逐项
   解释每个阶段全称、目的、已验证内容、未验证边界和后续依赖；长时间离开项目后应先读
   这一页。
 - `implementation/open-problems.md`：按阶段维护 `BLOCKER`、`IMPORTANT CAVEAT` 和
   `MINOR CAVEAT`，记录各问题的 blocking scope、最低成本检查和状态；只有未解决的
   blocker 能停止当前工程路线。见
   [[research/projects/eig-apost/implementation/open-problems|open-problem ledger]]。
-- `implementation/`：当前理论到代码的设计、符号表、实验计划和分阶段独立审查；
-  最新证据与最终 delta verdict 分别见
-  [[research/projects/eig-apost/implementation/archive/legacy-route-v1/i3-provenance/root_result|Root-readiness result]] 和
-  [[research/projects/eig-apost/implementation/archive/legacy-route-v1/i3-provenance/root_readiness_review|Root-readiness review]]。
+- `implementation/i2/`：当前活动阶段；项目级状态、冻结 I2.1 设计与独立审查分别见
+  [[research/projects/eig-apost/implementation/i2/README|I2 guide]]、
+  [[research/projects/eig-apost/implementation/i2/design|I2.1 design]] 和
+  [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]。具体实验证据只从
+  [[test/i2/k-count/README|I2.1 experiment index]] 进入。
 - `test/archive/legacy-route-v1/eig-apost-nep/`、`test/archive/legacy-route-v1/hg-map/`、
   `test/archive/legacy-route-v1/aug-bie/`、`test/archive/legacy-route-v1/root-ready/`：四个互相
   独立的 Octave 实验或受控诊断及可审计输出；I3 的当前权威输出在

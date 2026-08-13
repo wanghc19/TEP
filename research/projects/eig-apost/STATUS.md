@@ -1,9 +1,21 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-08-12。
+更新日期：2026-08-13。
 
 ## 当前状态
 
+- **2026-08-13 新路线 I2.1 同一离散对象单根隔离：**
+  `test/i2/k-count/` 在冻结 fine、$M=48$、$K=97$ 的未平衡
+  $194\times194$ $A_{\mathrm{def}}^D(k)$ 上完成 Method 1B factor-aware count。指定圆盘中心为
+  $k_c=1.8327703475952146$，半径为 $3.8146972647368216\times10^{-7}$。proxy reduced、
+  BIE $A_{QP}$、64 个 original/reversed resolvents、4 个 fixed-section $C$ 和 2 个
+  $\widehat D$ factors 的 32/64 winding 均为 zero；主矩阵 raw count 为 $1$ 与
+  $0.99999999999999967$。26 个正式 gates 全部通过，Skeptic、Engineer 和 Researcher
+  均给出 `PASS WITH CONDITIONS`，I2.1 blocker 为 0。full 用时 $412.089480375$ s，峰值
+  $197.61942958831787$ MiB；含启动失败和两次 smoke 的累计正式预算为
+  $450.64840354166665/7200$ s。结论只是在 sampled analytic/fixed-chart 经验资格下，圆盘内
+  有一个按代数重数计的 finite-dimensional determinant zero；尚未定位 root、验证非零场、
+  导数单根、continuous physical eigenvalue 或 estimator。下一门是另行设计 I2.2。
 - **2026-08-12 新路线 I1.4 sampled complex-$k$ readiness：**
   `test/i1/k-ready/` 围绕 $k_*=1.8327703475952146$、
   $r_0=3.8146972647368216\times10^{-7}$ 运行固定 $M=48$、固定 frame/chart/rank 的
@@ -116,7 +128,7 @@
   将 $M_{\mathrm{trace}}=48$ 的最坏误差和 omitted energy 分别压到
   $7.08\times10^{-12}$ 与 $5.00\times10^{-13}$。OP-I4-1h 与 OP-I4-6 因而在当前制造
   密度、实数非 Wood 参数和有限 $M_{\mathrm{ref}}=96$ 意义下关闭。
-- 状态：`active investigation -- I1.4 pass with conditions; sampled fixed-M discrete root readiness; candidate only`。
+- 状态：`active investigation -- I2.1 pass with conditions; conditional empirical fine-M48 count one; root location not started`。
 - 历史阶段门（均不构成当前实现授权）：manufactured root/correction pipeline 曾为窄范围
   `GO`，finite-tail Half-guide map 曾为 Stage 1 `GO`，Augmented BIE 曾为
   `STAGE2_DISCRETE_ALGEBRA_GO`；provenance-closure 曾为
@@ -127,8 +139,9 @@
   SLP_D_N_CERTIFIED_PROXY_RATIO_0P2 / DLP_D_N_MTRACE48_CERTIFIED`；这些标签现只作为
   已完成的离散数值证据保留，不构成继续实现的授权。OP-I4-1e 中旧矩阵的授权已被方法重构
   决定撤销并由新路线 I1 设计取代；direct $M=48$ static $A_{\mathrm{def}}$ 与分层 real-axis
-  candidate screen 和 sampled complex-disk readiness 已通过经验门；I2 isolation 只能作为
-  另行预注册的下一阶段，当前仍无 root 或 eigenvalue。新的 $A_{\mathrm{def}}^{D/G}$ 现有
+  candidate screen、sampled complex-disk readiness 与 I2.1 factor-aware count 已通过经验门；
+  当前只有圆盘内一个按代数重数计的 finite-dimensional zero，尚无 root 坐标或 physical
+  eigenvalue。新的 $A_{\mathrm{def}}^{D/G}$ 现有
   $M=5,8$ low-order、$M=48$ actual static oracle 和离散候选
   $k=1.8327703475952146$，但尚无 production separation 或 analytic derivative。现有证据支持 exact-profile finite-strip
   candidate 与 sharp-disk BIE 离散候选，但不支持 qualified BIE root、
@@ -147,6 +160,7 @@
 | Current I1.2 half-guide to $A_{\mathrm{def}}$ joint validation | `I1_2_M48_PASS_WITH_CONDITIONS`; `I1_2_EMPIRICAL_READY`; empirical I1.3 authorized | manufactured assembly；$M=5,8$ exact-small-sep mechanism；direct $M=48$ MATLAB `lsqminnorm` maps；双向 QZ 97/97 计数、projectors、代数 chart、DtN action 与 $A_{\mathrm{def}}^{D/G}$ Schur 门 | production separation 未计算，chart 不是 perturbation-certified；$A_{\mathrm{def}}'$ 尚未实现。locator、contour、root/eigenvalue 和 estimator 继续停止 |
 | Current I1.3 real-$k$ continuity, candidate reconnaissance and bounded zoom | `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_NESTED_GRID_CANDIDATE` | $M=48$ count/QZ/chart/subspace-coarse/fine continuity；中心差分二阶收敛；$M=12\to24\to48$ 分层筛查；v2 在 15 层、33 点、167 门全通过后得到 $k=1.8327703475952146$、$q=8.32009\times10^{-8}$，最终宽度 $7.6294\times10^{-7}$ | 固定 $M=48$ 不是 trace convergence；FD mutation 未过 $10^{-12}$，production derivative 不可用 |
 | Current I1.4 sampled complex-$k$ readiness | `I1_4_PASS_WITH_CONDITIONS / SAMPLED_FIXED_M_DISCRETE_ROOT_READINESS`; empirical I2 isolation ready | $r_0=3.8147\times10^{-7}$ disk；anchored branch/frame/chart/rank；82/820/164/164 node/factor/branch/QZ rows、8 closure、36 CR、6 CR-negative rows；V5 identifiable assembly-order closure | 未运行 locator/contour/root；固定 $M=48$ 不是 trace convergence；无 production separation、unsampled-pole theorem 或 $A_{\mathrm{def}}'$；对称 physical transmission labels 不可动态辨识 |
+| Current I2.1 factor-aware root count | `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`; I2.2 `DESIGN MAY BEGIN / NOT STARTED` | 32/64 主 winding 均为 one；72 个非主 inverse/section factors 均为 zero winding；26 gates、4096 k-arcs 与 4160 zeta-arcs 全通过；full 412.089 s、峰值 197.619 MiB | 未定位 zero，未验证左右近核、非零物理场、导数单根或跨层 matching；sampled screens 不是严格闭盘无 pole 定理；不能称 continuous eigenvalue 或 estimator |
 
 实现权威入口为
 [[research/projects/eig-apost/implementation/archive/legacy-route-v1/i0-manufactured/design|manufactured NEP design]]、
@@ -406,11 +420,10 @@ proxy-solver 收敛诊断见
   $\|\Lambda-E_M\Lambda_{h,M}Q_M\|_{H^{1/2}\to H^{-1/2}}\to0$ 对一阶非紧 DtN 和有限秩
   lift 通常不可能。尚需在 projected consistency + eigentrace regularity、principal-symbol
   subtraction + compact remainder、或 regular Galerkin convergence 三条路线中证明一条。
-- 新的 $A_{\mathrm{def}}^{D/G}$ 理论设计已完成并通过两项审查，manufactured 组装也已通过；
-  real one-cell/QZ/graph/$A_{\mathrm{def}}$ 仍因输入 provenance 未运行。locator、
-  selected complex disk、anchored analytic Rayleigh chart、factor/pole ledger、full-$F$ CR、
-  contour isolation、bordered root refinement 或 adjacent-level root matching 仍未执行且
-  未获授权。
+- 新的 $A_{\mathrm{def}}^{D/G}$ 理论设计、real one-cell/QZ/graph/$A_{\mathrm{def}}$、
+  selected complex disk、anchored branch/chart、factor/pole ledger、full-$F$ CR 和 I2.1
+  factor-aware contour count 均已完成；尚未执行 root refinement、root-point 左右近核与非零
+  场资格化、adjacent-level root matching 或 derivative pairing，且这些工作未获本轮授权。
 - 尚未得到独立 saturation 常数和 computable correction remainder；相邻层差只能称
   next-level correction，不能称 remaining-error estimator。
 - 尚未修复并回归验证 production variable-speed density scaling；当前 ellipse 的修正
@@ -425,7 +438,7 @@ proxy-solver 收敛诊断见
 
 ## 当前门槛
 
-当前门是 `I1_4_PASS_WITH_CONDITIONS / SAMPLED_FIXED_M_DISCRETE_ROOT_READINESS`。现行方法
+当前门是 `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`。现行方法
 已经具备正确层级：
 physical half-guide PDE 定义 exact $\Lambda_\pm$，physical center variational pencil
 $\mathcal F(k)$ 在截断前定义真实根，continuous BIE 只作待证明的等价 realization，
@@ -437,19 +450,20 @@ real-$k$ count/projector/chart 连续性和 width-driven candidate sampling，�
 $k=1.8327703475952146$、$q=8.3200886232193094\times10^{-8}$。历史 v1 的
 shrinking-prominence stop 保留，但设计 blocker 已由独立 v2 关闭。I1.4 又在冻结小复圆盘上
 完成 anchored branch、fixed chart/rank、factor/QZ/graph、loop closure、full-$F$ CR 和负例门，
-最终条件通过。最便宜的下一步是另行预注册 derivative-free I2 contour/count；I1.4 本身未
-运行 locator、contour 或 root isolation。
+最终条件通过。I2.1 随后在同一冻结圆盘上完成 factor-aware argument-principle count：所有
+实际 inverse factors 的 32/64 winding 为 zero，主 $A_{\mathrm{def}}^D$ 的 32/64 winding 为
+one，并经独立跑后审查条件通过。
 [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]] 的 OP-M0-1--4
 继续阻止真实 root/eigenvalue 与 theorem-level error claims；production separation/graph
 tangent 也保留为更强认证 caveat。OP-M0-5 的
 saturation/remainder 是 `IMPORTANT CAVEAT`，不阻止先寻找 qualified discrete root，但会
 阻止 remaining-error/certification claim。
 
-因此不得把当前状态描述为“已经找到 root”；最终三个 $q$ 值仍显著变化，也不得描述为
-plateau。static $M=48$ $A_{\mathrm{def}}$、实轴 candidate 与 sampled I1.4 readiness 通过后，
-四个 M0 理论问题和 production derivative 仍未完成；下一步可先做 derivative-free I2
-contour/root isolation，随后才是 simple-root qualification、two-level correction 和
-independent reference/effectivity。
+因此可以说“该冻结有限维圆盘内条件性 count one”，但不得给出尚未计算的 root 坐标，也
+不得把它称为 derivative-qualified simple root 或 continuous physical eigenvalue。最终三个
+$q$ 值仍显著变化，也不得描述为 plateau。四个 M0 理论问题和 production derivative 仍未
+完成；下一步是另行设计 I2.2 root solve、左右近核与最低非伪根检查，随后才是跨层 matching、
+simple-root denominator、correction 和 independent reference/effectivity。
 既有 Fliss FD candidate 和 SLP/DLP/$M_{\mathrm{trace}}$ 数值证据继续保留，但不缩短上述
 理论—离散桥接链。仍不创建 `research/mainline/`，也不使用绝对优先权表述。
 
@@ -460,6 +474,10 @@ independent reference/effectivity。
   worktree。
 - 新 session 应先读取仓库根目录与 `research/` 下的 `AGENTS.md`，再读取本文件、
   [[research/projects/eig-apost/implementation/README|implementation stage overview]]、
+  [[research/projects/eig-apost/implementation/i2/README|current I2 guide]]、
+  [[research/projects/eig-apost/implementation/i2/design|I2.1 frozen design]]、
+  [[research/projects/eig-apost/implementation/i2/review|I2.1 independent review]]、
+  [[test/i2/k-count/README|I2.1 experiment index]]、
   [[research/projects/eig-apost/phase1-scope/questions|Phase 1 commitments]]、
   [[research/projects/eig-apost/phase1-scope/p-method|Phase 1 analytical framework]]、
   [[research/projects/eig-apost/phase2-sources/synthesis-dtn|DtN source synthesis]]、
@@ -470,9 +488,10 @@ independent reference/effectivity。
   [[research/projects/eig-apost/phase4-report/legacy-tail.tex|legacy finite-tail formulation]] 和
   [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]]。Phase 1--2 文件
   保持历史原文，不因本次重构回写。
-- 新路线 I1 当前 verdict 是
-  `I1_4_PASS_WITH_CONDITIONS / SAMPLED_FIXED_M_DISCRETE_ROOT_READINESS`；当前候选为
-  $k=1.8327703475952146$。I1.4 已完成但 locator/root 尚未运行；历史 v1 zoom 的
+- 新路线当前 verdict 是
+  `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`；I1 dip 中心为
+  $k=1.8327703475952146$，I2.1 已确认冻结圆盘内一个按代数重数计的 determinant zero，但
+  尚未运行 root locator/refinement；历史 v1 zoom 的
   `STOP / DESIGN-GATE-INCONCLUSIVE` 只作为不追溯改写的设计负例保留。历史 I4 数值标签仍保留为
   `PARTIAL SUCCESS -- I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
   EWALD_VALUE_REFERENCE_CERTIFIED / EWALD_DERIVATIVE_REFERENCE_CERTIFIED /
@@ -486,18 +505,21 @@ independent reference/effectivity。
   blocker 能停止阶段，并优先建议廉价 numerical sanity check；主 agent 负责综合、更新
   [[research/projects/eig-apost/implementation/open-problems|open-problem ledger]] 和
   handoff。
-- 当前权威 operational provenance 状态仍保留
-  `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS`，但更新的阶段 gate 是
+- 历史 operational provenance 状态仍保留
+  `SOURCE_DERIVED_SHARED_A_B_PROVENANCE_PASS`；历史 numerical qualification 标签包括
   `I4_FD_CANDIDATE_READY / BIE_RAYLEIGH_BUDGET_SCREENED /
   EWALD_VALUE_REFERENCE_CERTIFIED / EWALD_DERIVATIVE_REFERENCE_CERTIFIED /
   SLP_D_N_CERTIFIED_PROXY_RATIO_0P2 / DLP_D_N_MTRACE48_CERTIFIED`；
   `production_internal_A_b_identity=NOT_DIRECTLY_OBSERVED` 和
-  `PHYSICAL_ROOT_READY=STOP` 保持不变。不得解释成 qualified root 或 estimator。
+  `PHYSICAL_ROOT_READY=STOP` 保持不变。这些历史状态不是当前阶段 gate；当前唯一阶段 gate 是
+  `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`，I2.2 仅允许另行
+  设计且尚未开始。不得把任何历史标签解释成 qualified root 或 estimator。
 - 新路线 I1.2 的 manufactured、MATLAB $M=5,8$ mechanism 和 direct $M=48$ static arms 已在
   `test/i1/hg-adef/` 通过；I1.3 又在 `test/i1/k-scan/` 记录 fixed-$M=48$ 离散候选
   $k=1.8327703475952146$；I1.4 在 `test/i1/k-ready/` 达到 sampled fixed-$M=48$ readiness。
-  production derivative 因 FD mutation 门失败仍不可用。下一步只能另行预注册
-  derivative-free I2 contour/root isolation；当前仍不得把该 dip 称为 root 或真实 eigenvalue。
+  I2.1 在 `test/i2/k-count/` 达到条件性 finite-dimensional count one。production derivative
+  因 FD mutation 门失败仍不可用；下一步只能另行设计 I2.2 root solve、root-point factor
+  health、左右 residual 与非零场检查，当前仍不得报告 root 坐标或真实 eigenvalue。
 - 历史新增内容现归档于 `test/archive/legacy-route-v1/i4-rayleigh-budget/`、
   `test/archive/legacy-route-v1/i4-extract/`、`test/archive/legacy-route-v1/i4-three-path/`、
   `test/archive/legacy-route-v1/i4-three-path-derivatives/`、
@@ -509,9 +531,9 @@ independent reference/effectivity。
   $95.539849$ s 并通过顺序门。
   历史 Octave canonical 用时 $531.181285$ s。
 
-新 session 若调用 Engineer，只能在另行取得用户授权后从 derivative-free I2
-contour/root isolation 的预注册开始，不得重复或绕开已经通过的 manufactured、low-order、
-direct $M=48$ static oracle、I1.3 实轴 candidate 与 I1.4 sampled readiness；
+新 session 若调用 Engineer，只能在另行取得用户授权后从 I2.2 root solve 的预注册开始，
+不得重复或绕开已经通过的 manufactured、low-order、direct $M=48$ static oracle、I1.3
+实轴 candidate、I1.4 sampled readiness 与 I2.1 count-one result；
 理论侧继续处理 OP-M0-1 的 concrete exact-DtN/analytic-domain contract 和 OP-M0-2 的 physical/BIE
 kernel bridge。不得以 balanced matrix 或固定点数值 sanity check 跳过连续—离散证明义务，
 也不得把当前有限 $M_{\mathrm{ref}}=96$ 制造密度认证外推为完整

@@ -5,14 +5,20 @@
 - Origin Skill: `academic-research-suite / experiment-agent`
 - Origin Mode: `plan`
 - Origin Date: `2026-08-12`
-- Verification Status: `PROJECT-LEVEL PLAN / UNVERIFIED BY EXPERIMENT`
+- Verification Status: `I2.1 PASS WITH CONDITIONS / I2.2 NOT STARTED`
 - Version Label: `i2-project-plan-v2-compact`
-- Scope: 本页只规划 I2 的最小充分证据链；不构成具体实验设计、预注册、实现或运行授权。
+- Scope: 本页维护 I2 的四里程碑最小充分证据链和实际状态；具体实验仍须另行设计与审查。
 
 ## 当前状态与权威边界
 
-I2 当前状态为 `PLANNING / NOT STARTED`。本页没有产生 contour count、离散根、导数、
-跨层匹配或 estimator 结果。
+I2 当前状态为 `I2.1 PASS WITH CONDITIONS / I2.2 DESIGN NOT STARTED`。I2.1 已在冻结
+fine、$M=48$、$K=97$ 的未平衡 $194\times194$ 矩阵族上完成 factor-aware contour count：
+指定 I1 dip 圆盘内的 determinant zero 代数计数为一。统一实验入口是
+[[test/i2/k-count/README|I2-K-COUNT-M1B-V1]]，独立结论与运行历史见
+[[research/projects/eig-apost/implementation/i2/review|I2.1 review]]。
+
+该结论没有给出 root 坐标、几何/导数单根、非零物理场、跨层 matching 或 estimator；
+也不是连续 physical eigenvalue。I2.2 尚未设计或授权。
 
 现行连续物理对象由
 [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]] 定义：
@@ -100,10 +106,10 @@ I2 承接以下 I1 正式收尾结果；数值证据以
 这些输入用于避免重复 I1 已通过的 readiness 工作。它们没有证明 contour 内有根、未采样处
 绝无 pole，也没有证明离散矩阵核等价于连续物理场。
 
-### 未来实施前必须补齐的输入
+### 后续实施前必须补齐的输入
 
-任何具体 I2 实验开始前，还需要一份另行审查的详细设计与预注册，并获得用户明确授权。
-该设计至少要冻结：
+I2.1 已由冻结设计和独立审查完成。任何 I2.2--I2.4 实验开始前，仍需要一份另行审查的
+详细设计与预注册，并获得用户明确授权。后续设计至少要冻结：
 
 1. 权威矩阵 evaluator、搜索域、root count 语义和 fail-closed 规则；
 2. 一个相邻离散层对及其公共表示、transport、normalization 和 scaling；
@@ -136,8 +142,8 @@ bound 已经建立。
 
 | Milestone | 内容 | 当前状态 | 下一门 |
 |---|---|---|---|
-| I2.1 同一离散对象上的单根隔离 | 合并对象合同、搜索域/evaluator 完整性和 count-one isolation | `PLANNED / NOT STARTED` | 只有 count 可解释为一个 root，才允许求根 |
-| I2.2 根求解与最低限度伪根排除 | 求出 fixed-level root，并检查 residual、复现、factor health 与非零场证据 | `PLANNED / NOT STARTED` | 只有根不是明显数值或表示伪影，才允许跨层比较 |
+| I2.1 同一离散对象上的单根隔离 | 合并对象合同、搜索域/evaluator 完整性和 count-one isolation | `PASS WITH CONDITIONS` | 条件性 finite-dimensional count one 已完成；允许另行设计 I2.2 |
+| I2.2 根求解与最低限度伪根排除 | 求出 fixed-level root，并检查 residual、复现、factor health 与非零场证据 | `NOT STARTED / NOT AUTHORIZED` | 只有根不是明显数值或表示伪影，才允许跨层比较 |
 | I2.3 一个相邻层对上的 root/mode matching | 确认两层是同一谱对象，并分离实际 root shift 与求根噪声 | `PLANNED / NOT STARTED` | matching 通过后，才资格化 correction 分母 |
 | I2.4 correction 分母资格化与 I3 交接 | 资格化总导数作用、非零左右配对、共同 scaling 和最小交接包 | `PLANNED / NOT STARTED` | 四门全过后才允许另行规划 I3 |
 
@@ -157,8 +163,15 @@ bound 已经建立。
   count 可稳定解释为 one，且边界不贴近 root 或 evaluator failure。
 - **什么失败会阻止继续：**count 为零、大于一或不稳定；无法区分 zeros 与 poles；发生
   branch/subspace/rank 切换、关键 factor 失效、chart 无合法处理或 solver 静默换路。
-- **完成后能支持什么结论：**只支持“冻结有限维矩阵族的该区域内有一个被隔离的 root”。
-  它还没有给出根的位置、向量或物理身份。
+- **完成后能支持什么结论：**只支持“冻结有限维矩阵族的该区域内有一个按代数重数计的
+  determinant zero”。它还没有给出根的位置、向量或物理身份。
+
+I2.1 实际以 `PASS WITH CONDITIONS` 完成。嵌套主 winding 稳定为 count one，全部非主
+inverse/section factors 均为 zero winding，预注册门全部通过。运行耗时、资源、失败保留、
+哈希与数值裕量统一见
+[[test/i2/k-count/README|experiment index]]，阶段审查见
+[[research/projects/eig-apost/implementation/i2/review|review]]。该结果按项目术语称
+“一个按代数重数计的 zero”，不提前称 derivative-qualified simple root。
 
 ### I2.2 根求解与最低限度伪根排除
 
@@ -278,21 +291,20 @@ PASS。若必须改变合同，应形成新的详细设计并重新审查。
 以下事项在项目级规划中保持开放；它们是在四个里程碑内部需要冻结的选择，不构成新的
 stage：
 
-1. **单根隔离路径。** 选择哪一种 derivative-free count 路径，以及哪一次最小加密或
-   轮廓核对足以识别不稳定计数。
-2. **搜索域与 pole accounting。** 如何从 I1.4 sampled disk 选定实际 isolating region，
-   并对 analytic、meromorphic 或 reduced evaluator 的内部 poles 作可审计说明。
-3. **root solve 与复现。** 采用何种 derivative-free 求根方式、如何定义 evaluator/root
+1. **root solve 与复现。** 采用何种 derivative-free 求根方式、如何定义 evaluator/root
    uncertainty，以及哪一种独立复现足够而不扩张成 solver benchmark。
-4. **最低非伪根门。** 当前 $n=0$ 模型下，哪一个 center/port field participation、边界
+2. **最低非伪根门。** 当前 $n=0$ 模型下，哪一个 center/port field participation、边界
    residual 与 factor-health 组合足以排除明显伪根；出现异常时再启用 OPTIONAL 互证。
-5. **相邻层对与 transport。** 第二个 level 改变 $h$、$M$ 还是其中一项，以及 trial/test
+3. **相邻层对与 transport。** 第二个 level 改变 $h$、$M$ 还是其中一项，以及 trial/test
    vectors 和 field traces 如何搬到公共表示；I2 只冻结一对，三层以上交给 I3。
-6. **mode identity。** 哪个最低成本的 eigendirection/field overlap 规则足以排除 mode swap，
+4. **mode identity。** 哪个最低成本的 eigendirection/field overlap 规则足以排除 mode swap，
    以及 root shift 相对 solve uncertainty 的解释规则。
-7. **derivative 与 pairing。** 哪种总 derivative provider 能关闭 I1 的 basis-mutation 失败，
+5. **derivative 与 pairing。** 哪种总 derivative provider 能关闭 I1 的 basis-mutation 失败，
    如何评估其 uncertainty，并在固定坐标/scaling 下形成稳定的左右配对。
-8. **交接标签。** fixed-level root、matched root、simple root 和 physical eigenvalue 的稳定
+6. **经验解析 caveat 的触发条件。** I2.1 的 64 点 $k$ screen、32 点 $\zeta$ screen、
+   proxy reduced 的窄 `rcond` 裕量和 Riesz range-difference 裕量何时需要升级；除非 I2.2
+   出现异常或 claim 升级，否则不追加 I2.1 完备性实验。
+7. **交接标签。** fixed-level root、matched root、simple root 和 physical eigenvalue 的稳定
    标签，以及 I3 最小输入文件和 provenance 格式。
 
 ## 推荐阅读顺序
@@ -302,14 +314,18 @@ stage：
    数值证据边界。
 3. [[research/projects/eig-apost/implementation/i1/design|I1 discrete design]]：I2 继承的
    空间、QZ/graph/chart、导数与 balancing 合同。
-4. [[research/projects/eig-apost/implementation/ROADMAP|current-route ROADMAP]]：I1--I4
+4. [[research/projects/eig-apost/implementation/i2/design|I2.1 frozen design]] 与
+   [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]：已运行方法、独立
+   verdict 和进入 I2.2 的边界。
+5. [[test/i2/k-count/README|I2.1 experiment index]]：唯一实验材料入口。
+6. [[research/projects/eig-apost/implementation/ROADMAP|current-route ROADMAP]]：I1--I4
    依赖和正式 I2 退出条件。
-5. [[research/projects/eig-apost/implementation/open-problems#Current I2|Current I2 ledger]]
+7. [[research/projects/eig-apost/implementation/open-problems#Current I2|Current I2 ledger]]
    与 [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]]：当前 blocker
    与 caveat。
-6. [[research/projects/eig-apost/phase3-analysis/s-root|root qualification]]：dip、离散 root 与
+8. [[research/projects/eig-apost/phase3-analysis/s-root|root qualification]]：dip、离散 root 与
    continuous eigenvalue 的区分。
-7. [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]：I3
+9. [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]：I3
    correction 的对象、分母和现行数学边界。
 
 本页不把历史 Phase 3 finite-tail plan 或归档旧 I2 当作当前授权；只有明确追溯历史时才进入

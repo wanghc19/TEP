@@ -32,8 +32,9 @@ $q=8.3200886232193094\times10^{-8}$。新版 15 层实验的 167 个 hard gates 
 最终三个 $q$ 值仍明显变化，不是 $10^{-3}$ 平台。旧 immediate-neighbor prominence
 实验的停止 verdict 保留为历史设计负例；OP-CI1-7 已由 v2 关闭。有限差分的
 graph-basis mutation 门仍未过，production derivative 仍不可用。I1.4 已在冻结
-fixed-$M=48$ 小复圆盘上达到 sampled discrete readiness；这允许另行预注册的经验型 I2
-contour/root isolation，但不关闭 continuous blockers，也不允许真实 eigenvalue 声明。现行方法见
+fixed-$M=48$ 小复圆盘上达到 sampled discrete readiness；I2.1 又在同一圆盘完成条件性
+factor-aware count one。它们不关闭 continuous blockers，也不允许 root 坐标或真实
+eigenvalue 声明。现行方法见
 [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]；旧路线见
 [[research/projects/eig-apost/phase4-report/legacy-tail.tex|superseded finite-tail formulation]]。
 
@@ -78,7 +79,9 @@ contour/root isolation，但不关闭 continuous blockers，也不允许真实 e
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
-| OP-CI2-1 | `BLOCKER` | 已有通过 I1.4 sampled readiness 的 fixed-$M=48$ 离散候选 $k=1.8327703475952146$，但尚无 count-one contour、converged root 和跨层 root matching；simple-root derivative 另受 OP-CI1-6 限制。 | 阻止把候选称为 root/eigenvalue，也阻止计算有意义的后验 correction。 | 另行预注册同一 disk 上的 derivative-free contour/count，保持现有 branch/QZ/chart/factor gates；随后先比较 coarse/fine isolated candidates，Newton 留待 derivative 资格化。 | `OPEN` |
+| OP-CI2-1 | `BLOCKER` | I2.1 `m1-a1` 已在冻结 fine、$M=48$、$K=97$ 的 $A_{\mathrm{def}}^D$ 上通过 factor-aware count：32/64 主 winding 均为 one，72 个非主 inverse/section factors 均为 zero winding，Skeptic verdict 为 `PASS WITH CONDITIONS`。原“没有 count-one contour”部分已关闭；尚未求出 root，也未检查 root residual、左右近核、非零场、root 处 factor health 或跨层 matching；simple-root derivative 另受 OP-CI1-6 限制。 | 不再阻止另行设计 I2.2；仍阻止报告 root 坐标、qualified discrete mode、跨层 shift、continuous eigenvalue 或后验 correction。 | 以 `m1-a1` 为 immutable parent，另行预注册 I2.2 的成本受控 root solve、独立复现、root-point factor health、左右 residual、center/port field participation 与边界匹配；不得改写 I2.1 contour/阈值迎合结果。 | `OPEN` |
+| OP-CI2-2 | `IMPORTANT CAVEAT` | I2.1 依赖 64 点 $k$、32 点 $\zeta$、双向 sampled Neumann guards 和嵌套 winding，而非连续边界 supremum 或严格闭盘无 pole 定理；未采样极窄 excursion 仍不能逻辑排除。 | 不阻止当前 conditional empirical finite-dimensional count one 或 I2.2；阻止把 I2.1 称为 certified pole-free theorem。 | I2.2 继续 fail-close 监测同一 branch/QZ/chart/factors；只有出现 nested inconsistency、弱 separation、近阈 guard 或 claim 升级时，才另行审查 $N_k=128$ 或严格界。 | `OPEN` |
+| OP-CI2-3 | `IMPORTANT CAVEAT` | I2.1 的 proxy reduced 最小 `rcond` 为 $1.0481727407734721\times10^{-8}$，只高于 $10^{-8}$ 门约 $4.82\%$；Riesz range difference 最大为 $6.989264130329236\times10^{-8}<10^{-7}$。当前冻结对象通过，但裕量有限。 | 不撤销 I2.1；阻止在 root 点、相邻 level 或新参数上直接继承 factor/chart readiness。 | I2.2 在 root 点重算全部 factor health 与 projector/chart 指标；若越门则停止并保留失败，不放宽阈值。 | `OPEN` |
 
 ### Current I3
 

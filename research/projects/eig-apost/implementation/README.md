@@ -2,20 +2,24 @@
 
 ## 当前状态
 
-当前新路线处于 `I1_4_PASS_WITH_CONDITIONS / SAMPLED_FIXED_M_DISCRETE_ROOT_READINESS`。精确
+当前新路线处于 `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`。精确
 half-guide DtN 由半无限边值问题定义，连续中心算子 $\mathcal F(k)$ 在任何
 BIE/Fourier 截断和 ordered QZ 之前定义真实谱对象。现行数学权威是
 [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]，离散
-$A_{\mathrm{def}}$ 的设计与审查统一位于
-[[research/projects/eig-apost/implementation/i1/README|i1/]]。
+$A_{\mathrm{def}}$ 的离散来源位于
+[[research/projects/eig-apost/implementation/i1/README|i1/]]，当前 root-isolation 状态位于
+[[research/projects/eig-apost/implementation/i2/README|i2/]]。
 
 I1.2 的 manufactured、MATLAB $M=5,8$ mechanism 与 direct $M=48$ static arms 已通过；
 I1.3 又完成 real-$k$ 连续性、分层筛查和 width-driven 局部加密，记录 fixed-$M=48$
 离散候选 $k=1.8327703475952146$ 与 $q=8.3200886232193094\times10^{-8}$。I1.4 随后在
 冻结小复圆盘上完成 sampled anchored branch、QZ/graph/DtN、factor、closure、CR 和负例门；
-V5 条件闭合只解决对称模型无法识别的 transmission-order assembly negative。本轮没有运行
-locator、contour 或 root isolation。production separation 和 production derivative 仍未
-资格化；下一阶段只允许另行预注册的经验型 I2 isolation，不能声称 root 或 eigenvalue。
+V5 条件闭合只解决对称模型无法识别的 transmission-order assembly negative。I2.1 随后在
+同一 fine、$M=48$ 圆盘上运行 factor-aware determinant winding：全部实际 inverse factors
+得到嵌套 zero winding，主 $A_{\mathrm{def}}^D$ 在 32/64 点网格上均得到 count one。该结果只
+是条件性 finite-dimensional algebraic zero count；尚未定位 root，production derivative 仍未
+资格化。下一阶段只允许另行设计 I2.2 root solve 和最低伪根排除，不能声称 continuous
+physical eigenvalue 或 estimator。
 OP-M0-1--OP-M0-4 继续限制 physical/root 解释，最新行动边界以
 [[research/projects/eig-apost/STATUS|project STATUS]] 为准。
 
@@ -31,6 +35,10 @@ implementation/
 │   ├── README.md
 │   ├── design.md
 │   └── review.md
+├── i2/
+│   ├── README.md
+│   ├── design.md
+│   └── review.md
 └── archive/
     └── legacy-route-v1/
         ├── README.md
@@ -41,8 +49,10 @@ implementation/
         └── i4-numerical-qualification/
 ```
 
-- [[research/projects/eig-apost/implementation/i1/README|i1/]]：当前新路线的唯一活动阶段，
-  汇总离散设计、内部里程碑、审查和授权边界。
+- [[research/projects/eig-apost/implementation/i1/README|i1/]]：已完成的离散算子与 sampled
+  root-readiness 阶段。
+- [[research/projects/eig-apost/implementation/i2/README|i2/]]：当前活动阶段；I2.1 已条件
+  通过，并维护 I2.1--I2.4 四个内部里程碑。
 - [[research/projects/eig-apost/implementation/ROADMAP|ROADMAP.md]]：只维护新路线 I1--I4
   的项目级依赖和退出条件。
 - [[research/projects/eig-apost/implementation/SYMBOL|SYMBOL.md]]：集中说明跨阶段缩写、
@@ -52,8 +62,8 @@ implementation/
 - [[research/projects/eig-apost/implementation/archive/legacy-route-v1/README|legacy route v1]]：
   保存旧路线 I0--I4 的完整 design、result、review 和原索引；旧编号和 verdict 不构成
   当前授权。
-- [[test/README|current test index]]：记录新路线 I1.2--I1.4 实验状态；当前实验位于
-  `test/i1/hg-adef/`、`test/i1/k-scan/` 和 `test/i1/k-ready/`。旧实验统一
+- [[test/README|current test index]]：记录新路线 I1.2--I2.1 实验状态；当前实验位于
+  `test/i1/hg-adef/`、`test/i1/k-scan/`、`test/i1/k-ready/` 和 `test/i2/k-count/`。旧实验统一
   由 [[test/archive/legacy-route-v1/README|legacy experiment index]] 保存。
 
 ## 阶段文档规则
@@ -74,17 +84,20 @@ I1--I4 文档、实验 ID 或冻结 verdict。
    I1--I4 的依赖。
 3. [[research/projects/eig-apost/implementation/i1/README|current I1 guide]]：确认内部
    里程碑和授权边界。
-4. [[research/projects/eig-apost/implementation/i1/design|discrete A-def design]]：阅读当前
+4. [[research/projects/eig-apost/implementation/i2/README|current I2 guide]] 与
+   [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]：确认 count-one 结果与
+   I2.2 入口。
+5. [[research/projects/eig-apost/implementation/i1/design|discrete A-def design]]：阅读当前
    离散空间、QZ/graph/DtN 链和组装合同。
-5. [[research/projects/eig-apost/implementation/i1/review|current I1 review]]：核对审查结论
+6. [[research/projects/eig-apost/implementation/i1/review|current I1 review]]：核对审查结论
    和 caveat。
-6. [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]]：查看仍限制
+7. [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]]：查看仍限制
    physical/root 解释的 blocker。
-7. [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]：阅读
+8. [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]：阅读
    当前数学方法。
-8. [[research/projects/eig-apost/implementation/SYMBOL|symbol and code-variable ledger]] 和
+9. [[research/projects/eig-apost/implementation/SYMBOL|symbol and code-variable ledger]] 和
    [[test/README|current experiment index]]：查询符号与新路线实验状态。
-9. 只有需要追溯历史设计、结果和审查时，再进入
+10. 只有需要追溯历史设计、结果和审查时，再进入
    [[research/projects/eig-apost/implementation/archive/legacy-route-v1/README|legacy route v1]]。
 
 ## Legacy route v1 证据边界

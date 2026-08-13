@@ -1,8 +1,8 @@
 # Eigenvalue a posteriori implementation roadmap
 
-本页只维护新路线的项目级阶段、依赖关系和退出条件。I1 内部设计、组装、DtN 验证和 locator
-readiness 的具体进度统一记录在
-[[research/projects/eig-apost/implementation/i1/README|current I1 guide]]；实验物理路径由
+本页只维护新路线的项目级阶段、依赖关系和退出条件。I1 的离散 readiness 见
+[[research/projects/eig-apost/implementation/i1/README|I1 guide]]，I2 的四里程碑和 I2.1
+count-one 结果见 [[research/projects/eig-apost/implementation/i2/README|I2 guide]]；实验物理路径由
 [[test/README|experiment index]] 维护。
 
 ## 阶段依赖
@@ -39,6 +39,10 @@ graph-basis mutation 的有限差分门仍失败，因此 production derivative�
 `IMPORTANT CAVEAT`。I1.4 已在 $r_0=3.8146972647368216\times10^{-7}$ 的冻结圆盘上完成
 sampled anchored branch、fixed chart/rank、factor/QZ/graph、loop closure、full-$F$ CR 和
 负例门。V4 所有 positive gates 通过，V5 以非对称 assembly oracle 闭合唯一因物理对称而
-不可辨识的 transmission swap，最终为 `PASS WITH CONDITIONS`。因此可以另行预注册
-derivative-free I2 contour/root isolation；当前仍没有 root、eigenvalue 或 estimator。具体
-进度和四个 I1 里程碑见 I1 guide。
+不可辨识的 transmission swap，最终为 `PASS WITH CONDITIONS`。
+
+I2.1 随后在同一 fine、$M=48$ 对象和冻结圆盘上完成 Method 1B factor-aware count。
+proxy、BIE、64 个 resolvents、fixed-section 和 Dirichlet factors 的嵌套 winding 均为 zero，
+主 $A_{\mathrm{def}}^D$ 的 32/64 winding 均为 one；最终为 `PASS WITH CONDITIONS`。这只
+隔离出一个按代数重数计的 finite-dimensional zero，尚未给出位置、导数单根、非零物理场、
+continuous eigenvalue 或 estimator。下一门是另行设计 I2.2 root solve 与最低伪根排除。

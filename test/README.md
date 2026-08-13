@@ -56,8 +56,22 @@ frozen outputs retain their recorded paths and hashes.
 | Status | `I1_4_PASS_WITH_CONDITIONS / SAMPLED_FIXED_M_DISCRETE_ROOT_READINESS`; candidate only, no locator/root/eigenvalue |
 | Implementation summary | [[research/projects/eig-apost/implementation/i1/README|current I1 guide]] |
 
-Future current-route experiments belong under `test/i1/` and receive an index entry only after
-they are designed and authorized. A legacy verdict never becomes a current stage gate.
+## I2-K-COUNT-M1B-V1
+
+| Field | Value |
+|---|---|
+| Experiment ID | `I2-K-COUNT-M1B-V1` |
+| Stage | I2.1 |
+| Purpose | Determine whether the frozen fine-$M=48$ I1 dip disk contains one finite-dimensional $A_{\mathrm{def}}^D$ zero while separately screening evaluator and elimination factors |
+| Current path | `test/i2/k-count/` |
+| Entry point | Preserved reproduction command: `run_i21('full')` in MATLAB; append-only output tag `m1-a1` must not be reused |
+| Experiment index | [[test/i2/k-count/README|I2.1 design, authorization, evidence, and reproduction index]] |
+| Status | `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`; `smoke-a1` failure and `smoke-a2` readiness parent preserved |
+| Implementation summary | [[research/projects/eig-apost/implementation/i2/README|current I2 guide]] |
+
+Future current-route experiments belong under the matching `test/i*/` stage directory and receive
+an index entry only after they are designed and authorized. A legacy verdict never becomes a
+current stage gate.
 
 The complete former I0--I4 experiment bundle, including its original index, scripts, configurations,
 reports and frozen outputs, is preserved at
