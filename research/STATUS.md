@@ -1,6 +1,6 @@
 # Research status
 
-更新日期：2026-08-12。
+更新日期：2026-08-14。
 
 状态词含义：`established in archived mainline` 仅表示冻结主线给出了论证，不等于已完成独立来源核验；`needs review` 表示已有陈述或证明草案但仍需严格审计；`tentative` 表示研究性判断；`unresolved` 表示尚未解决。
 
@@ -23,8 +23,13 @@ $k=1.8327703475952146$、$q=8.3200886232193094\times10^{-8}$。coarse/fine 最�
 全程无漂移；最终三个 $q$ 值仍明显变化，因此不是 $10^{-3}$ 平台。旧 prominence
 design-gate stop 保留为历史负例，原设计 blocker 已关闭。I1.4 随后在固定 $M=48$ 小复圆盘
 上完成 anchored branch、QZ/graph/DtN、factor、closure、CR 和负例门，阶段为
-`PASS WITH CONDITIONS`；它允许另行预注册 empirical I2 isolation，但没有运行 locator、
-contour 或 root，也不构成 eigenvalue。
+`PASS WITH CONDITIONS`。I2.1 随后在同一 fine、$M=48$ 小圆盘得到条件性 finite-dimensional
+count one；I2.2 的 Hermitian-part 两端 sign count 得到稳定 `SINGLE_JUMP`，只作 candidate
+佐证。I2.3 又分别完成边界 Nyström 轴 $n_{\mathrm{tot}}=160,208,256$ 与固定
+$n_{\mathrm{tot}}=160$ 的 trace-cutoff 轴 $M=32,40,48$；两条轴的三层最低原始门和
+`SAME_MODE` 均通过，且各轴三层 saved candidate 完全相同，故状态为
+`PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。terminal-cell 半宽只作
+sub-grid minimizer 的搜索分辨率；I3 可开始设计，但该结果不是 minimizer/root 零漂移或收敛证据。
 连续—离散桥接、production derivative、真实 root 和 estimator 尚未建立，也没有
 活动中的 `research/mainline/`。
 
@@ -37,7 +42,7 @@ contour 或 root，也不构成 eigenvalue。
 
 | 状态 | 专题 | 实际结论 |
 |---|---|---|
-| active investigation / new-route I1.4 complete with conditions; sampled discrete root readiness passed | `research/projects/eig-apost/` | PDE-defined exact DtN 和 physical $\mathcal F(k)$ 是连续主对象；ordered QZ 只计算 finite-pencil deflating subspace。新路线 static $A_{\mathrm{def}}$、real-$k$ continuity、width-driven $M=48$ zoom 和 sampled complex-$k$ readiness 已通过经验门，并保留离散候选 $k=1.8327703475952146$。另行预注册的 empirical I2 isolation 已获准作为下一步；locator/root、production derivative、next-level correction、remaining-error estimator 和独立 $k_{\mathrm{ref}}$ 均未完成。 |
+| active investigation / new-route I2.3 complete with conditions; I3 design may begin | `research/projects/eig-apost/` | PDE-defined exact DtN 和 physical $\mathcal F(k)$ 是连续主对象；ordered QZ 只计算 finite-pencil deflating subspace。I2.1 条件性 count one、I2.2 Hermitian-part endpoint corroboration 与 I2.3 的 `ntot`/$M$ 两条三层同-mode candidate 实验均已完成。两条轴的三层 saved candidate 均完全相同，故为 `NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`；terminal-cell 尺度不参与 candidate drift，也不证明 minimizer/root 零漂移或收敛。production derivative、continuous error estimator、独立 $k_{\mathrm{ref}}$ 与上界均未完成。 |
 | paused archive | `research/archive/muller-cauchy-2026-07/` | 冻结的 Müller--广义 Bloch--Cauchy 主线；商空间版本的核/场等价仍有未闭合的外部定理适配和表示论前提。 |
 | paused | `research/projects/half-guide-dtn/` | Stage 1 完成了符号审计、齐次半导 DtN/Riccati 验证和耦合方案建议；周期障碍半导、完整中心耦合及 MATLAB 最终验证尚未完成。该路线未整合进冻结主线。 |
 | completed project | `research/projects/cell-representation/` | 专题任务已完成：原始无条件猜想过强；给出了直接 Green 表示和带显式正则性、非 Wood 及互补问题条件的修正版。其纠正后的表示结构和商空间策略已进入冻结主线，但其中的表示定理仍为 `needs review`。 |
@@ -71,10 +76,11 @@ contour 或 root，也不构成 eigenvalue。
 4. 归档中的未证明结论、待核验引用和中英文差异保持原有成熟度，不因归档而自动升级或失效。
 5. 新方向形成后，应更新 `research/DECISIONS.md`、本文件和 `research/README.md`，再决定是否建立新的 `research/mainline/`。
 
-当前活动专题是偏工程实现的特征值后验误差研究。width-driven v2 已关闭旧 prominence
-实验设计问题，I1.4 又完成 sampled anchored complex-$k$ readiness。最便宜的下一门是另行
-预注册 derivative-free I2 contour/count；当前尚无 root/eigenvalue，且不授权
-derivative-based Newton 或 estimator。continuous exact-DtN domain、physical/BIE kernel bridge、production
+当前活动专题是偏工程实现的特征值后验误差研究。I1.4 sampled readiness、I2.1 条件性
+count one、I2.2 endpoint corroboration 与 I2.3 的 `ntot`/$M$ 两条三层同-mode candidate 实验均已完成。I2.3
+两条轴均得到 `NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`，I3 可开始误差来源与 independent-reference
+设计；但零 observed shift 不能单独验证 correction、收敛或 estimator。continuous exact-DtN
+domain、physical/BIE kernel bridge、production
 derivative/separation 与 projected/regular approximation topology 继续限制物理 root 和
 estimator 声明，也不升级为统一研究方向。
 冻结路线若被恢复，其优先事项仍是单位圆全谱排除、

@@ -2,7 +2,8 @@
 
 ## 当前状态与权威边界
 
-I2 当前状态为 `I2.1 PASS WITH CONDITIONS / I2.2 HERMITIAN-PART SINGLE_JUMP CORROBORATION`。
+I2 当前状态为 `I2.1 PASS WITH CONDITIONS / I2.2 HERMITIAN-PART SINGLE_JUMP /`
+`I2.3 PASS WITH CONDITIONS -- NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。
 I2.1 已在冻结 fine、$M=48$、$K=97$ 的有限维矩阵族上得到 factor-aware count one；统一入口为
 [[test/i2/k-count/README|I2.1 experiment index]]，结论边界见
 [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]。它提高了 I1 dip 是谱候选
@@ -19,6 +20,25 @@ raw finite $H$ 的 endpoint count 当成定理级 inertia，不表示端点 sign
 $H_{\mathrm{sym}}$ sign-count difference：左端 $(194,0,0)$、右端 $(193,1,0)$，即
 $\Delta_-=+1$；这只是一项 numerical corroboration，不是 raw-$H$ inertia 或实根证明。
 
+I2.3 的冻结设计和独立审查见
+[[research/projects/eig-apost/implementation/i2/design-2-3|I2.3 design]] 与
+[[research/projects/eig-apost/implementation/i2/review-2-3|I2.3 review]]，统一实验入口为
+[[test/i2/k-drift/README|I2.3 experiment index]]。唯一 `drift-a1` 在只改变
+$n_{\mathrm{tot}}=160,208,256$ 时得到三个同一终端网格点的 `SAME_MODE`
+candidate。算法保存的三项 $\widehat k_n$ 完全相同，因此当前结论是
+`NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。终端 cell 半宽只作潜在 sub-grid score minimizer
+的定位尺度，不是 candidate uncertainty，也不否定 observed candidate drift。冻结 output 中
+原 `DRIFT_UNRESOLVED / I3 STOP` 字段保持不变，但不再支配当前科学解释或 I3 入口。
+
+I2.3 随后追加一条独立的 trace-cutoff 轴：冻结 $n_{\mathrm{tot}}=160$，只改变
+$M=32,40,48$ 及其派生维数。设计、跑后审查和实验索引分别为
+[[research/projects/eig-apost/implementation/i2/design-2-3m|I2.3 M-axis design]]、
+[[research/projects/eig-apost/implementation/i2/review-2-3m|I2.3 M-axis review]] 与
+[[test/i2/m-drift/README|I2.3 M-axis experiment index]]。正式 `m-drift-a2` 的三项 saved
+candidate 同样均为 $1.832770289108157$，相邻 mode identity 均为 `SAME_MODE`，全部直接
+candidate drift 为零。它形成第二条 `CONDITIONAL_ALGORITHMIC_M_AXIS_HIERARCHY`，但不
+证明 sub-grid minimizer 相等、Fourier 截断收敛、continuous mode 或误差界。
+
 本页是当前 I2 的项目级规划。它不修改 I2.1 或 I2.2 的冻结设计、审查和 append-only 输出；
 后续实验仍须单独设计和审查。
 
@@ -33,9 +53,14 @@ I2 的任务是提出一个有充分数值依据的 continuous physical eigenval
 I2 遵循三个成本边界：
 
 1. 不重复 I1.3 已完成的宽区间实轴扫描、dip 搜索或发现式局部网格加密；I2.3 只允许在各
-   冻结离散阶数的预注册窗口内，用同一定位规则取得可比较 candidate 与 uncertainty；
+   冻结离散阶数的预注册窗口内，用同一定位规则取得可比较 candidate 与 minimizer-localization
+   diagnostic；
 2. 不为 exact finite Hermitian、严格离散实根或额外 contour 完备性扩张主线；
-3. I2.2 之后只把 I2.3 定义成明确的跨离散阶数实验；本轮不冻结其具体阶数、算法、参数或阈值。
+3. I2.3 已完成两条分别预注册的单轴实验：边界 Nyström 轴
+   $n_{\mathrm{tot}}=160,208,256$，以及固定 $n_{\mathrm{tot}}=160$ 的 trace-cutoff 轴
+   $M=32,40,48$。两条轴的 saved candidate drift 均为零且相邻 mode identity 均为
+   `SAME_MODE`。这允许 I3 开始误差来源识别，但不授权把零 observed shift 当成收敛证据、
+   非零 next-level correction 或误差界。
 
 ## 目标、输入和退出
 
@@ -43,7 +68,8 @@ I2 遵循三个成本边界：
 
 - 利用 I1 dip、I2.1 count one 和 I2.2 endpoint surrogate sign-count 诊断，提出高可信 candidate；
 - 在预先冻结的不同离散阶数上跟踪同一物理 mode，观察 candidate 是否漂移；
-- 报告 candidate 漂移量、定位不确定度及最低必要的 residual、factor、field、boundary 和
+- 报告 candidate 漂移量、minimizer-localization/search-resolution 尺度及最低必要的
+  residual、factor、field、boundary 和
   mode-identity 检查；
 - 把上述数值序列直接交给 I3，由 I3 识别空间、trace、half-guide、BIE/QZ、结构、求解和
   continuous--discrete 等误差来源并构造估计。
@@ -66,11 +92,11 @@ I2 完成时必须交付：
 3. 冻结物理对象、完整 level tuples、唯一主 refinement axis、candidate functional、定位窗口/
    规则、solver policy、precision 与 provenance；
 4. 公共 mode 表示、跨层映射、normalization/phase-alignment 规则，以及各离散阶数下同一
-   physical mode 的 candidate、相邻/相对漂移和定位不确定度；
+   physical mode 的 candidate、相邻/相对漂移和 terminal-cell/minimizer-localization 尺度；
 5. 每个阶数的最低 residual、factor、field、boundary、mode-identity 与复现诊断。
 
 退出不要求证明 candidate 是精确离散 eigenvalue，也不要求先得到 posterior estimator 或真值
-误差上界。只有 candidate 无法与明显数值伪影区分，或 level 配置、candidate uncertainty、
+误差上界。只有 candidate 无法与明显数值伪影区分，或 level 配置、candidate 定义、
 mode identity 与必要原始诊断无法记录，才阻止把 I2.3 输出作为 estimator-ready I3 输入。
 
 ## I2 内部里程碑
@@ -79,7 +105,7 @@ mode identity 与必要原始诊断无法记录，才阻止把 I2.3 输出作为
 |---|---|---|---|
 | I2.1 单零计数诊断 | 检查 dip 小圆盘内是否有一个有限维 zero，并与 evaluator poles/factors 分账 | `PASS WITH CONDITIONS` | 为 candidate 提供独立的局部谱计数证据 |
 | I2.2 端点 sign-count/inertia-like jump 数值诊断 | 只在 I1.3 已知区间左右端点检查 sign count/inertia-like quantity 是否出现可信 jump | `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP` | 稳定 jump corroboration；不证明 raw-$H$ inertia 或严格实根 |
-| I2.3 跨离散阶数 candidate 漂移实验 | 在预先冻结的不同离散阶数下比较同一物理 mode 的 candidate | `PLANNED / NOT STARTED` | 冻结 level/candidate/mode-map 元数据，candidate 序列、漂移量、定位不确定度及最低必要的 residual/factor/field/boundary/mode-identity 证据；直接作为 I3 输入 |
+| I2.3 跨离散阶数 candidate 漂移实验 | 在预先冻结的不同离散阶数下比较同一物理 mode 的 candidate | `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` | `ntot` 与 $M$ 两条三层单轴实验均返回完全相同的 saved candidate，并形成两条 conditional algorithmic hierarchy；terminal-cell 尺度只限制 sub-grid minimizer 解释 |
 
 正式里程碑共 **3 个**。四个里程碑只是常见压缩目标，不是最低数量要求；本项目不再为纯
 交接或误差账本凑出 I2.4。exact discrete root、额外 contour、完整 finite Hermitian、local
@@ -120,26 +146,41 @@ complex solve 和其他非阻断检查列入 `OPTIONAL`。
 ### I2.3 跨离散阶数 candidate 漂移实验
 
 - **具体要解决什么问题：**在预先冻结的不同离散阶数下，I1/I2 所识别的同一物理 mode 的
-  candidate 是否发生漂移，漂移相对于每个 candidate 的定位不确定度有多大。
+  算法输出 candidate 是否发生观测漂移，并记录 locator 对潜在 sub-grid minimizer 的分辨尺度。
 - **为什么必须做：**单一离散阶数上的 dip、count 和 endpoint diagnostic 只能说明该离散对象
   值得关注；只有比较同一 mode 随离散变化的 candidate，I3 才有真实数据研究离散误差，而不是
   对一个孤立数字构造 estimator。
 - **计划检查什么：**预先冻结物理对象、至少两个离散阶数、唯一主 refinement axis、各 level
   tuple、candidate functional、定位窗口/规则、solver policy 和 precision；每个阶数都记录
-  candidate、定位区间或 uncertainty。不同维数的场/trace 必须映到预先定义的公共表示，完成
+  candidate 与 terminal interval。不同维数的场/trace 必须映到预先定义的公共表示，完成
   phase alignment、mode overlap、邻近竞争 mode 检查，并只做解释漂移所必需的原矩阵
   residual、关键 factor health、非零 field participation、boundary matching 和复现检查。
-  若同时改变多个离散轴，只能标为 composite hierarchy，I2 不作误差归因。具体数值与阈值待
-  I2.2 完成后另行设计，本轮不冻结。
-- **什么结果可以接受：**各阶数的 candidate 都可复现且属于同一物理 mode；报告 signed 与
-  absolute drift，并把 $|\Delta_\ell|$ 与相邻两层定位 uncertainty 的组合比较。漂移明显、很小
-  或暂不单调都可以是有效科学结果，不以“必须收敛”定义成功；若 drift 不能与定位 uncertainty
-  分离，则输出 `DRIFT_UNRESOLVED`，不得写成零漂移或已收敛。
+  若同时改变多个离散轴，只能标为 composite hierarchy，I2 不作误差归因。本阶段已分别
+  完成 `ntot` 轴和固定 $n_{\mathrm{tot}}=160$ 的 $M$ 轴；具体数值、阈值与证据边界见两套
+  I2.3 design/review 与实验索引。
+- **对象定义：**算法保存的 candidate 记为 $\widehat k_n$，candidate drift 直接定义为
+  $\Delta^{\mathrm{cand}}_{ab}=\widehat k_b-\widehat k_a$。概念上的连续-$k$ score minimizer
+  $k_n^{\min}$ 不是算法交付物，也未被精确计算。terminal interval 半宽 $u_n$ 只作
+  minimizer-localization/search-resolution diagnostic；它不是 $\widehat k_n$ 的 uncertainty，
+  不进入 $\Delta^{\mathrm{cand}}_{ab}$。
+- **什么结果可以接受：**各阶数的 candidate 都可复现且属于同一物理 mode；直接报告 saved
+  candidate 的 signed 与 absolute drift，并另列 terminal interval 与半宽。observed drift 大、
+  小、为零或暂不单调都可以是有效科学结果，不以“必须收敛”定义成功。
 - **什么失败会阻止继续：**离散阶数未预先冻结、不同阶数发生 mode swap 或 mode identity
-  unresolved、candidate 定义变化、定位 uncertainty 大到漂移不可解释，或 residual/factor/
+  unresolved、candidate 定义变化，或 residual/factor/
   field/boundary 任一最低门说明 candidate 是明显伪影。
-- **完成后能支持什么结论：**交付同一物理 mode 的 candidate 序列、漂移与定位 uncertainty，
-  作为 I3 的直接输入；不自动说明漂移来自哪种误差，也不证明 candidate 已接近连续真值。
+- **实际结果：**相同初始区间、五点 dyadic 规则、$L=0,\ldots,11$、27 个求值点、terminal
+  spacing、tie band、winner rule、functional 与 solver 给出
+  $\widehat k_{160}=\widehat k_{208}=\widehat k_{256}=1.832770289108157$；三项
+  $\Delta^{\mathrm{cand}}=0$，相邻比较均为 `SAME_MODE`。每层 terminal interval 半宽
+  $u_n=9.3132\times10^{-11}$，只说明潜在 sub-grid minimizer 的搜索分辨尺度。
+- **追加 $M$ 轴结果：**固定 $n_{\mathrm{tot}}=160$ 后，$M=32,40,48$ 的三项 saved
+  candidate 也均为 $1.832770289108157$；三项直接 drift 为零，两个相邻比较均为
+  `SAME_MODE`。selector-gauge、repeat、raw residual、factor、field 和 boundary 门全部通过。
+  最紧 `proxy_reduced` rcond 仅为门槛的约 $1.048$ 倍，必须作为后续数值 caveat 保留。
+- **完成后能支持什么结论：**`NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`；I3 可接收该
+  candidate 序列并开始误差来源识别。不能声称 sub-grid minimizer 或 finite root 零漂移、
+  收敛、saturation、已接近连续真值，或已有误差上界。
 
 ## OPTIONAL：不计入三个正式里程碑
 
@@ -159,7 +200,7 @@ complex solve 和其他非阻断检查列入 `OPTIONAL`。
 | I1.4 sampled readiness | 维持同一 branch/chart/factor/evaluator 语义 | 未采样处绝无异常 |
 | I2.1 count one | 作为 candidate 的局部谱证据 | zero 位于实轴、等于 candidate 或对应非零 physical field |
 | I2.2 endpoint jump/no-jump | 作为 same-evaluator corroborative diagnostic，不作独立证据计数 | strict inertia theorem、crossing 或实根存在定理 |
-| I2.3 candidate 序列、漂移与 uncertainty | 直接供 [[research/projects/eig-apost/implementation/i3/README|I3]] 识别误差源并构造估计 | 某类误差已经被分解、estimator 或 upper bound 已经得到 |
+| I2.3 saved candidate 序列、observed drift 与 minimizer-localization diagnostic | 直接供 [[research/projects/eig-apost/implementation/i3/README|I3]] 识别误差源；当前 `ntot` 与 $M$ 两条轴均给出零 observed shift，不能单独提供非零 correction 或收敛证据 | 某类误差已经被分解、estimator 或 upper bound 已经得到 |
 
 ## 失败与停止规则
 
@@ -179,5 +220,11 @@ complex solve 和其他非阻断检查列入 `OPTIONAL`。
    [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]；
 4. [[research/projects/eig-apost/implementation/i2/design-2-2|historical I2.2 design]] 与
    [[research/projects/eig-apost/implementation/i2/review-2-2|historical I2.2 review]]；
-5. [[research/projects/eig-apost/implementation/open-problems#Current I2|Current I2 ledger]]；
-6. [[research/projects/eig-apost/implementation/i3/README|I3 guide]]。
+5. [[research/projects/eig-apost/implementation/i2/design-2-3|I2.3 frozen design]]、
+   [[research/projects/eig-apost/implementation/i2/review-2-3|I2.3 independent review]] 与
+   [[test/i2/k-drift/README|I2.3 ntot-axis experiment index]]；随后读
+   [[research/projects/eig-apost/implementation/i2/design-2-3m|I2.3 M-axis frozen design]]、
+   [[research/projects/eig-apost/implementation/i2/review-2-3m|I2.3 M-axis independent review]] 与
+   [[test/i2/m-drift/README|I2.3 M-axis experiment index]]；
+6. [[research/projects/eig-apost/implementation/open-problems#Current I2|Current I2 ledger]]；
+7. [[research/projects/eig-apost/implementation/i3/README|I3 guide]]。

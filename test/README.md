@@ -95,6 +95,32 @@ frozen outputs retain their recorded paths and hashes.
 | Status | `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP`; raw-$H$ inertia remains unavailable |
 | Implementation summary | [[research/projects/eig-apost/implementation/i2/README|current I2 guide]] |
 
+## I2-K-DRIFT-V1
+
+| Field | Value |
+|---|---|
+| Experiment ID | `I2-K-DRIFT-V1` |
+| Stage | I2.3 |
+| Purpose | Compare the same candidate and physical mode across the single boundary-Nyström axis $n_{\mathrm{tot}}=160,208,256$, with fixed $M=48$, proxy, window, functional, locator, solver and identity rules |
+| Current path | `test/i2/k-drift/` |
+| Entry point | Completed append-only attempt: `check_k_drift('drift-a1')` |
+| Experiment index | [[test/i2/k-drift/README|I2.3 design, command, result and boundary index]] |
+| Status | `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`; the immutable artifact retains its preregistered `DRIFT_UNRESOLVED` machine field, while terminal half-width is now treated only as a sub-grid minimizer-localization diagnostic |
+| Implementation summary | [[research/projects/eig-apost/implementation/i2/README|current I2 guide]] |
+
+## I2-M-DRIFT-V1
+
+| Field | Value |
+|---|---|
+| Experiment ID | `I2-M-DRIFT-V1` |
+| Stage | I2.3 |
+| Purpose | Compare the saved candidate and physical mode across the single Rayleigh/Fourier cutoff axis $M=32,40,48$, with fixed $n_{\mathrm{tot}}=160$, fine proxy, window, functional, locator, solver and identity rules |
+| Current path | `test/i2/m-drift/` |
+| Entry point | Completed append-only attempt: `check_m_drift('m-drift-a2')`; `m-drift-a1` was consumed by a preflight-only failure with zero evaluator calls and no output |
+| Experiment index | [[test/i2/m-drift/README|I2.3 M-axis command, run history, result and claim-boundary index]] |
+| Status | `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / ADJACENT SAME_MODE / CONDITIONAL_ALGORITHMIC_M_AXIS_HIERARCHY`; all three saved candidates are 1.832770289108157 with zero direct drift, while the common $9.31323\times10^{-11}$ halfwidth remains only a sub-grid minimizer-search diagnostic |
+| Implementation summary | [[research/projects/eig-apost/implementation/i2/README|current I2 guide]] |
+
 Future current-route experiments belong under the matching `test/i*/` stage directory and receive
 an index entry only after they are designed and authorized. A legacy verdict never becomes a
 current stage gate.

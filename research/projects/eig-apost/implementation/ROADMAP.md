@@ -47,7 +47,7 @@ $$
 | Stage | 核心目标 | 为最终目标解决什么 | 主要交付 | 为什么下一阶段需要它 |
 |---|---|---|---|---|
 | I1 | 建立可重复调用、对象不漂移的离散 evaluator，并找到显著实轴 dip | 没有可信 evaluator，后续 candidate 和误差变化都可能只是 branch、chart、rank 或 solver 改变 | 冻结的 $A_{\mathrm{def}}(k)$ 计算链、已知 dip、小邻域 readiness 与失败边界 | I2 需要在同一对象上判断这个 dip 是否值得作为连续特征值 candidate |
-| I2 | 汇总 count、端点 surrogate sign-count，并比较不同离散阶数下同一 mode 的 candidate 漂移 | 把“看见一个 dip”提升为“有局部计数、端点诊断和离散漂移证据支持的连续物理 candidate” | 各冻结离散阶数的 candidate、漂移量、定位不确定度及最低 residual/factor/field/boundary/mode-identity 证据 | I3 需要先看到 candidate 随离散变化的实际数据，才能识别误差来源和构造估计 |
+| I2 | 汇总 count、端点 surrogate sign-count，并比较不同离散阶数下同一 mode 的 candidate 漂移 | 把“看见一个 dip”提升为“有局部计数、端点诊断和跨离散 candidate 证据支持的连续物理 candidate” | 各冻结离散阶数的 saved candidate、observed drift、terminal-cell/minimizer-localization diagnostic 及最低 residual/factor/field/boundary/mode-identity 证据 | I3 需要这些同-mode candidate 数据来识别误差来源；terminal-cell 尺度不再充当 candidate error bar |
 | I3 | 构造可计算误差估计，检验它是否反映 candidate 到连续真值的误差，并研究可计算上界 | 防止把层间变化、矩阵残差或 correction 误称为真实 eigenvalue error | error indicator/correction、独立 truth comparison、effectivity 与 upper-bound verdict | 这是项目最终成果；额外参数、mode 或环境验证只在有需要时作为 OPTIONAL 扩展 |
 
 ## I1：可信离散 evaluator
@@ -84,7 +84,7 @@ I1 dip 是否足够可信，可以作为连续物理问题的 eigenvalue candida
 |---|---|---|---|
 | I2.1 单零计数诊断 | dip 小圆盘中是否存在一个孤立的有限维 zero，而不是没有 zero、多个 zero 或 factor pole 混淆 | `PASS WITH CONDITIONS` | 条件性 finite-dimensional count one；只作 candidate 可信度证据 |
 | I2.2 端点 sign-count/inertia-like jump 数值诊断 | 已知 dip 邻域左右端点的符号计数是否发生稳定跳变 | `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP` | 已观察到稳定 endpoint count difference；只作数值佐证，不证明 raw finite matrix inertia 或实根 |
-| I2.3 跨离散阶数 candidate 漂移 | 预先冻结的不同离散阶数是否给出同一物理 mode，candidate 漂移多大且是否超过定位不确定度 | `PLANNED / NOT STARTED` | 每个阶数的 candidate、相邻/相对漂移、定位不确定度，以及最低 residual、factor、field、boundary 和 mode-identity 结果 |
+| I2.3 跨离散阶数 candidate 漂移 | 预先冻结的不同离散阶数是否给出同一物理 mode，保存的 candidate 是否发生观测漂移 | `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` | `ntot` 与 $M$ 两条三层单轴实验均返回完全相同的 saved candidate，并分别形成 conditional algorithmic hierarchy；terminal-cell 尺度只限制 sub-grid minimizer 解释 |
 
 I2.2 只复用 I1.3 已确定的区间端点，不重新扫描、寻找 dip、二分定位或复平面求根。旧
 I2.2 structure experiment 的 `NaN/UNAVAILABLE` 与 `I2_2_STOP_THEORY_GATE` 保持历史原样；
@@ -92,11 +92,11 @@ I2.2 structure experiment 的 `NaN/UNAVAILABLE` 与 `I2_2_STOP_THEORY_GATE` 保�
 结构缺陷的端点 sign-count/inertia-like jump 作为数值可信度诊断，但 exact finite Hermitian
 证明不再是主线。
 
-I2 的退出不是“candidate 已被证明为精确特征值”，而是：candidate 已有足够、可复现且
-互相不循环的数值证据；不同离散阶数下同一 mode 的 candidate、漂移与定位不确定度均已报告；
-I3 能据此识别误差来源并研究 candidate 到连续真值的误差。误差分解本身属于 I3，不再为了
-“交接”单设 I2.4。精确 finite zero、额外 contour、全局复扫描、完整离散自伴证明和多参数
-稳健性均不自动成为 I2 blocker。
+I2 的退出不是“candidate 已被证明为精确特征值”。`drift-a1` 的 `ntot` 轴与
+`m-drift-a2` 的 $M$ 轴均给出三个可复现、同 mode 且完全相同的 saved candidates，故当前 I2 退出为
+`NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。I3 可以接收这一 conditional algorithmic
+hierarchy；但 terminal-cell 尺度只说明 sub-grid minimizer 尚未解析，两条零-shift 轴也不能
+单独提供非零 correction、收敛证据或误差界。
 
 ## I3：误差估计与上界研究
 
@@ -104,13 +104,17 @@ I3 能据此识别误差来源并研究 candidate 到连续真值的误差。误
 
 I3 直接研究 candidate 与真实连续特征值之间的误差。它不以某种固定 estimator 公式为预设，
 也不把 next-level shift、matrix residual 或 effectivity 单独当成最终答案。具体算法和验收流程
-必须等 I2 交付后再冻结。
+应根据 I2 实际交付另行冻结。当前 `drift-a1` 与 `m-drift-a2` 已提供两条 conditional
+same-mode algorithmic candidate hierarchy，故 I3 状态为 `DESIGN MAY BEGIN / NOT STARTED`。零 observed shift
+不能单独验证 next-level correction、收敛或 estimator。
 
 ### 输入、预期输出和与上界的关系
 
 - **从 I2.3 接收：**预先冻结的离散阶数、同一物理 mode 的 candidate 序列、相邻/相对漂移、
-  各层定位不确定度，以及最低 residual、factor、field、boundary、mode-identity 和复现诊断。
-  这些是尚未归因的原始数值事实，不预先指定属于哪种误差。
+  terminal-cell/minimizer-localization diagnostic，以及最低 residual、factor、field、boundary、
+  mode-identity 和复现诊断。`drift-a1` 与 `m-drift-a2` 已分别提供边界 Nyström 与
+  trace-cutoff 轴的原始数值事实；两条轴的三层 saved candidate 均相同，observed shift 为零。
+  这些事实可进入误差来源分析，但不能单独支持非零 correction、effectivity 或 convergence claim。
 - **由 I3 另行建立：**连续模型适用边界、空间/trace/half-guide/BIE--QZ/结构/求解/
   continuous--discrete 误差分类，以及带自身 uncertainty 的独立 truth reference。
 - **第一层输出：**一个可计算 error indicator 或 correction，以及它试图估计的误差分量。

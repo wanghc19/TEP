@@ -9,7 +9,7 @@ estimator，也不是新的 `research/mainline/`。
 ## 权威和边界
 
 - 状态：`active investigation`；当前新路线为
-  `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`。I1 的 width-driven
+  `I2_3_PASS_WITH_CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。I1 的 width-driven
   局部加密在 $7.6294\times10^{-7}$ 区间宽度处记录 fixed-$M=48$ dip 候选
   $k=1.8327703475952146$、$q=8.3200886232193094\times10^{-8}$；I2.1 随后在同一冻结 fine
   圆盘上得到主 determinant 的 32/64 嵌套 count one，并分别得到全部 inverse factors 的
@@ -19,6 +19,13 @@ estimator，也不是新的 `research/mainline/`。
   $H_{\mathrm{sym}}=(H+H^*)/2$ 两肩端点 sign count 得到
   `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP`。该 jump 只作 candidate 的数值佐证；
   exact raw-$H$ inertia、实根、continuous eigenvalue 与 error estimate 均未由此建立。
+  I2.3 随后分别完成两条单轴实验：边界 Nyström 阶数
+  $n_{\mathrm{tot}}=160,208,256$，以及固定 $n_{\mathrm{tot}}=160$ 的
+  $M=32,40,48$ trace cutoff。两条轴均通过最低 candidate、factor、field、boundary、repeat
+  与 `SAME_MODE` 检查；各轴的三项 saved candidate 完全相同，因此结果为
+  `NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。terminal-cell 半宽只作
+  潜在 sub-grid minimizer 的搜索分辨率，不是 candidate uncertainty；该结果仍不证明
+  minimizer/root 零漂移或收敛。
 - 本目录只管理新专题；不续写或改写冻结的 Müller--Cauchy 主线。
 - 归档理论、旧草稿中的命题和现有数值候选均不得被预设为正确。
 - 生产 MATLAB/package 代码保持未修改；实验实现和生成结果只位于仓库根目录 `test/`
@@ -83,8 +90,12 @@ eig-apost/
       README.md
       design.md
       design-2-2.md
+      design-2-3.md
+      design-2-3m.md
       review.md
       review-2-2.md
+      review-2-3.md
+      review-2-3m.md
     i3/
       README.md
     archive/
@@ -107,11 +118,17 @@ I2.2 已按 [[research/projects/eig-apost/implementation/i2/design-2-2|I2.2 desi
 受控路线：历史 raw-$H$ structure preflight 忠实停止于 theory gate；当前
 $H_{\mathrm{sym}}$ 两端 sign count 则得到稳定 `SINGLE_JUMP`，并由
 [[research/projects/eig-apost/implementation/i2/review-2-2|independent review]] 接受为
-numerical corroboration。它不证明 raw finite real zero 或真实 physical eigenvalue。当前下一步
-是另行设计 I2.3：在预先冻结的不同离散阶数下比较同一物理 mode 的 candidate，
-报告漂移、定位不确定度与最低 residual/factor/field/boundary/mode-identity 检查；其输出直接
-进入 I3，不再设置 I2.4。误差来源的识别和分解由 I3 负责。复平面 refinement 与 exact finite
-Hermitian 证明均为按异常触发的 OPTIONAL，而非默认阶段。
+numerical corroboration。它不证明 raw finite real zero 或真实 physical eigenvalue。I2.3 已按
+[[research/projects/eig-apost/implementation/i2/design-2-3|I2.3 design]] 完成三个预注册
+$n_{\mathrm{tot}}$ 层的同-mode candidate 漂移实验；独立审查见
+[[research/projects/eig-apost/implementation/i2/review-2-3|I2.3 review]]。随后又按
+[[research/projects/eig-apost/implementation/i2/design-2-3m|I2.3 M-axis design]] 完成固定
+$n_{\mathrm{tot}}=160$ 的 $M=32,40,48$ 实验；独立审查见
+[[research/projects/eig-apost/implementation/i2/review-2-3m|I2.3 M-axis review]]。两条轴的
+三层 candidate 均有效、完全相同且 mode identity 通过，故当前以
+`NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` 收口。I3 可以接收这一 conditional algorithmic
+candidate hierarchy 并开始误差来源与 independent-reference 设计；两条轴的零 observed
+shift 不能单独提供非零 correction、收敛证据或误差界。误差来源的识别和分解仍由 I3 负责。
 
 ## 当前入口
 
@@ -136,14 +153,20 @@ Hermitian 证明均为按异常触发的 OPTIONAL，而非默认阶段。
   `MINOR CAVEAT`，记录各问题的 blocking scope、最低成本检查和状态；只有未解决的
   blocker 能停止当前工程路线。见
   [[research/projects/eig-apost/implementation/open-problems|open-problem ledger]]。
-- `implementation/i2/`：当前活动阶段；项目级状态、I2.1/I2.2 设计与独立审查分别见
+- `implementation/i2/`：I2.1--I2.3 已完成，I3 design may begin；项目级状态与设计/审查分别见
   [[research/projects/eig-apost/implementation/i2/README|I2 guide]]、
   [[research/projects/eig-apost/implementation/i2/design|I2.1 design]] 和
   [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]，以及
   [[research/projects/eig-apost/implementation/i2/design-2-2|I2.2 design]] 和
-  [[research/projects/eig-apost/implementation/i2/review-2-2|I2.2 review]]。具体实验证据只从
+  [[research/projects/eig-apost/implementation/i2/review-2-2|I2.2 review]]，以及
+  [[research/projects/eig-apost/implementation/i2/design-2-3|I2.3 design]] 和
+  [[research/projects/eig-apost/implementation/i2/review-2-3|I2.3 review]]，以及
+  [[research/projects/eig-apost/implementation/i2/design-2-3m|I2.3 M-axis design]] 和
+  [[research/projects/eig-apost/implementation/i2/review-2-3m|I2.3 M-axis review]]。具体实验证据只从
   [[test/i2/k-count/README|I2.1 experiment index]] 与
-  [[test/i2/h-inertia/README|I2.2 experiment index]] 进入。
+  [[test/i2/h-inertia/README|I2.2 experiment index]]、
+  [[test/i2/k-drift/README|I2.3 ntot-axis experiment index]] 与
+  [[test/i2/m-drift/README|I2.3 M-axis experiment index]] 进入。
 - `implementation/i3/`：只维护 candidate 真值误差估计、独立 reference 和上界可行性的
   目标、输入、输出与 claim ladder；当前不冻结具体算法或实验。
 - `test/archive/legacy-route-v1/eig-apost-nep/`、`test/archive/legacy-route-v1/hg-map/`、

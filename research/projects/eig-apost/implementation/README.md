@@ -3,7 +3,7 @@
 ## 当前状态
 
 当前新路线处于
-`I2_1_PASS_WITH_CONDITIONS / I2_2_HERMITIAN_PART_SINGLE_JUMP_CORROBORATION`。精确
+`I2_3_PASS_WITH_CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。精确
 half-guide DtN 由半无限边值问题定义，连续中心算子 $\mathcal F(k)$ 在任何
 BIE/Fourier 截断和 ordered QZ 之前定义真实谱对象。现行数学权威是
 [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]，离散
@@ -32,11 +32,14 @@ finite $H$ 的定理级 inertia 解释；I2.2 仍可在同一已知端点完成�
 sign-count/inertia-like 数值诊断；该诊断现已得到稳定 `SINGLE_JUMP`，用于提高 candidate
 可信度。它不重复 I1.3 scan，
 不证明 exact discrete real root，也不扩张 finite Hermitian 理论。I2.3 在预先冻结的不同离散
-阶数上比较同一物理 mode 的 candidate，报告 candidate 漂移、定位不确定度及最低必要的
-residual、factor、field、boundary 和 mode-identity 诊断；该实验输出直接作为 I3 输入，不再
-另设交接里程碑。空间、trace、half-guide、BIE/QZ、结构、求解和连续--离散误差的识别与分解
-全部由 I3 负责。具体 estimator、transport、adjoint 与 denominator 是否必要，也由 I3 在
-选定误差估计路线后决定。
+阶数上比较同一物理 mode 的 candidate，报告 candidate 漂移、terminal-cell/minimizer-
+localization diagnostic 及最低必要的 residual、factor、field、boundary 和 mode-identity
+诊断。`drift-a1` 的 $n_{\mathrm{tot}}=160,208,256$ 轴与 `m-drift-a2` 的
+固定 $n_{\mathrm{tot}}=160$、$M=32,40,48$ 轴均确认 `SAME_MODE`，且各轴保存的 candidate
+完全相同，故 observed candidate drift 为零。终端半宽只描述潜在 sub-grid score minimizer 的搜索分辨率，
+不是 candidate uncertainty。当前形成 conditional algorithmic candidate hierarchy，I3 可以
+开始误差来源与 independent-reference 设计；但该轴不能单独提供非零 next-level correction、
+minimizer/root drift、收敛阶或误差上界。
 
 OP-M0-1--OP-M0-4 继续限制 continuous physical theorem 与上界解释，但不阻止提出带诚实
 claim boundary 的 candidate。最新行动边界以
@@ -58,8 +61,12 @@ implementation/
 │   ├── README.md
 │   ├── design.md
 │   ├── design-2-2.md
+│   ├── design-2-3.md
+│   ├── design-2-3m.md
 │   ├── review.md
-│   └── review-2-2.md
+│   ├── review-2-2.md
+│   ├── review-2-3.md
+│   └── review-2-3m.md
 ├── i3/
 │   └── README.md
 └── archive/
@@ -74,8 +81,8 @@ implementation/
 
 - [[research/projects/eig-apost/implementation/i1/README|i1/]]：已完成的离散算子与 sampled
   root-readiness 阶段。
-- [[research/projects/eig-apost/implementation/i2/README|i2/]]：当前活动阶段；维护 I2.1--I2.3
-  三个有独立科学问题的内部里程碑。
+- [[research/projects/eig-apost/implementation/i2/README|i2/]]：I2.1--I2.3 已完成；维护三个有
+  独立科学问题的内部里程碑，并向尚未启动的 I3 交付两条 conditional hierarchy。
 - [[research/projects/eig-apost/implementation/i3/README|i3/]]：维护 candidate 误差估计、
   independent truth comparison 和上界可行性的目标、输入与预期输出；尚未冻结实验细节。
 - [[research/projects/eig-apost/implementation/ROADMAP|ROADMAP.md]]：只维护新路线 I1--I3
@@ -87,9 +94,9 @@ implementation/
 - [[research/projects/eig-apost/implementation/archive/legacy-route-v1/README|legacy route v1]]：
   保存旧路线 I0--I4 的完整 design、result、review 和原索引；旧编号和 verdict 不构成
   当前授权。
-- [[test/README|current test index]]：记录新路线 I1.2--I2.2 实验状态；当前实验位于
+- [[test/README|current test index]]：记录新路线 I1.2--I2.3 实验状态；当前实验位于
   `test/i1/hg-adef/`、`test/i1/k-scan/`、`test/i1/k-ready/`、`test/i2/k-count/` 和
-  `test/i2/h-inertia/`。旧实验统一
+  `test/i2/h-inertia/`、`test/i2/k-drift/` 与 `test/i2/m-drift/`。旧实验统一
   由 [[test/archive/legacy-route-v1/README|legacy experiment index]] 保存。
 
 ## 阶段文档规则
@@ -126,7 +133,13 @@ I1--I4 文档、实验 ID 或冻结 verdict。
 4. [[research/projects/eig-apost/implementation/i2/README|current I2 guide]] 与
    [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]：确认 count-one 结果；
    再读 [[research/projects/eig-apost/implementation/i2/design-2-2|I2.2 design]] 与
-   [[research/projects/eig-apost/implementation/i2/review-2-2|I2.2 review]]。
+   [[research/projects/eig-apost/implementation/i2/review-2-2|I2.2 review]]，最后读
+   [[research/projects/eig-apost/implementation/i2/design-2-3|I2.3 design]]、
+   [[research/projects/eig-apost/implementation/i2/review-2-3|I2.3 review]] 与
+   [[test/i2/k-drift/README|I2.3 ntot-axis experiment index]]；再读
+   [[research/projects/eig-apost/implementation/i2/design-2-3m|I2.3 M-axis design]]、
+   [[research/projects/eig-apost/implementation/i2/review-2-3m|I2.3 M-axis review]] 与
+   [[test/i2/m-drift/README|I2.3 M-axis experiment index]]。
 5. [[research/projects/eig-apost/implementation/i3/README|I3 guide]]：确认 candidate、error
    estimate、independent truth 和 upper-bound claim ladder，不提前冻结算法。
 6. [[research/projects/eig-apost/implementation/i1/design|discrete A-def design]]：阅读当前

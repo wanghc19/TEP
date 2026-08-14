@@ -187,3 +187,37 @@ structure diagnostic, or any append-only numerical evidence.
 This decision supersedes the immediately preceding decision's I2.3/I2.4 split and four-milestone
 stage rule. It changes planning only and does not modify historical designs, reviews, code or
 append-only outputs.
+
+## 2026-08-14 — I2.3 separates the saved candidate from the sub-grid minimizer
+
+- **Saved candidate.** For each discretization order $n$, the numerical algorithm returns the
+  deterministic terminal-grid winner $\widehat k_n$. Candidate drift is defined directly by
+  $\Delta^{\mathrm{cand}}_{ab}=\widehat k_b-\widehat k_a$; no localization scale is added to this
+  observed difference.
+- **Observed result.** The same frozen initial interval, five-point dyadic rule, levels
+  $L=0,\ldots,11$, 27 evaluated points, tie band, terminal spacing, functional, solver and mode
+  rules produced
+  $\widehat k_{160}=\widehat k_{208}=\widehat k_{256}=1.832770289108157$.
+  All three observed candidate drifts are zero and the adjacent comparisons are `SAME_MODE`.
+  The current scientific label is therefore
+  `NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`.
+- **Sub-grid minimizer.** A conceptual continuous-$k$ score minimizer $k_n^{\min}$ is not the
+  saved candidate and was not computed exactly. The terminal interval half-width
+  $u_n=9.3132279666\times10^{-11}$ is a search-resolution/minimizer-localization diagnostic,
+  not candidate uncertainty. Without interpolation, convexity, unimodality or an enclosure
+  theorem it is not a rigorous minimizer-error bound.
+- **Interpretation boundary.** The data do not establish equal sub-grid minimizers, zero finite-root
+  drift, convergence, saturation, an error order or proximity to the continuous eigenvalue. The
+  narrower unresolved statement is `SUBGRID_MINIMIZER_DRIFT_UNRESOLVED`.
+- **I3 handoff.** This localization caveat does not stop I3. I2.3 supplies a reproducible same-mode
+  candidate sequence with no observed drift under identical scan parameters. I3 may begin error
+  source identification and independent-reference planning, while recording that this particular
+  $n_{\mathrm{tot}}$ axis supplies no resolved nonzero next-level correction.
+- **Artifact integrity.** The frozen design, runner and append-only `drift-a1` result/report retain
+  their preregistered `DRIFT_UNRESOLVED / STOP_DRIFT_UNRESOLVED` machine fields. Those fields are
+  historical contract outputs and are superseded only for the current object-level scientific
+  interpretation; they are not edited or rerun.
+
+This decision supersedes only the 2026-08-13 interpretation that combined two terminal-cell scales
+with the difference of the saved candidates and used that comparison as an I3 stop. It does not
+rewrite the preregistered design, executed code or append-only evidence.

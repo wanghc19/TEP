@@ -1,9 +1,32 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-08-13。
+更新日期：2026-08-14。
 
 ## 当前状态
 
+- **2026-08-14 I2.3 Rayleigh/Fourier cutoff 单轴：**正式 `m-drift-a2` 固定
+  $n_{\mathrm{tot}}=160$，只改变 $M=32,40,48$ 及其派生维数；物理参数、fine proxy、搜索区间、
+  五点 dyadic 规则、$L=0,\ldots,11$、candidate functional、solver 和 winner 规则保持不变。
+  三层 saved candidate 均为 $1.832770289108157$，全部直接 candidate drift 为零，相邻 mode
+  identity 均为 `SAME_MODE`；gauge、repeat、raw residual、factor、field 和 boundary 门均通过。
+  状态为 `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE /`
+  `CONDITIONAL_ALGORITHMIC_M_AXIS_HIERARCHY`。terminal half-width
+  $9.3132\times10^{-11}$ 只作 sub-grid minimizer 搜索尺度。`m-drift-a1` 曾在 evaluator 前因
+  MATLAB struct schema 错误失败，用时约 $22.18$ s、零 evaluator、无 output；Revision A 后
+  a2 无 retry，用时 $171.956$ s，active-object snapshot peak $148.171$ MiB。I2.1 count 不附着
+  这三个固定-$n_{\mathrm{tot}}$ level；零 observed shift 也不证明 minimizer/root 收敛或误差界。
+- **2026-08-14 I2.3 跨离散阶数 candidate 漂移：**唯一 `drift-a1` 只改变边界 Nyström
+  阶数 $n_{\mathrm{tot}}=160,208,256$；$M=48$、proxy、物理参数、搜索圆盘、candidate
+  functional、locator、solver 与 mode-identity 规则均固定。三层候选均为
+  $\widehat k_n=1.832770289108157$，相邻与端到端
+  $\Delta^{\mathrm{cand}}=0$。三层最低 residual、factor、field、boundary、repeat 门均通过，
+  相邻层 mode identity 均为 `SAME_MODE`。正式当前状态为
+  `I2_3_PASS_WITH_CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。
+  terminal interval 半宽 $u_n=9.3132\times10^{-11}$ 只作潜在 sub-grid score minimizer 的
+  search-resolution diagnostic，不是 saved candidate uncertainty，也不参与 candidate drift。
+  MATLAB 用时 $294.984424$ s，active-object snapshot peak $163.769340$ MiB，无失败或 retry。
+  冻结 artifact 中原 `DRIFT_UNRESOLVED / I3 STOP` machine fields 保持不变，但当前 I3 可开始
+  误差来源与 independent-reference 设计；仍不得声称 minimizer/root 零漂移或收敛。
 - **2026-08-13 candidate--error 总路线复审：**项目只保留两个最终目标：提出连续物理问题的
   数值 eigenvalue candidate；估计该 candidate 到真实连续特征值的误差，并研究可计算上界。
   底层 global physical operator 的自伴、正谱和适定条件下 exact-DtN 等价说明目标正频率
@@ -11,10 +34,11 @@
   当前只复用 I1.3 已确定的端点，检查一致定义的 endpoint sign count 是否出现稳定的
   inertia-like jump，并同时报告 structure defect、unresolved band 与 jump/no-jump。它不重做
   scan，不运行 locator，也不把 exact finite Hermitian 或 finite-real-zero 身份设为阶段目标。
-  I2.3 在预先冻结的不同离散阶数上比较同一物理 mode 的 candidate，报告漂移、定位
-  uncertainty 与最低 residual/factor/field/boundary/mode-identity 检查；输出直接进入 I3，
-  不再设置 I2.4。I3 再按 `candidate -> error sources -> computable estimate -> independent truth -> upper bound`
-  推进。exact finite structure、额外 contour、复数 refinement 以及未被 estimator 使用的
+  I2.3 已在预先冻结的不同离散阶数上比较同一物理 mode 的 saved candidate，并报告
+  terminal-cell/minimizer-localization diagnostic 与最低 residual/factor/field/boundary/
+  mode-identity 检查；首个结果为 `NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`，不设置 I2.4。
+  I3 可按 `candidate -> error sources -> computable estimate -> independent truth -> upper bound`
+  开始设计。exact finite structure、额外 contour、复数 refinement 以及未被 estimator 使用的
   derivative/adjoint/transport 均为 OPTIONAL。
 - **2026-08-13 I2.2 Hermitian-part endpoint sign count：**唯一 `inertia-a1` 在冻结 fine、
   $M=48$ evaluator 的 I1.3 L14 nodes 3/5 上完成。raw $H=A_{\mathrm{def}}^D/T$ 到
@@ -25,7 +49,7 @@
   MATLAB 用时 $20.0001$ s，active-object snapshot peak $63.4584$ MiB，无失败或 retry。
   该结果只为 candidate 提供 Hermitian-part numerical corroboration；raw-$H$ inertia 仍
   unavailable，不证明区间内 crossing、严格实根、continuous eigenvalue 或误差估计。I2.2
-  据此完成，下一步可另行设计 I2.3 跨离散阶数 candidate 漂移实验。
+  据此完成；后续 I2.3 的实际结果见本节首条。
 - **2026-08-13 I2.2 实轴结构资格：**阶段 verdict 为
   `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE`。I2.1 的对称小圆盘内 count one
   若再结合冻结有限维零集的实轴 Schwarz 对称，便会迫使唯一 zero 位于实轴；但 continuous
@@ -168,7 +192,9 @@
   将 $M_{\mathrm{trace}}=48$ 的最坏误差和 omitted energy 分别压到
   $7.08\times10^{-12}$ 与 $5.00\times10^{-13}$。OP-I4-1h 与 OP-I4-6 因而在当前制造
   密度、实数非 Wood 参数和有限 $M_{\mathrm{ref}}=96$ 意义下关闭。
-- 状态：`active investigation -- I2.1 pass with conditions; conditional empirical fine-M48 count one; root location not started`。
+- 状态：`active investigation -- I2.3 pass with conditions; no observed candidate drift; same mode`。
+  `ntot` 与 $M$ 两条三层单轴实验的 saved candidate 均完全相同且 `SAME_MODE`；I3 design may begin。该状态不表示 sub-grid
+  minimizer、finite root 或连续真值零漂移，也不构成收敛证据。
 - 历史阶段门（均不构成当前实现授权）：manufactured root/correction pipeline 曾为窄范围
   `GO`，finite-tail Half-guide map 曾为 Stage 1 `GO`，Augmented BIE 曾为
   `STAGE2_DISCRETE_ALGEBRA_GO`；provenance-closure 曾为
@@ -201,6 +227,7 @@
 | Current I1.3 real-$k$ continuity, candidate reconnaissance and bounded zoom | `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_NESTED_GRID_CANDIDATE` | $M=48$ count/QZ/chart/subspace-coarse/fine continuity；中心差分二阶收敛；$M=12\to24\to48$ 分层筛查；v2 在 15 层、33 点、167 门全通过后得到 $k=1.8327703475952146$、$q=8.32009\times10^{-8}$，最终宽度 $7.6294\times10^{-7}$ | 固定 $M=48$ 不是 trace convergence；FD mutation 未过 $10^{-12}$，production derivative 不可用 |
 | Current I1.4 sampled complex-$k$ readiness | `I1_4_PASS_WITH_CONDITIONS / SAMPLED_FIXED_M_DISCRETE_ROOT_READINESS`; empirical I2 isolation ready | $r_0=3.8147\times10^{-7}$ disk；anchored branch/frame/chart/rank；82/820/164/164 node/factor/branch/QZ rows、8 closure、36 CR、6 CR-negative rows；V5 identifiable assembly-order closure | 未运行 locator/contour/root；固定 $M=48$ 不是 trace convergence；无 production separation、unsampled-pole theorem 或 $A_{\mathrm{def}}'$；对称 physical transmission labels 不可动态辨识 |
 | Current I2.1 factor-aware root count / I2.2 endpoint sign count | I2.1 `PASS WITH CONDITIONS`; I2.2 `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP` | I2.1 32/64 主 winding 均为 one；I2.2 的 raw $H$ strict-inertia 路线保留历史 STOP，但当前 $H_{\mathrm{sym}}$ 两端 counts 为 $(194,0,0)$ 与 $(193,1,0)$，$50/100/200$ bands 稳定 | 该 difference 只作 numerical corroboration；raw-$H$ inertia 仍 unavailable，尚无实根、root 坐标、连续 eigenvalue 或 estimator |
+| Current I2.3 cross-discretization drift | `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` | `ntot=160,208,256` 与固定 $n_{\mathrm{tot}}=160$ 的 $M=32,40,48$ 两条单轴实验均返回完全相同的三层 saved candidate；最低 raw diagnostics、gauge/repeat 与相邻 `SAME_MODE` 门通过 | terminal half-width 只作 sub-grid minimizer 搜索分辨率；不证明 minimizer/root 零漂移、收敛或误差界，I3 可开始设计 |
 
 实现权威入口为
 [[research/projects/eig-apost/implementation/archive/legacy-route-v1/i0-manufactured/design|manufactured NEP design]]、
@@ -479,7 +506,7 @@ proxy-solver 收敛诊断见
 ## 当前门槛
 
 当前门是
-`I2_1_PASS_WITH_CONDITIONS / I2_2_HERMITIAN_PART_SINGLE_JUMP_CORROBORATION`；历史
+`I2_3_PASS_WITH_CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`；历史
 I2.2 structure preflight 状态为 `I2_2_STOP_THEORY_GATE`，但它只否定 raw finite $H$ 的
 定理级 inertia 解释，不否定当前数值 endpoint diagnostic。现行方法已经具备正确层级：
 physical half-guide PDE 定义 exact $\Lambda_\pm$，physical center variational pencil
@@ -507,10 +534,12 @@ estimator，但会阻止 computable upper bound。
 $q$ 值仍显著变化，也不得描述为 plateau。四个 M0 理论问题和 production derivative 仍未
 完成；历史 I2.2 已资格化实直径上点态奇异等价表示，但 exact finite Hermitian 与
 whole-interval same-family 证明失败关闭，数学 inertia 不可用。当前 I2.2 不翻转该历史结论，
-只把预注册端点的 sign-count/inertia-like jump 当作 candidate 可信度诊断。随后 I2.3 在冻结
-离散阶数与统一 candidate 规则下，记录同一 mode 的 candidate 序列、signed/absolute drift、
-定位 uncertainty 与最低原始诊断；若 mode identity unresolved 或漂移不可分辨，则如实输出，
-不得称收敛。I3 接收这些原始事实，再识别 location/solve/evaluator、空间/trace、half-guide、
+只把预注册端点的 sign-count/inertia-like jump 当作 candidate 可信度诊断。I2.3 随后在冻结
+离散阶数与统一 candidate 规则下完成 `ntot` 与 $M$ 两条单轴的 same-mode saved candidate
+序列、signed/absolute observed drift、terminal-cell diagnostic 与最低原始检查；两条轴各自
+三层 candidate 完全相同且 mode identity 通过，故为
+`NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。I3 现可接收这两条 conditional algorithmic
+hierarchy，并识别 location/solve/evaluator、空间/trace、half-guide、
 BIE/QZ structure 和 continuous bridge 等误差来源，并决定 matching、derivative、adjoint、
 denominator 或 independent reference 中哪些是必需输入；不得为了复用某个 simple-root 公式，
 预先把 exact finite zero 身份设成项目终点。
@@ -531,6 +560,12 @@ denominator 或 independent reference 中哪些是必需输入；不得为了复
   [[research/projects/eig-apost/implementation/i2/design-2-2|I2.2 frozen design]]、
   [[research/projects/eig-apost/implementation/i2/review-2-2|I2.2 independent review]]、
   [[test/i2/h-inertia/README|I2.2 experiment index]]、
+  [[research/projects/eig-apost/implementation/i2/design-2-3|I2.3 frozen design]]、
+  [[research/projects/eig-apost/implementation/i2/review-2-3|I2.3 independent review]]、
+  [[test/i2/k-drift/README|I2.3 ntot-axis experiment index]]、
+  [[research/projects/eig-apost/implementation/i2/design-2-3m|I2.3 M-axis frozen design]]、
+  [[research/projects/eig-apost/implementation/i2/review-2-3m|I2.3 M-axis independent review]]、
+  [[test/i2/m-drift/README|I2.3 M-axis experiment index]]、
   [[research/projects/eig-apost/implementation/i3/README|I3 error-estimation guide]]、
   [[research/projects/eig-apost/phase1-scope/questions|Phase 1 commitments]]、
   [[research/projects/eig-apost/phase1-scope/p-method|Phase 1 analytical framework]]、
@@ -543,7 +578,7 @@ denominator 或 independent reference 中哪些是必需输入；不得为了复
   [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]]。Phase 1--2 文件
   保持历史原文，不因本次重构回写。
 - 新路线当前 verdict 是
-  `I2_1_PASS_WITH_CONDITIONS / I2_2_HERMITIAN_PART_SINGLE_JUMP_CORROBORATION`；I1 dip 中心为
+  `I2_3_PASS_WITH_CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`；I1 dip 中心为
   $k=1.8327703475952146$，I2.1 已确认冻结圆盘内一个按代数重数计的 determinant zero，但
   尚未运行 root locator/refinement；历史 v1 zoom 的
   `STOP / DESIGN-GATE-INCONCLUSIVE` 只作为不追溯改写的设计负例保留。历史 I4 数值标签仍保留为
@@ -579,9 +614,12 @@ denominator 或 independent reference 中哪些是必需输入；不得为了复
   因 FD mutation 门失败仍不可用；I2.2 两肩 structure diagnostic 与后续 Hermitian-part
   sign-count 已完成。后者观察到稳定 `SINGLE_JUMP`，但保留 exact-Hermitian 与
   whole-interval caveats，未形成 mathematical raw-$H$ inertia、实根或 continuous eigenvalue。
-  I2.3 只做预注册跨离散阶数 candidate 漂移实验，其 candidate 序列、定位 uncertainty、最低
-  原始诊断和 mode-identity 结果直接作为 I3 输入；当前仍不得把 candidate 报告成 exact finite
-  real zero 或已证明的真实 eigenvalue，也不得自动转入复平面实验。
+  I2.3 已完成两条预注册 candidate 漂移实验：$n_{\mathrm{tot}}=160,208,256$ 与固定
+  $n_{\mathrm{tot}}=160$ 的 $M=32,40,48$。两条轴的三层均通过最低原始诊断并确认
+  `SAME_MODE`，saved candidate 完全相同。因此当前项目得到两条 conditional algorithmic
+  hierarchy，I3 design may begin；不得把 observed candidate equality 报告成 sub-grid
+  minimizer、exact finite real zero 或连续 eigenvalue 的零漂移，也不得称已收敛或自动转入
+  复平面实验。
 - 历史新增内容现归档于 `test/archive/legacy-route-v1/i4-rayleigh-budget/`、
   `test/archive/legacy-route-v1/i4-extract/`、`test/archive/legacy-route-v1/i4-three-path/`、
   `test/archive/legacy-route-v1/i4-three-path-derivatives/`、
@@ -593,9 +631,9 @@ denominator 或 independent reference 中哪些是必需输入；不得为了复
   $95.539849$ s 并通过顺序门。
   历史 Octave canonical 用时 $531.181285$ s。
 
-新 session 若调用 Engineer，只能在另行取得用户授权后，从 I2.2 已完成的 numerical
-corroboration 向 I2.3 的跨离散 candidate 漂移设计推进；不得重跑 I2.2、重新扫描、运行复数
-refinement 或扩张 exact finite-Hermitian 证明支线。
+新 session 若调用 Engineer，只能在 I3 的另行设计明确需要 sub-grid minimizer、非零 level
+shift 或新离散轴后承担相应实现；不得重跑 I2.2 或 `drift-a1`、结果后移动窗口、重新宽扫、
+自动运行复数 refinement，或扩张 exact finite-Hermitian 证明支线。
 不得重复或绕开已经通过的 manufactured、low-order、direct $M=48$ static oracle、I1.3
 实轴 candidate、I1.4 sampled readiness 与 I2.1 count-one result；
 理论侧继续处理 OP-M0-1 的 concrete exact-DtN/analytic-domain contract 和 OP-M0-2 的 physical/BIE

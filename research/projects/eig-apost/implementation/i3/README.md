@@ -19,7 +19,9 @@ $$
 $$
 
 I3 当前只冻结目标、输入、预期输出和 claim ladder，不冻结具体算法、levels、阈值、reference
-构造或实验流程。详细设计必须等待 I2 实际交付后另行完成。
+构造或实验流程。I2.3 的 `ntot` 与 $M$ 两条三层单轴实验均得到 `SAME_MODE`，且各自三个
+saved candidate 完全相同，当前结论为 `NO_OBSERVED_CANDIDATE_DRIFT`。因此 I3 当前
+`DESIGN MAY BEGIN / NOT STARTED`；具体算法仍须另行设计和审查。
 
 ## 目标
 
@@ -38,16 +40,24 @@ adjoint、transport 或非零 denominator，这些条件只作为该公式的适
 
 ## 输入
 
-I3 从 I2.3 直接接收：
+I3 预期从 I2.3 直接接收：
 
 - 一个冻结、可复现的实轴 candidate 及其搜索区间；
 - 原始 evaluator、factor、field 和 residual 的可信度诊断；
 - 冻结物理对象、完整 level tuples、唯一主 refinement axis、candidate functional、定位窗口/
   规则、solver policy、precision 与 provenance；
-- 预先冻结的不同离散阶数及每个阶数的 candidate、定位 uncertainty；
+- 预先冻结的不同离散阶数及每个阶数的 saved candidate；
+- terminal search-cell half-width；它只作潜在 sub-grid minimizer 的 localization/resolution
+  metadata，不是 candidate uncertainty；
 - 公共 mode 表示、跨层映射和 normalization/phase-alignment 规则；
 - 同一物理 mode 的相邻/相对 candidate 漂移；
 - 每个阶数最低必要的原矩阵 residual、factor、field、boundary、mode-identity 与复现结果；
+
+`drift-a1` 与 `m-drift-a2` 已分别提供 `ntot` 轴和 $M$ 轴的三层候选及上述健康诊断，且每条轴
+的三项 saved candidate 均共享同一终端网格点。因此它们形成两条 conditional same-mode
+algorithmic candidate hierarchy，observed candidate shift 均为零。
+I3 可以据此开始误差来源与 independent-reference 设计，但不能把 terminal half-width 解释为
+candidate error bar，也不能从零 observed shift 推出相等 minimizers、收敛、effectivity 或误差界。
 
 I3 另行建立而不反推给 I2 的输入是：
 
