@@ -14,11 +14,11 @@ estimator，也不是新的 `research/mainline/`。
   $k=1.8327703475952146$、$q=8.3200886232193094\times10^{-8}$；I2.1 随后在同一冻结 fine
   圆盘上得到主 determinant 的 32/64 嵌套 count one，并分别得到全部 inverse factors 的
   zero winding。该结果没有给出 root 坐标，也不是 continuous eigenvalue；production
-  derivative 和 estimator 仍不可用；I2.2 的历史 inertia 支线已完成实轴同对象两肩端点
-  诊断并以 `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE` 收口。两端点态等价与
-  near-Hermitian implementation evidence 很强，但 exact Hermitian 和整段同族连续性义务
-  未闭合，故 inertia 为 unavailable。该停止只约束 inertia 的数学解释，不再阻止以连续
-  物理实谱为依据，在原始离散矩阵上做低成本、derivative-free 的有界实轴定位。
+  derivative 和 estimator 仍不可用；I2.2 的历史 raw-$H$ inertia 支线以
+  `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE` 收口，而后续冻结
+  $H_{\mathrm{sym}}=(H+H^*)/2$ 两肩端点 sign count 得到
+  `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP`。该 jump 只作 candidate 的数值佐证；
+  exact raw-$H$ inertia、实根、continuous eigenvalue 与 error estimate 均未由此建立。
 - 本目录只管理新专题；不续写或改写冻结的 Müller--Cauchy 主线。
 - 归档理论、旧草稿中的命题和现有数值候选均不得被预设为正确。
 - 生产 MATLAB/package 代码保持未修改；实验实现和生成结果只位于仓库根目录 `test/`
@@ -103,14 +103,12 @@ provenance-closure 用 source-exact test-local copy 和同一 cache-derived $A,b
 priority claim，也不把候选公式升级为连续定理或 certified estimator。当前新路线已完成
 I1.1--I1.4，并以 I2.1 Method 1B 将上述 fixed-$M=48$ dip 圆盘条件性隔离为一个按代数重数
 计的 finite-dimensional zero。尚未定位该 zero、重构非零场或完成连续 kernel--field 桥；
-I2.2 已按 [[research/projects/eig-apost/implementation/i2/design-2-2|I2.2 endpoint-structure design]]
-完成 fail-close 结构资格，并由
-[[research/projects/eig-apost/implementation/i2/review-2-2|independent review]] 限定为理论门 STOP；
-不得把当前结果称为 inertia jump、精确离散实根或真实 physical eigenvalue。当前下一步是
-I2.2：不重做 I1.3 扫描，只在已确定端点检查一致定义的 sign count 是否出现稳定的
-inertia-like jump，并把 raw structure defect 与 unresolved band 一并报告。该检查只提高或
-降低 continuous eigenvalue candidate 的数值可信度，不以证明有限矩阵的精确实根为目标。
-I2.3 随后作为明确数值实验，在预先冻结的不同离散阶数下比较同一物理 mode 的 candidate，
+I2.2 已按 [[research/projects/eig-apost/implementation/i2/design-2-2|I2.2 design]] 完成两条
+受控路线：历史 raw-$H$ structure preflight 忠实停止于 theory gate；当前
+$H_{\mathrm{sym}}$ 两端 sign count 则得到稳定 `SINGLE_JUMP`，并由
+[[research/projects/eig-apost/implementation/i2/review-2-2|independent review]] 接受为
+numerical corroboration。它不证明 raw finite real zero 或真实 physical eigenvalue。当前下一步
+是另行设计 I2.3：在预先冻结的不同离散阶数下比较同一物理 mode 的 candidate，
 报告漂移、定位不确定度与最低 residual/factor/field/boundary/mode-identity 检查；其输出直接
 进入 I3，不再设置 I2.4。误差来源的识别和分解由 I3 负责。复平面 refinement 与 exact finite
 Hermitian 证明均为按异常触发的 OPTIONAL，而非默认阶段。

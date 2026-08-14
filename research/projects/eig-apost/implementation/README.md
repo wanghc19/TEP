@@ -2,7 +2,8 @@
 
 ## 当前状态
 
-当前新路线处于 `I2_1_PASS_WITH_CONDITIONS / I2_2_ENDPOINT_SURROGATE_SIGN_COUNT_ACTIVE`。精确
+当前新路线处于
+`I2_1_PASS_WITH_CONDITIONS / I2_2_HERMITIAN_PART_SINGLE_JUMP_CORROBORATION`。精确
 half-guide DtN 由半无限边值问题定义，连续中心算子 $\mathcal F(k)$ 在任何
 BIE/Fourier 截断和 ordered QZ 之前定义真实谱对象。现行数学权威是
 [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]，离散
@@ -28,7 +29,8 @@ continuous physical eigenvalue 或 estimator。
 2026-08-13 路线复审把项目压缩回两个最终目标：提出 continuous physical eigenvalue candidate，
 并估计该 candidate 到真实连续特征值的误差，进一步研究可计算上界。上述 STOP 只否定 raw
 finite $H$ 的定理级 inertia 解释；I2.2 仍可在同一已知端点完成明确标注的
-sign-count/inertia-like 数值诊断，用于提高或降低 candidate 可信度。它不重复 I1.3 scan，
+sign-count/inertia-like 数值诊断；该诊断现已得到稳定 `SINGLE_JUMP`，用于提高 candidate
+可信度。它不重复 I1.3 scan，
 不证明 exact discrete real root，也不扩张 finite Hermitian 理论。I2.3 在预先冻结的不同离散
 阶数上比较同一物理 mode 的 candidate，报告 candidate 漂移、定位不确定度及最低必要的
 residual、factor、field、boundary 和 mode-identity 诊断；该实验输出直接作为 I3 输入，不再

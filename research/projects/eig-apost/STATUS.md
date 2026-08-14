@@ -16,6 +16,16 @@
   不再设置 I2.4。I3 再按 `candidate -> error sources -> computable estimate -> independent truth -> upper bound`
   推进。exact finite structure、额外 contour、复数 refinement 以及未被 estimator 使用的
   derivative/adjoint/transport 均为 OPTIONAL。
+- **2026-08-13 I2.2 Hermitian-part endpoint sign count：**唯一 `inertia-a1` 在冻结 fine、
+  $M=48$ evaluator 的 I1.3 L14 nodes 3/5 上完成。raw $H=A_{\mathrm{def}}^D/T$ 到
+  $H_{\mathrm{sym}}=(H+H^*)/2$ 的相对 $2$-norm distance 为
+  $1.39\times10^{-16}$ 与 $1.60\times10^{-16}$。以预注册绝对 band 分类，左端 counts 为
+  $(194,0,0)$，右端为 $(193,1,0)$，故 $\Delta_-=+1$、`JUMP / SINGLE_JUMP`；$50/100/200$
+  sensitivity 完全稳定，且两端最小绝对 eigenvalue 分别约为主 band 的 $316$ 与 $595$ 倍。
+  MATLAB 用时 $20.0001$ s，active-object snapshot peak $63.4584$ MiB，无失败或 retry。
+  该结果只为 candidate 提供 Hermitian-part numerical corroboration；raw-$H$ inertia 仍
+  unavailable，不证明区间内 crossing、严格实根、continuous eigenvalue 或误差估计。I2.2
+  据此完成，下一步可另行设计 I2.3 跨离散阶数 candidate 漂移实验。
 - **2026-08-13 I2.2 实轴结构资格：**阶段 verdict 为
   `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE`。I2.1 的对称小圆盘内 count one
   若再结合冻结有限维零集的实轴 Schwarz 对称，便会迫使唯一 zero 位于实轴；但 continuous
@@ -190,7 +200,7 @@
 | Current I1.2 half-guide to $A_{\mathrm{def}}$ joint validation | `I1_2_M48_PASS_WITH_CONDITIONS`; `I1_2_EMPIRICAL_READY`; empirical I1.3 authorized | manufactured assembly；$M=5,8$ exact-small-sep mechanism；direct $M=48$ MATLAB `lsqminnorm` maps；双向 QZ 97/97 计数、projectors、代数 chart、DtN action 与 $A_{\mathrm{def}}^{D/G}$ Schur 门 | production separation 未计算，chart 不是 perturbation-certified；$A_{\mathrm{def}}'$ 尚未实现。locator、contour、root/eigenvalue 和 estimator 继续停止 |
 | Current I1.3 real-$k$ continuity, candidate reconnaissance and bounded zoom | `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_NESTED_GRID_CANDIDATE` | $M=48$ count/QZ/chart/subspace-coarse/fine continuity；中心差分二阶收敛；$M=12\to24\to48$ 分层筛查；v2 在 15 层、33 点、167 门全通过后得到 $k=1.8327703475952146$、$q=8.32009\times10^{-8}$，最终宽度 $7.6294\times10^{-7}$ | 固定 $M=48$ 不是 trace convergence；FD mutation 未过 $10^{-12}$，production derivative 不可用 |
 | Current I1.4 sampled complex-$k$ readiness | `I1_4_PASS_WITH_CONDITIONS / SAMPLED_FIXED_M_DISCRETE_ROOT_READINESS`; empirical I2 isolation ready | $r_0=3.8147\times10^{-7}$ disk；anchored branch/frame/chart/rank；82/820/164/164 node/factor/branch/QZ rows、8 closure、36 CR、6 CR-negative rows；V5 identifiable assembly-order closure | 未运行 locator/contour/root；固定 $M=48$ 不是 trace convergence；无 production separation、unsampled-pole theorem 或 $A_{\mathrm{def}}'$；对称 physical transmission labels 不可动态辨识 |
-| Current I2.1 factor-aware root count / I2.2 endpoint structure | I2.1 `PASS WITH CONDITIONS`; I2.2 `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE` | I2.1 32/64 主 winding 均为 one；I2.2 已证明 $A$--$H$ 点态等价、whole-shoulder $T$ 可逆和 center Hermitian，且两端同对象 structure diagnostic 完整通过数值实现门 | actual finite half-guide exact Hermitian 与 whole-interval same-family identity blocked；inertia 为 unavailable，尚无实根、root 坐标、连续 eigenvalue 或 estimator |
+| Current I2.1 factor-aware root count / I2.2 endpoint sign count | I2.1 `PASS WITH CONDITIONS`; I2.2 `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP` | I2.1 32/64 主 winding 均为 one；I2.2 的 raw $H$ strict-inertia 路线保留历史 STOP，但当前 $H_{\mathrm{sym}}$ 两端 counts 为 $(194,0,0)$ 与 $(193,1,0)$，$50/100/200$ bands 稳定 | 该 difference 只作 numerical corroboration；raw-$H$ inertia 仍 unavailable，尚无实根、root 坐标、连续 eigenvalue 或 estimator |
 
 实现权威入口为
 [[research/projects/eig-apost/implementation/archive/legacy-route-v1/i0-manufactured/design|manufactured NEP design]]、
@@ -468,7 +478,8 @@ proxy-solver 收敛诊断见
 
 ## 当前门槛
 
-当前门是 `I2_1_PASS_WITH_CONDITIONS / I2_2_ENDPOINT_SURROGATE_SIGN_COUNT_ACTIVE`；历史
+当前门是
+`I2_1_PASS_WITH_CONDITIONS / I2_2_HERMITIAN_PART_SINGLE_JUMP_CORROBORATION`；历史
 I2.2 structure preflight 状态为 `I2_2_STOP_THEORY_GATE`，但它只否定 raw finite $H$ 的
 定理级 inertia 解释，不否定当前数值 endpoint diagnostic。现行方法已经具备正确层级：
 physical half-guide PDE 定义 exact $\Lambda_\pm$，physical center variational pencil
@@ -532,7 +543,7 @@ denominator 或 independent reference 中哪些是必需输入；不得为了复
   [[research/projects/eig-apost/implementation/open-problems#M0|M0 ledger]]。Phase 1--2 文件
   保持历史原文，不因本次重构回写。
 - 新路线当前 verdict 是
-  `I2_1_PASS_WITH_CONDITIONS / I2_2_ENDPOINT_SURROGATE_SIGN_COUNT_ACTIVE`；I1 dip 中心为
+  `I2_1_PASS_WITH_CONDITIONS / I2_2_HERMITIAN_PART_SINGLE_JUMP_CORROBORATION`；I1 dip 中心为
   $k=1.8327703475952146$，I2.1 已确认冻结圆盘内一个按代数重数计的 determinant zero，但
   尚未运行 root locator/refinement；历史 v1 zoom 的
   `STOP / DESIGN-GATE-INCONCLUSIVE` 只作为不追溯改写的设计负例保留。历史 I4 数值标签仍保留为
@@ -556,18 +567,18 @@ denominator 或 independent reference 中哪些是必需输入；不得为了复
   SLP_D_N_CERTIFIED_PROXY_RATIO_0P2 / DLP_D_N_MTRACE48_CERTIFIED`；
   `production_internal_A_b_identity=NOT_DIRECTLY_OBSERVED` 和
   `PHYSICAL_ROOT_READY=STOP` 保持不变。这些历史状态不是当前阶段 gate；I2.1 的已完成 gate 是
-  `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`，其后的 I2.2 状态为
-  `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE`。该标签只描述历史 inertia 支线：exact finite
-  half-guide Hermitian 与 whole-interval same-family identity 尚未建立，inertia 未授权；它不再
-  被解释为禁止一维实轴 candidate refinement。不得把任何历史标签解释成 qualified root 或
-  estimator。
+  `I2_1_PASS_WITH_CONDITIONS / CONDITIONAL_EMPIRICAL_FINE_M48_COUNT_ONE`。I2.2 历史 raw-$H$
+  支线状态仍为 `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE`；当前后续结果为
+  `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP`。后者只描述两个冻结端点的 surrogate
+  sign-count difference，不把历史 theory gate 翻转成 raw-$H$ inertia，也不得解释为 qualified
+  root、continuous eigenvalue 或 estimator。
 - 新路线 I1.2 的 manufactured、MATLAB $M=5,8$ mechanism 和 direct $M=48$ static arms 已在
   `test/i1/hg-adef/` 通过；I1.3 又在 `test/i1/k-scan/` 记录 fixed-$M=48$ 离散候选
   $k=1.8327703475952146$；I1.4 在 `test/i1/k-ready/` 达到 sampled fixed-$M=48$ readiness。
   I2.1 在 `test/i2/k-count/` 达到条件性 finite-dimensional count one。production derivative
-  因 FD mutation 门失败仍不可用；I2.2 两肩 structure diagnostic 已完成并保留
-  exact-Hermitian 与 whole-interval caveats，未形成 mathematical inertia。当前 I2.2 只允许
-  在已确定端点继续做明确标注的 sign-count/inertia-like jump 可信度诊断，不重做扫描或定位。
+  因 FD mutation 门失败仍不可用；I2.2 两肩 structure diagnostic 与后续 Hermitian-part
+  sign-count 已完成。后者观察到稳定 `SINGLE_JUMP`，但保留 exact-Hermitian 与
+  whole-interval caveats，未形成 mathematical raw-$H$ inertia、实根或 continuous eigenvalue。
   I2.3 只做预注册跨离散阶数 candidate 漂移实验，其 candidate 序列、定位 uncertainty、最低
   原始诊断和 mode-identity 结果直接作为 I3 输入；当前仍不得把 candidate 报告成 exact finite
   real zero 或已证明的真实 eigenvalue，也不得自动转入复平面实验。
@@ -582,9 +593,9 @@ denominator 或 independent reference 中哪些是必需输入；不得为了复
   $95.539849$ s 并通过顺序门。
   历史 Octave canonical 用时 $531.181285$ s。
 
-新 session 若调用 Engineer，只能在另行取得用户授权后，从 I2.2 已冻结端点的数值
-sign-count/inertia-like diagnostic 设计开始；不得重新扫描、定位、运行复数 refinement 或扩张
-exact finite-Hermitian 证明支线。
+新 session 若调用 Engineer，只能在另行取得用户授权后，从 I2.2 已完成的 numerical
+corroboration 向 I2.3 的跨离散 candidate 漂移设计推进；不得重跑 I2.2、重新扫描、运行复数
+refinement 或扩张 exact finite-Hermitian 证明支线。
 不得重复或绕开已经通过的 manufactured、low-order、direct $M=48$ static oracle、I1.3
 实轴 candidate、I1.4 sampled readiness 与 I2.1 count-one result；
 理论侧继续处理 OP-M0-1 的 concrete exact-DtN/analytic-domain contract 和 OP-M0-2 的 physical/BIE

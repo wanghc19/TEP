@@ -83,7 +83,7 @@ I1 dip 是否足够可信，可以作为连续物理问题的 eigenvalue candida
 | Milestone | 核心问题 | 当前状态 | 交付 |
 |---|---|---|---|
 | I2.1 单零计数诊断 | dip 小圆盘中是否存在一个孤立的有限维 zero，而不是没有 zero、多个 zero 或 factor pole 混淆 | `PASS WITH CONDITIONS` | 条件性 finite-dimensional count one；只作 candidate 可信度证据 |
-| I2.2 端点 sign-count/inertia-like jump 数值诊断 | 已知 dip 邻域左右端点的符号计数是否发生稳定跳变 | `STRUCTURE PREFLIGHT COMPLETE / SIGN-COUNT DIAGNOSTIC PLANNED` | endpoint jump、no-jump 或 unresolved 的数值佐证；不证明 raw finite matrix 严格 Hermitian，也不证明实根 |
+| I2.2 端点 sign-count/inertia-like jump 数值诊断 | 已知 dip 邻域左右端点的符号计数是否发生稳定跳变 | `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP` | 已观察到稳定 endpoint count difference；只作数值佐证，不证明 raw finite matrix inertia 或实根 |
 | I2.3 跨离散阶数 candidate 漂移 | 预先冻结的不同离散阶数是否给出同一物理 mode，candidate 漂移多大且是否超过定位不确定度 | `PLANNED / NOT STARTED` | 每个阶数的 candidate、相邻/相对漂移、定位不确定度，以及最低 residual、factor、field、boundary 和 mode-identity 结果 |
 
 I2.2 只复用 I1.3 已确定的区间端点，不重新扫描、寻找 dip、二分定位或复平面求根。旧

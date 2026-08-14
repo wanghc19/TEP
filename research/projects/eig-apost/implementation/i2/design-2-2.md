@@ -2,6 +2,11 @@
 
 ## 摘要：本阶段做什么、不做什么
 
+> **当前适用版本（§19）：**第 1--18 节完整保留最初 exact-structure 路线、失败历史与
+> `NaN/UNAVAILABLE` verdict。当前路线不再要求证明 raw finite $H$ 严格 Hermitian；它只在
+> 两个既定端点计算 $H_{\mathrm{sym}}=(H+H^*)/2$ 的 sign count，并把结果解释为 candidate
+> 可信度的 numerical corroboration。若旧条款与 §19 冲突，以 §19 为当前设计。
+
 1. I2.2 **不重复** I1.3 已完成的宽区间实轴扫描、dip 搜索或逐层网格加密。
 2. I1.3 已负责发现显著 dip；I2.1 已负责确认其邻域复圆盘内存在一个按代数重数计的
    finite-dimensional determinant zero。
@@ -25,7 +30,7 @@ branch/QZ subspace/chart/factor family 的无极点连续性，因此独立冻�
 
 ## 1. Material Passport、状态和权威性
 
-- Origin Skill: `academic-research-suite / experiment-agent`；`rigorous-proof / proof from scratch`
+- Origin Skill: `academic-research-suite / experiment-agent`；`rigorous-proof / review only`
 - Collaboration: `Researcher--Engineer FINAL AGREED / independent Skeptic review required`
 - Design ID: `I2.2-H-INERTIA-DIAGNOSTIC-V1`
 - Design Status: `FROZEN CANDIDATE / PRE-RUN SKEPTIC REVIEW PENDING`
@@ -661,3 +666,150 @@ inertia 禁止路径、资源上限或结论解释。尤其
 config/runner、未改的 evaluator 和全部只读 I2.1 dependencies，并由 Skeptic 重新完成跑前静态审查。
 该修订不构成自动 retry 授权；未经新的 Skeptic verdict 不得运行。若 `diag-a2` 再次失败，必须
 保留其 evidence 并停止，不能复用 tag 或进一步自动重试。
+
+## 19. 当前路线修订：Hermitian-part endpoint sign-count
+
+### 19.1 目的与历史边界
+
+本节是 2026-08-13 总路线复审后的当前设计，只授权一项低成本 numerical corroboration。
+第 1--18 节关于 raw finite $H$ 缺少 exact Hermitian 证明、`diag-a1`/`diag-a2` 历史和
+`inertia=NaN/UNAVAILABLE` 的事实保持不变。当前实验不再要求关闭这项证明义务，而是显式
+构造 Hermitian part
+
+$$
+H_{\mathrm{sym}}(k)=\frac{H(k)+H(k)^*}{2},
+\qquad
+H(k)=A_{\mathrm{def}}^D(k)T(k)^{-1},
+$$
+
+并只把 $H_{\mathrm{sym}}$ 的端点 sign count 称为
+`HERMITIAN_PART_SIGN_COUNT`。它不是 raw $H$ 的 mathematical inertia，不能与 I2.1 count one
+合并成 raw $H$ 的实根证明，也不能证明 candidate 是 continuous physical eigenvalue。
+
+### 19.2 Researcher--Engineer 冻结共识
+
+Researcher 与 Engineer 已明确讨论并 `AGREED`：沿用 `diag-a2` 的同一 fine、$M=48$、
+$K=97$ evaluator、seed frame、fixed rows、branch/QZ/chart/rank/ordering/solver、对象公式和
+两个 nearest-shoulder endpoints，且只增加 Hermitian-part eigensolve 与三态解释。不得增加
+scan、locator、root refinement、复平面点、精度 ladder、第二套矩阵或 exact-structure 证明。
+
+端点仍严格为
+
+$$
+k_L=1.8327701568603514,
+\qquad
+k_R=1.8327705383300779.
+$$
+
+它们分别是 I1.3 L14 node 3 与 node 5；$k_c=1.8327703475952146$ 只构造 seed frame。不得因
+结果移动、交换或扩展端点。
+
+### 19.3 Hermitian-distance 与 unresolved band
+
+对每个端点令 $n=194$、$S=H_{\mathrm{sym}}$，定义
+
+$$
+s=\lVert S\rVert_2,
+\qquad
+d_H=\lVert H-S\rVert_2=\frac12\lVert H-H^*\rVert_2,
+$$
+
+以及与 $S$ 的 eigenvalues 同量纲的冻结诊断带
+
+$$
+\eta=d_H+100n\epsilon_{\mathrm{mach}}\max(1,s).
+$$
+
+必须同时报告 $s$、$d_H$、$d_H/\max(1,s)$、$\eta$ 和
+$\eta/\max(1,s)$。$d_H$ 是 raw $H$ 到本次 Hermitian part 的 operator-norm distance；
+$\eta$ 是保守的 surrogate structure/roundoff resolution band，不是 raw-$H$ eigenvalue error
+bound、root uncertainty 或连续离散误差上界。现有 Frobenius Hermitian defect 可以作为辅助
+历史对照，但不能替代本节的绝对 $2$-norm band。
+
+主结果固定使用系数 $100$。另以相同谱和相同公式计算系数 $50$ 与 $200$ 的 sensitivity
+bands；它们只检查计数对合理 roundoff allowance 的依赖，不得替换主带。若任一端点在
+$50/100/200$ 三带下的完整 $(n_+,n_-,n_{\mathrm{unresolved}})$ 不一致，则记
+`band_sensitivity=UNSTABLE` 并把整体科学结果降为 `UNRESOLVED`；禁止选择有利 band、临时改
+倍数或启动 precision ladder。
+
+计算 $S$ 的实特征值 $\lambda_j$ 后按以下预注册规则分类：
+
+$$
+\lambda_j>\eta\Rightarrow\text{positive},\qquad
+\lambda_j<-\eta\Rightarrow\text{negative},\qquad
+|\lambda_j|\le\eta\Rightarrow\text{unresolved}.
+$$
+
+等号归入 unresolved。每个端点必须满足
+$n_++n_-+n_{\mathrm{unresolved}}=194$；非有限谱值、明显非实 leakage 或计数不守恒是计算失败，
+不得强行归类。
+
+### 19.4 jump 判据与可接受结果
+
+冻结
+
+$$
+\Delta_-=n_-(k_R)-n_-(k_L),
+\qquad
+\Delta_+=n_+(k_R)-n_+(k_L).
+$$
+
+结果先按 unresolved 判定，再看 count difference：
+
+1. 任一端点 $n_{\mathrm{unresolved}}>0$：`UNRESOLVED`；仍保存 $\Delta_\pm$，但不解释 jump；
+2. 两端均无 unresolved 且 $\Delta_-\ne0$：`JUMP`，同时报告方向和 signed magnitude；
+3. 两端均无 unresolved 且 $\Delta_-=0$：`NO_JUMP`。
+
+`JUMP`、`NO_JUMP` 和 `UNRESOLVED` 都是合规科学结果。成功标准不预设 jump 的符号、大小或
+必须等于一，也不使用 I2.1 count one 来定义 $\eta$。禁止为得到预期 jump 修改对象、端点、
+band 或解释。
+
+输出 schema 必须分开 `raw_inertia_available=false` 与
+`surrogate_sign_count_available=true`；Hermitian-part counts 不得复用 raw-inertia 字段。
+`execution_pass` 只表示两端点和预注册计算完整完成，不得由是否观察到 jump 决定；科学结果
+另记为 `JUMP`、`NO_JUMP` 或 `UNRESOLVED`。同一最小分类 core 还须通过标量解释负例：
+$h(k)=k-a+\mathrm{i}\varepsilon$ 在实轴没有 raw zero，而其 Hermitian part 可产生 sign jump；
+oracle 必须同时得到 surrogate jump 和 `raw_real_zero_claim=false`，防止把分类结果误读为实根。
+
+### 19.5 最小实现、输出与资源
+
+新入口为独立的 `test/i2/h-inertia/check_h_inertia.m`。它保留 `check_h_struct.m` 已审查的
+必要 evaluator 输入、对象公式和数值 gates，但不调用或修改该历史结构入口；每个 attempt
+只能在计算完成后一次性写入新的
+`output/<attempt>/`。正式 attempt 冻结为 `inertia-a1`，输出仅含 `result.mat` 与简短
+`report.md`。旧 `diag-a1`、`diag-a2`、历史 source 和 I2.1 outputs 均不可修改。
+
+运行协议假设同一 attempt 不并发；启动时和发布前都检查目标目录不存在。为保持实现最小，
+正式计算完成前不创建 output，因此在 output 创建前的 MATLAB/runtime/evaluator failure 可能
+没有本地 artifact，必须由实际命令输出如实报告，禁止用同 tag 自动重试。output 一旦创建就
+视为 append-only，不得复用或覆盖。
+
+入口只依赖 MATLAB、normal MATLAB path 上唯一的 `eval_i21` 及 evaluator 真正需要的
+helper/package functions；不得读 Git、Markdown、freeze、manifest 或历史 output，
+不得搜索 repository root。必要的 runtime/evaluator、seed/node、factor、QZ/chart、$T$ 可逆、
+$A=N_0-LT$、$A=HT$ 和 finite gates 保留；不重建复杂 provenance、CSV ledger 或 failure
+taxonomy。
+
+历史 `diag-a2` 完成同样 seed 加两端点用时 $21.193$ s、active-object peak $54.366$ MiB。
+本次只增加两个 $194\times194$ Hermitian eigensolves，预计少于 $30$ s、低于 $80$ MiB；冻结
+soft target $60$ s、run stop $180$ s、memory gate $512$ MiB。整个用户任务从设计到收尾不得
+超过 3 h；接近上限即停止运行并报告未完成事项。
+
+正式命令从 repository root 执行：
+
+```sh
+matlab -batch "addpath(fullfile(pwd,'test','i2','h-inertia'),fullfile(pwd,'test','i2','k-count')); check_h_inertia('inertia-a1');"
+```
+
+### 19.6 验收和结论边界
+
+`result.mat` 与 `report.md` 至少记录：raw $H$ 与 $H_{\mathrm{sym}}$ 的确切定义、两个冻结端点、
+$s,d_H,\eta$ 及相对尺度、每端 eigenvalue extrema 和三类 counts、$\Delta_\pm$、三态 verdict、
+运行时间、active-object snapshot peak（不是 OS RSS）、实际命令语义和失败/重试历史。首次 attempt 失败时保留
+其目录，不复用 tag；低成本修复仍需新 tag 和 Skeptic 复审。
+
+即使得到 `JUMP`，允许的结论也只有：同一冻结 evaluator 的 Hermitian-part endpoint sign count
+为既有 dip 提供一项 numerical corroboration，且可以与其他 candidate 证据一并进入 I2.3。
+不得写成 raw $H$ 存在严格实根、I2.1 zero 已被定位、candidate 已是 continuous eigenvalue，或
+已经得到 posterior error estimate。`NO_JUMP`/`UNRESOLVED` 不撤销 I2.1；它们只表示本项
+corroboration 没有提供预期支持或分辨率不足。

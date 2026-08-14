@@ -12,8 +12,10 @@ k_R=1.8327705383300779,
 $$
 
 after constructing the continuation frame once at
-$k_c=1.8327703475952146$. It does not scan for a dip, locate a root, refine a
-root, symmetrize a matrix, or compute inertia.
+$k_c=1.8327703475952146$. It does not scan for a dip, locate a root, or refine
+a root. The current follow-up explicitly forms
+$H_{\mathrm{sym}}=(H+H^*)/2$ and counts its endpoint signs as numerical
+corroboration only; it does not alter the raw matrix or define raw-$H$ inertia.
 
 The active entry point preserves the same finite-dimensional construction
 
@@ -32,25 +34,26 @@ L=\operatorname{diag}(\Lambda_-,\Lambda_+),
 H=A/T,
 $$
 
-and the same endpoint gates used by the completed I2.2 diagnostic. Because the
-exact finite Hermitian identity and whole-interval same-family continuity proof
-remain open, positive, negative, and zero inertia counts remain `NaN`, and the
-jump remains `UNAVAILABLE`.
+and the same endpoint gates used by the completed I2.2 diagnostic. The raw
+matrix remains non-Hermitian, so its mathematical inertia remains unavailable.
+The current experiment counts only the signs of its Hermitian part and labels
+that result as corroboration.
 
 ## Active source
 
-The experiment now has one MATLAB file:
+The experiment now has two focused MATLAB entry points:
 
 | File | Role |
 |---|---|
 | `check_h_struct.m` | Configuration, fixed row selectors, I2.1 evaluator calls, endpoint object construction, numerical gates, compact result, and report |
+| `check_h_inertia.m` | Standalone endpoint evaluator, $H_{\mathrm{sym}}$ construction, operator-norm unresolved-band check, and sign-count report |
 
 It depends only on MATLAB, one `eval_i21` resolved from the normal MATLAB path,
 and all MATLAB dependencies genuinely required by that evaluator. It does not
 locate the repository or read project documentation, Git state, old outputs,
 or human-facing metadata.
 
-The next attempt is explicitly named `compact-a1`. From any working directory,
+The optional structure-only attempt is explicitly named `compact-a1`. From any working directory,
 after placing this experiment, `eval_i21`, and its required package functions
 on the MATLAB path, the intended command is:
 
@@ -67,8 +70,26 @@ This command has not been run. It will refuse to overwrite an existing
 Do not launch concurrent processes with the same attempt name. The existing
 directory check is the sole overwrite guard.
 
-There is no `check_h_inertia.m`. That separate entry point is reserved for a
-future stage that actually computes and outputs endpoint inertia.
+The completed frozen follow-up attempt is explicitly named `inertia-a1`:
+
+```matlab
+check_h_inertia('inertia-a1');
+```
+
+It writes only `result.mat` and `report.md` under a new
+`output/inertia-a1/`. The schema separates unavailable raw-$H$ inertia from
+the available `HERMITIAN_PART_SIGN_COUNT`; `JUMP`, `NO_JUMP`, and
+`UNRESOLVED` are all acceptable outcomes. Do not launch concurrent processes
+with the same tag. A failure before final output publication may leave no local
+artifact; it must be reported from the command output and must not trigger an
+automatic retry with the same tag.
+
+The one authorized attempt completed without retry in `20.0001 s`, with an
+active-object snapshot peak of `63.4584 MiB`. The Hermitian-part counts were
+`(194,0,0)` at $k_L$ and `(193,1,0)` at $k_R$, so
+$\Delta_-=+1$, $\Delta_+=-1$ and the preregistered result is
+`JUMP / SINGLE_JUMP`. The $50/100/200$ band-sensitivity triples were identical.
+This is the completed current attempt; do not reuse the tag.
 
 ## Preserved history
 
@@ -89,9 +110,8 @@ do not establish inertia or a real root.
 
 ## Interpretation boundary
 
-A future successful compact attempt can only confirm that the same frozen
-fine-$M=48$ evaluator completed both endpoints, the registered pointwise
-$A=N_0-LT$ and $A=HT$ identities closed numerically, and the endpoint
-invertibility/health gates passed. It cannot turn small Hermitian defects into
-an exact Hermitian proof and cannot support a root coordinate, continuous
+A successful `inertia-a1` can only report whether the Hermitian-part sign count
+shows `JUMP`, `NO_JUMP`, or `UNRESOLVED` at the two frozen endpoints after the
+same object and factor gates pass. It cannot turn small Hermitian defects into
+an exact raw-$H$ inertia proof and cannot support a root coordinate, continuous
 physical eigenvalue, or posterior eigenvalue-error estimate.

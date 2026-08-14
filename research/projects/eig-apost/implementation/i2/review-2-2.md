@@ -1,5 +1,11 @@
 # I2.2 实轴结构资格与端点实验独立审查
 
+> **当前补充结论（2026-08-13）：**本页原有 `STOPPED AT THEORY GATE` 仍是 raw $H$ strict
+> inertia 路线的历史 verdict，不作追溯改写。按后续总路线和
+> [[research/projects/eig-apost/implementation/i2/design-2-2#19 当前路线修订：Hermitian-part endpoint sign-count|design §19]]，
+> 当前 `inertia-a1` 只计算 $H_{\mathrm{sym}}=(H+H^*)/2$ 的 endpoint sign count，作为
+> numerical corroboration；其独立跑后审查见本页末尾“当前 Hermitian-part attempt”。
+
 ## 审查结论
 
 阶段 verdict 为
@@ -236,3 +242,55 @@ field、boundary、mode-identity 和复现诊断。其输出直接进入 I3，�
 识别和分解属于 I3。exact finite structure、额外 contour、复数 refinement、derivative、
 adjoint、transport 和 denominator 只有在当前 estimator 或上界路线实际需要时才升级；它们
 不再由本历史 review 自动生成 blocker。
+
+## 当前 Hermitian-part attempt：`inertia-a1`
+
+### 对象、判据与运行
+
+当前入口保持 raw $H=A_{\mathrm{def}}^D/T$，只对
+$H_{\mathrm{sym}}=(H+H^*)/2$ 做 endpoint sign count。绝对 resolution band 为
+
+$$
+\eta=\lVert H-H_{\mathrm{sym}}\rVert_2
+  +100n\epsilon_{\mathrm{mach}}\max(1,\lVert H_{\mathrm{sym}}\rVert_2),
+$$
+
+并以系数 $50/100/200$ 的三组完整 counts 做预注册 sensitivity check；任何变化都应降为
+`UNRESOLVED`。Skeptic 在静态 freeze 全部匹配后只授权一次 `inertia-a1`。实际 MATLAB 命令
+从 repository root 运行，用时 $20.0001$ s，active-object snapshot peak 为 $63.4584$ MiB；
+没有失败或 retry。output 只含 `result.mat` 与 `report.md`。
+
+### 结果
+
+两端分别为 $k_L=1.8327701568603514$ 与 $k_R=1.8327705383300779$。主带得到
+
+| endpoint | $n_+$ | $n_-$ | $n_{\mathrm{unresolved}}$ | $d_H$ | $\eta$ | $\min|\lambda(H_{\mathrm{sym}})|$ |
+|---|---:|---:|---:|---:|---:|---:|
+| $L$ | 194 | 0 | 0 | $8.3697\times10^{-14}$ | $2.6027\times10^{-9}$ | $8.2246\times10^{-7}$ |
+| $R$ | 193 | 1 | 0 | $9.6905\times10^{-14}$ | $2.6027\times10^{-9}$ | $1.5492\times10^{-6}$ |
+
+因此 $\Delta_-=+1$、$\Delta_+=-1$，分类为 `JUMP / SINGLE_JUMP`；$50/100/200$ 三组
+counts 完全一致，`band_sensitivity=STABLE`。端点最小绝对 eigenvalue 分别约为主带的
+$316$ 与 $595$ 倍，端点分类有清楚余量。$d_H/\lVert H_{\mathrm{sym}}\rVert_2$ 约为
+$1.39\times10^{-16}$ 与 $1.60\times10^{-16}$，只说明同一实现呈机器精度量级 near-Hermitian，
+不构成 exact structure proof。
+
+### 独立审查结论与边界
+
+Researcher 判定该结果完成 I2.2 的 numerical corroboration 交付，并允许进入另行设计的 I2.3；
+进入 I2.3 不以必须观察到 jump 为条件。Engineer 从保存的 eigenvalues、raw $H$ 与
+$H_{\mathrm{sym}}$ 独立复算主带和 sensitivity counts，确认
+$H_{\mathrm{sym}}=(H+H^*)/2$、report/result 一致、对象等价 gates 通过、资源合规。
+
+Skeptic 的独立 post-run verdict 为 `PASS WITH CONDITIONS`（高置信、零 blocker）。其只读
+复核重新解析保存的 MAT 数据、逐项重算 $50/100/200$ bands 与 counts，并以独立 LAPACK
+eigensolve 核对左端谱；全部保留 `SINGLE_JUMP` 分类。Skeptic 同时强调：历史 output 的文件数、
+修改时间与已登记的 `diag-a1` result identity 均无覆盖迹象，但 pre-run freeze 未登记每个历史
+output 文件的完整 digest，因而不得声称已经密码学证明所有历史字节均未变化。
+
+本结果只能称：冻结 fine-$M=48$ evaluator 的 Hermitian-part endpoint sign count 出现稳定
+单步差，为已有 candidate 提供 numerical corroboration。`SINGLE_JUMP` 只描述两个端点的
+count difference，不证明区间内恰有一个 crossing。它不提供 raw-$H$ mathematical inertia、
+raw finite real zero、root coordinate、continuous physical eigenvalue 或 posterior error estimate；
+也未闭合整个区间的 same-family continuity/no-pole 条件。I2.1 仍是 sampled conditional count one，
+不得与本结果拼接成实根定理。

@@ -2,7 +2,7 @@
 
 ## 当前状态与权威边界
 
-I2 当前状态为 `I2.1 PASS WITH CONDITIONS / I2.2 ENDPOINT SURROGATE SIGN-COUNT ACTIVE`。
+I2 当前状态为 `I2.1 PASS WITH CONDITIONS / I2.2 HERMITIAN-PART SINGLE_JUMP CORROBORATION`。
 I2.1 已在冻结 fine、$M=48$、$K=97$ 的有限维矩阵族上得到 factor-aware count one；统一入口为
 [[test/i2/k-count/README|I2.1 experiment index]]，结论边界见
 [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]。它提高了 I1 dip 是谱候选
@@ -15,6 +15,9 @@ I2.2 的第一条 exact-structure 路线和双端点 preflight 已冻结在
 `I2_2_STOP_THEORY_GATE` 和 `inertia=NaN/UNAVAILABLE` 不作追溯修改。它只说明当时不能把
 raw finite $H$ 的 endpoint count 当成定理级 inertia，不表示端点 sign-count/inertia-like jump
 失去数值诊断价值，也不阻止继续完成用户要求的最低成本可信度检查。
+当前 `inertia-a1` 已在同一 fine-$M=48$ evaluator 的两个冻结端点上得到稳定的
+$H_{\mathrm{sym}}$ sign-count difference：左端 $(194,0,0)$、右端 $(193,1,0)$，即
+$\Delta_-=+1$；这只是一项 numerical corroboration，不是 raw-$H$ inertia 或实根证明。
 
 本页是当前 I2 的项目级规划。它不修改 I2.1 或 I2.2 的冻结设计、审查和 append-only 输出；
 后续实验仍须单独设计和审查。
@@ -75,7 +78,7 @@ mode identity 与必要原始诊断无法记录，才阻止把 I2.3 输出作为
 | Milestone | 内容 | 当前状态 | 后续作用 |
 |---|---|---|---|
 | I2.1 单零计数诊断 | 检查 dip 小圆盘内是否有一个有限维 zero，并与 evaluator poles/factors 分账 | `PASS WITH CONDITIONS` | 为 candidate 提供独立的局部谱计数证据 |
-| I2.2 端点 sign-count/inertia-like jump 数值诊断 | 只在 I1.3 已知区间左右端点检查 sign count/inertia-like quantity 是否出现可信 jump | `STRUCTURE PREFLIGHT COMPLETE / JUMP CHECK PLANNED` | jump、no-jump 或 unresolved 的忠实诊断；不证明严格实根 |
+| I2.2 端点 sign-count/inertia-like jump 数值诊断 | 只在 I1.3 已知区间左右端点检查 sign count/inertia-like quantity 是否出现可信 jump | `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP` | 稳定 jump corroboration；不证明 raw-$H$ inertia 或严格实根 |
 | I2.3 跨离散阶数 candidate 漂移实验 | 在预先冻结的不同离散阶数下比较同一物理 mode 的 candidate | `PLANNED / NOT STARTED` | 冻结 level/candidate/mode-map 元数据，candidate 序列、漂移量、定位不确定度及最低必要的 residual/factor/field/boundary/mode-identity 证据；直接作为 I3 输入 |
 
 正式里程碑共 **3 个**。四个里程碑只是常见压缩目标，不是最低数量要求；本项目不再为纯

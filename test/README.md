@@ -77,9 +77,22 @@ frozen outputs retain their recorded paths and hashes.
 | Stage | I2.2 |
 | Purpose | Check the same fine-$M=48$ I2.1 object's endpoint structure, object equivalence, and fail-close theory gates at the two frozen I1.3 L14 shoulders; no inertia is computed |
 | Current path | `test/i2/h-inertia/` |
-| Entry point | `check_h_struct('compact-a1')`; single MATLAB structure-diagnostic source, not run in this refactor; `check_h_inertia.m` is reserved for a future implementation that actually outputs endpoint inertia |
+| Entry point | `check_h_struct('compact-a1')`; standalone structure diagnostic, not run in this refactor; endpoint sign counts use the separate experiment below |
 | Experiment index | [[test/i2/h-inertia/README|I2.2 compact implementation and preserved run-history index]] |
 | Status | Historical `diag-a2`: `PASS WITH CONDITIONS / I2_2_STOP_THEORY_GATE`; compact implementation is statically reviewed only and preserves `NaN/UNAVAILABLE` inertia while both theory qualifications remain false |
+| Implementation summary | [[research/projects/eig-apost/implementation/i2/README|current I2 guide]] |
+
+## I2-H-INERTIA-SURROGATE-V1
+
+| Field | Value |
+|---|---|
+| Experiment ID | `I2-H-INERTIA-SURROGATE-V1` |
+| Stage | I2.2 |
+| Purpose | Count signs of the Hermitian part of the same raw endpoint $H=A/T$, with an operator-norm unresolved band, as numerical corroboration only |
+| Current path | `test/i2/h-inertia/` |
+| Entry point | Completed append-only attempt: `check_h_inertia('inertia-a1')` |
+| Experiment index | [[test/i2/h-inertia/README|I2.2 structure history and Hermitian-part sign-count index]] |
+| Status | `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP`; raw-$H$ inertia remains unavailable |
 | Implementation summary | [[research/projects/eig-apost/implementation/i2/README|current I2 guide]] |
 
 Future current-route experiments belong under the matching `test/i*/` stage directory and receive
