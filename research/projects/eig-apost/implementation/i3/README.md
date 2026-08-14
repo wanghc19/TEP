@@ -7,23 +7,47 @@ Hermitian part 的端点符号计数以及两条单轴离散实验三个角度�
 candidate 到真实连续特征值的误差，也没有给出收敛阶或误差上界。详细交接见
 [[research/projects/eig-apost/implementation/i2/report|I2 stage report]]。
 
-I3 只研究下面这个最终问题。记 I2 在离散层 $h$ 上实际保存的 candidate 为
-$\widehat k_h$，记目标连续物理问题的真实特征值为 $k_*$，则目标误差是
+I3 先研究一个不要求命名唯一 mode 的误差。记 I2 在离散层 $h$ 上实际保存的 candidate 为
+$\widehat k_h$，暂记 $G_\lambda\subset(0,\infty)$ 为后续须针对当前模型认证的 continuous
+projected essential gap，并定义其中的正离散特征频率集合
 
 $$
-e_h=|k_*-\widehat k_h|.
+\mathcal K_{\mathrm{disc}}(A;G_\lambda)
+:=\{\sqrt{\lambda}:\lambda\in\sigma_{\mathrm{disc}}(A)\cap G_\lambda\}.
+$$
+
+约定到空集的距离为 $+\infty$。因此在当前 continuous projected gap 和其中离散谱的存在性
+尚未建立时，这个定义不会预设目标集合非空。
+
+第一层目标是
+
+$$
+e_h^{\mathrm{gap}}
+=\operatorname{dist}\bigl(\widehat k_h,\mathcal K_{\mathrm{disc}}(A;G_\lambda)\bigr).
+$$
+
+这表示 candidate 到 gap 内某个真实连续离散特征值的误差；它不预先指定该特征值的名字。
+只有后续确实需要跟踪特定 mode 时，才定义第二层 target-specific error
+
+$$
+e_h^*=|k_*-\widehat k_h|.
 $$
 
 本阶段不把有限维矩阵的精确零点、层间漂移、矩阵残差或某个修正公式本身当成最终成果。
-这些量只有在能够帮助估计 $e_h$ 时才进入主线。I3 当前只重构研究问题、输入、输出与结论
+这些量只有在能够帮助估计上述连续谱误差时才进入主线。I3 当前只重构研究问题、输入、输出与结论
 边界；具体算法、离散参数、reference 实现、阈值和实验命令均尚未冻结。
+
+长期对象门如下：每个新增主线对象和 hard gate 都必须写出它如何进入第一层集合距离或可选
+target-specific error 的估计链；若它
+只描述 finite root、score minimizer、层间矩阵差或实现内部一致性，就降为 `OPTIONAL` 或
+quality diagnostic。Skeptic 在每次 design/revision 审查中都必须重新执行这项对象检查。
 
 I3 由三个正式里程碑组成。三个是科学问题决定的数量，不是为了满足阶段数而拆分；误差来源
 识别、reference 搜索、术语整理和文档交接都不是独立里程碑。
 
 | Milestone | 独立科学问题 | 核心输出 | 当前状态 |
 |---|---|---|---|
-| I3.1 | 能否从实际计算量构造并内部论证一个与 $e_h$ 有关的可计算指标？ | 冻结的 $\eta_h$、适用假设、覆盖/忽略的误差及内部检查结果 | `NOT STARTED` |
+| I3.1 | 能否从实际计算量构造并内部论证一个与 continuous gap-spectrum distance 有关的可计算指标？ | 冻结的 $\eta_h$、适用假设、覆盖/忽略的误差及内部检查结果 | `THEORY ACTIVE / DESIGN NOT READY` |
 | I3.2 | 冻结后的 $\eta_h$ 能否在未参与其构造的独立 reference 上跟踪真实误差的量级？ | independent-reference comparison 与 empirical estimator verdict | `NOT STARTED` |
 | I3.3 | 能否在没有未知常数的条件下把已经验证的估计升级为可计算上界？ | $U_h$ 或 `UPPER_BOUND_UNAVAILABLE` | `NOT STARTED` |
 
@@ -37,7 +61,7 @@ I3 接收的是 candidate 及其质量证据，而不是已经成立的误差估
 - 原矩阵 residual、backward error、near-null separation、factor、field、boundary、repeat 与
   selector-gauge 等诊断已经记录；
 - terminal cell half-width 只描述连续 score minimizer 的搜索分辨率，不是 $\widehat k_h$ 的
-  uncertainty，也不是 $e_h$ 的上界；
+  uncertainty，也不是 continuous-eigenvalue error 的上界；
 - 两条轴的 observed candidate shift 都是零。这是有用的稳定性事实，但不能单独产生非零
   correction、收敛阶、effectivity 或真值误差界。
 
@@ -46,12 +70,47 @@ Rayleigh/Fourier 截断、边界离散、QZ 子空间、有限精度求解以及
 关系。哪些误差进入 $\eta_h$、哪些暂时忽略，必须在 I3.1 随具体公式一起说明，不能先验地把
 全部误差相加成一个没有数学来源的“总误差账本”。
 
+## I3.1 当前理论选择
+
+现行分析见 [[research/projects/eig-apost/phase3-analysis/README|Phase 3 analysis]]。I3.1 直接在
+算法保存的 $\widehat k_h$ 处研究连续物理弱残量。令 $\mu_h=\widehat k_h^2$，从 I2 数据
+重构非零的 continuous form-space field $u_h^{\mathrm c}$，并对连续 form $a$ 定义
+
+$$
+R_h(v)=a(u_h^{\mathrm c},v)-\mu_h(u_h^{\mathrm c},v)_H.
+$$
+
+首选指标来自 normalized dual norm
+
+$$
+q_h=\frac{\|R_h\|_{V'}}{\|u_h^{\mathrm c}\|_V}.
+$$
+
+对 nonnegative self-adjoint operator，谱定理把 exact $q_h$ 直接联系到 $\mu_h$ 与某个
+continuous spectral point 的距离。若进一步得到可靠 residual interval，且它完全位于当前
+continuous operator 的 projected essential gap 内，则区间中至少存在一个孤立、有限重的离散
+特征值。正式设计还必须在看结果前冻结可接受的 $k$-分辨率及一个小于一的 gap-relative
+宽度比例；区间既要小于绝对分辨率，也不能几乎占满整个 gap。区间过宽时只能保留存在性，
+不能称为达到项目分辨率的结果。把该谱值识别为某个指定 $k_*$ 是独立的第二层可选升级，不是
+residual 计算或第一层存在性的前置 blocker。近似 Riesz solve 也不自动给 dual norm 上界，
+所以 I3.1 首先冻结 continuous-residual estimator candidate 与上述两层解释合同，I3.2 再独立
+验证，I3.3 才研究可靠 enclosure。
+
+进入 `design-3-1.md` 前，只需具体化 continuous form、conforming field reconstruction、
+首个 global-field residual、完整 residual decomposition、dual-norm computation 和 numerical
+allowance。exact-DtN center residual 降为 OPTIONAL。finite common-space transport、nearby simple zero、
+matrix derivative 与 bordered conditioning 不再是主线门；它们只属于 OPTIONAL finite-matrix
+diagnostics。第一份设计还须预注册 continuous projected-gap contract、gap-edge containment 和
+由下游科学需求确定的频率分辨率，但 gap 证明失败只使存在性升级 unavailable；唯一目标识别
+失败不阻止第一层。
+
 ## I3.1：构造并内部论证可计算的误差指标
 
 ### 科学问题
 
 能否从当前计算中实际可得的矩阵、向量、residual、相邻离散层差异或其他量，构造一个数值
-$\eta_h$，并说明它为什么可能反映 $e_h$ 的一部分或主要部分？
+$\eta_h$，并说明它为什么可能反映 $e_h^{\mathrm{gap}}$；若未来启用唯一目标升级，再说明它
+怎样作用于 $e_h^*$？
 
 ### 输入
 
@@ -61,22 +120,30 @@ $\eta_h$，并说明它为什么可能反映 $e_h$ 的一部分或主要部分�
 - Phase 2 对非线性特征值扰动公式、相邻层修正和 continuous--discrete 缺口的核验结果。
 
 Phase 2 的材料说明了若干可能的数学来源，但没有交付一个可直接沿用的 estimator。I3.1 必须
-根据当前对象重新选择并推导实际公式，不能仅因某个量与 $e_h$ 同量纲就把它命名为误差估计。
+根据当前对象重新选择并推导实际公式，不能仅因某个量与目标误差同量纲就把它命名为误差估计。
 
 ### 必须完成的内部论证
 
 I3.1 把误差来源识别并入指标构造，而不另设阶段。至少要逐项说明：
 
 1. $\eta_h$ 的公式和所有可计算输入；
-2. 公式依赖的假设，例如单根、稳定性、非零分母、公共表示或渐近区间；
-3. 它覆盖哪些误差，例如 candidate 求解、边界离散、Fourier 截断或 half-guide 近似；
+2. 公式依赖的假设；当前首选 residual 路线尤其要说明 continuous form、field conformity、
+   dual norm 和 residual-to-spectrum 关系；
+3. 它覆盖哪些误差，例如 field reconstruction、材料界面、边界离散、Fourier tail 或
+   half-guide 近似；
 4. 它忽略哪些误差，尤其是尚未建立的 continuous--discrete 误差和可能的共同偏差；
 5. 单位、缩放、基底和相位改变是否会不合理地改变结果；
 6. 推导恒等式、简化问题、manufactured problem、相邻层自洽性或负例等内部检查是否支持该
    公式；
-7. 数值舍入、线性求解和 candidate 定位误差怎样与 estimator 数值本身区分。
+7. 数值舍入、field evaluation、quadrature 和 Riesz solve error 怎样与 estimator 数值本身
+   区分；
+8. 若形成可靠谱区间，当前 continuous projected gap 的来源和参数映射是否匹配，区间是否
+   完全落在 gap 内，以及其正频率宽度是否同时不超过看结果前冻结的绝对分辨率和 gap-relative
+   宽度；
+9. 是否真的需要命名一个唯一 mode；若不需要，不得把连续谱唯一性或 multiplicity-one 加成
+   第一层 blocker。
 
-这些都是内部证据：它们用于检查公式是否自洽，但不能用来证明它已经跟踪未知的 $e_h$。
+这些都是内部证据：它们用于检查公式是否自洽，但不能用来证明它已经跟踪未知的连续谱误差。
 I3.1 不得查看 I3.2 的独立 reference 后再选择公式、调常数或改变成功判据。
 
 ### 输出与结论边界
@@ -85,21 +152,28 @@ I3.1 的输出是一份冻结的 estimator specification，包括 $\eta_h$、覆
 内部检查和适用失败条件。若没有证明
 
 $$
-e_h=O(\eta_h),
+e_h^{\mathrm{gap}}=O(\eta_h),
 $$
 
 就只能称 $\eta_h$ 为“渐近误差指标”或“estimator candidate”。若它只预测下一层 candidate
-变化，则必须称“next-level indicator/correction”，不能称 eigenvalue-error estimator。
+变化，则必须称“next-level indicator/correction”，不能称 eigenvalue-error estimator。若要
+把同一关系写给 $e_h^*$，还须先完成唯一目标升级。
 
 I3.1 完成不表示 $\eta_h$ 已经有效；它只表示一个可计算、可证伪且可以在外部数据上检验的
 对象已经冻结。
+
+I3.1 同时冻结两层结论语义：第一层在可靠区间完全位于 continuous projected essential gap 且
+宽度通过预注册门时，只声称区间内至少有一个连续离散特征值；第二层只有另有连续谱隔离或
+计数时才命名唯一目标。gap containment 成立但区间过宽时，报告
+`EXISTS_BUT_RESOLUTION_INSUFFICIENT`；唯一身份未建立不撤销第一层。
 
 ## I3.2：用独立 reference 验证 estimator
 
 ### 科学问题
 
-在不再改变 I3.1 公式的前提下，$\eta_h$ 是否能跟踪
-$|k_*-\widehat k_h|$ 的量级，而不是只跟踪同一数值方法内部的层间变化或共同偏差？
+在不再改变 I3.1 公式的前提下，$\eta_h$ 是否能跟踪 candidate 到 independent reference
+给出的 gap 内连续离散特征频率集合的距离，而不是只跟踪同一数值方法内部的层间变化或共同
+偏差？只有 reference 还独立识别了指定 mode 时，才验证 target-specific $e_h^*$。
 
 ### 独立性的分界
 
@@ -143,31 +217,41 @@ I3.2 的通过仍不等于严格误差上界。
 
 ### 科学问题
 
-在 I3.2 已经建立 empirical estimator 的基础上，能否得到一个完全可计算的 $U_h$，使
+对 I3.1 已冻结的 residual 对象，能否得到一个完全可计算的区间，先保证某个 continuous
+projected-gap 离散特征频率存在，并满足
 
 $$
-|k_*-\widehat k_h|\leq U_h,
+\operatorname{dist}\bigl(
+\widehat k_h,\mathcal K_{\mathrm{disc}}(A;G_\lambda)
+\bigr)\leq U_h,
 $$
 
-且 $U_h$ 不含未知稳定性常数、未知 remainder 或凭经验选择的安全系数？
+且 $U_h$ 不含未知 norm constant、未计 numerical error 或凭经验选择的安全系数？
 
 ### 输入
 
-- I3.1 冻结的 estimator 及其覆盖/忽略项；
-- I3.2 的 independent-reference 验证结果；
-- 另行建立的 continuous--discrete 关系、稳定性、谱隔离/no-pollution、remainder 控制，或
-  足以给出 enclosure 的其他条件。
+- I3.1 冻结的 residual estimator candidate 及其覆盖/忽略项；
+- 经证明的 residual dual-norm 上界、field-norm 下界和 numerical enclosure；
+- 当前 sharp-disk continuous operator 的 projected essential gap、区间 containment 和在结果前
+  冻结的可接受频率分辨率；
+- 只有确需跟踪指定 mode 时，才额外输入 continuous spectral isolation/count；
+- I3.2 的 independent-reference 结果只作经验交叉检查，不是严格上界的逻辑前提。
 
-经验上观察到的 contraction ratio、effectivity 或同一 reference 的一致性不能自动替代这些
-条件。若使用 saturation，也必须有独立论证，而不能从要证明的上界反推 saturation 常数。
+经验上观察到的 contraction ratio、effectivity 或同一 reference 的一致性不能替代 reliable
+dual-norm/field-norm enclosure、continuous gap qualification 或预注册分辨率。
 
 ### 输出与结论边界
 
-I3.3 只有两类合法输出：
+I3.3 的输出按强度分层：
 
-- 给出所有量均可计算、假设逐项成立的 $U_h$；或
-- 明确输出 `UPPER_BOUND_UNAVAILABLE`，并列出缺失的稳定性、连续--离散、remainder、
-  enclosure 或 reference 条件。
+- 给出所有量均可计算、假设逐项成立的 gap 内区间，并证明其中至少存在一个连续离散特征值；
+  只有区间宽度不超过预注册尺度，才接受为分辨率级结果；
+- 若另有连续谱隔离或计数，再把该特征值识别为指定 $k_*$ 并给出
+  $|k_*-\widehat k_h|\le U_h$；若第一层已经成立而该附加条件缺失，则保留集合距离上界并输出
+  `EXISTENCE_WITH_TARGET_UNRESOLVED`；或
+- 若第一层所需的 residual-norm、field-norm、numerical enclosure 或 projected-gap 条件不能
+  建立，则明确输出 `UPPER_BOUND_UNAVAILABLE`；若只缺分辨率门，则保留存在性并输出
+  `EXISTS_BUT_RESOLUTION_INSUFFICIENT`。
 
 `UPPER_BOUND_UNAVAILABLE` 是有效研究结论。它不撤销 I3.1 已完成的内部指标，也不撤销
 I3.2 已通过的 empirical estimator；同样，经验 estimator 通过也不得被改写成已证明上界。
@@ -186,7 +270,8 @@ $$
 
 - I3.1 不能用 I3.2 的 reference 调公式后，再把同一 reference 当独立验证；
 - I3.2 不能把同方法高分辨率结果默认当作无偏真值；
-- I3.3 不能用 observed effectivity 代替未知 remainder 或稳定性常数；
+- I3.3 不能用 observed effectivity 代替 reliable norm enclosure、continuous projected-gap
+  qualification 或预注册分辨率；若启用唯一目标升级，也不能代替 continuous spectral count；
 - 后一里程碑失败不追溯撤销前一里程碑已经在其结论强度内成立的结果。
 
 ## OPTIONAL
@@ -196,6 +281,7 @@ $$
 - 额外参数、第二 mode、跨环境 parity 或泛化实验；
 - exact finite Hermitian/Lagrangian 证明、第二套 root/count 方法或大范围复平面扫描；
 - 与所选 $\eta_h$ 无关的完整 adjoint、transport、Gram 或 structure-preserving 理论；
+- saved candidate 到 finite zero 或相邻 projected finite roots 的 one-step correction；
 - 多套 reference 或 enclosure 方法的横向比较。
 
 ## 权威入口与后续设计顺序

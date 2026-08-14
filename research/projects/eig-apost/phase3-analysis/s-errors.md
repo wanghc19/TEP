@@ -1,80 +1,105 @@
-<!-- Analysis section: separated error budget for the DtN-first study -->
+# I3.1 residual 覆盖与遗漏项
 
-# Error budget
+## 1. 误差对象
 
-2026-08-13 路线复审后，本页的 finite-tail E4 分层保留为历史实例；现行 I2--I3 的共同主线
-是 continuous real eigenvalue、discrete approximation、consistency/discretization error 与
-posterior correction。finite Hermitian/reciprocity defect 不再作为实轴搜索许可门，而应与
-root solve、linear algebra、evaluator 和跨层 discretization 分开记录。当前项目级误差定义以
-[[research/projects/eig-apost/phase4-report/method.tex|continuous method]] 为准。
+第一层目标是
 
-E4 的 operator construction 见
-[[research/projects/eig-apost/phase3-analysis/s-dtn-chain|DtN computation chain]]；E7--E8
-的通过条件分别见
-[[research/projects/eig-apost/phase3-analysis/s-root|root qualification]] 与
-[[research/projects/eig-apost/phase3-analysis/s-estimator|candidate estimator]]。
+$$
+e_h^{\mathrm{gap}}
+=\operatorname{dist}\bigl(\widehat k_h,
+\mathcal K_{\mathrm{disc}}(A;G_\lambda)\bigr),
+$$
 
-## 1. Error sources
+其中 $G_\lambda\subset(0,\infty)$ 是需要针对当前模型认证的 continuous projected essential
+gap，且
+$\mathcal K_{\mathrm{disc}}(A;G_\lambda)
+=\{\sqrt{\lambda}:\lambda\in\sigma_{\mathrm{disc}}(A)\cap G_\lambda\}$。
+约定到空集的距离为 $+\infty$；只有可靠区间进入该 gap 后，第一层存在性才保证这个集合
+非空。
+若 $G_\lambda=(g_-,g_+)$ 且 $0<g_-<g_+$，记
+$G_k=(\sqrt{g_-},\sqrt{g_+})$。
+continuous residual 直接在 saved candidate 处测量重构场对连续弱特征方程的违反程度。它不先
+拆成 candidate-to-finite-root 与 finite-root-to-continuum 两段。只有以后确需识别指定 mode
+时，才追加 $e_h^*=|k_*-\widehat k_h|$ 的第二层目标。
 
-| 层级 | 误差源 | 可计算 diagnostic | 首轮处理 |
-|---|---|---|---|
-| E0 | 几何/材料与连续模型选择 | 参数表、clearance、projected gap | 冻结；不计入数值 estimator |
-| E1 | exact DtN reduction/formulation | sign test、homogeneous/known case | 先验证等价与符号 |
-| E2 | inclusion BIE/Kress quadrature | `ntot` sweep、BIE residual、block change | 首轮固定，随后反证测试 |
-| E3 | QP Green/proxy/Rayleigh port discretization | proxy residual、`M`/proxy sweep、channel tail | 首轮固定在预检平台 |
-| E4 | finite-tail approximation to half-guide DtN | closure comparison、$\Lambda_{j+1}-\Lambda_j$、transmission decay | **首轮目标误差** |
-| E5 | doubling/terminal/Cayley linear algebra | Schur rcond、terminal rcond、$I+\widehat R_j$ rcond、solve residual | 设为远小于 E4 |
-| E6 | fixed-$k$ matrix evaluation | repeated evaluation、determinism | 设为远小于 E4 |
-| E6s | finite structure preservation | raw anti-Hermitian、reciprocity/Lagrangian defect、跨层变化 | 先作未校准 structure diagnostics/uncertainty components；不手工对称化，不作为实轴搜索许可门，换算 root error 仍需 refinement 与 slope |
-| E7 | candidate numerical qualification | 原矩阵 residual、near-kernel separation、field/factor/boundary checks、repeatability | 登记 candidate credibility 和 uncertainty；不要求证明 exact finite root |
-| E8 | first-order estimator remainder | correction-vs-next-root mismatch、tail ratio | 通过三层数据评价 |
-| E9 | reference truth uncertainty | independent-method spread | 与 effectivity 一起报告 |
+## 2. 必须随指标分列的组成项
 
-## 2. 首轮冻结表
+| 组成项 | 主 residual 应如何处理 |
+|---|---|
+| 材料子域内体方程 | 作为 volume residual 纳入 |
+| 材料界面 field/flux mismatch | 作为 interface jump 或 reconstruction term 纳入 |
+| 胞元接口和人工截面 | 作为 trace/flux mismatch 纳入 |
+| 横向准周期条件 | 作为 boundary mismatch 纳入 |
+| half-guide、Rayleigh/Fourier tail | 纳入 global cutoff residual，或在 exact-DtN 路线中单列 DtN/tail 差异 |
+| field reconstruction 与 trace repair | 纳入 residual 或独立可计算 allowance |
+| dual-norm Riesz solve | 报告 discretization、quadrature 和 algebraic error |
+| floating-point 与 field evaluation | 用 repeat/precision 检查形成 numerical allowance |
+| continuous projected essential gap | 第一层存在性需要针对当前连续模型建立并核对区间 containment；不能由 finite QZ gap 或 I2 count 替代 |
+| 预注册频率分辨率 | 在查看 estimator 结果前固定 $\tau_k^{\mathrm{pre}}$ 和 $0<\rho_G^{\mathrm{pre}}<1$；可靠 $k$ 区间宽度须通过绝对门，且 $\tau_k^{\mathrm{pre}}\le\rho_G^{\mathrm{pre}}\operatorname{diam}(G_k)$，否则只保留存在性 |
+| unique target identity/multiplicity | 不由 residual 大小或 gap containment 自动决定；只有需要指定 mode 时才在第二层单独处理 |
 
-只把 doubling depth $j$ 作为主 refinement parameter。下列量在一次 DtN study 中固定：
+任何未计算项都必须列入 ignored errors。不能把它默认为零，也不能用原离散矩阵 residual 代替。
 
-- $\beta$、bulk/defect ellipse、材料参数和 cell periods；
-- bulk 与 defect inclusion 的 boundary nodes，provisional value 为 `ntot=120`；
-- Rayleigh half-width、QP Green/proxy parameters 和 arithmetic precision；
-- center formulation、matrix scaling、root scan/refinement rule；
-- 远端 Dirichlet closure 及用于交叉检查的 real Robin parameter；
-- linear solve tolerance 与 derivative finite-difference rule。
+## 3. 内部数值证据的边界
 
-若任何冻结 diagnostic 随 $j$ 显著变化，说明误差没有被隔离，该组数据不得进入
-effectivity table。
+I3.1 可以使用下列内部检查：
 
-## 3. 误差隔离的定量要求
+- field reconstruction 在 refinement 下稳定；
+- residual components 的分项和总和可复算；
+- Riesz space 加密时 dual-norm approximation 稳定；
+- phase/scale 改变不影响 normalized indicator；
+- quadrature、linear solve 和 repeat error 小于 residual signal；
+- manufactured exact field 给出预期的零或已知 residual；
+- 故意加入 interface jump、tail defect 或错误 candidate 时，指标能够响应。
 
-设当前 tail estimator 为 $\eta_j$。用于发表的样本至少应满足：
+这些检查只论证公式和实现自洽。它们不能替代 I3.2 的独立 reference，也不能从稳定平台推导
+误差上界。
 
-- projected Newton defect 小于 $0.05 \eta_j$，且 relative singular residual 到达预设
-  线性代数容差；
-- doubling、Cayley 和 BIE multi-RHS 的相对 solve residual 不主导 projected numerator；
-- derivative step 改变一倍时，$\lvert y_j^*F_j'(k_j)x_j \rvert$ 的变化不超过目标 effectivity
-  tolerance；
-- terminal elimination、$I+\widehat R_j$ 与 doubling Schur factors 没有接近数值奇异；
-  若接近则该点标为 method breakdown，不用更小 tolerance 掩盖。
+## 4. 共同偏差与部分 residual
 
-常数 $0.05$ 是实验设计阈值，不是理论常数；Phase 3 数值预试后可以统一修订，但不能
-逐例调节。
+若 numerical DtN、field reconstruction 和 residual evaluation 共享同一错误，内部 residual
+可能很小而 $e_h^{\mathrm{gap}}$ 仍不小。因此首个设计必须标明 residual 是否真正作用于 continuous form，
+还是只作用于同一离散方程。
 
-## 4. BIE 贡献的强制反证测试
+只覆盖体方程、只覆盖 boundary samples 或只覆盖 numerical-DtN center equation 的量仍可
+保存，但必须命名为 component/partial residual。它不能成为 total estimator candidate，除非
+其他项已被独立控制。
 
-在选定足够大的 $j_{\mathrm{ref}}$ 后，固定 DtN construction，只改变 inclusion boundary nodes，
-至少测试 `60,80,100,120,150` 中几档可行值。
+## 5. 数值信号与失败条件
 
-- 若 $k$ 的前两位有效数字发生变化，E2 必须提升为共同主误差源。
-- 若加密后误差或 condition diagnostics 非单调增大，应检查 special-solution/Rayleigh
-  basis conditioning、QP Green accuracy 和 scaling，不得继续声称 Kress error negligible。
-- 只有当 `ntot` 变化远小于 DtN effectivity study 的目标误差，才能在首篇论文中把
-  E2 作为 controlled background error。
+设计算得 $\widehat q_h$，并有同量纲数值 allowance $u_{q,h}$。至少要求：
 
-## 5. 不能合并的量
+- field norm 下界与 field-evaluation error 分离；
+- residual signal 大于 quadrature、Riesz solve、linear solve 和 repeat error；
+- 多个预注册 Riesz/refinement levels 没有显示未解析增长；
+- 任何 tail 或 reconstruction omission 都在结果中显式可见。
 
-- $\sigma_{\min}(F_j(k_j))$ 是矩阵近奇异 diagnostic，不是 E4 的误差估计。
-- $\lVert \Lambda_{j+1}-\Lambda_j \rVert$ 是 map-level change，不含 eigenvalue sensitivity。
-- $\lvert k_{j+1}-k_j \rvert$ 是相邻离散根差，不自动等于到极限的剩余误差。
-- 实轴 $\sigma_{\min}$ 极小点不是自动存在的离散 NEP root；root qualification 失败时 E8
-  没有定义。
-- QZ/Riccati 与 doubling 的一致只排查 E4/E5，不排查共同的 E2/E3。
+若这些条件失败，输出 `CONTINUOUS_RESIDUAL_UNRESOLVED` 或 `PARTIAL_RESIDUAL_ONLY`，而不是
+切换到有限根路线并把其结果改称 continuous error。
+
+可靠 residual 形成谱区间后，还要分开报告三个逻辑门：
+
+1. residual/field/numerical bounds 是否真正覆盖所用区间；
+2. 区间是否完全位于当前连续算子的 projected essential gap；
+3. 映射到正频率后的区间宽度是否不超过事前冻结的 $\tau_k^{\mathrm{pre}}$，且该绝对尺度是否
+   通过事前冻结的 gap-relative 非空泛门。
+
+第一门失败时没有 certified interval；第二门失败时不能声称 gap 内离散特征值；第三门失败时
+存在性可以保留，但分辨率不足。唯一目标识别是独立的第二层升级，不得反向成为上述三门或
+residual 计算的 blocker。
+
+## 6. OPTIONAL finite component
+
+$\delta_h^{\mathrm{loc}}$ 和 $\delta_h^{\mathrm{disc}}$ 可诊断有限矩阵局部位移或某一 refinement
+分量。它们不在 residual 总量中自动相加，也不为 shared continuous bias 提供控制。只有
+I3.1 或 I3.2 明确需要定位某个异常来源时才运行。
+
+## 7. 当前状态
+
+- 已完成：continuous residual 的目标、抽象谱结论和覆盖分类；
+- 未完成：实际 field reconstruction、完整 residual formula、dual-norm computation 和
+  numerical allowance；当前 sharp-disk continuous projected gap 与预注册分辨率也尚未冻结；
+- 允许名称：continuous-residual estimator candidate；
+- 可靠区间进入 gap 后的第一层名称：达到预注册分辨率的 continuous discrete-eigenvalue
+  existence interval，或分辨率失败时的 `EXISTS_BUT_RESOLUTION_INSUFFICIENT`；
+- 不允许名称：empirical eigenvalue-error estimator、certified error estimate、upper bound。

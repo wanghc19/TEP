@@ -37,9 +37,14 @@ localization diagnostic 及最低必要的 residual、factor、field、boundary 
 诊断。`drift-a1` 的 $n_{\mathrm{tot}}=160,208,256$ 轴与 `m-drift-a2` 的
 固定 $n_{\mathrm{tot}}=160$、$M=32,40,48$ 轴均确认 `SAME_MODE`，且各轴保存的 candidate
 完全相同，故 observed candidate drift 为零。终端半宽只描述潜在 sub-grid score minimizer 的搜索分辨率，
-不是 candidate uncertainty。当前形成 conditional algorithmic candidate hierarchy，I3 可以
-开始误差来源与 independent-reference 设计；但该轴不能单独提供非零 next-level correction、
-minimizer/root drift、收敛阶或误差上界。
+不是 candidate uncertainty。当前形成 conditional algorithmic candidate hierarchy。I3.1 已
+开始误差指标理论研究，现行主线在 saved candidate 处重构 continuous form-space field，并
+计算 continuous weak residual；finite one-step root correction 已降为 OPTIONAL。continuous
+form、conforming reconstruction、完整 residual decomposition 和 dual-norm computation 尚未
+闭合，实验设计尚未就绪。第一层只要求可靠区间进入 current continuous projected gap，并通过
+结果前冻结的 absolute/gap-relative resolution，从而证明其中至少存在一个连续离散特征值；
+唯一目标识别只在指定-mode升级时需要。两条 I2 轴不能单独提供非零 correction、minimizer/root drift、
+收敛阶或误差上界。
 
 OP-M0-1--OP-M0-4 继续限制 continuous physical theorem 与上界解释，但不阻止提出带诚实
 claim boundary 的 candidate。最新行动边界以

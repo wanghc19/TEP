@@ -29,8 +29,14 @@ count one；I2.2 的 Hermitian-part 两端 sign count 得到稳定 `SINGLE_JUMP`
 $n_{\mathrm{tot}}=160$ 的 trace-cutoff 轴 $M=32,40,48$；两条轴的三层最低原始门和
 `SAME_MODE` 均通过，且各轴三层 saved candidate 完全相同，故状态为
 `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。terminal-cell 半宽只作
-sub-grid minimizer 的搜索分辨率；I3 可开始设计，但该结果不是 minimizer/root 零漂移或收敛证据。
-连续—离散桥接、production derivative、真实 root 和 estimator 尚未建立，也没有
+sub-grid minimizer 的搜索分辨率；该结果不是 minimizer/root 零漂移或收敛证据。I3.1 已开始
+estimator theory，现行主线直接在 saved candidate 处构造 continuous weak residual；
+finite one-step root correction 已降为 OPTIONAL。continuous form、conforming field
+reconstruction、完整 residual decomposition 和 dual-norm computation 尚未闭合，故实验设计
+尚未就绪。第一层目标是 candidate 到 current projected gap 内离散谱集合的距离：可靠区间
+进入该 gap 后先得到至少一个离散特征值，且只有通过结果前冻结的 absolute/gap-relative
+resolution 才接受为分辨率级结论。唯一目标识别只在特定 mode 跟踪时升级。continuous
+residual estimator、sharp-disk projected-gap contract 和 upper bound 尚未建立，也没有
 活动中的 `research/mainline/`。
 
 原主线冻结于 Git 标签 `mainline-muller-cauchy-2026-07-26`，文件移至
@@ -42,7 +48,7 @@ sub-grid minimizer 的搜索分辨率；I3 可开始设计，但该结果不是 
 
 | 状态 | 专题 | 实际结论 |
 |---|---|---|
-| active investigation / new-route I2.3 complete with conditions; I3 design may begin | `research/projects/eig-apost/` | PDE-defined exact DtN 和 physical $\mathcal F(k)$ 是连续主对象；ordered QZ 只计算 finite-pencil deflating subspace。I2.1 条件性 count one、I2.2 Hermitian-part endpoint corroboration 与 I2.3 的 `ntot`/$M$ 两条三层同-mode candidate 实验均已完成。两条轴的三层 saved candidate 均完全相同，故为 `NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`；terminal-cell 尺度不参与 candidate drift，也不证明 minimizer/root 零漂移或收敛。production derivative、continuous error estimator、独立 $k_{\mathrm{ref}}$ 与上界均未完成。 |
+| active investigation / I3.1 theory active; design not ready | `research/projects/eig-apost/` | PDE-defined physical operator 是连续主对象；I2.1--I2.3 已完成。I3.1 首选 saved-candidate continuous weak residual；finite-root correction 仅为 OPTIONAL。continuous form、conforming reconstruction、dual norm、独立 $k_{\mathrm{ref}}$、sharp-disk projected-gap contract、预注册分辨率与上界均未完成；unique target 仅为可选升级。 |
 | paused archive | `research/archive/muller-cauchy-2026-07/` | 冻结的 Müller--广义 Bloch--Cauchy 主线；商空间版本的核/场等价仍有未闭合的外部定理适配和表示论前提。 |
 | paused | `research/projects/half-guide-dtn/` | Stage 1 完成了符号审计、齐次半导 DtN/Riccati 验证和耦合方案建议；周期障碍半导、完整中心耦合及 MATLAB 最终验证尚未完成。该路线未整合进冻结主线。 |
 | completed project | `research/projects/cell-representation/` | 专题任务已完成：原始无条件猜想过强；给出了直接 Green 表示和带显式正则性、非 Wood 及互补问题条件的修正版。其纠正后的表示结构和商空间策略已进入冻结主线，但其中的表示定理仍为 `needs review`。 |
@@ -78,11 +84,14 @@ sub-grid minimizer 的搜索分辨率；I3 可开始设计，但该结果不是 
 
 当前活动专题是偏工程实现的特征值后验误差研究。I1.4 sampled readiness、I2.1 条件性
 count one、I2.2 endpoint corroboration 与 I2.3 的 `ntot`/$M$ 两条三层同-mode candidate 实验均已完成。I2.3
-两条轴均得到 `NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`，I3 可开始误差来源与 independent-reference
-设计；但零 observed shift 不能单独验证 correction、收敛或 estimator。continuous exact-DtN
-domain、physical/BIE kernel bridge、production
-derivative/separation 与 projected/regular approximation topology 继续限制物理 root 和
-estimator 声明，也不升级为统一研究方向。
+两条轴均得到 `NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。I3.1 estimator theory 已启动；
+independent reference 仍属于 estimator 冻结后的 I3.2，当前实验设计尚未就绪。零 observed shift
+不能单独验证 correction、收敛或 estimator。continuous form、conforming field
+reconstruction、完整 residual decomposition、dual norm、sharp-disk projected-gap contract、
+预注册 absolute/gap-relative resolution 与 reliable enclosure 继续限制第一层 estimator 和
+上界声明。unique-target isolation 只限制指定-mode升级。production derivative/separation 与 projected/regular
+approximation 只限制相应 finite-correction 或离散谱收敛支线，不再是 I3.1 主线门，也不升级为
+统一研究方向。
 冻结路线若被恢复，其优先事项仍是单位圆全谱排除、
 广义 Floquet/Riesz 基适配、中心表示满射性和表示零空间刻画；具体记录见
 `research/archive/muller-cauchy-2026-07/review-log.md`。

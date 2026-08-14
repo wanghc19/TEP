@@ -105,8 +105,9 @@ hierarchy；但 terminal-cell 尺度只说明 sub-grid minimizer 尚未解析，
 I3 直接研究 candidate 与真实连续特征值之间的误差。它不以某种固定 estimator 公式为预设，
 也不把 next-level shift、matrix residual 或 effectivity 单独当成最终答案。具体算法和验收流程
 应根据 I2 实际交付另行冻结。当前 `drift-a1` 与 `m-drift-a2` 已提供两条经 mode-identity
-检查的 candidate sequence，故 I3 状态为 `DESIGN MAY BEGIN / NOT STARTED`。零 observed shift
-不能单独验证 next-level correction、收敛或 estimator。
+检查的 candidate sequence。I3.1 已正式进入理论研究，当前状态为
+`THEORY ACTIVE / DESIGN NOT READY`。零 observed shift 不能单独验证 next-level correction、
+收敛或 estimator。
 
 ### 输入、三项输出和与上界的关系
 
@@ -120,17 +121,23 @@ I3 直接研究 candidate 与真实连续特征值之间的误差。它不以某
 - **I3.1 输出：**一个冻结、可计算的 $\eta_h$，以及它覆盖和忽略的误差、适用假设和内部
   一致性证据。没有证明时只能称渐近误差指标或 estimator candidate。
 - **I3.2 输出：**在 estimator 冻结后，用未参与其构造的独立 reference 检验其是否跟踪
-  $|k_*-\widehat k_h|$ 的量级。通过后才称 `empirical eigenvalue-error estimator`；同方法
-  高分辨率结果只能作有共享偏差的后备。
-- **I3.3 输出：**若还能给出充分的 continuous--discrete bridge、稳定性、remainder 和
-  saturation/enclosure 条件，则产生可计算上界 $U_h$，满足
+  candidate 到 gap 内连续离散特征频率集合的距离。通过后才称
+  `empirical eigenvalue-error estimator`；只有 reference 独立识别特定 mode 时才检验
+  target-specific error。同方法高分辨率结果只能作有共享偏差的后备。
+- **I3.3 输出：**若还能给出 certified residual dual-norm upper bound、field-norm lower
+  bound、numerical enclosure、当前 continuous projected essential gap，以及结果前冻结的
+  absolute/gap-relative resolution，则先产生
 
   $$
-  |k_*-\widehat k_h|\le U_h.
+  \operatorname{dist}\bigl(
+  \widehat k_h,\mathcal K_{\mathrm{disc}}(A;G_\lambda)
+  \bigr)\le U_h.
   $$
 
-  若这些条件不能建立，必须明确输出 `UPPER_BOUND_UNAVAILABLE`；已经通过独立 truth
-  validation 的 empirical estimator 仍然可以保留。
+  只有另有 continuous spectral isolation/count 时，才升级为指定
+  $|k_*-\widehat k_h|\le U_h$。若这些条件不能建立，必须明确输出
+  `UPPER_BOUND_UNAVAILABLE`；已经通过独立 truth validation 的 empirical estimator 仍然可以
+  保留。
 
 ### 三个正式里程碑（尚未冻结实验设计）
 
@@ -138,9 +145,18 @@ I3 直接研究 candidate 与真实连续特征值之间的误差。它不以某
 |---|---|---|
 | I3.1 构造并内部论证误差指标 | 能否构造实际可计算的 $\eta_h$，并说明其数学来源、假设、覆盖和忽略的误差 | 冻结的 estimator candidate 与内部检查结果 |
 | I3.2 独立验证 estimator | 冻结后的 $\eta_h$ 是否在未参与其构造的独立 reference 上跟踪真值误差量级 | empirical estimator verdict；失败时保留较弱 indicator 结论 |
-| I3.3 研究可计算上界 | 能否由已证明覆盖的稳定性、continuous bridge、remainder 或 enclosure 得到不含未知常数的 $U_h$ | $U_h$ 或 `UPPER_BOUND_UNAVAILABLE` |
+| I3.3 研究可计算上界 | 能否由已证明覆盖的 residual/field norms、numerical enclosure、continuous projected gap 和预注册分辨率得到不含未知常数的 existence-distance 上界；必要时再升级唯一目标 | $U_h$、`EXISTS_BUT_RESOLUTION_INSUFFICIENT` 或 `UPPER_BOUND_UNAVAILABLE` |
 
-误差来源识别并入 I3.1；reference 搜索并入 I3.2；稳定性和 remainder 研究并入 I3.3。
+I3.1 当前接受的首个理论候选是 global continuous weak residual：在 saved candidate
+$\widehat k_h$ 处重构带 fixed cutoff 的 continuous form-space field，计算连续弱残量及其
+normalized dual norm。
+该量直接作用于连续物理算子，不先定位 finite zero 或预测 projected finite-root shift。
+continuous form、conforming reconstruction、完整 residual decomposition、dual-norm computation
+和数值信号分离尚未闭合，因此尚不进入实验设计。finite one-step correction 仅保留为 OPTIONAL
+离散分量诊断，不是前置 blocker。
+
+误差来源识别并入 I3.1；reference 搜索并入 I3.2；norm enclosure、continuous projected-gap
+containment 和预注册分辨率研究并入 I3.3。唯一目标识别只在下游必须跟踪特定 mode 时升级。
 它们不另拆里程碑。本轮仍不冻结 levels、transport、denominator、reference 算法、阈值或
 实验命令。I3.1 的定义、常数和样本规则必须在查看 I3.2 的 reference 结果前冻结；一般经验
 reference 的 uncertainty 不能进入严格 $U_h$，除非 reference 自身给出经证明的 enclosure。

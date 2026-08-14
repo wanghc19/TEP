@@ -41,9 +41,13 @@ chart 不安全时保留增广 Cauchy-data relation 或 Robin realization。本�
 trace 截断、one-cell map、deflating subspace、graph-to-DtN chart、矩阵计算和 root
 solve 的误差。由于一阶 DtN 在临界空间 $H^{1/2}\to H^{-1/2}$ 上一般非紧，有限 Fourier
 lift 不以完整算子范数逼近它；本文改以 projected DtN consistency、目标解的加权 trace
-tail，以及预条件/主符号扣除后的 operator convergence 为理论目标。两层
-projected correction 首先只预测 next-level root shift；只有另有 saturation 和
-remainder 条件时，才可解释为到连续根的剩余误差。旧的 finite-tail/doubling 主公式
+tail，以及预条件/主符号扣除后的 operator convergence 为理论目标。I3.1 直接在算法保存的
+candidate 处重构连续 form-space field，并以 continuous weak residual 的 normalized dual
+norm 作为首个 estimator candidate。自伴谱理论把 exact residual 联系到 continuous spectrum；
+可靠区间进入当前 continuous projected essential gap 后，先得到至少一个离散特征值的存在
+区间；达到预注册 absolute/gap-relative resolution 后才接受为第一层分辨率级结果。唯一目标
+识别只在确需指定 mode 时追加 spectral isolation。两层 projected correction 只保留为
+OPTIONAL finite-component diagnostic。旧的 finite-tail/doubling 主公式
 完整保存在 \texttt{legacy-tail.tex}，今后只作 cross-check、reference sequence 或 tail
 diagnostic。
 \end{abstract}
@@ -819,7 +823,134 @@ compactness、primal/adjoint convergence 和 simple-eigenvalue nondegeneracy
 \cite{Moskow2015}。当前 $\cF$ 尚未被证明可预条件成该文的 $I-kT(k)$ compact form，
 所以其 Theorem 4.1 只提供证明模板，不是可直接宣告的项目定理。
 
-\section{simple-root correction 和 two-level correction}
+\section{saved-candidate continuous weak residual}
+
+令 $A=A^*\ge0$ 为固定 $\beta$ 后在本节假设成立的 continuous physical operator，谱参数为
+$\lambda=k^2$。I2 保存的 candidate 为 $\widehat k_h>0$，记
+$\mu_h=\widehat k_h^2$。固定 $\gamma>0$，使
+$A+\gamma I\ge c_\gamma I$ 且 $c_\gamma>0$，并令
+\[
+  V=D((A+\gamma I)^{1/2}),
+  \qquad
+  \|v\|_V=\|(A+\gamma I)^{1/2}v\|_H.
+\]
+从 I2 数据确定性地重构一个非零 conforming field $u_h^{\mathrm c}\in V$，定义
+\begin{equation}
+  R_h(v)=a(u_h^{\mathrm c},v)-\mu_h(u_h^{\mathrm c},v)_H,
+  \qquad v\in V,
+  \qquad
+  q_h=\frac{\|R_h\|_{V'}}{\|u_h^{\mathrm c}\|_V}.
+  \label{eq:continuous-weak-residual}
+\end{equation}
+该 residual 直接作用于 saved candidate 和 continuous physical form，不需要先定位 finite
+determinant zero，也不需要 finite matrix derivative。
+
+令
+\[
+  T_{\mu_h}
+  =(A+\gamma I)^{-1/2}(A-\mu_h I)(A+\gamma I)^{-1/2}.
+\]
+$T_{\mu_h}$ 是 bounded self-adjoint operator。对
+$w=(A+\gamma I)^{1/2}u_h^{\mathrm c}$ 应用 self-adjoint residual--spectrum distance
+inequality 和 spectral mapping，得到
+\begin{equation}
+  \inf_{\lambda\in\sigma(A)}
+  \frac{|\lambda-\mu_h|}{\lambda+\gamma}
+  \le q_h.
+  \label{eq:weak-residual-spectrum}
+\end{equation}
+若 $q_h<1$，则存在某个 continuous spectral point $\lambda$ 满足
+\begin{equation}
+  |\lambda-\mu_h|
+  \le E_{\lambda,h}
+  :=\frac{q_h(\mu_h+\gamma)}{1-q_h}.
+  \label{eq:weak-residual-lambda}
+\end{equation}
+第一层不预先指定 $\lambda_*$. 设针对当前 sharp-disk continuous operator 和固定 $\beta$
+已经证明
+\[
+  G_\lambda=(g_-,g_+),
+  \qquad 0<g_-<g_+,
+  \qquad
+  G_\lambda\cap\sigma_{\mathrm{ess}}(A)=\varnothing,
+\]
+并且 residual、field norm 与 numerical errors 给出
+\[
+  \|R_h\|_{V'}\le\overline\rho_h,
+  \qquad
+  0<\underline u_h\le\|u_h^{\mathrm c}\|_V,
+  \qquad
+  \overline q_h=\overline\rho_h/\underline u_h<1.
+\]
+令
+\[
+  \overline E_{\lambda,h}
+  =\frac{\overline q_h(\mu_h+\gamma)}{1-\overline q_h},
+  \qquad
+  I_h^\lambda=
+  [\mu_h-\overline E_{\lambda,h},
+   \mu_h+\overline E_{\lambda,h}],
+\]
+其中正式浮点实现对 $I_h^\lambda$ 使用 outward rounding，并对 gap 使用 certified inner
+edges。若 $I_h^\lambda\subset G_\lambda$，则式\eqref{eq:weak-residual-spectrum} 保证
+$I_h^\lambda$ 内至少存在一个孤立、有限重的 continuous discrete eigenvalue。这里采用
+Weyl/Fredholm essential-spectrum 约定；fixed-$\beta$ 波导 gap 内离散谱性质见
+Fliss~\cite[Proposition~3.3]{Fliss2013}。projected gap 不保证该 eigenvalue 唯一。
+
+若 $I_h^\lambda=[L_h,U_h]\subset(0,\infty)$，令
+\[
+  I_h^k=[\sqrt{L_h},\sqrt{U_h}],
+  \qquad
+  G_k=(\sqrt{g_-},\sqrt{g_+}).
+\]
+定义 gap 内正离散特征频率集合
+$\mathcal K_{\mathrm{disc}}(A;G_\lambda)
+:=\{\sqrt{\lambda}:\lambda\in\sigma_{\mathrm{disc}}(A)\cap G_\lambda\}$，则
+\begin{equation}
+  \operatorname{dist}\bigl(
+    \widehat k_h,\mathcal K_{\mathrm{disc}}(A;G_\lambda)
+  \bigr)
+  \le
+  U_h^{\mathrm{gap}}
+  :=
+  \max\{\widehat k_h-\sqrt{L_h},
+         \sqrt{U_h}-\widehat k_h\}.
+  \label{eq:weak-residual-k}
+\end{equation}
+在查看 estimator 或 reference 结果前，还须冻结绝对分辨率
+$\tau_k^{\mathrm{pre}}>0$ 和 gap-relative fraction
+$0<\rho_G^{\mathrm{pre}}<1$，并要求
+\[
+  \operatorname{diam}(I_h^k)\le\tau_k^{\mathrm{pre}},
+  \qquad
+  \tau_k^{\mathrm{pre}}
+  \le\rho_G^{\mathrm{pre}}\operatorname{diam}(G_k).
+\]
+若 containment 成立但宽度门失败，存在性保留，但输出
+\texttt{EXISTS\_BUT\_RESOLUTION\_INSUFFICIENT}。
+
+只有后续确需跟踪指定 mode，才再要求例如
+$I_h^\lambda\cap\sigma(A)=\{\lambda_*\}$，并把
+式\eqref{eq:weak-residual-k} 升级为
+$|k_*-\widehat k_h|\le U_h^{\mathrm{gap}}$。该集合等式识别唯一谱值但不自动证明
+multiplicity one；I2.1 的 finite count one 不能替代 continuous spectral count。
+
+I3.1 的计算对象首先是式\eqref{eq:continuous-weak-residual} 的 estimator candidate。实际
+dual norm 可由 $V$ 中的 Riesz problem 近似，但普通 Galerkin Riesz solve 不自动给 reliable
+upper bound。I3.1 首个设计固定 global-field residual，并必须先冻结 continuous form、
+conforming field reconstruction、全部 volume/interface/port/tail/reconstruction components，
+Riesz/quadrature/numerical allowance、continuous projected-gap contract，以及结果前确定的
+absolute/gap-relative resolution。exact-DtN center residual 为 OPTIONAL；若启用，
+还必须给出到 global form residual 的带已知常数 outgoing extension/lifting inequality 及
+tail allowance。certified norm enclosure 与 projected-gap containment 属于 I3.3 的第一层；
+unique-target isolation 只属于确需指定 mode 时的第二层升级。
+
+若重构场只属于 broken form space，则 interface value/flux jumps 和 repair terms 必须显式进入
+residual。若 residual 使用与 candidate 相同的 numerical DtN 而不控制其到 exact DtN 的差，
+它只能称 partial/discrete residual。要求 $u_h^{\mathrm c}\in D(A)$ 的 strong residual 是
+更苛刻的 OPTIONAL 特例，不是首个设计的门。
+
+\section{OPTIONAL simple-root correction 和 two-level correction}
 
 本节把 $V_\beta(\Omega_0)'$ 取为连续反对偶，并约定
 $\langle f,v\rangle_{V',V}:=f(v)$；$\cF(k)^*:V_\beta(\Omega_0)\to
@@ -850,35 +981,40 @@ reduction 或 regular approximation，以及 simple-root persistence。
 
 令 level $\ell$ 汇总 $(h_c,h_{\mathrm{cell}},M)$ 及冻结的 linear algebra policy。
 把相邻两层通过已记录的 prolongation/restriction transport 到同一 trial/test space，
-所得 operator 记为 $\widehat\cF_\ell$ 和 $\widehat\cF_{\ell+1}$。若 $k_\ell$ 是 coarse
-simple root，$x_\ell,y_\ell$ 是相应左右 vectors，则定义
+所得 families 记为 $\widehat\cF_\ell$ 和
+$\widehat\cF_{\ell+1\downarrow\ell}$。后者默认只是 projected-enriched family；普通
+非方压缩不保持完整 enriched family 的零点。记 $\kappa_\ell$ 为 coarse simple root，记
+$\kappa_{\ell+1\downarrow\ell}$ 为同一局部分支的 projected-enriched root，并取相应左右
+vectors $x_\ell,y_\ell$，则定义
 \begin{equation}
   \delta_\ell^{\mathrm{next}}
   :=-
   \frac{\langle
-    [\widehat\cF_{\ell+1}(k_\ell)-
-     \widehat\cF_\ell(k_\ell)]x_\ell,y_\ell\rangle}
-       {\langle\widehat\cF_\ell'(k_\ell)x_\ell,y_\ell\rangle}.
+    [\widehat\cF_{\ell+1\downarrow\ell}(\kappa_\ell)-
+     \widehat\cF_\ell(\kappa_\ell)]x_\ell,y_\ell\rangle}
+       {\langle\widehat\cF_\ell'(\kappa_\ell)x_\ell,y_\ell\rangle}.
   \label{eq:two-level}
 \end{equation}
 式\eqref{eq:two-level} 的无附加解释是预测
-$k_{\ell+1}-k_\ell$，并应先用实际 next-level matched root 检验。它不是自动估计
-$k_*-k_\ell$。
+$\kappa_{\ell+1\downarrow\ell}-\kappa_\ell$，并应先用实际 projected-enriched matched root
+检验。只有 transport 为同维可逆同构，或 exact Schur/kernel 等价及 complement 可逆性已经
+证明时，$\kappa_{\ell+1\downarrow\ell}$ 才可等同于完整 next-level root。该式不是自动估计
+$k_*-\kappa_\ell$。
 
 若另有独立依据给出 saturation
 \[
-  |k_*-k_{\ell+1}|\le q|k_*-k_\ell|,
+  |k_*-\kappa_{\ell+1\downarrow\ell}|\le q|k_*-\kappa_\ell|,
   \qquad 0\le q<1,
 \]
 以及 first-order remainder bound
 \[
-  |(k_{\ell+1}-k_\ell)-\delta_\ell^{\mathrm{next}}|
+  |(\kappa_{\ell+1\downarrow\ell}-\kappa_\ell)-\delta_\ell^{\mathrm{next}}|
   \le r_\ell,
 \]
 才可推出
 \begin{equation}
   \frac{\max(0,|\delta_\ell^{\mathrm{next}}|-r_\ell)}{1+q}
-  \le |k_*-k_\ell|
+  \le |k_*-\kappa_\ell|
   \le
   \frac{|\delta_\ell^{\mathrm{next}}|+r_\ell}{1-q}.
   \label{eq:saturation-bound}
@@ -897,6 +1033,34 @@ root/linear-algebra error 另行报告。例如在近似根 $\widetilde k_\ell$�
   \widehat\cF_\ell'(\widetilde k_\ell)x_\ell,y_\ell\rangle}
 \]
 必须明显小于待解释的 discretization correction；否则 two-level effectivity 不可解释。
+
+若后续需要诊断 saved candidate 到 finite zero 的局部位移或某一指定离散 enrichment 的
+影响，可把这一结构用于 $\widehat k_h$。在 coarse 与 enriched operators 已经通过 trial
+prolongation 和 dual-compatible test restriction 搬到同一空间、且
+$\widehat k_h$ 附近 simple finite zero 与完整导数已经资格化时，令
+$B_h:X_h\to Z_h'$ 为 coarse analytic family，令
+$B_{h^+\downarrow h}:X_h\to Z_h'$ 为搬回同一空间的 projected-enriched family，并取
+$x_h\in X_h$、$y_h\in Z_h$ 为 $B_h(\widehat k_h)$ 的归一化右、左近核向量。若
+$d_h^{\mathrm{cand}}:=y_h^*B_h'(\widehat k_h)x_h$ 明确远离零，定义
+\[
+\begin{aligned}
+  \delta_h^{\mathrm{loc}}
+  &:=-\frac{y_h^*B_h(\widehat k_h)x_h}
+               {d_h^{\mathrm{cand}}},\\
+  \delta_h^{\mathrm{disc}}
+  &:=-\frac{y_h^*[B_{h^+\downarrow h}(\widehat k_h)-B_h(\widehat k_h)]x_h}
+               {d_h^{\mathrm{cand}}},\\
+  \delta_h^{\mathrm{one}}
+  &:=\delta_h^{\mathrm{loc}}+\delta_h^{\mathrm{disc}}.
+\end{aligned}
+\]
+其绝对值首先只称 one-step $k$-scale consistency indicator，并分别报告两个分量、复数虚部
+和抵消敏感性。该量预测的是 projected-enriched finite family 相对 saved candidate 的一步
+位移。普通非方 prolongation/restriction 不保持完整 enriched matrix 的零点；只有同维可逆
+坐标同构或 exact Schur/kernel 等价及 complement 可逆性成立时，才可把该位移升级为完整
+enriched problem 的位移。它不覆盖两层共同偏差或 enriched-to-continuous remainder，因而不是已经成立的
+$|k_*-\widehat k_h|$ estimator。
+
 若 $\widetilde k_\ell$ 只是实轴 constrained minimizer 而尚未桥接到 nearby finite simple
 zero，则式\eqref{eq:operator-correction}--\eqref{eq:two-level} 不能直接套用。此时必须二选一：
 在原始 analytic matrix family 上资格化 nearby simple zero，并把可能的 imaginary displacement
@@ -907,6 +1071,11 @@ perturbation formula。finite exact Hermitian 不是这道门的必要条件。
 的总路线门。I3 也可以选择直接以 constrained candidate、独立 continuous-problem reference
 和可计算 enclosure 为对象的其他 estimator；此时只需资格化该 estimator 实际消费的输入，
 不得为了复用本节公式把 exact-discrete-root 身份倒置成最终目标。
+
+固定 $M$、只改变 $n_{\mathrm{tot}}$ 是最接近共同空间条件的可选实例，但相同矩阵尺寸本身
+不构成 transport/duality 证明。公共空间、nearby simple zero、production derivative 和
+projected signal 相对数值噪声的分离只阻止本节 OPTIONAL diagnostic，不阻止
+式\eqref{eq:continuous-weak-residual} 的 I3.1 主线。
 
 \section{理论依据和项目证明义务}
 
@@ -924,6 +1093,7 @@ perturbation formula。finite exact Hermitian 不是这道门的必要条件。
     ordered QZ deflating subspace & LAPACK xTGSEN；Stewart (1972) & 有限矩阵直接适用 & 证明 pencil regular、cluster dimension 和 $k$-一致 separation；记录 \texttt{DIF/sep} \\
     graph-to-DtN chart & 式\eqref{eq:chart-identity} & 可直接适用的代数命题 & 对齐 graph bases，控制 $D_s^{-1}$ 和 $k$ 导数；unsafe 时使用 graph/RtR \\
     analytic operator spectral approximation & Kato VII Sec. 1.3, Thm. 1.7；Moskow Thm. 3.1/4.1 & 证明模板，不可直接套用 & generalized-pencil reduction、analytic Fredholm/compact reduction、primal/adjoint convergence、root persistence \\
+    self-adjoint weak residual & 式\eqref{eq:weak-residual-spectrum} 的 spectral-theorem proof & 抽象命题已闭合 & 冻结 continuous form、conforming reconstruction、computable dual norm、continuous projected gap 和预注册分辨率；unique target 只作可选升级 \\
     simple matrix NEP correction & G\"uttel--Tisseur Thm. 2.20 proof & 有限矩阵直接适用 & 保持同一物理 pairing、完整 $F'$、simple root 和 basis transport \\
     saturation / remainder & 当前无项目来源 & 仅数值假设 & 独立证明或保留为 empirical；不得由 observed ratios 生成 \\
     \bottomrule
@@ -945,8 +1115,10 @@ perturbation formula。finite exact Hermitian 不是这道门的必要条件。
   \item 中心、trace、cell 和 projected DtN 在公共 trial/test space 上给出
   $\cF,\cF'$ 的 primal/adjoint regular approximation；禁止复活完整
   $H^{1/2}\to H^{-1/2}$ finite-rank operator-norm target。
-  \item simple-root correction 的 remainder；若要把 two-level correction 升级为
-  remaining-error estimator，还需 saturation 或独立 asymptotic tail model。
+  \item continuous weak residual 的 field reconstruction、完整 component decomposition 与
+  computable dual norm；第一层 existence-distance 上界还需 reliable norm enclosure、
+  current-model projected-gap containment 和预注册分辨率。只有要升级为指定 $k_*$ 时才需
+  unique-target isolation。simple-root/two-level correction 仅为 OPTIONAL finite diagnostic。
 \end{enumerate}
 
 \section{finite-tail 方法的新位置}

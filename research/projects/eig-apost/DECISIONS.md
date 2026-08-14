@@ -221,3 +221,89 @@ append-only outputs.
 This decision supersedes only the 2026-08-13 interpretation that combined two terminal-cell scales
 with the difference of the saved candidates and used that comparison as an I3 stop. It does not
 rewrite the preregistered design, executed code or append-only evidence.
+
+## 2026-08-14 — I3.1 starts with a finite one-step component indicator
+
+**Historical status:** superseded later on 2026-08-14 by the saved-candidate continuous-residual
+decision below. The finite-dimensional statements remain valid only as an OPTIONAL diagnostic.
+
+- **Target remains continuous.** The final error is
+  $e_h=|k_*-\widehat k_h|$. A finite matrix correction is useful only as a named component or
+  diagnostic until independent evidence or a continuous--discrete theorem supports promotion.
+- **Selected first route.** The shortest current I3.1 route combines a projected residual correction
+  at the saved candidate with a coarse-to-enriched projected matrix difference, using the same left
+  and right near-null vectors and a nonzero transverse derivative denominator. The absolute sum is
+  named a one-step $k$-scale consistency indicator / estimator candidate.
+- **Projected-enriched boundary.** A non-square prolongation/restriction compression defines only a
+  projected-enriched family. It predicts the complete enriched zero only after a same-dimensional
+  invertible coordinate identification, or an exact Schur/kernel equivalence with an invertible
+  complement, has been proved.
+- **Coverage.** The formula may describe the saved candidate's local finite-root defect and the
+  discretization component actually changed by the selected enrichment. It does not cover shared
+  BIE/QZ/model bias, the projected-enriched-to-continuous remainder, nonlinear remainder, spectral
+  pollution or unquantified derivative/linear-algebra error.
+- **First axis.** Fixed $M$ with changing $n_{\mathrm{tot}}$ is the preferred first instance because
+  the finite matrix dimensions agree. Equal dimensions do not by themselves prove a common physical
+  trial/test space or dual pairing.
+- **Design status.** `design-3-1.md` is not ready. Common-space transport, a nearby simple finite zero,
+  the complete analytic derivative action, correct dual pairing and separation of the projected
+  signal from numerical error must be closed first.
+- **Fallback and future bound.** A continuous weak-residual route is not the first implementation;
+  it remains an I3.1 fallback if the finite one-step signal cannot be defined or resolved, and a likely
+  ingredient of I3.3 upper-bound research.
+
+This decision replaces the historical finite-tail/doubling correction as the active I3.1 theory.
+It does not modify I2 evidence, freeze an experiment, validate a total eigenvalue-error estimator or
+authorize MATLAB execution.
+
+## 2026-08-14 — I3.1 is redirected to the saved-candidate continuous residual
+
+- **Object test.** Every I3.1 mainline quantity must start from the saved algorithmic candidate
+  $\widehat k_h$ and enter an estimate of $|k_*-\widehat k_h|$. A quantity that only locates a finite
+  determinant zero or predicts a projected finite-root shift is not a mainline estimator.
+- **Superseded priority.** The preceding finite one-step decision remains a correct statement about
+  an optional finite-matrix perturbation diagnostic, but it no longer selects the first I3.1 route.
+  Common matrix transport, a nearby simple finite zero, left/right null vectors, the production
+  matrix derivative and bordered conditioning cease to be `design-3-1.md` readiness blockers.
+- **Selected first route.** At $\mu_h=\widehat k_h^2$, reconstruct a nonzero physical field in the
+  continuous form domain and evaluate the continuous weak residual. Its normalized dual norm is the
+  first estimator candidate because self-adjoint spectral theory relates it directly to distance
+  from $\mu_h$ to the continuous spectrum.
+- **Required distinction.** An exact weak residual controls distance to some continuous spectral
+  point. Promotion to the designated $k_*$ additionally requires target identification; promotion to
+  a certified upper bound requires a reliable dual-norm enclosure and spectral isolation.
+- **Design status.** `design-3-1.md` remains not ready only because the continuous form contract,
+  conforming field reconstruction, residual decomposition, dual-norm computation and numerical
+  allowance are not yet concrete.
+- **Optional finite diagnostics.** The former $\delta_h^{\mathrm{loc}}$ and
+  $\delta_h^{\mathrm{disc}}$ may still diagnose a finite-root offset or one chosen discretization
+  component. Their private hypotheses become gates only when that optional diagnostic is run.
+
+This decision supersedes the route priority, not the finite-dimensional algebra proved in the
+preceding decision. It does not create an experiment, validate a continuous estimator, modify I2
+evidence or authorize MATLAB execution.
+
+## 2026-08-14 — I3.1 separates gap existence from unique target identification
+
+- **First target.** The main non-target-specific error is the distance from the saved candidate to
+  the positive discrete spectrum of the current continuous operator inside a certified projected
+  essential gap. A reliable residual interval contained in that gap proves that at least one
+  isolated finite-multiplicity continuous eigenvalue lies in the interval.
+- **Resolution is independent.** Before seeing estimator or reference results, a design must freeze
+  an absolute frequency resolution and a gap-relative width fraction. A gap-contained interval that
+  exceeds either scale retains mathematical existence but is reported as
+  `EXISTS_BUT_RESOLUTION_INSUFFICIENT`.
+- **Optional second target.** Identifying the enclosed spectral value with a predesignated $k_*$,
+  proving uniqueness, or proving multiplicity one requires an additional continuous spectral
+  isolation/count argument. These are gates only for the named-mode upgrade, not for residual
+  computation or first-level existence.
+- **No substitutes.** The finite I2.1 count, finite QZ unit-circle gap, historical smooth-profile
+  gap, zero observed candidate shift and an empirical reference cannot establish the continuous
+  projected-gap containment or unique continuous spectral count.
+- **Current blocker split.** A certified sharp-disk projected essential gap blocks the existence
+  upgrade; reliable residual/field/numerical enclosures block any certified interval; unique-target
+  isolation is only an optional downstream blocker.
+
+This decision supersedes the preceding decision only where it treated a predesignated $k_*$ and
+target isolation as the default first-level objective. It does not weaken the reliability
+requirements for the residual interval, authorize an experiment or modify historical evidence.

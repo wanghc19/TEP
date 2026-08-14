@@ -1,241 +1,125 @@
-<!-- Analysis section: distinction between a real-axis singular-value minimum and an NEP root -->
+# Saved candidate、gap 内存在性与唯一目标
 
-# Root qualification
+## 1. 必须分开的对象
 
-状态：Phase 3 条件化设计；下述搜索方案在列明的解析域、等价性与简单根假设下成立，
-但尚未在当前 BIE 离散上完成实现验证。
+I3.1 同时涉及四个不同对象：
 
-2026-08-13 路线复审说明：本页的 complex-root protocol 是有限尾/一般非自伴离散的历史
-条件方案，不再定义当前 I2 的默认搜索方向。底层 global physical operator 的自伴、正谱在
-projected-gap/half-guide/exact-DtN 假设成立时说明目标正频率在实轴；当前 I2.2 只在 I1.3
-已经确定的端点检查 sign-count/inertia-like jump；随后由 I2.3 比较预先冻结的不同离散阶数下
-同一 physical mode 的 candidate 漂移，并把未归因的序列与不确定度直接交给 I3。本页不冻结
-locator 或误差分解。下面的标量反例继续限定强结论：实轴 dip、sign-count 诊断或
-constrained minimizer 都不能自动称为 exact finite root。复数诊断只能由以后明确观察到的异常
-另行触发，不作默认路线或正式 stage。
+1. $\widehat k_h$：I2 的固定算法实际保存的实数 candidate；
+2. $I_h^\lambda$：由可靠 continuous weak-residual bounds 构造的连续谱区间；
+3. $\lambda\in\sigma(A)$：residual 命题保证落在该区间中的某个连续谱点；
+4. $\lambda_*=k_*^2$：只有完成额外身份识别后才能命名的特定连续特征值真值。
 
-## 1. Three objects must remain distinct
+score minimizer 和 finite determinant zero 不在这条主链中。I3.1 直接把
+$\mu_h=\widehat k_h^2$ 代入连续弱方程。
 
-固定 $\beta$ 后，必须区分：
+## 2. 第一层：projected gap 内至少存在一个离散特征值
 
-1. 实轴 coarse scan 给出的 $\sigma_{\min}(F_j(k))$ 局部极小点；
-2. 近似 nonlinear operator $F_j(k)$ 的实际简单零点 $k_j$；
-3. 精确 half-guide DtN operator $F(k)$ 的目标零点 $k_*$。
-
-第 1 项只负责定位第 2 项。若 $\sigma_{\min}$ 在 `1e-3--1e-5` 形成平台，第 1 项完全可能
-不是第 2 项；此时不能把 simple-root perturbation formula 用在该点，也不能把平台高度
-解释成 $\lvert k_j-k_* \rvert$。
-
-标量反例 $F(k)=k-a+\mathrm{i}\epsilon$ 在实轴 $k=a$ 有严格
-$\sigma_{\min}$ minimum，却没有实根；这直接排除“实轴 dip 自动等于 eigenvalue”的推断。
-
-整个 hierarchy 固定 BIE/port discretization $h$。所有 $F_{j,h}$ 必须具有相同维数、
-unknown ordering、port phase origin、basis normalization、mass/flux pairing、row/column
-scaling 和 auxiliary-variable convention。共同且与 $j$ 无关的可逆变换可以使用；
-level-dependent scaling 会改变 projected correction，因而不允许。
-
-## 2. Reduced finite-tail cross-check
-
-对 $N_j=2^j$ 个 cell 的 finite segment，直接令远端 incoming scattering amplitude 为零，
-等价于让有限段继续向一个人工外部介质辐射。这个 finite-level map 可以收敛到半无限
-periodic tail，但有限 $j$ 的中心耦合一般不是自伴有界 eigenproblem；其真正零点可能
-离开实轴。若仍只在实轴扫描，得到的通常只是一个 singular-value minimum。
-
-Dirichlet 或预先冻结的 real Robin closure 仍可生成结构保持的 finite-tail
-cross-check，zero-incoming sequence 则用于 half-guide map 交叉验证。若要把 endpoint inertia
-或 signed-eigenvalue crossing 当成严格证据，必须先证明对应 weighted-Hermitian structure；
-但该证明不是以 continuous real spectrum 为依据进行 bounded real-axis approximation search
-的许可门。非结构保持 finite-level zero 仍可能离开实轴，故 constrained minimizer 必须连同
-residual floor 与结构误差报告。
-
-## 3. Dirichlet-terminated reflection maps
-
-令 $S_j$ 是 $N_j$-cell segment 的 scattering matrix，blocks 与
-[[research/projects/eig-apost/phase3-analysis/s-dtn-chain|DtN computation chain]] 相同。
-右端施加 $D^R=a^R+b^R=0$ 后，从中心右边界看到的 reflection map 是
+设 $A=A^*\ge0$ 是固定 Bloch 参数后的连续物理算子，并已针对当前 sharp-disk 模型证明
 
 $$
-  \widehat R_{+,j}^{D}
-  =R_{L,j}-T_{RL,j}(I+R_{R,j})^{-1}T_{LR,j}.
+G_\lambda=(g_-,g_+),
+\qquad 0<g_-<g_+,
+\qquad
+G_\lambda\cap\sigma_{\mathrm{ess}}(A)=\varnothing.
 $$
 
-左端施加 $D^L=a^L+b^L=0$ 后，从中心左边界看到的 reflection map 是
+这里的 projected gap 必须属于该连续算子的本质谱，而且 $g_-$ 与 $g_+$ 必须是已证明位于
+真实间隙内的 inner bounds；有限矩阵的 QZ separation、I2.1 的小圆盘 count 或其他材料
+profile 的 band gap 都不能代替。若可靠 residual interval 满足
 
 $$
-  \widehat R_{-,j}^{D}
-  =R_{R,j}-T_{LR,j}(I+R_{L,j})^{-1}T_{RL,j}.
+I_h^\lambda\subset G_\lambda,
 $$
 
-两式来自消去远端 amplitudes。实现时只解线性系统，不形成显式逆，并记录
-$I+R_{R,j}$、$I+R_{L,j}$ 的 reciprocal condition estimates。终端 Dirichlet
-resonance 或 termination-localized state 会表现为这些 factors 病态或根序列不稳定，
-必须作为 failure case 报告。
+则其中至少存在一个不属于本质谱的连续谱点，因而是孤立、有限重的离散特征值。这里采用
+Weyl/Fredholm essential-spectrum 约定。Fliss (2013), Proposition 3.3（本地原文 PDF p. 8）
+对 fixed-$\beta$ 波导给出同一 gap 内离散谱结论；当前项目仍须逐项核对 sharp-disk coefficient、
+Bloch 参数和尺度映射，见 [[ref/ref_data/Fliss2013.pdf|Fliss2013 original]]。projected gap 只排除
+本质谱，不排除同一区间内有多个离散特征值。
 
-独立静态核对使用 `4 x 4` 随机复 scattering blocks，分别直接解远端 Dirichlet
-constraint 和使用上述两个 reduced maps；右、左 map differences 为 `6.397e-17`、
-`6.728e-17`，对应 Dirichlet constraint residuals 为 `6.974e-17`、`6.547e-17`。
-该检查只确认矩阵消元，不确认物理 self-adjointness 或 MATLAB block convention。
-
-在当前中心域向外法向约定下，令 $\widehat R$ 代表相应一侧的 terminated reflection，
-则
+若 $I_h^\lambda=[L_h,U_h]\subset(0,\infty)$，定义
 
 $$
-  \Lambda_{±,j}^{D}
-  =\mathrm{i}\,\Gamma(I-\widehat R_{±,j}^{D})
-   (I+\widehat R_{±,j}^{D})^{-1}.
+I_h^k=[\sqrt{L_h},\sqrt{U_h}],
+\qquad
+G_k=(\sqrt{g_-},\sqrt{g_+}).
 $$
 
-这个 Cayley transform 还需要 $I+\widehat R$ 可逆。对实 $k$、真实材料和 projected
-gap，连续 finite-domain DtN 应具有相应的 self-adjoint symmetry；离散检查必须使用
-与 port basis 一致的 trace mass/flux pairing，不能只看未缩放矩阵是否逐元素 Hermitian。
-
-## 4. Primary root function: augmented coupling
-
-主 root function 不先形成 terminal Schur complement 或 reflection-to-DtN Cayley
-transform。把 center BIE unknown、center-port incoming/outgoing amplitudes 和左右
-far-port amplitudes 一起作为 unknown，并同时列出：
-
-1. center BIE 与两侧 port Cauchy matching equations；
-2. 左右 $N_j$-cell scattering equations；
-3. 两个 far-port 齐次 Dirichlet conditions
-   $a^\pm_{\mathrm{far}}+b^\pm_{\mathrm{far}}=0$。
-
-更具体地，设 center BIE density block $\xi$ 的长度为 $n$，每个 port block 的长度为
-$p$。按
+若记 gap 内正离散特征频率集合为
+$\mathcal K_{\mathrm{disc}}(A;G_\lambda)$，则可靠区间同时给出
 
 $$
-  z=
-  (\xi,a_c^-,b_c^+,b_c^-,a_c^+,a_f^-,b_f^-,b_f^+,a_f^+)^T
+\operatorname{dist}\bigl(
+\widehat k_h,\mathcal K_{\mathrm{disc}}(A;G_\lambda)
+\bigr)
+\le
+\max\{\widehat k_h-\sqrt{L_h},
+       \sqrt{U_h}-\widehat k_h\}.
 $$
 
-排列 $n+8p$ 个 unknowns。center BIE 与 extractors 写成
+这仍是到集合中某个谱点的上界，不是到指定 $k_*$ 的上界。
+
+在正式计算前必须独立预注册可接受频率分辨率 $\tau_k^{\mathrm{pre}}$。第一层可信结果还要求
 
 $$
-\begin{aligned}
-  A_c\xi+B_La_c^-+B_Rb_c^+&=0,\\
-  b_c^- -F_L\xi-J_{LL}a_c^- -J_{LR}b_c^+&=0,\\
-  a_c^+ -F_R\xi-J_{RL}a_c^- -J_{RR}b_c^+&=0.
-\end{aligned}
+\operatorname{diam}(I_h^k)\le\tau_k^{\mathrm{pre}}.
 $$
 
-其中 $J$ blocks 包含实现中的 direct incident/phase terms。左右 finite-segment equations
-按现有 scattering convention 分别是
+该阈值必须由下游所需有效数字、物理分辨率或比较任务决定。还要在结果前冻结
+$0<\rho_G^{\mathrm{pre}}<1$，并要求
 
 $$
-\begin{aligned}
-  b_f^- -R_L^-a_f^- -T_{RL}^-b_c^-&=0,\\
-  a_c^- -T_{LR}^-a_f^- -R_R^-b_c^-&=0,\\
-  a_f^-+b_f^-&=0,\\
-  b_c^+ -R_L^+a_c^+ -T_{RL}^+b_f^+&=0,\\
-  a_f^+ -T_{LR}^+a_c^+ -R_R^+b_f^+&=0,\\
-  a_f^++b_f^+&=0.
-\end{aligned}
+\tau_k^{\mathrm{pre}}
+\le\rho_G^{\mathrm{pre}}\operatorname{diam}(G_k),
 $$
 
-前三组 center equations 有 $n+2p$ 行，后六组有 $6p$ 行，因此形成
-$F_{j,h}(k)z=0$ 的 square $(n+8p)\times(n+8p)$ matrix。其维数与 $j$ 无关，只有
-finite-segment scattering blocks 随 $j$ 改变。这里 $+$/$-$ 表示右/左 lead，不表示
-Hermitian adjoint。
+从而不能用一个几乎占满整个 gap 的区间通过绝对宽度门。两个阈值都不能由已观察到的
+estimator 区间、I2 的零 observed shift 或后见的谱间距反推；$\rho_G^{\mathrm{pre}}$ 也须有
+非空泛性理由，不能只机械取成略小于一。区间落在 gap 内但过宽时，仍可保留
+“至少存在一个离散特征值”，但必须标为 `EXISTS_BUT_RESOLUTION_INSUFFICIENT`，不能作为达到
+预注册分辨率的 candidate 认证。
 
-若 $A_c$ 在搜索域可逆，消去 $\xi$ 恢复 center defect scattering equations；再消去
-far amplitudes 才恢复前两节的 reduced map。这给出可直接测试的代数等价链。对实际 BIE
-仍必须证明无 representation nullspace，并证明
+## 3. 第二层：唯一目标识别
 
-$$
-  \ker F_{j,h}(k)\ne\{0\}
-  \quad\Longleftrightarrow\quad
-  \text{the terminated finite-tail problem has a nonzero guided field}.
-$$
-
-该等价性还要求 contour 内 one-cell `A_QP(k)` 可逆，或改用能显式容纳其 poles 的
-formulation；否则 center representation nullspace 或 cell-solve pole 可能产生伪根。
-前两节的 Schur/Cayley form 仅作 well-conditioned cross-check，不作为主 root function。
-
-## 5. One analytic chart per local search
-
-现有 `bloch.rayleigh_channels` 在每个点重新调用 principal square root 并强制
-$\operatorname{Im}\gamma_m\ge0$；传播通道跨越实轴时这不是单一解析函数。局部复根
-搜索必须在中心点 $k_c$ 选择 physical seed $\gamma_{m,c}$，再在不含 branch point 的
-simply connected 区域中作 analytic continuation。例如在包含搜索 contour 的圆盘内用
+只有后续确实需要跟踪某个指定 mode 或特征值时，才进一步要求例如
 
 $$
-  \gamma_m(k)=\gamma_{m,c}
-  \exp\!\left[
-    \frac12\operatorname{Log}\!\left(1+\frac{k-k_c}{k_c-\beta_m}\right)
-    +\frac12\operatorname{Log}\!\left(1+\frac{k-k_c}{k_c+\beta_m}\right)
-  \right].
+I_h^\lambda\cap\sigma(A)=\{\lambda_*\}.
 $$
 
-圆盘半径小于 $k_c$ 到 $\pm\beta_m$ 的距离，并固定同一 logarithm branch。搜索域还必须
-避开 $k=0$、Wood points、Hankel/QP Green branch cuts 和 BIE poles。不得在 contour
-quadrature nodes 上分别重选 square-root branch。
+这会把第一层存在的谱值识别为 $\lambda_*$；若还要声称一重特征值，则另需 multiplicity-one
+或连续谱投影秩一。唯一身份和重数不是 residual 计算、gap 内存在性或分辨率门的前置条件。
 
-## 6. Triggered local complex-zero diagnostic
+I3.2 可以用独立 reference 和公共物理场表示经验检查身份；这支持 empirical estimator，不能
+替代连续谱隔离或计数。I2.1 的有限矩阵 count one 也不能替代连续谱计数。
 
-本节只在持续 real-axis residual floor、candidate shift 与 uncertainty ledger 不相容或
-近核/phase 异常时启用；它不是连续实谱问题的默认 locator。启用后：
+## 4. I2 证据能提供什么
 
-1. 取围绕 $k_c$ 的小型 pole-free complex contour，用 argument principle 或 Beyn
-   moments 计算 root count；缩放 contour 后 count 必须稳定且等于 $1$；
-2. contour 上 $\sigma_{\min}(F_{j,h})$ 必须与零分离；
-3. 用 bordered implicit determinant 求根。固定 borders $b,c$，每一步解
+- I2.1 只说明某个冻结 finite matrix determinant 在小复圆盘内有条件性 count one；它不能
+  充当 continuous projected gap 或连续谱计数。
+- I2.2 的 Hermitian-part endpoint sign-count 只提高 candidate 的数值可信度；它不是连续
+  spectral enclosure。
+- I2.3 的 `SAME_MODE` 与零 observed candidate shift 支持算法输出稳定；它不能证明 continuous
+  minimizer、finite root 或连续特征值收敛。
 
-   $$
-     \begin{bmatrix}F_{j,h}(k)&b\\c^*&0\end{bmatrix}
-     \begin{bmatrix}x(k)\\f(k)\end{bmatrix}
-     =
-     \begin{bmatrix}0\\1\end{bmatrix}.
-   $$
+这些证据适合帮助选择重构场和检查 mode identity，但不能参与 gap containment 或事后调整
+$\tau_k^{\mathrm{pre}}$。
 
-   再以右端 $[-F_{j,h}'(k)x;0]$ 解出 $f'(k)$，并更新
-   $k\leftarrow k-f(k)/f'(k)$；
-4. 至少两个初值和一个 contour-moment 初值收敛到同一 complex root。
+## 5. 不再是主线门的有限根条件
 
-一般 complex matrix function 的零点有两个实自由度；因此若该 fallback 被触发，必须把
-$|\operatorname{Im}k|$ 与 matrix evaluation、finite structure、branch continuation 和
-root-solve error 比较。若无法解释 imaginary part，只能报告 complex finite-matrix candidate，
-不能反向否定 continuous physical eigenvalue 的实性，也不能称 physical resonance。
+nearby finite simple zero、左右 finite null vectors、非零 transverse slope、完整 matrix
+derivative 和 bordered conditioning 只服务可选 simple-root correction。它们失败时，该
+finite diagnostic unavailable；continuous weak residual 仍可继续。
 
-## 7. How $k_j$ is qualified
+## 6. 分层失败语义
 
-contour isolation 与 bordered solve 后，候选 $k_j$ 至少通过：
+- 不能构造非零 conforming field：`CONFORMING_FIELD_UNAVAILABLE`；
+- residual norm 只覆盖部分项：`PARTIAL_RESIDUAL_ONLY`；
+- residual/Riesz 数值误差淹没信号：`CONTINUOUS_RESIDUAL_UNRESOLVED`；
+- 当前模型的 continuous projected gap 未建立：`PROJECTED_GAP_NOT_ESTABLISHED`；
+- 可靠区间越过 gap 边缘：`CERTIFIED_INTERVAL_CROSSES_GAP_EDGE`；
+- gap 内存在性成立但区间过宽：`EXISTS_BUT_RESOLUTION_INSUFFICIENT`；
+- 第一层通过但唯一身份未建立：`EXISTENCE_WITH_TARGET_UNRESOLVED`；
+- finite optional correction 失败：只停止该可选诊断，不改变以上主线状态。
 
-1. relative singular residual
-   $\rho_j=\sigma_{\min}(F_j(k_j))/\lVert F_j(k_j) \rVert$ 到达预设线性代数容差；
-2. projected Newton defect
-
-   $$
-     \nu_j=
-     \left|
-       \frac{y_j^*F_j(k_j)x_j}{y_j^*F_j'(k_j)x_j}
-     \right|
-   $$
-
-   小于当前 DtN estimator 的固定比例；
-3. $\lvert y_j^*F_j'(k_j)x_j \rvert$ 明确远离零；
-4. 从两个初值启动的局部 solve 收敛到同一根；
-5. second-smallest singular value 与 smallest singular value 明确分离；
-6. contour count 为 $1$，bordered matrix 的 rcond 可接受；
-7. derivative 包含 BIE、material wavenumber、Rayleigh phase 和 finite-tail map 的全部
-   $k$ dependence；anchored centered differences 在步长 $s,s/2,s/4$ 上稳定；
-8. 相邻层使用同一 branch chart，并以 center-field eigendirection overlap 匹配同一根；
-9. $\lvert \operatorname{Im} k_j \rvert$ 与 matrix evaluation、branch 和求解误差相容；
-10. center-field participation 不随 $j$ 消失，`A_QP` 与所有 Schur factors 不过度病态。
-
-若这些条件失败，只能报告 singular-value minimum 和平台诊断，$\delta_j$、effectivity
-和 “eigenvalue error estimator” 均标为 unavailable。
-
-## 8. Structure-preserving cross-checks
-
-- 比较 Dirichlet、一个冻结的 real Robin 和 zero-incoming 三种 half-guide map 是否随
-  $j$ 趋向同一 QZ/Riccati map；它们不是三种独立 BIE 方法，但能暴露 termination error。
-- 对 finite-level Dirichlet/Robin coupled problem 检查 root 的 imaginary part、离散
-  self-adjoint defect 和左右 null-vector conditioning。
-- reduced DtN/Schur eigenproblem 只在所有 elimination factors well-conditioned 时与
-  augmented root 交叉核对。
-- 只有先证明一个正定、与 $j$ 无关的 weight $W$ 满足
-  $WF_{j,h}(k)=F_{j,h}(k)^*W$，才可把实轴 signed-eigenvalue/inertia 当成严格 crossing
-  证据。普通 $\sigma_{\min}$ 极小点不能替代该结构条件；但其 bounded minimization 可以在
-  独立 residual/field/factor/uncertainty 门下产生 qualified constrained approximation。
-- 若 Dirichlet 与 real Robin 的根差在 $j$ 增加时不下降，不能声称已隔离 infinity
-  truncation；应先检查 port truncation、termination resonance 和 map composition。
+后面一层失败不得撤销前面已经成立的较弱结论。

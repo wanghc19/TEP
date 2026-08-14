@@ -7,14 +7,21 @@
 当前没有活动中的统一理论主线。原 Müller--Cauchy 主线已于 2026-07-26 冻结在
 Git 标签 `mainline-muller-cauchy-2026-07-26`，并移至
 `research/archive/muller-cauchy-2026-07/`。`research/projects/eig-apost/` 已确认
-fixed-$\beta$ line-defect guided-mode eigenvalue 后验误差的 research question，并已
-完成 Phase 2b novelty gate、Phase 3--4 历史方法设计和离散部件验证。当前新路线 I1.4
-为 `PASS WITH CONDITIONS`：fixed-$M=48$ width-driven 局部加密记录离散候选
-$k=1.8327703475952146$、$q=8.3200886232193094\times10^{-8}$，但这不是 locator root 或
-eigenvalue。sampled anchored complex-$k$ branch、fixed chart/rank、factor ledger 和
-Cauchy--Riemann 等 readiness gates 已条件通过，允许另行预注册 empirical I2 isolation；
-locator/root 尚未运行，production derivative 与 estimator 仍不可用。该结果也不构成真实 eigenvalue estimator 或新的
-统一主线。
+fixed-$\beta$ line-defect guided-mode eigenvalue 后验误差的 research question。新路线已完成
+I1 candidate discovery/readiness 与 I2 的局部有限维 count、Hermitian-part 端点 sign count 和
+两条单轴 candidate 比较；I2 的六个 saved candidates 均为
+$1.832770289108157$，相邻层均确认为同一 mode。该结果只表示在相同扫描规则下没有观察到
+candidate drift，不证明 score minimizer、finite root 或连续 eigenvalue 已收敛。
+
+I3.1 estimator theory 现已启动。现行主线直接在保存的 candidate 处重构连续 form-space
+物理场，并研究 continuous weak residual 的可计算对偶范数；finite one-step root correction
+已降为可选内部诊断。第一层目标是不指定唯一 mode 地认证 current projected gap 内至少一个
+连续离散特征值，并要求可靠区间通过事前冻结的 absolute/gap-relative resolution；唯一目标
+识别只作可选升级。continuous form、conforming field reconstruction、完整 residual
+decomposition、dual-norm computation 和 sharp-disk projected-gap contract 尚未闭合，所以
+`design-3-1.md` 尚未就绪，也没有
+empirical continuous error estimator 或 upper bound。
+该专题仍不构成新的统一主线。
 在形成可以明确命名且经过审核的统一框架以前，不建立空的 `mainline/` 作为占位。
 
 ## 层级
