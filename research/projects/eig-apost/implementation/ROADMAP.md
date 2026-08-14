@@ -104,44 +104,46 @@ hierarchy；但 terminal-cell 尺度只说明 sub-grid minimizer 尚未解析，
 
 I3 直接研究 candidate 与真实连续特征值之间的误差。它不以某种固定 estimator 公式为预设，
 也不把 next-level shift、matrix residual 或 effectivity 单独当成最终答案。具体算法和验收流程
-应根据 I2 实际交付另行冻结。当前 `drift-a1` 与 `m-drift-a2` 已提供两条 conditional
-same-mode algorithmic candidate hierarchy，故 I3 状态为 `DESIGN MAY BEGIN / NOT STARTED`。零 observed shift
+应根据 I2 实际交付另行冻结。当前 `drift-a1` 与 `m-drift-a2` 已提供两条经 mode-identity
+检查的 candidate sequence，故 I3 状态为 `DESIGN MAY BEGIN / NOT STARTED`。零 observed shift
 不能单独验证 next-level correction、收敛或 estimator。
 
-### 输入、预期输出和与上界的关系
+### 输入、三项输出和与上界的关系
 
 - **从 I2.3 接收：**预先冻结的离散阶数、同一物理 mode 的 candidate 序列、相邻/相对漂移、
   terminal-cell/minimizer-localization diagnostic，以及最低 residual、factor、field、boundary、
   mode-identity 和复现诊断。`drift-a1` 与 `m-drift-a2` 已分别提供边界 Nyström 与
   trace-cutoff 轴的原始数值事实；两条轴的三层 saved candidate 均相同，observed shift 为零。
   这些事实可进入误差来源分析，但不能单独支持非零 correction、effectivity 或 convergence claim。
-- **由 I3 另行建立：**连续模型适用边界、空间/trace/half-guide/BIE--QZ/结构/求解/
-  continuous--discrete 误差分类，以及带自身 uncertainty 的独立 truth reference。
-- **第一层输出：**一个可计算 error indicator 或 correction，以及它试图估计的误差分量。
-- **第二层输出：**与实际 refinement shift 和带 uncertainty 的独立连续问题 reference 比较后的
-  effectivity。若只预测下一层变化，必须称 `next-level correction/indicator`，不能称真值误差
-  estimator。
-- **最终输出：**若还能给出充分的 continuous--discrete bridge、稳定性、remainder 和
+- **由 I3 另行建立：**连续模型适用边界，以及空间/trace/half-guide/BIE--QZ/结构/求解/
+  continuous--discrete 误差与实际 estimator 的关系。
+- **I3.1 输出：**一个冻结、可计算的 $\eta_h$，以及它覆盖和忽略的误差、适用假设和内部
+  一致性证据。没有证明时只能称渐近误差指标或 estimator candidate。
+- **I3.2 输出：**在 estimator 冻结后，用未参与其构造的独立 reference 检验其是否跟踪
+  $|k_*-\widehat k_h|$ 的量级。通过后才称 `empirical eigenvalue-error estimator`；同方法
+  高分辨率结果只能作有共享偏差的后备。
+- **I3.3 输出：**若还能给出充分的 continuous--discrete bridge、稳定性、remainder 和
   saturation/enclosure 条件，则产生可计算上界 $U_h$，满足
 
   $$
-  |k_*-\widetilde k_h|\le U_h.
+  |k_*-\widehat k_h|\le U_h.
   $$
 
   若这些条件不能建立，必须明确输出 `UPPER_BOUND_UNAVAILABLE`；已经通过独立 truth
   validation 的 empirical estimator 仍然可以保留。
 
-### 四个预计方向（非冻结实验设计）
+### 三个正式里程碑（尚未冻结实验设计）
 
-| Direction | 只回答什么问题 |
-|---|---|
-| I3.1 误差来源识别与分解 | candidate 的变化来自哪些误差，哪些量能在公共表示下比较 |
-| I3.2 可计算误差估计 | 能否从已有离散数据构造一个与目标误差同量纲的 indicator/correction |
-| I3.3 真值关联与 effectivity | 该估计是否真的跟踪到连续真值的误差，而不只是预测共享偏差下的层间变化 |
-| I3.4 上界可行性 | 能否把估计、remainder、稳定性与 continuous bridge 组合成可计算上界；否则准确记录缺口 |
+| Milestone | 只回答什么问题 | 独立输出 |
+|---|---|---|
+| I3.1 构造并内部论证误差指标 | 能否构造实际可计算的 $\eta_h$，并说明其数学来源、假设、覆盖和忽略的误差 | 冻结的 estimator candidate 与内部检查结果 |
+| I3.2 独立验证 estimator | 冻结后的 $\eta_h$ 是否在未参与其构造的独立 reference 上跟踪真值误差量级 | empirical estimator verdict；失败时保留较弱 indicator 结论 |
+| I3.3 研究可计算上界 | 能否由已证明覆盖的稳定性、continuous bridge、remainder 或 enclosure 得到不含未知常数的 $U_h$ | $U_h$ 或 `UPPER_BOUND_UNAVAILABLE` |
 
-这些方向保持在项目级，不在本轮冻结 levels、transport、denominator、reference 算法、阈值或
-实验命令。
+误差来源识别并入 I3.1；reference 搜索并入 I3.2；稳定性和 remainder 研究并入 I3.3。
+它们不另拆里程碑。本轮仍不冻结 levels、transport、denominator、reference 算法、阈值或
+实验命令。I3.1 的定义、常数和样本规则必须在查看 I3.2 的 reference 结果前冻结；一般经验
+reference 的 uncertainty 不能进入严格 $U_h$，除非 reference 自身给出经证明的 enclosure。
 
 ## OPTIONAL：不构成正式阶段
 

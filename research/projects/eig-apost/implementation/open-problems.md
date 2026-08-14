@@ -92,8 +92,8 @@ I1--I4 ledger ID 冲突，当前问题使用
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
-| OP-CI3-1 | `BLOCKER` | I2.3 已提供 `ntot` 与 $M$ 两条 conditional same-mode candidate hierarchy，且两条轴都没有 observed candidate drift；但尚未把定位/求解、空间/trace、half-guide、BIE/QZ、structure 和 continuous--discrete 等误差来源建立为可计算分解，也尚无能与 independent continuous-truth reference 比较的 estimator。 | 不阻止 I3 开始设计；阻止项目回答 candidate 到真实连续特征值的误差，或把两条零 observed shift 称为 convergence/effectivity。不要求先证明 candidate 是 exact finite root。 | I3 先识别目标误差分量和两条零-shift 轴的信息边界，再选择 estimator 路线并冻结带 uncertainty 的 independent reference。若没有非零 next-level signal，必须另找独立可计算 indicator 或经审查的 refinement 对照。 | `OPEN` |
-| OP-CI3-2 | `IMPORTANT CAVEAT` | 尚无可计算上界所需的 continuous--discrete stability/no-pollution bridge、remainder 控制与 independently justified saturation/enclosure。 | 这是 Level-4 upper-bound claim blocker，不阻止 I3 以 independent-truth-validated empirical estimator 和 `UPPER_BOUND_UNAVAILABLE` 合法完成。 | 在 empirical effectivity 后单独审查 sufficient upper-bound route；若条件不成立，正式输出 `UPPER_BOUND_UNAVAILABLE`。 | `OPEN` |
+| OP-CI3-1 | `BLOCKER` | I2.3 已提供 `ntot` 与 $M$ 两条 same-mode candidate sequence，且两条轴都没有 observed candidate drift；但尚无已经冻结、说明覆盖/忽略误差的可计算 $\eta_h$，也尚无在 estimator 冻结后取得的 independent continuous-truth reference。 | 不阻止 I3.1 开始；阻止项目回答 candidate 到真实连续特征值的误差，或把两条零 observed shift 称为 convergence/effectivity。不要求先证明 candidate 是 exact finite root。 | I3.1 把误差来源识别并入 estimator 构造，先冻结公式、常数、样本与失败条件；I3.2 再用未参与构造且带自身 uncertainty 的独立 reference 验证。若只有同方法高分辨率结果，必须披露共享偏差并降级结论。 | `OPEN` |
+| OP-CI3-2 | `IMPORTANT CAVEAT` | 尚无可计算上界所需的 continuous--discrete stability/no-pollution bridge、remainder 控制与 independently justified saturation/enclosure。 | 这是 I3.3 upper-bound claim blocker，不阻止 I3.1 形成 estimator candidate，也不阻止 I3.2 形成 independently validated empirical estimator。 | I3.3 只使用可计算且经证明覆盖的量与常数研究 $U_h$；一般 empirical reference uncertainty 不能直接充当上界项。若条件不成立，正式输出 `UPPER_BOUND_UNAVAILABLE`。 | `OPEN` |
 
 ### Current I4
 
