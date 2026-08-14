@@ -82,7 +82,9 @@ implementation/
 - [[research/projects/eig-apost/implementation/i1/README|i1/]]：已完成的离散算子与 sampled
   root-readiness 阶段。
 - [[research/projects/eig-apost/implementation/i2/README|i2/]]：I2.1--I2.3 已完成；维护三个有
-  独立科学问题的内部里程碑，并向尚未启动的 I3 交付两条 conditional hierarchy。
+  独立科学问题的内部里程碑，并由
+  [[research/projects/eig-apost/implementation/i2/report|I2 stage report]] 综合向尚未启动的 I3
+  交付两条 conditional hierarchy。
 - [[research/projects/eig-apost/implementation/i3/README|i3/]]：维护 candidate 误差估计、
   independent truth comparison 和上界可行性的目标、输入与预期输出；尚未冻结实验细节。
 - [[research/projects/eig-apost/implementation/ROADMAP|ROADMAP.md]]：只维护新路线 I1--I3
@@ -130,7 +132,8 @@ I1--I4 文档、实验 ID 或冻结 verdict。
    I1--I3 的依赖。
 3. [[research/projects/eig-apost/implementation/i1/README|current I1 guide]]：确认内部
    里程碑和授权边界。
-4. [[research/projects/eig-apost/implementation/i2/README|current I2 guide]] 与
+4. [[research/projects/eig-apost/implementation/i2/README|current I2 guide]]、
+   [[research/projects/eig-apost/implementation/i2/report|I2 stage report]] 与
    [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]：确认 count-one 结果；
    再读 [[research/projects/eig-apost/implementation/i2/design-2-2|I2.2 design]] 与
    [[research/projects/eig-apost/implementation/i2/review-2-2|I2.2 review]]，最后读

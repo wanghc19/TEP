@@ -153,8 +153,9 @@ shift 不能单独提供非零 correction、收敛证据或误差界。误差来
   `MINOR CAVEAT`，记录各问题的 blocking scope、最低成本检查和状态；只有未解决的
   blocker 能停止当前工程路线。见
   [[research/projects/eig-apost/implementation/open-problems|open-problem ledger]]。
-- `implementation/i2/`：I2.1--I2.3 已完成，I3 design may begin；项目级状态与设计/审查分别见
-  [[research/projects/eig-apost/implementation/i2/README|I2 guide]]、
+- `implementation/i2/`：I2.1--I2.3 已完成，I3 design may begin；阶段综合与项目级状态分别见
+  [[research/projects/eig-apost/implementation/i2/report|I2 stage report]]、
+  [[research/projects/eig-apost/implementation/i2/README|I2 guide]]，设计/审查分别见
   [[research/projects/eig-apost/implementation/i2/design|I2.1 design]] 和
   [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]，以及
   [[research/projects/eig-apost/implementation/i2/design-2-2|I2.2 design]] 和

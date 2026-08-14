@@ -4,6 +4,8 @@
 
 I2 当前状态为 `I2.1 PASS WITH CONDITIONS / I2.2 HERMITIAN-PART SINGLE_JUMP /`
 `I2.3 PASS WITH CONDITIONS -- NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。
+三里程碑的综合科学解释、失败历史、证据层级与 I3 交接见
+[[research/projects/eig-apost/implementation/i2/report|I2 stage report]]。
 I2.1 已在冻结 fine、$M=48$、$K=97$ 的有限维矩阵族上得到 factor-aware count one；统一入口为
 [[test/i2/k-count/README|I2.1 experiment index]]，结论边界见
 [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]。它提高了 I1 dip 是谱候选
@@ -216,15 +218,16 @@ complex solve 和其他非阻断检查列入 `OPTIONAL`。
 
 1. [[research/projects/eig-apost/implementation/ROADMAP|project roadmap]]；
 2. [[research/projects/eig-apost/implementation/i1/README|I1 guide]]；
-3. [[research/projects/eig-apost/implementation/i2/design|I2.1 frozen design]] 与
+3. [[research/projects/eig-apost/implementation/i2/report|I2 stage report]]；
+4. [[research/projects/eig-apost/implementation/i2/design|I2.1 frozen design]] 与
    [[research/projects/eig-apost/implementation/i2/review|I2.1 review]]；
-4. [[research/projects/eig-apost/implementation/i2/design-2-2|historical I2.2 design]] 与
+5. [[research/projects/eig-apost/implementation/i2/design-2-2|historical I2.2 design]] 与
    [[research/projects/eig-apost/implementation/i2/review-2-2|historical I2.2 review]]；
-5. [[research/projects/eig-apost/implementation/i2/design-2-3|I2.3 frozen design]]、
+6. [[research/projects/eig-apost/implementation/i2/design-2-3|I2.3 frozen design]]、
    [[research/projects/eig-apost/implementation/i2/review-2-3|I2.3 independent review]] 与
    [[test/i2/k-drift/README|I2.3 ntot-axis experiment index]]；随后读
    [[research/projects/eig-apost/implementation/i2/design-2-3m|I2.3 M-axis frozen design]]、
    [[research/projects/eig-apost/implementation/i2/review-2-3m|I2.3 M-axis independent review]] 与
    [[test/i2/m-drift/README|I2.3 M-axis experiment index]]；
-6. [[research/projects/eig-apost/implementation/open-problems#Current I2|Current I2 ledger]]；
-7. [[research/projects/eig-apost/implementation/i3/README|I3 guide]]。
+7. [[research/projects/eig-apost/implementation/open-problems#Current I2|Current I2 ledger]]；
+8. [[research/projects/eig-apost/implementation/i3/README|I3 guide]]。
