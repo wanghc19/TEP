@@ -1,7 +1,8 @@
-# I3.1 进入实验设计前的最小门槛
+# I3.1 实验设计门与当前完成情况
 
-本页不是实验设计，也不授权 MATLAB 运行。它只说明何时可以由 Researcher 与 Engineer 编写
-`implementation/i3/design-3-1.md`。
+本页不是实验设计，也不授权 MATLAB 运行。它记录首个设计需要关闭的门，以及
+[[research/projects/eig-apost/implementation/i3/design-3-1|design-3-1]] 和 `center-a1` 实际关闭到
+哪一层。
 
 ## 必须先关闭
 
@@ -65,6 +66,15 @@ finite-matrix 条件只在启用 OPTIONAL correction 时恢复为局部门槛。
 
 ## 当前裁决
 
-`NOT READY FOR design-3-1`。原因已经收紧为：continuous form、field reconstruction、完整
-residual decomposition、computable dual norm 和 numerical allowance 尚未具体化。原
-common-space、finite-root、matrix-derivative blockers 已删除。
+`CENTER STRONG-RESIDUAL BASELINE COMPLETE / RESOLUTION INSUFFICIENT`。`design-3-1` 对中心
+空列特殊情形明确了 continuous operator/domain、紧支撑场、完整强残量三项、普通 Simpson
+数值检查和解释边界；正式 ratio 为 $22.43882099031153$。它关闭了“是否能从 I2 数据构造一个
+真正 continuous-domain trial field 并计算 residual”这一最低门，但没有关闭：
+
+- cutoff defect 更小且具有项目分辨率的 reconstruction/residual；
+- residual numerator 的可靠上界与 field norm 的可靠下界；
+- 当前 sharp-disk projected gap；
+- I3.2 所需的可验证 estimator。
+
+因此后续 design 仍须单独冻结。原 common-space、finite-root、matrix-derivative blockers 继续
+不属于主线。

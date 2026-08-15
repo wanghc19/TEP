@@ -1,20 +1,19 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-08-14。
+更新日期：2026-08-15。
 
 ## 当前状态
 
-- **2026-08-14 I3.1 estimator theory 路线复审：**第一层目标已改为 saved candidate 到当前
+- **2026-08-15 I3.1 中心空列强残量 baseline：**第一层目标仍是 saved candidate 到当前
   continuous projected gap 内正离散特征频率集合的距离；只有后续必须跟踪特定 mode 时才升级
   为 $|k_*-\widehat k_h|$。finite one-step projected-root correction 即使代数成立，也只预测
-  finite/projected root 位移，现已降为 OPTIONAL 内部诊断。当前主线直接在 saved candidate
-  处重构 continuous form-space field，计算 continuous weak residual 及其 normalized dual
-  norm。抽象自伴谱命题已闭合；可靠区间完全进入 current-model continuous projected essential
-  gap 时可先推出至少一个离散特征值，且只有同时通过结果前冻结的 absolute/gap-relative
-  resolution 才接受为分辨率级结果。唯一目标识别是第二层可选升级。continuous form、
-  conforming reconstruction、完整 residual decomposition、dual-norm computation 和 numerical
-  allowance 尚未具体化，sharp-disk projected-gap contract 也未建立，故
-  `design-3-1.md` 仍为 `NOT READY`；本轮未运行实验。
+  finite/projected root 位移，现已降为 OPTIONAL 内部诊断。首个 `center-a1` 在 saved candidate
+  处构造了属于 continuous strong-operator domain 的中心空列紧支撑场，得到场范数
+  $0.840017038309255$、强残量范数 $18.848991951433035$ 和 computed ratio
+  $22.43882099031153$。积分加密稳定，但固定单胞 cutoff 导数项主导，名义区间跨过零；正式
+  当前解释为 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`。普通积分尚非可靠 enclosure，
+  sharp-disk projected-gap contract 也未建立，故没有连续离散特征值存在性结论，I3.2 尚不可
+  开始。I3.1 继续研究低-cutoff-defect conforming reconstruction 或 continuous weak residual。
 
 - **2026-08-14 I2.3 Rayleigh/Fourier cutoff 单轴：**正式 `m-drift-a2` 固定
   $n_{\mathrm{tot}}=160$，只改变 $M=32,40,48$ 及其派生维数；物理参数、fine proxy、搜索区间、
@@ -204,11 +203,12 @@
   将 $M_{\mathrm{trace}}=48$ 的最坏误差和 omitted energy 分别压到
   $7.08\times10^{-12}$ 与 $5.00\times10^{-13}$。OP-I4-1h 与 OP-I4-6 因而在当前制造
   密度、实数非 Wood 参数和有限 $M_{\mathrm{ref}}=96$ 意义下关闭。
-- 状态：`active investigation -- I3.1 theory active; design not ready`。
+- 状态：`active investigation -- I3.1 center baseline complete; resolution insufficient`。
   `ntot` 与 $M$ 两条三层单轴实验的 saved candidate 均完全相同且 `SAME_MODE`；I3.1 已开始
-  saved-candidate continuous weak-residual 理论，但 form contract、conforming reconstruction、
-  complete residual、dual norm 与 current-model projected-gap contract 尚未闭合。第一层不要求
-  唯一 mode，但须预注册 absolute/gap-relative resolution。该状态不表示 sub-grid
+  saved-candidate continuous residual 研究。中心空列 strong-residual baseline 已完成，但 ratio
+  $22.43882099031153$ 由固定单胞 cutoff 主导，分辨率不足；下一设计须减少 cutoff defect 或回到
+  weak residual。第一层不要求唯一 mode，但 reliable enclosure、current-model projected gap 与
+  absolute/gap-relative resolution 仍是相应存在性结论的门。该状态不表示 sub-grid
   minimizer、finite root 或连续真值零漂移，也不构成收敛证据。
 - 历史阶段门（均不构成当前实现授权）：manufactured root/correction pipeline 曾为窄范围
   `GO`，finite-tail Half-guide map 曾为 Stage 1 `GO`，Augmented BIE 曾为
@@ -242,7 +242,7 @@
 | Current I1.3 real-$k$ continuity, candidate reconnaissance and bounded zoom | `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_NESTED_GRID_CANDIDATE` | $M=48$ count/QZ/chart/subspace-coarse/fine continuity；中心差分二阶收敛；$M=12\to24\to48$ 分层筛查；v2 在 15 层、33 点、167 门全通过后得到 $k=1.8327703475952146$、$q=8.32009\times10^{-8}$，最终宽度 $7.6294\times10^{-7}$ | 固定 $M=48$ 不是 trace convergence；FD mutation 未过 $10^{-12}$，production derivative 不可用 |
 | Current I1.4 sampled complex-$k$ readiness | `I1_4_PASS_WITH_CONDITIONS / SAMPLED_FIXED_M_DISCRETE_ROOT_READINESS`; empirical I2 isolation ready | $r_0=3.8147\times10^{-7}$ disk；anchored branch/frame/chart/rank；82/820/164/164 node/factor/branch/QZ rows、8 closure、36 CR、6 CR-negative rows；V5 identifiable assembly-order closure | 未运行 locator/contour/root；固定 $M=48$ 不是 trace convergence；无 production separation、unsampled-pole theorem 或 $A_{\mathrm{def}}'$；对称 physical transmission labels 不可动态辨识 |
 | Current I2.1 factor-aware root count / I2.2 endpoint sign count | I2.1 `PASS WITH CONDITIONS`; I2.2 `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP` | I2.1 32/64 主 winding 均为 one；I2.2 的 raw $H$ strict-inertia 路线保留历史 STOP，但当前 $H_{\mathrm{sym}}$ 两端 counts 为 $(194,0,0)$ 与 $(193,1,0)$，$50/100/200$ bands 稳定 | 该 difference 只作 numerical corroboration；raw-$H$ inertia 仍 unavailable，尚无实根、root 坐标、连续 eigenvalue 或 estimator |
-| Current I2.3 cross-discretization drift | `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` | `ntot=160,208,256` 与固定 $n_{\mathrm{tot}}=160$ 的 $M=32,40,48$ 两条单轴实验均返回完全相同的三层 saved candidate；最低 raw diagnostics、gauge/repeat 与相邻 `SAME_MODE` 门通过 | terminal half-width 只作 sub-grid minimizer 搜索分辨率；不证明 minimizer/root 零漂移、收敛或误差界。I3.1 theory 已启动，实验设计尚未就绪 |
+| Current I2.3 cross-discretization drift | `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` | `ntot=160,208,256` 与固定 $n_{\mathrm{tot}}=160$ 的 $M=32,40,48$ 两条单轴实验均返回完全相同的三层 saved candidate；最低 raw diagnostics、gauge/repeat 与相邻 `SAME_MODE` 门通过 | terminal half-width 只作 sub-grid minimizer 搜索分辨率；不证明 minimizer/root 零漂移、收敛或误差界。I3.1 已完成中心空列强残量 baseline，但该 baseline 分辨率不足 |
 
 实现权威入口为
 [[research/projects/eig-apost/implementation/archive/legacy-route-v1/i0-manufactured/design|manufactured NEP design]]、
@@ -632,7 +632,8 @@ denominator 或 independent reference 中哪些是必需输入；不得为了复
   I2.3 已完成两条预注册 candidate 漂移实验：$n_{\mathrm{tot}}=160,208,256$ 与固定
   $n_{\mathrm{tot}}=160$ 的 $M=32,40,48$。两条轴的三层均通过最低原始诊断并确认
   `SAME_MODE`，saved candidate 完全相同。因此当前项目得到两条 conditional algorithmic
-  hierarchy。I3.1 estimator theory 已启动但 design 尚未就绪；不得把 observed candidate equality 报告成 sub-grid
+  hierarchy。I3.1 的首个中心空列 strong-residual baseline 已完成，但固定单胞 cutoff 主导且
+  分辨率不足；不得把 observed candidate equality 报告成 sub-grid
   minimizer、exact finite real zero 或连续 eigenvalue 的零漂移，也不得称已收敛或自动转入
   复平面实验。
 - 历史新增内容现归档于 `test/archive/legacy-route-v1/i4-rayleigh-budget/`、

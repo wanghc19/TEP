@@ -105,9 +105,10 @@ hierarchy；但 terminal-cell 尺度只说明 sub-grid minimizer 尚未解析，
 I3 直接研究 candidate 与真实连续特征值之间的误差。它不以某种固定 estimator 公式为预设，
 也不把 next-level shift、matrix residual 或 effectivity 单独当成最终答案。具体算法和验收流程
 应根据 I2 实际交付另行冻结。当前 `drift-a1` 与 `m-drift-a2` 已提供两条经 mode-identity
-检查的 candidate sequence。I3.1 已正式进入理论研究，当前状态为
-`THEORY ACTIVE / DESIGN NOT READY`。零 observed shift 不能单独验证 next-level correction、
-收敛或 estimator。
+检查的 candidate sequence。I3.1 已完成首个中心空列 continuous strong-residual baseline，当前
+状态为 `ACTIVE / CENTER BASELINE COMPLETE / RESOLUTION INSUFFICIENT`。零 observed shift 不能
+单独验证 next-level correction、收敛或 estimator；首个强残量 ratio 也因固定单胞 cutoff 主导而
+不能进入 I3.2。
 
 ### 输入、三项输出和与上界的关系
 
@@ -139,7 +140,7 @@ I3 直接研究 candidate 与真实连续特征值之间的误差。它不以某
   `UPPER_BOUND_UNAVAILABLE`；已经通过独立 truth validation 的 empirical estimator 仍然可以
   保留。
 
-### 三个正式里程碑（尚未冻结实验设计）
+### 三个正式里程碑
 
 | Milestone | 只回答什么问题 | 独立输出 |
 |---|---|---|
@@ -147,18 +148,22 @@ I3 直接研究 candidate 与真实连续特征值之间的误差。它不以某
 | I3.2 独立验证 estimator | 冻结后的 $\eta_h$ 是否在未参与其构造的独立 reference 上跟踪真值误差量级 | empirical estimator verdict；失败时保留较弱 indicator 结论 |
 | I3.3 研究可计算上界 | 能否由已证明覆盖的 residual/field norms、numerical enclosure、continuous projected gap 和预注册分辨率得到不含未知常数的 existence-distance 上界；必要时再升级唯一目标 | $U_h$、`EXISTS_BUT_RESOLUTION_INSUFFICIENT` 或 `UPPER_BOUND_UNAVAILABLE` |
 
-I3.1 当前接受的首个理论候选是 global continuous weak residual：在 saved candidate
-$\widehat k_h$ 处重构带 fixed cutoff 的 continuous form-space field，计算连续弱残量及其
-normalized dual norm。
-该量直接作用于连续物理算子，不先定位 finite zero 或预测 projected finite-root shift。
-continuous form、conforming reconstruction、完整 residual decomposition、dual-norm computation
-和数值信号分离尚未闭合，因此尚不进入实验设计。finite one-step correction 仅保留为 OPTIONAL
-离散分量诊断，不是前置 blocker。
+I3.1 已冻结并运行首个最低成本特殊情形：在 homogeneous empty center column 中，由 I2 的
+Fourier 墙系数构造显式场，乘固定单胞 cutoff 后直接计算 continuous strong-residual norm ratio。
+`center-a1` 得到 $22.43882099031153$；积分层稳定，但两个 cutoff 导数项分别约为 $17.14$ 和
+$4.93$，名义区间跨过零，因而该 reconstruction 对预注册 $10^{-6}$ 频率尺度分辨率不足。
+这是一项有效负结果，不是可用于 I3.2 的 estimator。
+
+I3.1 下一步仍直接作用于连续物理算子，不先定位 finite zero 或预测 projected finite-root shift。
+应另行研究 cutoff defect 更小的 lead-aware conforming reconstruction，或回到 global continuous
+weak residual 及其 normalized dual norm。finite one-step correction 仅保留为 OPTIONAL 离散分量
+诊断，不是前置 blocker。对同一过宽 baseline 优先增加可靠积分 enclosure 或 gap 认证并不能提高
+分辨率，不是最低成本下一步。
 
 误差来源识别并入 I3.1；reference 搜索并入 I3.2；norm enclosure、continuous projected-gap
 containment 和预注册分辨率研究并入 I3.3。唯一目标识别只在下游必须跟踪特定 mode 时升级。
-它们不另拆里程碑。本轮仍不冻结 levels、transport、denominator、reference 算法、阈值或
-实验命令。I3.1 的定义、常数和样本规则必须在查看 I3.2 的 reference 结果前冻结；一般经验
+它们不另拆里程碑。任何后续 levels、reconstruction、reference 算法、阈值或实验命令仍须
+单独冻结。I3.1 的定义、常数和样本规则必须在查看 I3.2 的 reference 结果前冻结；一般经验
 reference 的 uncertainty 不能进入严格 $U_h$，除非 reference 自身给出经证明的 enclosure。
 
 ## OPTIONAL：不构成正式阶段

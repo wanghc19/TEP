@@ -47,6 +47,17 @@ extension/lifting inequality，把 center residual norm 联系到 global form re
 OPTIONAL，其代价是 exact/numerical DtN 差异及 extension/lifting。若以后启用，不得把两条
 路线各自缺失的部分互相省略后拼成“总 residual”。
 
+### 2.3 已完成的中心空列特殊 baseline
+
+当前 homogeneous empty center column 允许更短的 global construction：由 I2 的有限 Fourier
+墙系数直接得到空列场 $u_0$，乘固定 $\chi(x)=\cos^2(\pi x)$ 后在单胞外延零。端点满足
+$\chi=\chi'=0$，所以零延拓场属于强算子定义域，不需要跨材料界面或胞元接口修复。
+`center-a1` 已计算该场的连续 strong residual，并得到 ratio $22.43882099031153$。
+
+这一路线完整计入了固定 cutoff defect，但该 defect 恰好主导结果，使名义区间过宽。因此它
+关闭了“能否构造一个真正 conforming 的非零连续场”这一最低问题，却没有交付有用分辨率的
+estimator。下一设计必须改变 reconstruction 思路并重新冻结；不得在同一 attempt 中扩大 cutoff。
+
 ## 3. Residual decomposition
 
 无论选择哪条路线，都要逐项说明是否包含：
@@ -79,14 +90,15 @@ broken $H^1$ 场 $u_h^{\mathrm b}$，设计必须给出：
 
 ## 5. 当前真正义务
 
-进入 `design-3-1.md` 前需要：
+首个 `design-3-1.md` 已对中心空列特殊 baseline 关闭 continuous operator、field domain、
+residual decomposition 与普通数值积分门。若继续 I3.1，当前需要：
 
-1. 固定 continuous Hilbert space、form space、forms、norm、$\gamma$ 和归一化；
-2. 冻结 global-field residual；
-3. 给出确定性 conforming/broken field reconstruction；
-4. 列出 residual 的全部已含与未含 components；
-5. 给出 dual norm 的可计算近似和数值不确定度；
-6. 保证 field、residual 和 Riesz solve 的数值信号可分辨。
+1. 选择并冻结 cutoff defect 更小的 lead-aware conforming reconstruction，或 continuous weak
+   residual；
+2. 列出新 residual 的全部已含与未含 components；
+3. 若使用 weak residual，给出 dual norm 的可计算近似和数值不确定度；
+4. 先保证新的 field/residual 信号达到预注册分辨率，再考虑 reliable enclosure 与 gap
+   certification。
 
 不再要求 common finite-matrix transport、nearby finite zero、matrix $k$ derivative、Schur
 zero equivalence 或 bordered conditioning。它们只属于可选 finite-matrix correction。

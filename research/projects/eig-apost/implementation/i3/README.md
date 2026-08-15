@@ -34,8 +34,8 @@ e_h^*=|k_*-\widehat k_h|.
 $$
 
 本阶段不把有限维矩阵的精确零点、层间漂移、矩阵残差或某个修正公式本身当成最终成果。
-这些量只有在能够帮助估计上述连续谱误差时才进入主线。I3 当前只重构研究问题、输入、输出与结论
-边界；具体算法、离散参数、reference 实现、阈值和实验命令均尚未冻结。
+这些量只有在能够帮助估计上述连续谱误差时才进入主线。I3.1 已完成首个最低成本的连续强残量
+baseline；后续 estimator、independent reference 与严格上界仍须分别设计和审查。
 
 长期对象门如下：每个新增主线对象和 hard gate 都必须写出它如何进入第一层集合距离或可选
 target-specific error 的估计链；若它
@@ -47,7 +47,7 @@ I3 由三个正式里程碑组成。三个是科学问题决定的数量，不�
 
 | Milestone | 独立科学问题 | 核心输出 | 当前状态 |
 |---|---|---|---|
-| I3.1 | 能否从实际计算量构造并内部论证一个与 continuous gap-spectrum distance 有关的可计算指标？ | 冻结的 $\eta_h$、适用假设、覆盖/忽略的误差及内部检查结果 | `THEORY ACTIVE / DESIGN NOT READY` |
+| I3.1 | 能否从实际计算量构造并内部论证一个与 continuous gap-spectrum distance 有关的可计算指标？ | 冻结的 $\eta_h$、适用假设、覆盖/忽略的误差及内部检查结果 | `ACTIVE / CENTER STRONG-RESIDUAL BASELINE COMPLETE / RESOLUTION INSUFFICIENT` |
 | I3.2 | 冻结后的 $\eta_h$ 能否在未参与其构造的独立 reference 上跟踪真实误差的量级？ | independent-reference comparison 与 empirical estimator verdict | `NOT STARTED` |
 | I3.3 | 能否在没有未知常数的条件下把已经验证的估计升级为可计算上界？ | $U_h$ 或 `UPPER_BOUND_UNAVAILABLE` | `NOT STARTED` |
 
@@ -70,11 +70,12 @@ Rayleigh/Fourier 截断、边界离散、QZ 子空间、有限精度求解以及
 关系。哪些误差进入 $\eta_h$、哪些暂时忽略，必须在 I3.1 随具体公式一起说明，不能先验地把
 全部误差相加成一个没有数学来源的“总误差账本”。
 
-## I3.1 当前理论选择
+## I3.1 当前理论选择与首个 baseline
 
 现行分析见 [[research/projects/eig-apost/phase3-analysis/README|Phase 3 analysis]]。I3.1 直接在
-算法保存的 $\widehat k_h$ 处研究连续物理弱残量。令 $\mu_h=\widehat k_h^2$，从 I2 数据
-重构非零的 continuous form-space field $u_h^{\mathrm c}$，并对连续 form $a$ 定义
+算法保存的 $\widehat k_h$ 处研究连续物理残量。一般主线仍是：从 I2 数据重构非零的
+continuous form-space field $u_h^{\mathrm c}$，令 $\mu_h=\widehat k_h^2$，并对连续 form
+$a$ 定义
 
 $$
 R_h(v)=a(u_h^{\mathrm c},v)-\mu_h(u_h^{\mathrm c},v)_H.
@@ -96,13 +97,28 @@ residual 计算或第一层存在性的前置 blocker。近似 Riesz solve 也�
 所以 I3.1 首先冻结 continuous-residual estimator candidate 与上述两层解释合同，I3.2 再独立
 验证，I3.3 才研究可靠 enclosure。
 
-进入 `design-3-1.md` 前，只需具体化 continuous form、conforming field reconstruction、
-首个 global-field residual、完整 residual decomposition、dual-norm computation 和 numerical
-allowance。exact-DtN center residual 降为 OPTIONAL。finite common-space transport、nearby simple zero、
-matrix derivative 与 bordered conditioning 不再是主线门；它们只属于 OPTIONAL finite-matrix
-diagnostics。第一份设计还须预注册 continuous projected-gap contract、gap-edge containment 和
-由下游科学需求确定的频率分辨率，但 gap 证明失败只使存在性升级 unavailable；唯一目标识别
-失败不阻止第一层。
+首个冻结实验 [[research/projects/eig-apost/implementation/i3/design-3-1|design-3-1]] 利用了当前
+模型中心空列的特殊结构：从 I2 的 Fourier 墙系数构造空列中的显式场 $u_0$，乘以固定
+$\chi(x)=\cos^2(\pi x)$ 后在单胞外延零。这个场属于连续强算子的定义域，因而可以直接计算
+
+$$
+\eta_h^{\mathrm s}
+=\frac{\|(A-\mu_h)\chi u_0\|_H}{\|\chi u_0\|_H}.
+$$
+
+正式 `center-a1` 得到 $\|\chi u_0\|_H=0.840017038309255$、残量范数
+$18.848991951433035$ 和 $\eta_h^{\mathrm s}=22.43882099031153$。三个积分层稳定，但普通
+双精度积分不是可靠上包络；更关键的是，残量由固定单胞 cutoff 的导数项主导，名义
+$\lambda$ 区间跨过零且远宽于预注册 $10^{-6}$ 频率分辨率。因此本实验只交付一个可复现的
+连续强残量负向 baseline，当前解释为
+`FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`；它不支持 continuous projected gap 内离散特征值
+存在，也尚不能进入 I3.2。
+
+下一项 I3.1 设计应优先减少人工 cutoff defect，例如使用保持 conformity 的 lead-aware
+reconstruction，或回到可计算的 continuous weak residual。exact-DtN center residual、finite
+common-space transport、nearby simple zero、matrix derivative 与 bordered conditioning 继续只属
+OPTIONAL。对当前过宽 baseline 先做严格积分 enclosure 或优先认证 projected gap，不会解决其
+分辨率不足，因而不是最低成本下一步。
 
 ## I3.1：构造并内部论证可计算的误差指标
 
@@ -299,8 +315,11 @@ $$
    已核验的扰动公式来源、reference 独立性边界及尚未闭合的假设；
 4. [[research/projects/eig-apost/implementation/open-problems#Current I3|Current I3 ledger]]：
    当前 blocker；
-5. [[research/projects/eig-apost/implementation/ROADMAP|implementation roadmap]]：项目级顺序。
+5. [[research/projects/eig-apost/implementation/i3/design-3-1|I3.1 frozen baseline design]]、
+   [[research/projects/eig-apost/implementation/i3/review-3-1|I3.1 independent review]] 与
+   [[test/i3/s-resid/README|I3.1 experiment index]]：首个连续强残量 baseline；
+6. [[research/projects/eig-apost/implementation/ROADMAP|implementation roadmap]]：项目级顺序。
 
-I3.2 的正式独立验证必须在 I3.1 estimator specification 单独冻结后才能设计和运行；I3.1
-自身需要的简化问题或内部一致性检查仍属于 I3.1。本 README 不授权实验，也不预注册具体
-算法、离散阶数、reference、阈值或运行命令。
+I3.2 的正式独立验证必须在一个具有足够分辨率的 I3.1 estimator specification 单独冻结后才能
+设计和运行；I3.1 自身需要的重构、简化问题或内部一致性检查仍属于 I3.1。`center-a1` 不满足
+这一移交条件。任何后续算法、离散参数、reference、阈值和运行命令都须另行冻结。

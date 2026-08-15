@@ -156,7 +156,8 @@ current-model gap 且通过预注册 absolute/gap-relative resolution 时，先�
   `MINOR CAVEAT`，记录各问题的 blocking scope、最低成本检查和状态；只有未解决的
   blocker 能停止当前工程路线。见
   [[research/projects/eig-apost/implementation/open-problems|open-problem ledger]]。
-- `implementation/i2/`：I2.1--I2.3 已完成；I3.1 theory 已启动但实验设计尚未就绪。阶段综合与项目级状态分别见
+- `implementation/i2/`：I2.1--I2.3 已完成；I3.1 已完成首个中心空列 strong-residual baseline，
+  但固定单胞 cutoff 主导且分辨率不足，I3.1 继续活动。阶段综合与项目级状态分别见
   [[research/projects/eig-apost/implementation/i2/report|I2 stage report]]、
   [[research/projects/eig-apost/implementation/i2/README|I2 guide]]，设计/审查分别见
   [[research/projects/eig-apost/implementation/i2/design|I2.1 design]] 和
@@ -172,8 +173,8 @@ current-model gap 且通过预注册 absolute/gap-relative resolution 时，先�
   [[test/i2/k-drift/README|I2.3 ntot-axis experiment index]] 与
   [[test/i2/m-drift/README|I2.3 M-axis experiment index]] 进入。
 - `implementation/i3/`：维护 candidate 到 gap 内连续离散谱集合的误差估计、独立 reference
-  和上界可行性的目标、输入、输出与 claim ladder；唯一目标识别是可选升级，当前不冻结具体
-  算法或实验。
+  和上界可行性的目标、输入、输出与 claim ladder；唯一目标识别是可选升级，后续实验须另行
+  设计。首个实验证据只从 [[test/i3/s-resid/README|I3.1 experiment index]] 进入。
 - `test/archive/legacy-route-v1/eig-apost-nep/`、`test/archive/legacy-route-v1/hg-map/`、
   `test/archive/legacy-route-v1/aug-bie/`、`test/archive/legacy-route-v1/root-ready/`：四个互相
   独立的 Octave 实验或受控诊断及可审计输出；历史 I3 provenance 输出在

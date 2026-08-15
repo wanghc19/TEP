@@ -1,4 +1,4 @@
-# I3.1 continuous weak-residual estimator theory
+# I3.1 continuous-residual estimator theory
 
 ## 1. 目标误差
 
@@ -243,7 +243,7 @@ $$
 唯一目标识别属于第二层可选升级；只要研究目标仍是以预注册分辨率证明 candidate 附近存在
 某个连续离散特征值，它就不是 I3.1 residual 计算或第一层存在性结论的前置 blocker。
 
-## 4. 为什么首选 weak residual
+## 4. 一般 weak residual 与中心空列 strong-residual baseline
 
 若 $u_h^{\mathrm c}\in D(A)$，可计算强残量
 
@@ -261,8 +261,30 @@ $$
 
 但当前 BIE/QZ 场可能在材料界面、胞元接口和人工截面带有 trace 或 flux defect；未经修复时，
 强残量可能含分布项而不属于 $H$。弱残量只要求 form conformity，并允许通量 jump 作为
-$V'$ 泛函出现。因此 weak residual 是主线，strong residual 只作以后可能的 `OPTIONAL`
-强化。
+$V'$ 泛函出现。因此对一般 lead-aware reconstruction，weak residual 仍是更自然的主线。
+
+当前 homogeneous empty center column 是一个可直接计算的特殊情形。取空列显式 Fourier 场
+$u_0$，令
+
+$$
+\chi(x)=\cos^2(\pi x),\quad |x|\le1/2,
+$$
+
+并在单胞外延零。因为 $\chi=\chi'=0$ 于端点，$u_h^{\mathrm c}=\chi u_0$ 属于 $D(A)$。
+[[research/projects/eig-apost/implementation/i3/design-3-1|design-3-1]] 因而能够计算上式强残量。
+正式 `center-a1` 给出
+
+$$
+\|u_h^{\mathrm c}\|_H=0.840017038309255,
+\qquad
+\|(A-\mu_h)u_h^{\mathrm c}\|_H=18.848991951433035,
+$$
+
+所以 computed ratio 为 $22.43882099031153$。普通 Simpson 三层结果稳定，但未形成可靠数值
+上包络；两个 cutoff 导数分量的范数约为 $17.14$ 与 $4.93$，说明该 ratio 由固定单胞 cutoff
+主导。名义区间跨过零，远不能达到预注册 $10^{-6}$ 频率分辨率。故这个特殊强残量是一个
+有效的 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT` baseline，不是可移交 I3.2 的 estimator。
+一般 weak residual 或 cutoff defect 更小的 conforming reconstruction 仍需另行研究。
 
 ## 5. 可计算 dual norm 与当前名称
 
@@ -356,14 +378,20 @@ derivative 和 bordered conditioning 全部只在启用这项 `OPTIONAL` 诊断�
 
 ## 9. 当前裁决
 
-- 主对象：continuous weak residual at the saved candidate；
-- 允许名称：continuous-residual estimator candidate；
-- 已闭合：抽象 weak-residual-to-continuous-spectrum 命题；
-- 尚未闭合：本项目的 form contract、conforming reconstruction、完整 residual decomposition、
-  可计算 dual norm、数值 allowance、当前 sharp-disk continuous projected gap 和预注册分辨率；
+- 主对象：direct continuous residual at the saved candidate；
+- 已完成：中心空列 compact-support strong-residual baseline；
+- 当前结果：computed ratio $22.43882099031153$，数值稳定但分辨率不足；
+- 允许名称：continuous strong-residual baseline / estimator candidate；
+- 不允许名称：continuous-eigenvalue error estimator、可靠存在区间或误差上界；
+- 下一候选：减少 cutoff defect 的 lead-aware conforming reconstruction，或一般 continuous
+  weak residual；
+- 已闭合：抽象 residual-to-continuous-spectrum 命题，以及中心空列 baseline 的 operator-domain
+  与 strong-residual 公式；
+- 尚未闭合：具有项目分辨率的一般 conforming reconstruction/residual、可靠 numerical
+  enclosure、当前 sharp-disk continuous projected gap；
 - 第一层升级：可靠区间进入 continuous projected gap 且宽度不超过预注册尺度时，报告其中
   至少存在一个连续离散特征值；
 - 第二层升级：只有独立连续谱隔离或计数成立时，才识别指定 $k_*$；
 - 不允许：把近似 dual norm 称为已证明区间，把 gap 内存在性改写成唯一 mode，或用结果后
   选择的分辨率接受一个过宽区间；
-- `design-3-1.md`：`NOT READY`。
+- `design-3-1.md` 与 `center-a1`：已完成并保留为负向 baseline；下一设计须另行冻结。

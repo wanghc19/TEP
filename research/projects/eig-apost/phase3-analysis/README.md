@@ -25,7 +25,7 @@ I3.1 的主线必须直接服务这个误差。有限矩阵的精确零点、连
 零点之间的位移，不能控制两个离散层共有的偏差。I2.3 已直接比较算法保存的 candidates，
 所以继续把该有限根位移作为 I3.1 的前置对象会重复有限层内部问题。
 
-新的最短路线是：
+一般的最短路线是：
 
 1. 取 I2 已保存的 $\widehat k_h$，令 $\mu_h=\widehat k_h^2$；
 2. 从 I2 的边界密度、Fourier 系数和物理采样场构造非零的连续能量空间场
@@ -38,8 +38,18 @@ I3.1 的主线必须直接服务这个误差。有限矩阵的精确零点、连
 6. I3.2 再用独立 reference 检查这个冻结指标是否跟踪误差；若未来确需指定某个 mode，才
    另做唯一目标识别，I3.3 再研究严格误差上界。
 
-连续弱残量只要求重构场属于连续问题的能量空间。要求场属于强算子的定义域、直接计算
-强残量，是更苛刻的 `OPTIONAL` 路线，不作为首个实验的前置条件。
+连续弱残量只要求重构场属于连续问题的能量空间。一般情况下，要求场属于强算子的定义域会
+更苛刻；但当前模型的 homogeneous empty center column 提供了一个可立即检查的特殊情形。
+首个冻结实验把该空列中的有限 Fourier 场乘以固定
+$\chi(x)=\cos^2(\pi x)$ 并在单胞外延零，由于 $\chi=\chi'=0$ 于端点，得到的场属于强算子
+定义域。因而 `center-a1` 可以直接计算 continuous strong residual，而无需先完成一般 lead-field
+repair 或 Riesz dual-norm solve。
+
+该 baseline 得到 computed ratio $22.43882099031153$。普通 Simpson 加密稳定，但没有给出可靠
+积分 enclosure；更重要的是，固定单胞 cutoff 的导数项主导 residual，名义区间跨过零并远宽于
+预注册频率分辨率。因此它是一个有效的 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT` 负结果，
+不是可移交 I3.2 的 estimator。下一项 I3.1 研究应减少 cutoff defect 或回到一般 weak-residual
+路线，而不是先认证同一个过宽区间。
 
 ## 阅读顺序
 
@@ -68,12 +78,15 @@ I3.1 的主线必须直接服务这个误差。有限矩阵的精确零点、连
 
 ## 当前状态
 
-- 理论方向：`CONTINUOUS WEAK RESIDUAL SELECTED`；
-- 已闭合：弱残量到某个连续谱点距离的抽象自伴谱命题；
-- 未闭合：连续 form contract、确定性的 conforming field reconstruction、完整 residual
-  decomposition、可计算对偶范数及 numerical allowance；当前 sharp-disk continuous
-  projected gap 也尚未形成可用于第一层存在性结论的合同；
+- 理论方向：`CONTINUOUS RESIDUAL MAINLINE`；
+- 已闭合：残量到某个连续谱点距离的抽象自伴谱命题；中心空列 compact-support 强残量
+  baseline 的连续定义域和残量公式；
+- 已完成实验：[[research/projects/eig-apost/implementation/i3/design-3-1|design-3-1]] 的
+  `center-a1`，独立结论见
+  [[research/projects/eig-apost/implementation/i3/review-3-1|review-3-1]]；
+- 未闭合：一个同时保持 continuous conformity 且具有项目分辨率的 reconstruction/residual
+  indicator；普通 quadrature 的 reliable enclosure；当前 sharp-disk continuous projected gap；
 - 第一层目标：可靠区间进入 projected gap，且其正频率宽度不超过预注册分辨率；
 - 第二层可选升级：只有确需命名某个 mode 时才证明唯一目标身份；
-- `design-3-1.md`：`NOT READY`；
-- 正式实验：未设计、未授权、未运行。
+- I3.1 当前状态：`CENTER STRONG-RESIDUAL BASELINE COMPLETE / RESOLUTION INSUFFICIENT`；
+- I3.2：尚不可开始；须先得到有用分辨率的冻结 estimator candidate。

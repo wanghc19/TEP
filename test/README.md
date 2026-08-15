@@ -121,6 +121,19 @@ frozen outputs retain their recorded paths and hashes.
 | Status | `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / ADJACENT SAME_MODE / CONDITIONAL_ALGORITHMIC_M_AXIS_HIERARCHY`; all three saved candidates are 1.832770289108157 with zero direct drift, while the common $9.31323\times10^{-11}$ halfwidth remains only a sub-grid minimizer-search diagnostic |
 | Implementation summary | [[research/projects/eig-apost/implementation/i2/README|current I2 guide]] |
 
+## I3-CENTER-STRONG-RESID-V1
+
+| Field | Value |
+|---|---|
+| Experiment ID | `I3-CENTER-STRONG-RESID-V1` |
+| Stage | I3.1 |
+| Purpose | Apply a fixed compact cutoff to the saved candidate's explicit field in the homogeneous empty center column and compute a continuous strong-residual norm ratio |
+| Current path | `test/i3/s-resid/` |
+| Entry point | Completed append-only attempt `check_s_resid('center-a1')` |
+| Experiment index | [[test/i3/s-resid/README|I3.1 object, command, resource and interpretation index]] |
+| Status | `PASS WITH CONDITIONS / CONTINUOUS_STRONG_RESIDUAL_ESTIMATOR_CANDIDATE / FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`; computed ratio $22.43882099031153$, but no reliable numerical enclosure or continuous projected-gap claim |
+| Implementation summary | [[research/projects/eig-apost/implementation/i3/README|current I3 guide]] |
+
 Future current-route experiments belong under the matching `test/i*/` stage directory and receive
 an index entry only after they are designed and authorized. A legacy verdict never becomes a
 current stage gate.

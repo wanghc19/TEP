@@ -38,10 +38,12 @@ localization diagnostic 及最低必要的 residual、factor、field、boundary 
 固定 $n_{\mathrm{tot}}=160$、$M=32,40,48$ 轴均确认 `SAME_MODE`，且各轴保存的 candidate
 完全相同，故 observed candidate drift 为零。终端半宽只描述潜在 sub-grid score minimizer 的搜索分辨率，
 不是 candidate uncertainty。当前形成 conditional algorithmic candidate hierarchy。I3.1 已
-开始误差指标理论研究，现行主线在 saved candidate 处重构 continuous form-space field，并
-计算 continuous weak residual；finite one-step root correction 已降为 OPTIONAL。continuous
-form、conforming reconstruction、完整 residual decomposition 和 dual-norm computation 尚未
-闭合，实验设计尚未就绪。第一层只要求可靠区间进入 current continuous projected gap，并通过
+完成首个中心空列 continuous strong-residual baseline：固定单胞 cutoff 场给出的 computed ratio
+为 $22.43882099031153$，数值积分稳定，但 cutoff 导数项主导且名义区间跨过零，故结论为
+`FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`。这一负结果没有形成可靠存在区间，也不能进入
+I3.2。I3.1 继续活动，下一设计应寻找 cutoff defect 更小的 conforming reconstruction，或回到
+continuous weak residual；finite one-step root correction 仍为 OPTIONAL。第一层只要求可靠区间进入
+current continuous projected gap，并通过
 结果前冻结的 absolute/gap-relative resolution，从而证明其中至少存在一个连续离散特征值；
 唯一目标识别只在指定-mode升级时需要。两条 I2 轴不能单独提供非零 correction、minimizer/root drift、
 收敛阶或误差上界。
@@ -73,7 +75,9 @@ implementation/
 │   ├── review-2-3.md
 │   └── review-2-3m.md
 ├── i3/
-│   └── README.md
+│   ├── README.md
+│   ├── design-3-1.md
+│   └── review-3-1.md
 └── archive/
     └── legacy-route-v1/
         ├── README.md
@@ -91,7 +95,8 @@ implementation/
   [[research/projects/eig-apost/implementation/i2/report|I2 stage report]] 综合向尚未启动的 I3
   交付两条 conditional hierarchy。
 - [[research/projects/eig-apost/implementation/i3/README|i3/]]：维护 candidate 误差估计、
-  independent truth comparison 和上界可行性的目标、输入与预期输出；尚未冻结实验细节。
+  independent truth comparison 和上界可行性的目标、输入与预期输出；首个中心空列强残量
+  baseline 已完成但分辨率不足，I3.1 仍在活动。
 - [[research/projects/eig-apost/implementation/ROADMAP|ROADMAP.md]]：只维护新路线 I1--I3
   的项目级依赖和退出条件。
 - [[research/projects/eig-apost/implementation/SYMBOL|SYMBOL.md]]：集中说明跨阶段缩写、
@@ -101,9 +106,9 @@ implementation/
 - [[research/projects/eig-apost/implementation/archive/legacy-route-v1/README|legacy route v1]]：
   保存旧路线 I0--I4 的完整 design、result、review 和原索引；旧编号和 verdict 不构成
   当前授权。
-- [[test/README|current test index]]：记录新路线 I1.2--I2.3 实验状态；当前实验位于
+- [[test/README|current test index]]：记录新路线 I1.2--I3.1 实验状态；当前实验位于
   `test/i1/hg-adef/`、`test/i1/k-scan/`、`test/i1/k-ready/`、`test/i2/k-count/` 和
-  `test/i2/h-inertia/`、`test/i2/k-drift/` 与 `test/i2/m-drift/`。旧实验统一
+  `test/i2/h-inertia/`、`test/i2/k-drift/`、`test/i2/m-drift/` 与 `test/i3/s-resid/`。旧实验统一
   由 [[test/archive/legacy-route-v1/README|legacy experiment index]] 保存。
 
 ## 阶段文档规则
