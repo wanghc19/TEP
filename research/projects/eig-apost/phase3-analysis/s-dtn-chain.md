@@ -1,4 +1,4 @@
-# 从 I2 数据到连续弱残量
+# 从 I2 数据到全局连续残量
 
 ## 1. 连续物理对象先于矩阵
 
@@ -6,23 +6,24 @@
 $A_{\mathrm{def},h}^D(k)$、BIE density、QZ 子空间和离散 DtN 只用于产生 candidate 和重构
 数据；它们不定义连续真值。
 
-I3.1 在 I2 保存的 $\widehat k_h$ 处重构物理场。是否存在附近 finite determinant zero 对这
-一步不是前提。
+I3.1 在 I2 保存的 $\widehat k_h$ 处构造连续试验场。该场是否接近真物理场由 continuous
+residual 判断；是否存在附近 finite determinant zero 对这一步不是前提。
 
 ## 2. 主线 global residual 与可选 center residual
 
 ### 2.1 Global-field residual
 
-在中心缺陷区域和有限个左右普通胞元中，由 I2 density、Rayleigh/Fourier coefficients 和
-cell maps 重构分片场。然后：
+当前首选对象不是 raw BIE 分片场，也不再使用 finite-window cutoff。它由 frozen wall states
+生成左右 matrix-power 序列，用 one-cell exterior/interior BIE samples 拟合不改变 wall Cauchy
+data 的 bubbles，最终在每个胞元内定义一个单一 smooth Fourier--Hermite/bubble function。
+相邻胞元共享 field 和全局 $x$ 导数，材料圆内外使用同一个函数，横向有限 Fourier basis
+结构性满足 Bloch 准周期条件。若左右 $H^2$ Gram tails 可和，则所得非零场属于 $D(A)$，可以
+直接计算 continuous strong residual。
 
-1. 修复共享接口上的 Dirichlet trace，使场属于连续 form space；
-2. 保持横向 Bloch 准周期条件；
-3. 在更远胞元用预先固定的光滑 cutoff 衰减到零；
-4. 把修复和 cutoff 自身产生的 defect 保留在 residual 中。
-
-最终得到非零 $u_h^{\mathrm c}\in V$。该路线不需要把 numerical half-guide tail 证明成 exact
-continuous tail；tail 与 cutoff 的代价直接进入 residual。
+完整构造、左右 orientation、Müller density signs、定义域证明和 infinite-tail bound 见
+[[research/projects/eig-apost/phase3-analysis/s-lead-field|Global lead-aware conforming trial]]。
+finite QZ action 在该路线中只参数化 trial；continuous PDE residual 决定 trial 质量。因此既不把
+numerical half-guide tail 冒充 exact continuous tail，也不遗漏人工 cutoff defect。
 
 ### 2.2 Exact-DtN center residual
 
@@ -43,8 +44,9 @@ residual。即使 exact DtN 可得，还需要带已知常数和 tail allowance 
 extension/lifting inequality，把 center residual norm 联系到 global form residual；否则不能
 直接套用 global self-adjoint spectral proposition。
 
-首个设计固定使用 global residual；其代价是 field repair 与 cutoff。exact-DtN residual 降为
-OPTIONAL，其代价是 exact/numerical DtN 差异及 extension/lifting。若以后启用，不得把两条
+当前路线固定使用 global strong residual；其代价是 BIE-informed fit、geometry-fitted volume
+quadrature 和 infinite-tail Gram accounting。exact-DtN residual 降为 OPTIONAL，其代价是
+exact/numerical DtN 差异及 extension/lifting。若以后启用，不得把两条
 路线各自缺失的部分互相省略后拼成“总 residual”。
 
 ### 2.3 已完成的中心空列特殊 baseline
@@ -56,7 +58,19 @@ $\chi=\chi'=0$，所以零延拓场属于强算子定义域，不需要跨材料
 
 这一路线完整计入了固定 cutoff defect，但该 defect 恰好主导结果，使名义区间过宽。因此它
 关闭了“能否构造一个真正 conforming 的非零连续场”这一最低问题，却没有交付有用分辨率的
-estimator。下一设计必须改变 reconstruction 思路并重新冻结；不得在同一 attempt 中扩大 cutoff。
+estimator。后续设计改用全局 lead-aware smooth trial；没有在同一历史 attempt 中扩大 cutoff。
+
+### 2.4 Lead-aware 正式负结果
+
+正式 `lead-a3` 的 finite input、density representation 和 frozen-$Z$ propagation 通过，但固定
+BIE-informed fit 的 $J=4/8$ holdout error 约为 $4.522421/5.138028$，高于 $0.20$，故在
+`CONFORMING_RECONSTRUCTION_UNRESOLVED` 首败处停止。由于 continuous trial 尚未通过重构门，
+center correction、field/residual/$H^2$ Grams、tail 和 strong-residual ratio 均未形成。
+
+training/holdout targets 到材料圆仅约为 source-panel arc scale 的 $0.86\%/1.08\%$；当前 direct
+close layer-potential evaluation 未单独资格化。因此这个结果证明的是当前 pipeline 没有建立
+BIE-informed shape quality，而不是已经证明 bubble basis 或 fit metric 单独失败。详见
+[[research/projects/eig-apost/implementation/i3/review-3-1b|independent post-run review]]。
 
 ## 3. Residual decomposition
 
@@ -67,7 +81,7 @@ estimator。下一设计必须改变 reconstruction 思路并重新冻结；不�
 - 胞元接口和人工截面的 trace/flux mismatch；
 - 横向准周期边界 mismatch；
 - Rayleigh/Fourier truncation 与未保留 tail；
-- field reconstruction、trace repair 和 cutoff defect；
+- field reconstruction、BIE-fit、center correction 和 infinite-tail allowance；
 - quadrature、field evaluation 和 linear solve error。
 
 一个 sampled mismatch 表或原离散矩阵 residual 只能作为其中一项诊断，不能替代完整的
@@ -75,7 +89,7 @@ $V'$ residual functional。
 
 ## 4. Conforming 与 broken reconstruction
 
-最清楚的首选对象是确定性的 conforming reconstruction $u_h^{\mathrm c}\in V$。若只得到
+当前首选对象是确定性的 $u_h^{\mathrm c}\in D(A)$。若其他路线只得到
 broken $H^1$ 场 $u_h^{\mathrm b}$，设计必须给出：
 
 1. broken space 和所有 jump 的定义；
@@ -90,15 +104,17 @@ broken $H^1$ 场 $u_h^{\mathrm b}$，设计必须给出：
 
 ## 5. 当前真正义务
 
-首个 `design-3-1.md` 已对中心空列特殊 baseline 关闭 continuous operator、field domain、
-residual decomposition 与普通数值积分门。若继续 I3.1，当前需要：
+`design-3-1.md` 已对中心空列特殊 baseline 关闭 continuous operator、field domain、residual
+decomposition 与普通数值积分门；`design-3-1b.md` 又冻结了全波导对象，但 `lead-a3` 在形成该
+对象之前止于 fit gate。若继续 I3.1，当前需要：
 
-1. 选择并冻结 cutoff defect 更小的 lead-aware conforming reconstruction，或 continuous weak
-   residual；
-2. 列出新 residual 的全部已含与未含 components；
-3. 若使用 weak residual，给出 dual norm 的可计算近似和数值不确定度；
-4. 先保证新的 field/residual 信号达到预注册分辨率，再考虑 reliable enclosure 与 gap
-   certification。
+1. 先用独立、低成本检查区分 near-circle layer-potential evaluation 与 fixed
+   Fourier--Hermite/bubble space/metric 的贡献；
+2. 只有该区分能改变 reconstruction 设计时，才另行冻结修订或替代路线；不得自动调 basis、
+   grid、threshold 或运行下一 attempt；
+3. 新 reconstruction 先通过非零、field quality 和 continuous-residual 可计算门，再进入
+   field/residual/$H^2$ Grams、infinite tail、reliable enclosure 与 gap certification；
+4. 只有退回 weak residual 时，才重新引入 Riesz dual-norm solve。
 
 不再要求 common finite-matrix transport、nearby finite zero、matrix $k$ derivative、Schur
 zero equivalence 或 bordered conditioning。它们只属于可选 finite-matrix correction。

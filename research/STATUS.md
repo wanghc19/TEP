@@ -1,6 +1,6 @@
 # Research status
 
-更新日期：2026-08-15。
+更新日期：2026-08-16。
 
 状态词含义：`established in archived mainline` 仅表示冻结主线给出了论证，不等于已完成独立来源核验；`needs review` 表示已有陈述或证明草案但仍需严格审计；`tentative` 表示研究性判断；`unresolved` 表示尚未解决。
 
@@ -33,7 +33,14 @@ sub-grid minimizer 的搜索分辨率；该结果不是 minimizer/root 零漂移
 首个中心空列 continuous strong-residual baseline：computed ratio 为 $22.43882099031153$，积分层
 稳定，但固定单胞 cutoff 导数项主导，名义区间跨过零，故状态为
 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`。这不是可靠存在区间，也不能进入 I3.2。I3.1
-继续活动，下一设计应减少 cutoff defect 或回到 continuous weak residual。第一层目标仍是
+继续活动；全波导 BIE-informed Fourier--Hermite/bubble trial 随后正式运行。`lead-a3` 通过
+finite input、density representation 和 propagation，但固定 fit 的 $J=4/8$ holdout error
+约为 $4.522421/5.138028$，高于 $0.20$，故在
+`CONFORMING_RECONSTRUCTION_UNRESOLVED` 首败处停止。center、Gram、tail 和 residual ratio 均
+未到达；现有近圆 targets 又不足以区分 close layer-potential evaluation 与 basis/metric 的
+贡献。该结果是 `PASS WITH CONDITIONS / VALID NEGATIVE`，仍没有 estimator，I3.2 不可开始。
+continuous weak residual 保留为后备。
+第一层目标仍是
 candidate 到 current projected gap 内离散谱集合的距离：可靠区间
 进入该 gap 后先得到至少一个离散特征值，且只有通过结果前冻结的 absolute/gap-relative
 resolution 才接受为分辨率级结论。唯一目标识别只在特定 mode 跟踪时升级。continuous
@@ -49,7 +56,7 @@ residual estimator、sharp-disk projected-gap contract 和 upper bound 尚未建
 
 | 状态 | 专题 | 实际结论 |
 |---|---|---|
-| active investigation / I3.1 center baseline complete; resolution insufficient | `research/projects/eig-apost/` | PDE-defined physical operator 是连续主对象；I2.1--I2.3 已完成。I3.1 的中心空列 continuous strong-residual baseline 得到 ratio $22.43882099031153$，但固定单胞 cutoff 主导且名义区间跨过零，不能进入 I3.2。下一步研究低-cutoff-defect conforming reconstruction 或 continuous weak residual；可靠 enclosure、独立 $k_{\mathrm{ref}}$、sharp-disk projected-gap contract 与上界均未完成；unique target 仅为可选升级。 |
+| active investigation / I3.1 valid negative; no estimator | `research/projects/eig-apost/` | PDE-defined physical operator 是连续主对象；I2.1--I2.3 已完成。中心空列 baseline 的 ratio $22.43882099031153$ 由固定 cutoff 主导；全波导 trial 又在 fixed BIE-informed holdout fit 首败，且近圆评价与 basis/metric 的原因未决。两项都不能进入 I3.2；可靠 enclosure、独立 $k_{\mathrm{ref}}$、sharp-disk projected-gap contract 与上界均未完成；unique target 仅为可选升级。 |
 | paused archive | `research/archive/muller-cauchy-2026-07/` | 冻结的 Müller--广义 Bloch--Cauchy 主线；商空间版本的核/场等价仍有未闭合的外部定理适配和表示论前提。 |
 | paused | `research/projects/half-guide-dtn/` | Stage 1 完成了符号审计、齐次半导 DtN/Riccati 验证和耦合方案建议；周期障碍半导、完整中心耦合及 MATLAB 最终验证尚未完成。该路线未整合进冻结主线。 |
 | completed project | `research/projects/cell-representation/` | 专题任务已完成：原始无条件猜想过强；给出了直接 Green 表示和带显式正则性、非 Wood 及互补问题条件的修正版。其纠正后的表示结构和商空间策略已进入冻结主线，但其中的表示定理仍为 `needs review`。 |
@@ -87,9 +94,11 @@ residual estimator、sharp-disk projected-gap contract 和 upper bound 尚未建
 count one、I2.2 endpoint corroboration 与 I2.3 的 `ntot`/$M$ 两条三层同-mode candidate 实验均已完成。I2.3
 两条轴均得到 `NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。I3.1 的首个中心空列 continuous
 strong-residual baseline 已完成，computed ratio 为 $22.43882099031153$；固定单胞 cutoff 主导且
-名义区间跨过零，故分辨率不足，不能进入 I3.2。independent reference 仍属于取得有用
-estimator candidate 后的 I3.2。零 observed shift 不能单独验证 correction、收敛或 estimator。
-低-cutoff-defect conforming reconstruction/weak residual、sharp-disk projected-gap contract、
+名义区间跨过零，故分辨率不足。全波导 `lead-a3` 又在 fixed BIE-informed holdout fit 首败，
+尚未形成 continuous residual；不能把失败单因归咎于 bubble basis，因为 near-circle direct
+evaluation 未资格化。两项均不能进入 I3.2。independent reference 仍属于取得有用 estimator
+candidate 后的 I3.2。零 observed shift 不能单独验证 correction、收敛或 estimator。
+qualified conforming reconstruction/weak residual、sharp-disk projected-gap contract、
 预注册 absolute/gap-relative resolution 与 reliable enclosure 继续限制后续 estimator 和上界
 声明。unique-target isolation 只限制指定-mode升级。production derivative/separation 与 projected/regular
 approximation 只限制相应 finite-correction 或离散谱收敛支线，不再是 I3.1 主线门，也不升级为

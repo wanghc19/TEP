@@ -134,6 +134,19 @@ frozen outputs retain their recorded paths and hashes.
 | Status | `PASS WITH CONDITIONS / CONTINUOUS_STRONG_RESIDUAL_ESTIMATOR_CANDIDATE / FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`; computed ratio $22.43882099031153$, but no reliable numerical enclosure or continuous projected-gap claim |
 | Implementation summary | [[research/projects/eig-apost/implementation/i3/README|current I3 guide]] |
 
+## I3-BIE-INFORMED-GLOBAL-RESID-V1
+
+| Field | Value |
+|---|---|
+| Experiment ID | `I3-BIE-INFORMED-GLOBAL-RESID-V1` |
+| Stage | I3.1 |
+| Purpose | Build one smooth BIE-informed center-plus-infinite-leads trial at the saved candidate and compute its continuous strong-residual ratio with true material weight |
+| Current path | `test/i3/g-resid/` |
+| Entry point | Completed Revision B attempt `check_g_resid('lead-a3')`; `lead-a1` was consumed at MATLAB startup and `lead-a2` by the preserved density-oracle naming failure |
+| Experiment index | [[test/i3/g-resid/README|I3.1-B object, frozen gates, command, resources, and interpretation boundary]] |
+| Status | `PASS WITH CONDITIONS / VALID NEGATIVE / CONFORMING_RECONSTRUCTION_UNRESOLVED`; `lead-a3` passed finite input, density representation, and propagation, then failed the fixed BIE-informed holdout gate ($J=4$: $4.522421$; $J=8$: $5.138028$ versus $0.20$). Center/Gram/tail/residual estimator are `NOT_REACHED`; I3.2 remains unavailable. |
+| Implementation summary | [[research/projects/eig-apost/implementation/i3/README|current I3 guide]] |
+
 Future current-route experiments belong under the matching `test/i*/` stage directory and receive
 an index entry only after they are designed and authorized. A legacy verdict never becomes a
 current stage gate.

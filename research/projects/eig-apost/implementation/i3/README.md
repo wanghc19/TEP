@@ -47,7 +47,7 @@ I3 由三个正式里程碑组成。三个是科学问题决定的数量，不�
 
 | Milestone | 独立科学问题 | 核心输出 | 当前状态 |
 |---|---|---|---|
-| I3.1 | 能否从实际计算量构造并内部论证一个与 continuous gap-spectrum distance 有关的可计算指标？ | 冻结的 $\eta_h$、适用假设、覆盖/忽略的误差及内部检查结果 | `ACTIVE / CENTER STRONG-RESIDUAL BASELINE COMPLETE / RESOLUTION INSUFFICIENT` |
+| I3.1 | 能否从实际计算量构造并内部论证一个与 continuous gap-spectrum distance 有关的可计算指标？ | 冻结的 $\eta_h$、适用假设、覆盖/忽略的误差及内部检查结果 | `ACTIVE / TWO VALID NEGATIVE BASELINES / NO ESTIMATOR` |
 | I3.2 | 冻结后的 $\eta_h$ 能否在未参与其构造的独立 reference 上跟踪真实误差的量级？ | independent-reference comparison 与 empirical estimator verdict | `NOT STARTED` |
 | I3.3 | 能否在没有未知常数的条件下把已经验证的估计升级为可计算上界？ | $U_h$ 或 `UPPER_BOUND_UNAVAILABLE` | `NOT STARTED` |
 
@@ -114,11 +114,24 @@ $\lambda$ 区间跨过零且远宽于预注册 $10^{-6}$ 频率分辨率。因�
 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`；它不支持 continuous projected gap 内离散特征值
 存在，也尚不能进入 I3.2。
 
-下一项 I3.1 设计应优先减少人工 cutoff defect，例如使用保持 conformity 的 lead-aware
-reconstruction，或回到可计算的 continuous weak residual。exact-DtN center residual、finite
-common-space transport、nearby simple zero、matrix derivative 与 bordered conditioning 继续只属
-OPTIONAL。对当前过宽 baseline 先做严格积分 enclosure 或优先认证 projected gap，不会解决其
-分辨率不足，因而不是最低成本下一步。
+下一项 I3.1 已冻结并运行
+[[research/projects/eig-apost/implementation/i3/design-3-1b|BIE-informed global residual design]]：
+frozen wall states 生成左右无限序列，one-cell BIE 内外场只提供内部形状数据，显式
+Fourier--Hermite/bubble basis 保证跨胞元与跨材料圆的连续性，continuous strong residual 再独立
+判断质量。正式 `lead-a3` 通过 finite input、density representation 和 frozen-$Z$ propagation，
+但固定 fit 的独立 holdout error 在 $J=4$ 已约为 $4.522421$，到 $J=8$ 增至约
+$5.138028$，远高于预注册 $0.20$。producer 因而在
+`CONFORMING_RECONSTRUCTION_UNRESOLVED` 首败处停止；center correction、Grams、quadrature、
+infinite tail 和 strong-residual ratio 均为 `NOT_REACHED`。
+
+training/holdout targets 到材料圆的最小距离仅为 $4.22\times10^{-5}$ 与
+$5.32\times10^{-5}$，约为 $N=256$ source-panel arc scale 的 $0.86\%$ 与 $1.08\%$；direct
+close layer-potential evaluation 尚未单独资格化。因此现有证据不能把失败单因归咎于 bubble
+basis，只能说当前 pipeline 未建立 BIE-informed shape quality。独立结论见
+[[research/projects/eig-apost/implementation/i3/review-3-1b|review-3-1b]]。一般 continuous weak
+residual 与 exact-DtN center residual 仍为后备；finite common-space transport、nearby simple
+zero、matrix derivative 与 bordered conditioning 继续只属 OPTIONAL。不得自动调 basis/grid、
+修改阈值或运行下一 attempt。
 
 ## I3.1：构造并内部论证可计算的误差指标
 
@@ -318,8 +331,13 @@ $$
 5. [[research/projects/eig-apost/implementation/i3/design-3-1|I3.1 frozen baseline design]]、
    [[research/projects/eig-apost/implementation/i3/review-3-1|I3.1 independent review]] 与
    [[test/i3/s-resid/README|I3.1 experiment index]]：首个连续强残量 baseline；
-6. [[research/projects/eig-apost/implementation/ROADMAP|implementation roadmap]]：项目级顺序。
+6. [[research/projects/eig-apost/phase3-analysis/s-lead-field|Global lead-aware conforming trial]]、
+   [[research/projects/eig-apost/implementation/i3/design-3-1b|I3.1 lead-aware frozen design]]、
+   [[research/projects/eig-apost/implementation/i3/review-3-1b|independent post-run review]] 与
+   [[test/i3/g-resid/README|experiment index]]：全波导 reconstruction 的正式负结果；
+7. [[research/projects/eig-apost/implementation/ROADMAP|implementation roadmap]]：项目级顺序。
 
 I3.2 的正式独立验证必须在一个具有足够分辨率的 I3.1 estimator specification 单独冻结后才能
-设计和运行；I3.1 自身需要的重构、简化问题或内部一致性检查仍属于 I3.1。`center-a1` 不满足
-这一移交条件。任何后续算法、离散参数、reference、阈值和运行命令都须另行冻结。
+设计和运行；I3.1 自身需要的重构、简化问题或内部一致性检查仍属于 I3.1。`center-a1` 和
+`lead-a3` 都不满足这一移交条件。任何后续算法、离散参数、reference、阈值和运行命令都须
+另行冻结；当前结果不自动授权 `lead-a4`。

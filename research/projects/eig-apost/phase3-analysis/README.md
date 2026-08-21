@@ -25,21 +25,27 @@ I3.1 的主线必须直接服务这个误差。有限矩阵的精确零点、连
 零点之间的位移，不能控制两个离散层共有的偏差。I2.3 已直接比较算法保存的 candidates，
 所以继续把该有限根位移作为 I3.1 的前置对象会重复有限层内部问题。
 
-一般的最短路线是：
+当前选定的最短路线是：
 
 1. 取 I2 已保存的 $\widehat k_h$，令 $\mu_h=\widehat k_h^2$；
-2. 从 I2 的边界密度、Fourier 系数和物理采样场构造非零的连续能量空间场
-   $u_h^{\mathrm c}$；
-3. 在连续自伴算子的弱形式中计算 $u_h^{\mathrm c}$ 在参数 $\mu_h$ 处的残量泛函；
-4. 用该残量在能量空间对偶范数中的大小构造可计算指标；
+2. 用 I2 的 frozen wall states 生成左右 infinite lead 序列，以 one-cell BIE 场 samples 拟合
+   不改变 wall value/derivative 的 Fourier--Hermite bubble coefficients；
+3. 得到在材料圆内外使用同一 smooth function、跨胞元 $C^1$、横向准周期且 infinite
+   $H^2$ norm 可和的 $u_h^{\mathrm c}\in D(A)$；
+4. 直接计算该场在 $\mu_h$ 处的 continuous strong residual，并以 Gram/doubling 显式控制
+   左右 infinite tail；
 5. 若可靠 residual interval 完全位于当前连续算子的 projected essential gap，则先得到区间内
    至少存在一个连续离散特征值；只有区间宽度不超过看结果前冻结的频率分辨率，才接受为
    第一层分辨率级结论；
 6. I3.2 再用独立 reference 检查这个冻结指标是否跟踪误差；若未来确需指定某个 mode，才
    另做唯一目标识别，I3.3 再研究严格误差上界。
 
-连续弱残量只要求重构场属于连续问题的能量空间。一般情况下，要求场属于强算子的定义域会
-更苛刻；但当前模型的 homogeneous empty center column 提供了一个可立即检查的特殊情形。
+一般 weak residual 仍是合法后备，但它需要 conforming companion 和可计算 $V'$ norm。当前
+首选 reconstruction 结构性进入强算子定义域，因此无需先离散 Riesz problem。该构造、wall
+orientation、BIE 势符号和 infinite-tail 条件见
+[[research/projects/eig-apost/phase3-analysis/s-lead-field|Global lead-aware conforming trial]]。
+
+此前 homogeneous empty center column 提供了一个可立即检查的特殊情形。
 首个冻结实验把该空列中的有限 Fourier 场乘以固定
 $\chi(x)=\cos^2(\pi x)$ 并在单胞外延零，由于 $\chi=\chi'=0$ 于端点，得到的场属于强算子
 定义域。因而 `center-a1` 可以直接计算 continuous strong residual，而无需先完成一般 lead-field
@@ -48,21 +54,32 @@ repair 或 Riesz dual-norm solve。
 该 baseline 得到 computed ratio $22.43882099031153$。普通 Simpson 加密稳定，但没有给出可靠
 积分 enclosure；更重要的是，固定单胞 cutoff 的导数项主导 residual，名义区间跨过零并远宽于
 预注册频率分辨率。因此它是一个有效的 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT` 负结果，
-不是可移交 I3.2 的 estimator。下一项 I3.1 研究应减少 cutoff defect 或回到一般 weak-residual
-路线，而不是先认证同一个过宽区间。
+不是可移交 I3.2 的 estimator。随后 I3.1 使用全局 BIE-informed smooth trial 取消 fixed-cell
+cutoff；它没有继续调节同一个过宽 baseline。
+
+正式 `lead-a3` 通过 finite input、density representation 和 frozen-$Z$ propagation，但固定
+BIE-informed fit 的独立 holdout error 在 $J=4$ 为约 $4.522421$，在 $J=8$ 增至约
+$5.138028$，高于预注册 $0.20$。因此程序按冻结优先级停止于
+`CONFORMING_RECONSTRUCTION_UNRESOLVED`，没有进入 center correction、Gram、quadrature、tail
+或 strong-residual ratio。training/holdout targets 距材料圆仅约 source-panel arc scale 的
+$0.86\%/1.08\%$，direct close layer-potential evaluation 未单独资格化；目前只能判定 pipeline
+没有建立 BIE-informed shape quality，不能把原因单独归于 bubble basis 或 fit metric。
 
 ## 阅读顺序
 
 1. [[research/projects/eig-apost/phase3-analysis/s-estimator|Continuous residual estimator theory]]：
    连续弱残量、谱距离命题、gap 内存在性、预注册分辨率与可选唯一目标识别；
-2. [[research/projects/eig-apost/phase3-analysis/s-dtn-chain|Field reconstruction and residual chain]]：
-   从 I2 数据到连续或分片连续场，以及 residual 各组成项；
-3. [[research/projects/eig-apost/phase3-analysis/s-root|Existence and target identification]]：
+2. [[research/projects/eig-apost/phase3-analysis/s-lead-field|Global lead-aware conforming trial]]：
+   frozen wall states、BIE-informed Fourier--Hermite/bubble field、$D(A)$、strong residual 和
+   infinite-tail Gram/doubling；
+3. [[research/projects/eig-apost/phase3-analysis/s-dtn-chain|Exact/numerical DtN boundary]]：
+   exact half-guide theory、finite QZ/BIE 的适用边界和后备 weak-residual 路线；
+4. [[research/projects/eig-apost/phase3-analysis/s-root|Existence and target identification]]：
    saved candidate、可靠谱区间、gap 内离散特征值和指定目标的区别；
-4. [[research/projects/eig-apost/phase3-analysis/s-errors|Coverage and omitted errors]]：
+5. [[research/projects/eig-apost/phase3-analysis/s-errors|Coverage and omitted errors]]：
    residual 覆盖、数值近似和遗漏项；
-5. [[research/projects/eig-apost/phase3-analysis/p-implement|Design readiness]]：进入
-   `design-3-1.md` 前真正需要关闭的最小条件。
+6. [[research/projects/eig-apost/phase3-analysis/p-implement|Design readiness]]：进入
+   新实验实现前真正需要关闭的最小条件。
 
 `p-benchmark.md` 属于 I3.2 的独立 reference 问题，`p-paper.md` 属于结果形成后的写作问题。
 它们不得参与 I3.1 公式选择和调节。
@@ -74,7 +91,7 @@ repair 或 Riesz dual-norm solve。
 完整 $k$ 导数和非零横截斜率。只有实际启用该诊断时，这些条件才成为其局部门槛。
 
 该诊断不得称为 continuous-eigenvalue error estimator，不得阻止 continuous-residual 主线，也不得成为
-`design-3-1.md` 的 readiness gate。
+新实验的 readiness gate。
 
 ## 当前状态
 
@@ -84,9 +101,14 @@ repair 或 Riesz dual-norm solve。
 - 已完成实验：[[research/projects/eig-apost/implementation/i3/design-3-1|design-3-1]] 的
   `center-a1`，独立结论见
   [[research/projects/eig-apost/implementation/i3/review-3-1|review-3-1]]；
-- 未闭合：一个同时保持 continuous conformity 且具有项目分辨率的 reconstruction/residual
-  indicator；普通 quadrature 的 reliable enclosure；当前 sharp-disk continuous projected gap；
+- 已完成路线审查：BIE-informed single smooth Fourier--Hermite/bubble trial 的数学对象、
+  $D(A)$ 归属、strong residual 和 infinite-tail 条件；
+- 已完成 lead-aware 设计与正式负结果：
+  [[research/projects/eig-apost/implementation/i3/design-3-1b|design-3-1b]] 的 `lead-a3` 通过
+  finite/density/propagation 门后在 fixed holdout fit 首败；独立结论见
+  [[research/projects/eig-apost/implementation/i3/review-3-1b|review-3-1b]]；
+- 未闭合：普通 quadrature 的 reliable enclosure；当前 sharp-disk continuous projected gap；
 - 第一层目标：可靠区间进入 projected gap，且其正频率宽度不超过预注册分辨率；
 - 第二层可选升级：只有确需命名某个 mode 时才证明唯一目标身份；
-- I3.1 当前状态：`CENTER STRONG-RESIDUAL BASELINE COMPLETE / RESOLUTION INSUFFICIENT`；
+- I3.1 当前状态：`ACTIVE / VALID NEGATIVE / NO ESTIMATOR`；
 - I3.2：尚不可开始；须先得到有用分辨率的冻结 estimator candidate。

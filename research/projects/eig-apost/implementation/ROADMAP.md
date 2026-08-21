@@ -105,10 +105,12 @@ hierarchy；但 terminal-cell 尺度只说明 sub-grid minimizer 尚未解析，
 I3 直接研究 candidate 与真实连续特征值之间的误差。它不以某种固定 estimator 公式为预设，
 也不把 next-level shift、matrix residual 或 effectivity 单独当成最终答案。具体算法和验收流程
 应根据 I2 实际交付另行冻结。当前 `drift-a1` 与 `m-drift-a2` 已提供两条经 mode-identity
-检查的 candidate sequence。I3.1 已完成首个中心空列 continuous strong-residual baseline，当前
-状态为 `ACTIVE / CENTER BASELINE COMPLETE / RESOLUTION INSUFFICIENT`。零 observed shift 不能
-单独验证 next-level correction、收敛或 estimator；首个强残量 ratio 也因固定单胞 cutoff 主导而
-不能进入 I3.2。
+检查的 candidate sequence。I3.1 已完成中心空列与 lead-aware reconstruction 两个正式实验，
+当前状态为 `ACTIVE / TWO VALID NEGATIVE BASELINES / NO ESTIMATOR`。零 observed shift 不能单独
+验证 next-level correction、收敛或 estimator；中心空列 ratio 因固定单胞 cutoff 主导而失去
+分辨率，lead-aware 实验则在形成通过资格的全波导 continuous trial/residual 之前即于固定
+BIE-informed fit 首败。
+二者都不能进入 I3.2。
 
 ### 输入、三项输出和与上界的关系
 
@@ -154,11 +156,18 @@ Fourier 墙系数构造显式场，乘固定单胞 cutoff 后直接计算 contin
 $4.93$，名义区间跨过零，因而该 reconstruction 对预注册 $10^{-6}$ 频率尺度分辨率不足。
 这是一项有效负结果，不是可用于 I3.2 的 estimator。
 
-I3.1 下一步仍直接作用于连续物理算子，不先定位 finite zero 或预测 projected finite-root shift。
-应另行研究 cutoff defect 更小的 lead-aware conforming reconstruction，或回到 global continuous
-weak residual 及其 normalized dual norm。finite one-step correction 仅保留为 OPTIONAL 离散分量
-诊断，不是前置 blocker。对同一过宽 baseline 优先增加可靠积分 enclosure 或 gap 认证并不能提高
-分辨率，不是最低成本下一步。
+I3.1 下一步仍须直接作用于连续物理算子，不先定位 finite zero 或预测 projected finite-root shift。
+全波导 BIE-informed Fourier--Hermite/bubble reconstruction 的理论—实现映射和
+[[research/projects/eig-apost/implementation/i3/design-3-1b|冻结设计]] 已通过独立审查并正式运行。
+`lead-a3` 通过 finite input、density representation 和 propagation，但 $J=4/8$ holdout error
+分别约为 $4.522421/5.138028$，高于 $0.20$ 且随 bubble order 变差，故按预注册优先级停止于
+`CONFORMING_RECONSTRUCTION_UNRESOLVED`。center、Gram、tail 和 residual ratio 均未到达。
+
+由于 training/holdout targets 到圆周仅约为 source-panel arc scale 的 $0.86\%/1.08\%$，direct
+close layer-potential evaluation 尚未资格化；当前不能区分近奇异评价与 basis/metric 的贡献。
+因此下一步必须另行设计并审查，不能自动调参或启动新 attempt。一般 weak residual 保留为后备，
+finite one-step correction 仅为 OPTIONAL 离散分量诊断。对中心宽 baseline 优先增加可靠积分
+enclosure 或 gap 认证仍不能提高分辨率。
 
 误差来源识别并入 I3.1；reference 搜索并入 I3.2；norm enclosure、continuous projected-gap
 containment 和预注册分辨率研究并入 I3.3。唯一目标识别只在下游必须跟踪特定 mode 时升级。

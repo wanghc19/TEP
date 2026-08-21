@@ -2,8 +2,8 @@
 
 ## 当前状态
 
-当前新路线处于
-`I2_3_PASS_WITH_CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。精确
+当前新路线处于 `I3_1_ACTIVE / VALID_NEGATIVE / NO_ESTIMATOR`；其输入阶段 I2 已以
+`I2_3_PASS_WITH_CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` 收口。精确
 half-guide DtN 由半无限边值问题定义，连续中心算子 $\mathcal F(k)$ 在任何
 BIE/Fourier 截断和 ordered QZ 之前定义真实谱对象。现行数学权威是
 [[research/projects/eig-apost/phase4-report/method.tex|continuous DtN/BIE method]]，离散
@@ -41,8 +41,14 @@ localization diagnostic 及最低必要的 residual、factor、field、boundary 
 完成首个中心空列 continuous strong-residual baseline：固定单胞 cutoff 场给出的 computed ratio
 为 $22.43882099031153$，数值积分稳定，但 cutoff 导数项主导且名义区间跨过零，故结论为
 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`。这一负结果没有形成可靠存在区间，也不能进入
-I3.2。I3.1 继续活动，下一设计应寻找 cutoff defect 更小的 conforming reconstruction，或回到
-continuous weak residual；finite one-step root correction 仍为 OPTIONAL。第一层只要求可靠区间进入
+I3.2。I3.1 继续活动；全波导 BIE-informed Fourier--Hermite/bubble trial 的理论—实现映射和
+冻结设计随后完成实现与正式 `lead-a3`。finite input、density representation 和 propagation
+通过，但固定 fit 的 $J=4/8$ holdout error 分别约为 $4.522421/5.138028$，故在
+`CONFORMING_RECONSTRUCTION_UNRESOLVED` 首败处停止，尚未形成通过资格的全波导 continuous
+trial/residual 或 estimator。近圆 targets 相对 source-panel arc scale 过近且 direct close evaluation 未资格化，
+所以失败原因仍不能在近奇异评价与 basis/metric 之间区分；不自动启动下一 attempt。continuous
+weak residual 保留为后备，finite one-step root correction 仍为
+OPTIONAL。第一层只要求可靠区间进入
 current continuous projected gap，并通过
 结果前冻结的 absolute/gap-relative resolution，从而证明其中至少存在一个连续离散特征值；
 唯一目标识别只在指定-mode升级时需要。两条 I2 轴不能单独提供非零 correction、minimizer/root drift、
@@ -77,7 +83,9 @@ implementation/
 ├── i3/
 │   ├── README.md
 │   ├── design-3-1.md
-│   └── review-3-1.md
+│   ├── review-3-1.md
+│   ├── design-3-1b.md
+│   └── review-3-1b.md
 └── archive/
     └── legacy-route-v1/
         ├── README.md
@@ -96,7 +104,8 @@ implementation/
   交付两条 conditional hierarchy。
 - [[research/projects/eig-apost/implementation/i3/README|i3/]]：维护 candidate 误差估计、
   independent truth comparison 和上界可行性的目标、输入与预期输出；首个中心空列强残量
-  baseline 已完成但分辨率不足，I3.1 仍在活动。
+  baseline 分辨率不足，lead-aware reconstruction 又在 BIE-informed fit 首败；I3.1 仍在活动，
+  尚无 estimator，I3.2 不可开始。
 - [[research/projects/eig-apost/implementation/ROADMAP|ROADMAP.md]]：只维护新路线 I1--I3
   的项目级依赖和退出条件。
 - [[research/projects/eig-apost/implementation/SYMBOL|SYMBOL.md]]：集中说明跨阶段缩写、
@@ -108,8 +117,9 @@ implementation/
   当前授权。
 - [[test/README|current test index]]：记录新路线 I1.2--I3.1 实验状态；当前实验位于
   `test/i1/hg-adef/`、`test/i1/k-scan/`、`test/i1/k-ready/`、`test/i2/k-count/` 和
-  `test/i2/h-inertia/`、`test/i2/k-drift/`、`test/i2/m-drift/` 与 `test/i3/s-resid/`。旧实验统一
-  由 [[test/archive/legacy-route-v1/README|legacy experiment index]] 保存。
+  `test/i2/h-inertia/`、`test/i2/k-drift/`、`test/i2/m-drift/`、`test/i3/s-resid/` 与
+  `test/i3/g-resid/`。旧实验统一由
+  [[test/archive/legacy-route-v1/README|legacy experiment index]] 保存。
 
 ## 阶段文档规则
 
@@ -154,7 +164,9 @@ I1--I4 文档、实验 ID 或冻结 verdict。
    [[research/projects/eig-apost/implementation/i2/review-2-3m|I2.3 M-axis review]] 与
    [[test/i2/m-drift/README|I2.3 M-axis experiment index]]。
 5. [[research/projects/eig-apost/implementation/i3/README|I3 guide]]：确认 candidate、error
-   estimate、independent truth 和 upper-bound claim ladder，不提前冻结算法。
+   estimate、independent truth 和 upper-bound claim ladder；再读
+   [[research/projects/eig-apost/implementation/i3/review-3-1b|lead-aware post-run review]] 与
+   [[test/i3/g-resid/README|lead-aware experiment index]]，确认当前 reconstruction 首败。
 6. [[research/projects/eig-apost/implementation/i1/design|discrete A-def design]]：阅读当前
    离散空间、QZ/graph/DtN 链和组装合同。
 7. [[research/projects/eig-apost/implementation/i1/review|current I1 review]]：核对审查结论
