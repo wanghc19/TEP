@@ -28,22 +28,24 @@ I3.1 的主线必须直接服务这个误差。有限矩阵的精确零点、连
 当前选定的最短路线是：
 
 1. 取 I2 已保存的 $\widehat k_h$，令 $\mu_h=\widehat k_h^2$；
-2. 用 I2 的 frozen wall states 生成左右 infinite lead 序列，以 one-cell BIE 场 samples 拟合
-   不改变 wall value/derivative 的 Fourier--Hermite bubble coefficients；
-3. 得到在材料圆内外使用同一 smooth function、跨胞元 $C^1$、横向准周期且 infinite
-   $H^2$ norm 可和的 $u_h^{\mathrm c}\in D(A)$；
-4. 直接计算该场在 $\mu_h$ 处的 continuous strong residual，并以 Gram/doubling 显式控制
-   左右 infinite tail；
+2. 用 I2 的 frozen wall traces 生成左右 infinite lead 序列，并以 Q1 Dirichlet cell extension
+   构造全局 $H^1$ conforming trial；
+3. 构造跨胞元 normal component 连续的 global RT0 flux，以 functional majorant 计算
+   continuous weak-residual candidate；
+4. 以 full-$P$ Gram/doubling 显式控制左右 infinite tail，并分别检查 phase/scale 与
+   coarse/fine resolution；
 5. 若可靠 residual interval 完全位于当前连续算子的 projected essential gap，则先得到区间内
    至少存在一个连续离散特征值；只有区间宽度不超过看结果前冻结的频率分辨率，才接受为
    第一层分辨率级结论；
 6. I3.2 再用独立 reference 检查这个冻结指标是否跟踪误差；若未来确需指定某个 mode，才
    另做唯一目标识别，I3.3 再研究严格误差上界。
 
-一般 weak residual 仍是合法后备，但它需要 conforming companion 和可计算 $V'$ norm。当前
-首选 reconstruction 结构性进入强算子定义域，因此无需先离散 Riesz problem。该构造、wall
-orientation、BIE 势符号和 infinite-tail 条件见
-[[research/projects/eig-apost/phase3-analysis/s-lead-field|Global lead-aware conforming trial]]。
+当前主线已改为 conforming weak residual：从 frozen wall traces 构造 Q1 cell extension 和
+global RT0 flux，再用无未知常数的 functional majorant 计算 $V'$ residual candidate。当前
+[[research/projects/eig-apost/implementation/i3/design-3-1b|V2 design]] 给出对象与实现合同；
+此前的强残量 BIE reconstruction 作为历史负向路线保留在
+[[research/projects/eig-apost/phase3-analysis/s-lead-field|Global lead-aware conforming trial]]
+及其 post-run review 中。
 
 此前 homogeneous empty center column 提供了一个可立即检查的特殊情形。
 首个冻结实验把该空列中的有限 Fourier 场乘以固定
@@ -65,13 +67,27 @@ $5.138028$，高于预注册 $0.20$。因此程序按冻结优先级停止于
 $0.86\%/1.08\%$，direct close layer-potential evaluation 未单独资格化；目前只能判定 pipeline
 没有建立 BIE-informed shape quality，不能把原因单独归于 bubble basis 或 fit metric。
 
+同名 [[research/projects/eig-apost/implementation/i3/design-3-1b|design-3-1b]] 当前已在保留
+Git 历史的前提下重写为 Q1--RT0 weak-residual V2，并已完成正式 `weak-a1`。base finite
+input、frozen-$P$ propagation、coarse/fine Q1--RT0、Grams 与 full-$P$ tails 通过；fine
+phase/scale repeat 的 center 的 $A,B$ Gram 及左右 first-cell 的 $A$ Gram Hermitian defect 最大为
+$6.2442\times10^{-10}>10^{-12}$，故 producer 停止于
+`MAJORANT_QUADRATURE_UNRESOLVED`。该结果不改变 `lead-a3` 的 V1 machine verdict 与
+append-only output。独立结论见
+[[research/projects/eig-apost/implementation/i3/review-3-1c|review-3-1c]]。
+
+当前下一门是 scale-covariant Gram qualification。即使关闭，base diagnostics 已显示
+$B/\gamma$ coarse/fine change 约 $0.277>0.20$，fine nominal width 约
+$0.564\gg10^{-6}$；mesh 与 width 仍未闭合。
+
 ## 阅读顺序
 
 1. [[research/projects/eig-apost/phase3-analysis/s-estimator|Continuous residual estimator theory]]：
    连续弱残量、谱距离命题、gap 内存在性、预注册分辨率与可选唯一目标识别；
-2. [[research/projects/eig-apost/phase3-analysis/s-lead-field|Global lead-aware conforming trial]]：
-   frozen wall states、BIE-informed Fourier--Hermite/bubble field、$D(A)$、strong residual 和
-   infinite-tail Gram/doubling；
+2. [[research/projects/eig-apost/implementation/i3/design-3-1b|Q1--RT0 weak-residual V2 design]]：
+   当前从 frozen wall traces 到全局 $H^1$ trial、$H(\operatorname{div})$ flux 与 functional
+   majorant 的主线；[[research/projects/eig-apost/phase3-analysis/s-lead-field|旧 lead-aware
+   strong-residual theory]] 只保留 V1 历史解释；
 3. [[research/projects/eig-apost/phase3-analysis/s-dtn-chain|Exact/numerical DtN boundary]]：
    exact half-guide theory、finite QZ/BIE 的适用边界和后备 weak-residual 路线；
 4. [[research/projects/eig-apost/phase3-analysis/s-root|Existence and target identification]]：
@@ -101,14 +117,16 @@ $0.86\%/1.08\%$，direct close layer-potential evaluation 未单独资格化；�
 - 已完成实验：[[research/projects/eig-apost/implementation/i3/design-3-1|design-3-1]] 的
   `center-a1`，独立结论见
   [[research/projects/eig-apost/implementation/i3/review-3-1|review-3-1]]；
-- 已完成路线审查：BIE-informed single smooth Fourier--Hermite/bubble trial 的数学对象、
-  $D(A)$ 归属、strong residual 和 infinite-tail 条件；
-- 已完成 lead-aware 设计与正式负结果：
-  [[research/projects/eig-apost/implementation/i3/design-3-1b|design-3-1b]] 的 `lead-a3` 通过
-  finite/density/propagation 门后在 fixed holdout fit 首败；独立结论见
+- 已完成历史 BIE-informed single smooth Fourier--Hermite/bubble 路线的正式负结果：
+  `lead-a3` 通过 finite/density/propagation 门后在 fixed holdout fit 首败；独立结论见
   [[research/projects/eig-apost/implementation/i3/review-3-1b|review-3-1b]]；
+- 已完成 Q1--RT0 V2：[[research/projects/eig-apost/implementation/i3/design-3-1b|design]] 的
+  `weak-a1` 在 phase/scale Gram qualification 首败；独立结论见
+  [[research/projects/eig-apost/implementation/i3/review-3-1c|review-3-1c]]；
+- 当前数值 blocker：scale-covariant Gram qualification；关闭后仍须通过 mesh 与 absolute
+  interval-width 门；
 - 未闭合：普通 quadrature 的 reliable enclosure；当前 sharp-disk continuous projected gap；
 - 第一层目标：可靠区间进入 projected gap，且其正频率宽度不超过预注册分辨率；
 - 第二层可选升级：只有确需命名某个 mode 时才证明唯一目标身份；
-- I3.1 当前状态：`ACTIVE / VALID NEGATIVE / NO ESTIMATOR`；
+- I3.1 当前状态：`ACTIVE / THREE VALID NEGATIVE EXPERIMENTS / NO ESTIMATOR`；
 - I3.2：尚不可开始；须先得到有用分辨率的冻结 estimator candidate。

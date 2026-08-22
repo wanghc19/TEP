@@ -147,6 +147,19 @@ frozen outputs retain their recorded paths and hashes.
 | Status | `PASS WITH CONDITIONS / VALID NEGATIVE / CONFORMING_RECONSTRUCTION_UNRESOLVED`; `lead-a3` passed finite input, density representation, and propagation, then failed the fixed BIE-informed holdout gate ($J=4$: $4.522421$; $J=8$: $5.138028$ versus $0.20$). Center/Gram/tail/residual estimator are `NOT_REACHED`; I3.2 remains unavailable. |
 | Implementation summary | [[research/projects/eig-apost/implementation/i3/README|current I3 guide]] |
 
+## I3-Q1-RT0-WEAK-RESIDUAL-V2
+
+| Field | Value |
+|---|---|
+| Experiment ID | `I3-Q1-RT0-WEAK-RESIDUAL-V2` |
+| Stage | I3.1 |
+| Purpose | Reconstruct a conforming whole-waveguide Q1 trial from the saved candidate, build a global RT0 flux, and compute an ordinary-double functional-majorant candidate for the continuous weak residual |
+| Current path | `test/i3/w-resid/` |
+| Entry point | Completed formal attempt: `check_w_resid('weak-a1')` |
+| Experiment index | [[test/i3/w-resid/README|V2 attempt, schema, grid, result, resources, and claim limits]] |
+| Status | `POST-RUN PASS / VALID NEGATIVE / MAJORANT_QUADRATURE_UNRESOLVED`; base Q1--RT0 and full-$P$ tail checks passed, but the fine phase/scale repeat failed the per-cell Gram Hermitian gate (maximum defect $6.2442\times10^{-10}$ versus $10^{-12}$). No estimator was formed and I3.2 remains unavailable. |
+| Implementation summary | [[research/projects/eig-apost/implementation/i3/README|current I3 guide]] |
+
 Future current-route experiments belong under the matching `test/i*/` stage directory and receive
 an index entry only after they are designed and authorized. A legacy verdict never becomes a
 current stage gate.

@@ -1,8 +1,22 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-08-16。
+更新日期：2026-08-21。
 
 ## 当前状态
+
+- **2026-08-21 I3.1 Q1--RT0 弱残量正式负结果：**正式 `weak-a1` 固定
+  $\widehat k_h=1.832770289108157$、$n_{\mathrm{tot}}=256$、$M=48$、两层 Q1 网格和全部
+  phase/scale、tail、refinement 门。finite input、frozen-$P$ propagation、coarse/fine Q1--RT0、
+  base Grams 与 full-$P$ tails 通过；fine phase/scale repeat 中 center 的 $A,B$ Gram 及左右
+  first-cell 的 $A$ Gram 的
+  Hermitian defect 超过 $10^{-12}$，最大为 $6.2442\times10^{-10}$，producer 因而停止于
+  `MAJORANT_QUADRATURE_UNRESOLVED`。base coarse/fine computed $q$ 为约 $0.1792/0.1520$，但
+  尚未通过完整资格链；$B/\gamma$ layer change 约 $0.277>0.20$，fine nominal width 约
+  $0.564\gg10^{-6}$，只能作为后续负向诊断。运行用时 $22.5326065$ s，peak active-object
+  memory $341.8422213$ MiB，无 retry；独立 verdict 为 `POST-RUN PASS / VALID NEGATIVE`。
+  当前下一门为 scale-covariant Gram qualification，之后仍有 mesh/width blocker；尚无
+  estimator，I3.2 不可开始。详见
+  [[research/projects/eig-apost/implementation/i3/review-3-1c|independent review]]。
 
 - **2026-08-16 I3.1 lead-aware reconstruction 正式负结果：**冻结 `lead-a3` 固定
   $\widehat k_h=1.832770289108157$、$n_{\mathrm{tot}}=256$、$M=48$ 及全部设计参数。finite
@@ -217,11 +231,12 @@
   将 $M_{\mathrm{trace}}=48$ 的最坏误差和 omitted energy 分别压到
   $7.08\times10^{-12}$ 与 $5.00\times10^{-13}$。OP-I4-1h 与 OP-I4-6 因而在当前制造
   密度、实数非 Wood 参数和有限 $M_{\mathrm{ref}}=96$ 意义下关闭。
-- 状态：`active investigation -- I3.1 valid negative; no estimator`。
+- 状态：`active investigation -- I3.1 three valid negative experiments; no estimator`。
   `ntot` 与 $M$ 两条三层单轴实验的 saved candidate 均完全相同且 `SAME_MODE`；I3.1 已开始
   saved-candidate continuous residual 研究。中心空列 strong-residual baseline 已完成，但 ratio
   $22.43882099031153$ 由固定单胞 cutoff 主导，分辨率不足；全波导 BIE-informed smooth
-  trial 又在 fixed holdout fit 首败，尚未形成 continuous residual。第一层不要求唯一 mode，但 reliable enclosure、current-model projected gap 与
+  trial 又在 fixed holdout fit 首败；Q1--RT0 V2 随后在 fine phase/scale Gram qualification
+  首败，仍未形成 estimator。第一层不要求唯一 mode，但 reliable enclosure、current-model projected gap 与
   absolute/gap-relative resolution 仍是相应存在性结论的门。该状态不表示 sub-grid
   minimizer、finite root 或连续真值零漂移，也不构成收敛证据。
 - 历史阶段门（均不构成当前实现授权）：manufactured root/correction pipeline 曾为窄范围
@@ -256,7 +271,7 @@
 | Current I1.3 real-$k$ continuity, candidate reconnaissance and bounded zoom | `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_NESTED_GRID_CANDIDATE` | $M=48$ count/QZ/chart/subspace-coarse/fine continuity；中心差分二阶收敛；$M=12\to24\to48$ 分层筛查；v2 在 15 层、33 点、167 门全通过后得到 $k=1.8327703475952146$、$q=8.32009\times10^{-8}$，最终宽度 $7.6294\times10^{-7}$ | 固定 $M=48$ 不是 trace convergence；FD mutation 未过 $10^{-12}$，production derivative 不可用 |
 | Current I1.4 sampled complex-$k$ readiness | `I1_4_PASS_WITH_CONDITIONS / SAMPLED_FIXED_M_DISCRETE_ROOT_READINESS`; empirical I2 isolation ready | $r_0=3.8147\times10^{-7}$ disk；anchored branch/frame/chart/rank；82/820/164/164 node/factor/branch/QZ rows、8 closure、36 CR、6 CR-negative rows；V5 identifiable assembly-order closure | 未运行 locator/contour/root；固定 $M=48$ 不是 trace convergence；无 production separation、unsampled-pole theorem 或 $A_{\mathrm{def}}'$；对称 physical transmission labels 不可动态辨识 |
 | Current I2.1 factor-aware root count / I2.2 endpoint sign count | I2.1 `PASS WITH CONDITIONS`; I2.2 `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP` | I2.1 32/64 主 winding 均为 one；I2.2 的 raw $H$ strict-inertia 路线保留历史 STOP，但当前 $H_{\mathrm{sym}}$ 两端 counts 为 $(194,0,0)$ 与 $(193,1,0)$，$50/100/200$ bands 稳定 | 该 difference 只作 numerical corroboration；raw-$H$ inertia 仍 unavailable，尚无实根、root 坐标、连续 eigenvalue 或 estimator |
-| Current I2.3 cross-discretization drift | `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` | `ntot=160,208,256` 与固定 $n_{\mathrm{tot}}=160$ 的 $M=32,40,48$ 两条单轴实验均返回完全相同的三层 saved candidate；最低 raw diagnostics、gauge/repeat 与相邻 `SAME_MODE` 门通过 | terminal half-width 只作 sub-grid minimizer 搜索分辨率；不证明 minimizer/root 零漂移、收敛或误差界。I3.1 的 center 与 lead-aware 两项均为有效负结果，尚无 estimator |
+| Current I2.3 cross-discretization drift | `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` | `ntot=160,208,256` 与固定 $n_{\mathrm{tot}}=160$ 的 $M=32,40,48$ 两条单轴实验均返回完全相同的三层 saved candidate；最低 raw diagnostics、gauge/repeat 与相邻 `SAME_MODE` 门通过 | terminal half-width 只作 sub-grid minimizer 搜索分辨率；不证明 minimizer/root 零漂移、收敛或误差界。I3.1 的 center、lead-aware 与 Q1--RT0 三项均为有效负结果，尚无 estimator |
 
 实现权威入口为
 [[research/projects/eig-apost/implementation/archive/legacy-route-v1/i0-manufactured/design|manufactured NEP design]]、

@@ -105,12 +105,13 @@ hierarchy；但 terminal-cell 尺度只说明 sub-grid minimizer 尚未解析，
 I3 直接研究 candidate 与真实连续特征值之间的误差。它不以某种固定 estimator 公式为预设，
 也不把 next-level shift、matrix residual 或 effectivity 单独当成最终答案。具体算法和验收流程
 应根据 I2 实际交付另行冻结。当前 `drift-a1` 与 `m-drift-a2` 已提供两条经 mode-identity
-检查的 candidate sequence。I3.1 已完成中心空列与 lead-aware reconstruction 两个正式实验，
-当前状态为 `ACTIVE / TWO VALID NEGATIVE BASELINES / NO ESTIMATOR`。零 observed shift 不能单独
+检查的 candidate sequence。I3.1 已完成中心空列、lead-aware reconstruction 与 Q1--RT0 weak
+residual 三个正式实验，当前状态为 `ACTIVE / THREE VALID NEGATIVE EXPERIMENTS / NO ESTIMATOR`。
+零 observed shift 不能单独
 验证 next-level correction、收敛或 estimator；中心空列 ratio 因固定单胞 cutoff 主导而失去
 分辨率，lead-aware 实验则在形成通过资格的全波导 continuous trial/residual 之前即于固定
-BIE-informed fit 首败。
-二者都不能进入 I3.2。
+BIE-informed fit 首败；Q1--RT0 实验又在 fine phase/scale Gram qualification 首败。三者都不能
+进入 I3.2。
 
 ### 输入、三项输出和与上界的关系
 
@@ -157,17 +158,28 @@ $4.93$，名义区间跨过零，因而该 reconstruction 对预注册 $10^{-6}$
 这是一项有效负结果，不是可用于 I3.2 的 estimator。
 
 I3.1 下一步仍须直接作用于连续物理算子，不先定位 finite zero 或预测 projected finite-root shift。
-全波导 BIE-informed Fourier--Hermite/bubble reconstruction 的理论—实现映射和
-[[research/projects/eig-apost/implementation/i3/design-3-1b|冻结设计]] 已通过独立审查并正式运行。
+历史全波导 BIE-informed Fourier--Hermite/bubble reconstruction 已正式运行；
 `lead-a3` 通过 finite input、density representation 和 propagation，但 $J=4/8$ holdout error
 分别约为 $4.522421/5.138028$，高于 $0.20$ 且随 bubble order 变差，故按预注册优先级停止于
 `CONFORMING_RECONSTRUCTION_UNRESOLVED`。center、Gram、tail 和 residual ratio 均未到达。
 
 由于 training/holdout targets 到圆周仅约为 source-panel arc scale 的 $0.86\%/1.08\%$，direct
 close layer-potential evaluation 尚未资格化；当前不能区分近奇异评价与 basis/metric 的贡献。
-因此下一步必须另行设计并审查，不能自动调参或启动新 attempt。一般 weak residual 保留为后备，
-finite one-step correction 仅为 OPTIONAL 离散分量诊断。对中心宽 baseline 优先增加可靠积分
-enclosure 或 gap 认证仍不能提高分辨率。
+当前 [[research/projects/eig-apost/implementation/i3/design-3-1b|design-3-1b]] 已在保留 Git
+历史的前提下改写为 V2：用 frozen QZ wall traces、conforming Q1 cell extension、global RT0
+flux 与 functional majorant 构造 weak residual。正式 `weak-a1` 的 base finite input、Q1--RT0
+与 full-$P$ tails 通过，但 fine phase/scale repeat 中 center 的 $A,B$ Gram 及左右 first-cell 的
+$A$ Gram 的最大 Hermitian
+defect 为 $6.2442\times10^{-10}>10^{-12}$，故 producer 停止于
+`MAJORANT_QUADRATURE_UNRESOLVED`。该 valid negative 没有形成 estimator；独立结论见
+[[research/projects/eig-apost/implementation/i3/review-3-1c|review-3-1c]]。
+
+下一门是 scale-covariant Gram qualification。即使关闭该门，现有 base diagnostics 已显示
+$B/\gamma$ 的 coarse/fine 变化约 $0.277>0.20$，fine nominal width 约
+$0.564\gg10^{-6}$；mesh qualification 与有用 interval width 仍须另行关闭。`lead-a3` 的 V1
+结论继续以 review/output 为准。
+finite one-step correction 仅为 OPTIONAL 离散分量诊断。对中心宽
+baseline 优先增加可靠积分 enclosure 或 gap 认证仍不能提高分辨率。
 
 误差来源识别并入 I3.1；reference 搜索并入 I3.2；norm enclosure、continuous projected-gap
 containment 和预注册分辨率研究并入 I3.3。唯一目标识别只在下游必须跟踪特定 mode 时升级。

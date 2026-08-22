@@ -34,8 +34,8 @@ e_h^*=|k_*-\widehat k_h|.
 $$
 
 本阶段不把有限维矩阵的精确零点、层间漂移、矩阵残差或某个修正公式本身当成最终成果。
-这些量只有在能够帮助估计上述连续谱误差时才进入主线。I3.1 已完成首个最低成本的连续强残量
-baseline；后续 estimator、independent reference 与严格上界仍须分别设计和审查。
+这些量只有在能够帮助估计上述连续谱误差时才进入主线。I3.1 已完成三个正式负向实验；后续
+estimator、independent reference 与严格上界仍须分别设计和审查。
 
 长期对象门如下：每个新增主线对象和 hard gate 都必须写出它如何进入第一层集合距离或可选
 target-specific error 的估计链；若它
@@ -47,7 +47,7 @@ I3 由三个正式里程碑组成。三个是科学问题决定的数量，不�
 
 | Milestone | 独立科学问题 | 核心输出 | 当前状态 |
 |---|---|---|---|
-| I3.1 | 能否从实际计算量构造并内部论证一个与 continuous gap-spectrum distance 有关的可计算指标？ | 冻结的 $\eta_h$、适用假设、覆盖/忽略的误差及内部检查结果 | `ACTIVE / TWO VALID NEGATIVE BASELINES / NO ESTIMATOR` |
+| I3.1 | 能否从实际计算量构造并内部论证一个与 continuous gap-spectrum distance 有关的可计算指标？ | 冻结的 $\eta_h$、适用假设、覆盖/忽略的误差及内部检查结果 | `ACTIVE / THREE VALID NEGATIVE EXPERIMENTS / NO ESTIMATOR` |
 | I3.2 | 冻结后的 $\eta_h$ 能否在未参与其构造的独立 reference 上跟踪真实误差的量级？ | independent-reference comparison 与 empirical estimator verdict | `NOT STARTED` |
 | I3.3 | 能否在没有未知常数的条件下把已经验证的估计升级为可计算上界？ | $U_h$ 或 `UPPER_BOUND_UNAVAILABLE` | `NOT STARTED` |
 
@@ -70,7 +70,7 @@ Rayleigh/Fourier 截断、边界离散、QZ 子空间、有限精度求解以及
 关系。哪些误差进入 $\eta_h$、哪些暂时忽略，必须在 I3.1 随具体公式一起说明，不能先验地把
 全部误差相加成一个没有数学来源的“总误差账本”。
 
-## I3.1 当前理论选择与首个 baseline
+## I3.1 当前理论选择与实验结果
 
 现行分析见 [[research/projects/eig-apost/phase3-analysis/README|Phase 3 analysis]]。I3.1 直接在
 算法保存的 $\widehat k_h$ 处研究连续物理残量。一般主线仍是：从 I2 数据重构非零的
@@ -114,11 +114,9 @@ $\lambda$ 区间跨过零且远宽于预注册 $10^{-6}$ 频率分辨率。因�
 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`；它不支持 continuous projected gap 内离散特征值
 存在，也尚不能进入 I3.2。
 
-下一项 I3.1 已冻结并运行
-[[research/projects/eig-apost/implementation/i3/design-3-1b|BIE-informed global residual design]]：
-frozen wall states 生成左右无限序列，one-cell BIE 内外场只提供内部形状数据，显式
-Fourier--Hermite/bubble basis 保证跨胞元与跨材料圆的连续性，continuous strong residual 再独立
-判断质量。正式 `lead-a3` 通过 finite input、density representation 和 frozen-$Z$ propagation，
+历史 V1 路线由 frozen wall states 生成左右无限序列，并用 one-cell BIE 内外场拟合显式
+Fourier--Hermite/bubble trial。正式 `lead-a3` 通过 finite input、density representation 和
+frozen-$Z$ propagation，
 但固定 fit 的独立 holdout error 在 $J=4$ 已约为 $4.522421$，到 $J=8$ 增至约
 $5.138028$，远高于预注册 $0.20$。producer 因而在
 `CONFORMING_RECONSTRUCTION_UNRESOLVED` 首败处停止；center correction、Grams、quadrature、
@@ -128,10 +126,27 @@ training/holdout targets 到材料圆的最小距离仅为 $4.22\times10^{-5}$ �
 $5.32\times10^{-5}$，约为 $N=256$ source-panel arc scale 的 $0.86\%$ 与 $1.08\%$；direct
 close layer-potential evaluation 尚未单独资格化。因此现有证据不能把失败单因归咎于 bubble
 basis，只能说当前 pipeline 未建立 BIE-informed shape quality。独立结论见
-[[research/projects/eig-apost/implementation/i3/review-3-1b|review-3-1b]]。一般 continuous weak
-residual 与 exact-DtN center residual 仍为后备；finite common-space transport、nearby simple
+[[research/projects/eig-apost/implementation/i3/review-3-1b|review-3-1b]]。V1 收尾时一般
+continuous weak residual 仍是后备；当前 V2 已将其选为主线。exact-DtN center residual、
+finite common-space transport、nearby simple
 zero、matrix derivative 与 bordered conditioning 继续只属 OPTIONAL。不得自动调 basis/grid、
 修改阈值或运行下一 attempt。
+
+当前 [[research/projects/eig-apost/implementation/i3/design-3-1b|design-3-1b]] 已在保留 Git
+历史的前提下重写为 V2：从同一 frozen QZ wall traces 出发，用真实材料的 conforming Q1
+Dirichlet cell extension 形成全局 $H^1$ trial，再以 global RT0 flux 和 functional majorant
+直接构造 continuous weak residual。正式 `weak-a1` 已完成：finite input、frozen-$P$
+propagation、coarse/fine Q1--RT0、base Grams 与 full-$P$ tails 均通过；fine phase/scale repeat
+随后因 center 的 $A,B$ Gram 及左右 first-cell 的 $A$ Gram 的 Hermitian defect 超过
+$10^{-12}$ 而停止，最大 defect 为
+$6.2442\times10^{-10}$。producer 状态为 `I3_1_MAJORANT_QUADRATURE_UNRESOLVED`，独立 verdict
+为 `POST-RUN PASS / VALID NEGATIVE`。本 attempt 没有形成 scaled tail、refinement 或最终
+estimator；独立结论见
+[[research/projects/eig-apost/implementation/i3/review-3-1c|review-3-1c]]。
+
+下一门是 scale-covariant Gram qualification。即使关闭该门，base coarse/fine 的
+$B/\gamma$ component change 约 $0.277>0.20$，fine nominal width 约 $0.564\gg10^{-6}$；
+mesh qualification 与有用分辨率仍未闭合。因此 I3.1 继续活动，I3.2 不可开始。
 
 ## I3.1：构造并内部论证可计算的误差指标
 
@@ -331,13 +346,16 @@ $$
 5. [[research/projects/eig-apost/implementation/i3/design-3-1|I3.1 frozen baseline design]]、
    [[research/projects/eig-apost/implementation/i3/review-3-1|I3.1 independent review]] 与
    [[test/i3/s-resid/README|I3.1 experiment index]]：首个连续强残量 baseline；
-6. [[research/projects/eig-apost/phase3-analysis/s-lead-field|Global lead-aware conforming trial]]、
-   [[research/projects/eig-apost/implementation/i3/design-3-1b|I3.1 lead-aware frozen design]]、
+6. [[research/projects/eig-apost/implementation/i3/design-3-1b|I3.1 Q1--RT0 weak-residual V2 design]]：
+   已完成 `weak-a1`；其
+   [[research/projects/eig-apost/implementation/i3/review-3-1c|independent post-run review]] 与
+   [[test/i3/w-resid/README|experiment index]] 记录 phase/scale Gram 首败。历史 BIE V1 的正式
+   负结果由
    [[research/projects/eig-apost/implementation/i3/review-3-1b|independent post-run review]] 与
-   [[test/i3/g-resid/README|experiment index]]：全波导 reconstruction 的正式负结果；
+   [[test/i3/g-resid/README|experiment index]] 承载；
 7. [[research/projects/eig-apost/implementation/ROADMAP|implementation roadmap]]：项目级顺序。
 
 I3.2 的正式独立验证必须在一个具有足够分辨率的 I3.1 estimator specification 单独冻结后才能
-设计和运行；I3.1 自身需要的重构、简化问题或内部一致性检查仍属于 I3.1。`center-a1` 和
-`lead-a3` 都不满足这一移交条件。任何后续算法、离散参数、reference、阈值和运行命令都须
-另行冻结；当前结果不自动授权 `lead-a4`。
+设计和运行；I3.1 自身需要的重构、简化问题或内部一致性检查仍属于 I3.1。`center-a1`、
+`lead-a3` 和 `weak-a1` 都不满足 I3.2 移交条件。任何后续算法、离散参数、reference、阈值和
+运行命令都须另行冻结；当前结果不自动授权下一 attempt。

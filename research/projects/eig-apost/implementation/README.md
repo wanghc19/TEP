@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-当前新路线处于 `I3_1_ACTIVE / VALID_NEGATIVE / NO_ESTIMATOR`；其输入阶段 I2 已以
+当前新路线处于 `I3_1_ACTIVE / THREE_VALID_NEGATIVE_EXPERIMENTS / NO_ESTIMATOR`；其输入阶段 I2 已以
 `I2_3_PASS_WITH_CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` 收口。精确
 half-guide DtN 由半无限边值问题定义，连续中心算子 $\mathcal F(k)$ 在任何
 BIE/Fourier 截断和 ordered QZ 之前定义真实谱对象。现行数学权威是
@@ -41,13 +41,22 @@ localization diagnostic 及最低必要的 residual、factor、field、boundary 
 完成首个中心空列 continuous strong-residual baseline：固定单胞 cutoff 场给出的 computed ratio
 为 $22.43882099031153$，数值积分稳定，但 cutoff 导数项主导且名义区间跨过零，故结论为
 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`。这一负结果没有形成可靠存在区间，也不能进入
-I3.2。I3.1 继续活动；全波导 BIE-informed Fourier--Hermite/bubble trial 的理论—实现映射和
-冻结设计随后完成实现与正式 `lead-a3`。finite input、density representation 和 propagation
+I3.2。I3.1 继续活动；历史 V1 的全波导 BIE-informed Fourier--Hermite/bubble trial
+随后完成实现与正式 `lead-a3`。finite input、density representation 和 propagation
 通过，但固定 fit 的 $J=4/8$ holdout error 分别约为 $4.522421/5.138028$，故在
 `CONFORMING_RECONSTRUCTION_UNRESOLVED` 首败处停止，尚未形成通过资格的全波导 continuous
 trial/residual 或 estimator。近圆 targets 相对 source-panel arc scale 过近且 direct close evaluation 未资格化，
-所以失败原因仍不能在近奇异评价与 basis/metric 之间区分；不自动启动下一 attempt。continuous
-weak residual 保留为后备，finite one-step root correction 仍为
+所以失败原因仍不能在近奇异评价与 basis/metric 之间区分；不自动启动下一 attempt。当前
+[[research/projects/eig-apost/implementation/i3/design-3-1b|design-3-1b]] 已在保留 Git 历史的
+前提下改写为 QZ wall-trace、conforming Q1 cell extension、global RT0 flux 和 weak-residual
+majorant 的 V2 设计。正式 `weak-a1` 的 base finite input、Q1--RT0 和 full-$P$ tails 通过，
+但 fine phase/scale repeat 的 center 的 $A,B$ Gram 及左右 first-cell 的 $A$ Gram Hermitian
+qualification 失败，最大 defect
+为 $6.2442\times10^{-10}>10^{-12}$；状态为 `POST-RUN PASS / VALID NEGATIVE /`
+`MAJORANT_QUADRATURE_UNRESOLVED`。没有形成 estimator，I3.2 仍不可开始。下一门是
+scale-covariant Gram qualification；即使关闭，mesh change 与过宽 nominal interval 仍须处理。
+`lead-a3` 的 V1 历史结论继续由独立 review 与 append-only output 承载。
+finite one-step root correction 仍为
 OPTIONAL。第一层只要求可靠区间进入
 current continuous projected gap，并通过
 结果前冻结的 absolute/gap-relative resolution，从而证明其中至少存在一个连续离散特征值；
@@ -85,7 +94,8 @@ implementation/
 │   ├── design-3-1.md
 │   ├── review-3-1.md
 │   ├── design-3-1b.md
-│   └── review-3-1b.md
+│   ├── review-3-1b.md
+│   └── review-3-1c.md
 └── archive/
     └── legacy-route-v1/
         ├── README.md
@@ -103,9 +113,9 @@ implementation/
   [[research/projects/eig-apost/implementation/i2/report|I2 stage report]] 综合向尚未启动的 I3
   交付两条 conditional hierarchy。
 - [[research/projects/eig-apost/implementation/i3/README|i3/]]：维护 candidate 误差估计、
-  independent truth comparison 和上界可行性的目标、输入与预期输出；首个中心空列强残量
-  baseline 分辨率不足，lead-aware reconstruction 又在 BIE-informed fit 首败；I3.1 仍在活动，
-  尚无 estimator，I3.2 不可开始。
+  independent truth comparison 和上界可行性的目标、输入与预期输出；中心空列强残量
+  baseline 分辨率不足，lead-aware reconstruction 在 BIE-informed fit 首败，Q1--RT0 V2 又在
+  phase/scale Gram qualification 首败；I3.1 仍在活动，尚无 estimator，I3.2 不可开始。
 - [[research/projects/eig-apost/implementation/ROADMAP|ROADMAP.md]]：只维护新路线 I1--I3
   的项目级依赖和退出条件。
 - [[research/projects/eig-apost/implementation/SYMBOL|SYMBOL.md]]：集中说明跨阶段缩写、
@@ -118,7 +128,7 @@ implementation/
 - [[test/README|current test index]]：记录新路线 I1.2--I3.1 实验状态；当前实验位于
   `test/i1/hg-adef/`、`test/i1/k-scan/`、`test/i1/k-ready/`、`test/i2/k-count/` 和
   `test/i2/h-inertia/`、`test/i2/k-drift/`、`test/i2/m-drift/`、`test/i3/s-resid/` 与
-  `test/i3/g-resid/`。旧实验统一由
+  `test/i3/g-resid/`、`test/i3/w-resid/`。旧实验统一由
   [[test/archive/legacy-route-v1/README|legacy experiment index]] 保存。
 
 ## 阶段文档规则
