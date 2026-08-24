@@ -34,9 +34,11 @@ e_h^*=|k_*-\widehat k_h|.
 $$
 
 本阶段不把有限维矩阵的精确零点、层间漂移、矩阵残差或某个修正公式本身当成最终成果。
-这些量只有在能够帮助估计上述连续谱误差时才进入主线。I3.1 已完成四个正式负向实验，并由
-纯 BIE 边界残量路线首次形成一个可计算但 `NUMERICALLY_UNQUALIFIED` 的 indicator candidate；
-qualified estimator、independent reference 与严格上界仍须分别建立和审查。
+这些量只有在能够帮助估计上述连续谱误差时才进入主线。I3.1 的早期路线给出四个正式负向
+结果，纯 BIE 路线首次形成 finite indicator；最新全边界胞元 BIE 又关闭了旧 wall/$T$/outside-$M$
+资格问题，但 circle action $256\to512$ change 仍未通过。当前因此已有可计算但
+`NUMERICALLY_UNQUALIFIED` 的 indicator candidate；qualified estimator、independent reference
+与严格上界仍须分别建立和审查。
 
 长期对象门如下：每个新增主线对象和 hard gate 都必须写出它如何进入第一层集合距离或可选
 target-specific error 的估计链；若它
@@ -182,6 +184,21 @@ interval 与存在性问题。独立 verdict 为
 `PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`，见
 [[research/projects/eig-apost/implementation/i3/review-3-1e|review-3-1e]]。I3.1 因此已有
 可计算 indicator candidate，但尚无经过内部资格并冻结的 estimator，I3.2 仍不可开始。
+
+最新全边界路线
+[[research/projects/eig-apost/implementation/i3/design-3-1f|design-3-1f]] 把 $M=48$ 限定为
+共享 wall trace 输入，另用独立 $256/512$ wall response 与 circle action。正式、已消费的
+`fbie-a1` 得到 wall/circle/value-lift components
+$1.8732026085453917\times10^{-10}$、$2.9776880587814564\times10^{-15}$、
+$4.246327820844503\times10^{-11}$，field lower $2.2269063318145634$，故
+$q=1.0318643108971929\times10^{-10}$；名义 $k$ 区间为
+$[1.83277028891904,1.8327702892972739]$。wall 和 actual $\Delta T$ checks 通过，所有 512 个
+已计算 circle modes 都进入 $q$ 且 angular-tail 门通过；outside-$M$ share 降为描述性的
+$0.036178900402764308$，未计算 Fourier tail 仍未 enclosure。唯一
+nonblocking warning 是 circle action change $0.77408786032496468>0.20$，所以 estimator 仍不能
+冻结后移交 I3.2。独立 verdict 为 `PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`，见
+[[research/projects/eig-apost/implementation/i3/review-3-1f|review-3-1f]]。outward enclosure、
+projected gap 和 reliable width 仍只属于 I3.3。
 
 ## I3.1：构造并内部论证可计算的误差指标
 
@@ -390,14 +407,18 @@ $$
    [[test/i3/g-resid/README|experiment index]] 承载；
 7. [[research/projects/eig-apost/implementation/i3/design-3-1e|I3.1 pure-BIE design]]、
    [[research/projects/eig-apost/implementation/i3/review-3-1e|independent post-run review]] 与
-   [[test/i3/p-resid/README|experiment index]]：当前可计算 indicator、三个资格 warnings 与
-   分别属于 I3.2 handoff 和 I3.3 reliable-interval 研究的未闭合条件；
-8. [[research/projects/eig-apost/implementation/ROADMAP|implementation roadmap]]：项目级顺序。
+   [[test/i3/p-resid/README|experiment index]]：首个 finite pure-BIE indicator 及其历史资格问题；
+8. [[research/projects/eig-apost/implementation/i3/design-3-1f|full-boundary design]]、
+   [[research/projects/eig-apost/implementation/i3/review-3-1f|post-run review]] 与
+   [[test/i3/fb-resid/README|experiment index]]：当前 indicator、circle-action 首败与 I3.2/I3.3
+   分层边界；
+9. [[research/projects/eig-apost/implementation/ROADMAP|implementation roadmap]]：项目级顺序。
 
 I3.2 的正式独立验证必须在一个经过内部资格的 I3.1 estimator specification 单独冻结后才能
 设计和运行；I3.1 自身需要的重构、简化问题或内部一致性检查仍属于 I3.1。`center-a1`、
 `lead-a3` 和 `weak-a1` 都不满足 I3.2 移交条件。任何后续算法、离散参数、reference、阈值和
-运行命令都须另行冻结；`pbie-a2` 虽已形成窄名义区间，但实际 $T$ difference-block/oracle、
-wall refinement 与 outside-$M$ 三项内部资格尚未闭合，因此不能移交 I3.2。reliable
-enclosure、projected gap 和宽度门留给 I3.3，不是 I3.2 的前置条件。当前结果不自动授权下一
-attempt。
+运行命令都须另行冻结。`fbie-a1` 已通过 actual $T$ difference-block 与 wall refinement；全部
+512 个已计算 circle modes 进入 $q$ 且 angular-tail 门通过，未计算 Fourier tail 仍未 enclosure。
+但 circle action $256\to512$ ratio 仍为 $0.7741>0.20$；这是当前不能冻结并
+移交 I3.2 的唯一内部资格门。reliable enclosure、projected gap 和宽度门留给 I3.3，不是
+I3.2 的前置条件。当前结果不自动授权下一 attempt。

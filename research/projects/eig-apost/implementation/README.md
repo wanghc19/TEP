@@ -69,10 +69,19 @@ full-$P$ boundary Grams 直接计算 weak-residual indicator。`pbie-a1` 是 typ
 implementation failure；正式 `pbie-a2` 得到 $q=1.1049370224693775\times10^{-10}$ 及宽度
 $4.0501912934587381\times10^{-10}$ 的普通双精度名义区间。wall refinement $0.2302$、nonzero-mode
 $T$ oracle 最大误差 $1.4439$ 和 outside-$M$ share $0.5147$ 使 verdict 只能为
-`PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`。当前已有可计算 indicator candidate，但
-wall/T/outside-$M$ 三项内部资格仍阻止冻结 estimator 并进入 I3.2；outward enclosure 与
-continuous projected gap 另属 I3.3 的可靠区间和存在性问题。详见
+`PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`。该 attempt 当时的 wall/T/outside-$M$
+三项 warnings 解释其历史 verdict；outward enclosure 与 continuous projected gap 另属 I3.3。
+详见
 [[research/projects/eig-apost/implementation/i3/review-3-1e|review-3-1e]]。
+最新全边界胞元 BIE
+[[research/projects/eig-apost/implementation/i3/design-3-1f|design-3-1f]] 将 $M=48$ 只用于
+wall trace 输入，并独立计算 full wall/circle response。正式 `fbie-a1` 已消费，得到
+$q=1.0318643108971929\times10^{-10}$ 和宽度 $3.7823388865376728\times10^{-10}$ 的普通双精度
+名义区间。wall、actual $\Delta T$、Grams、tails 与 phase/scale checks 通过；所有 512 个已计算
+circle modes 进入 $q$ 且 angular-tail 门通过，未计算 Fourier tail 仍未 enclosure；
+唯一 warning 是 circle action change $0.77408786032496468>0.20$。因此 I3.1 仍只有
+`NUMERICALLY_UNQUALIFIED` indicator candidate，I3.2 尚不可开始；I3.3 的 outward/gap 条件
+仍独立未闭合。见 [[research/projects/eig-apost/implementation/i3/review-3-1f|review-3-1f]]。
 finite one-step root correction 仍为
 OPTIONAL。第一层只要求可靠区间进入
 current continuous projected gap，并通过
@@ -137,9 +146,9 @@ implementation/
   independent truth comparison 和上界可行性的目标、输入与预期输出；中心空列强残量
   baseline 分辨率不足，lead-aware reconstruction 在 BIE-informed fit 首败，Q1--RT0 V2 又在
   phase/scale Gram qualification 首败；BIE-collar V3 随后在含材料圆修正的 RT0-majorant
-  pre-factor 首败；纯 BIE `pbie-a2` 随后形成可计算但 `NUMERICALLY_UNQUALIFIED` 的 indicator
-  candidate。I3.1 仍在活动；三项内部资格未闭合，因此 I3.2 不可开始。可靠 enclosure 留给
-  I3.3，不是 I3.2 前置条件。
+  pre-factor 首败；纯 BIE `pbie-a2` 随后形成首个 finite indicator。最新全边界 `fbie-a1`
+  关闭旧 wall/$T$/outside-$M$ 问题，但 circle-action refinement 未通过。I3.1 仍在活动；该
+  唯一内部资格未闭合，因此 I3.2 不可开始。可靠 enclosure 留给 I3.3，不是 I3.2 前置条件。
 - [[research/projects/eig-apost/implementation/ROADMAP|ROADMAP.md]]：只维护新路线 I1--I3
   的项目级依赖和退出条件。
 - [[research/projects/eig-apost/implementation/SYMBOL|SYMBOL.md]]：集中说明跨阶段缩写、

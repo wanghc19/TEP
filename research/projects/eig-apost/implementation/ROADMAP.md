@@ -105,8 +105,9 @@ hierarchy；但 terminal-cell 尺度只说明 sub-grid minimizer 尚未解析，
 I3 直接研究 candidate 与真实连续特征值之间的误差。它不以某种固定 estimator 公式为预设，
 也不把 next-level shift、matrix residual 或 effectivity 单独当成最终答案。具体算法和验收流程
 应根据 I2 实际交付另行冻结。当前 `drift-a1` 与 `m-drift-a2` 已提供两条经 mode-identity
-检查的 candidate sequence。I3.1 已完成四个正式负向实验，并由纯 BIE 边界残量实验首次
-形成可计算但 `NUMERICALLY_UNQUALIFIED` 的 indicator candidate；当前状态为
+检查的 candidate sequence。I3.1 的早期路线给出四个正式负向结果，纯 BIE 路线首次形成
+finite indicator；最新全边界 BIE 进一步关闭旧 wall/$T$/outside-$M$ 资格问题，但 circle-action
+refinement 尚未通过。当前状态为
 `ACTIVE / INDICATOR CANDIDATE / I3.2 NOT READY`。
 零 observed shift 不能单独
 验证 next-level correction、收敛或 estimator；中心空列 ratio 因固定单胞 cutoff 主导而失去
@@ -117,8 +118,12 @@ RT0-majorant 的含圆盘修正预因子处停止，未形成 flux、majorant、
 `pbie-a2` 随后得到 $q=1.1049370224693775\times10^{-10}$ 和宽度
 $4.0501912934587381\times10^{-10}$ 的普通双精度名义区间，但 wall refinement $23.0\%$、
 nonzero-mode $T$ oracle 的 $O(1)$ 误差和 outside-$M$ share $51.5\%$ 使其只能作为
-`NUMERICALLY_UNQUALIFIED` candidate。这三项内部资格尚未闭合，故 estimator 还不能冻结并
-进入 I3.2 独立验证。可靠 outward enclosure、projected gap 与宽度门属于 I3.3，不是 I3.2 的
+`NUMERICALLY_UNQUALIFIED` candidate。这三项解释 `pbie-a2` 的历史 verdict。最新 `fbie-a1`
+得到 $q=1.0318643108971929\times10^{-10}$ 和宽度
+$3.7823388865376728\times10^{-10}$；wall/actual-$\Delta T$ 检查通过，全部 512 个已计算 circle
+modes 进入 $q$ 且 angular-tail 门通过；未计算 Fourier tail 仍未 enclosure。唯一 warning 是
+circle action change $0.77408786032496468>0.20$。所以当前只须先闭合并冻结这一
+内部 action 分辨率；可靠 outward enclosure、projected gap 与宽度门属于 I3.3，不是 I3.2 的
 前置条件。
 
 ### 输入、三项输出和与上界的关系
@@ -191,11 +196,13 @@ quadrature positivity 还是 assembly/index 问题；不得绕过首败。关闭
 $H(\mathrm{div})$、tail、mesh 与有用 interval width。独立结论见
 [[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]。
 纯 BIE [[research/projects/eig-apost/implementation/i3/design-3-1e|design-3-1e]] 随后形成首个
-可计算 normalized indicator 和窄名义区间；独立结论见
-[[research/projects/eig-apost/implementation/i3/review-3-1e|review-3-1e]]。当前下一门不再是
-构造有限 $q$，而是先关闭 $T$ difference-block/oracle、wall refinement 与 circle outside-$M$
-表示三项内部数值资格，再冻结 estimator 供 I3.2 独立验证。residual upper、field lower、tail、
-continuous projected gap 与预注册宽度的 outward enclosure 归 I3.3 研究。
+finite indicator；全边界
+[[research/projects/eig-apost/implementation/i3/design-3-1f|design-3-1f]] 的正式 `fbie-a1`
+进一步通过 actual $\Delta T$ 与 wall refinement；全部 512 个已计算 circle modes 进入 $q$ 且
+angular-tail 门通过，未计算 Fourier tail 仍未 enclosure。独立结论见
+[[research/projects/eig-apost/implementation/i3/review-3-1f|review-3-1f]]。当前下一门是诊断并
+冻结 circle action $256\to512$ 分辨率；通过后才可移交 I3.2。residual upper、field lower、tail、
+continuous projected gap 与可靠宽度的 outward enclosure 归 I3.3 研究。
 finite one-step correction 仅为 OPTIONAL 离散分量诊断。对中心宽
 baseline 优先增加可靠积分 enclosure 或 gap 认证仍不能提高分辨率。
 

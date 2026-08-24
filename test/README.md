@@ -186,6 +186,20 @@ frozen outputs retain their recorded paths and hashes.
 | Status | `POST-RUN PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED INDICATOR CANDIDATE`; $q=1.1049370224693775\times10^{-10}$ and the nominal width is $4.0501912934587381\times10^{-10}$. Wall refinement $23.0\%$, nonzero-mode $T$-oracle error up to $1.4439$, and outside-$M$ share $51.5\%$ prevent freezing the estimator for I3.2; the all-false reliability/enclosure flags separately prevent an I3.3 spectral interval or existence claim |
 | Implementation summary | [[research/projects/eig-apost/implementation/i3/README|current I3 guide]] |
 
+## I3-FULL-BOUNDARY-CELL-BIE-RESIDUAL-V1
+
+| Field | Value |
+|---|---|
+| Experiment ID | `I3-FULL-BOUNDARY-CELL-BIE-RESIDUAL-V1` |
+| Stage | I3.1 |
+| Purpose | Use independent full-order wall single-layer densities and circle Müller densities to reconstruct quotient-cell fields from the shared total wall traces, then assemble wall, circle, and value-lift weak-residual candidates with full-matrix tails |
+| Current path | `test/i3/fb-resid/` |
+| Entry point | Completed and consumed `check_fb_resid('fbie-a1')`; no rerun |
+| Experiment index | [[test/i3/fb-resid/README|full-boundary object, command, artifact hashes, and claim limits]] |
+| Status | `POST-RUN PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`; $q=1.0318643108971929\times10^{-10}$ and nominal width $3.7823388865376728\times10^{-10}$. The sole internal qualification failure is circle action change $0.77408786032496468>0.20$, so the estimator cannot yet be frozen for I3.2. $M=48$ is input-only; all 512 computed circle modes enter $q$, the angular-tail gate passed, and the descriptive outside-$M$ share is $3.6179\%$. Uncomputed Fourier tails remain unenclosed for I3.3 |
+| Implementation design | [[research/projects/eig-apost/implementation/i3/design-3-1f|full-boundary cell-BIE design]] |
+| Independent review | [[research/projects/eig-apost/implementation/i3/review-3-1f|post-run review]] |
+
 Future current-route experiments belong under the matching `test/i*/` stage directory and receive
 an index entry only after they are designed and authorized. A legacy verdict never becomes a
 current stage gate.

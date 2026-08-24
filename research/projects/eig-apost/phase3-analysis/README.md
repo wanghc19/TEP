@@ -100,14 +100,24 @@ flags 也未认证，但它们属于 I3.3 的 reliable interval 与存在性问�
 `PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`，不是 reliable interval 或存在性结论；详见
 [[research/projects/eig-apost/implementation/i3/review-3-1e|review-3-1e]]。
 
+全边界胞元 BIE `fbie-a1` 随后把 $M=48$ 限定为 wall-trace 输入，并用独立 $256/512$ wall
+response 与 circle action 检查同一 finite-density exact-kernel trial。它得到
+$q=1.0318643108971929\times10^{-10}$ 和宽度 $3.7823388865376728\times10^{-10}$ 的普通双精度
+名义区间。wall、actual $\Delta T$、Grams 与 full-$P$ tails 均通过；全部 512 个已计算 circle
+modes 进入 $q$ 且 angular-tail 门通过，未计算 Fourier tail 仍未 enclosure；唯一
+warning 是 circle action change $0.77408786032496468>0.20$。因此旧 wall/$T$/outside-$M$
+问题不再是当前门，但 estimator 仍不能冻结并交给 I3.2。outside-$M$ share 为 $3.6179\%$，
+所有 512 个已计算 circle modes 都已进入 $q$；它不是遗漏误差。见
+[[research/projects/eig-apost/implementation/i3/review-3-1f|review-3-1f]]。
+
 ## 阅读顺序
 
 1. [[research/projects/eig-apost/phase3-analysis/s-estimator|Continuous residual estimator theory]]：
    连续弱残量、谱距离命题、gap 内存在性、预注册分辨率与可选唯一目标识别；
-2. [[research/projects/eig-apost/implementation/i3/design-3-1e|Pure-BIE boundary-residual design]]
-   与 [[research/projects/eig-apost/implementation/i3/review-3-1e|post-run review]]：当前从 shared
-   wall traces 到 mathematical exact-kernel trial、ordinary-double indicator 与 outward-enclosure
-   blocker；[[research/projects/eig-apost/phase3-analysis/s-lead-field|旧 lead-aware strong-residual
+2. [[research/projects/eig-apost/implementation/i3/design-3-1f|Full-boundary BIE design]]
+   与 [[research/projects/eig-apost/implementation/i3/review-3-1f|post-run review]]：当前从 shared
+   wall traces 到 independent wall/circle response、ordinary-double indicator、circle-action
+   首败与 outward-enclosure blocker；[[research/projects/eig-apost/phase3-analysis/s-lead-field|旧 lead-aware strong-residual
    theory]] 只保留历史解释；
 3. [[research/projects/eig-apost/phase3-analysis/s-dtn-chain|Exact/numerical DtN boundary]]：
    exact half-guide theory、finite QZ/BIE 的适用边界和后备 weak-residual 路线；
@@ -147,12 +157,13 @@ flags 也未认证，但它们属于 I3.3 的 reliable interval 与存在性问�
 - 已完成 BIE-collar V3：[[research/projects/eig-apost/implementation/i3/design-3-1d|design]] 的
   `bie-a3` 在 composite RT0-majorant quadrature/assembly 首败；独立结论见
   [[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]；
-- 当前 I3.2 handoff blocker：actual $T$ difference-block/oracle、wall refinement $23.0\%$ 与
-  outside-$M$ share $51.5\%$ 三项内部资格尚未闭合，estimator specification 还不能冻结；
+- 当前 I3.2 handoff blocker：circle action $256\to512$ ratio $0.77408786032496468>0.20$；
+  estimator specification 还不能冻结。actual $T$、wall refinement 与 512-mode angular-tail
+  checks 已通过；未计算 Fourier tail 仍未 enclosure；
 - 当前 I3.3 blocker：512 trace/collar、residual/field/tail 的 outward numerical enclosure，以及
   sharp-disk continuous projected gap 和预注册宽度条件尚未闭合；
 - 第一层目标：可靠区间进入 projected gap，且其正频率宽度不超过预注册分辨率；
 - 第二层可选升级：只有确需命名某个 mode 时才证明唯一目标身份；
 - I3.1 当前状态：`ACTIVE / NUMERICALLY_UNQUALIFIED INDICATOR CANDIDATE`；
-- I3.2：尚不可开始；只须先闭合上述三项内部资格并冻结 estimator，outward enclosure 与 gap
+- I3.2：尚不可开始；只须先闭合上述 circle-action 内部资格并冻结 estimator，outward enclosure 与 gap
   不作为其前置条件。
