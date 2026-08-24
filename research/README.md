@@ -13,14 +13,14 @@ I1 candidate discovery/readiness 与 I2 的局部有限维 count、Hermitian-par
 $1.832770289108157$，相邻层均确认为同一 mode。该结果只表示在相同扫描规则下没有观察到
 candidate drift，不证明 score minimizer、finite root 或连续 eigenvalue 已收敛。
 
-I3.1 estimator theory 现已启动。现行主线直接在保存的 candidate 处重构连续 form-space
-物理场，并研究 continuous weak residual 的可计算对偶范数；finite one-step root correction
-已降为可选内部诊断。第一层目标是不指定唯一 mode 地认证 current projected gap 内至少一个
-连续离散特征值，并要求可靠区间通过事前冻结的 absolute/gap-relative resolution；唯一目标
-识别只作可选升级。continuous form、conforming field reconstruction、完整 residual
-decomposition、dual-norm computation 和 sharp-disk projected-gap contract 尚未闭合，所以
-`design-3-1.md` 尚未就绪，也没有
-empirical continuous error estimator 或 upper bound。
+I3.1 已以全边界胞元 BIE 得到 ordinary-double continuous-residual estimator candidate，阶段为
+`PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`；circle action
+$256\to512$ ratio $0.77408786032496468>0.20$ 仍使该 candidate 未获内部数值资格。自
+2026-08-24 起，I3.2 改为严格的条件性离散证书谱包含定理；该定理已经建立，但将 ordinary
+输出实例化为严格 cap 的 application hypotheses 尚未闭合。旧 I3.2 顺延为 I3.3，研究 empirical
+error caps 与 independent effectivity；旧 I3.3 顺延为 I3.4，研究 outward enclosure、认证
+projected gap 和离散特征值存在性。circle-action caveat 是 I3.3 的未来 cap 目标，不阻止 I3.2
+定理本身；可靠区间、gap 和存在性仍只属于 I3.4。
 该专题仍不构成新的统一主线。
 在形成可以明确命名且经过审核的统一框架以前，不建立空的 `mainline/` 作为占位。
 

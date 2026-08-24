@@ -307,3 +307,26 @@ evidence or authorize MATLAB execution.
 This decision supersedes the preceding decision only where it treated a predesignated $k_*$ and
 target isolation as the default first-level objective. It does not weaken the reliability
 requirements for the residual interval, authorize an experiment or modify historical evidence.
+
+## 2026-08-24 — I3 is remapped around a conditional certificate theorem
+
+- **I3.1 status.** The full-boundary BIE result is retained as
+  `PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`. Its ordinary-double value is not
+  a rigorous cap; the circle-action ratio $0.77408786032496468>0.20$ remains a numerical caveat.
+- **New I3.2.** A finite certificate $z_h$ is mapped to an exact nonzero continuous trial
+  $u_h^c=\mathcal T(z_h)$. If rigorous caps bound its weak residual from above and its form norm from
+  below, the resulting $\bar q_h<1$ gives an explicit asymmetric interval intersecting the spectrum.
+  Same-operator certified-gap containment is an additional condition for discrete-eigenvalue
+  existence. The theorem is established; its application hypotheses remain open.
+- **New I3.3.** The former I3.2 becomes empirical error-cap construction and independent effectivity
+  validation. The circle-action caveat is a future cap target, not a blocker for the I3.2 theorem.
+- **New I3.4.** The former I3.3 becomes reliable residual/field/tail enclosure, certified projected
+  gap, preregistered resolution and discrete-eigenvalue existence. Ordinary numerical intervals do
+  not satisfy these conditions.
+- **Effective date and history.** This mapping is effective 2026-08-24. Historical designs, reviews,
+  attempt tags and append-only outputs retain the milestone labels under which they were produced.
+  No experiment is authorized by this decision.
+
+The formal contract and its independent review are
+[[research/projects/eig-apost/implementation/i3/design-3-2a|design-3-2a]] and
+[[research/projects/eig-apost/implementation/i3/review-3-2a|review-3-2a]].

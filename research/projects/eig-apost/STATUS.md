@@ -4,6 +4,18 @@
 
 ## 当前状态
 
+- **2026-08-24 I3.2 条件性离散证书谱包含定理：**
+  [[research/projects/eig-apost/implementation/i3/design-3-2a|design-3-2a]] 已由 Researcher
+  接受并由 Skeptic `DESIGN PASS`。对 finite certificate $z_h$ 定义的 exact continuous trial，
+  若严格 caps 给出 residual dual-norm 上界和同一 trial 的 field-norm 下界，则
+  $\bar q_h<1$ 推出显式非对称区间与 $\sigma(A)$ 相交；同一算子的 certified projected gap
+  包含该区间时，才进一步推出 gap 内至少存在一个离散特征值。`fbie-a1` 的普通双精度预算给出
+  $q_{\mathrm{res}}=2.72811057103771594\times10^{-7}$、$\epsilon_M$ 轴
+  $6.07294883936662387\times10^{-7}$ 和 $\epsilon_N$ 轴
+  $4.95911110122031616$，但不是严格 cap。定理已经建立，实际 application hypotheses 仍 open；
+  本轮没有新实验。独立审查见
+  [[research/projects/eig-apost/implementation/i3/review-3-2a|review-3-2a]]。
+
 - **2026-08-24 I3.1 全边界胞元 BIE indicator candidate：**
   [[research/projects/eig-apost/implementation/i3/design-3-1f|design-3-1f]] 将 $M=48$ 只用于共享
   wall trace 输入，以独立 $256/512$ wall response、circle Müller action、显式 value lifts 和
@@ -15,9 +27,10 @@
   $0.77408786032496468>0.20$，所以 verdict 为
   `PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`。wall 与 actual $\Delta T$ checks 通过；
   $M=48$ 是 input-only，所有 512 个已计算 circle modes 进入 $q$ 且 angular-tail 门通过，
-  outside-$M$ share $3.6179\%$ 只是描述性诊断。未计算 Fourier tail 仍未 enclosure。I3.2
-  只因 circle-action 内部资格未闭合而 `NOT READY`；全部 outward/gap/
-  existence flags 仍 false，另属 I3.3。详见
+  outside-$M$ share $3.6179\%$ 只是描述性诊断。未计算 Fourier tail 仍未 enclosure。I3.1
+  状态为 `PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`。circle-action caveat
+  是未来 I3.3 empirical-cap/effectivity 的资格目标，不阻止上方 I3.2 定理；全部 outward/gap/
+  existence flags 仍 false，另属 I3.4。详见
   [[research/projects/eig-apost/implementation/i3/review-3-1f|review-3-1f]]。
 
 - **2026-08-24 I3.1 纯 BIE 边界残量 indicator candidate：**
@@ -38,7 +51,7 @@
   `PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`；见
   [[research/projects/eig-apost/implementation/i3/review-3-1e|review-3-1e]]。这是已由上方
   `fbie-a1` 更新的历史 indicator；其名义区间仍不得解释成连续离散特征值存在性、唯一 mode、
-  误差上界或 I3.2 independent reference。
+  误差上界或按当时编号的旧 I3.2 independent reference。
 
 - **2026-08-22 I3.1 BIE-collar 弱残量 V3 正式负结果：**
   [[research/projects/eig-apost/implementation/i3/design-3-1d|design-3-1d]] 已获 Researcher
@@ -58,7 +71,7 @@
   memory $89.6576280594$ MiB，无 retry。独立 verdict 为
   `POST-RUN PASS / VALID NEGATIVE / REVISE BEFORE CONTINUATION`；详见
   [[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]。该 attempt 没有
-  estimator；当前 I3.1 状态已由上方 `fbie-a1` 结果更新，I3.2 仍不可开始。
+  estimator；当前 I3.1 状态已由上方 `fbie-a1` 结果更新，按当时编号的旧 I3.2 当时不可开始。
 
 - **2026-08-21 I3.1 Q1--RT0 弱残量正式负结果：**正式 `weak-a1` 固定
   $\widehat k_h=1.832770289108157$、$n_{\mathrm{tot}}=256$、$M=48$、两层 Q1 网格和全部
@@ -71,7 +84,7 @@
   $0.564\gg10^{-6}$，只能作为后续负向诊断。运行用时 $22.5326065$ s，peak active-object
   memory $341.8422213$ MiB，无 retry；独立 verdict 为 `POST-RUN PASS / VALID NEGATIVE`。
   该 V2 路线的下一门为 scale-covariant Gram qualification，之后仍有 mesh/width blocker；尚无
-  estimator，I3.2 不可开始。详见
+  estimator，按当时编号的旧 I3.2 当时不可开始。详见
   [[research/projects/eig-apost/implementation/i3/review-3-1c|independent review]]。
 
 - **2026-08-16 I3.1 lead-aware reconstruction 正式负结果：**冻结 `lead-a3` 固定
@@ -84,7 +97,7 @@
   $0.86\%/1.08\%$，direct close layer-potential evaluation 未单独资格化，所以不能把失败单因
   归咎于 bubble basis 或 fit metric。`lead-a3` 用时 $373.254082$ s，peak active-object memory
   $62.706804$ MiB，无 retry；独立 verdict 为 `PASS WITH CONDITIONS / VALID NEGATIVE`。I3.1
-  继续活动，但尚无 estimator，I3.2 不可开始，也不自动授权新 attempt。详见
+  继续活动，但尚无 estimator，按当时编号的旧 I3.2 当时不可开始，也不自动授权新 attempt。详见
   [[research/projects/eig-apost/implementation/i3/review-3-1b|independent review]]。
 
 - **2026-08-15 I3.1 中心空列强残量 baseline：**第一层目标仍是 saved candidate 到当前
@@ -94,9 +107,10 @@
   处构造了属于 continuous strong-operator domain 的中心空列紧支撑场，得到场范数
   $0.840017038309255$、强残量范数 $18.848991951433035$ 和 computed ratio
   $22.43882099031153$。积分加密稳定，但固定单胞 cutoff 导数项主导，名义区间跨过零；正式
-  当前解释为 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`，因此它不能冻结为 I3.2 estimator。
-  普通积分尚非可靠 enclosure，sharp-disk projected-gap contract 也未建立，故没有 I3.3
-  连续离散特征值存在性或上界结论；这两项不是 I3.2 前置条件。后续全波导 BIE-informed
+  当前解释为 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`，因此它不能冻结为旧 I3.2
+  empirical estimator。普通积分尚非可靠 enclosure，sharp-disk projected-gap contract 也未建立，
+  故没有现行 I3.4 连续离散特征值存在性或上界结论；这两项不是现行 I3.3 经验验证的前置条件。
+  后续全波导 BIE-informed
   Fourier--Hermite/bubble trial 已于 2026-08-16 正式运行并在
   reconstruction fit 首败；见上一条。continuous weak residual 保留为后备。
 
@@ -288,17 +302,17 @@
   将 $M_{\mathrm{trace}}=48$ 的最坏误差和 omitted energy 分别压到
   $7.08\times10^{-12}$ 与 $5.00\times10^{-13}$。OP-I4-1h 与 OP-I4-6 因而在当前制造
   密度、实数非 Wood 参数和有限 $M_{\mathrm{ref}}=96$ 意义下关闭。
-- 状态：`active investigation -- I3.1 numerically unqualified indicator candidate`。
+- 状态：`active investigation -- I3.1 preliminary objective achieved; I3.2 theorem established`。
   `ntot` 与 $M$ 两条三层单轴实验的 saved candidate 均完全相同且 `SAME_MODE`；I3.1 已开始
   saved-candidate continuous residual 研究。中心空列 strong-residual baseline 已完成，但 ratio
   $22.43882099031153$ 由固定单胞 cutoff 主导，分辨率不足；全波导 BIE-informed smooth
   trial 又在 fixed holdout fit 首败；Q1--RT0 V2 随后在 fine phase/scale Gram qualification
   首败；BIE-collar V3 再在 coarse lead composite RT0-majorant assembly 首败。纯 BIE
   `pbie-a2` 先形成 finite indicator；全边界 `fbie-a1` 又关闭旧 wall/$T$/outside-$M$ 问题，但
-  circle-action refinement ratio $0.7741$ 仍阻止冻结 estimator 并进入 I3.2。全 false
-  reliability/enclosure flags、current-model projected
-  gap 与 absolute/gap-relative resolution 则是 I3.3 相应存在性和上界结论的门，不是 I3.2
-  前置条件。第一层不要求唯一 mode。该状态不表示 sub-grid
+  circle-action refinement ratio $0.7741$ 仍使 ordinary candidate 未获内部资格，并成为未来
+  I3.3 empirical-cap/effectivity 的首要目标。I3.2 条件性证书定理不以该诊断为前置。
+  reliability/enclosure flags、current-model projected gap 与 absolute/gap-relative resolution
+  则是 I3.4 相应存在性和上界结论的门。第一层不要求唯一 mode。该状态不表示 sub-grid
   minimizer、finite root 或连续真值零漂移，也不构成收敛证据。
 - 历史阶段门（均不构成当前实现授权）：manufactured root/correction pipeline 曾为窄范围
   `GO`，finite-tail Half-guide map 曾为 Stage 1 `GO`，Augmented BIE 曾为
@@ -332,7 +346,7 @@
 | Current I1.3 real-$k$ continuity, candidate reconnaissance and bounded zoom | `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_NESTED_GRID_CANDIDATE` | $M=48$ count/QZ/chart/subspace-coarse/fine continuity；中心差分二阶收敛；$M=12\to24\to48$ 分层筛查；v2 在 15 层、33 点、167 门全通过后得到 $k=1.8327703475952146$、$q=8.32009\times10^{-8}$，最终宽度 $7.6294\times10^{-7}$ | 固定 $M=48$ 不是 trace convergence；FD mutation 未过 $10^{-12}$，production derivative 不可用 |
 | Current I1.4 sampled complex-$k$ readiness | `I1_4_PASS_WITH_CONDITIONS / SAMPLED_FIXED_M_DISCRETE_ROOT_READINESS`; empirical I2 isolation ready | $r_0=3.8147\times10^{-7}$ disk；anchored branch/frame/chart/rank；82/820/164/164 node/factor/branch/QZ rows、8 closure、36 CR、6 CR-negative rows；V5 identifiable assembly-order closure | 未运行 locator/contour/root；固定 $M=48$ 不是 trace convergence；无 production separation、unsampled-pole theorem 或 $A_{\mathrm{def}}'$；对称 physical transmission labels 不可动态辨识 |
 | Current I2.1 factor-aware root count / I2.2 endpoint sign count | I2.1 `PASS WITH CONDITIONS`; I2.2 `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP` | I2.1 32/64 主 winding 均为 one；I2.2 的 raw $H$ strict-inertia 路线保留历史 STOP，但当前 $H_{\mathrm{sym}}$ 两端 counts 为 $(194,0,0)$ 与 $(193,1,0)$，$50/100/200$ bands 稳定 | 该 difference 只作 numerical corroboration；raw-$H$ inertia 仍 unavailable，尚无实根、root 坐标、连续 eigenvalue 或 estimator |
-| Current I2.3 cross-discretization drift | `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` | `ntot=160,208,256` 与固定 $n_{\mathrm{tot}}=160$ 的 $M=32,40,48$ 两条单轴实验均返回完全相同的三层 saved candidate；最低 raw diagnostics、gauge/repeat 与相邻 `SAME_MODE` 门通过 | terminal half-width 只作 sub-grid minimizer 搜索分辨率；不证明 minimizer/root 零漂移、收敛或误差界。I3.1 当前已有全边界 BIE `NUMERICALLY_UNQUALIFIED` indicator candidate，但尚无 reliable enclosure |
+| Current I2.3 cross-discretization drift | `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` | `ntot=160,208,256` 与固定 $n_{\mathrm{tot}}=160$ 的 $M=32,40,48$ 两条单轴实验均返回完全相同的三层 saved candidate；最低 raw diagnostics、gauge/repeat 与相邻 `SAME_MODE` 门通过 | terminal half-width 只作 sub-grid minimizer 搜索分辨率；不证明 minimizer/root 零漂移、收敛或误差界。I3.1 已达成 preliminary objective，I3.2 条件性定理已建立，但尚无 reliable enclosure |
 
 实现权威入口为
 [[research/projects/eig-apost/implementation/archive/legacy-route-v1/i0-manufactured/design|manufactured NEP design]]、

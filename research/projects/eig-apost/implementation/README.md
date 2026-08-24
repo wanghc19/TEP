@@ -2,7 +2,9 @@
 
 ## 当前状态
 
-当前新路线处于 `I3_1_ACTIVE / NUMERICALLY_UNQUALIFIED_INDICATOR_CANDIDATE / I3_2_NOT_READY`；其输入阶段 I2 已以
+当前新路线处于 `I3_1_PRELIMINARY_OBJECTIVE_ACHIEVED / COMPUTED_ESTIMATOR_CANDIDATE`；I3.2
+条件性证书谱包含定理已经建立，actual application hypotheses 仍 open。经验 caps/effectivity 与
+可靠 enclosure/gap 分别属于 I3.3/I3.4。其输入阶段 I2 已以
 `I2_3_PASS_WITH_CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` 收口。精确
 half-guide DtN 由半无限边值问题定义，连续中心算子 $\mathcal F(k)$ 在任何
 BIE/Fourier 截断和 ordered QZ 之前定义真实谱对象。现行数学权威是
@@ -40,8 +42,8 @@ localization diagnostic 及最低必要的 residual、factor、field、boundary 
 不是 candidate uncertainty。当前形成 conditional algorithmic candidate hierarchy。I3.1 已
 完成首个中心空列 continuous strong-residual baseline：固定单胞 cutoff 场给出的 computed ratio
 为 $22.43882099031153$，数值积分稳定，但 cutoff 导数项主导且名义区间跨过零，故结论为
-`FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`。这一负结果没有形成可靠存在区间，也不能进入
-I3.2。I3.1 继续活动；历史 V1 的全波导 BIE-informed Fourier--Hermite/bubble trial
+`FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`。这一负结果没有形成可靠存在区间，也不能实例化
+现行 I3.2 theorem。历史 V1 的全波导 BIE-informed Fourier--Hermite/bubble trial
 随后完成实现与正式 `lead-a3`。finite input、density representation 和 propagation
 通过，但固定 fit 的 $J=4/8$ holdout error 分别约为 $4.522421/5.138028$，故在
 `CONFORMING_RECONSTRUCTION_UNRESOLVED` 首败处停止，尚未形成通过资格的全波导 continuous
@@ -53,7 +55,7 @@ majorant 的 V2 设计。正式 `weak-a1` 的 base finite input、Q1--RT0 和 fu
 但 fine phase/scale repeat 的 center 的 $A,B$ Gram 及左右 first-cell 的 $A$ Gram Hermitian
 qualification 失败，最大 defect
 为 $6.2442\times10^{-10}>10^{-12}$；状态为 `POST-RUN PASS / VALID NEGATIVE /`
-`MAJORANT_QUADRATURE_UNRESOLVED`。没有形成 estimator，I3.2 仍不可开始。该 V2 路线的下一门是
+`MAJORANT_QUADRATURE_UNRESOLVED`。没有形成 estimator；这是当前 I3.1 结论前的历史负结果。该 V2 路线的下一门是
 scale-covariant Gram qualification；即使关闭，mesh change 与过宽 nominal interval 仍须处理。
 `lead-a3` 的 V1 历史结论继续由独立 review 与 append-only output 承载。
 V3 [[research/projects/eig-apost/implementation/i3/design-3-1d|design-3-1d]] 随后改用真实
@@ -70,7 +72,7 @@ implementation failure；正式 `pbie-a2` 得到 $q=1.1049370224693775\times10^{
 $4.0501912934587381\times10^{-10}$ 的普通双精度名义区间。wall refinement $0.2302$、nonzero-mode
 $T$ oracle 最大误差 $1.4439$ 和 outside-$M$ share $0.5147$ 使 verdict 只能为
 `PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`。该 attempt 当时的 wall/T/outside-$M$
-三项 warnings 解释其历史 verdict；outward enclosure 与 continuous projected gap 另属 I3.3。
+三项 warnings 解释其历史 verdict；outward enclosure 与 continuous projected gap 现属 I3.4。
 详见
 [[research/projects/eig-apost/implementation/i3/review-3-1e|review-3-1e]]。
 最新全边界胞元 BIE
@@ -79,9 +81,11 @@ wall trace 输入，并独立计算 full wall/circle response。正式 `fbie-a1`
 $q=1.0318643108971929\times10^{-10}$ 和宽度 $3.7823388865376728\times10^{-10}$ 的普通双精度
 名义区间。wall、actual $\Delta T$、Grams、tails 与 phase/scale checks 通过；所有 512 个已计算
 circle modes 进入 $q$ 且 angular-tail 门通过，未计算 Fourier tail 仍未 enclosure；
-唯一 warning 是 circle action change $0.77408786032496468>0.20$。因此 I3.1 仍只有
-`NUMERICALLY_UNQUALIFIED` indicator candidate，I3.2 尚不可开始；I3.3 的 outward/gap 条件
-仍独立未闭合。见 [[research/projects/eig-apost/implementation/i3/review-3-1f|review-3-1f]]。
+唯一 warning 是 circle action change $0.77408786032496468>0.20$。因此 I3.1 已有
+`COMPUTED ESTIMATOR CANDIDATE`，但普通数值仍 `NUMERICALLY_UNQUALIFIED`。该 warning 不阻止
+I3.2 theorem；它是未来 I3.3 empirical-cap target。I3.4 的 outward/gap 条件仍独立未闭合。
+I3.2 见 [[research/projects/eig-apost/implementation/i3/design-3-2a|design-3-2a]] 与
+[[research/projects/eig-apost/implementation/i3/review-3-2a|review-3-2a]]。
 finite one-step root correction 仍为
 OPTIONAL。第一层只要求可靠区间进入
 current continuous projected gap，并通过
@@ -125,7 +129,11 @@ implementation/
 │   ├── design-3-1d.md
 │   ├── review-3-1d.md
 │   ├── design-3-1e.md
-│   └── review-3-1e.md
+│   ├── review-3-1e.md
+│   ├── design-3-1f.md
+│   ├── review-3-1f.md
+│   ├── design-3-2a.md
+│   └── review-3-2a.md
 └── archive/
     └── legacy-route-v1/
         ├── README.md
@@ -147,8 +155,9 @@ implementation/
   baseline 分辨率不足，lead-aware reconstruction 在 BIE-informed fit 首败，Q1--RT0 V2 又在
   phase/scale Gram qualification 首败；BIE-collar V3 随后在含材料圆修正的 RT0-majorant
   pre-factor 首败；纯 BIE `pbie-a2` 随后形成首个 finite indicator。最新全边界 `fbie-a1`
-  关闭旧 wall/$T$/outside-$M$ 问题，但 circle-action refinement 未通过。I3.1 仍在活动；该
-  唯一内部资格未闭合，因此 I3.2 不可开始。可靠 enclosure 留给 I3.3，不是 I3.2 前置条件。
+  关闭旧 wall/$T$/outside-$M$ 问题，但 circle-action refinement 未通过。I3.1 已完成 preliminary
+  objective；I3.2 conditional theorem 已建立。该 warning 留给 I3.3 empirical caps，可靠
+  enclosure 留给 I3.4。
 - [[research/projects/eig-apost/implementation/ROADMAP|ROADMAP.md]]：只维护新路线 I1--I3
   的项目级依赖和退出条件。
 - [[research/projects/eig-apost/implementation/SYMBOL|SYMBOL.md]]：集中说明跨阶段缩写、
@@ -208,9 +217,10 @@ I1--I4 文档、实验 ID 或冻结 verdict。
    [[test/i2/m-drift/README|I2.3 M-axis experiment index]]。
 5. [[research/projects/eig-apost/implementation/i3/README|I3 guide]]：确认 candidate、error
    estimate、independent truth 和 upper-bound claim ladder；再读
-   [[research/projects/eig-apost/implementation/i3/review-3-1e|pure-BIE post-run review]] 与
-   [[test/i3/p-resid/README|pure-BIE experiment index]]，确认当前 indicator 数值、warnings 与
-   reliable-enclosure blocker。
+   [[research/projects/eig-apost/implementation/i3/review-3-1f|full-boundary BIE post-run review]]，
+   再读 [[research/projects/eig-apost/implementation/i3/design-3-2a|I3.2 theorem design]] 与
+   [[research/projects/eig-apost/implementation/i3/review-3-2a|independent theorem review]]，确认
+   ordinary indicator、strict cap theorem 与 reliable-application boundary。
 6. [[research/projects/eig-apost/implementation/i1/design|discrete A-def design]]：阅读当前
    离散空间、QZ/graph/DtN 链和组装合同。
 7. [[research/projects/eig-apost/implementation/i1/review|current I1 review]]：核对审查结论

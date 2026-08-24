@@ -2,10 +2,10 @@
 
 本文件集中维护 `eig-apost` 各实现阶段仍与当前目标有关的问题。项目只有两个最终目标：
 提出 continuous physical eigenvalue candidate；估计该 candidate 到真实连续特征值的误差，
-并研究可计算上界。首个工程目标是带 independent-truth validation 的 empirical estimator；
-严格上界是后续明确研究方向。第一层存在性需要 residual/field norm enclosure、numerical
-enclosure、当前 continuous projected essential gap 与预注册分辨率；只有指定 mode 的升级才
-另需 target isolation。条件未建立前不得把相应结论伪装成已完成的 certification。
+并研究可计算上界。I3.2 条件性证书定理已经建立；I3.3 负责 empirical caps 与 independent
+effectivity，I3.4 才负责严格 residual/field/tail enclosure、continuous projected gap 和存在性。
+只有指定 mode 的升级才另需 target isolation。条件未建立前不得把相应结论伪装成已完成的
+certification。
 
 各 review 保留其历史原文，只在末尾链接本 ledger。这里的分类按当前工程目标重新评估，
 不回写或伪造旧 verdict。最新阶段状态仍以
@@ -42,7 +42,7 @@ eigenvalue 声明。现行方法见
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
-| OP-M0-1 | `BLOCKER` | 当前 sharp-disk continuous operator 的 projected essential gap 尚未形成认证合同：需核对 fixed-$\beta$ coefficient、尺度、本质谱定义与 gap 的可靠内边缘。 | 只阻止把 reliable residual interval 升级为“gap 内至少存在一个连续离散特征值”；不阻止 I3.1 计算 residual 或 I3.2 经验验证。finite QZ gap、smooth-profile gap 和 I2.1 count 均不能替代。 | 针对当前模型建立 $G_\lambda\cap\sigma_{\mathrm{ess}}(A)=\varnothing$ 及认证 gap 边缘，并在 design 中预注册绝对和 gap-relative 分辨率。 | `OPEN` |
+| OP-M0-1 | `BLOCKER` | 当前 sharp-disk continuous operator 的 projected essential gap 尚未形成认证合同：需核对 fixed-$\beta$ coefficient、尺度、本质谱定义与 gap 的可靠内边缘。 | 只阻止 I3.4 把 reliable residual interval 升级为“gap 内至少存在一个连续离散特征值”；不阻止 I3.1 计算 residual、I3.2 条件性定理或 I3.3 经验验证。finite QZ gap、smooth-profile gap 和 I2.1 count 均不能替代。 | 针对当前模型建立 $G_\lambda\cap\sigma_{\mathrm{ess}}(A)=\varnothing$ 及认证 gap 边缘，并在 design 中预注册绝对和 gap-relative 分辨率。 | `OPEN` |
 | OP-M0-1a | `IMPORTANT CAVEAT` | gap 内可能有多个连续离散特征值；尚无 unique-target count/isolation。 | 只阻止把第一层存在区间命名为指定 $k_*$，或声称 multiplicity one；不阻止存在性、分辨率或不指定 mode 的集合距离上界。 | 仅当后续必须跟踪特定 mode 时，再证明 $I_h^\lambda\cap\sigma(A)=\{\lambda_*\}$；若还需一重性，再核验谱投影秩。 | `OPEN` |
 | OP-M0-2 | `IMPORTANT CAVEAT` | physical variational pencil $\mathcal F(k)$ 已先于截断定义；但 continuous BIE schema 的 representation completeness、injectivity、kernel--field equivalence、Fredholm index 和 adjoint pairing 尚未证明。 | 阻止把任意有限维近核无条件等同于真实 guided mode，也限制整个 BIE 方法的完备性；不阻止对一个实际重构、非零且 conforming 的物理场计算 continuous residual。若 residual 直接作用于该场，density injectivity 不是其前置门。 | I3.1 先冻结 deterministic field reconstruction、nonzero/form-conformity 和 residual components；完整 BIE kernel--field 双向对应只在方法完备性或矩阵-kernel claim 需要时另证。 | `OPEN` |
 | OP-M0-3 | `IMPORTANT CAVEAT` | continuous one-cell relation 到 BIE/Fourier generalized pencil 的 primal/adjoint consistency 仍未证明，production `DIF/sep` backend 和 analytic graph tangent 也未资格化。有限维设计已冻结 original/reversed 两次 QZ、regular infinite pair、seed-cluster continuation、absolute chart margin、fallback 和 $A_{\mathrm{def}}^{D/G}$；既有 sampled checks 已通过，但 FD graph-basis mutation 仍失败。 | 不阻止 candidate，也不阻止直接作用于 continuous field 的 residual indicator；后者不消费 matrix derivative。它只阻止 derivative-based finite correction、完整离散谱收敛和依赖该 tangent 的 theorem-level claim。 | production derivative、adjoint transport 和 `DIF/sep` 仅在 OPTIONAL finite correction 或未来具体公式实际需要时资格化。 | `OPEN` |
@@ -94,8 +94,8 @@ I1--I4 ledger ID 冲突，当前问题使用
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
-| OP-CI3-1 | `BLOCKER` | 四条早期路线已给出有效负结果；纯 BIE `pbie-a2` 首次形成 finite indicator，最新全边界 `fbie-a1` 又计算出 $q=1.0318643108971929\times10^{-10}$ 和宽度 $3.7823388865376728\times10^{-10}$ 的普通双精度名义区间。它通过 wall、actual $T(k_{\mathrm{out}})-T(k_{\mathrm{in}})$、512-mode inclusion/accounting、angular-tail、Gram、tail 与 phase/scale checks，但 circle action $256\to512$ ratio 为 $0.77408786032496468>0.20$。 | 这项唯一内部资格失败阻止冻结 estimator specification 并交给 I3.2 独立经验验证；它不撤销三个 residual components、$q$、full-$P$ tail 和名义代数变换的 ordinary-double 结果。$M=48$ 只定义 wall 输入；所有 512 个已计算 circle modes 都进入 $q$，outside-$M$ share $0.036178900402764308$ 只是描述性诊断；未计算 Fourier tail 仍未 enclosure，留给 I3.3。outward enclosure、projected gap 与可靠宽度另属 OP-CI3-2/I3.3，不是 I3.2 前置条件。 | 先诊断 source-256 action 插值到 512 与独立 source-512 action 的差；保存 value/normal 分项 numerator，并在看结果前冻结下一 action-resolution contract。通过后即可冻结 estimator 供 I3.2；不得调 $0.20$ 阈值、重跑 `fbie-a1`、追溯改 output 或把同链检查称独立 reference。 | `OPEN` |
-| OP-CI3-2 | `BLOCKER` | 尚无 I3.3 第一层可计算存在区间所需的 certified residual dual-norm upper bound、field-norm lower bound、numerical enclosure、continuous projected-gap containment 和预注册 absolute/gap-relative resolution。 | 这是 gap 内存在性与分辨率级 upper-bound claim 的 blocker，不阻止 I3.1 形成 estimator candidate，也不阻止 I3.2 形成 independently validated empirical estimator。unique-target isolation 只阻止可选指定-mode升级。 | I3.3 只使用可计算且经证明覆盖的 norm/enclosure/gap contract 研究 $U_h$，并在看结果前冻结分辨率；一般 empirical reference uncertainty 不能直接充当上界项。若条件不成立，正式输出 `UPPER_BOUND_UNAVAILABLE` 或 `EXISTS_BUT_RESOLUTION_INSUFFICIENT`。 | `OPEN` |
+| OP-CI3-1 | `IMPORTANT CAVEAT` | 四条早期路线已给出有效负结果；纯 BIE `pbie-a2` 首次形成 finite indicator，最新全边界 `fbie-a1` 又计算出 $q=1.0318643108971929\times10^{-10}$ 和宽度 $3.7823388865376728\times10^{-10}$ 的普通双精度名义区间。它通过 wall、actual $T(k_{\mathrm{out}})-T(k_{\mathrm{in}})$、512-mode inclusion/accounting、angular-tail、Gram、tail 与 phase/scale checks，但 circle action $256\to512$ ratio 为 $0.77408786032496468>0.20$。 | 这项内部资格失败不撤销三个 residual components、$q$、full-$P$ tail 和名义代数变换，也不阻止 I3.2 条件性定理；它使当前 ordinary candidate 尚不适合作为 I3.3 empirical-cap/effectivity 的冻结输入。$M=48$ 只定义 wall 输入；所有 512 个已计算 circle modes 都进入 $q$，outside-$M$ share $0.036178900402764308$ 只是描述性诊断。 | I3.3 在看新层结果前冻结 action-resolution 与 empirical-cap contract，诊断 source-256 插值到 512 和独立 source-512 action 的 value/normal 分项；不得调 $0.20$ 阈值、重跑 `fbie-a1`、追溯改 output 或把同链检查称独立 reference。 | `OPEN` |
+| OP-CI3-2 | `BLOCKER` | 尚无 I3.4 严格应用所需的 certified residual dual-norm upper bound、field-norm lower bound、arithmetic/tail enclosure、continuous projected-gap containment 和预注册 absolute/gap-relative resolution。 | 这是可靠区间、gap 内存在性和分辨率级 upper-bound claim 的 blocker；不阻止 I3.1 ordinary candidate、I3.2 条件性定理或 I3.3 empirical caps/effectivity。unique-target isolation 只阻止可选指定-mode升级。 | I3.4 只使用经证明覆盖的 norm/enclosure/gap contract 实例化 I3.2 定理，并在看结果前冻结分辨率；一般 empirical reference uncertainty 不能直接充当严格 cap。若条件不成立，正式输出 `UPPER_BOUND_UNAVAILABLE` 或 `EXISTS_BUT_RESOLUTION_INSUFFICIENT`。 | `OPEN` |
 
 ### Current I4
 
@@ -103,7 +103,7 @@ I1--I4 ledger ID 冲突，当前问题使用
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
-| OP-CI4-1 | `IMPORTANT CAVEAT` | 单一参数/单一 mode 可能不足以说明可推广性。I3 所需的 independent truth reference 已并入主线；这里仅保留第二参数、第二 mode、MATLAB parity 和跨模型稳健性。 | 限制推广范围，但不阻止第一 candidate 的 error estimator 或上界可行性 verdict。 | 第一案例和 I3 跑通后，按论文 claim 选择最小扩展；不得提前形成正式 I4 blocker。 | `SCHEDULED` |
+| OP-CI4-1 | `IMPORTANT CAVEAT` | 单一参数/单一 mode 可能不足以说明可推广性。I3.3 所需的 independent truth reference 已并入 I3 主线；这里仅保留第二参数、第二 mode、MATLAB parity 和跨模型稳健性。 | 限制推广范围，但不阻止第一 candidate 的 empirical-cap/effectivity 或 I3.4 上界可行性 verdict。 | 第一案例和 I3 跑通后，按论文 claim 选择最小扩展；不得提前形成正式 project-I4 blocker。 | `SCHEDULED` |
 
 ## Historical implementation stages
 

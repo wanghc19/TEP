@@ -3,8 +3,9 @@
 本专题用于把仓库中的周期波导特征值计算，转向偏工程实现的特征值后验误差分析与
 数值认证研究。当前按 Academic Research Suite 的 Deep Research 工作流推进，已经
 形成受条件约束的方法稿、完成三个离散实现 checkpoint，并在历史受控诊断之后完成
-source-derived proxy provenance closure；但尚未形成可提升为统一主线的理论或真实
-estimator，也不是新的 `research/mainline/`。
+source-derived proxy provenance closure。I3.1 已形成 ordinary-double continuous-residual
+estimator candidate；I3.2 的条件性离散证书谱包含定理已建立，但严格 cap 的实例化假设仍未
+闭合。本专题尚未形成 certified estimator，也不是新的 `research/mainline/`。
 
 ## 权威和边界
 
@@ -25,7 +26,10 @@ estimator，也不是新的 `research/mainline/`。
   与 `SAME_MODE` 检查；各轴的三项 saved candidate 完全相同，因此结果为
   `NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。terminal-cell 半宽只作
   潜在 sub-grid minimizer 的搜索分辨率，不是 candidate uncertainty；该结果仍不证明
-  minimizer/root 零漂移或收敛。
+  minimizer/root 零漂移或收敛。2026-08-24 起，I3.1 状态为
+  `PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`；新 I3.2 是已经建立的
+  条件性证书定理，旧 I3.2/旧 I3.3 分别顺延为 I3.3 empirical caps 与 independent
+  effectivity、I3.4 reliable enclosure/gap/existence。
 - 本目录只管理新专题；不续写或改写冻结的 Müller--Cauchy 主线。
 - 归档理论、旧草稿中的命题和现有数值候选均不得被预设为正确。
 - 生产 MATLAB/package 代码保持未修改；实验实现和生成结果只位于仓库根目录 `test/`
@@ -156,8 +160,9 @@ current-model gap 且通过预注册 absolute/gap-relative resolution 时，先�
   `MINOR CAVEAT`，记录各问题的 blocking scope、最低成本检查和状态；只有未解决的
   blocker 能停止当前工程路线。见
   [[research/projects/eig-apost/implementation/open-problems|open-problem ledger]]。
-- `implementation/i2/`：I2.1--I2.3 已完成；I3.1 当前已有纯 BIE
-  `NUMERICALLY_UNQUALIFIED` indicator candidate，但 reliable enclosure 未闭合，I3.1 继续活动。
+- `implementation/i2/`：I2.1--I2.3 已完成；I3.1 当前已有全边界 BIE
+  `NUMERICALLY_UNQUALIFIED` indicator candidate，阶段为
+  `PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`；reliable enclosure 未闭合。
   阶段综合与项目级状态分别见
   [[research/projects/eig-apost/implementation/i2/report|I2 stage report]]、
   [[research/projects/eig-apost/implementation/i2/README|I2 guide]]，设计/审查分别见
@@ -173,10 +178,14 @@ current-model gap 且通过预注册 absolute/gap-relative resolution 时，先�
   [[test/i2/h-inertia/README|I2.2 experiment index]]、
   [[test/i2/k-drift/README|I2.3 ntot-axis experiment index]] 与
   [[test/i2/m-drift/README|I2.3 M-axis experiment index]] 进入。
-- `implementation/i3/`：维护 candidate 到 gap 内连续离散谱集合的误差估计、独立 reference
-  和上界可行性的目标、输入、输出与 claim ladder；唯一目标识别是可选升级，后续实验须另行
-  设计。当前证据由 [[research/projects/eig-apost/implementation/i3/review-3-1e|pure-BIE review]]
-  与 [[test/i3/p-resid/README|experiment index]] 进入；不得把名义区间称为可靠谱 enclosure。
+- `implementation/i3/`：维护 candidate 到连续谱的 residual indicator、条件性证书定理、
+  empirical caps/independent effectivity 与 reliable enclosure/gap 的分层合同。I3.1 当前证据由
+  [[research/projects/eig-apost/implementation/i3/review-3-1f|full-boundary BIE review]] 进入；
+  I3.2 定理与独立审查分别见
+  [[research/projects/eig-apost/implementation/i3/design-3-2a|design-3-2a]] 和
+  [[research/projects/eig-apost/implementation/i3/review-3-2a|review-3-2a]]。circle-action
+  $0.77408786032496468$ 是 I3.1 caveat 和未来 I3.3 cap 目标，不阻止该定理；不得把普通名义
+  区间称为可靠谱 enclosure。
 - `test/archive/legacy-route-v1/eig-apost-nep/`、`test/archive/legacy-route-v1/hg-map/`、
   `test/archive/legacy-route-v1/aug-bie/`、`test/archive/legacy-route-v1/root-ready/`：四个互相
   独立的 Octave 实验或受控诊断及可审计输出；历史 I3 provenance 输出在
