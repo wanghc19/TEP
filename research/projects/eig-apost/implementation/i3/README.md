@@ -34,7 +34,7 @@ e_h^*=|k_*-\widehat k_h|.
 $$
 
 本阶段不把有限维矩阵的精确零点、层间漂移、矩阵残差或某个修正公式本身当成最终成果。
-这些量只有在能够帮助估计上述连续谱误差时才进入主线。I3.1 已完成三个正式负向实验；后续
+这些量只有在能够帮助估计上述连续谱误差时才进入主线。I3.1 已完成四个正式负向实验；后续
 estimator、independent reference 与严格上界仍须分别设计和审查。
 
 长期对象门如下：每个新增主线对象和 hard gate 都必须写出它如何进入第一层集合距离或可选
@@ -47,7 +47,7 @@ I3 由三个正式里程碑组成。三个是科学问题决定的数量，不�
 
 | Milestone | 独立科学问题 | 核心输出 | 当前状态 |
 |---|---|---|---|
-| I3.1 | 能否从实际计算量构造并内部论证一个与 continuous gap-spectrum distance 有关的可计算指标？ | 冻结的 $\eta_h$、适用假设、覆盖/忽略的误差及内部检查结果 | `ACTIVE / THREE VALID NEGATIVE EXPERIMENTS / NO ESTIMATOR` |
+| I3.1 | 能否从实际计算量构造并内部论证一个与 continuous gap-spectrum distance 有关的可计算指标？ | 冻结的 $\eta_h$、适用假设、覆盖/忽略的误差及内部检查结果 | `ACTIVE / FOUR VALID NEGATIVE EXPERIMENTS / NO ESTIMATOR` |
 | I3.2 | 冻结后的 $\eta_h$ 能否在未参与其构造的独立 reference 上跟踪真实误差的量级？ | independent-reference comparison 与 empirical estimator verdict | `NOT STARTED` |
 | I3.3 | 能否在没有未知常数的条件下把已经验证的估计升级为可计算上界？ | $U_h$ 或 `UPPER_BOUND_UNAVAILABLE` | `NOT STARTED` |
 
@@ -144,9 +144,27 @@ $6.2442\times10^{-10}$。producer 状态为 `I3_1_MAJORANT_QUADRATURE_UNRESOLVED
 estimator；独立结论见
 [[research/projects/eig-apost/implementation/i3/review-3-1c|review-3-1c]]。
 
-下一门是 scale-covariant Gram qualification。即使关闭该门，base coarse/fine 的
+对历史 V2，遗留下一门是 scale-covariant Gram qualification。即使关闭该门，base coarse/fine 的
 $B/\gamma$ component change 约 $0.277>0.20$，fine nominal width 约 $0.564\gg10^{-6}$；
 mesh qualification 与有用分辨率仍未闭合。因此 I3.1 继续活动，I3.2 不可开始。
+
+现行 V3 设计
+[[research/projects/eig-apost/implementation/i3/design-3-1d|design-3-1d]] 已获 Researcher
+`AGREED` 与 Skeptic `DESIGN PASS`。它以真实 one-cell BIE incoming data、安全圆/墙
+collar、全局 conforming Q1 companion、RT0 functional majorant 和 full-$P$ tail 重建弱残量。
+历史 `bie-a1` 在进入 evaluator 前因旧接口字段缺失而停止；`bie-a2` 通过 safe-field evaluation
+后因 MATLAB 转置结果索引语法而在 Q1 前停止。两个实现失败均以 append-only output 保留，且
+Revision A/B 没有改变科学对象、参数、阈值或资源合同。
+
+正式 `bie-a3` 已完成。finite input、branch/Wood、左右 propagation/scattering closure、BIE
+density、one-sided surface trace 和 safe circle/wall evaluation 均通过。coarse Q1 maps 随后在
+控制流中越过 form gate，但尚未写入 artifact；程序在第一个 coarse lead RT0-majorant factor
+处停止，machine 状态为 `I3_1_HDIV_FLUX_UNRESOLVED`。失败矩阵已经含 true-circle polar
+correction，而 integration-object gate 尚未先行检查，所以当前严格解释是 composite
+RT0-majorant quadrature/assembly 未资格化，不能称为 $H(\mathrm{div})$ 理论失败。RT0 flux、
+majorant 分量、full-$P$ tail、normalized indicator 和 prediction interval 均未形成。独立结论见
+[[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]。I3.1 继续为
+`ACTIVE / NO ESTIMATOR`，I3.2 不可开始。
 
 ## I3.1：构造并内部论证可计算的误差指标
 

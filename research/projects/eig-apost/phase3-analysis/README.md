@@ -28,8 +28,8 @@ I3.1 的主线必须直接服务这个误差。有限矩阵的精确零点、连
 当前选定的最短路线是：
 
 1. 取 I2 已保存的 $\widehat k_h$，令 $\mu_h=\widehat k_h^2$；
-2. 用 I2 的 frozen wall traces 生成左右 infinite lead 序列，并以 Q1 Dirichlet cell extension
-   构造全局 $H^1$ conforming trial；
+2. 从 I2 的 frozen QZ/Rayleigh state 提取真实 one-cell incoming $(a_L,b_R)$，用 one-sided
+   BIE traces 与安全 circle/wall collars 构造全局 $H^1$ conforming Q1 companion；
 3. 构造跨胞元 normal component 连续的 global RT0 flux，以 functional majorant 计算
    continuous weak-residual candidate；
 4. 以 full-$P$ Gram/doubling 显式控制左右 infinite tail，并分别检查 phase/scale 与
@@ -40,10 +40,11 @@ I3.1 的主线必须直接服务这个误差。有限矩阵的精确零点、连
 6. I3.2 再用独立 reference 检查这个冻结指标是否跟踪误差；若未来确需指定某个 mode，才
    另做唯一目标识别，I3.3 再研究严格误差上界。
 
-当前主线已改为 conforming weak residual：从 frozen wall traces 构造 Q1 cell extension 和
-global RT0 flux，再用无未知常数的 functional majorant 计算 $V'$ residual candidate。当前
-[[research/projects/eig-apost/implementation/i3/design-3-1b|V2 design]] 给出对象与实现合同；
-此前的强残量 BIE reconstruction 作为历史负向路线保留在
+当前主线是 conforming weak residual：从真实 incoming 的 BIE safe-field data 构造 Q1
+companion 和 global RT0 flux，再用无未知常数的 functional majorant 计算 $V'$ residual
+candidate。现行 [[research/projects/eig-apost/implementation/i3/design-3-1d|V3 design]] 给出
+对象与实现合同；V2 wall-trace Q1--RT0 和此前的强残量 BIE reconstruction 作为历史负向路线
+保留在
 [[research/projects/eig-apost/phase3-analysis/s-lead-field|Global lead-aware conforming trial]]
 及其 post-run review 中。
 
@@ -76,9 +77,17 @@ $6.2442\times10^{-10}>10^{-12}$，故 producer 停止于
 append-only output。独立结论见
 [[research/projects/eig-apost/implementation/i3/review-3-1c|review-3-1c]]。
 
-当前下一门是 scale-covariant Gram qualification。即使关闭，base diagnostics 已显示
+对历史 V2，遗留下一门是 scale-covariant Gram qualification。即使关闭，base diagnostics 已显示
 $B/\gamma$ coarse/fine change 约 $0.277>0.20$，fine nominal width 约
 $0.564\gg10^{-6}$；mesh 与 width 仍未闭合。
+
+V3 正式 `bie-a3` 已进一步关闭 V1 的 true-incoming 与 near-circle direct-evaluation 问题。
+finite input、branch/Wood、whole-subspace propagation、BIE density、one-sided surface trace 与
+safe circle/wall evaluation 均通过；程序在 coarse lead 的 composite RT0-majorant factor 前
+停止，machine 状态为 `HDIV_FLUX_UNRESOLVED`。因为该矩阵已经含 true-circle polar correction，
+而 integration-object gate 尚未先行检查，独立审查只把它解释为 quadrature/assembly blocker，
+不称 $H(\mathrm{div})$ 理论失败。RT0 flux、majorant、tail、indicator 与 interval 均未形成；
+详见 [[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]。
 
 ## 阅读顺序
 
@@ -123,10 +132,13 @@ $0.564\gg10^{-6}$；mesh 与 width 仍未闭合。
 - 已完成 Q1--RT0 V2：[[research/projects/eig-apost/implementation/i3/design-3-1b|design]] 的
   `weak-a1` 在 phase/scale Gram qualification 首败；独立结论见
   [[research/projects/eig-apost/implementation/i3/review-3-1c|review-3-1c]]；
-- 当前数值 blocker：scale-covariant Gram qualification；关闭后仍须通过 mesh 与 absolute
-  interval-width 门；
+- 已完成 BIE-collar V3：[[research/projects/eig-apost/implementation/i3/design-3-1d|design]] 的
+  `bie-a3` 在 composite RT0-majorant quadrature/assembly 首败；独立结论见
+  [[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]；
+- 当前最近的数值 blocker：先把材料圆 majorant assembly 改成可审计、保持正性的对象；关闭后
+  仍须通过 $H(\mathrm{div})$、tail、mesh 与 absolute interval-width 门；
 - 未闭合：普通 quadrature 的 reliable enclosure；当前 sharp-disk continuous projected gap；
 - 第一层目标：可靠区间进入 projected gap，且其正频率宽度不超过预注册分辨率；
 - 第二层可选升级：只有确需命名某个 mode 时才证明唯一目标身份；
-- I3.1 当前状态：`ACTIVE / THREE VALID NEGATIVE EXPERIMENTS / NO ESTIMATOR`；
+- I3.1 当前状态：`ACTIVE / FOUR VALID NEGATIVE EXPERIMENTS / NO ESTIMATOR`；
 - I3.2：尚不可开始；须先得到有用分辨率的冻结 estimator candidate。

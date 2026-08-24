@@ -1,6 +1,6 @@
 # Research status
 
-更新日期：2026-08-21。
+更新日期：2026-08-22。
 
 状态词含义：`established in archived mainline` 仅表示冻结主线给出了论证，不等于已完成独立来源核验；`needs review` 表示已有陈述或证明草案但仍需严格审计；`tentative` 表示研究性判断；`unresolved` 表示尚未解决。
 
@@ -42,8 +42,11 @@ finite input、density representation 和 propagation，但固定 fit 的 $J=4/8
 residual V2 正式 `weak-a1` 通过 base finite input、propagation、Q1--RT0、Gram 与 full-$P$
 tail checks，但在 fine phase/scale repeat 的 per-cell Gram Hermitian gate 首败；最大 defect
 $6.2442\times10^{-10}$ 高于 $10^{-12}$。该 run 是 `POST-RUN PASS / VALID NEGATIVE`，仍没有
-estimator，I3.2 不可开始。下一门是 scale-covariant Gram qualification；即使关闭，base
-diagnostics 仍显示 mesh change 与过宽 nominal interval 问题。
+estimator，I3.2 不可开始。BIE-collar V3 正式 `bie-a3` 随后通过 finite input、branch/Wood、
+propagation、density、surface trace 与 safe-field 门，但在 coarse lead 的 composite
+RT0-majorant 预因子处以 `HDIV_FLUX_UNRESOLVED` 停止。当前只可判定含材料圆修正的
+quadrature/assembly 未资格化；没有 flux、majorant、tail、indicator 或 interval。I3.1 仍无
+estimator，I3.2 不可开始。
 第一层目标仍是
 candidate 到 current projected gap 内离散谱集合的距离：可靠区间
 进入该 gap 后先得到至少一个离散特征值，且只有通过结果前冻结的 absolute/gap-relative
@@ -60,7 +63,7 @@ residual estimator、sharp-disk projected-gap contract 和 upper bound 尚未建
 
 | 状态 | 专题 | 实际结论 |
 |---|---|---|
-| active investigation / I3.1 three valid negative experiments; no estimator | `research/projects/eig-apost/` | PDE-defined physical operator 是连续主对象；I2.1--I2.3 已完成。中心空列 baseline 受固定 cutoff 主导；全波导 trial 在 fixed BIE-informed fit 首败；Q1--RT0 V2 又在 phase/scale Gram qualification 首败。三项都不能进入 I3.2；scale-covariant Gram、mesh/width、可靠 enclosure、独立 $k_{\mathrm{ref}}$ 与 sharp-disk projected-gap contract 均未完成；unique target 仅为可选升级。 |
+| active investigation / I3.1 four valid negative experiments; no estimator | `research/projects/eig-apost/` | PDE-defined physical operator 是连续主对象；I2.1--I2.3 已完成。中心空列 baseline 受固定 cutoff 主导；全波导 trial 在 fixed BIE-informed fit 首败；Q1--RT0 V2 在 phase/scale Gram qualification 首败；BIE-collar V3 又在含圆盘修正的 RT0-majorant 预因子首败。四项都不能进入 I3.2；保持正性的 majorant assembly、tail、mesh/width、可靠 enclosure、独立 $k_{\mathrm{ref}}$ 与 sharp-disk projected-gap contract 均未完成；unique target 仅为可选升级。 |
 | paused archive | `research/archive/muller-cauchy-2026-07/` | 冻结的 Müller--广义 Bloch--Cauchy 主线；商空间版本的核/场等价仍有未闭合的外部定理适配和表示论前提。 |
 | paused | `research/projects/half-guide-dtn/` | Stage 1 完成了符号审计、齐次半导 DtN/Riccati 验证和耦合方案建议；周期障碍半导、完整中心耦合及 MATLAB 最终验证尚未完成。该路线未整合进冻结主线。 |
 | completed project | `research/projects/cell-representation/` | 专题任务已完成：原始无条件猜想过强；给出了直接 Green 表示和带显式正则性、非 Wood 及互补问题条件的修正版。其纠正后的表示结构和商空间策略已进入冻结主线，但其中的表示定理仍为 `needs review`。 |
@@ -101,7 +104,9 @@ strong-residual baseline 已完成，computed ratio 为 $22.43882099031153$；�
 名义区间跨过零，故分辨率不足。全波导 `lead-a3` 又在 fixed BIE-informed holdout fit 首败，
 尚未形成 continuous residual；不能把失败单因归咎于 bubble basis，因为 near-circle direct
 evaluation 未资格化。Q1--RT0 `weak-a1` 随后在 fine phase/scale Gram qualification 首败；base
-diagnostics 还显示 mesh/width 未闭合。三项均不能进入 I3.2。independent reference 仍属于取得有用 estimator
+diagnostics 还显示 mesh/width 未闭合。BIE-collar `bie-a3` 随后关闭真实 incoming、one-sided
+trace 与 safe evaluation 的内部门，却在 coarse lead RT0-majorant 的 composite quadrature/assembly
+处首败；没有形成 residual 或区间。四项均不能进入 I3.2。independent reference 仍属于取得有用 estimator
 candidate 后的 I3.2。零 observed shift 不能单独验证 correction、收敛或 estimator。
 qualified conforming reconstruction/weak residual、sharp-disk projected-gap contract、
 预注册 absolute/gap-relative resolution 与 reliable enclosure 继续限制后续 estimator 和上界

@@ -53,9 +53,16 @@ majorant 的 V2 设计。正式 `weak-a1` 的 base finite input、Q1--RT0 和 fu
 但 fine phase/scale repeat 的 center 的 $A,B$ Gram 及左右 first-cell 的 $A$ Gram Hermitian
 qualification 失败，最大 defect
 为 $6.2442\times10^{-10}>10^{-12}$；状态为 `POST-RUN PASS / VALID NEGATIVE /`
-`MAJORANT_QUADRATURE_UNRESOLVED`。没有形成 estimator，I3.2 仍不可开始。下一门是
+`MAJORANT_QUADRATURE_UNRESOLVED`。没有形成 estimator，I3.2 仍不可开始。该 V2 路线的下一门是
 scale-covariant Gram qualification；即使关闭，mesh change 与过宽 nominal interval 仍须处理。
 `lead-a3` 的 V1 历史结论继续由独立 review 与 append-only output 承载。
+V3 [[research/projects/eig-apost/implementation/i3/design-3-1d|design-3-1d]] 随后改用真实
+$(a_L,b_R)$ incoming、one-sided BIE traces、安全 collars、conforming Q1 companion 与 RT0
+majorant。正式 `bie-a3` 通过 finite input、branch/Wood、propagation、density、surface trace
+和 safe-field 门，但在 coarse lead 的 composite RT0-majorant 预因子处停止。machine 状态为
+`HDIV_FLUX_UNRESOLVED`；独立复核将其限定为含 polar disk correction 的 quadrature/assembly
+对象未资格化，而非 $H(\mathrm{div})$ 理论失败。没有形成 majorant、tail、indicator 或区间；
+详见 [[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]。
 finite one-step root correction 仍为
 OPTIONAL。第一层只要求可靠区间进入
 current continuous projected gap，并通过
@@ -115,7 +122,8 @@ implementation/
 - [[research/projects/eig-apost/implementation/i3/README|i3/]]：维护 candidate 误差估计、
   independent truth comparison 和上界可行性的目标、输入与预期输出；中心空列强残量
   baseline 分辨率不足，lead-aware reconstruction 在 BIE-informed fit 首败，Q1--RT0 V2 又在
-  phase/scale Gram qualification 首败；I3.1 仍在活动，尚无 estimator，I3.2 不可开始。
+  phase/scale Gram qualification 首败；BIE-collar V3 随后在含材料圆修正的 RT0-majorant
+  pre-factor 首败。I3.1 仍在活动，尚无 estimator，I3.2 不可开始。
 - [[research/projects/eig-apost/implementation/ROADMAP|ROADMAP.md]]：只维护新路线 I1--I3
   的项目级依赖和退出条件。
 - [[research/projects/eig-apost/implementation/SYMBOL|SYMBOL.md]]：集中说明跨阶段缩写、

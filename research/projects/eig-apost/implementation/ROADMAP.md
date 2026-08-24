@@ -105,13 +105,16 @@ hierarchy；但 terminal-cell 尺度只说明 sub-grid minimizer 尚未解析，
 I3 直接研究 candidate 与真实连续特征值之间的误差。它不以某种固定 estimator 公式为预设，
 也不把 next-level shift、matrix residual 或 effectivity 单独当成最终答案。具体算法和验收流程
 应根据 I2 实际交付另行冻结。当前 `drift-a1` 与 `m-drift-a2` 已提供两条经 mode-identity
-检查的 candidate sequence。I3.1 已完成中心空列、lead-aware reconstruction 与 Q1--RT0 weak
-residual 三个正式实验，当前状态为 `ACTIVE / THREE VALID NEGATIVE EXPERIMENTS / NO ESTIMATOR`。
+检查的 candidate sequence。I3.1 已完成中心空列、lead-aware reconstruction、Q1--RT0 weak
+residual 与 BIE-collar weak residual 四个正式实验，当前状态为
+`ACTIVE / FOUR VALID NEGATIVE EXPERIMENTS / NO ESTIMATOR`。
 零 observed shift 不能单独
 验证 next-level correction、收敛或 estimator；中心空列 ratio 因固定单胞 cutoff 主导而失去
 分辨率，lead-aware 实验则在形成通过资格的全波导 continuous trial/residual 之前即于固定
-BIE-informed fit 首败；Q1--RT0 实验又在 fine phase/scale Gram qualification 首败。三者都不能
-进入 I3.2。
+BIE-informed fit 首败；Q1--RT0 实验又在 fine phase/scale Gram qualification 首败。V3
+`bie-a3` 虽通过真实 incoming BIE 的 branch/density/surface/safe-field 门，却在 coarse lead
+RT0-majorant 的含圆盘修正预因子处停止，未形成 flux、majorant、tail 或区间。四者都不能进入
+I3.2。
 
 ### 输入、三项输出和与上界的关系
 
@@ -174,10 +177,14 @@ defect 为 $6.2442\times10^{-10}>10^{-12}$，故 producer 停止于
 `MAJORANT_QUADRATURE_UNRESOLVED`。该 valid negative 没有形成 estimator；独立结论见
 [[research/projects/eig-apost/implementation/i3/review-3-1c|review-3-1c]]。
 
-下一门是 scale-covariant Gram qualification。即使关闭该门，现有 base diagnostics 已显示
-$B/\gamma$ 的 coarse/fine 变化约 $0.277>0.20$，fine nominal width 约
-$0.564\gg10^{-6}$；mesh qualification 与有用 interval width 仍须另行关闭。`lead-a3` 的 V1
-结论继续以 review/output 为准。
+V3 [[research/projects/eig-apost/implementation/i3/design-3-1d|design-3-1d]] 改用真实
+incoming BIE、安全 collars、conforming Q1 companion 与 constrained RT0 majorant。正式
+`bie-a3` 已通过 finite input、branch/Wood、propagation、density、surface trace 与 safe-field
+门，但在 coarse lead 的 composite RT0-majorant pre-factor 处停止。当前最近的下一门是先保存
+并检查 background、disk correction 与最终 free-block 的正性和 bad-edge 诊断，再决定是
+quadrature positivity 还是 assembly/index 问题；不得绕过首败。关闭后仍须另行通过
+$H(\mathrm{div})$、tail、mesh 与有用 interval width。独立结论见
+[[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]。
 finite one-step correction 仅为 OPTIONAL 离散分量诊断。对中心宽
 baseline 优先增加可靠积分 enclosure 或 gap 认证仍不能提高分辨率。
 

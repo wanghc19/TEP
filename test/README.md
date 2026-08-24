@@ -160,6 +160,19 @@ frozen outputs retain their recorded paths and hashes.
 | Status | `POST-RUN PASS / VALID NEGATIVE / MAJORANT_QUADRATURE_UNRESOLVED`; base Q1--RT0 and full-$P$ tail checks passed, but the fine phase/scale repeat failed the per-cell Gram Hermitian gate (maximum defect $6.2442\times10^{-10}$ versus $10^{-12}$). No estimator was formed and I3.2 remains unavailable. |
 | Implementation summary | [[research/projects/eig-apost/implementation/i3/README|current I3 guide]] |
 
+## I3-BIE-COLLAR-WEAK-RESIDUAL-V3
+
+| Field | Value |
+|---|---|
+| Experiment ID | `I3-BIE-COLLAR-WEAK-RESIDUAL-V3` |
+| Stage | I3.1 |
+| Purpose | Reconstruct qualified one-cell BIE fields, repair circle and wall traces into a conforming whole-waveguide Q1 companion, and compute an RT0 functional-majorant candidate with full-matrix tails |
+| Current path | `test/i3/b-resid/` |
+| Entry point | Completed Revision B attempt `check_b_resid('bie-a3')`; `bie-a1` and `bie-a2` remain preserved implementation failures |
+| Experiment index | [[test/i3/b-resid/README|V3 attempt, schema, grids, command, resources, and claim limits]] |
+| Status | `POST-RUN PASS / VALID NEGATIVE / HDIV_FLUX_UNRESOLVED`; `bie-a3` passed finite input, branch/Wood, propagation, density, one-sided surface trace, and safe-field gates, then stopped at the coarse lead RT0-majorant pre-factor. No majorant, estimator, interval, or I3.2 entry was formed. |
+| Implementation summary | [[research/projects/eig-apost/implementation/i3/README|current I3 guide]] |
+
 Future current-route experiments belong under the matching `test/i*/` stage directory and receive
 an index entry only after they are designed and authorized. A legacy verdict never becomes a
 current stage gate.
