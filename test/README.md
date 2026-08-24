@@ -173,6 +173,19 @@ frozen outputs retain their recorded paths and hashes.
 | Status | `POST-RUN PASS / VALID NEGATIVE / HDIV_FLUX_UNRESOLVED`; `bie-a3` passed finite input, branch/Wood, propagation, density, one-sided surface trace, and safe-field gates, then stopped at the coarse lead RT0-majorant pre-factor. No majorant, estimator, interval, or I3.2 entry was formed. |
 | Implementation summary | [[research/projects/eig-apost/implementation/i3/README|current I3 guide]] |
 
+## I3-PURE-BIE-BOUNDARY-RESIDUAL-V1
+
+| Field | Value |
+|---|---|
+| Experiment ID | `I3-PURE-BIE-BOUNDARY-RESIDUAL-V1` |
+| Stage | I3.1 |
+| Purpose | Define a finite-density exact rectangular-Green trial from shared total wall traces and compute wall, circle, and collar residual candidates without Q1, RT0, or a volume mesh |
+| Current path | `test/i3/p-resid/` |
+| Entry point | Completed Revision A attempt: `check_p_resid('pbie-a2')`; `pbie-a1` remains a preserved implementation failure |
+| Experiment index | [[test/i3/p-resid/README|pure-BIE objects, frozen command, resources, and claim limits]] |
+| Status | `POST-RUN PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED INDICATOR CANDIDATE`; $q=1.1049370224693775\times10^{-10}$ and the nominal width is $4.0501912934587381\times10^{-10}$. Wall refinement $23.0\%$, nonzero-mode $T$-oracle error up to $1.4439$, and outside-$M$ share $51.5\%$ prevent freezing the estimator for I3.2; the all-false reliability/enclosure flags separately prevent an I3.3 spectral interval or existence claim |
+| Implementation summary | [[research/projects/eig-apost/implementation/i3/README|current I3 guide]] |
+
 Future current-route experiments belong under the matching `test/i*/` stage directory and receive
 an index entry only after they are designed and authorized. A legacy verdict never becomes a
 current stage gate.

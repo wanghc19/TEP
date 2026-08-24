@@ -105,16 +105,21 @@ hierarchy；但 terminal-cell 尺度只说明 sub-grid minimizer 尚未解析，
 I3 直接研究 candidate 与真实连续特征值之间的误差。它不以某种固定 estimator 公式为预设，
 也不把 next-level shift、matrix residual 或 effectivity 单独当成最终答案。具体算法和验收流程
 应根据 I2 实际交付另行冻结。当前 `drift-a1` 与 `m-drift-a2` 已提供两条经 mode-identity
-检查的 candidate sequence。I3.1 已完成中心空列、lead-aware reconstruction、Q1--RT0 weak
-residual 与 BIE-collar weak residual 四个正式实验，当前状态为
-`ACTIVE / FOUR VALID NEGATIVE EXPERIMENTS / NO ESTIMATOR`。
+检查的 candidate sequence。I3.1 已完成四个正式负向实验，并由纯 BIE 边界残量实验首次
+形成可计算但 `NUMERICALLY_UNQUALIFIED` 的 indicator candidate；当前状态为
+`ACTIVE / INDICATOR CANDIDATE / I3.2 NOT READY`。
 零 observed shift 不能单独
 验证 next-level correction、收敛或 estimator；中心空列 ratio 因固定单胞 cutoff 主导而失去
 分辨率，lead-aware 实验则在形成通过资格的全波导 continuous trial/residual 之前即于固定
 BIE-informed fit 首败；Q1--RT0 实验又在 fine phase/scale Gram qualification 首败。V3
 `bie-a3` 虽通过真实 incoming BIE 的 branch/density/surface/safe-field 门，却在 coarse lead
-RT0-majorant 的含圆盘修正预因子处停止，未形成 flux、majorant、tail 或区间。四者都不能进入
-I3.2。
+RT0-majorant 的含圆盘修正预因子处停止，未形成 flux、majorant、tail 或区间。纯 BIE
+`pbie-a2` 随后得到 $q=1.1049370224693775\times10^{-10}$ 和宽度
+$4.0501912934587381\times10^{-10}$ 的普通双精度名义区间，但 wall refinement $23.0\%$、
+nonzero-mode $T$ oracle 的 $O(1)$ 误差和 outside-$M$ share $51.5\%$ 使其只能作为
+`NUMERICALLY_UNQUALIFIED` candidate。这三项内部资格尚未闭合，故 estimator 还不能冻结并
+进入 I3.2 独立验证。可靠 outward enclosure、projected gap 与宽度门属于 I3.3，不是 I3.2 的
+前置条件。
 
 ### 输入、三项输出和与上界的关系
 
@@ -185,6 +190,12 @@ incoming BIE、安全 collars、conforming Q1 companion 与 constrained RT0 majo
 quadrature positivity 还是 assembly/index 问题；不得绕过首败。关闭后仍须另行通过
 $H(\mathrm{div})$、tail、mesh 与有用 interval width。独立结论见
 [[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]。
+纯 BIE [[research/projects/eig-apost/implementation/i3/design-3-1e|design-3-1e]] 随后形成首个
+可计算 normalized indicator 和窄名义区间；独立结论见
+[[research/projects/eig-apost/implementation/i3/review-3-1e|review-3-1e]]。当前下一门不再是
+构造有限 $q$，而是先关闭 $T$ difference-block/oracle、wall refinement 与 circle outside-$M$
+表示三项内部数值资格，再冻结 estimator 供 I3.2 独立验证。residual upper、field lower、tail、
+continuous projected gap 与预注册宽度的 outward enclosure 归 I3.3 研究。
 finite one-step correction 仅为 OPTIONAL 离散分量诊断。对中心宽
 baseline 优先增加可靠积分 enclosure 或 gap 认证仍不能提高分辨率。
 

@@ -28,23 +28,24 @@ I3.1 的主线必须直接服务这个误差。有限矩阵的精确零点、连
 当前选定的最短路线是：
 
 1. 取 I2 已保存的 $\widehat k_h$，令 $\mu_h=\widehat k_h^2$；
-2. 从 I2 的 frozen QZ/Rayleigh state 提取真实 one-cell incoming $(a_L,b_R)$，用 one-sided
-   BIE traces 与安全 circle/wall collars 构造全局 $H^1$ conforming Q1 companion；
-3. 构造跨胞元 normal component 连续的 global RT0 flux，以 functional majorant 计算
-   continuous weak-residual candidate；
-4. 以 full-$P$ Gram/doubling 显式控制左右 infinite tail，并分别检查 phase/scale 与
-   coarse/fine resolution；
+2. 从 I2 的 frozen QZ/Rayleigh state 形成共享 wall Dirichlet traces，用 finite trigonometric
+   density 与数学上精确的 rectangular Dirichlet Green kernel 定义分片 trial；
+3. 用数学上的 continuous radial collar 修复 circle value jump，把 wall/circle normal jumps 与
+   collar volume source 组成 continuous weak-residual indicator candidate；
+4. 以 full-$P$ Gram/doubling 显式控制左右 infinite tail，并分别检查 phase/scale、wall/circle
+   refinement 和数值 enclosure；
 5. 若可靠 residual interval 完全位于当前连续算子的 projected essential gap，则先得到区间内
    至少存在一个连续离散特征值；只有区间宽度不超过看结果前冻结的频率分辨率，才接受为
    第一层分辨率级结论；
 6. I3.2 再用独立 reference 检查这个冻结指标是否跟踪误差；若未来确需指定某个 mode，才
    另做唯一目标识别，I3.3 再研究严格误差上界。
 
-当前主线是 conforming weak residual：从真实 incoming 的 BIE safe-field data 构造 Q1
-companion 和 global RT0 flux，再用无未知常数的 functional majorant 计算 $V'$ residual
-candidate。现行 [[research/projects/eig-apost/implementation/i3/design-3-1d|V3 design]] 给出
-对象与实现合同；V2 wall-trace Q1--RT0 和此前的强残量 BIE reconstruction 作为历史负向路线
-保留在
+当前主线是纯 BIE conforming weak residual：shared wall traces、finite-density exact-kernel
+trial、value-only circle collar 与 boundary dual weights 直接给出 residual indicator candidate，
+无需 Q1/RT0 体网格。现行
+[[research/projects/eig-apost/implementation/i3/design-3-1e|pure-BIE design]] 给出对象与实现
+合同；V2 wall-trace Q1--RT0、V3 BIE-collar Q1--RT0 和此前的强残量 reconstruction 都作为
+历史负向路线保留在
 [[research/projects/eig-apost/phase3-analysis/s-lead-field|Global lead-aware conforming trial]]
 及其 post-run review 中。
 
@@ -89,14 +90,25 @@ safe circle/wall evaluation 均通过；程序在 coarse lead 的 composite RT0-
 不称 $H(\mathrm{div})$ 理论失败。RT0 flux、majorant、tail、indicator 与 interval 均未形成；
 详见 [[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]。
 
+纯 BIE 正式 `pbie-a2` 已首次形成可计算 indicator candidate。三个 residual components 的
+triangle sum 为 $2.4605912515933872\times10^{-10}$，field lower candidate 为
+$2.2269063318145634$，故 $q=1.1049370224693775\times10^{-10}$；名义 $k$ 区间宽度为
+$4.0501912934587381\times10^{-10}$。但 wall $256\to512$ change 为 $0.2302$，nonzero-mode
+$T$ oracle 最大误差为 $1.4439$，circle outside-$M$ share 为 $0.5147$。这三项内部资格问题使
+estimator 尚不能冻结并交给 I3.2 独立验证。512 点 continuity/$H^1$ 和全部 outward reliability
+flags 也未认证，但它们属于 I3.3 的 reliable interval 与存在性问题。当前 verdict 是
+`PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`，不是 reliable interval 或存在性结论；详见
+[[research/projects/eig-apost/implementation/i3/review-3-1e|review-3-1e]]。
+
 ## 阅读顺序
 
 1. [[research/projects/eig-apost/phase3-analysis/s-estimator|Continuous residual estimator theory]]：
    连续弱残量、谱距离命题、gap 内存在性、预注册分辨率与可选唯一目标识别；
-2. [[research/projects/eig-apost/implementation/i3/design-3-1b|Q1--RT0 weak-residual V2 design]]：
-   当前从 frozen wall traces 到全局 $H^1$ trial、$H(\operatorname{div})$ flux 与 functional
-   majorant 的主线；[[research/projects/eig-apost/phase3-analysis/s-lead-field|旧 lead-aware
-   strong-residual theory]] 只保留 V1 历史解释；
+2. [[research/projects/eig-apost/implementation/i3/design-3-1e|Pure-BIE boundary-residual design]]
+   与 [[research/projects/eig-apost/implementation/i3/review-3-1e|post-run review]]：当前从 shared
+   wall traces 到 mathematical exact-kernel trial、ordinary-double indicator 与 outward-enclosure
+   blocker；[[research/projects/eig-apost/phase3-analysis/s-lead-field|旧 lead-aware strong-residual
+   theory]] 只保留历史解释；
 3. [[research/projects/eig-apost/phase3-analysis/s-dtn-chain|Exact/numerical DtN boundary]]：
    exact half-guide theory、finite QZ/BIE 的适用边界和后备 weak-residual 路线；
 4. [[research/projects/eig-apost/phase3-analysis/s-root|Existence and target identification]]：
@@ -135,10 +147,12 @@ safe circle/wall evaluation 均通过；程序在 coarse lead 的 composite RT0-
 - 已完成 BIE-collar V3：[[research/projects/eig-apost/implementation/i3/design-3-1d|design]] 的
   `bie-a3` 在 composite RT0-majorant quadrature/assembly 首败；独立结论见
   [[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]；
-- 当前最近的数值 blocker：先把材料圆 majorant assembly 改成可审计、保持正性的对象；关闭后
-  仍须通过 $H(\mathrm{div})$、tail、mesh 与 absolute interval-width 门；
-- 未闭合：普通 quadrature 的 reliable enclosure；当前 sharp-disk continuous projected gap；
+- 当前 I3.2 handoff blocker：actual $T$ difference-block/oracle、wall refinement $23.0\%$ 与
+  outside-$M$ share $51.5\%$ 三项内部资格尚未闭合，estimator specification 还不能冻结；
+- 当前 I3.3 blocker：512 trace/collar、residual/field/tail 的 outward numerical enclosure，以及
+  sharp-disk continuous projected gap 和预注册宽度条件尚未闭合；
 - 第一层目标：可靠区间进入 projected gap，且其正频率宽度不超过预注册分辨率；
 - 第二层可选升级：只有确需命名某个 mode 时才证明唯一目标身份；
-- I3.1 当前状态：`ACTIVE / FOUR VALID NEGATIVE EXPERIMENTS / NO ESTIMATOR`；
-- I3.2：尚不可开始；须先得到有用分辨率的冻结 estimator candidate。
+- I3.1 当前状态：`ACTIVE / NUMERICALLY_UNQUALIFIED INDICATOR CANDIDATE`；
+- I3.2：尚不可开始；只须先闭合上述三项内部资格并冻结 estimator，outward enclosure 与 gap
+  不作为其前置条件。

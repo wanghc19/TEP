@@ -34,8 +34,9 @@ e_h^*=|k_*-\widehat k_h|.
 $$
 
 本阶段不把有限维矩阵的精确零点、层间漂移、矩阵残差或某个修正公式本身当成最终成果。
-这些量只有在能够帮助估计上述连续谱误差时才进入主线。I3.1 已完成四个正式负向实验；后续
-estimator、independent reference 与严格上界仍须分别设计和审查。
+这些量只有在能够帮助估计上述连续谱误差时才进入主线。I3.1 已完成四个正式负向实验，并由
+纯 BIE 边界残量路线首次形成一个可计算但 `NUMERICALLY_UNQUALIFIED` 的 indicator candidate；
+qualified estimator、independent reference 与严格上界仍须分别建立和审查。
 
 长期对象门如下：每个新增主线对象和 hard gate 都必须写出它如何进入第一层集合距离或可选
 target-specific error 的估计链；若它
@@ -47,7 +48,7 @@ I3 由三个正式里程碑组成。三个是科学问题决定的数量，不�
 
 | Milestone | 独立科学问题 | 核心输出 | 当前状态 |
 |---|---|---|---|
-| I3.1 | 能否从实际计算量构造并内部论证一个与 continuous gap-spectrum distance 有关的可计算指标？ | 冻结的 $\eta_h$、适用假设、覆盖/忽略的误差及内部检查结果 | `ACTIVE / FOUR VALID NEGATIVE EXPERIMENTS / NO ESTIMATOR` |
+| I3.1 | 能否从实际计算量构造并内部论证一个与 continuous gap-spectrum distance 有关的可计算指标？ | 冻结的 $\eta_h$、适用假设、覆盖/忽略的误差及内部检查结果 | `ACTIVE / NUMERICALLY_UNQUALIFIED INDICATOR CANDIDATE / I3.2 NOT READY` |
 | I3.2 | 冻结后的 $\eta_h$ 能否在未参与其构造的独立 reference 上跟踪真实误差的量级？ | independent-reference comparison 与 empirical estimator verdict | `NOT STARTED` |
 | I3.3 | 能否在没有未知常数的条件下把已经验证的估计升级为可计算上界？ | $U_h$ 或 `UPPER_BOUND_UNAVAILABLE` | `NOT STARTED` |
 
@@ -165,6 +166,22 @@ RT0-majorant quadrature/assembly 未资格化，不能称为 $H(\mathrm{div})$ �
 majorant 分量、full-$P$ tail、normalized indicator 和 prediction interval 均未形成。独立结论见
 [[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]。I3.1 继续为
 `ACTIVE / NO ESTIMATOR`，I3.2 不可开始。
+
+现行纯 BIE 路线
+[[research/projects/eig-apost/implementation/i3/design-3-1e|design-3-1e]] 随后取消 Q1/RT0
+体网格：共享 wall Dirichlet traces 驱动 finite-density exact rectangular-Green trial，数学上的
+continuous radial collar 修复 circle value jump，wall/circle/collar residual 通过 full-$P$ tails
+形成归一化指标。`pbie-a1` 是 warning schema 的 implementation failure；只作 typed-empty 修复的
+正式 `pbie-a2` 已完成。普通双精度结果为 $q=1.1049370224693775\times10^{-10}$，名义 $k$
+区间为 $[1.8327702889056474,1.8327702893106665]$，宽度
+$4.0501912934587381\times10^{-10}$。但 wall $256\to512$ change 为 $0.2302$，nonzero-mode
+$T$ manufactured oracle 最大误差为 $1.4439$，circle outside-$M$ share 为 $0.5147$。这三项
+内部资格问题尚未闭合，所以 estimator 还不能冻结后交给 I3.2 独立验证。512 点 continuity/H1、
+residual/field/tail outward bounds 与 projected gap 也均未认证；这些属于 I3.3 的 reliable
+interval 与存在性问题。独立 verdict 为
+`PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`，见
+[[research/projects/eig-apost/implementation/i3/review-3-1e|review-3-1e]]。I3.1 因此已有
+可计算 indicator candidate，但尚无经过内部资格并冻结的 estimator，I3.2 仍不可开始。
 
 ## I3.1：构造并内部论证可计算的误差指标
 
@@ -371,9 +388,16 @@ $$
    负结果由
    [[research/projects/eig-apost/implementation/i3/review-3-1b|independent post-run review]] 与
    [[test/i3/g-resid/README|experiment index]] 承载；
-7. [[research/projects/eig-apost/implementation/ROADMAP|implementation roadmap]]：项目级顺序。
+7. [[research/projects/eig-apost/implementation/i3/design-3-1e|I3.1 pure-BIE design]]、
+   [[research/projects/eig-apost/implementation/i3/review-3-1e|independent post-run review]] 与
+   [[test/i3/p-resid/README|experiment index]]：当前可计算 indicator、三个资格 warnings 与
+   分别属于 I3.2 handoff 和 I3.3 reliable-interval 研究的未闭合条件；
+8. [[research/projects/eig-apost/implementation/ROADMAP|implementation roadmap]]：项目级顺序。
 
-I3.2 的正式独立验证必须在一个具有足够分辨率的 I3.1 estimator specification 单独冻结后才能
+I3.2 的正式独立验证必须在一个经过内部资格的 I3.1 estimator specification 单独冻结后才能
 设计和运行；I3.1 自身需要的重构、简化问题或内部一致性检查仍属于 I3.1。`center-a1`、
 `lead-a3` 和 `weak-a1` 都不满足 I3.2 移交条件。任何后续算法、离散参数、reference、阈值和
-运行命令都须另行冻结；当前结果不自动授权下一 attempt。
+运行命令都须另行冻结；`pbie-a2` 虽已形成窄名义区间，但实际 $T$ difference-block/oracle、
+wall refinement 与 outside-$M$ 三项内部资格尚未闭合，因此不能移交 I3.2。reliable
+enclosure、projected gap 和宽度门留给 I3.3，不是 I3.2 的前置条件。当前结果不自动授权下一
+attempt。

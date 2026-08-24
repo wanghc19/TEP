@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-当前新路线处于 `I3_1_ACTIVE / THREE_VALID_NEGATIVE_EXPERIMENTS / NO_ESTIMATOR`；其输入阶段 I2 已以
+当前新路线处于 `I3_1_ACTIVE / NUMERICALLY_UNQUALIFIED_INDICATOR_CANDIDATE / I3_2_NOT_READY`；其输入阶段 I2 已以
 `I2_3_PASS_WITH_CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` 收口。精确
 half-guide DtN 由半无限边值问题定义，连续中心算子 $\mathcal F(k)$ 在任何
 BIE/Fourier 截断和 ordered QZ 之前定义真实谱对象。现行数学权威是
@@ -63,6 +63,16 @@ majorant。正式 `bie-a3` 通过 finite input、branch/Wood、propagation、den
 `HDIV_FLUX_UNRESOLVED`；独立复核将其限定为含 polar disk correction 的 quadrature/assembly
 对象未资格化，而非 $H(\mathrm{div})$ 理论失败。没有形成 majorant、tail、indicator 或区间；
 详见 [[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]。
+纯 BIE [[research/projects/eig-apost/implementation/i3/design-3-1e|design-3-1e]] 随后避开 Q1/RT0，
+以 shared wall traces、finite-density exact rectangular-Green trial、value-only circle collar 和
+full-$P$ boundary Grams 直接计算 weak-residual indicator。`pbie-a1` 是 typed-warning schema 的
+implementation failure；正式 `pbie-a2` 得到 $q=1.1049370224693775\times10^{-10}$ 及宽度
+$4.0501912934587381\times10^{-10}$ 的普通双精度名义区间。wall refinement $0.2302$、nonzero-mode
+$T$ oracle 最大误差 $1.4439$ 和 outside-$M$ share $0.5147$ 使 verdict 只能为
+`PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`。当前已有可计算 indicator candidate，但
+wall/T/outside-$M$ 三项内部资格仍阻止冻结 estimator 并进入 I3.2；outward enclosure 与
+continuous projected gap 另属 I3.3 的可靠区间和存在性问题。详见
+[[research/projects/eig-apost/implementation/i3/review-3-1e|review-3-1e]]。
 finite one-step root correction 仍为
 OPTIONAL。第一层只要求可靠区间进入
 current continuous projected gap，并通过
@@ -102,7 +112,11 @@ implementation/
 │   ├── review-3-1.md
 │   ├── design-3-1b.md
 │   ├── review-3-1b.md
-│   └── review-3-1c.md
+│   ├── review-3-1c.md
+│   ├── design-3-1d.md
+│   ├── review-3-1d.md
+│   ├── design-3-1e.md
+│   └── review-3-1e.md
 └── archive/
     └── legacy-route-v1/
         ├── README.md
@@ -123,7 +137,9 @@ implementation/
   independent truth comparison 和上界可行性的目标、输入与预期输出；中心空列强残量
   baseline 分辨率不足，lead-aware reconstruction 在 BIE-informed fit 首败，Q1--RT0 V2 又在
   phase/scale Gram qualification 首败；BIE-collar V3 随后在含材料圆修正的 RT0-majorant
-  pre-factor 首败。I3.1 仍在活动，尚无 estimator，I3.2 不可开始。
+  pre-factor 首败；纯 BIE `pbie-a2` 随后形成可计算但 `NUMERICALLY_UNQUALIFIED` 的 indicator
+  candidate。I3.1 仍在活动；三项内部资格未闭合，因此 I3.2 不可开始。可靠 enclosure 留给
+  I3.3，不是 I3.2 前置条件。
 - [[research/projects/eig-apost/implementation/ROADMAP|ROADMAP.md]]：只维护新路线 I1--I3
   的项目级依赖和退出条件。
 - [[research/projects/eig-apost/implementation/SYMBOL|SYMBOL.md]]：集中说明跨阶段缩写、
@@ -136,7 +152,7 @@ implementation/
 - [[test/README|current test index]]：记录新路线 I1.2--I3.1 实验状态；当前实验位于
   `test/i1/hg-adef/`、`test/i1/k-scan/`、`test/i1/k-ready/`、`test/i2/k-count/` 和
   `test/i2/h-inertia/`、`test/i2/k-drift/`、`test/i2/m-drift/`、`test/i3/s-resid/` 与
-  `test/i3/g-resid/`、`test/i3/w-resid/`。旧实验统一由
+  `test/i3/g-resid/`、`test/i3/w-resid/`、`test/i3/b-resid/` 与 `test/i3/p-resid/`。旧实验统一由
   [[test/archive/legacy-route-v1/README|legacy experiment index]] 保存。
 
 ## 阶段文档规则
@@ -183,8 +199,9 @@ I1--I4 文档、实验 ID 或冻结 verdict。
    [[test/i2/m-drift/README|I2.3 M-axis experiment index]]。
 5. [[research/projects/eig-apost/implementation/i3/README|I3 guide]]：确认 candidate、error
    estimate、independent truth 和 upper-bound claim ladder；再读
-   [[research/projects/eig-apost/implementation/i3/review-3-1b|lead-aware post-run review]] 与
-   [[test/i3/g-resid/README|lead-aware experiment index]]，确认当前 reconstruction 首败。
+   [[research/projects/eig-apost/implementation/i3/review-3-1e|pure-BIE post-run review]] 与
+   [[test/i3/p-resid/README|pure-BIE experiment index]]，确认当前 indicator 数值、warnings 与
+   reliable-enclosure blocker。
 6. [[research/projects/eig-apost/implementation/i1/design|discrete A-def design]]：阅读当前
    离散空间、QZ/graph/DtN 链和组装合同。
 7. [[research/projects/eig-apost/implementation/i1/review|current I1 review]]：核对审查结论

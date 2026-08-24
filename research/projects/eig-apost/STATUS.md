@@ -1,8 +1,28 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-08-22。
+更新日期：2026-08-24。
 
 ## 当前状态
+
+- **2026-08-24 I3.1 纯 BIE 边界残量 indicator candidate：**
+  [[research/projects/eig-apost/implementation/i3/design-3-1e|design-3-1e]] 使用 shared wall
+  Dirichlet traces、finite-density exact rectangular-Green trial、value-only circle collar 和
+  full-$P$ boundary Grams，避免 Q1/RT0 体网格。`pbie-a1` 已完成 finite-density boundary
+  action，但在记录第一个 warning 时因 fieldless struct schema 以
+  `MATLAB:heterogeneousStrucAssignment` 停止；这是 implementation failure。Revision A 只统一
+  typed warning schema，科学公式、参数与阈值不变。正式 `pbie-a2` 随后得到 residual triangle
+  sum $2.4605912515933872\times10^{-10}$、field lower candidate $2.2269063318145634$、
+  $q=1.1049370224693775\times10^{-10}$，以及名义 $k$ 区间
+  $[1.8327702889056474,1.8327702893106665]$；宽度
+  $4.0501912934587381\times10^{-10}$。三个 nonblocking warnings 是 wall $256\to512$ change
+  $0.23020558465752644$、nonzero-mode $T$ oracle 最大误差 $1.4438757363102721$ 与 outside-$M$
+  share $0.51468601513057144$。数学 exact-kernel/collar 对象已定义，但 512 点 continuity/$H^1$、
+  residual/field/tail outward enclosure、projected gap 和全部 reliability flags 都未闭合。用时
+  $117.91992858333333$ s，peak $242.98618412017822$ MiB，无 retry。独立 verdict 为
+  `PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`；见
+  [[research/projects/eig-apost/implementation/i3/review-3-1e|review-3-1e]]。I3.1 当前为
+  `ACTIVE / INDICATOR CANDIDATE / I3.2 NOT READY`；不得把名义区间解释成连续离散特征值存在性、
+  唯一 mode、误差上界或 I3.2 independent reference。
 
 - **2026-08-22 I3.1 BIE-collar 弱残量 V3 正式负结果：**
   [[research/projects/eig-apost/implementation/i3/design-3-1d|design-3-1d]] 已获 Researcher
@@ -21,8 +41,8 @@
   indicator 和 prediction interval 均未形成。用时 $379.523247125$ s，peak active-object
   memory $89.6576280594$ MiB，无 retry。独立 verdict 为
   `POST-RUN PASS / VALID NEGATIVE / REVISE BEFORE CONTINUATION`；详见
-  [[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]。I3.1 仍为
-  `ACTIVE / NO ESTIMATOR`，I3.2 不可开始。
+  [[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]。该 attempt 没有
+  estimator；当前 I3.1 状态已由上方 `pbie-a2` 结果更新，I3.2 仍不可开始。
 
 - **2026-08-21 I3.1 Q1--RT0 弱残量正式负结果：**正式 `weak-a1` 固定
   $\widehat k_h=1.832770289108157$、$n_{\mathrm{tot}}=256$、$M=48$、两层 Q1 网格和全部
@@ -58,9 +78,10 @@
   处构造了属于 continuous strong-operator domain 的中心空列紧支撑场，得到场范数
   $0.840017038309255$、强残量范数 $18.848991951433035$ 和 computed ratio
   $22.43882099031153$。积分加密稳定，但固定单胞 cutoff 导数项主导，名义区间跨过零；正式
-  当前解释为 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`。普通积分尚非可靠 enclosure，
-  sharp-disk projected-gap contract 也未建立，故没有连续离散特征值存在性结论，I3.2 尚不可
-  开始。后续全波导 BIE-informed Fourier--Hermite/bubble trial 已于 2026-08-16 正式运行并在
+  当前解释为 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`，因此它不能冻结为 I3.2 estimator。
+  普通积分尚非可靠 enclosure，sharp-disk projected-gap contract 也未建立，故没有 I3.3
+  连续离散特征值存在性或上界结论；这两项不是 I3.2 前置条件。后续全波导 BIE-informed
+  Fourier--Hermite/bubble trial 已于 2026-08-16 正式运行并在
   reconstruction fit 首败；见上一条。continuous weak residual 保留为后备。
 
 - **2026-08-14 I2.3 Rayleigh/Fourier cutoff 单轴：**正式 `m-drift-a2` 固定
@@ -251,14 +272,16 @@
   将 $M_{\mathrm{trace}}=48$ 的最坏误差和 omitted energy 分别压到
   $7.08\times10^{-12}$ 与 $5.00\times10^{-13}$。OP-I4-1h 与 OP-I4-6 因而在当前制造
   密度、实数非 Wood 参数和有限 $M_{\mathrm{ref}}=96$ 意义下关闭。
-- 状态：`active investigation -- I3.1 four valid negative experiments; no estimator`。
+- 状态：`active investigation -- I3.1 numerically unqualified indicator candidate`。
   `ntot` 与 $M$ 两条三层单轴实验的 saved candidate 均完全相同且 `SAME_MODE`；I3.1 已开始
   saved-candidate continuous residual 研究。中心空列 strong-residual baseline 已完成，但 ratio
   $22.43882099031153$ 由固定单胞 cutoff 主导，分辨率不足；全波导 BIE-informed smooth
   trial 又在 fixed holdout fit 首败；Q1--RT0 V2 随后在 fine phase/scale Gram qualification
-  首败；BIE-collar V3 再在 coarse lead composite RT0-majorant assembly 首败，仍未形成 estimator。
-  第一层不要求唯一 mode，但 reliable enclosure、current-model projected gap 与
-  absolute/gap-relative resolution 仍是相应存在性结论的门。该状态不表示 sub-grid
+  首败；BIE-collar V3 再在 coarse lead composite RT0-majorant assembly 首败。纯 BIE
+  `pbie-a2` 已形成可计算 $q$ 与窄名义区间，但 wall/T/outside-$M$ 三项内部资格 warnings
+  阻止冻结 estimator 并进入 I3.2。全 false reliability/enclosure flags、current-model projected
+  gap 与 absolute/gap-relative resolution 则是 I3.3 相应存在性和上界结论的门，不是 I3.2
+  前置条件。第一层不要求唯一 mode。该状态不表示 sub-grid
   minimizer、finite root 或连续真值零漂移，也不构成收敛证据。
 - 历史阶段门（均不构成当前实现授权）：manufactured root/correction pipeline 曾为窄范围
   `GO`，finite-tail Half-guide map 曾为 Stage 1 `GO`，Augmented BIE 曾为
@@ -292,7 +315,7 @@
 | Current I1.3 real-$k$ continuity, candidate reconnaissance and bounded zoom | `I1_3_PASS_WITH_CONDITIONS / M48_DISCRETE_NESTED_GRID_CANDIDATE` | $M=48$ count/QZ/chart/subspace-coarse/fine continuity；中心差分二阶收敛；$M=12\to24\to48$ 分层筛查；v2 在 15 层、33 点、167 门全通过后得到 $k=1.8327703475952146$、$q=8.32009\times10^{-8}$，最终宽度 $7.6294\times10^{-7}$ | 固定 $M=48$ 不是 trace convergence；FD mutation 未过 $10^{-12}$，production derivative 不可用 |
 | Current I1.4 sampled complex-$k$ readiness | `I1_4_PASS_WITH_CONDITIONS / SAMPLED_FIXED_M_DISCRETE_ROOT_READINESS`; empirical I2 isolation ready | $r_0=3.8147\times10^{-7}$ disk；anchored branch/frame/chart/rank；82/820/164/164 node/factor/branch/QZ rows、8 closure、36 CR、6 CR-negative rows；V5 identifiable assembly-order closure | 未运行 locator/contour/root；固定 $M=48$ 不是 trace convergence；无 production separation、unsampled-pole theorem 或 $A_{\mathrm{def}}'$；对称 physical transmission labels 不可动态辨识 |
 | Current I2.1 factor-aware root count / I2.2 endpoint sign count | I2.1 `PASS WITH CONDITIONS`; I2.2 `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP` | I2.1 32/64 主 winding 均为 one；I2.2 的 raw $H$ strict-inertia 路线保留历史 STOP，但当前 $H_{\mathrm{sym}}$ 两端 counts 为 $(194,0,0)$ 与 $(193,1,0)$，$50/100/200$ bands 稳定 | 该 difference 只作 numerical corroboration；raw-$H$ inertia 仍 unavailable，尚无实根、root 坐标、连续 eigenvalue 或 estimator |
-| Current I2.3 cross-discretization drift | `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` | `ntot=160,208,256` 与固定 $n_{\mathrm{tot}}=160$ 的 $M=32,40,48$ 两条单轴实验均返回完全相同的三层 saved candidate；最低 raw diagnostics、gauge/repeat 与相邻 `SAME_MODE` 门通过 | terminal half-width 只作 sub-grid minimizer 搜索分辨率；不证明 minimizer/root 零漂移、收敛或误差界。I3.1 的 center、lead-aware、Q1--RT0 与 BIE-collar 四项均为有效负结果，尚无 estimator |
+| Current I2.3 cross-discretization drift | `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` | `ntot=160,208,256` 与固定 $n_{\mathrm{tot}}=160$ 的 $M=32,40,48$ 两条单轴实验均返回完全相同的三层 saved candidate；最低 raw diagnostics、gauge/repeat 与相邻 `SAME_MODE` 门通过 | terminal half-width 只作 sub-grid minimizer 搜索分辨率；不证明 minimizer/root 零漂移、收敛或误差界。I3.1 当前已有纯 BIE `NUMERICALLY_UNQUALIFIED` indicator candidate，但尚无 reliable enclosure |
 
 实现权威入口为
 [[research/projects/eig-apost/implementation/archive/legacy-route-v1/i0-manufactured/design|manufactured NEP design]]、
