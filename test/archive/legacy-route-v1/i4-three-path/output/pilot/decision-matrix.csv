@@ -1,0 +1,4 @@
+"stage","classification","status","pass","note"
+"pilot","IMPORTANT CAVEAT","PILOT_TIMING_ONLY",1.0000000000000000e+00,"Use the estimate before any full SLP-D wall evaluation."
+"pilot_triangle_observation","IMPORTANT CAVEAT","TIMING_ONLY_TRIANGLE_OBSERVATION",0.0000000000000000e+00,"E-P=4.692e-08, E-R=1.346e-16, P-R=4.692e-08; E-R closes while base P differs, but pilot resolution cannot certify a path."
+"SLP-N/DLP-D/DLP-N","IMPORTANT CAVEAT","NOT_RUN_PREREQUISITE",0.0000000000000000e+00,"Derivative layers remain stopped."

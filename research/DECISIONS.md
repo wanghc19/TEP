@@ -2,6 +2,25 @@
 
 这里只记录能由现有文件支持的研究决定。`Revisitable` 表示将来可在新证明或新证据下重新审议。
 
+## 2026-08-11 阶段：eig-apost 恢复 continuous DtN/BIE 主层级并暂停 I4 数值
+
+- **决定：** 精确 half-guide DtN 只由半无限边值问题定义；physical center variational
+  pencil $\mathcal F(k)$ 在 BIE representation、Fourier truncation、ordered QZ、doubling
+  和矩阵之前定义真实 guided eigenvalue。continuous BIE 只作待证明的等价 realization，
+  ordered QZ 只作 discrete deflating-subspace 计算。
+- **旧路线：** “有限多个 cells + 远端闭合 + doubling”的完整方法归档为
+  `research/projects/eig-apost/phase4-report/legacy-tail.tex`。它以后只作 same-cell
+  cross-check、reference sequence 或 tail diagnostic，不定义主问题或主 estimator。
+- **误差路线：** 不再要求 finite-rank Fourier lift 在完整
+  $H^{1/2}\to H^{-1/2}$ operator norm 下逼近一阶非紧 DtN。当前候选是 projected
+  consistency + eigentrace regularity、principal-part subtraction + compact remainder，
+  或 regular Galerkin/graph convergence。相邻层差默认只称 next-level correction。
+- **行动边界：** I4 数值工作暂停；OP-M0-1--OP-M0-4 关闭前不得组装
+  $A_{\mathrm{def}}$，不得运行 DtN wall、locator、complex disk 或 root isolation。
+- **证据：** `research/projects/eig-apost/phase4-report/method.tex`；项目 `STATUS.md`、
+  implementation `README.md` 和 `open-problems.md`；Researcher/Skeptic 方法审查。
+- **状态：** Active method reconstruction；Phase 1--2 历史文件保持原文。
+
 ## 2026-07-13 阶段：DtN 只作为独立可行性路线
 
 - **决定：** 直接半波导 DtN 暂不替换当前主线的出射 Cauchy 关系。若恢复原型工作，优先采用保留中心未知量 $(\eta,\xi)$、只替换端口行的 Scheme A；局部胞元 Riccati/QZ 是主要研究路线，scattering-to-DtN 只作诊断。
@@ -193,3 +212,62 @@
   `research/projects/eig-apost/phase2b-novelty/r-sources.md`。
 - **状态：** Revisitable；若补充全文覆盖 C1--C5，或候选量不能超越 convergence
   indicator，应改为 `REVISE` 或 `STOP`。
+
+## 2026-08-07 协作政策：Skeptic 按工程目标分级并集中维护 open problems
+
+- **决定：** `eig-apost` 当前以得到可运行、可复现、在真实案例上可检验的 empirical
+  estimator 和偏工程论文为目标。Skeptic 必须把问题分为 `BLOCKER`、
+  `IMPORTANT CAVEAT`、`MINOR CAVEAT`；只有未解决的 blocker 可以停止阶段。
+- **审查深度：** 不因问题具有数学趣味就展开旁支。只有当问题会改变当前验收门、使
+  结果不可解释或阻止下一项必要计算时才继续调查；能用廉价 numerical sanity check
+  充分约束时，优先做该检查而不是开启理论研究。
+- **记录方式：** 每个 stage review 末尾只保留 handoff 链接，未解决事项集中写入
+  [[research/projects/eig-apost/implementation/open-problems|open-problem ledger]]，并记录
+  category、blocking scope、cheapest next check 和 status，避免 review 之间重复清单漂移。
+- **影响：** continuous proof、certification 和广泛参数稳健性仍可作为 caveat 或未来
+  工作；除非当前 claim 明确依赖，它们不再自动阻止工程 estimator pipeline。
+- **证据：** 用户对论文定位和 Skeptic 行为的明确修订；`research/AGENTS.md`；
+  `.codex/agents/skeptic.toml`。
+- **状态：** 当前协作规则；若未来目标改为 theorem-level 或 certified paper，应重新
+  校准 blocker 定义。
+
+## 2026-08-08 阶段：I4 改用相同周期端与 Fliss 缺列模型
+
+- **决定：** I4 不再以左右 half-guide 介质柱形状不同的双椭圆配置作为主真实案例，
+  改为左右完全相同的二维完美周期介质，并把中心一整列替换为背景介质。主正对照采用
+  Fliss (2013) 的 period-one 光滑 Gaussian 系数和 missing-column geometry；只在
+  `test/i4-fliss-2013/` 实现新的实验代码。
+- **模型分层：** Fliss 光滑 profile 由独立的稀疏离散 Track A 复现。现有 BIE 只能处理
+  分片常数界面，因此半径 $0.2$、折射率 $\sqrt{17}$ 的圆柱只作为单独标记的 Track B
+  sharp-disk surrogate；不得把 Track B 的结果称为 Fliss 复现或用于论文值的误差门。
+- **谱域：** 固定 $\beta$ 后，projected gap 由完美周期背景的离散 Floquet--Bloch bands
+  计算；所有数值结果写成 $\sigma_{\mathrm{ess}}^h(\beta)$，并通过空间、Bloch 网格和
+  局部带边加密给出经验 edge uncertainty。Fliss 对称胞元使 classical half-guide DtN
+  的额外 Dirichlet 例外点不作为该正对照的主障碍。
+- **I4 边界：** 本轮先寻找可信 projected gap 和 center-localized 特征值候选，再决定是否
+  启动 complex-$k$ analytic chart 与 root isolation。实轴 $\sigma_{\min}$ dip 仍只是
+  locator；未通过 contour/root qualification 前不得称为特征值或 estimator。
+- **证据：** 用户明确更改当前实验模型；Fliss (2013) Sections 3--5；
+  `research/projects/eig-apost/phase4-report/output/pdf/method.pdf`；
+  [[research/projects/eig-apost/implementation/open-problems#I4|I4 ledger]]。
+- **状态：** Active replacement benchmark；旧双椭圆 I4 结果保留为历史负例，不再决定
+  新主模型是否存在候选。
+
+## 2026-08-08 阶段：Fliss FD 候选通过，BIE 停在投影子空间门
+
+- **决定：** 接受 exact smooth-profile Track A 的
+  `TRACK_A_PROJECTED_GAP_CONFIRMED / I4_FD_CANDIDATE_READY`，但不把该候选升级为
+  qualified root。sharp-disk Track B 因双向 pencil residual 与 reciprocal pairing 失败，
+  冻结为 `BIE_PROJECTIVE_SUBSPACE_BLOCKED`；不运行已实现的 legacy M4/M5 实轴 scan。
+- **理由：** N80/N120 targeted edge check 给出
+  $\varepsilon_{80,120}=7.91\times10^{-4}<10^{-3}$、safe gap
+  $(1.981350,5.386819)$ 和 candidate margin $1.479625$，与 N80 strip 的
+  $\lambda_h=3.460975044$、极小 tail drift 和中心局域性共同构成可信 FD 候选。另一方面，
+  BIE M5 虽恢复满秩且条件良好的两侧 traces，forward/reverse residual 仍为
+  $3.15\times10^{-6}/9.43\times10^{-4}$，pairing defect 为 $1.58\times10^{-5}$，不能用
+  trace normalization 或调宽阈值消除。
+- **下一步：** test-local 实现带 Rayleigh 物理尺度平衡的 projective ordered-QZ 或等价
+  deflating-subspace port bases，先通过单点与相邻 $k,M$ 的 subspace gates，再恢复实轴
+  locator。若最终案例坚持 exact Fliss Gaussian，另需 model-consistent infinite-domain
+  evaluator；不得把 sharp-disk root 迁移为 Gaussian root。
+- **状态：** Track A partial success；Track B blocker open；`PHYSICAL_ROOT_READY=STOP`。

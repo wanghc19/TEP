@@ -1,0 +1,10 @@
+gate,pass,status,note
+"G1_LOCATOR",0,"FAIL","strict 29-point interior dip and complete scan"
+"G2_FIXED_CHARTS",0,"FAIL","four seed-frozen proxy charts and refinement sensitivity"
+"G3_SAMPLED_DOMAIN",0,"FAIL","first complete nested sampled disk"
+"G4_BRANCH",0,"FAIL","anchored algebra and continuation fingerprints"
+"G5_FACTORS",0,"FAIL","all raw and interpretation factors available"
+"G6_FULL_F_CR",0,"FAIL","full augmented CR and derivative refinement"
+"G7_NEGATIVES",0,"FAIL","mandatory N1--N11 falsification matrix"
+"G8_ARTIFACT_BUNDLE",1,"PASS","all pre-marker artifacts present"
+"G9_REPRODUCIBILITY",1,"PASS","baseline/repeat exact-class reproduction"

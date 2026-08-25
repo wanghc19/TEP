@@ -1,0 +1,4 @@
+case,k,min_abs_gamma,robin_zeta,factor_rcond,primary_status,secondary_status,provenance,construct_S_called,qz_available,map_available,dtn_available,qz_comparison_available,map_value,dtn_value,qz_comparison_value,observed_failure_metric,pass
+B_WOOD,0.20000000000000001,5.2683560638617543e-09,NaN,NaN,WOOD_POINT,CELL_BIE_POLE_RISK,USER_SUPPLIED_PRIOR_SCREENING,0,0,0,0,0,NaN,NaN,NaN,5.2683560638617543e-09,1
+A_ROBIN_RESONANCE,NaN,NaN,1,0,TERMINAL_RESONANCE,DOWNSTREAM_UNAVAILABLE,PRESERVED_FIRST_SMOKE_AND_EXACT_ORACLE,0,0,0,0,0,NaN,NaN,NaN,0,1
+A0_CAYLEY_ORDER,NaN,NaN,NaN,NaN,REVERSED_CAYLEY_ORDER,DIRECT_TRACE_MISMATCH,DETERMINISTIC_NONCOMMUTING_ORACLE,0,0,0,0,0,NaN,NaN,NaN,0.17561551508508505,1

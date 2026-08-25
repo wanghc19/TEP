@@ -1,0 +1,3 @@
+"stage","classification","status","pass","note"
+"preflight","BLOCKER","MATLAB_PACKAGE_SLP_AUTHORITIES_VERIFIED",1,"Requires MATLAB lsqminnorm, exact package hashes, derivative authority, and certified p=0.2 SLP."
+"DLP-D pilot","BLOCKER","DLP_D_PILOT_CERTIFIED",1,"Gx/Gy point, four-axis self, FD/sign/parity/nonmirror, rank, and q duplicate gates."

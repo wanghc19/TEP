@@ -1,103 +1,125 @@
-<!-- Analysis section: distinction between a real-axis singular-value minimum and an NEP root -->
+# Saved candidate、gap 内存在性与唯一目标
 
-# Root qualification
+## 1. 必须分开的对象
 
-状态：Phase 3 风险审计；以下是 estimator 使用条件和数值协议，不是已证明结论。
+I3.1 同时涉及四个不同对象：
 
-## 1. Three objects must remain distinct
+1. $\widehat k_h$：I2 的固定算法实际保存的实数 candidate；
+2. $I_h^\lambda$：由可靠 continuous weak-residual bounds 构造的连续谱区间；
+3. $\lambda\in\sigma(A)$：residual 命题保证落在该区间中的某个连续谱点；
+4. $\lambda_*=k_*^2$：只有完成额外身份识别后才能命名的特定连续特征值真值。
 
-固定 $\beta$ 后，必须区分：
+score minimizer 和 finite determinant zero 不在这条主链中。I3.1 直接把
+$\mu_h=\widehat k_h^2$ 代入连续弱方程。
 
-1. 实轴 coarse scan 给出的 $\sigma_{\min}(F_j(k))$ 局部极小点；
-2. 近似 nonlinear operator $F_j(k)$ 的实际简单零点 $k_j$；
-3. 精确 half-guide DtN operator $F(k)$ 的目标零点 $k_*$。
+## 2. 第一层：projected gap 内至少存在一个离散特征值
 
-第 1 项只负责定位第 2 项。若 $\sigma_{\min}$ 在 `1e-3--1e-5` 形成平台，第 1 项完全可能
-不是第 2 项；此时不能把 simple-root perturbation formula 用在该点，也不能把平台高度
-解释成 $\lvert k_j-k_* \rvert$。
-
-## 2. Why the remote closure matters
-
-对 $N_j=2^j$ 个 cell 的 finite segment，直接令远端 incoming scattering amplitude 为零，
-等价于让有限段继续向一个人工外部介质辐射。这个 finite-level map 可以收敛到半无限
-periodic tail，但有限 $j$ 的中心耦合一般不是自伴有界 eigenproblem；其真正零点可能
-离开实轴。若仍只在实轴扫描，得到的通常只是一个 singular-value minimum。
-
-因此，首版实 $k$ estimator 采用结构保持的 finite-tail closure：远端施加齐次
-Dirichlet，或预先冻结的 real Robin condition。zero-incoming sequence 只用于
-half-guide map 交叉验证；若未来以它产生 eigenvalue sequence，则必须求复 $k$ 零点并
-把问题改写成 resonance-style validation，不能沿用首版实根协议。
-
-## 3. Dirichlet-terminated reflection maps
-
-令 $S_j$ 是 $N_j$-cell segment 的 scattering matrix，blocks 与
-[[research/projects/eig-apost/phase3-analysis/s-dtn-chain|DtN computation chain]] 相同。
-右端施加 $D^R=a^R+b^R=0$ 后，从中心右边界看到的 reflection map 是
+设 $A=A^*\ge0$ 是固定 Bloch 参数后的连续物理算子，并已针对当前 sharp-disk 模型证明
 
 $$
-  \widehat R_{+,j}^{D}
-  =R_{L,j}-T_{RL,j}(I+R_{R,j})^{-1}T_{LR,j}.
+G_\lambda=(g_-,g_+),
+\qquad 0<g_-<g_+,
+\qquad
+G_\lambda\cap\sigma_{\mathrm{ess}}(A)=\varnothing.
 $$
 
-左端施加 $D^L=a^L+b^L=0$ 后，从中心左边界看到的 reflection map 是
+这里的 projected gap 必须属于该连续算子的本质谱，而且 $g_-$ 与 $g_+$ 必须是已证明位于
+真实间隙内的 inner bounds；有限矩阵的 QZ separation、I2.1 的小圆盘 count 或其他材料
+profile 的 band gap 都不能代替。若可靠 residual interval 满足
 
 $$
-  \widehat R_{-,j}^{D}
-  =R_{R,j}-T_{LR,j}(I+R_{L,j})^{-1}T_{RL,j}.
+I_h^\lambda\subset G_\lambda,
 $$
 
-两式来自消去远端 amplitudes。实现时只解线性系统，不形成显式逆，并记录
-$I+R_{R,j}$、$I+R_{L,j}$ 的 reciprocal condition estimates。终端 Dirichlet
-resonance 或 termination-localized state 会表现为这些 factors 病态或根序列不稳定，
-必须作为 failure case 报告。
+则其中至少存在一个不属于本质谱的连续谱点，因而是孤立、有限重的离散特征值。这里采用
+Weyl/Fredholm essential-spectrum 约定。Fliss (2013), Proposition 3.3（本地原文 PDF p. 8）
+对 fixed-$\beta$ 波导给出同一 gap 内离散谱结论；当前项目仍须逐项核对 sharp-disk coefficient、
+Bloch 参数和尺度映射，见 [[ref/ref_data/Fliss2013.pdf|Fliss2013 original]]。projected gap 只排除
+本质谱，不排除同一区间内有多个离散特征值。
 
-独立静态核对使用 `4 x 4` 随机复 scattering blocks，分别直接解远端 Dirichlet
-constraint 和使用上述两个 reduced maps；右、左 map differences 为 `6.397e-17`、
-`6.728e-17`，对应 Dirichlet constraint residuals 为 `6.974e-17`、`6.547e-17`。
-该检查只确认矩阵消元，不确认物理 self-adjointness 或 MATLAB block convention。
-
-在当前中心域向外法向约定下，令 $\widehat R$ 代表相应一侧的 terminated reflection，
-则
+若 $I_h^\lambda=[L_h,U_h]\subset(0,\infty)$，定义
 
 $$
-  \Lambda_{±,j}^{D}
-  =\mathrm{i}\,\Gamma(I-\widehat R_{±,j}^{D})
-   (I+\widehat R_{±,j}^{D})^{-1}.
+I_h^k=[\sqrt{L_h},\sqrt{U_h}],
+\qquad
+G_k=(\sqrt{g_-},\sqrt{g_+}).
 $$
 
-这个 Cayley transform 还需要 $I+\widehat R$ 可逆。对实 $k$、真实材料和 projected
-gap，连续 finite-domain DtN 应具有相应的 self-adjoint symmetry；离散检查必须使用
-与 port basis 一致的 trace mass/flux pairing，不能只看未缩放矩阵是否逐元素 Hermitian。
+若记 gap 内正离散特征频率集合为
+$\mathcal K_{\mathrm{disc}}(A;G_\lambda)$，则可靠区间同时给出
 
-## 4. How $k_j$ is qualified
+$$
+\operatorname{dist}\bigl(
+\widehat k_h,\mathcal K_{\mathrm{disc}}(A;G_\lambda)
+\bigr)
+\le
+\max\{\widehat k_h-\sqrt{L_h},
+       \sqrt{U_h}-\widehat k_h\}.
+$$
 
-coarse scan 后，首版采用局部 nonlinear singularity solve，而不是继续无限加密实轴
-grid。候选 $k_j$ 至少通过：
+这仍是到集合中某个谱点的上界，不是到指定 $k_*$ 的上界。
 
-1. relative singular residual
-   $\rho_j=\sigma_{\min}(F_j(k_j))/\lVert F_j(k_j) \rVert$ 到达预设线性代数容差；
-2. projected Newton defect
+在正式计算前必须独立预注册可接受频率分辨率 $\tau_k^{\mathrm{pre}}$。第一层可信结果还要求
 
-   $$
-     \nu_j=
-     \left|
-       \frac{y_j^*F_j(k_j)x_j}{y_j^*F_j'(k_j)x_j}
-     \right|
-   $$
+$$
+\operatorname{diam}(I_h^k)\le\tau_k^{\mathrm{pre}}.
+$$
 
-   小于当前 DtN estimator 的固定比例；
-3. $\lvert y_j^*F_j'(k_j)x_j \rvert$ 明确远离零；
-4. 从两个初值启动的局部 solve 收敛到同一根；
-5. 允许复 $k$ 作审计时，$\lvert \operatorname{Im} k_j \rvert$ 与离散/求解容差相容。
+该阈值必须由下游所需有效数字、物理分辨率或比较任务决定。还要在结果前冻结
+$0<\rho_G^{\mathrm{pre}}<1$，并要求
 
-若这些条件失败，只能报告 singular-value minimum 和平台诊断，$\delta_j$、effectivity
-和 “eigenvalue error estimator” 均标为 unavailable。
+$$
+\tau_k^{\mathrm{pre}}
+\le\rho_G^{\mathrm{pre}}\operatorname{diam}(G_k),
+$$
 
-## 5. Structure-preserving cross-checks
+从而不能用一个几乎占满整个 gap 的区间通过绝对宽度门。两个阈值都不能由已观察到的
+estimator 区间、I2 的零 observed shift 或后见的谱间距反推；$\rho_G^{\mathrm{pre}}$ 也须有
+非空泛性理由，不能只机械取成略小于一。区间落在 gap 内但过宽时，仍可保留
+“至少存在一个离散特征值”，但必须标为 `EXISTS_BUT_RESOLUTION_INSUFFICIENT`，不能作为达到
+预注册分辨率的 candidate 认证。
 
-- 比较 Dirichlet、一个冻结的 real Robin 和 zero-incoming 三种 half-guide map 是否随
-  $j$ 趋向同一 QZ/Riccati map；它们不是三种独立 BIE 方法，但能暴露 termination error。
-- 对 finite-level Dirichlet/Robin coupled problem 检查 root 的 imaginary part、离散
-  self-adjoint defect 和左右 null-vector conditioning。
-- 若 Dirichlet 与 real Robin 的根差在 $j$ 增加时不下降，不能声称已隔离 infinity
-  truncation；应先检查 port truncation、termination resonance 和 map composition。
+## 3. 第二层：唯一目标识别
+
+只有后续确实需要跟踪某个指定 mode 或特征值时，才进一步要求例如
+
+$$
+I_h^\lambda\cap\sigma(A)=\{\lambda_*\}.
+$$
+
+这会把第一层存在的谱值识别为 $\lambda_*$；若还要声称一重特征值，则另需 multiplicity-one
+或连续谱投影秩一。唯一身份和重数不是 residual 计算、gap 内存在性或分辨率门的前置条件。
+
+I3.2 可以用独立 reference 和公共物理场表示经验检查身份；这支持 empirical estimator，不能
+替代连续谱隔离或计数。I2.1 的有限矩阵 count one 也不能替代连续谱计数。
+
+## 4. I2 证据能提供什么
+
+- I2.1 只说明某个冻结 finite matrix determinant 在小复圆盘内有条件性 count one；它不能
+  充当 continuous projected gap 或连续谱计数。
+- I2.2 的 Hermitian-part endpoint sign-count 只提高 candidate 的数值可信度；它不是连续
+  spectral enclosure。
+- I2.3 的 `SAME_MODE` 与零 observed candidate shift 支持算法输出稳定；它不能证明 continuous
+  minimizer、finite root 或连续特征值收敛。
+
+这些证据适合帮助选择重构场和检查 mode identity，但不能参与 gap containment 或事后调整
+$\tau_k^{\mathrm{pre}}$。
+
+## 5. 不再是主线门的有限根条件
+
+nearby finite simple zero、左右 finite null vectors、非零 transverse slope、完整 matrix
+derivative 和 bordered conditioning 只服务可选 simple-root correction。它们失败时，该
+finite diagnostic unavailable；continuous weak residual 仍可继续。
+
+## 6. 分层失败语义
+
+- 不能构造非零 conforming field：`CONFORMING_FIELD_UNAVAILABLE`；
+- residual norm 只覆盖部分项：`PARTIAL_RESIDUAL_ONLY`；
+- residual/Riesz 数值误差淹没信号：`CONTINUOUS_RESIDUAL_UNRESOLVED`；
+- 当前模型的 continuous projected gap 未建立：`PROJECTED_GAP_NOT_ESTABLISHED`；
+- 可靠区间越过 gap 边缘：`CERTIFIED_INTERVAL_CROSSES_GAP_EDGE`；
+- gap 内存在性成立但区间过宽：`EXISTS_BUT_RESOLUTION_INSUFFICIENT`；
+- 第一层通过但唯一身份未建立：`EXISTENCE_WITH_TARGET_UNRESOLVED`；
+- finite optional correction 失败：只停止该可选诊断，不改变以上主线状态。
+
+后面一层失败不得撤销前面已经成立的较弱结论。

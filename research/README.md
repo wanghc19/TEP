@@ -7,10 +7,22 @@
 当前没有活动中的统一理论主线。原 Müller--Cauchy 主线已于 2026-07-26 冻结在
 Git 标签 `mainline-muller-cauchy-2026-07-26`，并移至
 `research/archive/muller-cauchy-2026-07/`。`research/projects/eig-apost/` 已确认
-fixed-$\beta$ line-defect guided-mode eigenvalue 后验误差的 research question，并已
-完成 Phase 2b novelty gate，verdict 为 `PASS WITH CONDITIONS`。Phase 3 只进行 gate
-允许的低成本理论与验证设计，不构成新的统一主线。在形成可以明确命名且经过审核的
-统一框架以前，不建立空的 `mainline/` 作为占位。
+fixed-$\beta$ line-defect guided-mode eigenvalue 后验误差的 research question。新路线已完成
+I1 candidate discovery/readiness 与 I2 的局部有限维 count、Hermitian-part 端点 sign count 和
+两条单轴 candidate 比较；I2 的六个 saved candidates 均为
+$1.832770289108157$，相邻层均确认为同一 mode。该结果只表示在相同扫描规则下没有观察到
+candidate drift，不证明 score minimizer、finite root 或连续 eigenvalue 已收敛。
+
+I3.1 已以全边界胞元 BIE 得到 ordinary-double continuous-residual estimator candidate，阶段为
+`PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`。自 2026-08-24 起，I3.2
+包含已建立的条件性离散证书谱包含定理，以及固定同一 trial 的 empirical evaluation-cap
+application。正式 `ecap-a2` 已通过 certificate identity 并完成 same-trial evaluation，但在 cap、
+full-$P$ contraction、$q$ 和 interval 前以 $664.470682$ MiB 超过 $640$ MiB hard limit，故当前为
+`EMPIRICAL_CAP_UNRESOLVED`；actual-$\Delta T$、finite-image Bloch 和 analytic-kernel 三项资格也
+未通过。I3.3 现只研究 independent reference/effectivity；I3.4 研究 strict outward enclosure、
+certified projected gap 和离散特征值存在性。可靠区间、gap 和存在性仍只属于 I3.4。
+该专题仍不构成新的统一主线。
+在形成可以明确命名且经过审核的统一框架以前，不建立空的 `mainline/` 作为占位。
 
 ## 层级
 

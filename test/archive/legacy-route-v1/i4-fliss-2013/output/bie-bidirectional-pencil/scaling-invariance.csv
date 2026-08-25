@@ -1,0 +1,7 @@
+model_id,M,K,test_index,min_amplitude,max_amplitude,scaled_minus_trace_rank,scaled_plus_trace_rank,scaled_minus_trace_rank_pass,scaled_plus_trace_rank_pass,minus_trace_rank_unchanged,plus_trace_rank_unchanged,trace_rank_gate_pass,matrix_size_unchanged,finite_unchanged,rank_unchanged,normalized_sigma,sigma_difference,sigma_tolerance,sigma_pass,status,pass
+"sharp-disk-bie-bidirectional-pencil-v1",5,11,1,0.0001,10000,11,11,1,1,1,1,1,1,1,1,1.1826942825114764e-17,9.7198109068843183e-21,1.0000000000001182e-10,1,"SCALING_INVARIANCE_PASSED",1
+"sharp-disk-bie-bidirectional-pencil-v1",5,11,2,9.9999999999999991e-05,10000,11,11,1,1,1,1,1,1,1,1,1.1813483463777178e-17,3.7395504307015077e-21,1.0000000000001182e-10,1,"SCALING_INVARIANCE_PASSED",1
+"sharp-disk-bie-bidirectional-pencil-v1",5,11,3,0.0001,10000,11,11,1,1,1,1,1,1,1,1,1.1824720363229878e-17,7.4973490219988902e-21,1.0000000000001182e-10,1,"SCALING_INVARIANCE_PASSED",1
+"sharp-disk-bie-bidirectional-pencil-v1",10,21,1,0.0001,10000,21,21,1,1,1,1,1,1,1,1,2.3144893010100529e-41,1.2437051982584331e-41,1e-10,1,"SCALING_INVARIANCE_PASSED",1
+"sharp-disk-bie-bidirectional-pencil-v1",10,21,2,9.9999999999999991e-05,10000,21,21,1,1,1,1,1,1,1,1,2.1864901887390265e-41,1.1157060859874066e-41,1e-10,1,"SCALING_INVARIANCE_PASSED",1
+"sharp-disk-bie-bidirectional-pencil-v1",10,21,3,0.0001,10000,21,21,1,1,1,1,1,1,1,1,4.3213347869705488e-42,6.3865062405456503e-42,1e-10,1,"SCALING_INVARIANCE_PASSED",1

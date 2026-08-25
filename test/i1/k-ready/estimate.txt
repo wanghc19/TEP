@@ -1,0 +1,21 @@
+I1.4 pilot pre-run engineering estimate
+
+Scope: two nodes only (real seed and kstar+i*r0), coarse and fine levels.
+Full I1.4 execution is not authorized by this estimate.
+
+Dense matrix dimensions:
+- coarse proxy: 720 x 354
+- fine proxy: 960 x 450
+- coarse A_QP: 320 x 320
+- fine A_QP: 512 x 512
+- original/reversed QZ pencil and Adef D: 194 x 194
+- Adef G: 388 x 388
+
+Streaming policy: retain one dense node plus the frozen proxy/QZ frame.
+Expected pilot wall time: below 300 seconds.
+Preferred pilot wall time: below 60 seconds.
+Conservative expected retained state: below 192 MiB.
+Hard retained-state gate: 512 MiB.
+
+The measured pilot will replace timing assumptions with a per-node estimate
+for the preregistered full node/CR/negative count. It will not run that count.

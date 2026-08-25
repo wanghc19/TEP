@@ -1,0 +1,4 @@
+"stage","classification","status","pass","note"
+"runtime_package_preflight","BLOCKER","MATLAB_LSQMINNORM_PACKAGE_VERIFIED",1,"Requires MATLAB, lsqminnorm, expected package paths, and exact hashes."
+"authority","BLOCKER","FROZEN_AUTHORITIES_VERIFIED",1,"SHA-256 verified before reading E/R coefficients or Ewald Gx points."
+"pilot_point","BLOCKER","PILOT_PROXY_POINT_CERTIFIED",1,"Base Gx Ewald error and every base-to-axis Gx point change are pilot wall prerequisites."

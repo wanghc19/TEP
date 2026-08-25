@@ -1,0 +1,5 @@
+"action","scope","level","maximum_change","gate","pass","note"
+"DLP-D","point","Nedge",2.6600095698182991e-14,2.0000000000000001e-09,1,"Gx+Gy"
+"DLP-D","point","Nside",1.2836886208488526e-14,2.0000000000000001e-09,1,"Gx+Gy"
+"DLP-D","point","Ntop",1.858854950797466e-14,2.0000000000000001e-09,1,"Gx+Gy"
+"DLP-D","point","Mpw",7.6385462041184648e-14,2.0000000000000001e-09,1,"Gx+Gy"

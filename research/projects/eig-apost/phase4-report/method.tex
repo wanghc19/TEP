@@ -1,0 +1,1242 @@
+\documentclass[UTF8,fontset=fandol,11pt,a4paper]{ctexart}
+
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\geometry{margin=2.35cm}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\cK}{\mathcal K}
+\newcommand{\cF}{\mathcal F}
+\newcommand{\cG}{\mathcal G}
+\newcommand{\cB}{\mathcal B}
+\newcommand{\cD}{\mathcal D}
+\newcommand{\cN}{\mathcal N}
+\newcommand{\cP}{\mathcal P}
+
+\title{连续半波导 DtN 与边界积分耦合的\\导模特征值和误差估计框架}
+\author{eig-apost 方法重构稿}
+\date{2026年8月11日}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+本文重构二维周期线缺陷波导的主特征值问题。固定准周期参数 $\beta$ 后，首先在左右
+半无限周期波导上定义精确 Dirichlet-to-Neumann（DtN）算子，再把它与中心缺陷胞元的
+连续边界积分 trace operator 耦合，得到在任何 Fourier 截断、QZ 分解或有限尾端之前
+已经成立的算子函数 $\cF(k)$。真实 guided eigenvalue 定义为
+$\ker\cF(k)\ne\{0\}$。精确 outgoing Cauchy-data space 是
+$\operatorname{graph}\Lambda_\pm(k)$；有限维 trace basis、ordered QZ 和 Riccati
+方程只用于近似该图空间，不能反向定义精确 DtN。
+
+离散计算链为：中心与普通胞元的 BIE/Fourier 离散、one-cell generalized pencil、
+ordered-QZ stable/unstable deflating subspaces、Dirichlet/Neumann blocks，以及在
+Dirichlet chart 安全时形成的 $\Lambda_{\pm,h,M}=N_{s,\pm,M}D_{s,\pm,M}^{-1}$。
+chart 不安全时保留增广 Cauchy-data relation 或 Robin realization。本文分别列出中心 BIE、wall
+trace 截断、one-cell map、deflating subspace、graph-to-DtN chart、矩阵计算和 root
+solve 的误差。由于一阶 DtN 在临界空间 $H^{1/2}\to H^{-1/2}$ 上一般非紧，有限 Fourier
+lift 不以完整算子范数逼近它；本文改以 projected DtN consistency、目标解的加权 trace
+tail，以及预条件/主符号扣除后的 operator convergence 为理论目标。I3.1 直接在算法保存的
+candidate 处重构连续 form-space field，并以 continuous weak residual 的 normalized dual
+norm 作为首个 estimator candidate。自伴谱理论把 exact residual 联系到 continuous spectrum；
+可靠区间进入当前 continuous projected essential gap 后，先得到至少一个离散特征值的存在
+区间；达到预注册 absolute/gap-relative resolution 后才接受为第一层分辨率级结果。唯一目标
+识别只在确需指定 mode 时追加 spectral isolation。两层 projected correction 只保留为
+OPTIONAL finite-component diagnostic。旧的 finite-tail/doubling 主公式
+完整保存在 \texttt{legacy-tail.tex}，今后只作 cross-check、reference sequence 或 tail
+diagnostic。
+\end{abstract}
+
+\section{方法权威、目标和结论等级}
+
+本文使用当前项目局部记号，不继承冻结的 M\"uller--Cauchy 主线记号。Phase 1--2
+已经承诺以 DtN+BIE 为首条理论和 estimator 路线，并要求 continuous half-guide DtN、
+cell/propagation operator、Riccati/QZ 构造和 discrete DtN matrix 严格分层。本文据此
+取代 2026 年 7 月的 finite-tail 主公式。旧稿不删除，其完整归档为
+\texttt{legacy-tail.tex}；其中 $N_j=2^j$ 个有限胞元、远端闭合和 Redheffer doubling
+以后只提供数值交叉检查，不定义本文的真实谱对象。
+
+本文区分四种结论等级。
+\begin{enumerate}
+  \item 文献中已对相应 PDE 或有限矩阵对象证明的结果，只按原文假设引用。
+  \item 可直接使用的有限维代数恒等式，在本文给出所需条件和坐标约定。
+  \item 从连续 BIE 到 discrete QZ/DtN 的收敛、伴随一致性和解析性，是本项目尚需证明的
+  命题，不因固定点数值吻合而升级为 theorem。
+  \item spectral separation、saturation 和 asymptotic remainder 在没有证明时只能作为
+  明确可反驳的数值假设。
+\end{enumerate}
+
+本文不组装或运行现有 $A_{\mathrm{def}}$，不执行 locator、DtN wall experiment、
+contour count 或 root isolation。下面的 $A_{\mathrm{def}}$ 仅表示未来对 $\cF(k)$ 的
+有限维实现所应满足的定义约束。
+
+\section{连续半波导 DtN}
+
+\subsection{几何、trace spaces 和法向约定}
+
+令 $\Omega_0$ 是包含缺陷的一段有界中心区域，左右人工截面分别为
+$\Gamma_-$ 和 $\Gamma_+$；$\Omega_-$、$\Omega_+$ 是从相应截面向左、向右延伸的
+半无限周期波导。周期方向记为 $y$，周期为 $L_y$，并固定实准周期参数 $\beta$：
+\[
+  u(x,y+L_y)=e^{\ii\beta L_y}u(x,y).
+\]
+时间因子取 $e^{-\ii\omega t}$；若 BIE 使用第一类 Hankel 函数，这一选择与 outgoing
+Green function 一致。
+
+令 $\nu_-=-e_x$、$\nu_+=e_x$，二者都从中心区域指向相应 half-guide。定义
+\[
+  X_\pm:=H_\beta^{1/2}(\Gamma_\pm)
+  :=\gamma_\pm H_\beta^1(\Omega_\pm),
+  \qquad
+  Y_\pm:=H_\beta^{-1/2}(\Gamma_\pm)=X_\pm'.
+\]
+这里 trace space 通过半波导准周期 $H^1$ 空间的迹定义；准周期兼容性由该 trace-space
+定义编码，不诉诸临界 $H^{1/2}$ 元素的端点点值。$\partial_{\nu_\pm}$ 始终表示沿
+“中心到 half-guide”的定向导数。
+Fliss 使用 half-guide 自身的外法向，方向与 $\nu_\pm$ 相反；因此本文与其文献记号的
+映射为
+\[
+  \Lambda_\pm^{\mathrm{Fliss}}=-\Lambda_\pm.
+\]
+这一负号必须在 theory-to-code map 中显式保存，不能由“左右对称”猜测。
+
+\subsection{projected gap、Wood threshold 和 Dirichlet 例外集}
+
+设 $A_{\mathrm p}(\beta,\theta)$ 是普通二维周期介质在 $y$ 方向取 $\beta$、在 lead
+方向取 Bloch 参数 $\theta$ 的胞元算子。固定 $\beta$ 的 bulk projected spectrum 为
+\[
+  \Sigma_{\mathrm{bulk}}(\beta)
+  :=\bigcup_{\theta\in[-\pi/L_x,\pi/L_x]}
+    \sigma\!\left(A_{\mathrm p}(\beta,\theta)\right).
+\]
+projected gap 是 $\mathbb R\setminus\Sigma_{\mathrm{bulk}}(\beta)$ 的开连通分量。
+Fliss 的 Proposition 3.1 证明其目标算子的 essential spectrum 正是这一 bulk union，
+Theorem 3.5 给出 gap 中 guided eigenfunction 的指数衰减
+\cite{Fliss2013}。
+
+对固定实 $\beta$，Fliss Proposition~3.1 的物理算子是 self-adjoint、positive；
+Proposition~3.3 进一步说明 projected gap 中的谱点是有限重孤立特征值。因此连续谱参数
+$\lambda=\omega^2$ 为实且非负，目标正频率 $k=\omega>0$ 位于实轴。这是数值方法优先
+在实轴上寻找近似的理论依据。它既不要求每个 MFS/BIE/QZ 离散矩阵在 exact arithmetic
+中 Hermitian，也不推出非结构保持离散 determinant 的 zero 精确落在实轴；后者的
+anti-Hermitian、reciprocity 和 nonnormal defects 属于离散一致性与误差分析。
+
+projected gap 与 Wood threshold 不是同一个对象。对 BIE 背景 Rayleigh 表示，令
+\[
+  \alpha_m=\beta+\frac{2\pi m}{L_y},
+  \qquad
+  \gamma_m(k)^2=k^2-\alpha_m^2.
+\]
+$\gamma_m(k)=0$ 是所选 background Green/Rayleigh 坐标的 Wood threshold 或分支点；
+它可能导致表示失效，但不能用来定义物理 bulk essential spectrum。反之，处在
+projected gap 也不自动保证某个准周期 Green evaluator 远离 Wood 点。
+
+另令 $\Sigma_{D,\pm}(\beta)$ 为半波导在 $\Gamma_\pm$ 施加齐次 Dirichlet 数据所得
+算子的离散谱。Fliss 的 Theorem 4.1 表明：当 $k^2$ 离开 projected essential spectrum
+时，半波导 Dirichlet problem 除一个可数例外集外唯一可解；该例外集正由相应
+Dirichlet spectrum 产生。对称胞元是原文给出的特殊无例外情形。Remark 4.2 说明
+Robin-to-Robin chart 可避开这些 Dirichlet 例外点\cite{Fliss2013}。
+
+因此实数工作区间 $I$ 必须满足
+\[
+  k^2\notin
+  \Sigma_{\mathrm{bulk}}(\beta)
+  \cup\Sigma_{D,-}(\beta)
+  \cup\Sigma_{D,+}(\beta),
+  \qquad k\in I,
+\]
+并与所有实际使用的 Wood threshold 保持正距离。做 complex-$k$ 分析时还需选择
+一个连通开集 $U\subset\mathbb C$，使 $U\cap\mathbb R\subset I$，所有 square-root
+branches 在 $U$ 上由同一 seed 解析延拓，且 half-guide solution operators、中心 BIE
+和普通胞元 BIE 在 $U$ 上无 pole。Fliss 直接证明的是实频 well-posedness 和 norm
+continuity（Proposition 4.3），不是这里所需的复邻域 holomorphy；后者是本项目必须
+补证的命题。
+
+\subsection{精确边值定义和 Cauchy-data graph}
+
+给定 $\phi\in X_\pm$，考虑材料与传输条件均为真实 half-guide 条件的边值问题
+\[
+  -\Delta u_\pm-k^2q_\pm u_\pm=0\quad\text{in }\Omega_\pm,
+  \qquad
+  \gamma_\pm u_\pm=\phi,
+\]
+并要求 $u_\pm$ 属于 projected gap 中的衰减解空间；在 complex-$k$ 邻域则取从该
+衰减解空间解析延拓得到的 branch。若此问题唯一可解，定义
+\begin{equation}
+  \Lambda_\pm(k):X_\pm\longrightarrow Y_\pm,
+  \qquad
+  \Lambda_\pm(k)\phi
+  :=\partial_{\nu_\pm}u_\pm(\phi;k)\big|_{\Gamma_\pm}.
+  \label{eq:exact-dtn}
+\end{equation}
+这一对象只依赖半无限 PDE，不依赖有限 trace basis、Riccati、QZ、BIE 或有限尾端。
+Fliss 的 Proposition 4.3 在其相反法向约定下给出
+$H_\beta^{1/2}\to H_\beta^{-1/2}$ 的有界性和实参数 norm continuity；Theorem 4.5
+给出无界 guided problem 与中心域精确 DtN problem 的双向等价和重数保持
+\cite{Fliss2013}。
+
+精确 outgoing/decaying Cauchy-data space 是
+\begin{equation}
+  \cG_\pm(k)
+  :=\operatorname{graph}\Lambda_\pm(k)
+  =\{(\phi,\Lambda_\pm(k)\phi):\phi\in X_\pm\}
+  \subset X_\pm\times Y_\pm.
+  \label{eq:exact-graph}
+\end{equation}
+式\eqref{eq:exact-graph} 是由式\eqref{eq:exact-dtn} 推出的图表示；它不是用某个有限维
+stable trace subspace 反向给出的定义。
+
+\section{连续中心 DtN pencil 与条件化 BIE realization}
+
+\subsection{先定义 exact physical pencil}
+
+令 $V_\beta(\Omega_0)$ 是满足横向准周期条件的中心域能量空间；内部材料界面的传输条件
+由中心问题的标准弱形式编码。记 $a_0(k;u,v)$ 为该中心 PDE 的 sesquilinear form，
+$\gamma_\pm:V_\beta(\Omega_0)\to X_\pm$ 为完整 wall traces。定义
+\begin{equation}
+  \langle\cF(k)u,v\rangle
+  :=a_0(k;u,v)
+  -\sum_{\varsigma\in\{-,+\}}
+   \langle\Lambda_\varsigma(k)\gamma_\varsigma u,
+   \gamma_\varsigma v\rangle_{\Gamma_\varsigma},
+  \qquad
+  \cF(k):V_\beta(\Omega_0)\to V_\beta(\Omega_0)'.
+  \label{eq:continuous-pencil}
+\end{equation}
+这里 $\nu_\pm$ 正是中心域的外法向，所以分部积分产生式\eqref{eq:continuous-pencil} 中的
+减号；换成 Fliss 的 half-guide 外法向后边界项写成加号。
+
+真实 guided eigenvalue 由 physical pencil 定义：
+\begin{equation}
+  k_*\in U,
+  \qquad
+  \ker\cF(k_*)\ne\{0\}.
+  \label{eq:true-root}
+\end{equation}
+Fliss 的 bounded-domain DtN equivalence 在其实参数适用域内为这一 kernel criterion 提供
+直接依据；复邻域中的 analytic Fredholm 性仍是本项目证明义务。关键是
+式\eqref{eq:continuous-pencil} 在 BIE representation、Fourier truncation、QZ 和矩阵之前
+已经成立。
+
+\subsection{continuous BIE trace realization 是待证明的等价表示}
+
+令 $\mathcal X_c$ 是中心 transmission BIE 的连续 density/trace unknown space，
+$\mathcal Y_c$ 是其 interface residual space，并令完整 BIE--port residual space 为
+\[
+  \mathcal Z_c:=\mathcal Y_c\times Y_-\times Y_+.
+\]
+具体 M\"uller、Calder\'on 或其他无伪频
+组合可以改变这些空间及 block 形式，但不能改变物理 trace 接口。记
+\[
+  \cB(k):\mathcal X_c\to\mathcal Y_c,
+  \qquad
+  \cD_\pm(k):\mathcal X_c\to X_\pm,
+  \qquad
+  \cN_\pm(k):\mathcal X_c\to Y_\pm
+\]
+为 BIE interface residual、完整 wall Dirichlet trace 和沿 $\nu_\pm$ 的 Neumann trace。
+记
+\[
+  \cP_\pm(k):=\cN_\pm(k)-\Lambda_\pm(k)\cD_\pm(k):
+  \mathcal X_c\longrightarrow Y_\pm
+\]
+为连续 port residual。定义条件化的 BIE block schema
+\begin{equation}
+  \cF_{\mathrm{BIE}}(k):\mathcal X_c\longrightarrow\mathcal Z_c,
+  \qquad
+  \cF_{\mathrm{BIE}}(k)x=
+  \begin{bmatrix}
+    \cB(k)x\\
+    \cN_-(k)x-\Lambda_-(k)\cD_-(k)x\\
+    \cN_+(k)x-\Lambda_+(k)\cD_+(k)x
+  \end{bmatrix}.
+  \label{eq:continuous-bie-pencil}
+\end{equation}
+式\eqref{eq:continuous-bie-pencil} 本身还不能取代式\eqref{eq:continuous-pencil} 定义真实根。
+本项目必须证明：layer-potential reconstruction 把其 kernel 映到非零物理场；零场不产生
+非零 density；每个目标物理解都有 BIE preimage；primal/adjoint pairings 一致。只有这些
+kernel--field bridge 条件成立后，才有
+\[
+  \ker\cF_{\mathrm{BIE}}(k)\simeq\ker\cF(k),
+\]
+并可把离散 BIE matrix 解释为 physical pencil 的表示。固定矩阵的 raw/reduced Schur
+agreement 或 field-energy sanity check 都不能单独证明这一等价性。
+
+\section{从 one-cell BIE 到 discrete DtN}
+
+\subsection{BIE/Fourier 离散和 one-cell generalized pencil}
+
+令 $M$ 是物理 wall trace 的 Fourier order，$K_M=2M+1$。中心和普通周期胞元的 BIE
+离散分别还含 boundary quadrature 参数 $h_c,h_{\mathrm{cell}}$。MFS/proxy evaluator
+内部的 plane-wave order $M_{\mathrm{pw}}$ 属于 Green evaluator/cell BIE 误差，不是
+$M$，也不是 $M_{\mathrm{trace}}$ 或 stable-subspace dimension。
+
+普通胞元的 BIE/Fourier solve 在固定 port normalization 下产生 one-cell scattering
+blocks
+\[
+  \begin{bmatrix}b^L\\a^R\end{bmatrix}
+  =
+  \begin{bmatrix}R_L&T_{RL}\\T_{LR}&R_R\end{bmatrix}
+  \begin{bmatrix}a^L\\b^R\end{bmatrix}.
+\]
+为消除相位原点的歧义，冻结
+\[
+  z=\begin{bmatrix}a^L\\b^L\end{bmatrix},
+  \qquad a^R=\lambda a^L,
+  \qquad b^R=\lambda b^L.
+\]
+把这两个 Floquet matching relations 代入两条 scattering equations，分别得到
+\[
+  -R_La^L+b^L=\lambda T_{RL}b^L,
+  \qquad
+  T_{LR}a^L=\lambda(a^L-R_Rb^L).
+\]
+因此形成项目当前采用的 generalized pencil candidate
+\begin{equation}
+  A_{\mathrm{sc}}=
+  \begin{bmatrix}-R_L&I\\T_{LR}&0\end{bmatrix},
+  \qquad
+  B_{\mathrm{sc}}=
+  \begin{bmatrix}0&T_{RL}\\I&-R_R\end{bmatrix},
+  \qquad
+  A_{\mathrm{sc}}z=\lambda B_{\mathrm{sc}}z.
+  \label{eq:cell-pencil}
+\end{equation}
+这里 $\lambda$ 是 lead 方向的 Floquet multiplier，不是目标 guided eigenvalue $k$。
+式\eqref{eq:cell-pencil} 是 one-cell scattering relation 的有限维坐标表示；它的
+regularity、维数、phase origin 和 normalization 必须作为离散数据记录。
+
+\subsection{ordered QZ 和 stable deflating subspace}
+
+在一个固定 real gap 点，以 projective pair $(\alpha,\vartheta)$ 分类广义特征值：
+right-decaying multipliers 满足 $|\alpha|<|\vartheta|$，left-decaying 方向对应
+positive-$x$ pencil 的 $|\alpha|>|\vartheta|$ cluster。regular infinite pair
+$\vartheta=0$ 属于后一 cluster，不得一概删除；只有 numerically indeterminate pair、
+neutral pair、pencil irregularity 或错误的 cluster count 才直接失败。浮点实现先检查
+$r=(|\alpha|^2+|\vartheta|^2)^{1/2}$，只有 $r$ 超过包含 QZ backward error 的冻结阈值后
+才形成 normalized projective pair。
+
+左右图使用两次独立 ordering。右侧对 $(A_{\mathrm{sc}},B_{\mathrm{sc}})$ 排序，其
+right Schur frame 是 ordinary cell 左墙的
+$z_L=(a^L,b^L)^{\mathsf T}$。左侧对 reversed relation
+
+\[
+  B_{\mathrm{sc}}z_R=\mu A_{\mathrm{sc}}z_R,
+  \qquad \mu=1/\lambda,
+\]
+
+独立排序，其 stable right Schur frame 直接是 ordinary cell 右墙、即接触左 lead 的
+$z_R=(a^R,b^R)^{\mathsf T}$。因此 regular $\lambda=\infty$ 只成为 regular
+$\mu=0$，不需要乘以或除以 multiplier 做参考面搬运。令
+\[
+  Z_s=\begin{bmatrix}A_s\\B_s\end{bmatrix},
+  \qquad Z_s\text{ at the left cell wall},
+  \qquad
+  Z_u=\begin{bmatrix}A_u\\B_u\end{bmatrix},
+  \qquad Z_u\text{ at the right cell wall}
+\]
+分别表示右、左 decaying Cauchy graph 的 amplitude frames。$Z_u$ 的下标保留历史命名，
+但它来自 reversed-pair stable pass。一次 QZ 的 trailing Schur vectors 不得自动当成另一
+物理图。
+
+modulus classification 只在 real seed 选取 isolated clusters。进入一个 complex-$k$
+disk 后必须延拓同一 deflating subspaces；逐点 count、unit-circle margin 和 overlap 只作
+no-crossing gates，不能触发 pointwise reordering 或换支。任一 separation/count/overlap
+失败时整个 disk unavailable。
+
+ordered QZ 是有限矩阵的计算方法。对 original/reversed 两个 passes 分别保留 selected
+stable block $(S_{\sigma,s},T_{\sigma,s})$ 及同一 pass 的 complementary diagonal block
+$(S_{\sigma,c},T_{\sigma,c})$，$\sigma\in\{+,-\}$。两个 generalized Sylvester directions
+分别是
+\[
+\begin{aligned}
+  \mathcal L_{\sigma,u}(R,L)
+  &=(S_{\sigma,s}R-LS_{\sigma,c},
+     T_{\sigma,s}R-LT_{\sigma,c}),\\
+  \mathcal L_{\sigma,l}(R,L)
+  &=(S_{\sigma,c}R-LS_{\sigma,s},
+     T_{\sigma,c}R-LT_{\sigma,s}).
+\end{aligned}
+\]
+资格诊断必须记录两方向的 separation，并保守使用二者较小值。LAPACK 的 xTGSEN 文档明确把 reordered leading
+Schur vectors解释为相应 deflating subspaces，并以 generalized Sylvester separation
+的 reciprocal estimates 衡量 selected/unselected clusters 的条件性
+\cite{LAPACKTGSEN}。Stewart 对 $Az=\lambda Bz$ 给出了 deflating-subspace perturbation
+bounds\cite{Stewart1972}。因此本项目的误差门必须记录 cluster separation 或
+LAPACK-style 双向 \texttt{DIF/sep}、所用 norm、\texttt{IJOB}、\texttt{PL/PR} 和
+\texttt{INFO}。估计值只称 numerical diagnostic，不能冒充 certified lower bound；单独记录
+$\min_\lambda||\lambda|-1|$ 只是分类 margin，不是一般非正规 pencil 的完整
+subspace condition number。若 production separation backend 尚未资格化，只允许小型
+exact-Sylvester assembly oracle，并返回
+\texttt{QUALIFIED\_HALFGUIDE\_GRAPH=false}。
+
+\subsection{Cauchy blocks 和 safe Dirichlet chart}
+
+在当前 amplitude convention 中，wall Dirichlet trace 是 $a+b$。沿中心到 lead 的
+定向 Neumann trace在右侧为 $\ii\Gamma(a-b)$，在左侧为
+$-\ii\Gamma(a-b)$，其中 $\Gamma=\operatorname{diag}(\gamma_m)$。因此定义
+\begin{align}
+  D_{s,+}&=A_s+B_s,
+  &N_{s,+}&=\ii\Gamma(A_s-B_s),\label{eq:right-cauchy}\\
+  D_{s,-}&=A_u+B_u,
+  &N_{s,-}&=-\ii\Gamma(A_u-B_u).\label{eq:left-cauchy}
+\end{align}
+这里 $Z_s$ 是 original pass 的左胞元墙 state，$Z_u$ 是 reversed pass 的右胞元墙
+state；二者已经分别位于接触右、左 lead 的接口参考面。对应的实现标签是
+\[
+  Z_s:\ \texttt{LEFT\_CELL\_WALL},
+  \qquad
+  Z_u:\ \texttt{RIGHT\_CELL\_WALL}.
+\]
+实现不得再用 $\lambda$ 或 $1/\lambda$ 搬运 $Z_u$。左式的负号来自中心域外法向
+$\nu_-=-e_x$，不是由镜像对称性推断。
+
+在一个固定 complex disk 上，先延拓 seed 的 isolated subspace，再消除 QZ column gauge。
+在 seed 选择固定 row extractor $H_\pm$ 后，使用
+\[
+  \widehat Z_\pm(k)
+  =Z_\pm(k)\bigl(H_\pm Z_\pm(k)\bigr)^{-1}.
+\]
+$H_\pm$ 不得在 disk 内重新选行。谱簇 overlap 或固定行 overlap 失败即停止。
+逐点 SVD/Procrustes alignment 不能定义 analytic frame。
+这一步把 amplitude deflating subspace 转成物理 Cauchy-data subspace。令
+$G_{D,M},G_{N,M}$ 为离散 $H^{1/2}$、$H^{-1/2}$ Gram matrices，并定义
+\[
+  G_{G,\pm}=D_{s,\pm}^*G_{D,M}D_{s,\pm}
+  +N_{s,\pm}^*G_{N,M}N_{s,\pm},
+  \qquad
+  \overline D_{s,\pm}
+  =G_{D,M}^{1/2}D_{s,\pm}G_{G,\pm}^{-1/2}.
+\]
+chart transversality 由 absolute margin
+$\sigma_{\min}(\overline D_{s,\pm})$ 控制，right solve roundoff 另由
+$\kappa(\overline D_{s,\pm})$ 控制。ratio-only
+reciprocal condition 不能替代 absolute margin：$D=\varepsilon,N=1$ 的 scalar graph
+虽有 condition number $1$，但 Dirichlet chart 明显趋于垂直。只有 absolute margin、
+graph-error/margin 和 solve-condition gates 同时通过时，才显式形成
+\begin{equation}
+  \Lambda_{\pm,h,M}(k)
+  =N_{s,\pm,M}(k)D_{s,\pm,M}(k)^{-1},
+  \label{eq:discrete-dtn}
+\end{equation}
+实际实现使用右线性求解，不能形成显式 inverse。若 Schur basis 右乘任意可逆矩阵
+$T$，$(D_sT,N_sT)$ 表示同一个 graph，且
+$N_sT(D_sT)^{-1}=N_sD_s^{-1}$；因此 DtN 取决于 subspace 和 chart，不取决于
+所选 basis。
+
+若两个已对齐的 graph bases 满足
+$\widehat D=D+\Delta D$、$\widehat N=N+\Delta N$，则有精确恒等式
+\begin{equation}
+  \widehat\Lambda-\Lambda
+  =(\Delta N-\Lambda\Delta D)(D+\Delta D)^{-1}.
+  \label{eq:chart-identity}
+\end{equation}
+当 $\|D^{-1}\Delta D\|<1$ 时，式\eqref{eq:chart-identity} 给出
+\[
+  \|\widehat\Lambda-\Lambda\|
+  \le
+  \frac{(\|\Delta N\|+\|\Lambda\|\,\|\Delta D\|)\|D^{-1}\|}
+       {1-\|D^{-1}\Delta D\|}.
+\]
+这说明 SLP-D 稳定或 deflating residual 很小都不能单独保证 DtN 稳定；Dirichlet
+projection 的 transversality 同样是实质条件。
+
+\subsection{unsafe chart 的 graph/Robin realization}
+
+当 $D_{s,\pm}$ 病态或奇异时，不把式\eqref{eq:discrete-dtn} 的巨大数值误差解释成物理
+DtN pole，也不把 $\operatorname{range}[D_s;N_s]$ 预先称为某个 operator graph。它首先
+只是 discrete Cauchy-data subspace（必要时是相对于 Dirichlet 坐标的 linear relation）。
+可保留 coefficient vector $c_\pm$，直接耦合
+\begin{equation}
+  \cD_{\pm,h}x_h=D_{s,\pm}c_\pm,
+  \qquad
+  \cN_{\pm,h}x_h=N_{s,\pm}c_\pm.
+  \label{eq:aug-graph}
+\end{equation}
+式\eqref{eq:aug-graph} 是 discrete Cauchy-relation realization。只有 Dirichlet projection
+可逆时，它才是式\eqref{eq:discrete-dtn} 的 graph realization。令
+$J_M:\mathbb C_D^{K_M}\to\mathbb C_N^{K_M}$ 是冻结的 discrete impedance/Riesz map，负责把
+Dirichlet 和 Neumann coefficients 放到相同单位与 Sobolev scaling。也可在
+$N_s+\ii\eta J_MD_s$ 安全时使用 Robin chart
+\[
+  (N_s-\ii\eta J_MD_s)(N_s+\ii\eta J_MD_s)^{-1}.
+\]
+当前 nondimensional 首选冻结 $\eta=1$；其安全性同样使用
+$G_{N,M}^{1/2}(N_s+\ii\eta J_MD_s)G_G^{-1/2}$ 的 absolute minimum singular value
+控制 transversality，并另记 solve condition。不能在 disk 内动态换 $\eta$ 或 chart。
+连续层相应使用固定 isomorphism $J:X_\pm\to Y_\pm$；若不记录 $J_M$ 及其跨层
+compatibility，$D_s$ 与 $N_s$ 的直接相加没有坐标无关的含义。
+两者都只是式\eqref{eq:exact-graph} 的离散坐标，不是新的 continuous DtN definition。
+Fliss 的 Remark 4.2 和后续 RtR 工作为避开 Dirichlet poles 提供了直接先例
+\cite{Fliss2013,Fliss2015}。
+
+\subsection{\texorpdfstring{$A_{\mathrm{def}}$}{A-def} 和 block balancing 的位置}
+
+选定中心 density basis、wall Fourier basis、stable Cauchy realization 和 test pairing
+以后，先定义未平衡的 discrete BIE--compressed-DtN operator
+\begin{equation}
+  \cF_{h,M}(k):\mathcal X_{c,h,M}\longrightarrow\mathcal Z_{h,M},
+  \label{eq:discrete-f}
+\end{equation}
+其中
+\[
+  \mathcal Z_{h,M}:=\mathcal Y_{B,h,M}
+  \times\mathbb C_N^{K_M}\times\mathbb C_N^{K_M}
+\]
+是 center-interface residual 与左右 port residual 的完整 product test space；
+$\mathcal Y_{B,h,M}$ 只表示 center BIE residual coefficient space。
+它由式\eqref{eq:continuous-bie-pencil} 的 center BIE、wall Fourier restriction 和
+式\eqref{eq:discrete-dtn}（或式\eqref{eq:aug-graph}）逐块离散得到。其在所选 trial/test
+bases 下的矩阵才记为
+\[
+  A_{\mathrm{def},h,M}(k).
+\]
+
+当前 I4 sharp-disk missing-column 模型的 center column 是 homogeneous empty column，
+因此 center density dimension 为 $n=0$。令 $K=K_M$、$W=X_R-X_L$，并记
+\[
+  E_c(k)=\operatorname{diag}
+  \bigl(e^{\ii\gamma_m(k)W}\bigr),
+  \qquad
+  q=\begin{bmatrix}a_c^-\\b_c^+\end{bmatrix}
+  \in\mathbb C^{2K},
+\]
+其中两个 incoming amplitudes 分别锚定在自己的 center wall。center Cauchy rows 为
+\[
+\begin{aligned}
+  D_-&=[I\ \ E_c]q,&
+  N_-&=[-\ii\Gamma\ \ \ii\Gamma E_c]q,\\
+  D_+&=[E_c\ \ I]q,&
+  N_+&=[\ii\Gamma E_c\ \ -\ii\Gamma]q.
+\end{aligned}
+\]
+当两个 Dirichlet charts 都安全时，column order 为 $(a_c^-,b_c^+)$、row order 为
+`left port, right port` 的未平衡矩阵是
+\begin{equation}
+  A_{\mathrm{def},h,M}^{D}(k)=
+  \begin{bmatrix}
+    -(\ii\Gamma+\Lambda_{-,h,M})
+    &(\ii\Gamma-\Lambda_{-,h,M})E_c\\
+    (\ii\Gamma-\Lambda_{+,h,M})E_c
+    &-(\ii\Gamma+\Lambda_{+,h,M})
+  \end{bmatrix}
+  \in\mathbb C^{2K\times2K}.
+  \label{eq:empty-dtn-adef}
+\end{equation}
+它正是 $N_\pm-\Lambda_{\pm,h,M}D_\pm=0$ 的 coefficient matrix。若 chart 不安全，
+保留 graph coordinates $c_-,c_+$，column order
+$(a_c^-,b_c^+,c_-,c_+)$ 与 row order `left D, left N, right D, right N` 给出
+\begin{equation}
+  A_{\mathrm{def},h,M}^{G}(k)=
+  \begin{bmatrix}
+    I&E_c&-D_{s,-}&0\\
+    -\ii\Gamma&\ii\Gamma E_c&-N_{s,-}&0\\
+    E_c&I&0&-D_{s,+}\\
+    \ii\Gamma E_c&-\ii\Gamma&0&-N_{s,+}
+  \end{bmatrix}
+  \in\mathbb C^{4K\times4K}.
+  \label{eq:empty-graph-adef}
+\end{equation}
+当 $D_{s,-},D_{s,+}$ 可逆时，对 $c_-,c_+$ 做 exact Schur elimination 就得到
+式\eqref{eq:empty-dtn-adef}。式\eqref{eq:empty-graph-adef} 不含 exponentially growing
+$E_c^{-1}$；它与历史 $M=5$ 时的 $44\times44$ matrix 只有尺寸相同，half-guide rows
+和 amplitude anchoring 已经不同。
+
+未来若 center inclusion 使 $n>0$，才引入 scaled density $\xi\in\mathbb C^n$ 和
+\[
+  A_c\xi+B_La_c^-+B_Rb_c^+=0.
+\]
+令 $D_{\xi,\pm},N_{\xi,\pm}\in\mathbb C^{K\times n}$ 为完整
+density-to-wall Cauchy maps，并在 unknown order $(\xi,a_c^-,b_c^+)$ 上定义
+\[
+\begin{aligned}
+ C_{D,-}&=[D_{\xi,-}\ \ I\ \ E_c],&
+ C_{N,-}&=[N_{\xi,-}\ \ -\ii\Gamma\ \ \ii\Gamma E_c],\\
+ C_{D,+}&=[D_{\xi,+}\ \ E_c\ \ I],&
+ C_{N,+}&=[N_{\xi,+}\ \ \ii\Gamma E_c\ \ -\ii\Gamma].
+\end{aligned}
+\]
+则 conditional safe-DtN extension 为
+\begin{equation}
+  A_{\mathrm{def},h,M}^{D}=
+  \begin{bmatrix}
+    A_c&B_L&B_R\\
+    C_{N,-}-\Lambda_{-,h,M}C_{D,-}\\
+    C_{N,+}-\Lambda_{+,h,M}C_{D,+}
+  \end{bmatrix}
+  \in\mathbb C^{(n+2K)\times(n+2K)}.
+  \label{eq:general-dtn-adef}
+\end{equation}
+它的 full graph parent 使用 unknown order
+$(\xi,a_c^-,b_c^+,c_-,c_+)$，先放 $A_c,B_L,B_R$ row，再放左右 D/N matching rows，
+尺寸为 $(n+4K)\times(n+4K)$；消去 $c_\pm$ 精确得到
+式\eqref{eq:general-dtn-adef}。旧 extractors 只在共同 phase/mode/density coordinates 下
+给出
+$D_{\xi,-}=\mathcal E_L$、$N_{\xi,-}=\ii\Gamma\mathcal E_L$、
+$D_{\xi,+}=\mathcal E_R$、$N_{\xi,+}=\ii\Gamma\mathcal E_R$，其中
+$\mathcal E_{L/R}=\mathcal E_{L/R}^{\mathrm{phys}}D_h^{-1}$。这一 $n>0$ extension
+仍受 continuous kernel--field bridge 限制，不属于当前 empty-center claim。
+
+这才是未来 $A_{\mathrm{def}}$ 的定义：它首先是 $\cF_{\mathrm{BIE}}(k)$ 的离散矩阵；只有
+kernel--field bridge 和 regular approximation 成立后，才可称为 physical
+$\cF(k)$ 的离散表示。为排除 spectral pollution，除 consistency 外还必须证明 uniform
+stability/discrete inf--sup 或相应 resolvent convergence。它不以自身的近奇异性定义新的
+连续谱问题。
+
+在 anchored Rayleigh branch 上，
+\[
+  \gamma_m'(k)=\frac{k}{\gamma_m(k)},
+  \qquad E_c'(k)=\ii W\Gamma'(k)E_c(k),
+  \qquad
+  \Lambda_{\pm,h,M}'
+  =(N_{s,\pm}'-\Lambda_{\pm,h,M}D_{s,\pm}')D_{s,\pm}^{-1}.
+\]
+$A_{\mathrm{def}}'$ 必须包含 center blocks、$\Gamma$、$E_c$、continued deflating
+subspace、chart 和 DtN/RtR 的全部导数。当前尚未冻结 analytic subspace-tangent solver，
+故 production 接口必须返回
+\[
+  \texttt{DERIVATIVE\_AVAILABLE}=\texttt{false}.
+\]
+manufactured-frame finite differences 只能作未来 oracle，不能定义该导数。
+
+若
+$L_{h,M}$、$R_{h,M}$ 可逆，block-balanced matrix
+\[
+  \widetilde A_{\mathrm{def},h,M}(k)
+  =L_{h,M}(k)A_{\mathrm{def},h,M}(k)R_{h,M}(k)
+\]
+只是 residual 和 unknown 的坐标变换。首版在一个 disk 上使用 seed-frozen
+$L_0,R_0$，于是 $\widetilde A'=L_0A'R_0$；右向量和左 row covector 分别按
+$x=R_0\widetilde x$、$\ell^*=\widetilde\ell^*L_0$ 搬回。它不改变 pointwise
+kernel/root；若 balancing 依赖 $k$ 或 level，则导数、左右向量和 two-level comparison
+必须一致地包含完整 product rule，不能把 balancing 写入真实 eigenvalue 的定义。
+
+\section{operator-level 误差分解}
+
+\subsection{公共 trace space、投影和临界范数障碍}
+
+令 $Q_M^D:X_\pm\to\mathbb C^{K_M}$ 是 Dirichlet Fourier coefficient map，
+$E_M^D:\mathbb C^{K_M}\to X_\pm$ 是 synthesis；$Q_M^N,E_M^N$ 是与
+$X_\pm$--$Y_\pm$ duality 相容的 Neumann maps。系数空间分别使用离散
+$H^{1/2}$ 和 $H^{-1/2}$ 加权范数。系数 duality 冻结为
+$\langle n,d\rangle_{N,D}=d^*n$。若 $P_{M\to M'}^D$ 是 $M'>M$ 的 Dirichlet
+zero-padding，则 dual-compatible Neumann restriction 必须是
+$R_{M'\to M}^N=(P_{M\to M'}^D)^*$；不能另选未记录的截断。精确 DtN 在该有限 trace space 上的压缩是
+\begin{equation}
+  \Lambda_{\pm,M}^{\mathrm{ex}}(k)
+  :=Q_M^N\Lambda_\pm(k)E_M^D:
+  \mathbb C_D^{K_M}\longrightarrow\mathbb C_N^{K_M}.
+  \label{eq:dtn-compression}
+\end{equation}
+离散 half-guide 方法首先必须逼近式\eqref{eq:dtn-compression}，即控制
+\begin{equation}
+  \varepsilon_{\Lambda,h,M}^{\mathrm{proj}}
+  :=\|\Lambda_{\pm,h,M}-\Lambda_{\pm,M}^{\mathrm{ex}}\|_{C^1(\mathfrak K;
+  \mathbb C_D^{K_M}\to\mathbb C_N^{K_M})}.
+  \label{eq:dtn-projected-target}
+\end{equation}
+
+这里必须区分三种 Cauchy-data 对象：无限维物理图
+$\cG_\pm(k)=\operatorname{graph}\Lambda_\pm(k)$、retained input 上的 exact compressed
+graph
+\[
+  \cG_{\pm,M}^{\mathrm{ex}}(k)
+  :=\operatorname{range}
+  \begin{bmatrix}I\\\Lambda_{\pm,M}^{\mathrm{ex}}(k)\end{bmatrix},
+\]
+以及 QZ/BIE 产生的
+$\cG_{\pm,h,M}:=\operatorname{range}[D_{s,\pm};N_{s,\pm}]$。后两者在同一个 weighted
+finite coefficient space 中才可比较 symmetric gap。无限维图与有限维 subspace 的
+uniform gap 一般不会趋零；$M\to\infty$ 必须使用式\eqref{eq:trace-tail}、strong/Mosco
+convergence 或 regular Galerkin approximation。
+
+不能把有限秩 lift $E_M^N\Lambda_{\pm,h,M}Q_M^D$ 在完整
+$H^{1/2}\to H^{-1/2}$ operator norm 下与 $\Lambda_\pm$ 作收敛主张。一阶椭圆 DtN 在这对
+临界 Sobolev 空间上一般不是紧算子；若这样的有限秩 operator-norm convergence 成立，
+极限反而必须紧。归一化高 Fourier 模也直接显示截断余项可保持 $O(1)$。
+
+因此从 projected consistency 回到连续问题还需要以下路线之一。
+\begin{enumerate}
+  \item 对目标 primal/adjoint eigentraces 证明额外正则性，例如
+  $\phi\in H^{1/2+s}$、$\Lambda\phi\in H^{-1/2+s}$，并控制
+  \begin{equation}
+    \tau_M(\phi;k):=
+    \|(I-E_M^DQ_M^D)\phi\|_{H^{1/2}}
+    +\|(I-E_M^NQ_M^N)\Lambda(k)\phi\|_{H^{-1/2}}.
+    \label{eq:trace-tail}
+  \end{equation}
+  在上述正则性下，期望 $\tau_M=O(M^{-s})$，但 $s$ 和常数必须由本项目的
+  interface/corner regularity 证明或数值估计支持。
+  \item 选定并解析保留一个共同的 principal DtN part
+  $\Lambda_\pm^{\mathrm{prin}}$，证明余项
+  $\Lambda_\pm-\Lambda_\pm^{\mathrm{prin}}$ 在所选空间间紧或更平滑，再只对余项要求
+  operator-norm approximation。
+  \item 采用 Cauchy graph/strong convergence 和 regular Galerkin spectral
+  approximation，而不声称完整 DtN 的有限秩 operator-norm convergence。
+\end{enumerate}
+若相邻 levels 改变 dimension，仍必须记录 trial prolongation 和 dual-compatible test
+restriction；未经 transport 的裸矩阵差不能进入 correction。
+
+\subsection{必须分开的误差层}
+
+在一个紧参数集 $\mathfrak K\Subset U$ 上，建议按以下顺序建立 $C^1(\mathfrak K)$ budget。
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{连续对象到 root 的误差链。}
+  \begin{tabular}{p{0.17\textwidth}p{0.35\textwidth}p{0.37\textwidth}}
+    \toprule
+    层 & 需要控制的对象 & 可计算诊断与不能替代的证明 \\
+    \midrule
+    中心 BIE & $\cB,\cD_\pm,\cN_\pm$ 及其 $k$ 导数的离散误差 & boundary refinement、off-surface residual、adjoint test；固定点 agreement 不是 operator convergence \\
+    wall trace & Fourier projection/synthesis 和 omitted weighted Cauchy tail & reconstruction、omitted energy、相邻 $M$；制造密度 tail 不是所有解的 operator norm \\
+    one-cell & scattering blocks 或 pencil pair $(A_{\mathrm{sc}},B_{\mathrm{sc}})$ 的 $C^1$ 误差 & BIE/proxy/solver refinement、hold-out residual；$M_{\mathrm{pw}}$ 不等于 $M$ \\
+    QZ subspace & exact stable/unstable graph 与 computed deflating subspace 的 gap & deflating residual、backward error、\texttt{DIF/sep}、cluster count；unit-circle margin 单独不充分 \\
+    DtN chart & projected Cauchy-subspace error 经 $D_s^{-1}$ 传播后的 compressed DtN error & $\sigma_{\min}(D_s)$、式\eqref{eq:chart-identity}；unsafe 时改用 Cauchy relation/RtR \\
+    finite structure & continuous self-adjoint/flux identities 在 MFS/BIE/QZ graph 中的破坏 & raw anti-Hermitian、reciprocity/Lagrangian defect 与跨层变化；它们先是 uncalibrated structure diagnostics/uncertainty components，不是实轴搜索许可门 \\
+    matrix/linear algebra & assembly、evaluation、QZ/solve 和 derivative error & rank policy、solve residual、precision repeat；不得静默换 solver \\
+    root solve & 已固定 $\cF_{h,M}$ 的 nonlinear solve error & 原矩阵左右 residual、backward error、近核分离与独立复现；实轴 constrained minimum 不自动等于 exact finite zero，也不等于 operator discretization error \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+下面显式冻结 transport，避免把 continuous、compressed 和 discrete maps 混在同一
+减法中。BIE trial synthesis 与 center-interface residual restriction 分别写成
+\[
+  E_{h,M}^X:\mathcal X_{c,h,M}\to\mathcal X_c,
+  \qquad
+  Q_{B,h,M}:\mathcal Y_c\to\mathcal Y_{B,h,M}
+\]
+再定义完整 product restriction
+\[
+  Q_{Z,h,M}:=\operatorname{diag}(Q_{B,h,M},Q_M^N,Q_M^N):
+  \mathcal Z_c\longrightarrow\mathcal Z_{h,M}.
+\]
+exact compressed maps 为
+\begin{align*}
+  \cB_{h,M}^{\mathrm{ex}}&:=Q_{B,h,M}\cB E_{h,M}^X,\\
+  \cD_{\pm,h,M}^{\mathrm{ex}}&:=Q_M^D\cD_\pm E_{h,M}^X,\\
+  \cN_{\pm,h,M}^{\mathrm{ex}}&:=Q_M^N\cN_\pm E_{h,M}^X.
+\end{align*}
+computed maps 均在相同 coefficient spaces 上，故可以定义
+\begin{align*}
+  E_{\cB}&:=\cB_{h,M}-\cB_{h,M}^{\mathrm{ex}},
+  &E_{\cD,\pm}&:=\cD_{\pm,h,M}-\cD_{\pm,h,M}^{\mathrm{ex}},\\
+  E_{\cN,\pm}&:=\cN_{\pm,h,M}-\cN_{\pm,h,M}^{\mathrm{ex}},
+  &E_{\Lambda,\pm}&:=\Lambda_{\pm,h,M}-\Lambda_{\pm,M}^{\mathrm{ex}}.
+\end{align*}
+令 projected exact port row 和 computed port row 分别为
+\[
+  \cP_{\pm,h,M}^{\mathrm{ex}}
+  :=\cN_{\pm,h,M}^{\mathrm{ex}}
+    -\Lambda_{\pm,M}^{\mathrm{ex}}\cD_{\pm,h,M}^{\mathrm{ex}},
+  \qquad
+  \cP_{\pm,h,M}:=\cN_{\pm,h,M}
+    -\Lambda_{\pm,h,M}\cD_{\pm,h,M}.
+\]
+则同型对象间有精确恒等式
+\begin{align}
+  \cP_{\pm,h,M}-\cP_{\pm,h,M}^{\mathrm{ex}}
+  &=E_{\cN,\pm}-E_{\Lambda,\pm}\cD_{\pm,h,M}^{\mathrm{ex}}
+    -\Lambda_{\pm,h,M}E_{\cD,\pm},\label{eq:port-error}\\
+  (\cP_{\pm,h,M}-\cP_{\pm,h,M}^{\mathrm{ex}})'
+  &=E_{\cN,\pm}'-E_{\Lambda,\pm}'\cD_{\pm,h,M}^{\mathrm{ex}}
+    -E_{\Lambda,\pm}(\cD_{\pm,h,M}^{\mathrm{ex}})'
+    -\Lambda_{\pm,h,M}'E_{\cD,\pm}
+    -\Lambda_{\pm,h,M}E_{\cD,\pm}'.\label{eq:port-derivative-error}
+\end{align}
+projected exact port 与 continuous port 的 restriction 之间另有 wall-tail term
+\begin{equation}
+  \cP_{\pm,h,M}^{\mathrm{ex}}
+  -Q_M^N\cP_\pm E_{h,M}^X
+  =Q_M^N\Lambda_\pm(I-E_M^DQ_M^D)\cD_\pm E_{h,M}^X.
+  \label{eq:port-tail}
+\end{equation}
+因此 projected BIE block error 是
+\[
+  \begin{bmatrix}E_{\cB}&E_{\cP,-}&E_{\cP,+}\end{bmatrix}^{\mathsf T},
+\]
+它是两个从 $\mathcal X_{c,h,M}$ 到 $\mathcal Z_{h,M}$ 的同型 block operators 之差。
+若所选 convergence route 另外给出同型的 continuous approximate DtN
+$\Lambda_\pm^{\mathrm{app}}:X_\pm\to Y_\pm$，则 physical weak pencil 中纯 DtN 扰动为
+\[
+  -\sum_\pm\gamma_\pm^*
+  (\Lambda_\pm^{\mathrm{app}}-\Lambda_\pm)\gamma_\pm.
+\]
+其中 $E_{\cP,\pm}:=\cP_{\pm,h,M}-\cP_{\pm,h,M}^{\mathrm{ex}}$。式
+\eqref{eq:port-error}--\eqref{eq:port-tail} 是同型空间上的恒等式；各项及其导数的收敛
+仍依赖 projected target、wall-tail regularity 和 stability gates。
+
+若 $\varepsilon_{\mathrm{cell}}$ 控制同一个有限维 pencil pair 的 perturbation，
+$\operatorname{sep}_{s/u}$ 是 generalized Sylvester separation，而 ordered-QZ backward
+error 为 $\varepsilon_{\mathrm{qz}}$，则期望的结构是
+\[
+  \operatorname{gap}(\cG_{s,h,M}^{\mathrm{exact\ pencil}},
+  \cG_{s,h,M}^{\mathrm{computed}})
+  \lesssim
+  \frac{\varepsilon_{\mathrm{cell}}+\varepsilon_{\mathrm{qz}}}
+       {\operatorname{sep}_{s/u}}.
+\]
+这一形式有 matrix-pencil perturbation theory 支持，但它只控制同一个 finite pencil 的
+exact 与 computed deflating subspaces。它不控制 continuous cell relation 到 Fourier
+pencil 的截断误差。常数、norm、left/right pairing 和对 $k$ 的一致性仍必须针对
+式\eqref{eq:cell-pencil} 证明，当前不能作为已闭合估计。
+
+\subsection{三个主 convergence targets}
+
+第一目标是式\eqref{eq:dtn-projected-target} 趋于零，同时目标 primal/adjoint traces 的
+式\eqref{eq:trace-tail} 趋于零。若采用 principal-part 路线，则相应目标改为紧余项的
+operator-norm $C^1(\mathfrak K)$ convergence。中心 BIE trace operators 也须在兼容 trial/test
+spaces 上一致逼近。利用
+\[
+  (\Lambda\cD)'=\Lambda'\cD+\Lambda\cD'
+\]
+所需的第二、第三目标不是未经限定的 full-space finite-rank norm convergence，而是足以
+保证目标谱簇 regular approximation 的 primal/adjoint consistency：
+\begin{equation}
+  \begin{aligned}
+    &\Bigl\|Q_{Z,h,M}\cF_{\mathrm{BIE}}(k)x
+      -\cF_{h,M}(k)Q_{X,h,M}x\Bigr\|_{\mathcal Z_{h,M}}\to0,\\
+    &\Bigl\|Q_{Z,h,M}\cF_{\mathrm{BIE}}'(k)x
+      -\cF'_{h,M}(k)Q_{X,h,M}x\Bigr\|_{\mathcal Z_{h,M}}\to0,
+  \end{aligned}
+  \label{eq:f-targets}
+\end{equation}
+对正则目标子空间中的 $x\in\mathcal X_c$ 和 $k\in\mathfrak K$ 一致成立，且对相应
+adjoint family 也成立；这里
+$Q_{X,h,M}:\mathcal X_c\to\mathcal X_{c,h,M}$ 是与 $E_{h,M}^X$ 配套的 trial
+restriction，$Q_{Z,h,M}$ 是上面定义的完整 product restriction。还需要
+uniform discrete stability、resolvent convergence 或等价的 no-pollution hypothesis。
+这些 BIE-level targets 只有与 physical/BIE kernel bridge 合并后，才给出
+$\cF_{h,M}$ 对 physical $\cF$ 的 spectral approximation。若能把 physical pencil
+$\cF$ 预条件成 identity 加 compact analytic family，则可把目标改写为该 compact part
+的 operator-norm/collectively compact convergence。否则必须使用适合非紧 principal part
+的 regular Galerkin/Fredholm spectral approximation theorem。
+
+Moskow 的 nonlinear compact-operator result 要求 analytic operator families、collective
+compactness、primal/adjoint convergence 和 simple-eigenvalue nondegeneracy
+\cite{Moskow2015}。当前 $\cF$ 尚未被证明可预条件成该文的 $I-kT(k)$ compact form，
+所以其 Theorem 4.1 只提供证明模板，不是可直接宣告的项目定理。
+
+\section{saved-candidate continuous weak residual}
+
+令 $A=A^*\ge0$ 为固定 $\beta$ 后在本节假设成立的 continuous physical operator，谱参数为
+$\lambda=k^2$。I2 保存的 candidate 为 $\widehat k_h>0$，记
+$\mu_h=\widehat k_h^2$。固定 $\gamma>0$，使
+$A+\gamma I\ge c_\gamma I$ 且 $c_\gamma>0$，并令
+\[
+  V=D((A+\gamma I)^{1/2}),
+  \qquad
+  \|v\|_V=\|(A+\gamma I)^{1/2}v\|_H.
+\]
+从 I2 数据确定性地重构一个非零 conforming field $u_h^{\mathrm c}\in V$，定义
+\begin{equation}
+  R_h(v)=a(u_h^{\mathrm c},v)-\mu_h(u_h^{\mathrm c},v)_H,
+  \qquad v\in V,
+  \qquad
+  q_h=\frac{\|R_h\|_{V'}}{\|u_h^{\mathrm c}\|_V}.
+  \label{eq:continuous-weak-residual}
+\end{equation}
+该 residual 直接作用于 saved candidate 和 continuous physical form，不需要先定位 finite
+determinant zero，也不需要 finite matrix derivative。
+
+令
+\[
+  T_{\mu_h}
+  =(A+\gamma I)^{-1/2}(A-\mu_h I)(A+\gamma I)^{-1/2}.
+\]
+$T_{\mu_h}$ 是 bounded self-adjoint operator。对
+$w=(A+\gamma I)^{1/2}u_h^{\mathrm c}$ 应用 self-adjoint residual--spectrum distance
+inequality 和 spectral mapping，得到
+\begin{equation}
+  \inf_{\lambda\in\sigma(A)}
+  \frac{|\lambda-\mu_h|}{\lambda+\gamma}
+  \le q_h.
+  \label{eq:weak-residual-spectrum}
+\end{equation}
+若 $q_h<1$，则存在某个 continuous spectral point $\lambda$ 满足
+\begin{equation}
+  |\lambda-\mu_h|
+  \le E_{\lambda,h}
+  :=\frac{q_h(\mu_h+\gamma)}{1-q_h}.
+  \label{eq:weak-residual-lambda}
+\end{equation}
+第一层不预先指定 $\lambda_*$. 设针对当前 sharp-disk continuous operator 和固定 $\beta$
+已经证明
+\[
+  G_\lambda=(g_-,g_+),
+  \qquad 0<g_-<g_+,
+  \qquad
+  G_\lambda\cap\sigma_{\mathrm{ess}}(A)=\varnothing,
+\]
+并且 residual、field norm 与 numerical errors 给出
+\[
+  \|R_h\|_{V'}\le\overline\rho_h,
+  \qquad
+  0<\underline u_h\le\|u_h^{\mathrm c}\|_V,
+  \qquad
+  \overline q_h=\overline\rho_h/\underline u_h<1.
+\]
+令
+\[
+  \overline E_{\lambda,h}
+  =\frac{\overline q_h(\mu_h+\gamma)}{1-\overline q_h},
+  \qquad
+  I_h^\lambda=
+  [\mu_h-\overline E_{\lambda,h},
+   \mu_h+\overline E_{\lambda,h}],
+\]
+其中正式浮点实现对 $I_h^\lambda$ 使用 outward rounding，并对 gap 使用 certified inner
+edges。若 $I_h^\lambda\subset G_\lambda$，则式\eqref{eq:weak-residual-spectrum} 保证
+$I_h^\lambda$ 内至少存在一个孤立、有限重的 continuous discrete eigenvalue。这里采用
+Weyl/Fredholm essential-spectrum 约定；fixed-$\beta$ 波导 gap 内离散谱性质见
+Fliss~\cite[Proposition~3.3]{Fliss2013}。projected gap 不保证该 eigenvalue 唯一。
+
+若 $I_h^\lambda=[L_h,U_h]\subset(0,\infty)$，令
+\[
+  I_h^k=[\sqrt{L_h},\sqrt{U_h}],
+  \qquad
+  G_k=(\sqrt{g_-},\sqrt{g_+}).
+\]
+定义 gap 内正离散特征频率集合
+$\mathcal K_{\mathrm{disc}}(A;G_\lambda)
+:=\{\sqrt{\lambda}:\lambda\in\sigma_{\mathrm{disc}}(A)\cap G_\lambda\}$，则
+\begin{equation}
+  \operatorname{dist}\bigl(
+    \widehat k_h,\mathcal K_{\mathrm{disc}}(A;G_\lambda)
+  \bigr)
+  \le
+  U_h^{\mathrm{gap}}
+  :=
+  \max\{\widehat k_h-\sqrt{L_h},
+         \sqrt{U_h}-\widehat k_h\}.
+  \label{eq:weak-residual-k}
+\end{equation}
+在查看 estimator 或 reference 结果前，还须冻结绝对分辨率
+$\tau_k^{\mathrm{pre}}>0$ 和 gap-relative fraction
+$0<\rho_G^{\mathrm{pre}}<1$，并要求
+\[
+  \operatorname{diam}(I_h^k)\le\tau_k^{\mathrm{pre}},
+  \qquad
+  \tau_k^{\mathrm{pre}}
+  \le\rho_G^{\mathrm{pre}}\operatorname{diam}(G_k).
+\]
+若 containment 成立但宽度门失败，存在性保留，但输出
+\texttt{EXISTS\_BUT\_RESOLUTION\_INSUFFICIENT}。
+
+只有后续确需跟踪指定 mode，才再要求例如
+$I_h^\lambda\cap\sigma(A)=\{\lambda_*\}$，并把
+式\eqref{eq:weak-residual-k} 升级为
+$|k_*-\widehat k_h|\le U_h^{\mathrm{gap}}$。该集合等式识别唯一谱值但不自动证明
+multiplicity one；I2.1 的 finite count one 不能替代 continuous spectral count。
+
+I3.1 的计算对象首先是式\eqref{eq:continuous-weak-residual} 的 estimator candidate。实际
+dual norm 可由 $V$ 中的 Riesz problem 近似，但普通 Galerkin Riesz solve 不自动给 reliable
+upper bound。I3.1 首个设计固定 global-field residual，并必须先冻结 continuous form、
+conforming field reconstruction、全部 volume/interface/port/tail/reconstruction components，
+Riesz/quadrature/numerical allowance、continuous projected-gap contract，以及结果前确定的
+absolute/gap-relative resolution。exact-DtN center residual 为 OPTIONAL；若启用，
+还必须给出到 global form residual 的带已知常数 outgoing extension/lifting inequality 及
+tail allowance。certified norm enclosure 与 projected-gap containment 属于 I3.3 的第一层；
+unique-target isolation 只属于确需指定 mode 时的第二层升级。
+
+若重构场只属于 broken form space，则 interface value/flux jumps 和 repair terms 必须显式进入
+residual。若 residual 使用与 candidate 相同的 numerical DtN 而不控制其到 exact DtN 的差，
+它只能称 partial/discrete residual。要求 $u_h^{\mathrm c}\in D(A)$ 的 strong residual 是
+更苛刻的 OPTIONAL 特例，不是首个设计的门。
+
+\section{OPTIONAL simple-root correction 和 two-level correction}
+
+本节把 $V_\beta(\Omega_0)'$ 取为连续反对偶，并约定
+$\langle f,v\rangle_{V',V}:=f(v)$；$\cF(k)^*:V_\beta(\Omega_0)\to
+V_\beta(\Omega_0)'$ 由
+\[
+  \langle\cF(k)^*y,x\rangle_{V',V}
+  :=\overline{\langle\cF(k)x,y\rangle_{V',V}}
+\]
+定义。设 $k_*$ 是式\eqref{eq:true-root} 的孤立简单根，
+$x_*\in\ker\cF(k_*)$、$y_*\in\ker\cF(k_*)^*$，并满足横截条件
+\[
+  \langle\cF'(k_*)x_*,y_*\rangle_{V',V}\ne0.
+\]
+对一个小 operator perturbation $\Delta\cF$，simple-root 的一阶位移为
+\begin{equation}
+  \Delta k
+  =-
+  \frac{\langle\Delta\cF(k_*)x_*,y_*\rangle_{V',V}}
+       {\langle\cF'(k_*)x_*,y_*\rangle_{V',V}}
+  +\text{higher-order remainder}.
+  \label{eq:operator-correction}
+\end{equation}
+G\"uttel--Tisseur 的 Theorem 2.20 直接支持 analytic matrix function 的这一有限维
+公式\cite{GuettelTisseur2017}；Moskow 给出带额外 compactness、
+adjoint convergence 和 multiplicity 假设的 operator-level correction
+\cite{Moskow2015}。把二者用于本文仍依赖式\eqref{eq:f-targets}、Fredholm/compact
+reduction 或 regular approximation，以及 simple-root persistence。
+
+令 level $\ell$ 汇总 $(h_c,h_{\mathrm{cell}},M)$ 及冻结的 linear algebra policy。
+把相邻两层通过已记录的 prolongation/restriction transport 到同一 trial/test space，
+所得 families 记为 $\widehat\cF_\ell$ 和
+$\widehat\cF_{\ell+1\downarrow\ell}$。后者默认只是 projected-enriched family；普通
+非方压缩不保持完整 enriched family 的零点。记 $\kappa_\ell$ 为 coarse simple root，记
+$\kappa_{\ell+1\downarrow\ell}$ 为同一局部分支的 projected-enriched root，并取相应左右
+vectors $x_\ell,y_\ell$，则定义
+\begin{equation}
+  \delta_\ell^{\mathrm{next}}
+  :=-
+  \frac{\langle
+    [\widehat\cF_{\ell+1\downarrow\ell}(\kappa_\ell)-
+     \widehat\cF_\ell(\kappa_\ell)]x_\ell,y_\ell\rangle}
+       {\langle\widehat\cF_\ell'(\kappa_\ell)x_\ell,y_\ell\rangle}.
+  \label{eq:two-level}
+\end{equation}
+式\eqref{eq:two-level} 的无附加解释是预测
+$\kappa_{\ell+1\downarrow\ell}-\kappa_\ell$，并应先用实际 projected-enriched matched root
+检验。只有 transport 为同维可逆同构，或 exact Schur/kernel 等价及 complement 可逆性已经
+证明时，$\kappa_{\ell+1\downarrow\ell}$ 才可等同于完整 next-level root。该式不是自动估计
+$k_*-\kappa_\ell$。
+
+若另有独立依据给出 saturation
+\[
+  |k_*-\kappa_{\ell+1\downarrow\ell}|\le q|k_*-\kappa_\ell|,
+  \qquad 0\le q<1,
+\]
+以及 first-order remainder bound
+\[
+  |(\kappa_{\ell+1\downarrow\ell}-\kappa_\ell)-\delta_\ell^{\mathrm{next}}|
+  \le r_\ell,
+\]
+才可推出
+\begin{equation}
+  \frac{\max(0,|\delta_\ell^{\mathrm{next}}|-r_\ell)}{1+q}
+  \le |k_*-\kappa_\ell|
+  \le
+  \frac{|\delta_\ell^{\mathrm{next}}|+r_\ell}{1-q}.
+  \label{eq:saturation-bound}
+\end{equation}
+observed ratios 或有限几个 level 的单调下降不能生成 $q$ 或 $r_\ell$。在它们缺失时，
+式\eqref{eq:two-level} 只能称为 next-level correction；只有在独立 reference 上观察到
+稳定 $O(1)$ effectivity 并验证渐近区以后，才称为 empirical estimator。
+
+root/linear-algebra error 另行报告。例如在近似根 $\widetilde k_\ell$，
+\[
+  \delta_\ell^{\mathrm{root}}
+  :=-
+  \frac{\langle
+  \widehat\cF_\ell(\widetilde k_\ell)x_\ell,y_\ell\rangle}
+  {\langle
+  \widehat\cF_\ell'(\widetilde k_\ell)x_\ell,y_\ell\rangle}
+\]
+必须明显小于待解释的 discretization correction；否则 two-level effectivity 不可解释。
+
+若后续需要诊断 saved candidate 到 finite zero 的局部位移或某一指定离散 enrichment 的
+影响，可把这一结构用于 $\widehat k_h$。在 coarse 与 enriched operators 已经通过 trial
+prolongation 和 dual-compatible test restriction 搬到同一空间、且
+$\widehat k_h$ 附近 simple finite zero 与完整导数已经资格化时，令
+$B_h:X_h\to Z_h'$ 为 coarse analytic family，令
+$B_{h^+\downarrow h}:X_h\to Z_h'$ 为搬回同一空间的 projected-enriched family，并取
+$x_h\in X_h$、$y_h\in Z_h$ 为 $B_h(\widehat k_h)$ 的归一化右、左近核向量。若
+$d_h^{\mathrm{cand}}:=y_h^*B_h'(\widehat k_h)x_h$ 明确远离零，定义
+\[
+\begin{aligned}
+  \delta_h^{\mathrm{loc}}
+  &:=-\frac{y_h^*B_h(\widehat k_h)x_h}
+               {d_h^{\mathrm{cand}}},\\
+  \delta_h^{\mathrm{disc}}
+  &:=-\frac{y_h^*[B_{h^+\downarrow h}(\widehat k_h)-B_h(\widehat k_h)]x_h}
+               {d_h^{\mathrm{cand}}},\\
+  \delta_h^{\mathrm{one}}
+  &:=\delta_h^{\mathrm{loc}}+\delta_h^{\mathrm{disc}}.
+\end{aligned}
+\]
+其绝对值首先只称 one-step $k$-scale consistency indicator，并分别报告两个分量、复数虚部
+和抵消敏感性。该量预测的是 projected-enriched finite family 相对 saved candidate 的一步
+位移。普通非方 prolongation/restriction 不保持完整 enriched matrix 的零点；只有同维可逆
+坐标同构或 exact Schur/kernel 等价及 complement 可逆性成立时，才可把该位移升级为完整
+enriched problem 的位移。它不覆盖两层共同偏差或 enriched-to-continuous remainder，因而不是已经成立的
+$|k_*-\widehat k_h|$ estimator。
+
+若 $\widetilde k_\ell$ 只是实轴 constrained minimizer 而尚未桥接到 nearby finite simple
+zero，则式\eqref{eq:operator-correction}--\eqref{eq:two-level} 不能直接套用。此时必须二选一：
+在原始 analytic matrix family 上资格化 nearby simple zero，并把可能的 imaginary displacement
+与 $\delta_\ell^{\mathrm{root}}$ 纳入 uncertainty；或另行推导和审查 constrained-minimizer
+perturbation formula。finite exact Hermitian 不是这道门的必要条件。
+
+上述二选一只决定本节 simple-root correction 是否适用，不是项目必须证明 exact finite zero
+的总路线门。I3 也可以选择直接以 constrained candidate、独立 continuous-problem reference
+和可计算 enclosure 为对象的其他 estimator；此时只需资格化该 estimator 实际消费的输入，
+不得为了复用本节公式把 exact-discrete-root 身份倒置成最终目标。
+
+固定 $M$、只改变 $n_{\mathrm{tot}}$ 是最接近共同空间条件的可选实例，但相同矩阵尺寸本身
+不构成 transport/duality 证明。公共空间、nearby simple zero、production derivative 和
+projected signal 相对数值噪声的分离只阻止本节 OPTIONAL diagnostic，不阻止
+式\eqref{eq:continuous-weak-residual} 的 I3.1 主线。
+
+\section{理论依据和项目证明义务}
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{来源等级；“直接”不表示已验证项目假设。}
+  \begin{tabular}{p{0.18\textwidth}p{0.27\textwidth}p{0.17\textwidth}p{0.25\textwidth}}
+    \toprule
+    对象 & 来源定位 & 当前等级 & 本项目仍需完成 \\
+    \midrule
+    projected essential spectrum、half-guide BVP、DtN、中心域等价 & Fliss PDF pp. 7, 10--13：Prop. 3.1, Thm. 4.1, Prop. 4.3, Thm. 4.5 & 原文已有定理 & 映射材料模型、trace spaces、法向；补 complex-$k$ holomorphy \\
+    real-gap propagation/Riccati 与 DtN recovery & Fliss PDF pp. 18--19：Thm. 4.12--4.13, Eq. (4.16) & 原文已有定理 & 映射其 FEM cell relation 假设；证明本项目 BIE cell relation 满足相应条件 \\
+    absorbing-media Riccati construction & Joly PDF pp. 5, 9, 13, 26；Coatl\'even PDF pp. 3, 8--10\cite{Joly2006,Coatleven2012} & 仅吸收情形有严格结果 & 不把 $\varepsilon=0$ 的 heuristic/conjectural extension 当作 real-gap theorem \\
+    ordered QZ deflating subspace & LAPACK xTGSEN；Stewart (1972) & 有限矩阵直接适用 & 证明 pencil regular、cluster dimension 和 $k$-一致 separation；记录 \texttt{DIF/sep} \\
+    graph-to-DtN chart & 式\eqref{eq:chart-identity} & 可直接适用的代数命题 & 对齐 graph bases，控制 $D_s^{-1}$ 和 $k$ 导数；unsafe 时使用 graph/RtR \\
+    analytic operator spectral approximation & Kato VII Sec. 1.3, Thm. 1.7；Moskow Thm. 3.1/4.1 & 证明模板，不可直接套用 & generalized-pencil reduction、analytic Fredholm/compact reduction、primal/adjoint convergence、root persistence \\
+    self-adjoint weak residual & 式\eqref{eq:weak-residual-spectrum} 的 spectral-theorem proof & 抽象命题已闭合 & 冻结 continuous form、conforming reconstruction、computable dual norm、continuous projected gap 和预注册分辨率；unique target 只作可选升级 \\
+    simple matrix NEP correction & G\"uttel--Tisseur Thm. 2.20 proof & 有限矩阵直接适用 & 保持同一物理 pairing、完整 $F'$、simple root 和 basis transport \\
+    saturation / remainder & 当前无项目来源 & 仅数值假设 & 独立证明或保留为 empirical；不得由 observed ratios 生成 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+按当前材料，以下结果必须由本项目证明或以更窄 claim 明确绕开。
+\begin{enumerate}
+  \item exact half-guide solution operator 和 $\Lambda_\pm(k)$ 在选定复邻域 $U$ 上的
+  holomorphy，并区分 physical projected gap、half-guide Dirichlet poles、Wood points、
+  cell Dirichlet poles 和 BIE representation poles。
+  \item 中心 continuous BIE trace operator 的 Fredholm property、representation
+  injectivity、kernel--field equivalence 和 adjoint consistency。
+  \item one-cell BIE/Fourier pencil pair及其 $k$ 导数向 continuous cell relation 的一致
+  收敛；ordered-QZ stable/unstable clusters 在 $U$ 上维数固定且 uniformly separated。
+  \item deflating-subspace error 经 Cauchy transform 和 safe chart 传播到
+  式\eqref{eq:dtn-projected-target} 的定量界；同时以式\eqref{eq:trace-tail}、principal-part
+  compact remainder 或 regular Galerkin theory 连接到 $M\to\infty$。
+  \item 中心、trace、cell 和 projected DtN 在公共 trial/test space 上给出
+  $\cF,\cF'$ 的 primal/adjoint regular approximation；禁止复活完整
+  $H^{1/2}\to H^{-1/2}$ finite-rank operator-norm target。
+  \item continuous weak residual 的 field reconstruction、完整 component decomposition 与
+  computable dual norm；第一层 existence-distance 上界还需 reliable norm enclosure、
+  current-model projected-gap containment 和预注册分辨率。只有要升级为指定 $k_*$ 时才需
+  unique-target isolation。simple-root/two-level correction 仅为 OPTIONAL finite diagnostic。
+\end{enumerate}
+
+\section{finite-tail 方法的新位置}
+
+归档的 \texttt{legacy-tail.tex} 保留 finite scattering blocks、远端 Dirichlet/Robin
+闭合、Redheffer doubling、augmented finite-tail NEP、complex locator/root protocol 和
+finite-tail projected correction 的全部历史推导。它在新路线中只有三种用途：
+\begin{enumerate}
+  \item 与 ordered-QZ/Riccati discrete half-guide graph 作 same-cell infinity-treatment
+  cross-check；共享 one-cell BIE 时不算独立 physical reference。
+  \item 作为有限尾长 $N$ 的 reference sequence，检查由 stable multiplier 预测的 decay
+  和 termination sensitivity。
+  \item 在真实 solved density 上作可选 tail diagnostic，帮助识别 close-to-band-edge
+  或 weak-separation 情形。
+\end{enumerate}
+它不再定义 exact-half-guide lift，不再把 $k_{\infty,h}$ 当作连续谱对象，也不再以
+finite-tail level difference 定义主 estimator。
+
+\section{恢复 production I4 前的最小理论门}
+
+新框架已经冻结 $A_{\mathrm{def}}^{D/G}$ 的 block roles，并完成 static assembly、sampled
+complex-$k$ readiness 与 finite count-one 实验。历史“只授权 test-local static assembly
+oracle”的限制已由后续用户授权和 I1--I2.1 证据 supersede。下面 formulation obligations
+继续限制 continuous physical eigenvalue、spectral-pollution exclusion、production
+derivative 和 theorem-level estimator 主张；它们不阻止在原始离散矩阵上设计
+claim-calibrated bounded real-axis candidate refinement。
+\begin{enumerate}
+  \item 冻结式\eqref{eq:continuous-pencil} 的具体中心 BIE spaces、wall trace rows、
+  source/target normal signs 和 Fliss/code sign map；先保持 physical
+  式\eqref{eq:continuous-pencil} 为真实问题，再给出 BIE kernel--field equivalence 的证明
+  或明确的数值论文级替代门。
+  \item 用 static oracle 实现式\eqref{eq:cell-pencil}、
+  式\eqref{eq:right-cauchy}--\eqref{eq:left-cauchy} 和
+  式\eqref{eq:empty-dtn-adef}--\eqref{eq:empty-graph-adef} 的逐块 map；随后另行资格化
+  production original/reversed QZ、双向 \texttt{DIF/sep}、graph residual 和固定
+  subspace tangent。unit-circle gap 不能替代这些对象。
+  \item 对每个 $k$ 选择 safe DtN chart；否则改用增广 Cauchy relation 或 Robin
+  realization。冻结 impedance map $J_M$，不能在 Dirichlet chart 失效后继续形成
+  $N_sD_s^{-1}$。
+  \item 冻结 wall trace common space、prolongation/dual restriction、$M$ 与
+  $M_{\mathrm{pw}}$ 的不同角色，以及 $\cF'$ 中所有 $k$ 依赖。
+  \item 为 continuous physical eigenvalue、spectral-pollution exclusion 或 theorem-level
+  estimator 主张，选择并证明 projected consistency + eigentrace regularity、principal-part
+  subtraction 或 regular Galerkin 三条 convergence route 之一；证明在该意义下
+  $\cF_{h,M}$ 是 $\cF$ 的一致离散，且 block balancing 仅为坐标变换。在证明完成前，仍可
+  依赖预注册的原矩阵 residual、field participation、boundary matching、factor health 和
+  refinement-overlap 门报告 qualified discrete approximation，但必须保持 conditional/
+  empirical 标签。
+\end{enumerate}
+
+连续 self-adjoint/positive 谱决定正频率搜索优先沿实轴。因而 bounded real-axis refinement
+可以先在未经手工对称化的原始 $A_{\mathrm{def}}^D$ 上进行，并把 finite structure defect、
+evaluator error、linear-algebra error 与 discretization shift 分账；exact finite Hermitian
+structure 只在使用 endpoint inertia 或 signed eigenvalue crossing 时是前置条件。没有合法
+signed scalar 时只能作 bounded nonnegative-residual minimization，不能冒充 sign bracket。
+local complex refinement 仅在持续 real-axis residual floor、candidate shift 与
+evaluator/structure uncertainty ledger 不相容或近核/phase 异常时另行触发，不是默认路线；
+off-axis displacement 只有进入该诊断后才是可观测量。
+
+operator convergence、saturation 和 certified remainder 可以晚于第一个 qualified discrete
+approximation，但若它们未闭合，后续结果只能是 qualified discrete approximation 和
+empirical correction，
+不能声称 theorem-level estimator 或 certified interval。
+
+\begin{thebibliography}{9}
+
+\bibitem{Fliss2013}
+S.~Fliss,
+\newblock A Dirichlet-to-Neumann approach for the exact computation of guided modes in photonic crystal waveguides,
+\newblock \emph{SIAM Journal on Scientific Computing}, 35(2), B438--B461, 2013.
+\newblock DOI: \href{https://doi.org/10.1137/12086697X}{10.1137/12086697X}.
+
+\bibitem{Fliss2015}
+S.~Fliss, D.~Klindworth, and K.~Schmidt,
+\newblock Robin-to-Robin transparent boundary conditions for the computation of guided modes in photonic crystal wave-guides,
+\newblock \emph{BIT Numerical Mathematics}, 55, 81--115, 2015.
+\newblock DOI: \href{https://doi.org/10.1007/s10543-014-0521-1}{10.1007/s10543-014-0521-1}.
+
+\bibitem{Joly2006}
+P.~Joly, J.-R.~Li, and S.~Fliss,
+\newblock Exact boundary conditions for periodic waveguides containing a local perturbation,
+\newblock \emph{Communications in Computational Physics}, 1(6), 945--973, 2006.
+\newblock DOI: \href{https://doi.org/10.4208/cicp.2006.v1.p945}{10.4208/cicp.2006.v1.p945}.
+
+\bibitem{Coatleven2012}
+J.~Coatl\'even,
+\newblock Helmholtz equation in periodic media with a line defect,
+\newblock \emph{Journal of Computational Physics}, 231(4), 1675--1704, 2012.
+\newblock DOI: \href{https://doi.org/10.1016/j.jcp.2011.10.022}{10.1016/j.jcp.2011.10.022}.
+
+\bibitem{Stewart1972}
+G.~W.~Stewart,
+\newblock On the sensitivity of the eigenvalue problem $Ax=\lambda Bx$,
+\newblock \emph{SIAM Journal on Numerical Analysis}, 9(4), 669--686, 1972.
+\newblock DOI: \href{https://doi.org/10.1137/0709056}{10.1137/0709056}.
+
+\bibitem{LAPACKTGSEN}
+E.~Anderson et al.,
+\newblock \emph{LAPACK Users' Guide}, 3rd ed., SIAM, 1999; xTGSEN documentation,
+\newblock \href{https://www.netlib.org/lapack/lug/node58.html}{Deflating subspaces and condition numbers}.
+
+\bibitem{Kato1995}
+T.~Kato,
+\newblock \emph{Perturbation Theory for Linear Operators}, 2nd ed., Springer, 1995.
+\newblock DOI: \href{https://doi.org/10.1007/978-3-642-66282-9}{10.1007/978-3-642-66282-9}.
+
+\bibitem{GuettelTisseur2017}
+S.~G\"uttel and F.~Tisseur,
+\newblock The nonlinear eigenvalue problem,
+\newblock \emph{Acta Numerica}, 26, 1--94, 2017.
+\newblock DOI: \href{https://doi.org/10.1017/S0962492917000034}{10.1017/S0962492917000034}.
+
+\bibitem{Moskow2015}
+S.~Moskow,
+\newblock Nonlinear eigenvalue approximation for compact operators,
+\newblock \emph{Journal of Mathematical Physics}, 56, 113512, 2015.
+\newblock DOI: \href{https://doi.org/10.1063/1.4936304}{10.1063/1.4936304}.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,17 @@
+selection=all
+completed_count=21
+planned_count=21
+summed_case_seconds=1653.1915419101715
+summed_case_minutes=27.553192365169526
+aggregation_elapsed_seconds=21.274801015853882
+numerical_batch_wall_seconds=NOT_RETAINED_USE_SUMMED_CASE_SECONDS
+max_runtime_seconds=5400
+ntot_action_tolerance=9.9999999999999995e-08
+ntot_action_tolerance_source=paired_high_case_config
+ntot_pair_count=3
+ntot_pair_provenance=ntot-action-ledger.csv:low_output_label->high_output_label
+M_trace=NaN
+M_trace_status=NOT_CERTIFIED_REFERENCE_NOT_CLOSED
+M_stable=NaN
+M_stable_status=NOT_CERTIFIED_REFERENCE_NOT_CLOSED
+global_interval_status=NOT_CERTIFIED

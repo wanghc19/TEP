@@ -1,16 +1,78 @@
 # Research status
 
-更新日期：2026-07-27。
+更新日期：2026-08-25。
 
 状态词含义：`established in archived mainline` 仅表示冻结主线给出了论证，不等于已完成独立来源核验；`needs review` 表示已有陈述或证明草案但仍需严格审计；`tentative` 表示研究性判断；`unresolved` 表示尚未解决。
 
 ## 当前阶段
 
+2026-08-24，eig-apost I3.1 的全边界胞元 BIE `fbie-a1` 已形成可计算 continuous-residual
+indicator candidate：普通双精度 $q=1.0318643108971929\times10^{-10}$，名义 $k$ 区间宽度
+$3.7823388865376728\times10^{-10}$。旧纯 BIE 路线的 wall/$T$/outside-$M$ 资格问题已由独立
+wall/circle response 检查关闭；当前唯一内部失败是 circle action $256\to512$ ratio
+$0.77408786032496468>0.20$。$M=48$ 只定义 wall 输入，所有 512 个已计算 circle modes 都进入
+$q$，circle angular-tail 门通过；outside-$M$ share $3.6179\%$ 只是描述性诊断，未计算 Fourier
+tail 仍未 enclosure。I3.1 现为
+`PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`。2026-08-24 起，I3.2
+条件性离散证书谱包含定理已经建立；same-trial empirical-cap application 也已正式尝试。
+`ecap-a1` 是 implementation failure；Revision E `ecap-a2` 通过 identity 并完成 evaluation 后，
+在 cap/full-$P$/$q$/interval 前以 $664.470682$ MiB 超过 $640$ MiB hard limit，状态为
+`I3_2_RESOURCE_BUDGET_UNAVAILABLE / EMPIRICAL_CAP_UNRESOLVED`。其保存的 actual-$\Delta T$、
+finite-image Bloch 和 analytic-kernel diagnostics 亦未通过。I3.3 只保留 independent
+reference/effectivity；outward enclosure 与 projected gap 另属 I3.4。详见
+[[research/projects/eig-apost/implementation/i3/review-3-1f|I3.1 review]] 和
+[[research/projects/eig-apost/implementation/i3/review-3-2a|I3.2 theorem review]]、
+[[research/projects/eig-apost/implementation/i3/review-3-2b|I3.2 evaluation-cap review]]。
+
 此前的统一目标是在固定实数准周期参数 $\beta$ 下研究二维周期线缺陷波导的导模，
 并建立中心胞元 Müller--Rayleigh 表示与左右周期半波导出射 Cauchy 关系之间的连续
 耦合。该路线现已暂停；当前把 fixed-$\beta$ line-defect guided-mode eigenvalue 的
-numerical half-guide DtN 后验误差作为专题候选方向，但尚未通过理论与数值可行性门，
-也没有活动中的 `research/mainline/`。
+numerical half-guide DtN 后验误差作为专题候选方向。其 manufactured NEP、Half-guide
+map 与 Augmented BIE 离散实现门已经通过；历史 Root-readiness diagnostic 及其后续
+Ewald/MFS/Rayleigh、SLP/DLP 和有限 $M_{\mathrm{trace}}$ 结果保留为离散数值证据。
+2026-08-11 起旧 I4 数值工作暂停并完成 continuous DtN/BIE method reconstruction：
+精确 DtN 由半无限 PDE 定义，physical center pencil $\mathcal F(k)$ 先于 BIE、QZ 和矩阵。
+旧 finite-tail/doubling 主方法已降为 legacy/cross-check。新路线 I1.1--I1.2 已完成
+离散设计和 static $A_{\mathrm{def}}$ 验证；I1.3 又完成 real-$k$ 连续性、分层筛查与
+width-driven $M=48$ 局部加密，阶段为 `PASS WITH CONDITIONS`。新版局部实验在 15 层、
+33 个唯一点和 167 个 hard gates 全部通过后，以
+$7.6294\times10^{-7}$ 的区间宽度正常结束，记录离散候选
+$k=1.8327703475952146$、$q=8.3200886232193094\times10^{-8}$。coarse/fine 最小位置
+全程无漂移；最终三个 $q$ 值仍明显变化，因此不是 $10^{-3}$ 平台。旧 prominence
+design-gate stop 保留为历史负例，原设计 blocker 已关闭。I1.4 随后在固定 $M=48$ 小复圆盘
+上完成 anchored branch、QZ/graph/DtN、factor、closure、CR 和负例门，阶段为
+`PASS WITH CONDITIONS`。I2.1 随后在同一 fine、$M=48$ 小圆盘得到条件性 finite-dimensional
+count one；I2.2 的 Hermitian-part 两端 sign count 得到稳定 `SINGLE_JUMP`，只作 candidate
+佐证。I2.3 又分别完成边界 Nyström 轴 $n_{\mathrm{tot}}=160,208,256$ 与固定
+$n_{\mathrm{tot}}=160$ 的 trace-cutoff 轴 $M=32,40,48$；两条轴的三层最低原始门和
+`SAME_MODE` 均通过，且各轴三层 saved candidate 完全相同，故状态为
+`PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。terminal-cell 半宽只作
+sub-grid minimizer 的搜索分辨率；该结果不是 minimizer/root 零漂移或收敛证据。I3.1 已完成
+首个中心空列 continuous strong-residual baseline：computed ratio 为 $22.43882099031153$，积分层
+稳定，但固定单胞 cutoff 导数项主导，名义区间跨过零，故状态为
+`FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`。这不是可靠存在区间，按当时编号也不能进入旧
+I3.2 empirical validation。I3.1
+继续活动；全波导 BIE-informed Fourier--Hermite/bubble trial 随后正式运行。`lead-a3` 通过
+finite input、density representation 和 propagation，但固定 fit 的 $J=4/8$ holdout error
+约为 $4.522421/5.138028$，高于 $0.20$，故在
+`CONFORMING_RECONSTRUCTION_UNRESOLVED` 首败处停止。center、Gram、tail 和 residual ratio 均
+未到达；现有近圆 targets 又不足以区分 close layer-potential evaluation 与 basis/metric 的
+贡献。该结果是 `PASS WITH CONDITIONS / VALID NEGATIVE`。随后 Q1--RT0 continuous weak
+residual V2 正式 `weak-a1` 通过 base finite input、propagation、Q1--RT0、Gram 与 full-$P$
+tail checks，但在 fine phase/scale repeat 的 per-cell Gram Hermitian gate 首败；最大 defect
+$6.2442\times10^{-10}$ 高于 $10^{-12}$。该 run 是 `POST-RUN PASS / VALID NEGATIVE`，仍没有
+estimator，按当时编号旧 I3.2 不可开始。BIE-collar V3 正式 `bie-a3` 随后通过 finite input、branch/Wood、
+propagation、density、surface trace 与 safe-field 门，但在 coarse lead 的 composite
+RT0-majorant 预因子处以 `HDIV_FLUX_UNRESOLVED` 停止。当前只可判定含材料圆修正的
+quadrature/assembly 未资格化；没有 flux、majorant、tail、indicator 或 interval。后续纯 BIE
+`pbie-a2` 首次形成 finite indicator；最新全边界 `fbie-a1` 将 ordinary-candidate 内部 caveat
+缩减为 circle-action refinement，但仍为 `NUMERICALLY_UNQUALIFIED`。
+第一层目标仍是
+candidate 到 current projected gap 内离散谱集合的距离：可靠区间
+进入该 gap 后先得到至少一个离散特征值，且只有通过结果前冻结的 absolute/gap-relative
+resolution 才接受为分辨率级结论。唯一目标识别只在特定 mode 跟踪时升级。continuous
+qualified residual estimator、sharp-disk projected-gap contract 和 upper bound 尚未建立，也没有
+活动中的 `research/mainline/`。
 
 原主线冻结于 Git 标签 `mainline-muller-cauchy-2026-07-26`，文件移至
 `research/archive/muller-cauchy-2026-07/`。冻结版本主要考虑实数 `k`、严格公共
@@ -21,7 +83,7 @@ numerical half-guide DtN 后验误差作为专题候选方向，但尚未通过�
 
 | 状态 | 专题 | 实际结论 |
 |---|---|---|
-| active investigation | `research/projects/eig-apost/` | 已确认 fixed-$\beta$ line-defect guided-mode eigenvalue 的后验误差 RQ；Phase 2b novelty gate 已完成，verdict 为 `PASS WITH CONDITIONS`。Bonnet-Ben Dhia--Gmati (1995) 与 Djellouli et al. (2000) 全文进一步确认一般 boundary-truncation eigenvalue estimate 已有先例；候选缺口仅为 periodic half-guide numerical DtN error 到 $k$-shift 的 computable posterior estimator 与 simple-root effectivity。尚无已证明 estimator、独立 $k_{\mathrm{ref}}$ 或 MATLAB prototype。 |
+| active investigation / I3.1 preliminary candidate; I3.2 theorem established, empirical cap unresolved | `research/projects/eig-apost/` | PDE-defined physical operator 是连续主对象；I2.1--I2.3 已完成。全边界 `fbie-a1` 已计算 ordinary residual components、full-$P$ tails、$q$ 与窄名义区间。I3.2 条件性定理已建立；same-trial `ecap-a2` 完成 evaluation 后因 $664.470682>640$ MiB 资源门停止，未形成 cap、$q$ 或 interval，且三项 evaluation qualifications 未通过。I3.3 只做 independent reference/effectivity；全 false reliability/enclosure flags 与 projected-gap contract 阻止 I3.4 的存在性和上界解释。unique target 仅为可选升级。 |
 | paused archive | `research/archive/muller-cauchy-2026-07/` | 冻结的 Müller--广义 Bloch--Cauchy 主线；商空间版本的核/场等价仍有未闭合的外部定理适配和表示论前提。 |
 | paused | `research/projects/half-guide-dtn/` | Stage 1 完成了符号审计、齐次半导 DtN/Riccati 验证和耦合方案建议；周期障碍半导、完整中心耦合及 MATLAB 最终验证尚未完成。该路线未整合进冻结主线。 |
 | completed project | `research/projects/cell-representation/` | 专题任务已完成：原始无条件猜想过强；给出了直接 Green 表示和带显式正则性、非 Wood 及互补问题条件的修正版。其纠正后的表示结构和商空间策略已进入冻结主线，但其中的表示定理仍为 `needs review`。 |
@@ -55,8 +117,29 @@ numerical half-guide DtN 后验误差作为专题候选方向，但尚未通过�
 4. 归档中的未证明结论、待核验引用和中英文差异保持原有成熟度，不因归档而自动升级或失效。
 5. 新方向形成后，应更新 `research/DECISIONS.md`、本文件和 `research/README.md`，再决定是否建立新的 `research/mainline/`。
 
-当前活动专题是偏工程实现的特征值后验误差研究。Phase 2b 已以
-`PASS WITH CONDITIONS` 完成，只允许进入受条件约束的 Phase 3 低成本理论与验证
-设计，不升级为统一研究方向。冻结路线若被恢复，其优先事项仍是单位圆全谱排除、
+当前活动专题是偏工程实现的特征值后验误差研究。I1.4 sampled readiness、I2.1 条件性
+count one、I2.2 endpoint corroboration 与 I2.3 的 `ntot`/$M$ 两条三层同-mode candidate 实验均已完成。I2.3
+两条轴均得到 `NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。I3.1 的首个中心空列 continuous
+strong-residual baseline 已完成，computed ratio 为 $22.43882099031153$；固定单胞 cutoff 主导且
+名义区间跨过零，故分辨率不足。全波导 `lead-a3` 又在 fixed BIE-informed holdout fit 首败，
+尚未形成 continuous residual；不能把失败单因归咎于 bubble basis，因为 near-circle direct
+evaluation 未资格化。Q1--RT0 `weak-a1` 随后在 fine phase/scale Gram qualification 首败；base
+diagnostics 还显示 mesh/width 未闭合。BIE-collar `bie-a3` 随后关闭真实 incoming、one-sided
+trace 与 safe evaluation 的内部门，却在 coarse lead RT0-majorant 的 composite quadrature/assembly
+处首败；没有形成 residual 或区间。纯 BIE `pbie-a2` 随后形成首个 ordinary-double indicator；
+全边界 `fbie-a1` 又通过 wall/actual-$\Delta T$ checks，全部 512 个已计算 circle modes 进入
+$q$ 且 angular-tail 门通过，但 circle action $256\to512$ ratio $0.7741$ 未通过。I3.2
+条件性证书定理已经建立；其 same-trial `ecap-a2` application 进一步完成新 evaluation，却因
+实际内存 $664.470682$ MiB 超过 $640$ MiB 在 cap 前停止，所以本次 empirical cap 未计算；另有
+actual-$\Delta T$、finite-image Bloch、analytic-kernel 三项 fail-open 资格失败，按冻结
+component gates 也会使 cap unresolved。I3.3 只负责
+independent reference/effectivity。零 observed shift 不能单独验证 correction、收敛或 estimator。outward
+residual/field/tail enclosure、sharp-disk projected-gap contract 与预注册
+absolute/gap-relative resolution 只限制 I3.4 的 reliable existence/upper-bound 声明。
+unique-target isolation
+只限制指定-mode升级。production derivative/separation 与 projected/regular
+approximation 只限制相应 finite-correction 或离散谱收敛支线，不再是 I3.1 主线门，也不升级为
+统一研究方向。
+冻结路线若被恢复，其优先事项仍是单位圆全谱排除、
 广义 Floquet/Riesz 基适配、中心表示满射性和表示零空间刻画；具体记录见
 `research/archive/muller-cauchy-2026-07/review-log.md`。

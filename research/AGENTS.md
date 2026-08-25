@@ -29,6 +29,40 @@ When an active `mainline/` exists, use this order: `mainline/` > `NOTATION.md` >
 - `draft/` is a downstream writing target, not an authority, unless a task selects
   a frozen draft version.
 
+## Research depth
+
+- Classify each unresolved concern relative to the current goal as exactly one
+  of the following:
+  - `blocker`: invalidates the current stage's primary deliverable, makes its
+    main result uninterpretable, or prevents the next required computation;
+  - `important caveat`: materially limits scope, robustness, reproducibility,
+    or interpretation, but does not stop the current stage or the next one;
+  - `minor caveat`: a low-impact limitation, optional robustness extension, or
+    documentation issue that may be deferred.
+- Only an unresolved `blocker` may stop a stage. Important and minor caveats
+  must be disclosed and tracked, but they do not by themselves justify
+  `STOP`, `BLOCKED`, or a new theoretical workstream.
+- Use `REVISE` only when a bounded repair is required before accepting the
+  current deliverable. Caveats alone should normally produce
+  `PASS WITH CONDITIONS` or `PASS`, with their follow-up recorded in the
+  open-problem ledger.
+- Investigate a side issue only as far as needed to advance or validate the
+  current task. Every proposed investigation must identify which current
+  acceptance criterion or next computation it can change.
+- Do not turn a numerical plausibility question into a full theoretical
+  investigation unless the unresolved issue materially blocks the current goal.
+- Prefer a cheap sanity check over a new theoretical branch when it can
+  adequately test the concern.
+- Calibrate rigor to the intended output. An engineering or numerical paper
+  normally requires an executable method, representative validation,
+  reproducibility, sensitivity checks, and honest limitations; it does not
+  require theorem-level certification unless the active claim says so.
+- After each stage review, hand unresolved goal-relevant items to one
+  project-level open-problem ledger. Group the ledger by stage, record category,
+  blocking scope, cheapest next check, and status, and link it from both the
+  review and the project's README. Do not duplicate a growing open-problem list
+  across review files.
+
 ## Literature
 
 - If a reference must be downloaded, use a lawful public full text and save it

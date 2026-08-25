@@ -1,0 +1,3 @@
+case_name,delta,k,m,min_abs_gamma,status,root_claim,reason
+"delta_zero",0.0000000000000000e+00,1.8603695988000000e+00,NaN,NaN,"NEGATIVE_CONTROL_NO_ROOT_CLAIM",0,"Source lies on the wall; the point Green value is singular."
+"near_wood",NaN,5.0000000000099998e-01,0.0000000000000000e+00,9.9998893907876725e-07,"NEGATIVE_CONTROL_NO_ROOT_CLAIM",0,"A near-grazing Rayleigh denominator invalidates a uniform root claim."

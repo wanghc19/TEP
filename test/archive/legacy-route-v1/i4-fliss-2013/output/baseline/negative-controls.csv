@@ -1,0 +1,5 @@
+track,name,value,threshold,pass,detail
+A,no-defect-center-localization,0.11544766918185641,0.25,1,"Perfect strip must not create a strongly center-localized control mode."
+A,manufactured-end-localization,1,0.90000000000000002,1,"An end-supported vector must be classified as end-localized, not centered."
+B,homogeneous-medium-no-projected-gap,0,0,1,"The exact s=0 homogeneous limit must retain propagating bulk modes at every control sample."
+B,singular-value-dip-is-not-a-root,0,0,1,"Every BIE candidate remains a real-axis singular-value diagnostic only."

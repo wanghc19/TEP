@@ -1,0 +1,19 @@
+version_label=eig-apost-manufactured-v1.2
+date=2026-08-02
+command=conda run -n octave octave --quiet --no-gui --eval "cd('/Users/whc/Documents/Work/epost'); addpath(pwd); addpath(fullfile(pwd,'test','eig-apost-nep')); results=run_manufactured_nep(); assert(results.all_pass);"
+run_1_exit_code=0
+run_2_exit_code=0
+deterministic_artifacts_byte_identical=true
+results_mat_structures_isequaln=true
+config.txt.sha256=04dd59835ef784948cacc08815f7fe3cdecfdfb938f6c67eea98afa3fb132d0c
+levels.csv.sha256=0b01efeb9c3001dcc8560a16d135fe33463db8af2c86c083bfa86afcba6a40a8
+contours.csv.sha256=4a0c66512eeaa8ae5b141d7a497c27811996715f1c1d88a9e985896be4f7b709
+checks.csv.sha256=0a3bcacd833bd825d797ebd551da08b55b67cdab44c34a44d85a1e1dfcbeae41
+negative-cases.csv.sha256=3cdabca311ee1b000bbf0724ff78f7d277a8cee14b3000f40351ae9df745dbb1
+effectivity.svg.sha256=3df6ad7c9238a34ecb6dbcbf1289fe48c5a90ff2bf9b940fe44d62a36ca866dc
+run.log.sha256=e0fee247b6d89ca502f90b5e4143e33fa1b73a8c77f0cc857da7c583ef5e8f7d
+report.md.sha256=2cdcf7f65c7d8348c8a17b9b1c09a751f0e615be4b678bddaa0e4590822a13f2
+run_1_results.mat.sha256=9fdead46065720daa352943c44dca6e49b0af7358d26d70dff6866538801c0b2
+run_2_results.mat.sha256=fa4666c29e6c84df0f0dca4bbabc6374c8397574b525c53c5c2f57b6c0215740
+nonblocking_anomaly=Conda and shasum emitted locale fallback warnings; exit codes and numerical results were unaffected.
+final_status=PASS

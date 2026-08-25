@@ -1,0 +1,6 @@
+status=REPRODUCED
+pass=1
+relative_difference=0
+tolerance=1e-13
+manifest_equal=1
+projector_fingerprints_equal=1

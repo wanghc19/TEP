@@ -1,0 +1,7 @@
+"stage","classification","status","pass","note"
+"published_reference","MANDATORY","EWALD_REFERENCE_CERTIFIED","1","Published values are checked in Linton sign convention."
+"value","MANDATORY","EWALD_VALUE_CERTIFIED","1","Physical signed components only; no abs-coordinate aliases."
+"gradient","MANDATORY","EWALD_GRADIENT_CERTIFIED","1","Physical signed components only; no abs-coordinate aliases."
+"hessian","MANDATORY","EWALD_HESSIAN_CERTIFIED","1","Physical signed components only; no abs-coordinate aliases."
+"projection_and_mutations","MANDATORY","ORACLE_CONTROLS_CERTIFIED","1","Pure Fourier projection and sign/normalization mutations."
+"runtime_authority","IMPORTANT CAVEAT","OCTAVE_SANITY_PASS","1","Octave is compatibility evidence only; MATLAB remains authoritative."

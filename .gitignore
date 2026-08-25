@@ -10,6 +10,7 @@
 # MATLAB generated / local artifacts
 *.asv
 *.mat
+*.sha256
 *.mexmaca64
 *.fig
 
@@ -54,6 +55,9 @@ research/tmp/
 research/**/tmp/
 research/**/logs/
 research/**/checkpoints/
+
+# Local experiment outputs (already tracked files remain tracked)
+test/**/output/
 
 # Reference library: track only the catalog and BibTeX index
 ref/**

@@ -1,0 +1,5 @@
+"stage","seconds","note"
+"coarse_map","1.5724676666666666","recorded by make_prod"
+"fine_map","5.3106085416666664","recorded by make_prod"
+"map_total","7.1779083333333329","complete make_prod wall time"
+"static_validation","0.83545391666666668","run_prod wall time"

@@ -1,0 +1,751 @@
+\documentclass[UTF8,fontset=fandol,11pt,a4paper]{ctexart}
+
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{hyperref}
+
+\geometry{margin=2.5cm}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\newtheorem{proposition}{命题}
+\newtheorem{remark}{说明}
+
+\title{Legacy：周期线缺陷波导中特征值无穷尾截断误差的\\条件化后验估计方法}
+\author{研究方法汇总稿}
+\date{2026年7月}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+  \fbox{\parbox{0.92\textwidth}{\textbf{Superseded finite-tail formulation（2026-08-11）.}
+  本文完整保留“有限多个周期胞元、远端闭合与 doubling”的历史推导。
+  它不再定义本项目的连续半波导 DtN、主特征值问题或主 estimator；今后只作为
+  finite-tail cross-check、reference sequence 或可选 tail diagnostic。现行方法见
+  \texttt{method.tex}。}}
+\end{center}
+
+\begin{abstract}
+本文汇总一个针对二维周期线缺陷波导导模计算的条件化数值方案。固定横向准周期参数
+$\beta$ 以及边界积分、端口和线性代数离散参数，只以
+$N_j=2^j$ 个周期胞元组成的有限尾端逼近半无限周期端。为避免终端 Schur 补和
+reflection-to-DtN Cayley 变换在共振附近产生的人工极点，主特征值函数保留中心边界
+积分未知量、中心端口振幅和远端振幅，形成维数与 $j$ 无关的
+$(n+8p)\times(n+8p)$ augmented nonlinear eigenvalue problem。实轴最小奇异值扫描
+仅用于定位候选；随后在固定的解析 Rayleigh 分支图中，以无极点小轮廓确认根计数，
+再用 bordered implicit-determinant Newton 在复平面求实际简单根。
+
+对通过根资格检查的 $k_{j,h}$，本文采用左右零向量投影的相邻 map correction
+估计 coarse finite-tail error $|k_{j,h}-k_{\infty,h}|$。在共同表示、简单根、
+$C^1$ map 展开、doubling separation 和非消失主系数等假设下，该 estimator 的
+effectivity 趋于 $1$。若另有独立的 saturation bound 和 correction remainder 上界，
+还可得到严格的双边区间。本文同时说明：有限个 observed doubling ratios 不能生成
+certificate；当前 BIE kernel--field equivalence、$C^1$ map convergence、
+saturation/remainder、MATLAB 实现和独立 reference 均未完成。因此本文给出的是
+可实现的 conditional design，而不是已经认证的完整求解器或连续理论定理。
+\end{abstract}
+
+\section{问题、目标与结论等级}
+
+考虑沿一个方向周期、沿另一个方向由左右周期半波导包围中心缺陷胞元的二维标量波导。
+横向准周期参数 $\beta$ 固定，波数 $k$ 是待求参数。精确半波导
+Dirichlet-to-Neumann（DtN）算子通过如下边值过程定义：给人工截面上的 Dirichlet
+迹，在本文 gap 设置中解满足衰减条件的整个半波导问题，再取从中心域指向该半波导的
+法向导数。
+这一对象的定义先于 FEM、BIE、Riccati 方程和 Bloch 基；Fliss 的工作给出了相应的
+fixed-$\beta$ guided-mode DtN 框架及有界化方法\cite{Fliss2013}。
+这里必须限定在两个 half-guide Dirichlet problems 唯一可解的 gap 子域：按 Fliss 的
+Theorem 4.1，局部搜索域中的 $k$ 应满足
+\[
+  k^2\notin \sigma_{\mathrm{ess}}(\beta)
+  \cup\sigma_{\mathrm{d},+}(\beta)
+  \cup\sigma_{\mathrm{d},-}(\beta),
+\]
+其中 $\sigma_{\mathrm{d},\pm}(\beta)$ 是相应半波导齐次 Dirichlet 问题的可数离散谱。
+在该文的对称胞元设置中这一例外集消失；一般情形若命中例外点，应改用
+Robin-to-Robin chart，而不能继续假定 DtN 存在且解析。
+
+本文只研究一个误差层：固定其余离散参数以后，用有限周期尾端代替精确半波导所产生的
+特征值误差。记 $h$ 统称固定的中心 BIE、胞元 BIE、端口截断、求积和线性代数离散参数。
+记
+\[
+  F_{\infty,h}(k)
+\]
+为下文通过 scattering-block 极限定义的同维 exact-half-guide lift，记
+\[
+  F_{j,h}(k),\qquad N_j=2^j,
+\]
+为左右半波导均由 $N_j$ 个周期胞元及固定远端闭合替代后的矩阵函数。对应的目标是
+区分并计算
+\[
+  k_{j,h},\qquad k_{\infty,h},\qquad k_*.
+\]
+这里 $k_{j,h}$ 是 $F_{j,h}$ 的有限尾简单根，$k_{\infty,h}$ 是
+$F_{\infty,h}$ 在同一离散空间中的根，而 $k_*$ 表示连续问题的目标特征值。本文的
+主 estimator 针对
+\[
+  |k_{j,h}-k_{\infty,h}|,
+\]
+并不自动估计包含 BIE、端口截断和连续离散误差的总误差
+$|k_{j,h}-k_*|$。
+
+本文所有理论结论均保持如下等级。
+\begin{itemize}
+  \item augmented NEP 与复根搜索均为具有明确实现步骤的候选方案；其用于实际 BIE 时的
+  kernel--field equivalence 仍待证明。
+  \item projected correction 的渐近精确性是有限维、简单根、$C^1$ 展开下的条件命题；
+  当前 finite-tail BIE map 尚未被证明满足这些假设。
+  \item 严格区间依赖外部给定或另行证明的 saturation 常数和 remainder 上界；
+  observed ratios 不能替代它们。
+  \item 本稿没有新的 MATLAB 结果，也不作优先权或无条件收敛主张。
+\end{itemize}
+
+\section{固定公共表示与有限尾端层级}
+
+\subsection{单胞 scattering map 与 doubling}
+
+每个周期 lead cell 在固定的 $p$ 维 Rayleigh port basis 中由四个 scattering blocks
+表示。若 $a^L,b^R$ 是进入单胞的振幅，$b^L,a^R$ 是离开单胞的振幅，则
+\[
+  \begin{bmatrix}b^L\\a^R\end{bmatrix}
+  =
+  \begin{bmatrix}
+    R_L&T_{RL}\\
+    T_{LR}&R_R
+  \end{bmatrix}
+  \begin{bmatrix}a^L\\b^R\end{bmatrix}.
+\]
+当前代码中的 one-cell BIE solve 只承担生成这些 blocks 的任务；它不是 line-defect
+特征值算子，也不是 half-guide DtN 的定义。
+
+两个相邻有限段通过消去公共端口振幅进行 Schur/Redheffer composition。由一个胞元
+开始反复 doubling，第 $j$ 层代表 $N_j=2^j$ 个胞元。实现中所有逆都必须用线性系统
+求解代替，并记录相应 Schur factors 的 reciprocal condition estimates。Ehrhardt、
+Sun 和 Zheng 在一维半无限周期阵列中给出了 finite scattering/doubling 的数值先例，
+包括 stop-band 内有限尾边界 map 的快速收敛\cite{Ehrhardt2009}。该文只支持方法选择
+和数值现象的先例，不证明本文二维穿透介质 BIE 层级的收敛。
+composition 本身只在全部内部 Schur factors 可逆时解析；主 augmented terminal
+formulation 并不会消除这些内部消元产生的 poles。故后续 contour 检查必须覆盖从
+one-cell solve 到每次 doubling 的完整 pole ledger，而不能只检查最终终端因子。
+
+\subsection{远端闭合和 reduced cross-check}
+
+主层级采用齐次 Dirichlet 远端闭合，并以固定 real Robin 闭合作结构交叉检查。
+zero-incoming 闭合只用于 half-guide map 的交叉比较；在一般有限层上，其真正根可能
+离开实轴。以右端为例，若有限段 scattering blocks 为
+$R_{L,j},T_{RL,j},T_{LR,j},R_{R,j}$，远端条件 $a^R+b^R=0$ 给出从中心端看到的
+terminated reflection map
+\[
+  \widehat R_{+,j}^{\mathrm D}
+  =R_{L,j}-T_{RL,j}(I+R_{R,j})^{-1}T_{LR,j}.
+\]
+左端相应为
+\[
+  \widehat R_{-,j}^{\mathrm D}
+  =R_{R,j}-T_{LR,j}(I+R_{L,j})^{-1}T_{RL,j}.
+\]
+在本文采用的中心域向外法向约定下，两侧有限尾 DtN 均写成
+\[
+  \Lambda_{\pm,j}^{\mathrm D}
+  =\mathrm{i}\,\Gamma(I-\widehat R_{\pm,j}^{\mathrm D})
+   (I+\widehat R_{\pm,j}^{\mathrm D})^{-1}.
+\]
+这里 $\Gamma$ 是固定端口 basis 中的 Rayleigh 纵向波数对角矩阵，$\mathrm{i}$ 是虚数
+单位。两个公式外形相同来自端口和法向约定，并不表示左右介质具有对称性。
+
+这些 reduced maps 需要 $I+R_{R,j}$、$I+R_{L,j}$ 和
+$I+\widehat R_{\pm,j}^{\mathrm D}$ 可逆。在终端共振附近，它们可能病态。因此 reduced
+DtN/Schur 表述只在消元因子条件良好时用于交叉检查；主 root function 保留下节的
+全部端口未知量。
+
+\subsection{共同表示的必要性}
+
+所有 $F_{j,h}$ 必须具有相同维数、unknown ordering、port phase origin、basis
+normalization、mass/flux pairing、row/column scaling 和辅助变量约定。共同且与
+$j$ 无关的可逆变换不会破坏层级比较；level-dependent scaling 则会改变 projected
+correction。标量例
+\[
+  f_j(k)=k-k_j,
+  \qquad
+  \widetilde f_j(k)=\alpha_j(k-k_j)
+\]
+有相同根，但用 $\widetilde f_j$ 形成的相邻 projected correction 会被
+$\alpha_{j+1}/\alpha_j$ 缩放。故“根不变”并不足以保证 estimator 不变。
+
+\section{固定维数的 augmented nonlinear eigenvalue problem}
+
+设中心 BIE density block $\xi$ 长度为 $n$，每个端口振幅 block 长度为 $p$。按
+\[
+  z=(\xi,a_c^-,b_c^+,b_c^-,a_c^+,a_f^-,b_f^-,b_f^+,a_f^+)^{\mathsf T}
+\]
+排列未知量。下标 $c$ 和 $f$ 分别表示 center port 和 far port，上标 $-$、$+$
+分别表示左、右 lead；这里的正负号不表示 Hermitian adjoint。
+
+中心 BIE 与端口 extractors 写成
+\begin{align}
+  A_c\xi+B_La_c^-+B_Rb_c^+&=0,\label{eq:center-bie}\\
+  b_c^- -\mathcal E_L\xi-J_{LL}a_c^- -J_{LR}b_c^+&=0,\label{eq:center-left}\\
+  a_c^+ -\mathcal E_R\xi-J_{RL}a_c^- -J_{RR}b_c^+&=0.\label{eq:center-right}
+\end{align}
+其中 $A_c$ 是中心胞元 BIE matrix，$B_L,B_R$ 注入中心端口数据。Phase 3 记录中的
+extractors $F_L,F_R$ 为避免与主矩阵函数 $F_{j,h}$ 冲突，在本文改记为
+$\mathcal E_L,\mathcal E_R$；它们提取中心胞元产生的出射端口数据，$J$ blocks 包含
+direct incident 和 phase terms。
+这些 blocks 的实际行列顺序和法向号必须逐行映射到代码，不能从本抽象式反推。
+
+左右有限段的 scattering equations 和远端 Dirichlet conditions 为
+\begin{align}
+  b_f^- -R_L^-a_f^- -T_{RL}^-b_c^-&=0,\label{eq:left-1}\\
+  a_c^- -T_{LR}^-a_f^- -R_R^-b_c^-&=0,\label{eq:left-2}\\
+  a_f^-+b_f^-&=0,\label{eq:left-d}\\
+  b_c^+ -R_L^+a_c^+ -T_{RL}^+b_f^+&=0,\label{eq:right-1}\\
+  a_f^+ -T_{LR}^+a_c^+ -R_R^+b_f^+&=0,\label{eq:right-2}\\
+  a_f^++b_f^+&=0.\label{eq:right-d}
+\end{align}
+其中所有 scattering blocks 均取第 $j$ 层，并依赖 $k$；为减轻公式负担，没有在每个
+block 上重复写下标 $j,h$ 和变量 $k$。
+
+式\eqref{eq:center-bie}--\eqref{eq:center-right} 有 $n+2p$ 行，
+式\eqref{eq:left-1}--\eqref{eq:right-d} 有 $6p$ 行。因此它们形成 square matrix
+function
+\[
+  F_{j,h}(k)z=0,
+  \qquad
+  F_{j,h}(k)\in\mathbb C^{(n+8p)\times(n+8p)},
+\]
+其维数不随 $j$ 改变，只有有限段 scattering blocks 随层级改变。这一共同空间使
+$F_{j+1,h}(k)-F_{j,h}(k)$ 可直接计算。
+
+同维极限不能只靠语言约定。取闭圆盘 $\overline D$ 包含目标根，并假设在其邻域内
+one-cell solve 和全部 doubling steps 解析。一个可核验的 exact-half-guide lift 需要
+有限段 blocks 在 $C^1(\overline D)$ 中满足
+\[
+  T_{RL,j}^{\pm},T_{LR,j}^{\pm}\longrightarrow0,
+  \qquad
+  R_{L,j}^{\pm}\longrightarrow R_{L,\infty}^{\pm},
+  \qquad
+  R_{R,j}^{\pm}\longrightarrow R_{R,\infty}^{\pm}.
+\]
+用这些极限 blocks 原位替换式\eqref{eq:left-1}--\eqref{eq:right-d} 中的有限层 blocks，
+并保留同一 unknown ordering 与远端 Dirichlet 方程，由此定义
+$F_{\infty,h}^{\mathrm{aug}}$。其左右 far subsystems 分别为
+\[
+  \mathcal B_{\infty,-}
+  =\begin{bmatrix}-R_{L,\infty}^-&I\\ I&I\end{bmatrix},
+  \qquad
+  \mathcal B_{\infty,+}
+  =\begin{bmatrix}-R_{R,\infty}^+&I\\ I&I\end{bmatrix}.
+\]
+这里两块的变量顺序分别为 $(a_f^-,b_f^-)$ 和 $(b_f^+,a_f^+)$。
+若它们在 $\overline D$ 上一致可逆，则可消去 far variables，剩下的中心关系为
+\[
+  a_c^-=R_{R,\infty}^-b_c^-,
+  \qquad
+  b_c^+=R_{L,\infty}^+a_c^+.
+\]
+只有再证明这两个定向 reflection limits 正是相应 exact half-guide maps，并建立中心
+BIE kernel--field equivalence，才能认定
+$\ker F_{\infty,h}^{\mathrm{aug}}$ 与 exact-map NEP 的核双向对应。下文简写
+$F_{\infty,h}:=F_{\infty,h}^{\mathrm{aug}}$。上述 block convergence、far-block
+一致可逆性或 kernel bridge 任一未闭合时，$k_{\infty,h}$ 只能解释为假定 compatible
+lift 的根，不能自动解释为物理 half-guide root。
+
+若 $A_c(k)$ 可逆，先消去 $\xi$ 可恢复中心 defect scattering equations；再消去远端
+振幅可恢复上一节的 reduced map。这给出可检验的代数等价链。但对于实际 BIE，仍须
+证明
+\[
+  \ker F_{j,h}(k)\ne\{0\}
+  \quad\Longleftrightarrow\quad
+  \text{terminated finite-tail problem 存在非零导模场}.
+\]
+该命题目前未完成。特别需要排除 center representation nullspace，并保证搜索域内
+one-cell BIE matrix 可逆；否则 cell solve 的 poles 或零场表示可能产生伪根。主方案
+因此只在明确避开这些 poles 的局部区域内使用。
+
+\section{解析分支和实际复根搜索}
+
+\subsection{anchored analytic Rayleigh chart}
+
+逐点调用 principal square root 并强制 $\operatorname{Im}\gamma_m\ge0$，在传播通道
+跨越实轴时不是单一解析函数，不能直接用于 complex Newton 或 contour quadrature。
+令 $\beta_m$ 为第 $m$ 个横向准周期波数，满足
+\[
+  \gamma_m(k)^2=k^2-\beta_m^2.
+\]
+在候选中心 $k_c$ 选择物理 seed $\gamma_{m,c}$。若搜索圆盘不含分支点
+$\pm\beta_m$，可在整个圆盘固定同一 logarithm branch，并定义
+\[
+  \gamma_m(k)=\gamma_{m,c}
+  \exp\!\left[
+    \frac12\operatorname{Log}\!\left(1+\frac{k-k_c}{k_c-\beta_m}\right)
+    +\frac12\operatorname{Log}\!\left(1+\frac{k-k_c}{k_c+\beta_m}\right)
+  \right].
+\]
+圆盘半径须小于 $k_c$ 到所有相关 $\pm\beta_m$ 的距离，并避开 $k=0$、Wood points、
+Hankel 或准周期 Green function branch cuts、BIE poles 以及内部 doubling Schur poles。
+它还必须留在上述 half-guide Dirichlet problems 唯一可解的谱子域。每个 contour node
+必须使用同一 anchored chart，不能重新选择 square-root branch。
+
+\subsection{scan、轮廓隔离和 bordered Newton}
+
+实轴上的 $\sigma_{\min}(F_{j,h}(k))$ 只用于给出候选 $k_c$。标量函数
+\[
+  f_{\mathrm{dip}}(k)=k-k_0+\mathrm{i}\tau,
+  \qquad \tau>0,
+\]
+在实轴 $k=k_0$ 有严格的最小奇异值极小点，却没有实根。因此不能把实轴 dip 直接写成
+finite-level eigenvalue。
+
+在候选周围选择小型复轮廓 $\mathcal C$。只有在 $F_{j,h}$ 在轮廓及其内部解析、轮廓
+上可逆且内部不含 one-cell、doubling Schur、terminal 或 BIE poles 时，
+argument-principle 数量
+\[
+  \frac{1}{2\pi\mathrm{i}}
+  \int_{\mathcal C}
+  \operatorname{tr}\!\left(F_{j,h}(k)^{-1}F_{j,h}'(k)\right)
+  \,\mathrm{d}k
+\]
+才直接给出内部零点的代数重数。实现可使用 argument-principle quadrature 或 Beyn
+moments；轮廓缩放与 quadrature 加密后，根计数必须稳定且等于 $1$，轮廓上的
+$\sigma_{\min}$ 也必须与零明确分离。非线性矩阵函数的简单根、轮廓方法和 bordered
+implicit determinant 可参见 Güttel--Tisseur 的综述\cite{GuettelTisseur2017}。
+仅在 contour nodes 上观测到良好 rcond 不能排除内部 pole；实现必须给出整个闭圆盘的
+pole ledger 或其他解析性论证。若做不到，应退回不消去中间 cell amplitudes 的 fully
+augmented chain，再在该解析矩阵函数上计数。
+
+根被隔离以后，固定适当的 border vectors $v_{\mathrm{bdr}},w_{\mathrm{bdr}}$，每一步求解
+\[
+  \begin{bmatrix}
+    F_{j,h}(k)&v_{\mathrm{bdr}}\\
+    w_{\mathrm{bdr}}^*&0
+  \end{bmatrix}
+  \begin{bmatrix}x(k)\\f(k)\end{bmatrix}
+  =
+  \begin{bmatrix}0\\1\end{bmatrix}.
+\]
+再以右端 $[-F_{j,h}'(k)x(k);0]$ 解同一个 bordered matrix，得到 $f'(k)$，并作
+\[
+  k\leftarrow k-\frac{f(k)}{f'(k)}.
+\]
+一般复矩阵函数的零点有两个实自由度，故默认在复平面求解。即使物理目标预期为实根，
+也只有当 $|\operatorname{Im}k|$ 与 matrix evaluation、branch continuation 和
+root-solve error 相容时，才把它解释为实特征值；否则只能报告 complex resonance
+candidate。
+在 $f(k_{j,h})=0$ 时，后文使用的 unit-norm 方向取为
+$x_j=x(k_{j,h})/\|x(k_{j,h})\|$；border normalization 与 unit normalization 不表示
+两个不同 eigendirections。
+
+\subsection{root qualification}
+
+一个候选 $k_{j,h}$ 只有同时通过以下检查，才进入 estimator 阶段。
+\begin{enumerate}
+  \item 左右 singular residual 达到预设线性代数容差，最小与次小奇异值明确分离。
+  \item unit-norm right/left vectors $x_j,y_j$ 满足
+  $|y_j^*F_{j,h}'(k_{j,h})x_j|$ 明确远离零。
+  \item projected Newton defect
+  \[
+    \left|
+    \frac{y_j^*F_{j,h}(k_{j,h})x_j}
+         {y_j^*F_{j,h}'(k_{j,h})x_j}
+    \right|
+  \]
+  远小于待估计的 finite-tail correction。
+  \item 至少两个局部初值和一个 contour-moment 初值收敛到同一 complex root；
+  contour count 为 $1$，bordered matrix 的 reciprocal condition estimate 可接受。
+  \item 导数包含 BIE、材料波数、Rayleigh phases 和 finite-tail map 的全部 $k$ 依赖；
+  anchored centered difference 在步长 $s,s/2,s/4$ 上稳定。
+  \item 相邻层使用同一 branch chart，并由中心场 eigendirection overlap 匹配同一根；
+  center-field participation 不随 $j$ 消失。
+  \item one-cell BIE、全部内部 doubling Schur factors 和所有终端消元因子不过度病态，
+  并已排除它们在 contour 及内部的 poles；$|\operatorname{Im}k_{j,h}|$ 有可解释的
+  误差来源。
+\end{enumerate}
+若任一关键条件失败，只报告 singular-value minimum 或 resonance diagnostic；此时
+eigenvalue correction 和 effectivity 均标记为 unavailable。
+
+\section{Projected corrections}
+
+\subsection{精确有限层根上的 map correction}
+
+固定 $h$。设 $k_{j,h}$ 是 $F_{j,h}$ 的精确简单根，$x_j,y_j$ 是相应 unit-norm
+右、左零向量，并记
+\[
+  d_j=y_j^*F_{j,h}'(k_{j,h})x_j\ne0.
+\]
+定义相邻 map correction
+\begin{equation}
+  \delta_j^{\mathrm{map}}
+  =-
+  \frac{y_j^*\bigl(F_{j+1,h}-F_{j,h}\bigr)(k_{j,h})x_j}{d_j},
+  \qquad
+  \eta_j=|\delta_j^{\mathrm{map}}|.
+  \label{eq:map-correction}
+\end{equation}
+其一阶目标是 signed increment $k_{j+1,h}-k_{j,h}$。若记
+\[
+  e_j=k_{j,h}-k_{\infty,h}
+\]
+且 $e_{j+1}=o(e_j)$，则 $k_{j+1,h}-k_{j,h}=e_{j+1}-e_j\sim-e_j$。
+因此 $\eta_j$ 估计的是 coarse tail $|e_j|$，不是 fine tail $|e_{j+1}|$。
+
+这一公式来自非线性简单特征值的一阶扰动结构；左右零向量投影选择 map perturbation
+中真正耦合到目标根的分量，分母 $d_j$ 给出固定表示下的横截斜率
+\cite{GuettelTisseur2017}。$1/|d_j|$ 只能作为固定 representation 中的 conditioning
+proxy，不能声称是 representation-invariant 的物理 condition number。
+
+\subsection{未完全收敛的数值根}
+
+若 root solver 只给出 $\widetilde k_{j,h}$，并在该点得到 unit-norm singular vectors
+$\widetilde x_j,\widetilde y_j$，令
+\[
+  \widetilde d_j
+  =\widetilde y_j^*F_{j,h}'(\widetilde k_{j,h})\widetilde x_j.
+\]
+应把 root defect、map change 和总的 next-level predictor 分开：
+\begin{align}
+  \delta_j^{\mathrm{root}}
+  &=-\frac{\widetilde y_j^*F_{j,h}(\widetilde k_{j,h})\widetilde x_j}
+           {\widetilde d_j},\label{eq:root-correction}\\
+  \delta_j^{\mathrm{map}}
+  &=-\frac{\widetilde y_j^*
+    (F_{j+1,h}-F_{j,h})(\widetilde k_{j,h})\widetilde x_j}
+    {\widetilde d_j},\label{eq:computed-map-correction}\\
+  \delta_j^{\mathrm{tot}}
+  &=\delta_j^{\mathrm{root}}+\delta_j^{\mathrm{map}}
+   =-\frac{\widetilde y_j^*F_{j+1,h}(\widetilde k_{j,h})\widetilde x_j}
+            {\widetilde d_j}.\label{eq:total-correction}
+\end{align}
+$\delta_j^{\mathrm{tot}}$ 是 $k_{j+1,h}-\widetilde k_{j,h}$ 的一阶 predictor。
+若目标是 isolating finite-tail error，则 $|\delta_j^{\mathrm{root}}|$ 必须远小于
+$|\delta_j^{\mathrm{map}}|$，否则不能把 map part 单独解释为尾端误差。
+
+数值上，式\eqref{eq:computed-map-correction} 只需要一次 coarse root solve 和一次
+fine-map evaluation：在 $\widetilde k_{j,h}$ 保持相同 unknown ordering、scaling、
+branch chart 和 vectors，仅将 tail blocks 更新至第 $j+1$ 层，然后计算
+$F_{j+1,h}(\widetilde k_{j,h})\widetilde x_j$。求解 $k_{j+1,h}$ 不是 estimator 本身
+所必需，只在验证阶段用于检查 predicted increment。
+
+\section{条件渐近精确性}
+
+下面的命题完整陈述 estimator 达到 effectivity $1$ 所需的有限维假设。它不是当前
+BIE family 已经满足的无条件定理。
+
+\begin{proposition}[共同表示下 coarse-tail estimator 的条件渐近精确性]
+设 $U\subset\mathbb C$ 是 $k_{\infty,h}$ 的邻域，且闭圆盘
+$\overline D\Subset U$ 的内部包含 $k_{\infty,h}$；记
+$D:=\operatorname{int}(\overline D)$。对矩阵函数 $H$ 定义
+\[
+  \|H\|_{C^1(\overline D)}
+  =\max_{k\in\overline D}\|H(k)\|
+   +\max_{k\in\overline D}\|H'(k)\|.
+\]
+对每个充分大的 $j$，矩阵函数
+$F_{j,h}:U\to\mathbb C^{(n+8p)\times(n+8p)}$ 与
+$F_{\infty,h}:U\to\mathbb C^{(n+8p)\times(n+8p)}$ 均解析且正则，并且所有层级使用
+同一表示。假设：
+\begin{enumerate}
+  \item $F_{j,h}\to F_{\infty,h}$ 在 $C^1(\overline D)$ 中成立；
+  \item 存在 $U$ 上的解析矩阵函数 $G$ 和趋于零的非零数列 $\varepsilon_j$，使
+  \[
+    F_{j,h}-F_{\infty,h}
+    =\varepsilon_jG+o(\varepsilon_j)
+    \quad\text{in }C^1(\overline D),
+    \qquad
+    \varepsilon_{j+1}=o(\varepsilon_j);
+  \]
+  \item $k_{\infty,h}$ 是 $F_{\infty,h}$ 的孤立简单根，unit-norm 左右零向量
+  $y_\infty,x_\infty$ 满足
+  \[
+    d_\infty
+    =y_\infty^*F_{\infty,h}'(k_{\infty,h})x_\infty\ne0;
+  \]
+  \item $D$ 内的对应简单根 $k_{j,h}\to k_{\infty,h}$，相应 unit-norm 左右零向量的相位可选为
+  $x_j\to x_\infty$、$y_j\to y_\infty$；
+  \item leading projected coefficient
+  \[
+    y_\infty^*G(k_{\infty,h})x_\infty
+  \]
+  非零。
+\end{enumerate}
+则式\eqref{eq:map-correction} 满足
+\[
+  \frac{|\delta_j^{\mathrm{map}}|}
+       {|k_{j,h}-k_{\infty,h}|}
+  \longrightarrow1.
+\]
+\end{proposition}
+
+\begin{proof}
+由有限维解析矩阵函数的简单根扰动展开，在上述共同表示和 $C^1$ 展开下，
+\[
+  k_{j,h}-k_{\infty,h}
+  =-\varepsilon_j
+  \frac{y_\infty^*G(k_{\infty,h})x_\infty}{d_\infty}
+  +o(\varepsilon_j).
+\]
+这一步使用的非退化条件正是 $d_\infty\ne0$；主投影系数非零保证右端主项不消失。
+
+另一方面，$\varepsilon_{j+1}=o(\varepsilon_j)$ 给出
+\[
+  F_{j+1,h}-F_{j,h}
+  =-\varepsilon_jG+o(\varepsilon_j)
+  \quad\text{in }C^1(\overline D).
+\]
+由于 $k_{j,h}\to k_{\infty,h}$、$x_j\to x_\infty$、
+$y_j\to y_\infty$，且 $C^1$ 收敛保证
+\[
+  y_j^*F_{j,h}'(k_{j,h})x_j=d_\infty+o(1),
+\]
+式\eqref{eq:map-correction} 的分子满足
+\[
+  y_j^*\bigl(F_{j+1,h}-F_{j,h}\bigr)(k_{j,h})x_j
+  =-\varepsilon_j
+   y_\infty^*G(k_{\infty,h})x_\infty
+   +o(\varepsilon_j).
+\]
+因此
+\[
+  \delta_j^{\mathrm{map}}
+  =\varepsilon_j
+  \frac{y_\infty^*G(k_{\infty,h})x_\infty}{d_\infty}
+  +o(\varepsilon_j).
+\]
+它与 $k_{j,h}-k_{\infty,h}$ 的主项互为相反数。由主投影系数非零，取绝对值并相除即得
+所述极限。
+\end{proof}
+
+\begin{remark}
+命题中的 $C^1$ expansion、$\varepsilon_{j+1}=o(\varepsilon_j)$ 和 leading coefficient
+非消失均是实质假设。当前尚无结果证明它们对实际 finite-tail BIE maps 成立；
+termination resonance、稳定/不稳定 multiplier separation 变弱或主项消去都可能使
+结论失效。
+\end{remark}
+
+\section{严格区间需要独立 saturation 与 remainder}
+
+令 $e_j=k_{j,h}-k_{\infty,h}$。假设另有独立理论或可验证界给出
+\[
+  |e_{j+1}|\le\bar q|e_j|,
+  \qquad 0\le\bar q<1,
+\]
+并且一阶 correction remainder 满足
+\[
+  |(k_{j+1,h}-k_{j,h})-\delta_j^{\mathrm{map}}|\le r_j.
+\]
+由 $k_{j+1,h}-k_{j,h}=e_{j+1}-e_j$ 和三角不等式，
+\[
+  (1-\bar q)|e_j|
+  \le |k_{j+1,h}-k_{j,h}|
+  \le (1+\bar q)|e_j|.
+\]
+同时
+\[
+  \max(0,|\delta_j^{\mathrm{map}}|-r_j)
+  \le |k_{j+1,h}-k_{j,h}|
+  \le |\delta_j^{\mathrm{map}}|+r_j.
+\]
+合并两组不等式得到严格区间
+\begin{equation}
+  \boxed{
+  \frac{\max(0,|\delta_j^{\mathrm{map}}|-r_j)}{1+\bar q}
+  \le |k_{j,h}-k_{\infty,h}|
+  \le
+  \frac{|\delta_j^{\mathrm{map}}|+r_j}{1-\bar q}}
+  .
+  \label{eq:reliable-interval}
+\end{equation}
+
+区间\eqref{eq:reliable-interval} 的推导本身没有使用经验渐近判断，但其可靠性完全取决于
+$\bar q$ 和 $r_j$ 的独立有效性。$r_j$ 最终需要覆盖 nonlinear Taylor remainder、
+derivative difference、singular-vector error、matrix evaluation error、linear solve
+error 和 root-solve error。当前项目尚无这样的可计算上界，因此现阶段不得输出
+``certified interval''。
+
+有限个 observed ratios
+\[
+  q_j^{\mathrm{obs}}
+  =\frac{|\delta_{j+1}^{\mathrm{map}}|}
+         {|\delta_j^{\mathrm{map}}|}
+\]
+只能作 diagnostic。精确标量层级
+\[
+  f_j^{\mathrm{osc}}(k)=k-\zeta_j,
+  \qquad
+  \zeta_j=0.8^{2^j}\cos\!\left(2^j\frac{2178\pi}{10007}\right),
+  \qquad
+  k_\infty=0,
+\]
+中的 projected correction 恰好等于相邻根增量，但三个连续 observed ratios 可约为
+$0.23775$、$0.00660$ 和 $1.02151$。前两个数再小也不能证明下一层 contraction。
+因此经验 $q_j^{\mathrm{obs}}$ 不能生成 $\bar q$。
+
+\section{数值实现协议}
+
+\subsection{阶段化实现}
+
+建议按以下顺序实现，并在每个 gate 失败时停止，而不是直接进入完整 effectivity study。
+
+\paragraph{阶段 A：map-only prototype.}
+固定 BIE、QP Green/proxy 和 Rayleigh port 参数，复用 one-cell scattering solve；实现
+纯线性代数的 composition/doubling。分别构造远端 Dirichlet、固定 real Robin 和
+zero-incoming maps，记录每次内部 Schur、termination 和 Cayley factors 的条件数，
+并维护搜索域的 pole ledger。与同一
+cell map 的 stable QZ/Riccati fixed point 比较只验证 infinity treatment，不能视为
+独立的 whole-eigenproblem reference。
+
+\paragraph{阶段 B：center coupling.}
+按式\eqref{eq:center-bie}--\eqref{eq:right-d} 组装 augmented $F_{j,h}(k)$，冻结
+unknown ordering、port scaling 和 phase origin。逐行核对左右 Cauchy 法向号、
+equation count 和 BIE extractor conventions。证明或至少在进入数值 root 阶段前闭合
+augmented kernel 与 finite-field solution 的等价性，并排除 representation nullspace
+和 one-cell poles。
+
+\paragraph{阶段 C：root and estimator.}
+先用实轴 scan 定位；再建立 anchored analytic chart，选取已排除 one-cell、doubling
+Schur、terminal 与 BIE poles 的 contour，确认
+root count 为 $1$；最后用 bordered complex Newton 求根。通过 root qualification 后，
+分别计算 $\delta_j^{\mathrm{root}}$、$\delta_j^{\mathrm{map}}$ 和
+$\delta_j^{\mathrm{tot}}$。validation 阶段另求 matched $k_{j+1,h}$，检查
+\[
+  \frac{|\delta_j^{\mathrm{map}}-(k_{j+1,h}-k_{j,h})|}
+       {|k_{j+1,h}-k_{j,h}|}
+\]
+是否随层级下降；当分母已接近 root-solve 或 matrix-evaluation error 时不报告该比值。
+
+\paragraph{阶段 D：reference and falsification.}
+分别执行：doubling 与 QZ/Riccati map cross-check；DtN 与 trace-subspace whole-root
+internal cross-check；独立 FEM/supercell 或第二套高精度 solver；固定充分大 $j$ 后的
+BIE node refinement；branch crossing、termination resonance、nonnormal simple NEP、
+false-$q$ 和 level-dependent scaling manufactured tests。失败点必须保留，不能通过
+逐例调参或删除样本改善 effectivity。
+
+\subsection{误差层和报告量}
+
+一次 finite-tail study 只改变 doubling depth $j$。至少固定并报告 $\beta$、几何和
+材料、BIE nodes、Rayleigh order、QP Green/proxy 参数、arithmetic precision、matrix
+scaling、远端闭合、root rule、linear tolerance 和 derivative rule。主要误差层如下。
+
+\begin{table}[htbp]
+  \centering
+  \caption{必须分开的误差层与诊断。}
+  \begin{tabular}{p{0.12\textwidth}p{0.39\textwidth}p{0.37\textwidth}}
+    \toprule
+    层级 & 误差源 & 主要诊断 \\
+    \midrule
+    E2--E3 & BIE 求积、QP Green/proxy、端口截断 & node/order sweep、BIE 与 proxy residual \\
+    E4 & finite-tail 对 half-guide map 的近似 & closure comparison、map difference、transmission decay \\
+    E5--E6 & doubling、terminal、Cayley 和 fixed-$k$ matrix evaluation & rcond、solve residual、重复计算 \\
+    E7 & candidate-to-root qualification & contour count、singular residual、Newton defect、root repeatability \\
+    E8 & first-order correction remainder & correction 与 matched next-level root shift 的差 \\
+    E9 & reference truth uncertainty & 独立方法 spread 与 reference error bar \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+以下量不能互相替代：$\sigma_{\min}(F_{j,h})$ 是矩阵近奇异诊断，不是特征值误差；
+$\max_{\varsigma\in\{-,+\}}
+\|\Lambda_{\varsigma,j+1}^{\mathrm D}-\Lambda_{\varsigma,j}^{\mathrm D}\|$ 是 map-level change，
+不含 root sensitivity；
+$|k_{j+1,h}-k_{j,h}|$ 是相邻根差，不自动等于剩余尾误差；同一 BIE cell map 产生的
+doubling、Riccati 和 QZ agreement 不是独立 reference truth。
+
+应分别报告 tail effectivity 和 total effectivity：
+\[
+  \mathcal I_j^{\mathrm{tail}}
+  =\frac{\eta_j}{|k_{j,h}-k_{\infty,h}^{\mathrm{ref}}|},
+  \qquad
+  \mathcal I_j^{\mathrm{total}}
+  =\frac{\eta_j}{|k_{j,h}-k_*^{\mathrm{ref}}|}.
+\]
+只有当独立 refinement 表明 $|k_{\infty,h}-k_*|$ 明显小于 finite-tail error，或另有
+该误差层的控制时，total effectivity 才能用于评价本文 estimator。
+
+\subsection{停止条件}
+
+出现下列任一情况时，应返回 formulation 或误差隔离阶段：找不到 isolated simple
+root；contour count 对轮廓缩放、branch chart 或 quadrature 不稳定；搜索域内的
+one-cell、doubling Schur、terminal 或 BIE poles 不能排除；只能得到稳定的
+实轴 singular-value dip；augmented kernel equivalence 或 square regularity 不能建立；
+Schur/Cayley matrices 系统性病态；$\delta_j^{\mathrm{map}}$ 不能预测 next-level root
+shift；BIE node test 表明共同离散误差大于 finite-tail error；或 reference uncertainty
+与待估计误差同量级。增加 scan density 或收紧 solver tolerance 不能掩盖这些失败。
+
+\section{结构交叉检查、反例与解释边界}
+
+若能证明存在正定、与 $j$ 无关的 weight $W$，使实 $k$ 上
+\[
+  WF_{j,h}(k)=F_{j,h}(k)^*W,
+\]
+则可考虑 signed-eigenvalue 或 inertia 的实根搜索。当前未证明这一结构，所以主方案
+仍是复平面 root solve。普通逐元素 Hermitian defect 也不能替代与 port basis
+mass/flux pairing 一致的 weighted check。
+
+以下 falsification cases 应在实现前后持续保留。
+\begin{enumerate}
+  \item \textbf{非根 dip：} $f_{\mathrm{dip}}(k)=k-k_0+\mathrm{i}\tau$ 检查 scan 不会被误写成实根。
+  \item \textbf{层级缩放：} $\widetilde f_j=\alpha_jf_j$ 检查公共表示 gate 是否真正生效。
+  \item \textbf{false asymptotic gate：} 上节 oscillatory scalar hierarchy 检查 observed
+  ratios 不会产生 certificate。
+  \item \textbf{branch crossing：} contour 穿越传播通道附近时，检查所有节点是否共享
+  anchored analytic continuation。
+  \item \textbf{termination resonance：} 检查远端闭合病态和 center participation，
+  防止把 termination-localized state 匹配为目标导模。
+  \item \textbf{nonnormal simple root：} 检查左右向量投影、correction 符号和
+  $|y_j^*F_{j,h}'x_j|$ 的敏感性。
+\end{enumerate}
+
+独立归一化 $x_j$ 和 $y_j$ 的复相位会在同一个 projected quotient 中抵消，不是误差
+来源；相反，level-dependent row/column scaling 会真实污染 correction。map difference
+很小而 $\eta_j$ 很大也不一定是失败：它可能说明目标根的横截斜率很小、对 map
+perturbation 高度敏感。此时应报告 conditioning，而不是用重新缩放隐藏它。
+
+\section{当前局限与推荐下一步}
+
+本文方法在数学逻辑上区分了 scan、实际根、相邻根位移、coarse finite-tail error 和
+总离散误差，并给出了可直接实现的复根求解与 projected correction。但下列义务尚未
+闭合。
+\begin{enumerate}
+  \item 把 augmented blocks 逐行映射到实际 center BIE 和 extractors，证明
+  kernel--finite-field equivalence 与同维 exact-map lift，并处理 far-block 可逆性、
+  representation nullspace 与 one-cell poles。
+  \item 实现 anchored Rayleigh chart、带完整 pole ledger 的 contour count、bordered
+  complex Newton 和 adjacent-level branch matching。
+  \item 从 stable-subspace separation 或 map-convergence theory 证明
+  $F_{j,h}\to F_{\infty,h}$ 的共同邻域 $C^1$ 展开，并识别主项是否非零。
+  \item 给出独立 saturation 常数 $\bar q<1$ 与可计算 remainder $r_j$；在此以前只把
+  $\eta_j$ 报告为 empirical estimator 并注明结论有条件，不报告 certified interval。
+  \item 建立独立 FEM/supercell 或第二套高精度 reference，并在固定 DtN 后执行 BIE
+  node falsification，分开 tail 与 total effectivity。
+  \item 在 MATLAB 中完成原型和最终验证。本文未运行 MATLAB 或 Octave，也未生成任何
+  项目数值结果。
+\end{enumerate}
+
+因此，当前最合理的下一步不是扩大参数扫描，而是先关闭 augmented operator
+equivalence，然后实现最小的 analytic complex root solver。只有 root qualification
+通过，才验证式\eqref{eq:map-correction}；只有独立得到 $\bar q$ 与 $r_j$，才使用
+式\eqref{eq:reliable-interval}。
+
+\begin{thebibliography}{9}
+
+\bibitem{Fliss2013}
+S.~Fliss,
+\newblock A Dirichlet-to-Neumann approach for the exact computation of guided modes in photonic crystal waveguides,
+\newblock \emph{SIAM Journal on Scientific Computing}, 35(2), B438--B461, 2013.
+\newblock DOI: \href{https://doi.org/10.1137/12086697X}{10.1137/12086697X}.
+
+\bibitem{GuettelTisseur2017}
+S.~G{\"u}ttel and F.~Tisseur,
+\newblock The nonlinear eigenvalue problem,
+\newblock \emph{Acta Numerica}, 26, 2017.
+\newblock DOI: \href{https://doi.org/10.1017/S0962492917000034}{10.1017/S0962492917000034}.
+
+\bibitem{Ehrhardt2009}
+M.~Ehrhardt, J.~Sun, and C.~Zheng,
+\newblock Evaluation of scattering operators for semi-infinite periodic arrays,
+\newblock \emph{Communications in Mathematical Sciences}, 7, 347--364, 2009.
+\newblock DOI: \href{https://doi.org/10.4310/CMS.2009.v7.n2.a4}{10.4310/CMS.2009.v7.n2.a4}.
+
+\end{thebibliography}
+
+\end{document}

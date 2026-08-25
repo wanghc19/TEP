@@ -1,0 +1,4 @@
+"gate","value","tolerance","pass","mandatory","note"
+"slp_self_change",7.5233170674026035e-08,2.0000000000000001e-09,0,1.0000000000000000e+00,"maximum per-axis, boundary, or wall coefficient change"
+"slp_pairwise_coefficients",4.6871193978567445e-08,1.0000000000000000e-08,0,1.0000000000000000e+00,"maximum E-P, E-R, or P-R coefficient difference per side/mode"
+"rayleigh_retained_rows",0.0000000000000000e+00,5.0000000000000002e-14,1,1.0000000000000000e+00,"direct extractor retained modes across M=12,24,48"

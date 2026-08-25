@@ -1,0 +1,10 @@
+gate,threshold,observed,pass,availability,failure_reason
+production_internal_A_b_identity,NaN,NaN,0,0,NOT_OBSERVABLE_WITH_CURRENT_INTERFACE
+mirrored_constructor_coefficient_output_reproduction,9.9999999999999994e-12,2.7985395664043119e-07,0,1,MIRRORED_CONSTRUCTOR_COEFFICIENT_OUTPUT_REPRODUCTION_FAILURE
+mirrored_constructor_proxy_field_output_reproduction,9.9999999999999994e-12,5.5315521671957456e-10,0,1,MIRRORED_CONSTRUCTOR_PROXY_FIELD_OUTPUT_REPRODUCTION_FAILURE
+mirrored_constructor_residual_output_reproduction,9.9999999999999994e-12,1.2503878229520087e-09,0,1,MIRRORED_CONSTRUCTOR_RESIDUAL_OUTPUT_REPRODUCTION_FAILURE
+off_collocation_readiness,NaN,5.9114540333348429e-08,0,0,PENDING_REVIEW
+object_compatibility_resolution,1.0000000000000001e-05,1.8985077139248387e-09,1,1,
+object_compatibility_downstream,1.0000000000000001e-05,1.6709315135135221e-09,1,1,
+object_compatibility_all,1.0000000000000001e-05,1.8985077139248387e-09,1,1,
+source_provenance,1,1,1,1,

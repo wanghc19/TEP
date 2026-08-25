@@ -1,0 +1,2 @@
+"gate","value","tolerance","pass","mandatory","note"
+"pilot_no_scientific_verdict",NaN,NaN,1.0000000000000000e+00,0.0000000000000000e+00,"pilot measurements are not acceptance evidence"
