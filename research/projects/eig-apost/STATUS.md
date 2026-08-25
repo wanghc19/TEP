@@ -1,8 +1,23 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-08-24。
+更新日期：2026-08-25。
 
 ## 当前状态
+
+- **2026-08-25 I3.2 same-trial evaluation-cap 负结果：** `ecap-a1` 已消费并保留为
+  `I3_2_EXECUTION_UNAVAILABLE` implementation failure；它在 `LOCAL_identity` 的 integer/double
+  arithmetic 停止，随后 report open permission 又使 shell exit 1。Revision E `ecap-a2` 通过
+  certificate identity，并完成冻结的 7 个 image、3 个 circle、3 个 wall 及 Riccati/Gauss
+  same-trial evaluation levels。实际 retained memory $664.47068214416504$ MiB 超过 $640$ MiB
+  hard limit，所以在 cap/full-$P$/$q$/interval 前停止，状态为
+  `I3_2_RESOURCE_BUDGET_UNAVAILABLE / EMPIRICAL_CAP_UNRESOLVED`。已到达的 diagnostics 另有
+  actual-$\Delta T$ contraction $2.2946515117026931>0.80$、finite-image Bloch
+  $0.071741947137921119>10^{-10}$、analytic-kernel aggregate `Inf` 三项资格失败。这些是
+  ordinary same-chain negative evidence，不是 independent reference 或 strict cap。当前 I3.2
+  包含已建立的 conditional theorem 与 same-trial empirical-cap application；I3.3 只保留
+  independent reference/effectivity；I3.4 负责 strict enclosure、certified gap 和 existence。
+  全部 strict/reliable/independent/existence flags 仍 false。独立审查见
+  [[research/projects/eig-apost/implementation/i3/review-3-2b|review-3-2b]]。
 
 - **2026-08-24 I3.2 条件性离散证书谱包含定理：**
   [[research/projects/eig-apost/implementation/i3/design-3-2a|design-3-2a]] 已由 Researcher
@@ -29,8 +44,8 @@
   $M=48$ 是 input-only，所有 512 个已计算 circle modes 进入 $q$ 且 angular-tail 门通过，
   outside-$M$ share $3.6179\%$ 只是描述性诊断。未计算 Fourier tail 仍未 enclosure。I3.1
   状态为 `PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`。circle-action caveat
-  是未来 I3.3 empirical-cap/effectivity 的资格目标，不阻止上方 I3.2 定理；全部 outward/gap/
-  existence flags 仍 false，另属 I3.4。详见
+  已由上方 I3.2 same-trial application 继续诊断；它不阻止条件性定理。I3.3 只做 independent
+  reference/effectivity；全部 outward/gap/existence flags 仍 false，另属 I3.4。详见
   [[research/projects/eig-apost/implementation/i3/review-3-1f|review-3-1f]]。
 
 - **2026-08-24 I3.1 纯 BIE 边界残量 indicator candidate：**
@@ -302,15 +317,18 @@
   将 $M_{\mathrm{trace}}=48$ 的最坏误差和 omitted energy 分别压到
   $7.08\times10^{-12}$ 与 $5.00\times10^{-13}$。OP-I4-1h 与 OP-I4-6 因而在当前制造
   密度、实数非 Wood 参数和有限 $M_{\mathrm{ref}}=96$ 意义下关闭。
-- 状态：`active investigation -- I3.1 preliminary objective achieved; I3.2 theorem established`。
+- 状态：`active investigation -- I3.1 preliminary objective achieved; I3.2 theorem established / empirical cap unresolved`。
   `ntot` 与 $M$ 两条三层单轴实验的 saved candidate 均完全相同且 `SAME_MODE`；I3.1 已开始
   saved-candidate continuous residual 研究。中心空列 strong-residual baseline 已完成，但 ratio
   $22.43882099031153$ 由固定单胞 cutoff 主导，分辨率不足；全波导 BIE-informed smooth
   trial 又在 fixed holdout fit 首败；Q1--RT0 V2 随后在 fine phase/scale Gram qualification
   首败；BIE-collar V3 再在 coarse lead composite RT0-majorant assembly 首败。纯 BIE
   `pbie-a2` 先形成 finite indicator；全边界 `fbie-a1` 又关闭旧 wall/$T$/outside-$M$ 问题，但
-  circle-action refinement ratio $0.7741$ 仍使 ordinary candidate 未获内部资格，并成为未来
-  I3.3 empirical-cap/effectivity 的首要目标。I3.2 条件性证书定理不以该诊断为前置。
+  circle-action refinement ratio $0.7741$ 仍使 ordinary candidate 未获内部资格。I3.2
+  条件性证书定理不以该诊断为前置；同一阶段的 `ecap-a2` 已完成 same-trial evaluation，但因
+  $664.470682>640$ MiB 资源门使本次 empirical cap 未计算。三项 fail-open evaluation
+  qualification failures 按冻结 component gates 也会使 cap unresolved；I3.3 只负责
+  independent reference/effectivity。
   reliability/enclosure flags、current-model projected gap 与 absolute/gap-relative resolution
   则是 I3.4 相应存在性和上界结论的门。第一层不要求唯一 mode。该状态不表示 sub-grid
   minimizer、finite root 或连续真值零漂移，也不构成收敛证据。

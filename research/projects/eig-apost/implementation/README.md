@@ -3,8 +3,10 @@
 ## 当前状态
 
 当前新路线处于 `I3_1_PRELIMINARY_OBJECTIVE_ACHIEVED / COMPUTED_ESTIMATOR_CANDIDATE`；I3.2
-条件性证书谱包含定理已经建立，actual application hypotheses 仍 open。经验 caps/effectivity 与
-可靠 enclosure/gap 分别属于 I3.3/I3.4。其输入阶段 I2 已以
+条件性证书谱包含定理已经建立，same-trial empirical-cap application 则由 `ecap-a2` 给出
+`RESOURCE_BUDGET_UNAVAILABLE / EMPIRICAL_CAP_UNRESOLVED`。该 run 完成 evaluation 后在 cap、
+full-$P$、$q$ 和 interval 前超过 $640$ MiB hard limit。I3.3 只负责 independent
+reference/effectivity，可靠 enclosure/gap 属于 I3.4。其输入阶段 I2 已以
 `I2_3_PASS_WITH_CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` 收口。精确
 half-guide DtN 由半无限边值问题定义，连续中心算子 $\mathcal F(k)$ 在任何
 BIE/Fourier 截断和 ordered QZ 之前定义真实谱对象。现行数学权威是
@@ -83,9 +85,15 @@ $q=1.0318643108971929\times10^{-10}$ 和宽度 $3.7823388865376728\times10^{-10}
 circle modes 进入 $q$ 且 angular-tail 门通过，未计算 Fourier tail 仍未 enclosure；
 唯一 warning 是 circle action change $0.77408786032496468>0.20$。因此 I3.1 已有
 `COMPUTED ESTIMATOR CANDIDATE`，但普通数值仍 `NUMERICALLY_UNQUALIFIED`。该 warning 不阻止
-I3.2 theorem；它是未来 I3.3 empirical-cap target。I3.4 的 outward/gap 条件仍独立未闭合。
-I3.2 见 [[research/projects/eig-apost/implementation/i3/design-3-2a|design-3-2a]] 与
-[[research/projects/eig-apost/implementation/i3/review-3-2a|review-3-2a]]。
+I3.2 theorem。same-trial cap 的正式 `ecap-a2` 通过 identity 并完成 evaluation，但以
+$664.470682>640$ MiB 资源门停止，因此 cap 未计算。actual-$\Delta T$、finite-image Bloch 和
+analytic-kernel 资格也未通过；按冻结 component gates，这些 fail-open warnings 会保存 raw
+diagnostics，但也使相应 empirical cap unresolved。I3.4 的
+outward/gap 条件仍独立未闭合。I3.2 见
+[[research/projects/eig-apost/implementation/i3/design-3-2a|design-3-2a]]、
+[[research/projects/eig-apost/implementation/i3/review-3-2a|review-3-2a]]、
+[[research/projects/eig-apost/implementation/i3/design-3-2b|design-3-2b]] 与
+[[research/projects/eig-apost/implementation/i3/review-3-2b|review-3-2b]]。
 finite one-step root correction 仍为
 OPTIONAL。第一层只要求可靠区间进入
 current continuous projected gap，并通过
@@ -156,8 +164,10 @@ implementation/
   phase/scale Gram qualification 首败；BIE-collar V3 随后在含材料圆修正的 RT0-majorant
   pre-factor 首败；纯 BIE `pbie-a2` 随后形成首个 finite indicator。最新全边界 `fbie-a1`
   关闭旧 wall/$T$/outside-$M$ 问题，但 circle-action refinement 未通过。I3.1 已完成 preliminary
-  objective；I3.2 conditional theorem 已建立。该 warning 留给 I3.3 empirical caps，可靠
-  enclosure 留给 I3.4。
+  objective；I3.2 conditional theorem 已建立。same-trial `ecap-a2` 已在 I3.2 内尝试 empirical
+  cap，但资源硬门使本次 cap 未计算；三项 fail-open qualification failures 也会使相应 cap
+  unresolved。I3.3 只做
+  independent reference/effectivity，可靠 enclosure 留给 I3.4。
 - [[research/projects/eig-apost/implementation/ROADMAP|ROADMAP.md]]：只维护新路线 I1--I3
   的项目级依赖和退出条件。
 - [[research/projects/eig-apost/implementation/SYMBOL|SYMBOL.md]]：集中说明跨阶段缩写、

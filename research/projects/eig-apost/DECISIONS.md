@@ -330,3 +330,27 @@ requirements for the residual interval, authorize an experiment or modify histor
 The formal contract and its independent review are
 [[research/projects/eig-apost/implementation/i3/design-3-2a|design-3-2a]] and
 [[research/projects/eig-apost/implementation/i3/review-3-2a|review-3-2a]].
+
+## 2026-08-25 — Same-trial empirical cap stays in I3.2; I3.3 is independent validation only
+
+- **I3.2 scope.** I3.2 now contains both the established conditional certificate theorem and the
+  same-trial empirical evaluation-cap application. The latter is diagnostic and ordinary-double;
+  it cannot instantiate the theorem's strict hypotheses.
+- **Consumed negative result.** `ecap-a1` is an implementation failure. Revision E `ecap-a2` passed
+  certificate identity and completed same-trial evaluation, then exceeded the 640 MiB hard memory
+  limit at 664.470682 MiB before cap, full-$P$, $q$, or interval construction. Its current status is
+  `I3_2_RESOURCE_BUDGET_UNAVAILABLE / EMPIRICAL_CAP_UNRESOLVED`.
+- **Qualification evidence.** The reached evaluation separately failed actual fixed-density
+  Delta-$T$ action, finite-image physical Bloch, and analytic-kernel qualification. These failures
+  are retained as same-chain diagnostics, not promoted to independent evidence.
+- **I3.3 scope.** I3.3 now means only independent reference and effectivity validation. It does not
+  own same-trial cap construction and cannot reuse the same evaluator as its independent reference.
+- **I3.4 scope.** Strict outward residual/field/tail enclosure, same-operator certified gap,
+  preregistered resolution and discrete-eigenvalue existence remain I3.4.
+- **History.** This is a forward current-planning clarification. The 2026-08-24 decision and all
+  historical designs, reviews, source files, attempt tags and append-only outputs retain their
+  original labels and bytes.
+
+The implementation contract and consumed result review are
+[[research/projects/eig-apost/implementation/i3/design-3-2b|design-3-2b]] and
+[[research/projects/eig-apost/implementation/i3/review-3-2b|review-3-2b]].

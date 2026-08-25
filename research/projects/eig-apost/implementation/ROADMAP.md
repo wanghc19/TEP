@@ -109,7 +109,9 @@ I3 直接研究 candidate 与真实连续特征值之间的误差。它不以某
 finite indicator；最新全边界 BIE 进一步关闭旧 wall/$T$/outside-$M$ 资格问题，但 circle-action
 refinement 尚未通过。当前 I3.1 状态为
 `PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`；I3.2 条件性证书谱包含定理已
-建立，但 actual application hypotheses 仍 open。
+建立。same-trial `ecap-a2` application 通过 identity 并完成 evaluation，但以
+$664.470682>640$ MiB 资源硬门停止，未形成 cap、full-$P$、$q$ 或 interval；当前为
+`EMPIRICAL_CAP_UNRESOLVED`。
 零 observed shift 不能单独
 验证 next-level correction、收敛或 estimator；中心空列 ratio 因固定单胞 cutoff 主导而失去
 分辨率，lead-aware 实验则在形成通过资格的全波导 continuous trial/residual 之前即于固定
@@ -123,9 +125,11 @@ nonzero-mode $T$ oracle 的 $O(1)$ 误差和 outside-$M$ share $51.5\%$ 使其�
 得到 $q=1.0318643108971929\times10^{-10}$ 和宽度
 $3.7823388865376728\times10^{-10}$；wall/actual-$\Delta T$ 检查通过，全部 512 个已计算 circle
 modes 进入 $q$ 且 angular-tail 门通过；未计算 Fourier tail 仍未 enclosure。唯一 warning 是
-circle action change $0.77408786032496468>0.20$。所以当前只须先闭合并冻结这一
-内部 action 分辨率；它不阻止 I3.2 theorem，但仍是未来 I3.3 empirical-cap/effectivity 的资格
-目标。可靠 outward enclosure、projected gap 与宽度门属于 I3.4。
+circle action change $0.77408786032496468>0.20$。该内部 action 分辨率不阻止 I3.2 theorem，
+并已由同一阶段的 same-trial design 继续诊断。新 nested evaluation 已实际暴露
+actual-$\Delta T$、finite-image Bloch 和 analytic-kernel
+三项资格失败，但尚未形成 cap。I3.3 只负责 independent reference/effectivity；可靠 outward
+enclosure、projected gap 与宽度门属于 I3.4。
 
 ### 输入、四项输出和与上界的关系
 
@@ -140,8 +144,11 @@ circle action change $0.77408786032496468>0.20$。所以当前只须先闭合并
   一致性证据。没有证明时只能称渐近误差指标或 estimator candidate。
 - **I3.2 输出：**对同一连续 trial，证明 strict residual/field caps 若成立，则
   $\overline q_h<1$ 给出 continuous spectral-intersection interval；same-$A$ certified gap
-  containment 再给出条件性离散存在。当前只建立定理，不声称 caps 已有。
-- **I3.3 输出：**在 estimator 冻结后，用未参与其构造的独立 reference 检验其是否跟踪
+  containment 再给出条件性离散存在；并以同一 frozen certificate 做 ordinary same-trial
+  empirical evaluation-cap application。定理已建立；`ecap-a2` 因资源首败未形成 empirical
+  cap，三项 fail-open warnings 按 component gates 也会使 cap unresolved；strict application
+  亦未形成。
+- **I3.3 输出：**在 estimator/candidate 与 I3.2 same-trial evaluation 冻结后，只用未参与其构造的独立 reference 检验其是否跟踪
   candidate 到 gap 内连续离散特征频率集合的距离。通过后才称
   `empirical eigenvalue-error estimator`；只有 reference 独立识别特定 mode 时才检验
   target-specific error。同方法高分辨率结果只能作有共享偏差的后备。
@@ -165,15 +172,16 @@ circle action change $0.77408786032496468>0.20$。所以当前只须先闭合并
 | Milestone | 只回答什么问题 | 独立输出 |
 |---|---|---|
 | I3.1 构造并内部论证误差指标 | 能否构造实际可计算的 $\eta_h$，并说明其数学来源、假设、覆盖和忽略的误差 | 冻结的 estimator candidate 与内部检查结果 |
-| I3.2 条件性证书谱包含定理 | strict residual/field caps 若存在，能否推出连续谱相交及条件性离散存在 | 条件性定理、cap 可行域与 certificate application obligations |
-| I3.3 经验 cap 与独立 effectivity | 冻结后的 estimator 是否形成经验 cap，并在未参与构造的独立 reference 上跟踪真值误差量级 | empirical-cap/effectivity verdict；失败时保留较弱 indicator |
+| I3.2 条件性定理与 same-trial evaluation cap | strict residual/field caps 若存在，能否推出连续谱相交及条件性离散存在；同一 certificate 的 nested evaluation 能否形成 ordinary empirical cap | 条件性定理、cap 可行域、certificate obligations；`ecap-a2` 当前为 `RESOURCE_BUDGET_UNAVAILABLE / EMPIRICAL_CAP_UNRESOLVED` |
+| I3.3 独立 reference 与 effectivity | 冻结后的 estimator/candidate 能否在未参与构造的独立 reference 上跟踪真值误差量级 | independent-effectivity verdict；失败时保留较弱 indicator |
 | I3.4 可靠 enclosure 与 gap | 能否由已证明覆盖的 residual/field norms、numerical enclosure、continuous projected gap 和预注册分辨率得到不含未知常数的 existence-distance 上界；必要时再升级唯一目标 | $U_h$、`EXISTS_BUT_RESOLUTION_INSUFFICIENT` 或 `UPPER_BOUND_UNAVAILABLE` |
 
 I3.1 已冻结并运行首个最低成本特殊情形：在 homogeneous empty center column 中，由 I2 的
 Fourier 墙系数构造显式场，乘固定单胞 cutoff 后直接计算 continuous strong-residual norm ratio。
 `center-a1` 得到 $22.43882099031153$；积分层稳定，但两个 cutoff 导数项分别约为 $17.14$ 和
 $4.93$，名义区间跨过零，因而该 reconstruction 对预注册 $10^{-6}$ 频率尺度分辨率不足。
-这是一项有效负结果，不能实例化现行 I3.2 strict theorem，也不是 I3.3 empirical estimator。
+这是一项有效负结果，不能实例化现行 I3.2 strict theorem，也没有形成可进入 I3.3 independent
+effectivity 的冻结 estimator。
 
 I3.1 下一步仍须直接作用于连续物理算子，不先定位 finite zero 或预测 projected finite-root shift。
 历史全波导 BIE-informed Fourier--Hermite/bubble reconstruction 已正式运行；
@@ -206,16 +214,20 @@ finite indicator；全边界
 进一步通过 actual $\Delta T$ 与 wall refinement；全部 512 个已计算 circle modes 进入 $q$ 且
 angular-tail 门通过，未计算 Fourier tail 仍未 enclosure。独立结论见
 [[research/projects/eig-apost/implementation/i3/review-3-1f|review-3-1f]]。当前下一门是诊断并
-冻结 circle action $256\to512$ 分辨率；它是 I3.1 caveat 与未来 I3.3 empirical-cap target，
-不阻止 I3.2 theorem。residual upper、field lower、tail、continuous projected gap 与可靠宽度的
+冻结 circle action $256\to512$ 分辨率；它是 I3.1 caveat，并已由 I3.2 same-trial design 继续
+诊断。`ecap-a2` 完成 evaluation 后因资源门停止，所以本次 cap 未计算；actual-$\Delta T$、
+finite-image Bloch、analytic-kernel fail-open warnings 按冻结 component gates 也会使 cap
+unresolved。这不阻止 I3.2 theorem。residual upper、field lower、tail、continuous projected gap 与可靠宽度的
 outward enclosure 归 I3.4 研究。I3.2 的现行设计与审查见
 [[research/projects/eig-apost/implementation/i3/design-3-2a|design-3-2a]] 和
-[[research/projects/eig-apost/implementation/i3/review-3-2a|review-3-2a]]。
+[[research/projects/eig-apost/implementation/i3/review-3-2a|review-3-2a]]，same-trial application
+见 [[research/projects/eig-apost/implementation/i3/design-3-2b|design-3-2b]] 与
+[[research/projects/eig-apost/implementation/i3/review-3-2b|review-3-2b]]。
 finite one-step correction 仅为 OPTIONAL 离散分量诊断。对中心宽
 baseline 优先增加可靠积分 enclosure 或 gap 认证仍不能提高分辨率。
 
-误差来源识别并入 I3.1；conditional certificate theorem 属于 I3.2；empirical caps 与 reference
-搜索并入 I3.3；norm enclosure、continuous projected-gap containment 和预注册分辨率研究并入
+误差来源识别并入 I3.1；conditional certificate theorem 与 same-trial empirical cap 属于 I3.2；
+independent reference/effectivity 属于 I3.3；norm enclosure、continuous projected-gap containment 和预注册分辨率研究并入
 I3.4。唯一目标识别只在下游必须跟踪特定 mode 时升级。
 它们不另拆里程碑。任何后续 levels、reconstruction、reference 算法、阈值或实验命令仍须
 单独冻结。I3.1 的定义、常数和样本规则必须在查看 I3.3 的 reference 结果前冻结；一般经验

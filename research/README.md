@@ -14,13 +14,13 @@ $1.832770289108157$，相邻层均确认为同一 mode。该结果只表示在�
 candidate drift，不证明 score minimizer、finite root 或连续 eigenvalue 已收敛。
 
 I3.1 已以全边界胞元 BIE 得到 ordinary-double continuous-residual estimator candidate，阶段为
-`PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`；circle action
-$256\to512$ ratio $0.77408786032496468>0.20$ 仍使该 candidate 未获内部数值资格。自
-2026-08-24 起，I3.2 改为严格的条件性离散证书谱包含定理；该定理已经建立，但将 ordinary
-输出实例化为严格 cap 的 application hypotheses 尚未闭合。旧 I3.2 顺延为 I3.3，研究 empirical
-error caps 与 independent effectivity；旧 I3.3 顺延为 I3.4，研究 outward enclosure、认证
-projected gap 和离散特征值存在性。circle-action caveat 是 I3.3 的未来 cap 目标，不阻止 I3.2
-定理本身；可靠区间、gap 和存在性仍只属于 I3.4。
+`PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`。自 2026-08-24 起，I3.2
+包含已建立的条件性离散证书谱包含定理，以及固定同一 trial 的 empirical evaluation-cap
+application。正式 `ecap-a2` 已通过 certificate identity 并完成 same-trial evaluation，但在 cap、
+full-$P$ contraction、$q$ 和 interval 前以 $664.470682$ MiB 超过 $640$ MiB hard limit，故当前为
+`EMPIRICAL_CAP_UNRESOLVED`；actual-$\Delta T$、finite-image Bloch 和 analytic-kernel 三项资格也
+未通过。I3.3 现只研究 independent reference/effectivity；I3.4 研究 strict outward enclosure、
+certified projected gap 和离散特征值存在性。可靠区间、gap 和存在性仍只属于 I3.4。
 该专题仍不构成新的统一主线。
 在形成可以明确命名且经过审核的统一框架以前，不建立空的 `mainline/` 作为占位。
 

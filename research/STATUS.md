@@ -1,6 +1,6 @@
 # Research status
 
-更新日期：2026-08-24。
+更新日期：2026-08-25。
 
 状态词含义：`established in archived mainline` 仅表示冻结主线给出了论证，不等于已完成独立来源核验；`needs review` 表示已有陈述或证明草案但仍需严格审计；`tentative` 表示研究性判断；`unresolved` 表示尚未解决。
 
@@ -14,11 +14,15 @@ $0.77408786032496468>0.20$。$M=48$ 只定义 wall 输入，所有 512 个已计
 $q$，circle angular-tail 门通过；outside-$M$ share $3.6179\%$ 只是描述性诊断，未计算 Fourier
 tail 仍未 enclosure。I3.1 现为
 `PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`。2026-08-24 起，I3.2
-条件性离散证书谱包含定理已经建立；strict cap 的 application hypotheses 仍 open。circle-action
-caveat 是未来 I3.3 empirical-cap/effectivity 的目标，不阻止该定理；outward enclosure 与
-projected gap 另属 I3.4。详见
+条件性离散证书谱包含定理已经建立；same-trial empirical-cap application 也已正式尝试。
+`ecap-a1` 是 implementation failure；Revision E `ecap-a2` 通过 identity 并完成 evaluation 后，
+在 cap/full-$P$/$q$/interval 前以 $664.470682$ MiB 超过 $640$ MiB hard limit，状态为
+`I3_2_RESOURCE_BUDGET_UNAVAILABLE / EMPIRICAL_CAP_UNRESOLVED`。其保存的 actual-$\Delta T$、
+finite-image Bloch 和 analytic-kernel diagnostics 亦未通过。I3.3 只保留 independent
+reference/effectivity；outward enclosure 与 projected gap 另属 I3.4。详见
 [[research/projects/eig-apost/implementation/i3/review-3-1f|I3.1 review]] 和
-[[research/projects/eig-apost/implementation/i3/review-3-2a|I3.2 theorem review]]。
+[[research/projects/eig-apost/implementation/i3/review-3-2a|I3.2 theorem review]]、
+[[research/projects/eig-apost/implementation/i3/review-3-2b|I3.2 evaluation-cap review]]。
 
 此前的统一目标是在固定实数准周期参数 $\beta$ 下研究二维周期线缺陷波导的导模，
 并建立中心胞元 Müller--Rayleigh 表示与左右周期半波导出射 Cauchy 关系之间的连续
@@ -79,7 +83,7 @@ qualified residual estimator、sharp-disk projected-gap contract 和 upper bound
 
 | 状态 | 专题 | 实际结论 |
 |---|---|---|
-| active investigation / I3.1 preliminary candidate; I3.2 theorem established | `research/projects/eig-apost/` | PDE-defined physical operator 是连续主对象；I2.1--I2.3 已完成。全边界 `fbie-a1` 已计算 ordinary residual components、full-$P$ tails、$q$ 与窄名义区间；circle-action refinement 是未来 I3.3 empirical-cap/effectivity target。I3.2 条件性证书定理已建立但严格 application caps 尚未形成；全 false reliability/enclosure flags 与 projected-gap contract 阻止 I3.4 的存在性和上界解释。unique target 仅为可选升级。 |
+| active investigation / I3.1 preliminary candidate; I3.2 theorem established, empirical cap unresolved | `research/projects/eig-apost/` | PDE-defined physical operator 是连续主对象；I2.1--I2.3 已完成。全边界 `fbie-a1` 已计算 ordinary residual components、full-$P$ tails、$q$ 与窄名义区间。I3.2 条件性定理已建立；same-trial `ecap-a2` 完成 evaluation 后因 $664.470682>640$ MiB 资源门停止，未形成 cap、$q$ 或 interval，且三项 evaluation qualifications 未通过。I3.3 只做 independent reference/effectivity；全 false reliability/enclosure flags 与 projected-gap contract 阻止 I3.4 的存在性和上界解释。unique target 仅为可选升级。 |
 | paused archive | `research/archive/muller-cauchy-2026-07/` | 冻结的 Müller--广义 Bloch--Cauchy 主线；商空间版本的核/场等价仍有未闭合的外部定理适配和表示论前提。 |
 | paused | `research/projects/half-guide-dtn/` | Stage 1 完成了符号审计、齐次半导 DtN/Riccati 验证和耦合方案建议；周期障碍半导、完整中心耦合及 MATLAB 最终验证尚未完成。该路线未整合进冻结主线。 |
 | completed project | `research/projects/cell-representation/` | 专题任务已完成：原始无条件猜想过强；给出了直接 Green 表示和带显式正则性、非 Wood 及互补问题条件的修正版。其纠正后的表示结构和商空间策略已进入冻结主线，但其中的表示定理仍为 `needs review`。 |
@@ -124,10 +128,12 @@ diagnostics 还显示 mesh/width 未闭合。BIE-collar `bie-a3` 随后关闭真
 trace 与 safe evaluation 的内部门，却在 coarse lead RT0-majorant 的 composite quadrature/assembly
 处首败；没有形成 residual 或区间。纯 BIE `pbie-a2` 随后形成首个 ordinary-double indicator；
 全边界 `fbie-a1` 又通过 wall/actual-$\Delta T$ checks，全部 512 个已计算 circle modes 进入
-$q$ 且 angular-tail 门通过，但 circle action
-$256\to512$ ratio $0.7741$ 未通过，因此该 ordinary candidate 尚未获得内部数值资格；它是
-未来 I3.3 empirical-cap/effectivity 的目标。I3.2 条件性证书定理已经建立，不以此诊断为
-前置。零 observed shift 不能单独验证 correction、收敛或 estimator。outward
+$q$ 且 angular-tail 门通过，但 circle action $256\to512$ ratio $0.7741$ 未通过。I3.2
+条件性证书定理已经建立；其 same-trial `ecap-a2` application 进一步完成新 evaluation，却因
+实际内存 $664.470682$ MiB 超过 $640$ MiB 在 cap 前停止，所以本次 empirical cap 未计算；另有
+actual-$\Delta T$、finite-image Bloch、analytic-kernel 三项 fail-open 资格失败，按冻结
+component gates 也会使 cap unresolved。I3.3 只负责
+independent reference/effectivity。零 observed shift 不能单独验证 correction、收敛或 estimator。outward
 residual/field/tail enclosure、sharp-disk projected-gap contract 与预注册
 absolute/gap-relative resolution 只限制 I3.4 的 reliable existence/upper-bound 声明。
 unique-target isolation

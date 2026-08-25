@@ -2,8 +2,11 @@
 
 本文件集中维护 `eig-apost` 各实现阶段仍与当前目标有关的问题。项目只有两个最终目标：
 提出 continuous physical eigenvalue candidate；估计该 candidate 到真实连续特征值的误差，
-并研究可计算上界。I3.2 条件性证书定理已经建立；I3.3 负责 empirical caps 与 independent
-effectivity，I3.4 才负责严格 residual/field/tail enclosure、continuous projected gap 和存在性。
+并研究可计算上界。I3.2 条件性证书定理已经建立，并负责 same-trial empirical-cap
+application；当前 `ecap-a2` 由资源硬门实际停止，三项 fail-open evaluation qualification
+failure 也会使相应 component cap unresolved。I3.3 只负责 independent reference/effectivity，
+I3.4 才负责严格 residual/field/tail
+enclosure、continuous projected gap 和存在性。
 只有指定 mode 的升级才另需 target isolation。条件未建立前不得把相应结论伪装成已完成的
 certification。
 
@@ -94,8 +97,8 @@ I1--I4 ledger ID 冲突，当前问题使用
 
 | ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
 |---|---|---|---|---|---|
-| OP-CI3-1 | `IMPORTANT CAVEAT` | 四条早期路线已给出有效负结果；纯 BIE `pbie-a2` 首次形成 finite indicator，最新全边界 `fbie-a1` 又计算出 $q=1.0318643108971929\times10^{-10}$ 和宽度 $3.7823388865376728\times10^{-10}$ 的普通双精度名义区间。它通过 wall、actual $T(k_{\mathrm{out}})-T(k_{\mathrm{in}})$、512-mode inclusion/accounting、angular-tail、Gram、tail 与 phase/scale checks，但 circle action $256\to512$ ratio 为 $0.77408786032496468>0.20$。 | 这项内部资格失败不撤销三个 residual components、$q$、full-$P$ tail 和名义代数变换，也不阻止 I3.2 条件性定理；它使当前 ordinary candidate 尚不适合作为 I3.3 empirical-cap/effectivity 的冻结输入。$M=48$ 只定义 wall 输入；所有 512 个已计算 circle modes 都进入 $q$，outside-$M$ share $0.036178900402764308$ 只是描述性诊断。 | I3.3 在看新层结果前冻结 action-resolution 与 empirical-cap contract，诊断 source-256 插值到 512 和独立 source-512 action 的 value/normal 分项；不得调 $0.20$ 阈值、重跑 `fbie-a1`、追溯改 output 或把同链检查称独立 reference。 | `OPEN` |
-| OP-CI3-2 | `BLOCKER` | 尚无 I3.4 严格应用所需的 certified residual dual-norm upper bound、field-norm lower bound、arithmetic/tail enclosure、continuous projected-gap containment 和预注册 absolute/gap-relative resolution。 | 这是可靠区间、gap 内存在性和分辨率级 upper-bound claim 的 blocker；不阻止 I3.1 ordinary candidate、I3.2 条件性定理或 I3.3 empirical caps/effectivity。unique-target isolation 只阻止可选指定-mode升级。 | I3.4 只使用经证明覆盖的 norm/enclosure/gap contract 实例化 I3.2 定理，并在看结果前冻结分辨率；一般 empirical reference uncertainty 不能直接充当严格 cap。若条件不成立，正式输出 `UPPER_BOUND_UNAVAILABLE` 或 `EXISTS_BUT_RESOLUTION_INSUFFICIENT`。 | `OPEN` |
+| OP-CI3-1 | `BLOCKER` | `fbie-a1` 的 ordinary candidate 保持有效；I3.2 same-trial `ecap-a2` 已通过 identity 并完成 7 image、3 circle、3 wall 和 Riccati/Gauss evaluation levels，但 retained memory $664.47068214416504$ MiB 超过 $640$ MiB hard limit，在 cap/full-$P$/$q$/interval 前停止。已到达的 evaluation 又分别失败于 actual-$\Delta T$ contraction $2.2946515117026931>0.80$、finite-image Bloch $0.071741947137921119>10^{-10}$ 和 analytic-kernel aggregate `Inf`。 | 资源门是实际到达的首个 blocker；三项 qualification failures 按冻结 component gates 也会使 empirical cap unresolved。fail-open 只保留 raw evaluation/warnings，不产生 cap/$q$/nominal transform。它们不撤销 I3.2 条件性定理或 I3.1 ordinary components/$q$。 | 若继续 I3.2，须另行预注册新 attempt，同时解决 active-object retention 和三个 evaluator qualification 对象；不得重跑 `ecap-a2`、调旧阈值或把未到达的 cap 从 partial evaluation 推断出来。只有形成冻结且内部资格化的 candidate/estimator 后，I3.3 才另做 independent effectivity。 | `OPEN` |
+| OP-CI3-2 | `BLOCKER` | 尚无 I3.4 严格应用所需的 certified residual dual-norm upper bound、field-norm lower bound、arithmetic/tail enclosure、continuous projected-gap containment 和预注册 absolute/gap-relative resolution。 | 这是可靠区间、gap 内存在性和分辨率级 upper-bound claim 的 blocker；不阻止 I3.1 ordinary candidate、I3.2 条件性定理/same-trial negative result 或 I3.3 independent effectivity design。unique-target isolation 只阻止可选指定-mode升级。 | I3.4 只使用经证明覆盖的 norm/enclosure/gap contract 实例化 I3.2 定理，并在看结果前冻结分辨率；一般 empirical reference uncertainty 不能直接充当严格 cap。若条件不成立，正式输出 `UPPER_BOUND_UNAVAILABLE` 或 `EXISTS_BUT_RESOLUTION_INSUFFICIENT`。 | `OPEN` |
 
 ### Current I4
 

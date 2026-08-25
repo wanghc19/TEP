@@ -144,7 +144,7 @@ frozen outputs retain their recorded paths and hashes.
 | Current path | `test/i3/g-resid/` |
 | Entry point | Completed Revision B attempt `check_g_resid('lead-a3')`; `lead-a1` was consumed at MATLAB startup and `lead-a2` by the preserved density-oracle naming failure |
 | Experiment index | [[test/i3/g-resid/README|I3.1-B object, frozen gates, command, resources, and interpretation boundary]] |
-| Status | `PASS WITH CONDITIONS / VALID NEGATIVE / CONFORMING_RECONSTRUCTION_UNRESOLVED`; `lead-a3` passed finite input, density representation, and propagation, then failed the fixed BIE-informed holdout gate ($J=4$: $4.522421$; $J=8$: $5.138028$ versus $0.20$). Center/Gram/tail/residual estimator are `NOT_REACHED`; I3.2 remains unavailable. |
+| Status | `PASS WITH CONDITIONS / VALID NEGATIVE / CONFORMING_RECONSTRUCTION_UNRESOLVED`; `lead-a3` passed finite input, density representation, and propagation, then failed the fixed BIE-informed holdout gate ($J=4$: $4.522421$; $J=8$: $5.138028$ versus $0.20$). Center/Gram/tail/residual estimator are `NOT_REACHED`; this historical attempt formed no downstream estimator or cap and does not bear on the later I3.2 theorem. |
 | Implementation summary | [[research/projects/eig-apost/implementation/i3/README|current I3 guide]] |
 
 ## I3-Q1-RT0-WEAK-RESIDUAL-V2
@@ -157,7 +157,7 @@ frozen outputs retain their recorded paths and hashes.
 | Current path | `test/i3/w-resid/` |
 | Entry point | Completed formal attempt: `check_w_resid('weak-a1')` |
 | Experiment index | [[test/i3/w-resid/README|V2 attempt, schema, grid, result, resources, and claim limits]] |
-| Status | `POST-RUN PASS / VALID NEGATIVE / MAJORANT_QUADRATURE_UNRESOLVED`; base Q1--RT0 and full-$P$ tail checks passed, but the fine phase/scale repeat failed the per-cell Gram Hermitian gate (maximum defect $6.2442\times10^{-10}$ versus $10^{-12}$). No estimator was formed and I3.2 remains unavailable. |
+| Status | `POST-RUN PASS / VALID NEGATIVE / MAJORANT_QUADRATURE_UNRESOLVED`; base Q1--RT0 and full-$P$ tail checks passed, but the fine phase/scale repeat failed the per-cell Gram Hermitian gate (maximum defect $6.2442\times10^{-10}$ versus $10^{-12}$). This historical attempt formed no downstream estimator or cap and does not bear on the later I3.2 theorem. |
 | Implementation summary | [[research/projects/eig-apost/implementation/i3/README|current I3 guide]] |
 
 ## I3-BIE-COLLAR-WEAK-RESIDUAL-V3
@@ -183,7 +183,7 @@ frozen outputs retain their recorded paths and hashes.
 | Current path | `test/i3/p-resid/` |
 | Entry point | Completed Revision A attempt: `check_p_resid('pbie-a2')`; `pbie-a1` remains a preserved implementation failure |
 | Experiment index | [[test/i3/p-resid/README|pure-BIE objects, frozen command, resources, and claim limits]] |
-| Status | `POST-RUN PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED INDICATOR CANDIDATE`; $q=1.1049370224693775\times10^{-10}$ and the nominal width is $4.0501912934587381\times10^{-10}$. Wall refinement $23.0\%$, nonzero-mode $T$-oracle error up to $1.4439$, and outside-$M$ share $51.5\%$ prevent freezing the estimator for I3.2; the all-false reliability/enclosure flags separately prevent an I3.3 spectral interval or existence claim |
+| Status | `POST-RUN PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED INDICATOR CANDIDATE`; $q=1.1049370224693775\times10^{-10}$ and the nominal width is $4.0501912934587381\times10^{-10}$. Wall refinement $23.0\%$, nonzero-mode $T$-oracle error up to $1.4439$, and outside-$M$ share $51.5\%$ prevent internal qualification and freeze-ready entry to I3.3 independent effectivity; the all-false reliability/enclosure flags separately prevent an I3.4 spectral interval or existence claim |
 | Implementation summary | [[research/projects/eig-apost/implementation/i3/README|current I3 guide]] |
 
 ## I3-FULL-BOUNDARY-CELL-BIE-RESIDUAL-V1
@@ -196,9 +196,22 @@ frozen outputs retain their recorded paths and hashes.
 | Current path | `test/i3/fb-resid/` |
 | Entry point | Completed and consumed `check_fb_resid('fbie-a1')`; no rerun |
 | Experiment index | [[test/i3/fb-resid/README|full-boundary object, command, artifact hashes, and claim limits]] |
-| Status | `POST-RUN PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`; $q=1.0318643108971929\times10^{-10}$ and nominal width $3.7823388865376728\times10^{-10}$. The sole internal qualification failure is circle action change $0.77408786032496468>0.20$, so the estimator cannot yet be frozen for I3.2. $M=48$ is input-only; all 512 computed circle modes enter $q$, the angular-tail gate passed, and the descriptive outside-$M$ share is $3.6179\%$. Uncomputed Fourier tails remain unenclosed for I3.3 |
+| Status | `POST-RUN PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`; $q=1.0318643108971929\times10^{-10}$ and nominal width $3.7823388865376728\times10^{-10}$. The sole internal qualification failure is circle action change $0.77408786032496468>0.20$, so the estimator is not freeze-ready for I3.3 independent effectivity. $M=48$ is input-only; all 512 computed circle modes enter $q$, the angular-tail gate passed, and the descriptive outside-$M$ share is $3.6179\%$. Uncomputed Fourier tails remain unenclosed for I3.4 |
 | Implementation design | [[research/projects/eig-apost/implementation/i3/design-3-1f|full-boundary cell-BIE design]] |
 | Independent review | [[research/projects/eig-apost/implementation/i3/review-3-1f|post-run review]] |
+
+## I3-SAME-CERTIFICATE-EVALUATION-CAP-V1
+
+| Field | Value |
+|---|---|
+| Experiment ID | `I3-SAME-CERTIFICATE-EVALUATION-CAP-V1` |
+| Stage | I3.2 same-trial empirical application |
+| Purpose | Re-evaluate the immutable `fbie-a1` certificate at preregistered image, circle, wall, Riccati, Gauss, and full-$P$ levels without any candidate, QZ, density, Schur, propagation, or proxy re-solve |
+| Current path | `test/i3/e-cap/` |
+| Entry point | `ecap-a1` and Revision E `ecap-a2` are both consumed; no rerun |
+| Experiment index | [[test/i3/e-cap/README|same-trial object, consumed commands, resource result, and claim limits]] |
+| Status | `VALID RESOURCE-LIMITED NEGATIVE / I3_2_RESOURCE_BUDGET_UNAVAILABLE / EMPIRICAL_CAP_UNRESOLVED`; `ecap-a1` was an implementation failure. `ecap-a2` passed identity and completed same-trial evaluation, then stopped at 664.470682 MiB above the 640 MiB hard limit before cap/full-$P$/$q$/interval. Saved diagnostics also fail actual Delta-T action, finite-image Bloch, and analytic-kernel qualification. All strict/reliable/independent/existence claims remain false. |
+| Independent review | [[research/projects/eig-apost/implementation/i3/review-3-2b|post-run review]] |
 
 Future current-route experiments belong under the matching `test/i*/` stage directory and receive
 an index entry only after they are designed and authorized. A legacy verdict never becomes a

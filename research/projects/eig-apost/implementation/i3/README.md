@@ -38,8 +38,9 @@ $$
 结果，纯 BIE 路线首次形成 finite indicator；最新全边界胞元 BIE 又关闭了旧 wall/$T$/outside-$M$
 资格问题，但 circle action $256\to512$ change 仍未通过。当前因此已有可计算但
 `NUMERICALLY_UNQUALIFIED` 的 indicator candidate。2026-08-24 起，I3.2 的条件性证书谱包含
-定理已经建立；经验 cap/independent effectivity 与实际可靠 enclosure/gap 分别留给 I3.3 和
-I3.4。
+定理已经建立，并承载固定同一 trial 的 empirical evaluation-cap application。正式 `ecap-a2`
+完成 evaluation 后因 $664.470682>640$ MiB 资源门停止，cap、full-$P$、$q$ 和 interval 未到达；
+I3.3 只保留 independent reference/effectivity，实际可靠 enclosure/gap 留给 I3.4。
 
 长期对象门如下：每个新增主线对象和 hard gate 都必须写出它如何进入第一层集合距离或可选
 target-specific error 的估计链；若它
@@ -52,8 +53,8 @@ I3 由四个正式里程碑组成。四个是科学问题决定的数量，不�
 | Milestone | 独立科学问题 | 核心输出 | 当前状态 |
 |---|---|---|---|
 | I3.1 | 能否从实际计算量构造并内部论证一个与 continuous gap-spectrum distance 有关的可计算指标？ | 可计算 indicator candidate、覆盖/忽略项和内部检查 | `PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE` |
-| I3.2 | 对同一连续 trial，严格 residual/field caps 若存在，能否推出连续谱相交和条件性离散存在？ | 条件性定理、cap 可行域和证书接口 | `THEOREM ESTABLISHED / APPLICATION HYPOTHESES OPEN` |
-| I3.3 | 经验 cap 是否成立，冻结 estimator 能否在独立 reference 上跟踪真实误差量级？ | empirical-cap 与 independent-effectivity verdict | `NOT STARTED` |
+| I3.2 | 对同一连续 trial，严格 residual/field caps 若存在，能否推出连续谱相交；同一 certificate 的 nested evaluation 能否形成 ordinary empirical cap？ | 条件性定理、cap 可行域、证书接口和 same-trial application | `THEOREM ESTABLISHED / EMPIRICAL CAP UNRESOLVED` |
+| I3.3 | 冻结 estimator/candidate 能否在独立 reference 上跟踪真实误差量级？ | independent-reference/effectivity verdict | `NOT STARTED` |
 | I3.4 | 能否实际构造 outward enclosure、certified gap 和不含未知常数的存在/误差上界？ | reliable interval、离散存在性、$U_h$ 或 `UPPER_BOUND_UNAVAILABLE` | `NOT STARTED` |
 
 ## 从 I2 接收的输入
@@ -100,7 +101,7 @@ continuous operator 的 projected essential gap 内，则区间中至少存在�
 不能称为达到项目分辨率的结果。把该谱值识别为某个指定 $k_*$ 是独立的第二层可选升级，不是
 residual 计算或第一层存在性的前置 blocker。近似 Riesz solve 也不自动给 dual norm 上界，
 所以 I3.1 先交付 continuous-residual indicator candidate；I3.2 建立严格 caps 蕴含谱相交的
-条件性定理；I3.3 再研究 empirical caps 和 independent effectivity；I3.4 才实际研究可靠
+条件性定理并研究 same-trial empirical cap；I3.3 再做 independent reference/effectivity；I3.4 才实际研究可靠
 enclosure、gap 与存在性。
 
 首个冻结实验 [[research/projects/eig-apost/implementation/i3/design-3-1|design-3-1]] 利用了当前
@@ -118,7 +119,7 @@ $18.848991951433035$ 和 $\eta_h^{\mathrm s}=22.43882099031153$。三个积分�
 $\lambda$ 区间跨过零且远宽于预注册 $10^{-6}$ 频率分辨率。因此本实验只交付一个可复现的
 连续强残量负向 baseline，当前解释为
 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`；它不支持 continuous projected gap 内离散特征值
-存在，也不能实例化现行 I3.2 strict theorem 或充当 I3.3 empirical estimator。
+存在，也不能实例化现行 I3.2 strict theorem 或进入 I3.3 independent effectivity validation。
 
 历史 V1 路线由 frozen wall states 生成左右无限序列，并用 one-cell BIE 内外场拟合显式
 Fourier--Hermite/bubble trial。正式 `lead-a3` 通过 finite input、density representation 和
@@ -181,7 +182,7 @@ continuous radial collar 修复 circle value jump，wall/circle/collar residual 
 区间为 $[1.8327702889056474,1.8327702893106665]$，宽度
 $4.0501912934587381\times10^{-10}$。但 wall $256\to512$ change 为 $0.2302$，nonzero-mode
 $T$ manufactured oracle 最大误差为 $1.4439$，circle outside-$M$ share 为 $0.5147$。这三项
-内部资格问题尚未闭合，所以 estimator 不能作为现行 I3.3 empirical/effectivity 输入。512 点
+内部资格问题尚未闭合，所以 estimator 当时不能进入现行 I3.3 independent effectivity。512 点
 continuity/H1、residual/field/tail outward bounds 与 projected gap 也均未认证；这些属于 I3.4 的 reliable
 interval 与存在性问题。独立 verdict 为
 `PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`，见
@@ -302,71 +303,60 @@ $$
 $$
 
 该预算不是 strict cap。实际 outward residual/field/tail、same-operator gap 和 directed-rounded
-application 仍 open，留给 I3.4。circle action $0.7741$ 仍是 I3.1 caveat 和未来 I3.3 empirical-cap
-target，但不阻止 I3.2 的条件性定理成立。
+application 仍 open，留给 I3.4。
 
-## I3.3：经验 cap 与独立 effectivity
+### Same-trial empirical-cap application
+
+[[research/projects/eig-apost/implementation/i3/design-3-2b|design-3-2b]] 固定同一个
+certificate/trial identity，在不重新求解 candidate、QZ、propagation、density、Schur 或 proxy
+的前提下比较预注册 nested evaluation levels。`ecap-a1` 是 integer/double identity-arithmetic
+implementation failure。Revision E `ecap-a2` 通过 identity，并完成 7 个 image、3 个 circle、
+3 个 wall 与 Riccati/Gauss levels；随后 retained active memory
+$664.47068214416504$ MiB 超过 $640$ MiB hard limit，在 cap/full-$P$/$q$/interval 前停止。
+
+已到达的 evaluation 另有三项资格失败：actual fixed-density $\Delta T$ image contraction
+$2.2946515117026931>0.80$、finite-image physical Bloch
+$0.071741947137921119>10^{-10}$、analytic-kernel aggregate `Inf`。因此当前正式状态是
+`I3_2_RESOURCE_BUDGET_UNAVAILABLE / EMPIRICAL_CAP_UNRESOLVED`，见
+[[research/projects/eig-apost/implementation/i3/review-3-2b|review-3-2b]]。该 same-chain result
+不是 outward bound，不能实例化上面的 strict hypotheses，也不能触发
+`CONDITIONAL_SPECTRAL_INTERSECTION`。历史 circle-action $0.7741$ 只作 background；本轮没有
+形成 empirical $\epsilon_M$、$\epsilon_N$、$q$ 或 nominal transform。
+
+## I3.3：独立 reference 与 effectivity
 
 ### 科学问题
 
-在不再改变 I3.1 公式的前提下，能否先由 same-$z_h$ nested evaluation 构造诚实标注的经验
-error cap，再检查 $\eta_h$ 是否能跟踪 independent reference 给出的 gap 内连续离散特征频率
-集合距离，而不是只跟踪同一数值方法内部的层间变化或共同偏差？只有 reference 还独立识别了
-指定 mode 时，才验证 target-specific $e_h^*$。
-
-### 经验 cap 的分界
-
-经验 cap 必须固定同一个 certificate/trial identity，再比较预注册的 nested 数值层；不得重选
-candidate、公式、分量或阈值。当前 circle action $256\to512$ ratio $0.77408786032496468>0.20$
-是首个需解释的 empirical-cap target。后续设计须在看新层结果前冻结 levels、cap 组合规则和
-failure semantics；本 README 不预先指定算法、层数或常数。
-
-若任一必要分量没有形成有限、可解释的经验 allowance，输出 `EMPIRICAL_CAP_UNRESOLVED`。
-只有所有预注册分量都形成并按冻结规则组合时，才输出
-`EMPIRICALLY_SUPPORTED_ERROR_CAP`；由它得到的区间只能称
-`EMPIRICAL_NOMINAL_TRANSFORM`。same-chain empirical cap 不是 outward bound，不能实例化
-I3.2 的 strict hypotheses，也不能触发 `CONDITIONAL_SPECTRAL_INTERSECTION`。
+在不再改变 I3.1 estimator/candidate 或 I3.2 same-trial evaluation contract 的前提下，能否用
+真正未参与构造、调参或阈值选择的 independent reference，检验 $\eta_h$ 是否跟踪 gap 内连续
+离散特征频率集合距离？只有 reference 还独立识别指定 mode 时，才验证 target-specific
+$e_h^*$。
 
 ### 独立性的分界
 
-I3.1 使用推导、内部恒等式、简化问题和同一计算链的自洽性；I3.3 使用 estimator 冻结后才
-取得或启用的外部独立证据。若 reference 参与了公式选择、常数拟合或阈值调节，它就是校准
-数据，不能再作为同一次独立验证；此时必须另有未参与校准的验证对象。
+I3.1 使用推导与内部自洽性；I3.2 可以使用同一 certificate 的 nested evaluation；I3.3 只使用
+estimator/candidate 与 same-trial diagnostics 冻结后才取得或启用的外部独立证据。若 reference
+参与公式选择、常数拟合或阈值调节，它就是 calibration data，不能再作为同一次独立验证。
+`ecap-a2` 与 `fbie-a1` 共享 certificate、density 和 BIE/QZ chain，明确不属于 I3.3 reference。
 
-当前问题没有解析解。I3.3 应按以下优先顺序研究 reference，但本规划不预先指定具体方法：
+当前问题没有解析解。I3.3 按以下优先顺序研究 reference，但本规划不预先指定具体算法：
 
 1. 与当前 BIE/QZ 链不同的数值表述、离散方法或独立实现；
 2. 两种或更多具有不同主要误差来源的方法给出的相容高精度结果；
 3. 经原文核验、参数和归一化完全匹配、且给出足够复现信息的文献数据；
-4. 同一方法的更高分辨率结果，仅作为后备 reference，并明确披露共享模型和离散偏差。
+4. 同一方法的更高分辨率结果仅作带共享偏差的后备，不称 independent。
 
-仅仅把同一个 one-cell map 分别交给 doubling 与 QZ/Riccati 处理，最多能交叉检查无穷端的
-数值处理；由于两条链共享关键离散误差，它们不能单独充当整个连续特征值的独立 reference。
+reference 自身必须有 uncertainty 说明。若 uncertainty 与 candidate-reference 差异同量级，
+合法结果是 reference resolution 不足，而不是把 reference 当作真值。
 
-reference 自身也必须有 uncertainty 说明。若 reference uncertainty 与 candidate-reference 差异
-同量级，就不能用该比较判定 effectivity；合法结果是 reference resolution 不足，而不是把
-reference 当作真值。
+### 输入与输出
 
-### 输入
-
-- I3.1 已冻结的 $\eta_h$、canonical certificate/trial identity，以及其失败条件和不允许调整的部分；
-- 另行预注册的 same-$z_h$ nested evaluations、每个经验 cap 分量和组合规则；
-- I2 的 candidate、mode identity 与质量诊断；
-- 一个或多个未参与 estimator 构造的 reference 及其 uncertainty、方法差异和参数匹配说明。
-
-### 输出与结论边界
-
-I3.3 先报告 `EMPIRICAL_CAP_UNRESOLVED` 或 `EMPIRICALLY_SUPPORTED_ERROR_CAP`，并在后者成立时
-保存 `EMPIRICAL_NOMINAL_TRANSFORM`；这些输出的 strict/reliable/certified flags 全为 false。
-随后比较 $\eta_h$ 与由独立 reference 近似得到的真值误差尺度，报告它是否在多个合格离散
-层上保持正确量级、是否随误差共同变化，以及 reference uncertainty 是否足以解释比较。若
-$\eta_h$ 只覆盖某一个误差分量，就必须先说明其他误差已经受到控制或可以忽略；否则只能验证
-该分量的指标，不能把它命名为总 eigenvalue-error estimator。
-
-只有通过这项外部检验后，$\eta_h$ 才可称为 `empirical eigenvalue-error estimator`。若失败，
-I3.1 的内部一致性结果仍可保留，但名称必须退回“indicator”或“estimator candidate”；失败
-原因应区分 estimator 无效、reference 不独立、reference uncertainty 过大或尚未进入适用区间。
-I3.3 的通过仍不等于严格误差上界。
+输入是 I3.1 冻结的 $\eta_h$/candidate、I3.2 已保存的 same-trial negative diagnostics、I2 mode
+identity，以及未参与构造的 reference 和其 uncertainty。输出只报告 independent-effectivity
+verdict：是否在多个合格层上保持正确量级、是否随误差共同变化、reference uncertainty 是否足以
+解释比较。只有通过外部检验后，$\eta_h$ 才可称 `empirical eigenvalue-error estimator`；失败时
+保留 indicator/candidate，并区分 estimator 无效、reference 不独立、reference uncertainty
+过大或未进入适用区间。I3.3 不生成 same-trial cap，也不等于严格误差上界。
 
 ## I3.4：研究可靠 enclosure、gap 与可计算误差上界
 
@@ -418,15 +408,15 @@ I3.3 中一般的 empirical reference uncertainty 也不能直接作为 $U_h$ �
 $$
 \underbrace{\text{内部推导与自洽检查}}_{\mathrm{I3.1}}
 \longrightarrow
-\underbrace{\text{条件性证书定理}}_{\mathrm{I3.2}}
+\underbrace{\text{条件性定理与 same-trial cap}}_{\mathrm{I3.2}}
 \longrightarrow
-\underbrace{\text{经验 cap 与独立验证}}_{\mathrm{I3.3}}
+\underbrace{\text{独立 reference/effectivity}}_{\mathrm{I3.3}}
 \longrightarrow
 \underbrace{\text{可靠 enclosure 与 gap}}_{\mathrm{I3.4}}.
 $$
 
 - I3.1 不能用 I3.3 的 reference 调公式后，再把同一 reference 当独立验证；
-- I3.2 只建立条件性逻辑，不能把 ordinary/empirical caps 改名为严格假设；
+- I3.2 的 same-trial empirical cap 不能改名为严格假设或独立 reference；
 - I3.3 不能把同方法高分辨率结果默认当作无偏真值；
 - I3.4 不能用 observed effectivity 代替 reliable norm enclosure、continuous projected-gap
   qualification 或预注册分辨率；若启用唯一目标升级，也不能代替 continuous spectral count；
@@ -477,13 +467,14 @@ $$
 9. [[research/projects/eig-apost/implementation/i3/design-3-2a|I3.2 theorem design]] 与
    [[research/projects/eig-apost/implementation/i3/review-3-2a|independent review]]：条件性定理、
    cap budget 和 application obligations；
-10. [[research/projects/eig-apost/implementation/ROADMAP|implementation roadmap]]：项目级顺序。
+10. [[research/projects/eig-apost/implementation/i3/design-3-2b|same-trial cap design]]、
+    [[research/projects/eig-apost/implementation/i3/review-3-2b|post-run review]] 与
+    [[test/i3/e-cap/README|experiment index]]：固定 certificate 的 evaluation、资源首败、三项
+    qualification failures 与未到达的 cap/$q$/interval；
+11. [[research/projects/eig-apost/implementation/ROADMAP|implementation roadmap]]：项目级顺序。
 
-I3.2 条件性定理已经建立，但没有授权 certificate implementation 或新实验。I3.3 的 empirical
-cap/effectivity 工作必须另行冻结；I3.1 自身需要的重构、简化问题或内部一致性检查仍属于 I3.1。
-任何后续算法、离散参数、reference、阈值和运行命令都须另行冻结。`fbie-a1` 已通过 actual
-$T$ difference-block 与 wall refinement；全部
-512 个已计算 circle modes 进入 $q$ 且 angular-tail 门通过，未计算 Fourier tail 仍未 enclosure。
-circle action $256\to512$ ratio 仍为 $0.7741>0.20$；它不阻止 I3.2 theorem，只阻止把当前
-ordinary indicator 直接冻结为 I3.3 empirical estimator。reliable enclosure、projected gap 和
-宽度门留给 I3.4。当前结果不自动授权下一 attempt。
+I3.2 条件性定理已经建立；其 same-trial `ecap-a2` application 已消费并以
+`RESOURCE_BUDGET_UNAVAILABLE / EMPIRICAL_CAP_UNRESOLVED` 收口。identity/evaluation 到达，
+cap/full-$P$/$q$/interval 未到达；actual-$\Delta T$、finite-image Bloch 与 analytic-kernel
+qualification 未通过。I3.3 只负责 independent reference/effectivity，必须另行冻结。reliable
+enclosure、projected gap 和宽度门留给 I3.4。当前结果不自动授权下一 attempt。
