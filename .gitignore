@@ -59,6 +59,10 @@ research/**/checkpoints/
 # Local experiment outputs (already tracked files remain tracked)
 test/**/output/
 
+# Local legacy snapshot artifacts
+/legacy/draft-2026-07-24/examples/output/
+/legacy/draft-2026-07-24/tmp/
+
 # Reference library: track only the catalog and BibTeX index
 ref/**
 !ref/README.md
