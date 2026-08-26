@@ -1186,3 +1186,91 @@ self-consistent forged data/digest/stamp combination, and a rewritten parent
 digest. Manufactured low-level oracles remain separate from the formal module
 gate; the actual frozen-certificate preflight exercises every formal module
 entry.
+
+## 13. `ecap-v3-a1` minimal volume-diagnostic contract
+
+The independent directory `test/i3/e-cap-v3` preserves every v2 file and
+artifact. It contains at most seven MATLAB files: one thin entry, one
+certificate reader, one fixed-MFS evaluator, one self-contained boundary
+action module, one lifting/oracle module, one full-$P$/cap module, and one
+compact output writer. It must not call any `test/i3/e-cap*` evaluator or
+helper. The only external numerical dependencies are the established project
+MFS and Kress package primitives. There is no hash, Git provenance, recursive
+ownership audit, identity ledger, MFS variant, density solve, image sum, or
+Rayleigh/Fourier field representation.
+
+The frozen trial, density, candidate, $P_\pm$, wall order $M=48$, source and
+target levels, lifting levels $32/64/128$, full-$P$ levels $8/16/32$,
+thresholds, majorant, field-lower, $q$, and interval formulas are unchanged.
+The raw certificate is read only; the numerical view explicitly converts
+scientific quantities to `double`. Circle levels are $512/1024/2048$ and
+wall levels are $1024/2048/4096$. Source-level actions are compared on the
+fixed finest target grids; target-level residuals are compared in periodic
+Fourier coordinates on those same common grids.
+
+The MFS parameters are fixed at
+$(H,p,N_{\rm side},N_{\rm top},N_{\rm edge},M_{\rm pw})
+=(1.1,0.2,160,160,80,32)$. One proxy and one $2049^2$ six-field smooth
+remainder table are used, with no sweep or fallback. The fixed relative
+kernel-action uncertainty is $10^{-10}$ and arithmetic roundoff is reported
+separately. A few direct-pair spots only test compatibility with this
+empirical assumption; they are not a global error bound. A failing spot
+makes GQP-dependent caps unsupported and unresolved but does not stop other
+components.
+
+For each $X\in\{W,\Gamma,V\}$, retain every unique GQP-only self or cross
+boundary-action factor $F^{G}_{X,p}$ before cancellation. Apply to it the
+same registered boundary norm, lifting block, and full-$P$ association used
+by row $X$, denoted $\mathcal A_{X,p}$, and define
+
+$$
+S_{X,G}=\sum_{p\in\mathcal P_X}\|\mathcal A_{X,p}F^{G}_{X,p}\|,
+\qquad
+\epsilon_{X,G}^{\rm emp}=10^{-10}S_{X,G}.
+$$
+
+The index ledger $\mathcal P_X$ assigns each physical piece exactly once.
+For $V$, circle-self pieces belong only to the circle collar, while each
+wall piece belongs only to its left or right strip and its registered
+center/first-lead propagation block; the reported total is the sum of these
+unique non-cancelling scales, not an additional residual-norm term. The
+aggregate numerator GQP row is the sum of the unique $W$, $\Gamma$, and $V$
+rows. Arithmetic roundoff is excluded from every $S_{X,G}$ and reported only
+in its separate row. The direct spots control only the `supported` flag for
+these GQP rows.
+
+On each boundary the code forms target/prescribed, self, cross, and total
+Dirichlet residual pieces on one physical midpoint grid and reports their
+recombination defect. Circle self action includes Kress product quadrature
+and the correct jump; each wall separates same-wall self, opposite-wall
+cross, and circle cross. Common-grid Fourier diagnostics report common-band
+change and newly exposed bands for every piece and for the total. Only the
+total residual enters lifting and cap formation; no individual layer tail is
+treated as a residual tail.
+
+Volume diagnostics separate target action, source action, lift quadrature,
+circle collar, the two wall strips, four center/first-lead singleton blocks,
+full-$P$ tail, GQP sensitivity, and arithmetic roundoff. A fixed single-mode
+oracle checks Fourier normalization, the second-order lift weight, Jacobian,
+strip width, and $\rho/\gamma$ scaling. For each nested axis let
+
+$$
+a_A=\max\{10^{-10},100\epsilon_{\rm mach}\max(1,B_0,B_1,B_2)\}.
+$$
+
+The axis is resolved when $d_2\leq 0.5d_1$ or
+$\max(d_1,d_2)\leq a_A$. In the second case it is explicitly an absolute
+plateau. A finite continuation candidate $2\max(d_2,a_A)$ is always saved,
+but an unresolved candidate is not called an empirical cap. Each wall,
+circle, volume, full-$P$, tail, GQP, roundoff, denominator, and field-lower
+row remains independently publishable; one unresolved volume row must not
+turn unrelated rows into `NaN`.
+
+The exact directory `output/ecap-v3-a1` may be overwritten and rerun within
+this task. Each invocation records its retry ordinal. A readable complete or
+partial `result.mat` and `report.md` is mandatory. All reliability,
+outward-enclosure, projected-gap, and existence flags remain false, and the
+claim label is `EMPIRICAL / UNQUALIFIED`.
+
+Researcher and Engineer returned `RESEARCHER--ENGINEER AGREED`. Skeptic
+DESIGN and spec-to-code passes remain required before the formal run.

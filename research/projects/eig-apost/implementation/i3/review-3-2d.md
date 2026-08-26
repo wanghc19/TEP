@@ -468,3 +468,122 @@ conclusion.
 | ordinal | command status | first blocker | repair/status |
 |---:|---|---|---|
 | 1 | complete, no retry | none | readable empirical artifact; circle/volume caps unresolved |
+
+## `ecap-v3-a1` bounded review
+
+Researcher and Engineer agreed to the minimal Section 13 contract. The v3
+implementation is limited to seven MATLAB files, is independent of all old
+e-cap field evaluators, and uses one frozen MFS proxy/table with a fixed
+$10^{-10}$ empirical relative uncertainty. It must publish independent wall,
+circle, volume, lifting, full-$P$, tail, GQP, roundoff, denominator, and
+field-lower rows even when volume remains unresolved. Skeptic DESIGN review
+initially requested one revision: the relative GQP assumption did not yet
+have a unique scale or de-duplication rule. Section 13 now defines each GQP
+row as $10^{-10}$ times the non-cancelling sum of uniquely registered
+GQP-only action factors after that row's own lifting/full-$P$ map. Circle
+collar and left/right wall strips are disjoint registrations, total norms are
+not added again, and roundoff remains separate. Renewed R--E agreement and
+Skeptic DESIGN review are pending; no formal v3 artifact has yet been run.
+
+Researcher and Engineer then returned `AGREED` for the amended formula.
+Skeptic returned `SKEPTIC DESIGN PASS`. This authorizes only the seven-file
+implementation; spec-to-code review remains mandatory before a formal run.
+
+The seven-file implementation was then reviewed in bounded R--E--S rounds.
+Before execution, the reviews corrected the Gauss--Legendre normalization and
+made the single-mode reference independent; replaced band-energy differences
+by common-grid Fourier-factor differences and new-shell norms; separated
+GQP-only smooth remainders from the complete physical actions; split
+opposite-wall and circle cross diagnostics; published circle-collar, two-wall-
+strip, and four singleton block norms; split volume GQP wall pieces into
+left/right registrations; and published diagnostic-only full-$P$ tail rows.
+None of these diagnostics is counted twice in an empirical cap.
+
+Engineer returned `ENGINEER IMPLEMENTATION AGREED`, Researcher returned
+`RESEARCHER IMPLEMENTATION AGREED`, and Skeptic returned
+`SKEPTIC SPEC-TO-CODE PASS`. MATLAB `checkcode` reported zero messages for
+all seven files and `git diff --check` passed. The formal `ecap-v3-a1`
+invocation is now authorized.
+
+### `ecap-v3-a1` retry ledger
+
+| ordinal | status | elapsed (s) | first blocker | repair |
+|---:|---|---:|---|---|
+| 1 | partial | 1822.6066 | `I32V3:HARD_TIME_LIMIT` | GQP complete; vectorize identical six-field interpolation stencils and reuse identical finest target/source actions |
+
+Retry 1 completed all six logical circle actions before the time gate. Its
+fixed GQP spot defect was approximately $1.5875\times10^{-11}$, the frozen
+$10^{-10}$ assumption was supported, and the GQP memory proxy was about
+$384.4423$ MiB. Researcher and Engineer agreed that flat six-field table
+storage/vectorized stencil accumulation and reuse of the mathematically
+identical finest target/source actions are resource-equivalent. Skeptic
+returned `SKEPTIC RESOURCE SPEC-TO-CODE PASS`. No trial, level, threshold,
+formula, MFS parameter, or resource gate changed; retry 2 is authorized.
+
+### `ecap-v3-a1` final result
+
+Retry 2 completed in approximately $507.5102$ seconds and produced readable
+`result.mat` and `report.md`. The saved status is `COMPLETE`, the execution
+blocker is empty, and the claim is `EMPIRICAL / UNQUALIFIED`. The report was
+subsequently regenerated from the saved result only, without re-running a
+kernel, boundary, lifting, or cap evaluation. MATLAB `checkcode` returned zero
+messages for the report writer. Engineer returned `PASS` for all saved-field
+mappings and memory semantics, and Skeptic returned `REPORT-MAPPING PASS`.
+
+The ordinary evaluated components are
+
+- $B_{\mathrm W}=1.8724053381984950\times10^{-10}$,
+  $B_{\Gamma}=4.2895211946436049\times10^{-13}$,
+  $B_{\mathrm V}=2.7945391880164676\times10^{-8}$, and
+  $\mathcal M_h=2.8133061366103989\times10^{-8}$;
+- $\epsilon_{\mathrm W}=7.3042451525550823\times10^{-10}$ and
+  $\epsilon_{\Gamma}=8.9028230760084101\times10^{-10}$ are finite empirical
+  caps;
+- $\epsilon_{\mathrm V}$ and therefore $\epsilon_{\mathcal M}$ are unresolved;
+  $q_{\rm emp}$ and all nominal interval fields remain `NaN`, and the
+  width-below-$10^{-6}$ flag is false; and
+- the field lower candidate is $4.9591118106757941$, while
+  $\epsilon_N=1.0320473565707022\times10^{-5}$.
+
+The fixed MFS parameters are
+$(H,d_{\rm proxy},N_{\rm side},N_{\rm top},N_{\rm edge},M_{\rm pw})
+=(1.1,0.2,160,160,80,32)$ with one $2049$-point table. The maximum direct-pair
+spot defect is approximately $1.5875\times10^{-11}$, supporting but not
+certifying the frozen $10^{-10}$ relative uncertainty. Image-sum and MFS
+variant/sweep paths are zero. The non-cancelling GQP rows are approximately
+$1.30419\times10^{-10}$ for the wall,
+$9.02823\times10^{-11}$ for the circle, and
+$2.31646\times10^{-7}$ for volume. Separate arithmetic-roundoff rows are
+$5.40943\times10^{-15}$, $9.76628\times10^{-18}$, and
+$1.32064\times10^{-12}$, respectively.
+
+The volume target differences are approximately
+$4.95814\times10^{-9}$ and $2.81039\times10^{-8}$; the source differences are
+$1.53175\times10^{-8}$ and $1.23113\times10^{-8}$. They are neither an
+absolute $10^{-10}$ plateau nor a contracting nested sequence, and remain of
+the scale of $B_{\mathrm V}$. In contrast, the weight/Gauss row is at absolute
+plateau and the full-$P$ row contracts. Boundary decomposition shows the
+mechanism: large self/cross actions cancel to tiny total traces, after which
+the second-order volume lifting magnifies small evaluation changes. The circle
+self and wall-cross norms are about $28.6924$ and $76.0101$, while the total
+circle residual norm is $6.56407\times10^{-11}$; the wall self,
+opposite-wall, and circle-cross norms are about $13.9227$, $1.35911$, and
+$2.18255$, while the wall total residual is of order $10^{-12}$. The
+single-mode lifting oracle passes with maximum defect about
+$1.81919\times10^{-15}$, and the lifting direct-sum defect is approximately
+$1.35107\times10^{-13}$. Individual layer tails were not substituted for the
+total residual tail.
+
+The final unresolved ledger is `VOLUME_TOTAL_CAP`, `VOLUME_TARGET`,
+`VOLUME_SOURCE`, and `Q_EMP_AND_INTERVAL`. The sole saved warning is
+`BOUNDARY_RECOMBINATION_WARNING`. There is no unrecoverable execution blocker;
+the first scientific nonclosure is the volume target-evaluation refinement.
+Recorded memory values are internal MATLAB object proxies, not an OS RSS peak:
+approximately $384.4423$ MiB for GQP, $402.6162$ MiB for boundary retained
+data, $254.1478$ MiB for lifting, and $0.07325$ MiB for cap data, under the
+$2048$ MiB hard gate. OS RSS was not measured.
+
+All reliability, outward-enclosure, projected-gap, existence,
+independent-reference, certified-tail, and reliable-interval flags remain
+false. This artifact is not a strict cap, reliable interval, certified error
+bound, or spectral-existence conclusion.
