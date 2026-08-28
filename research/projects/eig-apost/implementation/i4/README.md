@@ -2,13 +2,21 @@
 
 ## 当前状态
 
-I4.1 本轮 literature/method research 已完成。独立
+I4.1 literature/method research 已完成，独立
 [[research/projects/eig-apost/implementation/i4/method-review|method review]] 的最终 verdict 为
-`PASS WITH CONDITIONS`，没有 unresolved blocker；所选方法已通过方法门，但不授权实验设计、
-实现或运行。未来必须满足的 empirical coverage/resolution conditions 以 method review 为准。
+`PASS WITH CONDITIONS`。随后唯一 `femref-a1` attempt 按冻结的
+[[research/projects/eig-apost/implementation/i4/design-4-1a|design-4-1a]] 实施；同一 Skeptic 在
+[[research/projects/eig-apost/implementation/i4/review-4-1a|review-4-1a]] 完成 design、
+spec-to-code 和 post-run gates。最终 artifact verdict 为 `PASS`，科学结果为
+`MESH_QUALITY_UNRESOLVED / VALID SCIENTIFIC NEGATIVE / FROZEN M1 METHOD FAILED`：首个
+`bulk-s12-g24` mesh 的 reflection stiffness defect 为
+$2.410043158511017\times10^{-15}$，但 reflection mass defect 为
+$0.014666412555809508>5\times10^{-11}$。运行在 `MESH_ORACLES` fail closed，完成
+$0/119$ eigensolves；没有 eigenvalue、field、qualified reference collection 或 effectivity
+evidence。该 attempt 已消费，不授权 `run-005` 或同方法重试；任何实质不同方法必须另行设计和
+审查。
 
-I4.2 的 reliable enclosure、projected gap、存在性和可计算上界不在本次范围内。本轮不得创建
-`design-4-1.md`、`review-4-1.md`、`report.md`，也不得创建或运行 `test/i4/` 下的内容。
+I4.2 的 reliable enclosure、projected gap、存在性和可计算上界仍不在本次范围内。
 
 ## 文件权威顺序与阅读顺序
 
@@ -24,7 +32,12 @@ I4.2 的 reliable enclosure、projected gap、存在性和可计算上界不在�
 4. [[research/projects/eig-apost/implementation/i4/method-4-1|I4.1 method manuscript]]：本轮方法主稿；
 5. [[research/projects/eig-apost/implementation/i4/method-review|independent method review]]：独立
    Skeptic verdict。若与方法稿冲突，以 review 对“是否通过方法门”的判断为准，但 Skeptic
-   不替代 Researcher 改写方法稿。
+   不替代 Researcher 改写方法稿；
+6. [[research/projects/eig-apost/implementation/i4/design-4-1a|frozen I4.1a design]]：冻结本次
+   continuous model、branch inventory、信息隔离、refinement、预算和失败状态；
+7. [[research/projects/eig-apost/implementation/i4/review-4-1a|I4.1a review ledger]]：本次 design、
+   theory-to-code、spec-to-code、retry、artifact 和 post-run verdict 的最终审查权威入口；
+8. [[test/i4/femref-a1/README|femref-a1 attempt guide]]：实现与 append-only run artifact 入口。
 
 项目级阶段和 unresolved concern 仍分别以
 [[research/projects/eig-apost/STATUS|project STATUS]]、
@@ -42,8 +55,13 @@ I4.2 的 reliable enclosure、projected gap、存在性和可计算上界不在�
 4. 只有 unresolved `blocker` 可以阻止未来进入 `design-4-1.md`。`PASS` 或
    `PASS WITH CONDITIONS` 也不自动授权实验设计或运行。
 
+I4.1a 的后续 Researcher--Engineer--Skeptic gate 及全部 bounded revision/retry 已记录在
+`review-4-1a.md`。post-run gate 已关闭；其 `FROZEN M1 METHOD FAILED` verdict 禁止在当前
+attempt 内继续调网格、oracle 或阈值。
+
 ## Claim boundary
 
-本轮只通过一条未来 independent-reference 方法及其 resolution/uncertainty 语义。它不计算
-$k_{\mathrm{ref}}$，不评价 effectivity，不改变 I3 estimator、BIE density、QZ eigenvector、证书、
-公式或历史结论。I4.1 的数值实验必须另行授权。
+方法研究只通过一条 candidate independent-reference 路线及其 resolution/uncertainty 语义；
+I4.1a 数值阶段随后在 reference solve 前以有效科学负结果结束。它没有计算
+$k_{\mathrm{ref}}$，没有评价 effectivity，也不改变 I3 estimator、BIE density、QZ eigenvector、
+证书、公式或历史结论。位置一致、reference resolution 或 estimator validation 均未建立。

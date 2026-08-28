@@ -4,14 +4,30 @@
 
 ## 当前状态
 
+- **2026-08-28 I4.1a independent-reference 数值负结果：**唯一 `femref-a1` attempt 按冻结
+  [[research/projects/eig-apost/implementation/i4/design-4-1a|design-4-1a]] 完成全部前置审查后
+  正式启动。前三个 `run_id` 分别因 dependency capability check、`triangulation` constructor
+  次序和失败工件 schema 停止，均为保留日志、不消费 attempt 的 operational retry；`run-004`
+  则在首个 `bulk-s12-g24` mesh 的预注册 reflection oracle 给出 stiffness defect
+  $2.410043158511017\times10^{-15}$、mass defect
+  $0.014666412555809508>5\times10^{-11}$，故在 `MESH_ORACLES` 以
+  `MESH_QUALITY_UNRESOLVED` fail closed。正式科学运行完成 $0/119$ eigensolves，用时
+  $15.90$ s，external peak RSS $664223744$ B，未触及 $30$ min/$2$ GiB 预算。独立 post-run
+  artifact verdict 为 `PASS`，科学结果为
+  `VALID SCIENTIFIC NEGATIVE / FROZEN M1 METHOD FAILED`；attempt 已消费，不授权 `run-005` 或
+  同方法 retry。没有 eigenvalue、field、qualified reference collection 或 effectivity evidence，
+  I4.1 尚未验证 estimator。详见
+  [[research/projects/eig-apost/implementation/i4/review-4-1a|review-4-1a]]。
+
 - **2026-08-28 I4.1 independent-reference 方法门：** literature/method research 已按冻结
   search plan 完成。所选 geometry-fitted conforming FEM supercell + twist-band-collapse 路线经
   同一 Researcher 有界修订和同一 Skeptic 复审，最终 verdict 为 `PASS WITH CONDITIONS`，没有
   unresolved blocker。第一层只允许对完整 frozen finite empirical branch set 报告 observed
   set-distance；coverage/resolution 不足时 fail closed。single-mode denominator 另需冻结的
   target-specific estimator 或 continuous isolation，field label 一致本身不升级 target。
-  $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ 仍不是 error bound。本轮没有创建 design、实现、实验或
-  reference/effectivity result；全部 strict/reliable/independent/existence result flags 仍 false。
+  $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ 仍不是 error bound。该方法门阶段本身没有创建 design、
+  实现、实验或 reference/effectivity result；其后 I4.1a 数值负结果见上一条。全部
+  strict/reliable/independent/existence result flags 仍 false。
   详见 [[research/projects/eig-apost/implementation/i4/README|I4 guide]] 和
   [[research/projects/eig-apost/implementation/i4/method-review|method review]]。
 
@@ -27,7 +43,8 @@
   ordinary same-chain negative evidence，不是 independent reference 或 strict cap。当前 I3.2
   包含已建立的 conditional theorem 与 same-trial empirical-cap application；原 I3.3 已迁移
   至未来 I4.1，只登记 independent reference/effectivity；原 I3.4 已迁移至未来 I4.2，继续
-  登记 strict enclosure、certified gap 和 existence。I4.1、I4.2 当前均未启动。
+  登记 strict enclosure、certified gap 和 existence。I4.1a 后续已启动但在 reference solve 前以
+  `FROZEN M1 METHOD FAILED` 结束；I4.2 当前未启动。
   全部 strict/reliable/independent/existence flags 仍 false。独立审查见
   [[research/projects/eig-apost/implementation/i3/review-3-2b|review-3-2b]]。
 
@@ -56,8 +73,9 @@
   $M=48$ 是 input-only，所有 512 个已计算 circle modes 进入 $q$ 且 angular-tail 门通过，
   outside-$M$ share $3.6179\%$ 只是描述性诊断。未计算 Fourier tail 仍未 enclosure。I3.1
   状态为 `PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`。circle-action caveat
-  已由上方 I3.2 same-trial application 继续诊断；它不阻止条件性定理。未来 I4.1 只做 independent
-  reference/effectivity，当前未启动；全部 outward/gap/existence flags 仍 false，另属 I4.2。详见
+  已由上方 I3.2 same-trial application 继续诊断；它不阻止条件性定理。I4.1 只做 independent
+  reference/effectivity；其首个 M1 attempt 已失败且未形成 reference。全部
+  outward/gap/existence flags 仍 false，另属 I4.2。详见
   [[research/projects/eig-apost/implementation/i3/review-3-1f|review-3-1f]]。
 
 - **2026-08-24 I3.1 纯 BIE 边界残量 indicator candidate：**
@@ -340,7 +358,8 @@
   条件性证书定理不以该诊断为前置；同一阶段的 `ecap-a2` 已完成 same-trial evaluation，但因
   $664.470682>640$ MiB 资源门使本次 empirical cap 未计算。三项 fail-open evaluation
   qualification failures 按冻结 component gates 也会使 cap unresolved；I4.1 literature/method
-  research 已通过方法门，但 independent reference/effectivity 数值阶段尚未启动。
+  research 已通过方法门，但首个 independent-reference 数值 attempt 在 mesh oracle 结束，未形成
+  reference/effectivity evidence。
   reliability/enclosure flags、current-model projected gap 与 absolute/gap-relative resolution
   则是 I4.2 相应存在性和上界结论的门。第一层不要求唯一 mode。该状态不表示 sub-grid
   minimizer、finite root 或连续真值零漂移，也不构成收敛证据。
