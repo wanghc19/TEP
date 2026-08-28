@@ -14,8 +14,9 @@
   actual-$\Delta T$ contraction $2.2946515117026931>0.80$、finite-image Bloch
   $0.071741947137921119>10^{-10}$、analytic-kernel aggregate `Inf` 三项资格失败。这些是
   ordinary same-chain negative evidence，不是 independent reference 或 strict cap。当前 I3.2
-  包含已建立的 conditional theorem 与 same-trial empirical-cap application；I3.3 只保留
-  independent reference/effectivity；I3.4 负责 strict enclosure、certified gap 和 existence。
+  包含已建立的 conditional theorem 与 same-trial empirical-cap application；原 I3.3 已迁移
+  至未来 I4.1，只登记 independent reference/effectivity；原 I3.4 已迁移至未来 I4.2，继续
+  登记 strict enclosure、certified gap 和 existence。I4.1、I4.2 当前均未启动。
   全部 strict/reliable/independent/existence flags 仍 false。独立审查见
   [[research/projects/eig-apost/implementation/i3/review-3-2b|review-3-2b]]。
 
@@ -44,8 +45,8 @@
   $M=48$ 是 input-only，所有 512 个已计算 circle modes 进入 $q$ 且 angular-tail 门通过，
   outside-$M$ share $3.6179\%$ 只是描述性诊断。未计算 Fourier tail 仍未 enclosure。I3.1
   状态为 `PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`。circle-action caveat
-  已由上方 I3.2 same-trial application 继续诊断；它不阻止条件性定理。I3.3 只做 independent
-  reference/effectivity；全部 outward/gap/existence flags 仍 false，另属 I3.4。详见
+  已由上方 I3.2 same-trial application 继续诊断；它不阻止条件性定理。未来 I4.1 只做 independent
+  reference/effectivity，当前未启动；全部 outward/gap/existence flags 仍 false，另属 I4.2。详见
   [[research/projects/eig-apost/implementation/i3/review-3-1f|review-3-1f]]。
 
 - **2026-08-24 I3.1 纯 BIE 边界残量 indicator candidate：**
@@ -124,7 +125,7 @@
   $22.43882099031153$。积分加密稳定，但固定单胞 cutoff 导数项主导，名义区间跨过零；正式
   当前解释为 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`，因此它不能冻结为旧 I3.2
   empirical estimator。普通积分尚非可靠 enclosure，sharp-disk projected-gap contract 也未建立，
-  故没有现行 I3.4 连续离散特征值存在性或上界结论；这两项不是现行 I3.3 经验验证的前置条件。
+  故没有未来 I4.2 连续离散特征值存在性或上界结论；这两项不是未来 I4.1 经验验证的前置条件。
   后续全波导 BIE-informed
   Fourier--Hermite/bubble trial 已于 2026-08-16 正式运行并在
   reconstruction fit 首败；见上一条。continuous weak residual 保留为后备。
@@ -327,10 +328,10 @@
   circle-action refinement ratio $0.7741$ 仍使 ordinary candidate 未获内部资格。I3.2
   条件性证书定理不以该诊断为前置；同一阶段的 `ecap-a2` 已完成 same-trial evaluation，但因
   $664.470682>640$ MiB 资源门使本次 empirical cap 未计算。三项 fail-open evaluation
-  qualification failures 按冻结 component gates 也会使 cap unresolved；I3.3 只负责
-  independent reference/effectivity。
+  qualification failures 按冻结 component gates 也会使 cap unresolved；未来 I4.1 只登记
+  independent reference/effectivity，当前未启动。
   reliability/enclosure flags、current-model projected gap 与 absolute/gap-relative resolution
-  则是 I3.4 相应存在性和上界结论的门。第一层不要求唯一 mode。该状态不表示 sub-grid
+  则是 I4.2 相应存在性和上界结论的门。第一层不要求唯一 mode。该状态不表示 sub-grid
   minimizer、finite root 或连续真值零漂移，也不构成收敛证据。
 - 历史阶段门（均不构成当前实现授权）：manufactured root/correction pipeline 曾为窄范围
   `GO`，finite-tail Half-guide map 曾为 Stage 1 `GO`，Augmented BIE 曾为

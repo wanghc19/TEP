@@ -18,8 +18,9 @@ tail 仍未 enclosure。I3.1 现为
 `ecap-a1` 是 implementation failure；Revision E `ecap-a2` 通过 identity 并完成 evaluation 后，
 在 cap/full-$P$/$q$/interval 前以 $664.470682$ MiB 超过 $640$ MiB hard limit，状态为
 `I3_2_RESOURCE_BUDGET_UNAVAILABLE / EMPIRICAL_CAP_UNRESOLVED`。其保存的 actual-$\Delta T$、
-finite-image Bloch 和 analytic-kernel diagnostics 亦未通过。I3.3 只保留 independent
-reference/effectivity；outward enclosure 与 projected gap 另属 I3.4。详见
+finite-image Bloch 和 analytic-kernel diagnostics 亦未通过。原 I3.3 已迁移至未来 I4.1，
+只登记 independent reference/effectivity；原 I3.4 已迁移至未来 I4.2，继续登记 outward
+enclosure 与 projected gap。I4.1、I4.2 当前均未启动。详见
 [[research/projects/eig-apost/implementation/i3/review-3-1f|I3.1 review]] 和
 [[research/projects/eig-apost/implementation/i3/review-3-2a|I3.2 theorem review]]、
 [[research/projects/eig-apost/implementation/i3/review-3-2b|I3.2 evaluation-cap review]]。
@@ -83,7 +84,7 @@ qualified residual estimator、sharp-disk projected-gap contract 和 upper bound
 
 | 状态 | 专题 | 实际结论 |
 |---|---|---|
-| active investigation / I3.1 preliminary candidate; I3.2 theorem established, empirical cap unresolved | `research/projects/eig-apost/` | PDE-defined physical operator 是连续主对象；I2.1--I2.3 已完成。全边界 `fbie-a1` 已计算 ordinary residual components、full-$P$ tails、$q$ 与窄名义区间。I3.2 条件性定理已建立；same-trial `ecap-a2` 完成 evaluation 后因 $664.470682>640$ MiB 资源门停止，未形成 cap、$q$ 或 interval，且三项 evaluation qualifications 未通过。I3.3 只做 independent reference/effectivity；全 false reliability/enclosure flags 与 projected-gap contract 阻止 I3.4 的存在性和上界解释。unique target 仅为可选升级。 |
+| active investigation / I3.1 preliminary candidate; I3.2 theorem established, empirical cap unresolved | `research/projects/eig-apost/` | PDE-defined physical operator 是连续主对象；I2.1--I2.3 已完成。全边界 `fbie-a1` 已计算 ordinary residual components、full-$P$ tails、$q$ 与窄名义区间。I3.2 条件性定理已建立；same-trial `ecap-a2` 完成 evaluation 后因 $664.470682>640$ MiB 资源门停止，未形成 cap、$q$ 或 interval，且三项 evaluation qualifications 未通过。原 I3.3、I3.4 已分别迁移至未来 I4.1、I4.2，两项均未启动；全 false reliability/enclosure flags 与 projected-gap contract 阻止 I4.2 的存在性和上界解释。unique target 仅为可选升级。 |
 | paused archive | `research/archive/muller-cauchy-2026-07/` | 冻结的 Müller--广义 Bloch--Cauchy 主线；商空间版本的核/场等价仍有未闭合的外部定理适配和表示论前提。 |
 | paused | `research/projects/half-guide-dtn/` | Stage 1 完成了符号审计、齐次半导 DtN/Riccati 验证和耦合方案建议；周期障碍半导、完整中心耦合及 MATLAB 最终验证尚未完成。该路线未整合进冻结主线。 |
 | completed project | `research/projects/cell-representation/` | 专题任务已完成：原始无条件猜想过强；给出了直接 Green 表示和带显式正则性、非 Wood 及互补问题条件的修正版。其纠正后的表示结构和商空间策略已进入冻结主线，但其中的表示定理仍为 `needs review`。 |
@@ -132,10 +133,10 @@ $q$ 且 angular-tail 门通过，但 circle action $256\to512$ ratio $0.7741$ �
 条件性证书定理已经建立；其 same-trial `ecap-a2` application 进一步完成新 evaluation，却因
 实际内存 $664.470682$ MiB 超过 $640$ MiB 在 cap 前停止，所以本次 empirical cap 未计算；另有
 actual-$\Delta T$、finite-image Bloch、analytic-kernel 三项 fail-open 资格失败，按冻结
-component gates 也会使 cap unresolved。I3.3 只负责
-independent reference/effectivity。零 observed shift 不能单独验证 correction、收敛或 estimator。outward
+component gates 也会使 cap unresolved。未来 I4.1 只登记
+independent reference/effectivity，当前未启动。零 observed shift 不能单独验证 correction、收敛或 estimator。outward
 residual/field/tail enclosure、sharp-disk projected-gap contract 与预注册
-absolute/gap-relative resolution 只限制 I3.4 的 reliable existence/upper-bound 声明。
+absolute/gap-relative resolution 只限制未来 I4.2 的 reliable existence/upper-bound 声明。
 unique-target isolation
 只限制指定-mode升级。production derivative/separation 与 projected/regular
 approximation 只限制相应 finite-correction 或离散谱收敛支线，不再是 I3.1 主线门，也不升级为
