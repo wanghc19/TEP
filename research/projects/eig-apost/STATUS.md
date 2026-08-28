@@ -1,8 +1,19 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-08-25。
+更新日期：2026-08-28。
 
 ## 当前状态
+
+- **2026-08-28 I4.1 independent-reference 方法门：** literature/method research 已按冻结
+  search plan 完成。所选 geometry-fitted conforming FEM supercell + twist-band-collapse 路线经
+  同一 Researcher 有界修订和同一 Skeptic 复审，最终 verdict 为 `PASS WITH CONDITIONS`，没有
+  unresolved blocker。第一层只允许对完整 frozen finite empirical branch set 报告 observed
+  set-distance；coverage/resolution 不足时 fail closed。single-mode denominator 另需冻结的
+  target-specific estimator 或 continuous isolation，field label 一致本身不升级 target。
+  $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ 仍不是 error bound。本轮没有创建 design、实现、实验或
+  reference/effectivity result；全部 strict/reliable/independent/existence result flags 仍 false。
+  详见 [[research/projects/eig-apost/implementation/i4/README|I4 guide]] 和
+  [[research/projects/eig-apost/implementation/i4/method-review|method review]]。
 
 - **2026-08-25 I3.2 same-trial evaluation-cap 负结果：** `ecap-a1` 已消费并保留为
   `I3_2_EXECUTION_UNAVAILABLE` implementation failure；它在 `LOCAL_identity` 的 integer/double
@@ -328,8 +339,8 @@
   circle-action refinement ratio $0.7741$ 仍使 ordinary candidate 未获内部资格。I3.2
   条件性证书定理不以该诊断为前置；同一阶段的 `ecap-a2` 已完成 same-trial evaluation，但因
   $664.470682>640$ MiB 资源门使本次 empirical cap 未计算。三项 fail-open evaluation
-  qualification failures 按冻结 component gates 也会使 cap unresolved；未来 I4.1 只登记
-  independent reference/effectivity，当前未启动。
+  qualification failures 按冻结 component gates 也会使 cap unresolved；I4.1 literature/method
+  research 已通过方法门，但 independent reference/effectivity 数值阶段尚未启动。
   reliability/enclosure flags、current-model projected gap 与 absolute/gap-relative resolution
   则是 I4.2 相应存在性和上界结论的门。第一层不要求唯一 mode。该状态不表示 sub-grid
   minimizer、finite root 或连续真值零漂移，也不构成收敛证据。
