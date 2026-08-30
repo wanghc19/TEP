@@ -1,10 +1,44 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-08-28。
+更新日期：2026-08-29。
 
 ## 当前状态
 
-- **2026-08-28 I4.1a independent-reference 数值负结果：**唯一 `femref-a1` attempt 按冻结
+- **2026-08-29 I4.1a representation-gate-003 完成：** create-once
+  `representation-gate-003` 已自然退出、执行一次并永久消费；
+  [[research/projects/eig-apost/implementation/i4/review-4-1a|postdiagnostic review §AS]] verdict 为
+  `PASS WITH CONDITIONS`。冻结的 zero-scientific-eigensolve representation diagnostic 完成全部
+  schema/count/correctness 门，记录 $737$ 个 valid samples、$0$ 个 unavailable samples，target-active
+  time 为 $761.486755$ s，authoritative aggregate peak RSS 为 $1296187392$ B，均未达到
+  $1800$ s/$2147483648$ B resource uppers。内部 future-formal forecast 仍仅为 advisory：
+  $2671.670676$ s（$44.53$ min），且 timing variability 未通过。该结果不产生 guided-mode
+  eigenpair、independent reference、effectivity validation 或 formal-run feasibility 结论；不授权 retry、
+  新 diagnostic ID 或 `run-006`。
+
+- **2026-08-29 I4.1a representation diagnostic external protocol/wall blocker：** create-once
+  `representation-gate-002` 已执行一次并消费；
+  [[research/projects/eig-apost/implementation/i4/review-4-1a|postdiagnostic review §AM]] 判为
+  `INCOMPLETE / EXTERNAL_MONITOR_PROTOCOL_FAILURE / WALL HARD LIMIT EXCEEDED`。external
+  monitor相邻 samples约间隔 $40$ s，未满足不粗于 $30$ s的冻结协议；whole-command
+  `real` 为 $139.74$ s，超过无 grace 的 $120$ s hard limit。保存的aggregate peak RSS为
+  $1227096064$ B，严格低于授权的 $2147483648$ B，因此本次不是 memory failure。reached
+  evidence仅限三个 phase pairs 的六行 primary K/M均通过；完成 $0$ 次 scientific eigensolve，
+  derived representation、resource forecast及terminal summary均未完成。该 preformal diagnostic
+  不消费 scientific attempt，也不是 FEM method或scientific negative；不授权 retry、新 diagnostic ID、
+  `run-006`、reference collection或 effectivity claim。I4.1 尚未验证 estimator。
+
+- **2026-08-29 I4.1a representation diagnostic resource blocker：** create-once
+  `representation-gate-001` 已执行一次；
+  [[research/projects/eig-apost/implementation/i4/review-4-1a|postdiagnostic review §AJ]] 判为
+  `INCOMPLETE / EXTERNAL_RESOURCE_BUDGET_UNAVAILABLE`，因为 external peak RSS 超过冻结的
+  $1$ GiB gate。reached evidence 仅限三个 phase pairs 的六行 primary K/M 均通过 exact
+  canonical Hermitian gate，且三个 mass `chol` flag 均为 $0$；完成 $0$ 次 scientific
+  eigensolve，derived representation 与 resource forecast 均未完成。该 preformal diagnostic
+  不是 FEM method 或 scientific negative，scientific attempt 未消费；diagnostic ID 已消费，
+  不授权 retry、`run-006`、reference collection 或 effectivity claim。I4.1 尚未验证 estimator。
+
+- **2026-08-28 I4.1a independent-reference 数值负结果（historical verdict retained / 历史 verdict）：**
+  唯一 `femref-a1` attempt 按冻结
   [[research/projects/eig-apost/implementation/i4/design-4-1a|design-4-1a]] 完成全部前置审查后
   正式启动。前三个 `run_id` 分别因 dependency capability check、`triangulation` constructor
   次序和失败工件 schema 停止，均为保留日志、不消费 attempt 的 operational retry；`run-004`
@@ -17,7 +51,9 @@
   `VALID SCIENTIFIC NEGATIVE / FROZEN M1 METHOD FAILED`；attempt 已消费，不授权 `run-005` 或
   同方法 retry。没有 eigenvalue、field、qualified reference collection 或 effectivity evidence，
   I4.1 尚未验证 estimator。详见
-  [[research/projects/eig-apost/implementation/i4/review-4-1a|review-4-1a]]。
+  [[research/projects/eig-apost/implementation/i4/review-4-1a|review-4-1a]]。该 verdict 仅作为
+  `run-001`--`run-004` 历史记录保留；其 current-authority status 已被本轮完成并消费的
+  `representation-gate-003` 状态 supersede，不应冒充当前 method 或 scientific verdict。
 
 - **2026-08-28 I4.1 independent-reference 方法门：** literature/method research 已按冻结
   search plan 完成。所选 geometry-fitted conforming FEM supercell + twist-band-collapse 路线经

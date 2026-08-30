@@ -1,6 +1,6 @@
 # I4.1a 独立 FEM supercell reference 审查
 
-状态：`POST-RUN REVIEW COMPLETE / PASS (VALID SCIENTIFIC NEGATIVE) / M1 FAILED / ATTEMPT CONSUMED / NO FURTHER RUN AUTHORIZED`
+状态：`§15 DESIGN REVIEW COMPLETE / PASS WITH CONDITIONS / §Q HISTORY PRESERVED / ENGINEER BOUNDED REPAIR AUTHORIZED / DIAGNOSTIC AND RUN-005 NOT AUTHORIZED`
 
 审查对象：[[research/projects/eig-apost/implementation/i4/design-4-1a|design-4-1a]]。
 本文件由同一 Skeptic 持续维护；依次保留 design 初审、design 复审和当前 spec-to-code review。
@@ -1111,3 +1111,3172 @@ claim，也不应在尚未选定 future route 时提前写入 `DECISIONS.md`。
 
 最终 next action：**停止实验链，不授权 `run-005` 或任何 same-method retry；由主 agent
 仅做上述 project status sync。**
+
+## R. Independent review of prospective design §15
+
+本节审查
+[[research/projects/eig-apost/implementation/i4/design-4-1a|design-4-1a §15]] 在后续 user
+direction 下建立的 prospective same-method mesh-implementation repair contract。审查对象仅为
+§15 的前瞻授权、freeze、allowed/prohibited scope、diagnostic 和 preformal gates。Q 节的
+`VALID SCIENTIFIC NEGATIVE / FROZEN M1 METHOD FAILED / ATTEMPT CONSUMED` 及 run-001--004
+artifacts 全部保留为历史权威。本次没有运行 MATLAB、Octave、Python，没有审查
+或修改 implementation，也没有创建文件或目录。
+
+### R.1 Verdict and present authority
+
+**Verdict：`PASS WITH CONDITIONS`。Confidence：high。Unresolved `BLOCKER`：none。**
+
+本轮 user authority 明确允许将 future mesh-connectivity/material-pair repair 前瞻性重分类为
+same-method implementation repair。§15 忠实实现该授权：它只改 future action authority，不否定
+run-004 当时的 complete negative artifact，不把 Q 节 `PASS` 改写为 reference success，也不
+追溯将 consumed attempt 记为 unconsumed。Git diff 显示 design 只在旧文末追加 §15，没有删除
+或改写原 sections。
+
+§15 给出的 prospective exception 只允许 Engineer 实现原 design 已要求的
+reflection-closed fitted mesh；不允许 diagnostic 或 formal MATLAB run。因此本 Skeptic **明确
+授权同一 Engineer 开展第 15.3 节的 bounded implementation repair 和 diagnostic plumbing**，
+但 **不授权运行第 15.5 节 diagnostic，不授权 `run-005`，也不授权任何
+MATLAB/Octave/Python numerical command**。
+
+### R.2 Historical boundary and reclassification audit
+
+1. §15.1 明确链接 Q 节，逐字保留 run-001--004 artifact/retry ledger 和当时
+   `M1 FAILED / ATTEMPT CONSUMED` verdict；该修订没有赋予 run-004 新数值含义。
+2. Established evidence 仍只是 run-004 的 $K/M$ reflection defects、$5\times10^{-11}$
+   threshold 和 $0/119$ eigensolves。Delaunay tie-breaking 或 material pairing 作为根因仍标为
+   `PROVISIONAL`，没有把推测提升为事实。
+3. 当前 user-authorized prospective repair 是对 future work 的窄例外：历史上“attempt consumed”仍是
+   当时正确 verdict；future 工作则在不新建 attempt 的条件下按 §15 gates 进行。后续
+   文档必须同时保留这两个时态，不得用 prospective authority 覆盖历史。
+
+### R.3 Frozen scientific contract audit
+
+§15.2 对本 repair 不可改变的科学对象枚举完整：
+
+- exact-circle continuous problem、$R=0.2$、$q_{\mathrm{in}}=17$、$q_{\mathrm{out}}=1$、missing
+  index $0$、$\beta=0.5$ 和 frequency normalization；
+- volume conforming $P_1$ FEM weak form、local stiffness 和 consistent weighted-mass formulas；
+- 全部 $(s,n_\Gamma)$、$N$、$\alpha$、$\vartheta$、solver/root/tolerance/threshold gates 与
+  $72+47=119$ solve union；
+- raw/safe-gap、all-slice edge buffer、cluster/subspace、localization/tail、coverage、four-axis
+  refinement 和 $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ uncertainty rules；
+- wide cue 的唯一 bulk-gap-identification 角色、information isolation、blind export/reveal gate 和
+  empirical/non-certified claim boundary；
+- 同一 `femref-a1` directory 与原 30 min / 2 GiB / single-grace / 40 min 合同。
+
+因此 prospective repair 不能改 continuous eigenproblem、trial space family、branch selector、coverage target、
+resolution formula 或结论强度。该 freeze 足以阻止借“mesh fix”引入 effectivity/reveal 或
+nearest-root leakage。
+
+### R.4 Property-based repair and method identity
+
+§15.3 将 acceptance 写成 pre-assembly property contract，而不猜测特定 root cause。允许改动的只是
+ordering 或 deterministic tie resolution；point coordinates、point-removal rule、disk polygon/rings、
+constraint segment multiset、mesh levels 和 material rule 不变。每个 unordered triangle 必须有唯一
+reflected partner，material flag 必须 pairwise 一致，且原 quality/seam/Hermitian 合同仍然 fail
+closed。
+
+更换 Delaunay tie resolution 会改变有限维 connectivity，因此后续 source diff 必须受严格审查；
+但在本轮 user 明确的 prospective reclassification 下，它不是新 method，原因是：
+
+1. old design 本就要求 reflection-invariant deterministic fitted mesh，而未冻结唯一 tie algorithm；
+2. node/constraint/material/weak-form 数据与所有 refinement axes 不变；
+3. repair 在 assembly 之前用 combinatorial closure 验收，而不在 assembly 之后修饰 matrices；
+4. formal run 仍从 source 重建 meshes 并重跑全部原 oracles。
+
+这一 property-based boundary 允许 Engineer 选择最小实现，但不允许将一种新外部 mesher 或
+新 variational problem 悄然引入 M1。
+
+### R.5 Prohibition audit
+
+§15.4 对最容易伪造“symmetry pass”的路径给出了足够强的排除：
+
+1. 明禁 $K$、$M$ matrix averaging/post-symmetrization；
+2. 明禁改 `LOCAL_assemble_p1` coefficients/formulas、material labeling rule、points/removal/rings/
+   polygons/constraints 或 mesh levels；
+3. 明禁放松 $5\times10^{-11}$ tolerance、删除/降级 reflection oracle 或只检查 $K$；
+4. 明禁 external mesher/toolbox、BIE/QZ/current estimator、historical output 和信息泄漏；
+5. 明禁改 cue/window/root/solver/branch/refinement/uncertainty/claim/reveal objects；
+6. 明禁覆写 run-001--004、新建 second attempt 或把 diagnostic 伪装为 reference
+   collection。
+
+这些禁令关闭了容忍度放宽、后验 matrix repair、point/constraint 漂移和科学参数更改四类
+最大风险。
+
+### R.6 Diagnostic-path and lifecycle audit
+
+Optional `test/i4/femref-a1/diagnostics/mesh-repair-001/` 是 existing `femref-a1` 内部的
+debug-evidence namespace，不是 second attempt directory。它不要求新 `design-*.md`、
+`review-*.md`、attempt README 或新 scientific output tree；只保存原子发布的 diagnostic
+ledgers。因此它与 user 对新 design/review/attempt files/directories 的禁止兼容。
+
+§15.5 的 diagnostic boundary 足够明确：
+
+- 保留 one-argument formal scientific entry 的语义，diagnostic 只使用显式 debug mode；
+- 只构造九个 frozen meshes、组装 matrices、运行原 quality/seam/reflection oracles 和
+  resource preflight；
+- 必须记录 unpaired-triangle/material-pair counts、所有原 diagnostics、$K/M$ defects、
+  seam checks、$0$ eigensolves 和 wall/memory forecast；
+- 禁止 `eigs`、bulk/defect/branch/coverage/resolution/reference export、current-chain 或历史
+  inputs；
+- 任一九-mesh property/oracle/resource gate 失败即 fail closed，不产生 `output/run-005/`；
+- future formal run 不读/复用 diagnostic mesh、cache 或 artifact，而是在独立同命令 clock 中
+  从 source 重建。
+
+因为 diagnostic 显式包含 numerical mesh/matrix oracles，§15 没有把它误称为“无数值运算”；
+它只是 non-eigensolve/non-scientific debugging gate。这一分类诚实。
+
+### R.7 Findings and conditions
+
+#### 1. `IMPORTANT CAVEAT`：future connectivity diff 必须证明零科学漂移
+
+- **Consequence：** connectivity 本身会改变有限维 matrices；若 points/constraints/material rule/local
+  formulas 也改变，repair 将越界成新 method 或科学调参。
+- **Decisive later evidence：** Engineer diff 必须只落在 §15.3 allowed scope，Researcher
+  theory-to-code check 必须核对 source-owned spec、point/constraint multiset、material rule、weak-form
+  formulas 和 schedules 零漂移。该证据属 implementation 后 gate，不阻止当前 design pass。
+
+#### 2. `IMPORTANT CAVEAT`：diagnostic pass 不可代替 formal-run independence
+
+- **Consequence：** 若 formal run 读取 diagnostic cache/mesh，就会把 debug command 嵌入 scientific result、
+  破坏 single-command budget 与当次重建证据。
+- **Decisive later evidence：** diagnostic artifact 必须显示九 meshes、$0$ eigensolves、全 oracles
+  pass 和 forecast within 30 min/1.5 GiB；后续 spec-to-code review 必须证明 `run-005`
+  不读 diagnostic path 或复用 cache。该证据在本轮尚不存在，因此当前不授权
+  diagnostic 或 formal run，但不阻止 Engineer 实现 plumbing。
+
+#### 3. `MINOR CAVEAT`：diagnostic namespace 必须 create-once 且不冒充 attempt
+
+- **Consequence：** fixed `mesh-repair-001` 若被静默覆写，会破坏 debug evidence 的可追溯性；若在其中
+  新建 design/review/reference files，会混淆文件权威。
+- **Cheapest later check：** diagnostic writer 对已存在路径 fail collision，只写第 15.5 节的
+  ledgers；README/SYMBOLS 若需机械同步，只更新现有文件。该项不影响当前 method identity。
+
+No `BLOCKER` is unresolved。Root-cause diagnosis 仍为 provisional，但 property-based acceptance
+不依赖在当前阶段确定唯一 root cause，因而不构成 blocker。
+
+### R.8 Preformal gates and bounded handoff
+
+§15.6--15.7 的 gates 足以防止提前运行或用 diagnostic 替代 formal evidence：
+
+1. Engineer 只能修改 `run_i4_1a.m` 中 mesh connectivity/tie-resolution、直接相关
+   `LOCAL_` helpers、pre-assembly closure diagnostics 和最小 diagnostic dispatch/writers；现有
+   `SYMBOLS.md`/attempt `README.md` 只能机械同步。
+2. Engineer 完成后，同一 Researcher 必须先做 theory-to-code zero-drift check。
+3. 后续 diagnostic 必须独立证明九 meshes、connectivity/material pairing、原 oracles、
+   $0$ eigensolves 和 resource forecast。
+4. 同一 Skeptic 必须在 diagnostic 后完成 implementation/artifact/spec-to-code review，并另行
+   明确授权 formal `run-005`。
+5. formal run 必须保持 run-001--004 不变、`output/run-005/` 预先不存在，以
+   单条 exact command 从 source 重建九 meshes，共享原 30/40 min 和 2 GiB 合同。
+6. 任一 mesh/oracle/preflight gate 失败即在 eigensolve 前返回 Skeptic，不自动授权
+   `run-006`。
+
+当前 handoff 仅为：**Engineer implementation repair and diagnostic plumbing authorized**。不允许创建
+新 design/review/attempt files or directories，不允许覆写历史 artifacts，不允许运行 diagnostic，
+不允许创建 `output/run-005/`，不允许执行或授权 formal command。
+
+## S. Pre-diagnostic independent spec/code review after design §17
+
+### S.1 Audit frame and verdict
+
+本节审查 [[research/projects/eig-apost/implementation/i4/design-4-1a|design-4-1a
+§§15--17]]、`test/i4/femref-a1/run_i4_1a.m`、`README.md` 和 `SYMBOLS.md`
+的完整 working-tree diff，以及 diagnostic/formal 共享 helper 的静态调用链。当前 gate 的成功标准是：
+bounded repair 恢复冻结的 reflection-closed fitted mesh，diagnostic 可在不调用 `eigs`、不读取历史或
+current-chain 信息且不复用 cache 的条件下，独立产生九网格 pre-eigensolve evidence。审查时确认 cwd
+为 `/Users/whc/Documents/Work/epost`、branch 为 `codex/epost`；没有运行 MATLAB、Octave、Python，
+没有创建 diagnostic/output，也没有修改 design、implementation、documentation 或历史 artifact。
+
+**Verdict：`PASS WITH CONDITIONS`。Confidence：high。Unresolved `BLOCKER`：none。**
+
+本 verdict 只授权一次 create-once mesh diagnostic；它不是 scientific/reference run 的授权。
+Q 节及 run-001--004 的历史 verdict、artifact 和 attempt-consumption 结论保持不变，`run-005`
+继续 `NOT AUTHORIZED`。
+
+### S.2 Scope, method identity and zero-drift audit
+
+完整 diff 的实质 source hunks仅包括：two-input diagnostic dispatch、diagnostic publication、
+21-to-36-column mesh ledger migration、`LOCAL_build_mesh` 中 assembly 前的 reflection tie repair 与
+planar/material closure gates，以及直接服务这些对象的 `LOCAL_` helpers。`README.md` 和
+`SYMBOLS.md` 只作 interface/ledger 机械同步。未发现下列冻结对象发生 diff：
+
+1. exact-circle continuous problem、physical parameters、frequency normalization、volume $P_1$
+   weak form、local stiffness 和 consistent weighted-mass formulas；
+2. point coordinates/removal、disk polygon/rings、constraint generation/deduplication 和
+   polygon-centroid material rule；
+3. 40/48 complete-return gates、$72+47=119$ solve union、bulk/defect schedule、wide cue、
+   all-slice edge buffer、cluster/subspace、coverage、branch identification、four-axis refinement、
+   empirical uncertainty、information isolation 和 claim/reveal boundary；
+4. `coordinate_tolerance=10^{-13}`、`constraint_tolerance=2\times10^{-12}`、
+   `reflection_tolerance=5\times10^{-11}`、resource caps 及其他 scientific gates。
+
+没有 matrix averaging/post-symmetrization、tolerance relaxation、point/constraint/formula/parameter
+改动，亦没有 external mesher、BIE/QZ、current estimator 或 reference input。修复只在原
+constrained-Delaunay connectivity 上保留已闭合 triangle orbits，并以 negative-$x$ centroid
+代表生成缺失 reflection partner；centered 或左右 inventory 不平衡、duplicate、coverage-area defect
+均 fail closed。最终 connectivity 还必须通过独立 planar-complex、unique partner、material-pair 和
+assembled $K/M$ reflection oracles。因此这仍是 §15 已授权的 same-method implementation repair，
+不是新连续模型或 M2。
+
+### S.3 Implementation and schema audit
+
+1. **Reflection and planar-complex gates.** `reflection_index` 在 repair 前由冻结 point set 构造；
+   constraints 必须在 reflection 下闭合。repair 后依次检查 strictly positive signed area、unordered
+   triangle uniqueness、edge incidence、outer-boundary 双向集合相等、frozen constraint retention、
+   nonincident-edge intersections 和 single triangle component。material classification 之后又检查
+   unique reflected triangle partner 和 pairwise material equality；assembly 后原 $K/M$ reflection
+   defects 仍以 $5\times10^{-11}$ fail closed。intersection sweep 的 lower-$x$ stop 和 $y$-box
+   pruning 不会跳过 bounding boxes 可能相交的 pair；absolute orientation tolerance 对本冻结坐标尺度是
+   保守的 near-touch failure rule。
+2. **36-column contract.** Header、initial row、success row 和 failure checkpoint 均为 36 columns。
+   Columns 19--23 是 repair/reflection/material fields，24--33 是 planar fields，34 是
+   `reached_boundary`，35--36 是 first code/reason。seam completion 只写 column 34，failure
+   propagation 只回填 35--36。diagnostic `closure_pass` 对九 rows、九 seam rows以及 columns 19--33
+   作一致映射；constraint、quality、matrix 和 seam failures 则由 shared builder 在返回九 rows 前直接
+   fail closed。
+3. **Create-once and atomic publication.** Entry 先确认 final diagnostic ID 不存在，再成功创建
+   system-temporary work area，之后才 claim `diagnostics/mesh-repair-001/`。每个 CSV/MAT 通过
+   `.partial` 后 move 发布；catchable failure 进入 terminal summary。temporary cache 由 cleanup
+   删除，formal one-input path 不含 `diagnostics` read。
+4. **Zero-eigensolve control flow.** Exact two-input dispatch 调用 `LOCAL_run_mesh_diagnostic` 后立即
+   return。其静态 call chain止于 `LOCAL_preflight_audit`、mesh/seam oracles、`symbfact` 和 resource
+   forecast；唯一 `eigs` call 位于未被该路径调用的 `LOCAL_low_spectrum`。summary 固定
+   `completed_eigensolves=0`、`reference_exported=false` 和 non-reference claim boundary。
+5. **Isolation.** Diagnostic 只加载其 system-temporary current-command mesh caches；source 中没有
+   Markdown、Git、历史 output、BIE/QZ/current-estimator/reference read。formal path 只使用
+   `output/<run-id>/work/` 的 current-run caches，从 source 重建九 meshes，不读取或复用 diagnostic
+   artifacts。
+6. **Resource fail-closed behavior.** Shared preflight仍审计九 meshes、40/48 workspaces、symbolic
+   fill、current-run cache/export buffers 和 $72+47=119$ solves。diagnostic 只在 forecast
+   $\le30$ min、$\le1.5$ GiB 且全部 closure/oracle gates pass 时给出 `PASS`；其自身仍受
+   30 min / 2 GiB external limits。当前 `diagnostics/mesh-repair-001/`、`output/run-005/` 和
+   untracked files 均不存在；source diff 没有历史 artifact 写入路径，run-001--004 当前文件集与
+   Q 节 reached-stage inventory 一致。
+
+### S.4 Strongest challenge and classified findings
+
+**Strongest challenge.** 最可能推翻本 gate 的 failure mode 是一个 reflection-closed 但非合法
+planar complex 的 triangle soup 被当成 valid mesh。§16 已准确识别这一问题；新增 incidence、boundary、
+intersection、component 和 constraint oracles 加上原 positive-area/total-area checks，在本冻结
+Delaunay-plus-reflection provenance 下关闭了该 blocker。下一项决定性证据不是再扩展理论，而是运行九网格
+diagnostic 并审查逐网格 ledgers。
+
+1. **`IMPORTANT CAVEAT` — aggregate `closure_pass` 不可单独替代完整 artifact audit。**
+   `closure_pass` 显式重查新增 columns 19--33，但不再次数值比较原 columns 13--18 或 seam-row
+   tolerances；这些对象依靠 shared builder/phase helper 的 throw-before-return control flow 保障。
+   这在静态上足以授权 diagnostic，却意味着后续 formal authorization 必须逐列复核原
+   constraint/interface/$K/M$ 和 seam/Hermitian values，不能只读取 summary 的一个 boolean。
+2. **`IMPORTANT CAVEAT` — 资源余量仍须由当次 evidence 证明。** Design floor 为 29.8 min，
+   距 30 min gate 仅 0.2 min；新 planar sweep 的真实耗时未知。preflight 把当次九网格 elapsed 纳入
+   forecast，故会 fail closed，但 diagnostic 必须由外部 process-tree/RSS monitor独立验证实际
+   wall/RSS，并且不得因接近上限自动重试。
+3. **`MINOR CAVEAT` — intersection orientation tolerance 是冻结尺度专用。** 当前
+   $[-5.5,5.5]\times[-0.5,0.5]$ 尺度下，$2\times10^{-12}$ 的 absolute tolerance 是保守 gate；
+   未来若 rescale geometry，不能未经新 freeze 直接沿用。它不影响本轮 diagnostic。
+
+No unresolved `BLOCKER` was found。上述 caveats 只限制后续证据解释，不阻止执行最便宜的
+decisive check。
+
+### S.5 Exact diagnostic authorization and monitor contract
+
+在 `test/i4/femref-a1` 工作目录中，**仅授权一次**以下 exact command：
+
+```text
+/usr/bin/time -lp /Applications/MATLAB_R2023b.app/bin/matlab -batch "run_i4_1a('mesh-repair-001','mesh-diagnostic')"
+```
+
+Code Runner 必须每 30 s 监控 MATLAB process tree、elapsed wall 和 aggregate RSS，并保存完整 terminal
+及 `/usr/bin/time -lp` record。Diagnostic 必须在 30 min 内结束，2 GiB 是 hard RSS limit；达到任一
+limit 即停止并保留当前 artifact。不得 auto-retry、不得改 command/ID、不得将 shell exit code 单独当作
+成功权威。`diagnostic-summary.csv/.mat`、ledgers 和 terminal record 共同决定状态；本授权不包含
+`run-005`、`mesh-repair-002` 或任何 formal/scientific command。
+
+### S.6 Required post-diagnostic artifact gate
+
+在考虑 formal authorization 前，同一 Skeptic 至少必须确认：
+
+1. `diagnostic-summary.csv/.mat` 一致记录 `PASS`、九 meshes、$0$ eigensolves、
+   `closure_pass=true`、resource forecast complete/pass、`reference_exported=false` 及冻结
+   non-reference claim boundary；无 `.partial` 或冒充 reference collection 的 artifact；
+2. `mesh-ledger.csv` 有 36-column header 和九个冻结 mesh IDs 各一 row；新增 repair/material/planar
+   fields 全部过 gate，同时原 minimum-angle、constraint、cross-interface、Hausdorff（适用 level）和
+   $K/M$ reflection fields 逐列过原 tolerance；
+3. `seam-checks.csv` 有 12-column header 和九 rows，periodic pairing、corner、coordinate、seam 与
+   Hermitian diagnostics 全部过原 gates；
+4. `resource-preflight.csv/.mat` 的 schedule ledger 为 72 bulk + 47 defect = 119，wall forecast
+   $\le30$ min、peak forecast $\le1.5$ GiB，且 external actual wall $<30$ min、peak RSS
+   $<2$ GiB；
+5. diagnostic 未产生 bulk/defect spectra、branch/coverage/resolution、fields 或
+   `reference-collection`，未留下可供 formal 复用的 mesh cache；run-001--004 的 artifact sets/content
+   未变，`output/run-005/` 仍不存在；
+6. 若任一项失败，保留 create-once diagnostic evidence并返回本 review，不自动修复、重跑或创建新
+   ID。只有全部通过且同一 Skeptic 完成 artifact/spec re-review 后，才可另行判断是否授权
+   `run-005`。
+
+### S.7 Minimal resolution and open-problem handoff
+
+当前最小下一门仅是上述 authorized diagnostic 及其 artifact audit；不需要新理论、设计、attempt 或
+source modification。Goal-relevant handoff 为：stage `I4.1a preformal`，category
+`IMPORTANT CAVEAT`，blocking scope `formal run only`，cheapest check `nine-mesh diagnostic plus
+full-column artifact audit`，建议 ledger status `PENDING DIAGNOSTIC EVIDENCE`。项目 ledger 由主 agent
+维护；本 Skeptic 不在此阶段同步 project status。
+
+## T. Post-diagnostic artifact and final preformal review
+
+### T.1 Audit frame and verdict
+
+本节直接审查 authorized create-once
+`test/i4/femref-a1/diagnostics/mesh-repair-001/` 的全部六个 artifacts，并将其逐列对照
+[[research/projects/eig-apost/implementation/i4/design-4-1a|design-4-1a §§15--17]]、S 节的
+post-diagnostic gate 和当前 `run_i4_1a.m`。审查目标是判断 same-method repair 是否已经产生足以放行
+第一次 prospective formal run 的 pre-eigensolve evidence；它不审查 guided mode、reference
+collection 或 effectivity，因为 diagnostic 按合同不计算这些对象。本次只使用 read-only
+filesystem/Git inspection；没有运行 MATLAB、Octave、Python 或任何 experiment
+command，没有修改 design/code/docs/output，也没有创建 artifact。
+
+**Verdict：`PASS WITH CONDITIONS`。Confidence：high。Unresolved `BLOCKER`：none。Formal
+`run-005`：`AUTHORIZED`。**
+
+Diagnostic 充分证明九个冻结 mesh implementations 满足 preassembly planar/reflection/material
+contract、assembled $K/M$ 与 seam/Hermitian oracles，并给出合格的 formal resource forecast。
+该结论不推翻 Q 节的历史 negative；它只关闭 §§15--17 前瞻修复的 preformal gate。
+
+### T.2 Command, external budget and artifact inventory
+
+Code Runner 的 external record 给出 exact command：
+
+```text
+/usr/bin/time -lp /Applications/MATLAB_R2023b.app/bin/matlab -batch "run_i4_1a('mesh-repair-001','mesh-diagnostic')"
+```
+
+terminal 为 `PASS`；external real wall 为 19.40 s，maximum RSS 为 775,766,016 bytes，peak memory
+footprint 为 487,543,808 bytes。三者均远低于 30 min / 2 GiB diagnostic limits，没有 grace、kill 或
+retry。内部 summary 的 6.365840875 s 只计 entry 内 diagnostic clock；它与包含 MATLAB startup/exit
+的 external wall 含义不同，不构成冲突。
+
+Diagnostic final directory 直接枚举为且仅为：
+
+- `diagnostic-summary.csv` / `diagnostic-summary.mat`；
+- `mesh-ledger.csv`；
+- `seam-checks.csv`；
+- `resource-preflight.csv` / `resource-preflight.mat`。
+
+没有 `.partial`、subdirectory、mesh cache、bulk/defect spectrum、branch/coverage/resolution、fields、
+`reference-collection` 或其他 scientific output。`output/run-005/` 仍不存在。当前 source 中 formal
+one-input path 不读取 `diagnostics/`，diagnostic temporary work 由 system-temp cleanup 管理；artifact
+集合与调用链共同支持“没有 diagnostic cache 被 formal 复用”。
+
+### T.3 Summary-independent mesh and seam audit
+
+`mesh-ledger.csv` 的 header 和九个 data rows 均为 36 columns，mesh ID 集合与冻结 schedule 完全一致。
+逐列直接核验结果为：
+
+1. columns 13--14 的 constraint-missing/cross-interface 均为 0；
+2. columns 19、21--26、29--31 的 repair-unresolved、unpaired constraint/triangle、material mismatch、
+   duplicate、invalid incidence、nonmanifold、interior-free boundary、missing outer boundary 和
+   nonincident intersection 均为 0；
+3. connectivity-area defect 最大为 $3.5850110758805058\times10^{-14}$，低于
+   $2\times10^{-12}$；每个 mesh 的 triangle component 为 1、`planar_complex_pass=1`；
+4. actual/expected outer-boundary counts逐 mesh 相等，依次为
+   48、72、96、288、288、360、432、480、576；
+5. minimum angle 均大于冻结的 $3^\circ$；三个 $s=24,n_\Gamma=48$ meshes 的 Hausdorff defect
+   均为 $4.2821535227930422\times10^{-4}<5\times10^{-4}$；
+6. stiffness-reflection defect 最大为 $5.5742785813988442\times10^{-14}$，mass-reflection defect
+   最大为 $3.0644974405302783\times10^{-16}$，均远低于 $5\times10^{-11}$；
+7. 九 rows 的 reached boundary 均为 `MESH_AND_SEAM_COMPLETE`，first failure code/reason 均为空，
+   CSV 中没有 `NaN`、`Inf` 或 failure token。
+
+`seam-checks.csv` 有 12-column header 和九 rows。所有 coordinate mismatch 和 seam residual 均为 0；
+Hermitian stiffness defect 最大为 $2.9312934718285006\times10^{-18}$，mass defect 最大为
+$2.7105054312137611\times10^{-19}$，均远低于 $5\times10^{-13}$。每 row 记录四个 corner pairs、
+冻结 phase $0$ 和与 $\beta=0.5$ 一致的 corner factor。因而 S.4 所要求的原 mesh/seam/$K/M$ fields
+并非只由 aggregate `closure_pass` 间接推断，而是已经逐列通过。
+
+### T.4 Resource, zero-eigensolve and isolation audit
+
+`resource-preflight.csv` 直接记录九个 symbolic mesh rows、elapsed preflight、67 bulk-main、5
+bulk-count、20 defect-medium、27 defect-fine/corner/count 和 postprocess categories。`TOTAL` row 为：
+
+- solve count $119=72+47$；
+- estimated wall $1788$ s $=29.8$ min；
+- estimated peak $1,288,490,188.8$ bytes $=1.2$ GiB；
+- current-run cache/export estimate $255,984,094$ bytes。
+
+这些值分别通过 30 min 和 1.5 GiB internal preflight caps；summary 独立记录
+`resource_forecast_complete=1`、`resource_pass=1`。九 mesh reduced DOF 最大 7496、reduced nonzeros
+最大 94,032，均低于冻结 caps。Forecast 仍是 implementation estimate，不是正式 119-solve runtime
+measurement；这一降级在 claim boundary 中保留。
+
+`diagnostic-summary.csv` 有 14-column header 和唯一 row，直接记录 `PASS`、mesh count 9、completed
+eigensolves 0、`closure_pass=1`、`reference_exported=0`、空 failure fields 及
+`NON_EIGENSOLVE_IMPLEMENTATION_DIAGNOSTIC;NOT_A_REFERENCE_COLLECTION;NO_GUIDED_MODE_OR_EFFECTIVITY_CLAIM`。
+目录中没有 progress/solve/spectrum/reference artifacts；静态 call graph 在
+`LOCAL_preflight_audit` 后 return，唯一 `eigs` call 仍只由 formal bulk/defect path 到达。没有发现
+Markdown、Git、historical output、BIE/QZ/current estimator 或 reference input，也没有 absolute
+repository dependency。
+
+### T.5 Historical immutability and scientific zero drift
+
+Direct filesystem subset audit枚举 run-001--004 下 28 个 regular artifact files；其 SHA-256、size、
+mtime 与本 Skeptic 在 diagnostic 前记录的 snapshot 一致，四个 `work/` directories 仍为空。
+提供的更广 35-entry baseline 也报告 unchanged；二者计数口径不同，但没有任何相同 path 的 digest
+冲突。Q 节的 run-001--004 artifact、retry ledger、valid negative 和 historical attempt-consumed
+verdict 均未被 diagnostic 改写。
+
+Current code/doc numstat 与 S 节 pre-diagnostic snapshot 相同，diagnostic 之后没有 source change。
+formal path 仍使用相同 continuous problem、physical parameters、$P_1$ weak form、local element
+formulas、point/constraint/material rules、40/48 gates、119-solve schedule、branch/coverage/refinement/
+uncertainty/information-isolation/claim boundaries。Diagnostic evidence 证明 repair 实现了原冻结
+reflection property；它没有引入 matrix post-symmetrization、tolerance relaxation 或新 method。
+
+### T.6 Strongest challenge and classified findings
+
+**Strongest challenge.** 当前最可能使 formal result 不可用的风险已从 mesh validity 转为 resource
+forecast error：29.8 min 距 30 min soft gate 只有 12 s，diagnostic 的 19.40 s 不能验证 119 个
+eigensolves 的真实吞吐。这个风险不会使现有 preflight artifact 不可解释；冻结的 30 min objective-progress
+gate、一次 10 min grace、40 min/2 GiB hard stops 能以最小代价在 formal command 内决定它。
+
+1. **`IMPORTANT CAVEAT` — 29.8 min forecast 余量极窄。** Formal run 必须每 30 s 监控 process
+   tree、aggregate RSS、`progress.csv` completed/planned count 和 ETA。30 min 后只有 artifact 给出
+   objective imminent-completion evidence 时才允许唯一 10 min grace；否则停止。40 min 或 2 GiB
+   无条件 hard stop。该 caveat 限制运行管理，不构成启动 blocker，因为 frozen preflight 已通过。
+2. **`IMPORTANT CAVEAT` — diagnostic pass 只关闭 pre-eigensolve gate。** 它没有计算 bulk gap、
+   defect eigenpair、branch coverage 或 $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$。任何 reference/effectivity
+   claim 仍须等待 run-005 完整 artifacts 和本 Skeptic post-run review；不得把当前 mesh pass 同步为
+   reference success。
+3. **`MINOR CAVEAT` — external resource record 不在 diagnostic final directory。** Exact command、
+   19.40 s 和 external RSS/footprint 由 Code Runner record提供，而 machine directory只保存内部 clock
+   和 forecast。当前 review 已把两条 authority 分开记录；formal post-run review 也必须保留 external
+   record，不能用 internal MATLAB elapsed 代替 process wall/RSS。
+
+No unresolved `BLOCKER` was found。
+
+### T.7 Exact formal authorization and monitoring contract
+
+在 `test/i4/femref-a1` 工作目录中，**仅授权一次**以下 exact first formal command：
+
+```text
+/usr/bin/time -lp /Applications/MATLAB_R2023b.app/bin/matlab -batch "run_i4_1a('run-005')"
+```
+
+Code Runner 必须沿用每 30 s external monitor，记录 MATLAB process tree、aggregate RSS、elapsed wall、
+`progress.csv`、terminal output 和 `/usr/bin/time -lp`。30 min 是 soft gate：只有 current-run artifacts
+显示至少 90% solve completion且 ETA 不超过 10 min，或同等客观证据证明即将完成时，才允许一次且仅一次
+最多 10 min grace。40 min 和 2 GiB 是 hard limits；达到即停止并保留 artifacts。不得拆分 command、
+不得 auto-retry、不得预授权 `run-006`，也不得把 shell exit code 单独当作 success。正式 command 必须
+从 source 重建九 meshes并重跑全部 oracles/preflight；任一 gate failure 都按 reached-stage artifact
+返回本 Skeptic。
+
+### T.8 Mandatory post-run artifact/review obligations
+
+无论 run-005 success 或 fail closed，下一步只能是同一 `review-4-1a.md` 的 post-run audit，至少包括：
+
+1. exact command、start/end、30 s monitor ledger、soft/grace/hard decision、external real/RSS/footprint、
+   shell exit 与 terminal-artifact authority；
+2. output collision、current-run-only work/cache、atomic publication、first failure、completed/planned solves、
+   attempt/retry ledger 及 run-001--004/diagnostic immutability；
+3. formal `model.csv`/`config.csv` 和九-row 36-column mesh ledger、seam ledger、resource preflight，确认
+   当次独立重建而非 diagnostic cache reuse；
+4. reached-stage bulk 72-solve inventory、40/48 sentinels、raw/safe gap 与 all-level/all-slice edge gates；
+5. reached-stage defect 47-solve union、cluster/subspace continuation、localization/tail、coverage、mode
+   identification、four-axis resolution 和 empirical $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$；
+6. reference collection/fields 的 qualified 或 fail-closed status，及
+   `EMPIRICAL / NOT CERTIFIED / NO EFFECTIVITY BEFORE REVEAL` claim boundary；
+7. post-run verdict、unresolved blocker/caveat 和是否允许最小 project-doc sync。Post-run review 前不得
+   宣称 reference success、不得 effectivity reveal、不得同步数值结论，也不得启动 `run-006`。
+
+### T.9 Minimal resolution and open-problem handoff
+
+当前最小下一门就是 authorized run-005 及其 mandatory post-run review，不需要代码、设计或方法修订。
+Goal-relevant handoff：stage `I4.1a formal run`，category `IMPORTANT CAVEAT`，blocking scope
+`reference/effectivity claims only`，cheapest next check `one monitored 119-solve formal command`，建议
+ledger status `RUN-005 AUTHORIZED / POST-RUN REVIEW PENDING`。项目 ledger 仍由主 agent维护；本节不作
+project-document synchronization。
+
+## U. `run-005` post-run audit：reduced-mass definiteness stop
+
+### U.1 Audit frame and authority
+
+本节审查唯一 authorized formal command：
+
+```text
+/usr/bin/time -lp /Applications/MATLAB_R2023b.app/bin/matlab -batch "run_i4_1a('run-005')"
+```
+
+审查目标是判断 first bulk entry 的 reduced-mass `chol` stop 能否作为冻结方法的合法科学阴性结果，
+以及它是否消费 R--T 节 prospectively reopened work。权威链为：design §5.1 的 positive-mass gate、
+§10.2 reached-stage artifact contract、§11 failure semantics；current source 中
+`LOCAL_phase_reduce`/`LOCAL_low_spectrum`；`run-005` 的 machine artifacts；以及 Code Runner 的 external
+`/usr/bin/time -lp` record。shell exit code 不是 terminal authority。本 Skeptic 未运行 MATLAB、Octave、
+Python 或任何数值程序，也未改动 source、design 或 output。
+
+### U.2 Direct artifact, budget and retry audit
+
+`failures.csv` 的唯一 terminal row 是
+`SPECTRUM_INVENTORY_TRUNCATED, bulk-s12-g24 reduced mass is not positive definite., BULK_INVENTORY`
+（internal elapsed 6.503098333333333 s）；`progress.csv` 记录已经进入 `BULK_INVENTORY`，但 completed
+solves 仍为 $0/119$。Code Runner 的 external record 是 shell exit 0、real 20.71 s、maximum RSS
+790,233,088 bytes、peak memory footprint 497,751,040 bytes。它们远低于 30 min/2 GiB gates；shell 0
+仅说明 MATLAB batch wrapper正常结束，不能覆盖 machine terminal failure。
+
+Formal directory含完整 `config.csv`、`model.csv`、九-row 36-column `mesh-ledger.csv`、九-row
+`seam-checks.csv`、`resource-preflight.csv/.mat`、failure-only `run-summary.mat` 和
+`reference-collection.mat`，并在 `work/` 保存九个 current-run mesh caches。九个 mesh 的 topology、
+material、reflection、seam 和 resource values 与 T 节 diagnostic相符；`TOTAL` 仍为 119 solves、
+1788 s（29.8 min）和 1.2 GiB。没有任何 bulk eigenvalue、guided mode 或 reference result。
+
+另一方面，directory 中没有 `bulk-bands.csv` 或 `bulk-gaps.csv`。design §10.2 明确要求二者在
+bulk reached时存在；source 只有在 first `LOCAL_low_spectrum` 成功返回后才调用 bulk writer。因此
+当前 failure path在进入 `BULK_INVENTORY` 后、first `chol` raise 前没有原子发布哪怕 header-only 的
+reached-stage bulk ledgers。该缺失是可重复的 artifact-contract failure，不是科学阴性证据。
+
+`run-005` 保持 append-only；本次审查没有发现 run-001--004 或 `mesh-repair-001` 被改写。由于 stop发生
+在 first eigensolve前且 reached-stage schema不完整，本 run 不消费 prospectively reopened scientific
+work/attempt。它仍永久占用 label `run-005`；未来若另获授权只能使用新的 run ID。
+
+### U.3 Verdict
+
+**Verdict: `REVISE`（high confidence）。** 当前 primary classification 是 **(b) bounded
+implementation/artifact failure**；mass-definiteness stop 的具体根因仍是 **(c) unresolved**，但明确
+不是 **(a) valid frozen scientific negative**。理由有两层：其一，冻结的正系数 consistent $P_1$
+mass 与 full-column-rank periodic prolongation在数学上应给出 positive-definite reduced mass，而当前
+generic `chol_flag` message没有发布足以解释违反该 invariant 的证据；其二，已经达到 bulk stage 却
+缺少 required bulk ledgers。两项均须在接受任何 scientific failure classification前有界修订。
+
+本 verdict 不授权 `run-006`，不授权 auto-retry，也不授权把 `run-005` 解释为没有 bulk band、没有
+guided mode 或 FEM reference方法失败。
+
+### U.4 Strongest challenge and classified findings
+
+**Strongest challenge.** 若把一次与冻结 finite-element invariant矛盾、又缺诊断的 `chol` flag直接称为
+`SPECTRUM_INVENTORY_TRUNCATED` 科学阴性，implementation defect（unused DOF、约化 support错误、assembly
+defect 或 floating-point Hermitian handling）会被错误包装成 coverage failure。这样会使方法成败和
+后续 attempt ledger都不可解释。
+
+1. **`BLOCKER` — positive-definite invariant 与 terminal classification 未闭合。** Source在
+   `LOCAL_low_spectrum` 中只执行 `[~, chol_flag] = chol(reduced.mass)`，随后发布 generic message；没有
+   保存 `chol_flag`/failing pivot、zero row/column、nonfinite、diagonal range、active-node incidence、master
+   group support 或 absolute/relative Hermitian defect。与此同时，current source的 local consistent
+   mass使用正系数 $q\in\{1,17\}$；periodic map通过 `unique(canonical_node)` 产生 contiguous groups，
+   prolongation每 row恰有一个 unit-modulus entry，故只要 full nodal space无 orphan DOF，$P$ 就满列秩且
+   $P^*MP$ 应正定。first mesh ledger还给出 233 nodes、416 triangles、48 outer-boundary edges、valid
+   edge incidences、单 component、无 interior-free edge；由
+   $E=(3F+B)/2=648$ 和 $V=E-F+1=233$，这些已记录的 planar-complex invariants 与“存在未被 triangle
+   使用的额外 point”不相容。现有证据因此强烈指向未诊断的 implementation/numerical representation
+   failure，而非 frozen method negative。最便宜的决定性检查见 U.7；在它完成前不得升级 scientific
+   claim。
+2. **`BLOCKER` — reached bulk artifact contract 未满足。** `progress.csv` 已记录
+   `BULK_INVENTORY stage-start`，但 design §10.2 要求的 `bulk-bands.csv` 和 `bulk-gaps.csv` 均缺失。
+   Source writer位于 first low-spectrum return之后，使 `chol` failure不能发布 header/empty reached
+   ledgers或 mass-gate evidence。最小 repair必须在任何 future raise前原子发布 schema-complete reached
+   ledgers及有明确字段的 mass-definiteness evidence；否则 post-run audit无法区分“没有求根”与“求根后
+   inventory为空”。
+3. **`IMPORTANT CAVEAT` — tiny Hermitian defect 不能自行解释或修复 `chol` failure。** Mesh/seam
+   artifacts证明 phase-zero reduced mass normalized Hermitian defect极小，但这既不是 positive-definiteness
+   certificate，也不授权 matrix post-symmetrization、tolerance relaxation、point/constraint/formula/
+   parameter更改。若 bounded diagnostic显示 failure仅来自 floating-point exact-Hermitian handling，任何
+   formal-path canonicalization仍须经 Researcher specification和独立 review，不能作为“普通 bug fix”
+   静默加入。
+4. **`MINOR CAVEAT` — external resource evidence 与 machine terminal evidence分属两条 authority。**
+   External real/RSS/footprint没有写入 final directory；machine artifact又正确记录 failure。这不妨碍
+   当前 stop判定，但未来 review必须继续同时保存两者，且不得用 shell exit 0称为成功。
+
+### U.5 Implementation audit and what survived
+
+Defensible components仍包括：formal command从 source重建并通过九 mesh topology/material/reflection/seam
+gates；current-run-only work caches和119-solve resource preflight完整；没有 evidence表明 diagnostic cache、
+Markdown、Git、historical output、BIE/QZ/current estimator 或 existing reference被读取；budget没有接近
+soft/hard stop；run-001--005 的 historical artifacts保持可追溯。故本次 failure不推翻同一 continuous
+problem、weak form、independence或 mesh repair本身。
+
+不能存活的 claim是 bulk spectrum、gap、guided-mode branch、four-axis resolution、
+$\Delta_{\mathrm{ref}}^{\mathrm{obs}}$、reference collection 或 effectivity中的任何一个。当前唯一允许的
+数值陈述是：`run-005` 在 first bulk entry、任何 eigensolve前触发 as-built reduced-mass `chol` gate；原因
+尚未分类。
+
+### U.6 Claim boundary, synchronization and attempt decision
+
+- `run-005` 是 preserved operational/implementation artifact，不是 qualified scientific negative；
+- completed/planned仍为 $0/119$，本次 wall/RSS只计入 retry history，不消费 prospectively reopened
+  scientific work；
+- 不得把 generic terminal code解释为 continuous FEM operator没有 spectrum、wide cue没有 gap或没有
+  localized guided mode；
+- 不得 reveal estimator、做 effectivity comparison，亦不得把 numerical conclusion同步到项目
+  `STATUS.md`、I4 `README.md`、method/report或其他 project docs；
+- 允许的 project-level状态至多是“formal run遇到未解决 implementation gate，post-run verdict
+  `REVISE`”，但本 Skeptic不执行该同步。
+
+### U.7 Minimal resolution and authorization boundary
+
+在任何 source repair或 rerun前，先冻结一个 **zero-eigensolve、read-only/as-built mass diagnostic
+obligation**。它必须针对 preserved `run-005/work/bulk-s12-g24.mat` 或从相同 frozen source重建的同一
+mesh，逐项发布：
+
+1. full point count、triangle-used point count/unused IDs、每点 triangle incidence；
+2. `master_index` 的 minimum/maximum/unique count、每个 master group size，以及 prolongation的
+   zero-support columns；
+3. full/reduced mass 的 dimensions、`nnz`、nonfinite count、zero rows/columns、real diagonal min/max、
+   absolute和normalized Hermitian defects；
+4. 对 **as-built matrix** 的 two-output `chol` flag/failing pivot，以及该 pivot对应的 row/column/support
+   identity；
+5. terminal evidence在 raise前原子发布，并同时发布 design-required header-only `bulk-bands.csv`、
+   `bulk-gaps.csv`，不运行 `eigs`、不构造 reference、也不改写 `run-005`。
+
+本节只授权同一 Engineer作 **read-only source/artifact investigation并提出上述最小 diagnostic/repair
+patch**；不授权执行新的 MATLAB diagnostic，不授权 source mutation直接落地，不授权
+post-symmetrization或其他 scientific change。若 future diagnostic证明 unused/support/assembly defect，
+Researcher须把最小 representation repair与 artifact schema闭合交给同一 Skeptic静态复审；若只剩
+exact-Hermitian handling，则须先作显式 specification amendment。任一路径都必须在另获授权后才能运行。
+
+**`run-006` 未授权。** 没有 automatic retry；在 diagnosis、bounded repair、theory-to-code mapping和
+同一 Skeptic pre-run review全部通过前，formal chain保持停止。
+
+### U.8 Open-problem handoff
+
+唯一 goal-relevant handoff为：stage `I4.1a first bulk mass gate`；category `BLOCKER`；blocking scope
+`scientific-negative classification, further formal run, all reference/effectivity claims`；cheapest next check
+`zero-eigensolve as-built mass diagnostic plus reached-bulk schema publication`；建议 ledger status
+`RUN-005 PRESERVED / IMPLEMENTATION CAUSE UNRESOLVED / RUN-006 NOT AUTHORIZED`。项目 ledger由主 agent
+维护；本节不创建或修改其他文件。
+
+## V. Design review of §18 bounded source-rebuild mass diagnostic
+
+### V.1 Audit frame
+
+本节只审查 design §18 是否足以把 U.7 的最小 diagnosis交给 Engineer实现。当前问题不是求 guided
+mode，而是定位 `run-005` 在 first bulk entry 的 raw reduced-mass `chol` failure为何与正系数
+consistent $P_1$ mass invariant冲突。成功标准是：从 frozen source重建 exact object，零 eigensolve、
+零 reference/effectivity input，完整发布 node/master/$P$/full-reduced-mass/pivot证据，再 fail closed；
+不得借诊断设计改变 formal representation或授权 `run-006`。审查材料包括 design §18、review §U、
+current `run_i4_1a.m` 的 entry/build/assembly/periodic reduction/`chol` path、现有 CSV atomic writer合同和
+R2023b `chol` API identity。未运行任何数值程序。
+
+### V.2 Verdict
+
+**Verdict: `PASS WITH CONDITIONS`（high confidence）。** §18 已把 U 节两个 blockers转化为一个有界、
+可证伪、zero-eigensolve diagnostic specification；没有 unresolved `BLOCKER`。本 verdict 只允许实现
+diagnostic/evidence plumbing。条件是 Engineer diff仍须由 Researcher作 zero-drift mapping，并由同一
+Skeptic作 pre-execution spec-to-code/resource review；在该门之前 diagnostic command仍未授权。
+
+### V.3 Strongest challenge
+
+最强挑战是 source rebuild与 preserved `run-005` cache并非同一 byte-level input：若重建后的
+`chol_flag=0`，它只能证明 current source未复现 failure，不能反推 `run-005` 的矩阵或环境发生了哪种
+变化。§18.7 第 5 分支正确把该结果冻结为 reproducibility/cache/environment discrepancy，并禁止自动
+formal repair/retry；因此该限制不阻止当前 diagnostic，但必须保留为 postdiagnostic claim boundary。
+
+### V.4 Classified findings
+
+1. **`IMPORTANT CAVEAT` — source-rebuild pass 不能关闭 historical root cause。** Diagnostic刻意不读
+   `run-005/work/bulk-s12-g24.mat`，提高了 current-source独立重现性，也牺牲了对 historical cache的
+   byte-level attribution。若 flag变为 0，最便宜的后续动作只能是报告 discrepancy并停在 Skeptic gate，
+   不能据此称 `run-005` 已修复或 formal path可重跑。§18.7 已给出这一处理，故无 design blocker。
+2. **`IMPORTANT CAVEAT` — 2 min/1.0 GiB 是 prospective estimate。** `run-005` 九-mesh preflight到
+   stop的 external record为20.71 s、约0.736 GiB；本 diagnostic只构造一张 coarse mesh并保存小型 sparse
+   matrices，2 min/1.0 GiB估计有直接依据。尽管如此，1.0 GiB不是实际 measurement；pre-execution
+   review仍须确认新增 MAT/CSV temporary copies、partial Cholesky factor和writer peak，不得仅以低于
+   2 GiB hard cap替代所冻结的1.0 GiB forecast。
+3. **`MINOR CAVEAT` — `chol_flag`/partial-factor mapping需防止实现期 off-by-one。** Design冻结唯一
+   `[R_partial, chol_flag] = chol(M_red)`，没有 third-output permutation、reordering或 alternate triangle；
+   只有 $1\leq\texttt{chol_flag}\leq n$ 才映射为 1-based reduced/master ID，flag 0时 pivot-only fields
+   空置，越界或 call未返回则 evidence incomplete。该语义足以设计，但 implementation review须逐项核对
+   `R_partial` dimensions和 pivot-support row，不能把 partial-factor order或任意内部 ordering误记为
+   different physical node。
+
+### V.5 Specification and artifact audit
+
+以下要点经审查成立：
+
+- source identity由 `LOCAL_spec`、`LOCAL_mesh_schedule` 的唯一 ID、`kind='bulk'`、$N=0$、$s=12$、
+  $n_\Gamma=24$、`LOCAL_phase_reduce(...,0,'mass-diagnostic')` 共同冻结；因此
+  $\alpha=0$、$\beta=0.5$ 与 `run-005` first object一致；
+- $M_{\mathrm{full}}$、$P$ 和 $M_{\mathrm{red}}$ 均来自同一次 source build，`chol`直接消费返回的同一
+  sparse `reduced.mass`；禁止 copy-and-average、drop、threshold、symmetrize、regularize、shift、
+  reorder或第二个 repaired verdict；
+- per-node incidence/usage、master group/member、$P$ row/column support、entry modulus、full/reduced
+  dimensions/`nnz`/nonfinite/zero-support/diagonal/Hermitian defect，以及 failed pivot的 master/full-node/
+  triangle/$P$/mass-support trace，足以区分 U.7列出的 active-node、master/prolongation、assembly/storage
+  和 raw-`chol` representation branches；exact matrices、$P$、partial factor和IDs同时保存在唯一
+  `payload` 中，CSV只承担审查级 scalar/list ledger；
+- header-only `bulk-bands.csv` 和 `bulk-gaps.csv` 在 mesh/mass work前创建，且 hard gates要求零 data
+  rows；这补齐 diagnostic namespace的 reached-bulk evidence，但没有提前修改 one-input formal writer；
+- `evidence_complete` 只在 required rows/fields、single `chol` return、pivot mapping、zero-eigensolve/
+  no-reference gates及 atomic publication全部完成后成立。`MASS_DIAGNOSTIC_COMPLETE_CHOL_FAIL` 必须在
+  populated evidence和 terminal summary成功发布后才 raise；pre-evidence异常保持
+  `MASS_DIAGNOSTIC_INCOMPLETE`，不会伪装成 mass verdict；
+- create-once `diagnostics/mass-gate-001/` 与 `output/` 分离；collision在 evidence read/write前停止，
+  namespace不覆盖、不追加、不复用。Diagnostic只从 source构建内存对象，不读 run-005、旧 diagnostic、
+  Markdown、design/review、Git、BIE/QZ、estimator或 reference，不输出 fields/eigenvalues/branches/
+  $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$，也不留下可供 formal path复用的 cache；
+- setup、build、evidence和cleanup共享一只 budget clock；30 min soft、single grace、40 min/2 GiB hard
+  semantics保持。该 diagnostic不创建或消费 scientific attempt，不恢复或重写 `run-005`。
+
+### V.6 Prohibited drift and authorization boundary
+
+§18.5--18.7 明确把 active-DOF removal、node/master reindex、$P$ support或storage repair、matrix
+post-symmetrization/averaging/thresholding/shift、pivot-rule substitution、tolerance relaxation，以及
+continuous problem、weak form、geometry/material/phase、119-solve、coverage/refinement/uncertainty/
+isolation/claim gates全部排除在本轮之外。即使 diagnostic找到明确 implementation cause，也只能进入新的
+bounded revision/review；§18本身没有 silently authorize representation repair、formal bulk schema
+patch或任何 formal run。
+
+因此，**明确授权同一 Engineer** 仅执行以下实现工作：
+
+1. 在 existing `test/i4/femref-a1/run_i4_1a.m` 中加入 exact
+   `('mass-gate-001','mass-diagnostic')` dispatch、`LOCAL_run_mass_diagnostic`、pure evidence/pivot-support
+   helpers、atomic diagnostic writers和 header-only bulk publication；
+2. 对同目录 `README.md`、`SYMBOLS.md` 作 dispatch/schema/helper locator的机械同步；
+3. 保持 one-input formal path、`LOCAL_low_spectrum`、formal mass computation/raise/writer placement、
+   `mesh-repair-001` semantics及所有 historical artifacts不变；先提交完整 diff给 Researcher和本
+   Skeptic复审。
+
+**不授权运行** `run_i4_1a('mass-gate-001','mass-diagnostic')`；**不授权** MATLAB/Octave/Python
+diagnostic、formal mass或representation repair、formal header patch、`run-006`、auto-retry、reference/
+effectivity reveal或 project-doc result synchronization。
+
+### V.7 Minimal next gate and open-problem handoff
+
+下一门只有 implementation diff：Researcher先给 `THEORY-TO-CODE PASS` 或有界修订，同一 Skeptic随后
+核对 exact dispatch、raw object identity、single-`chol` call graph、schema row/column counts、
+atomic-before-raise、zero-eigs/isolation、create-once lifecycle和 static peak estimate。只有该门无
+unresolved blocker，才可另行考虑授权一次 diagnostic command。
+
+Goal-relevant handoff：stage `I4.1a mass-gate diagnostic implementation`；category
+`IMPORTANT CAVEAT`；blocking scope `diagnostic execution and all later formal/reference claims`；cheapest
+next check `bounded Engineer diff plus Researcher/Skeptic static review`；建议 ledger status
+`DESIGN PASS WITH CONDITIONS / IMPLEMENTATION AUTHORIZED / DIAGNOSTIC RUN AND RUN-006 NOT AUTHORIZED`。
+项目 ledger仍由主 agent维护。
+
+## W. §18 mass-diagnostic pre-execution spec/code/resource review
+
+### W.1 Audit frame
+
+本节审查 Researcher §19 `THEORY-TO-CODE PASS` 后的 exact implementation，成功标准是 diagnostic
+可以一次性重建 `run-005` first bulk mass object并发布足够的 as-built证据，而不进入任何 eigensolve、
+reference或 formal repair。权威是 design §18、review §U--§V、current source及 machine-side preserved
+artifact inventory；§19 conclusions只作为待核 claim。审查覆盖 complete entry dispatch、mass diagnostic
+call graph、all writers/schema/gates、unchanged formal/build/assembly/periodic/phase code、README/SYMBOLS和
+create-once namespace。未运行 MATLAB、Octave、Python或 diagnostic。
+
+### W.2 Verdict
+
+**Verdict: `PASS WITH CONDITIONS`（high confidence）。** 没有 unresolved `BLOCKER`。Implementation
+满足 §18 的 zero-eigensolve、raw-object、evidence-before-raise和 isolation contract，且 prospective
+resource plan低于本轮 hard budget。条件只包括 W.6 的 external monitor、create-once/no-retry合同和 W.7
+postdiagnostic review；它们不授权任何 source/formal repair。
+
+### W.3 Strongest challenge
+
+最可能使 diagnostic失去解释力的实现 failure是 terminal order错误：若 intentional `chol` error先于
+完整 evidence或 summary commit，create-once namespace会被占用却仍不能诊断 `run-005`。Current code已
+关闭该路径：detail/header artifacts先原子发布，`mass-summary.csv/.mat` 随后发布，
+`diagnostic-summary.mat` 再发布，`diagnostic-summary.csv` 作为最后 commit marker，最后才依据 status
+raise。若 final CSV缺失，namespace按合同只能解释为 incomplete，不得使用 MAT或 shell exit补成 verdict。
+
+### W.4 Static implementation audit and what survived
+
+以下 spec-to-code claims经直接审查成立：
+
+1. **Exact dispatch/source identity.** Two-input entry只接受
+   `mesh-repair-001`/`mesh-diagnostic` 和 `mass-gate-001`/`mass-diagnostic`；mass branch立即 return，其他
+   pair fail closed。它唯一选择 `LOCAL_mesh_schedule` 中的 `bulk-s12-g24`，assert `kind='bulk'`、
+   $N=0$、$s=12$、$n_\Gamma=24$、$\beta=0.5$，再以
+   `LOCAL_phase_reduce(spec,mesh,0,'mass-diagnostic')` 固定 $\alpha=0$。One-input formal semantics未变。
+2. **Scientific zero drift.** Mass additions位于独立 dispatch/helper block；current
+   `LOCAL_build_mesh`、`LOCAL_assemble_p1`、`LOCAL_periodic_maps`、`LOCAL_phase_reduce`和 formal
+   `LOCAL_low_spectrum` 仍保留已审查的 geometry/material/$P_1$/phase/$P^*MP$行为。没有 DOF/master/
+   storage repair、symmetrization、averaging、threshold、shift、alternate pivot rule或 tolerance change；
+   formal bulk writer仍位于 first spectrum return后，本 diagnostic没有偷偷修 formal schema。
+3. **Single raw Cholesky semantics.** Diagnostic call graph中唯一 factorization是
+   `[partial_factor,chol_flag]=chol(reduced.mass)`；它直接消费本次 `LOCAL_phase_reduce` 返回的同一 sparse
+   object，没有 third-output permutation、copy、reordering或 second matrix。R2023b two-output contract把
+   nonzero flag定义为 natural pivot position；code只接受 finite real integer $0\le p\le n$，positive
+   $p$ 直接映射 1-based reduced/master ID，0时 pivot-only fields为空/`NaN`，call error或越界使
+   evidence incomplete。Partial-factor实际 dimensions/`nnz`/nonfinite另行记录，避免 off-by-one推断。
+4. **Evidence sufficiency and schemas.** Node/master/matrix/pivot rows固定为9/7/14/23 columns；rows分别
+   是 every full point、every unique master、exact two matrices、exact one pivot record。Summary固定26
+   columns，terminal summary固定16 columns；mesh/seam和empty bulk沿用36/12/10/14-column schemas。
+   Integer IDs经升序去重，pivot member incidences按升序 member-node sequence保持对应。Exact points/
+   triangles/incidence/master groups/$P$/full-reduced mass/partial factor/pivot support均在唯一 MAT
+   `payload`，不是只靠 CSV narrative。
+5. **Header/reached/atomic semantics.** Namespace claim后首先发布 zero-row bulk bands/gaps及四个
+   header-only mass ledgers。Mesh或phase failure仍可借 existing checkpoint留下 reached mesh/seam rows；
+   catch把 exact `reached_boundary`和 first cause写入 terminal incomplete summary。Complete path先替换
+   populated mass ledgers，再检查 required files及无 `.partial` peers，发布 mass summary，最后以
+   `diagnostic-summary.csv` commit。`chol_flag>0` 的 intentional error只发生在 commit之后；writer/call/
+   schema failure保持 `MASS_DIAGNOSTIC_INCOMPLETE`。
+6. **Isolation and zero eigensolves.** Mass call graph不到达唯一 `eigs`、`LOCAL_low_spectrum`、formal
+   cache `load`、work directory、field/branch/reference exports或 `output/` writer。它不读 run-005、旧
+   diagnostic、Markdown、design/review、Git、BIE/QZ、estimator或 reference；只在内存 source-build一张
+   mesh，不留下 formal可复用 cache。Hard fields保持 `completed_eigensolves=0`、
+   `reference_exported=false`和zero bulk rows。
+7. **Lifecycle/history.** `diagnostics/mass-gate-001/` 当前不存在；collision会在任何 evidence read/write
+   前停止。Preserved `diagnostics/mesh-repair-001/`、`output/run-001`--`run-005` 均早于 current source
+   mtime且未出现在 source diff；本 review没有发现历史改写。Exact run-005和§U verdict保持 immutable。
+8. **Resource.** Source只新增一张 coarse mesh、$233/208$ scale sparse evidence和一个 partial factor；
+   对照 run-005九-mesh到 first gate的20.71 s/约0.736 GiB external record，2 min/1 GiB plan保守且低于
+   30 min/2 GiB hard limits。MAT/CSV temporary peers很小；仍须由 external process-tree/RSS monitor给出
+   actual authority。
+
+### W.5 Classified findings
+
+1. **`IMPORTANT CAVEAT` — source rebuild仍不是 historical-cache attribution。** 若 diagnostic raw
+   `chol` pass，结论只是不复现 `run-005` failure；不得自动把它解释为 current source修复或授权 formal
+   retry。该 caveat由 §18.7 decision tree处理，故不阻止 diagnostic。
+2. **`IMPORTANT CAVEAT` — prospective resource不是 measurement。** 2 min/1 GiB有充分静态依据，但
+   external monitor仍是 wall/RSS authority；超过 W.6 caps必须停止并保留 incomplete artifacts。
+3. **`MINOR CAVEAT` — existing README有两处 stale run-history wording.** Mesh diagnostic paragraph仍写
+   “has not been run”，但 preserved summary明确是 `PASS`；后文“This implementation stage has not run
+   MATLAB”也与 run-001--005及 mesh diagnostic的 preserved MATLAB artifacts冲突。它们不控制 execution，
+   不改变 code mapping或 artifact truth，因此不是 pre-execution blocker。明确授权只在 existing
+   `test/i4/femref-a1/README.md` 作机械事实修正：记录 mesh diagnostic已运行一次并 PASS、不是 reference；
+   记录 historical MATLAB runs存在但截至 `run-005` completed eigensolves仍为 0，mass diagnostic尚未
+   运行。不得借此改 status、science、code或其他 docs；无需重开 theory-to-code review。
+
+No `BLOCKER` was found。
+
+### W.6 Exact one-command authorization and monitor contract
+
+只在 `/Users/whc/Documents/Work/epost/test/i4/femref-a1` 中授权 **一次** exact command：
+
+```text
+/usr/bin/time -lp /Applications/MATLAB_R2023b.app/bin/matlab -batch "run_i4_1a('mass-gate-001','mass-diagnostic')"
+```
+
+Code Runner必须原样执行，不得加入前置 MATLAB command、改 ID/mode或拆分 budget。每30 s记录 process
+tree、aggregate RSS、elapsed和 diagnostic namespace/terminal output；即使 command在 first interval内结束，
+也须记录 start/final process及 `/usr/bin/time -lp`。Planned gate为2 min/1 GiB；本 diagnostic采用更保守
+的 **30 min/2 GiB hard stop**，不使用 grace。达到任一 hard cap即停止并保留 artifacts。不得 auto-retry；
+create-once namespace一旦出现，无论 PASS、FAIL或 INCOMPLETE都返回本 Skeptic，不得删除、覆盖、追加或
+换 ID重跑。shell exit只作 launcher evidence，`diagnostic-summary.csv` terminal commit才是 status
+authority。
+
+本 authorization **不包含** source、matrix、representation、formal bulk-header或 formal mass repair；
+不授权 `run-006`、任何 guided-mode eigensolve、reference/effectivity reveal或 project-result sync。
+
+### W.7 Mandatory postdiagnostic artifact obligations
+
+Command结束后，必须在同一 review追加 postdiagnostic audit，至少直接核对：
+
+1. exact command、working directory、start/end、30 s monitor、external real/max RSS/footprint、shell exit、
+   terminal CSV status及 hard-cap decision；
+2. create-once final inventory和无 `.partial` peers；`diagnostic-summary.csv` 是否为 terminal commit，
+   MAT/CSV status、identity、elapsed、failure/reached语义是否一致；
+3. `mesh-ledger.csv` header+1 row/36 columns、`seam-checks.csv` header+1/12，冻结 ID、
+   $\alpha=0$、$\beta=0.5$、mesh/oracle values；
+4. `bulk-bands.csv` 10-column header only、`bulk-gaps.csv` 14-column header only；
+5. node ledger header+full-point rows/9 columns、master ledger header+unique-master rows/7、matrix ledger
+   header+2/14、pivot ledger header+1/23、mass summary header+1/26；
+6. MAT top-level payload identity和 exact arrays；unused/incidence、master contiguity/groups、$P$ row/column
+   support/moduli、full/reduced zero/nonfinite/diagonal/Hermitian evidence、raw flag、partial-factor dimensions及
+   positive-pivot support mapping；
+7. hard gates `completed_eigensolves=0`、`reference_exported=0`、zero bulk rows、`evidence_complete`，并按
+   §18.7选择唯一 decision branch；
+8. run-001--005和 mesh diagnostic immutability、无 output/reference/cache reuse，以及允许的 exact claim
+   boundary。Postdiagnostic verdict前不得 repair或启动任何 formal run。
+
+### W.8 Minimal handoff
+
+下一步唯一获授权动作是 W.6 command及其 W.7 artifact review。Goal-relative ledger建议：stage
+`I4.1a mass-gate diagnostic execution`；category `IMPORTANT CAVEAT`；blocking scope
+`all source/formal repair, run-006 and reference/effectivity claims`；cheapest next check
+`one monitored create-once zero-eigensolve diagnostic`；status
+`SPEC-TO-CODE PASS WITH CONDITIONS / MASS-GATE-001 AUTHORIZED ONCE / NO REPAIR OR RUN-006`。项目 ledger
+仍由主 agent维护。
+
+## X. `mass-gate-001` postdiagnostic operational-publication audit
+
+### X.1 Audit frame and evidence authority
+
+本节只审查 W.6 唯一授权的 source-rebuild mass diagnostic 是否形成了可解释的持久证据。当前成功标准不是
+证明 reduced mass 正定或否定 `run-005`，而是完整发布 §18 冻结的 raw $P^*MP$、single two-output
+`chol` flag、node/master/support/pivot ledgers和最后 commit summary；在此之前不得进入 representation repair
+或 formal retry。直接核查了 preserved `diagnostics/mass-gate-001/` inventory、terminal CSV、mesh/seam/bulk/
+mass CSV 行数及 current writer/evidence call graph。Exact command、shell exit 1、external real 14.45 s、max RSS
+743800832 B、peak footprint 487904192 B 来自 Code Runner 的 external record；本节没有运行 MATLAB、Octave、
+Python或任何数值程序。
+
+Terminal `diagnostic-summary.csv` 是本次 status authority：
+`MASS_DIAGNOSTIC_INCOMPLETE / EXECUTION_UNAVAILABLE`，
+`reached_boundary=MASS_EVIDENCE_COMPUTED`，message 为
+`Function is not defined for sparse inputs`，internal elapsed 0.51799820833333332 s，completed eigensolves为0，
+reference exported为false，bulk band/gap rows均为0，`evidence_complete=0`。因此 shell exit 1 与 terminal
+artifact一致；不能从 `MASS_EVIDENCE_COMPUTED` 反推未持久化的 Cholesky结果。
+
+### X.2 Verdict
+
+**Verdict: `REVISE`（high confidence）。** 这是一个有明确 source-level mechanism 的
+**operational diagnostic/artifact failure**，不是 frozen mass gate 的科学正结果或负结果，也不消费
+scientific attempt。唯一 `BLOCKER` 是 required raw-mass/`chol` evidence没有被原子发布，因而 §18 decision
+tree无法选择任何 scientific branch。修复是有界的，但 `mass-gate-001` create-once namespace已经被消费且
+必须保持 immutable；任何 corrected diagnostic只能在新的 prospective design/review gate之后使用
+append-only ID `mass-gate-002`。当前不授权 mutation、new ID、new run或 formal retry。
+
+### X.3 Strongest challenge
+
+最危险的错误解释是把 `reached_boundary=MASS_EVIDENCE_COMPUTED` 当成 mass verdict。它只证明
+`LOCAL_mass_gate_diagnostics` 返回到 caller，随后 caller把 reached marker推进到了该值；它不证明任一
+required evidence artifact已经 durable。目录中四个 final mass CSV均只有 header，另有一个 header-only
+`mass-node-incidence.csv.partial`，且没有 `mass-summary.csv/.mat`。特别是没有持久化 `chol_flag`、partial
+factor、matrix diagnostics或 pivot support，故当前既不能称 raw `chol` failed，也不能称 raw `chol`
+passed或 `run-005` discrepancy成立。
+
+### X.4 Classified findings
+
+1. **`BLOCKER` — first populated node-ledger row在 scalar serialization处失败，完整 mass evidence不可达。**
+   Source先以 `p_row_support = sum(spones(phase_prolongation),2)` 构造 sparse column，随后把
+   `p_row_nnz = p_row_support(node_id)` 直接放入 node row第5列。该 1-by-1 value仍为 sparse numeric；
+   `LOCAL_csv_value` 的 scalar branch调用 `sprintf('%.17g',double(value))`，而 MATLAB对 sparse input报出
+   terminal中完全一致的 `Function is not defined for sparse inputs`。Writer先编码整行、后 `fprintf`，
+   因而 failed `.partial` 只有 header，正与 first data row第5列 failure一致。Consequence是 matrix/Cholesky/
+   pivot evidence与 mass summary都没有 durable publication，当前 diagnostic不可用于 §18 scientific
+   classification。最便宜的 decisive repair是仅在 diagnostic evidence builder把该 count转成 full scalar，
+   并静态枚举四张 mass ledger的所有 numeric cells以排除其他 sparse scalar；不得借机更改 shared generic
+   CSV serializer或 formal mass path。修复后的 populated-ledger schema和 raw `chol` evidence仍需同一
+   Researcher/Skeptic pre-execution gate。
+2. **`IMPORTANT CAVEAT` — `mass-gate-001` 已永久占用，不能原地清理或重试。** Final terminal summary、
+   header-only final files和 failed `.partial` 共同记录了 create-once incomplete run；删除 `.partial`、覆盖/
+   追加 final files、复用 ID或把它补写成 complete都会破坏 append-only provenance。若后续 design明确授权
+   bounded publication repair，corrected execution必须是同一 `femref-a1` scientific attempt内的新
+   `mass-gate-002` namespace，而不是新 scientific method/attempt；但 §18/current dispatch只冻结001，故
+   002尚未获授权。
+3. **`MINOR CAVEAT` — external process record不在 diagnostic namespace内。** 14.45 s、743800832 B
+   （约0.693 GiB RSS）和487904192 B（约0.454 GiB footprint）均低于2 min/1 GiB diagnostic plan，也远低于
+   30 min/2 GiB hard caps；内部0.518 s与 MATLAB startup差异合理。该记录足以作本轮 budget ledger，但
+   corrected diagnostic仍须重新独立监控，不能继承该 measurement。
+
+### X.5 Artifact, retry, and implementation audit
+
+以下内容经审查成立并保留：
+
+- `bulk-bands.csv`、`bulk-gaps.csv` 均为 header-only；`mesh-ledger.csv` 与 `seam-checks.csv` 均为
+  header+1 row，identity是 `bulk-s12-g24`、mass-diagnostic、$\alpha=0$、$\beta=0.5$；mesh/seam gates到达
+  `MESH_AND_SEAM_COMPLETE`；
+- 四个 final mass CSV均只有 header；唯一 `.partial` 是同样只有 header的
+  `mass-node-incidence.csv.partial`；没有 `mass-summary.csv` 或 `mass-summary.mat`。这一 inventory与
+  first populated node-ledger write failure一致，没有 completed evidence的歧义；
+- terminal CSV/MAT仍被 catch path原子发布，且 status、zero eigensolves、zero bulk rows、no reference和
+  `evidence_complete=0` fail closed；这说明 terminal lifecycle存活，但不能提升 upstream partial evidence；
+- mesh/source/phase build和 in-memory diagnostic helper已到达，未进入任何 eigensolve，也没有产生
+  reference、field、branch或 effectivity artifact。不存在可供 formal run合法复用的 complete mass cache；
+- 这次失败源于 diagnostic-only row representation/CSV boundary，而不是 frozen continuous model、weak
+  form、$P^*MP$ formula或 `chol` predicate的已证 failure。它不消耗重新开放后的 scientific attempt，
+  但 create-once diagnostic ID确已消费。
+
+### X.6 Authorization boundary and minimal resolution
+
+当前只允许以下**只读/源级调查**，且本节已完成足以定位 blocker的最小部分：追踪第一个 populated writer、
+核对 sparse/full类型传播、枚举所有 mass-ledger cell的潜在 sparse scalar，并由 Researcher把 diagnostic-local
+conversion、schema invariants、new create-once ID和失败语义写成 bounded prospective design amendment。
+
+本节**不授权**任何 code/doc/artifact mutation，不授权修改 shared `LOCAL_csv_value`，不授权删除或补写
+`mass-gate-001`，不授权创建/运行 `mass-gate-002`，不授权 MATLAB diagnostic、auto-retry、formal mass/
+representation repair、`run-006`、reference/effectivity reveal或 project-document synchronization。最小
+推进序列是：同一 Researcher作 bounded design amendment；同一 Skeptic design review；同一 Engineer仅在
+获准后实施 diagnostic-local repair和 exact 002 dispatch；Researcher theory-to-code mapping；同一 Skeptic
+pre-execution spec/code/resource review。只有最后一门无 unresolved blocker时，才可另行考虑一次 exact
+002 command。
+
+### X.7 What survived and open-problem handoff
+
+Defensible claim仅为：一次冻结 identity的 zero-eigensolve source rebuild完成 mesh/phase并在内存中计算了
+mass evidence，随后在第一张 populated mass CSV的 first-row sparse scalar serialization处 operationally
+failed；terminal和 partial artifacts按 fail-closed方式保留。它不是 reduced-mass definiteness verdict，
+不是 `run-005` root-cause resolution，也不是 independent reference或 effectivity evidence。
+
+Goal-relevant handoff：stage `I4.1a mass diagnostic publication repair`；category `BLOCKER`；blocking scope
+`§18 mass decision branch, all representation/formal repair, run-006 and reference/effectivity claims`；cheapest
+next check `bounded diagnostic-local scalar densification plus all-ledger type audit under new prospective
+mass-gate-002 design`；建议 ledger status
+`MASS-GATE-001 OPERATIONAL INCOMPLETE / SCIENTIFIC ATTEMPT NOT CONSUMED / NO RETRY AUTHORIZED`。项目 ledger
+由主 agent维护。
+
+## Y. Design review of §20 prospective `mass-gate-002` publication repair
+
+### Y.1 Audit frame
+
+本节独立审查 design §20 能否以最小 operational repair关闭 §X 的 CSV publication blocker，同时保持
+`mass-gate-001`、raw mass objects、single `chol` predicate和全部 formal/scientific contract不变。成功标准
+是：001及其 `.partial` 保持 immutable；002是唯一 append-only corrected namespace；所有可能从 sparse
+object派生的 CSV numeric scalar在 diagnostic boundary做 value-preserving `full` normalization；写盘前有
+nonmutating、schema-safe type gate；不改变 shared serializer、矩阵、求解或信息隔离。本节直接对照了
+§18--§20、review §U--§X、current mass-diagnostic source call graph和 preserved 001 inventory；没有编辑
+design/code/docs/artifacts，也没有运行 MATLAB、Octave、Python或任何数值程序。
+
+### Y.2 Verdict
+
+**Verdict: `PASS WITH CONDITIONS`（high confidence）。** 没有 unresolved `BLOCKER`。§20把已证 failure
+收缩为 diagnostic-only scalar representation/publication repair，没有把它伪装成 mass/scientific repair，
+也没有授权 corrected diagnostic或 formal run。Y.4的两个 `IMPORTANT CAVEAT` 是 implementation/pre-run
+review必须逐项关闭的静态条件，不妨碍现在把 bounded implementation交给同一 Engineer。
+
+### Y.3 Strongest challenge
+
+最可能使这个修复越界或再次失效的机制不是漏掉已知 `p_row_nnz`，而是把“修复 sparse scalar”实现成
+shared serializer宽松转换：那会改变 formal和所有其他 CSV的全局语义，并可能把 unintended nonscalar或
+unsupported cell静默压平。§20明确禁止修改 `LOCAL_csv_value`/`LOCAL_write_csv`，把 conversion限制在五个
+diagnostic evidence scalars，并要求 prepublication gate不改 value。只要 implementation严格执行这个
+边界，修复不会改变 $P$、$M_{\mathrm{full}}$、$M_{\mathrm{red}}$ 或 `chol` 结论。
+
+### Y.4 Classified findings
+
+1. **`IMPORTANT CAVEAT` — type gate必须 schema-safe，而不能只“跳过非 numeric cell”。** §20正确要求
+   numeric/logical cell只能是 empty或 nonsparse scalar，并保留 integer-list character strings；但
+   implementation helper还必须显式接受 existing legitimate character cells（IDs、status、failure reason、
+   claim boundary以及 semicolon lists），若选择支持 MATLAB `string`，只能接受 scalar string且不得改写
+   content。其他 object/cell/struct类型应 fail closed，而不能让 generic serializer把 `class(value)` 当作数据
+   发布。最便宜的 decisive check是在 static review对四张 evidence rows、mass-summary row和 terminal row
+   各做 allowed-type truth table及故意 sparse/nonscalar numeric反例；不需要运行 guided-mode computation。
+   这是 §20现有 nonmutating/schema gate的实现精化，不需要扩展 design或改 shared writer。
+2. **`IMPORTANT CAVEAT` — 001 immutability与002 no-read必须由 call order而非意图证明。** Parameterized
+   runner只能在 exact allowlist和002 create-once claim后构建 source-owned evidence；不得为了比较、迁移或
+   fallback而调用 `exist/load/dir/copyfile/movefile` 访问001。001 exact invocation必须在 source build前由
+   preserved collision停机。Pre-execution diff review须核对001完整 inventory（包括
+   `mass-node-incidence.csv.partial`）未变，并追踪002 call graph无任何001 path read。该条件有便宜、决定性
+   的 static path/call audit，故不是 design blocker。
+3. **`MINOR CAVEAT` — 2 min/1.0 GiB仍是 prospective estimate。** 001实际14.45 s、约0.693 GiB RSS，002
+   只增加常数级 scalar conversions/type predicates，budget有直接依据且低于30 min/2 GiB hard limits；但
+   measurement不能继承。若后续获准执行，仍须独立记录完整 process tree、wall和RSS，不得 auto-retry。
+
+No `BLOCKER` was found.
+
+### Y.5 Representation inventory and value-preservation audit
+
+§20冻结的五类 conversion与 current source逐项匹配：
+
+1. `sum(spones(P),2)` 保留 sparse vector，只有 selected `p_row_support(node_id)` 转为 full scalar；既不
+   densify $P$，也不改变 support count；
+2. `diag(M)` 可保留 sparse vector，只有 `min(real(diagonal_values))`、
+   `max(real(diagonal_values))`、`max(abs(imag(diagonal_values)))` 三个 reduction result转为 full scalar；
+   empty branch仍是原 `NaN`，matrix本体和完整 diagonal均不 densify；
+3. 只有 selected `M_{\mathrm{red}}(p,p)` 转为 full scalar后提取 real/imag；raw matrix、partial factor和
+   natural 1-based `chol_flag`不变；
+4. `size`、`nnz`、`numel`、norm、`find`/`nonzeros`后的 counts/extrema，以及 pivot row/column nonfinite counts
+   是 ordinary full scalar/vector-to-scalar results；ID/support vectors在入 CSV前继续经过现有
+   `LOCAL_integer_list`/`LOCAL_integer_sequence` 成为 character fields，不应被 numeric-scalar gate误拒；
+5. mass-summary和terminal-summary只复用上述 full scalar、identity/status strings和boolean gates；它们仍须
+   在各自 MAT/CSV commit前通过同一 nonmutating type invariant。
+
+因此，当前 source inventory没有遗漏另一个已知 sparse scalar origin。All-row gate必须只验证类型、shape和
+sparsity，不得 normalize value、flatten numeric vector、改变 list order/encoding、计算 tolerance或读取 matrix
+scientific property。若任何 evidence row不安全，`MASS_EVIDENCE_REPRESENTATION_UNSAFE` 在 populated writer
+前回到既有 catch并保持 `MASS_DIAGNOSTIC_INCOMPLETE`；terminal row自身不安全时不发布 MAT或CSV，缺 final
+commit marker即是权威 incomplete状态。该 fail-closed semantics与001教训一致。
+
+### Y.6 Scientific, lifecycle, isolation, and resource audit
+
+以下 design choices经审查成立：
+
+- `diagnostics/mass-gate-001/` 的 final/header/terminal文件和 header-only `.partial` 全部保留，不删除、
+  补写、覆盖、追加、重命名、移动或重跑；002不得读、探测后复用、链接、复制或缓存001；
+- corrected dispatch唯一是 exact `('mass-gate-002','mass-diagnostic')`，只允许 create-once 002 namespace；
+  arbitrary suffix/prefix/fallback被排除。002 incomplete也永久占用自己的ID并返回 review；
+- source identity仍是 `bulk-s12-g24`、$N=0$、$s=12$、$n_\Gamma=24$、$\alpha=0$、$\beta=0.5$；mesh、
+  assembly、periodic/phase helpers与 raw sparse $P$、$M_{\mathrm{full}}$、$P^*M_{\mathrm{full}}P$ 完全复用；
+- 唯一 `[R_{\mathrm{partial}},p]=\operatorname{chol}(M_{\mathrm{red}})` call、natural pivot semantics、四张
+  evidence schema、MAT payload、atomic per-file publication、terminal CSV last commit和§18.7 decision tree
+  保持；full-scalar normalization只改变 MATLAB storage class，不改变要序列化的数值；
+- shared serializer/writer、one-input formal path、mesh diagnostic、formal headers、eigensolve schedule、
+  branch/coverage/refinement/uncertainty gates和 claim boundary均明确禁止修改；002保持0 eigensolves、no
+  reference/output/cache reuse，也不读 Markdown、review/design、Git、BIE/QZ、estimator或 historical output；
+- 2 min/1.0 GiB plan在现有 evidence下可执行；setup、source rebuild、factorization、publication、catch和
+  cleanup共享一个 budget，不能用子阶段重置。§20只登记 proposed command，未授权创建 namespace或执行。
+
+### Y.7 Bounded implementation authorization
+
+在没有 unresolved blocker的前提下，**明确授权同一 Engineer** 只做以下 bounded implementation：
+
+1. 在 existing `test/i4/femref-a1/run_i4_1a.m` 中加入 exact allowlisted 002 dispatch/identity plumbing；
+2. 只加入 §20.2冻结的 selected `p_row_nnz`、三个 diagonal reduction和 selected pivot diagonal
+   full-scalar conversions，以及 diagnostic-only、nonmutating、schema-safe prepublication row audit；
+3. 可把 existing mass diagnostic runner参数化为 exact 001/002 ID，但必须保持001 collision-before-evidence、
+   no-read/no-reuse和 one-input formal path不变；不得修改 shared generic serializer/writer；
+4. 只对 existing `test/i4/femref-a1/README.md`、`SYMBOLS.md` 作 exact 002 dispatch、helper locator、gate和
+   nonauthorization的机械同步，不写结果或新 scientific claim。
+
+本 authorization **不包含**创建002 diagnostic directory/artifact、运行 MATLAB/Octave/Python、运行002、
+修改或清理001、修改 matrix/$P$/`chol`/formal path、`run-006`、auto-retry、reference/effectivity reveal或
+project-document synchronization。Engineer完成 diff后，必须先由同一 Researcher给 theory-to-code
+zero-drift结论，再由同一 Skeptic核对 Y.4 conditions、all-row schemas/call order、001 immutability和 static
+resource；在该 pre-execution gate通过前，§20 proposed command仍**未获授权**。
+
+### Y.8 Minimal handoff
+
+Goal-relative handoff：stage `I4.1a mass-gate-002 bounded implementation`；category
+`IMPORTANT CAVEAT`；blocking scope `002 execution, all mass/formal repair, run-006 and reference/effectivity
+claims`；cheapest next check `bounded Engineer diff + Researcher theory-to-code + same-Skeptic static review`；
+建议 ledger status
+`§20 DESIGN PASS WITH CONDITIONS / BOUNDED IMPLEMENTATION AUTHORIZED / MASS-GATE-002 RUN NOT AUTHORIZED`。
+项目 ledger由主 agent维护。
+
+## Z. `mass-gate-002` pre-execution spec/code/artifact review
+
+### Z.1 Audit frame
+
+本节在 Researcher §21 `THEORY-TO-CODE PASS` 后审查 exact implementation是否足以执行一次 create-once、
+zero-eigensolve corrected diagnostic。成功标准是：002 exact dispatch/path与001完全隔离；§20五个 conversions
+只改变 CSV scalar storage class；9/7/14/23/26/16-column rows在各自 writer前 fail closed；raw $P$、mass、
+single `chol`、source identity、formal path、shared serializer、atomic order和 resource contract不漂移。本节
+直接核查 current source/docs、001 inventory/hash/mtime、002 absence及 historical output inventory；没有编辑
+code/design/docs/artifacts，没有创建 namespace，也没有运行 MATLAB、Octave、Python或任何数值程序。
+
+### Z.2 Verdict
+
+**Verdict: `PASS WITH CONDITIONS`（high confidence）。** 没有 unresolved `BLOCKER`。§Y的两个 important
+conditions均由 exact call order和 schema-aware predicate静态关闭。剩余条件是一次受监控 execution及本
+Skeptic的 postdiagnostic artifact gate；它们限制 runtime/result claim，但不阻止授权本次唯一 command。
+本 verdict只授权 Z.7，不授权任何 repair、second diagnostic、formal run或 effectivity claim。
+
+### Z.3 Strongest challenge
+
+最有可能推翻 static PASS的 residual risk是实际 row cell仍携带一个未枚举的 sparse/nonscalar value。Current
+code已把该风险变为可解释的 fail-closed outcome：四张 evidence rows全部先 audit、后写第一张 populated
+ledger；mass summary先 audit、后写 CSV/MAT；terminal row先 audit、后写 MAT和最终 commit CSV。因而未知
+runtime type不会被 generic serializer静默压平。但只有002 artifact能证明 real rows实际通过，该点必须留给
+postdiagnostic gate，不能从 source提升为 runtime success。
+
+### Z.4 Classified findings
+
+1. **`IMPORTANT CAVEAT` — runtime row values与 atomic lifecycle尚未被执行证据验证。** Static predicate
+   正确，但002尚不存在；CSV/MAT row counts、无 `.partial` peers、terminal commit order和 raw `chol` branch
+   仍须由一次获准 execution验证。Cheapest decisive test正是 Z.7的 single zero-eigensolve diagnostic，不需要
+   guided-mode solve。
+2. **`IMPORTANT CAVEAT` — 001 immutability的历史证据有明确上限。** 本次直接计算的11个 SHA-256与§21
+   table逐项一致，所有 current mtimes仍为 `2026-08-28T23:29:07+0800`，inventory仍含四个 header-only final
+   mass CSV、同 hash的 header-only node `.partial`、terminal summary且无 mass-summary。可是 pre-§20没有
+   digest table，故可证明的是“自§21 snapshot至本 gate unchanged”以及 content/mtime/no-diff与§X一致，不能
+   倒推 cryptographic pre/post equality。该 bounded statement足以保护当前 gate；postdiagnostic必须再与§21
+   hash table比较。
+3. **`MINOR CAVEAT` — resource仍是 forecast。** 2 min/1.0 GiB由001的14.45 s/约0.693 GiB和常数级新 gate
+   支持，但不是002 measurement。若 crossing planned values但未触及 hard caps，必须记录为 resource anomaly
+   并返回 review；不得据此自行重试或扩张 computation。
+
+No `BLOCKER` was found.
+
+### Z.5 Spec-to-code and artifact audit
+
+以下 claims经直接审查成立：
+
+1. **Exact dispatch/path and no-read.** Two-input entry只接受 exact mesh001/mass001/mass002 pairs；mass
+   runner再次将 ID限制为 exact two-element allowlist。002只由 selected ID构造
+   `diagnostics/mass-gate-002/`，在 `LOCAL_spec`、mesh build、evidence或 writer之前检查自己的 collision。
+   002 call graph没有001 artifact path的 `exist/load/dir/copy/move/link/cache`；allowlist里的001仅是 identity
+   string。001 invocation会在 preserved namespace collision处、任何 evidence前停止，无法触及修复后的
+   helper或重写001。
+2. **Five value-preserving conversions.** Selected `p_row_support(node_id)`、三个 sparse-diagonal reduction
+   results和 selected positive-pivot diagonal分别转为 ordinary full scalar；$P$、support vector、完整
+   diagonal、$M_{\mathrm{full}}$、$M_{\mathrm{red}}$、partial factor均不 densify。`size`/`nnz`/`numel`、norm、
+   nonfinite/support counts和 `find`/`nonzeros` derived extrema没有另一个已知 sparse scalar hazard。唯一
+   diagnostic raw call仍是 `[partial_factor,chol_flag]=chol(reduced.mass)`，没有 alternate matrix、third
+   output、symmetrization、threshold、shift、reorder或第二个 verdict。
+3. **Schema-safe gates.** `LOCAL_assert_mass_csv_rows`要求 cell matrix和 exact width；numeric/logical仅允许
+   nonsparse empty或scalar，character仅允许 empty/row vector，MATLAB string仅允许 scalar，其余 class和
+   nonempty nonscalar/sparse numeric全部 fail closed为 `MASS_EVIDENCE_REPRESENTATION_UNSAFE`。因此 existing
+   IDs/status/reason/claim及 semicolon list strings、empty character/numeric cells不会被误拒，也不会 flatten
+   vector或转换 value。Node/master/matrix/pivot的9/7/14/23 gates全部发生在任何 populated mass writer前；
+   mass-summary 26 gate在其 CSV/MAT前；terminal 16 gate在 terminal MAT和最终 CSV二者之前。Header-only
+   `cell(0,width)`也满足同一 width gate。
+4. **Source/science/isolation.** 002仍唯一选择 `bulk-s12-g24`并硬检查 `kind='bulk'`、$N=0$、$s=12$、
+   $n_\Gamma=24$、$\beta=0.5$，以$\alpha=0$调用 unchanged mesh/assembly/periodic/phase helpers。Entry在 mass
+   runner后 return，不能到达 `LOCAL_low_spectrum`/`eigs`。Zero eigensolves、no reference、zero bulk rows和
+   non-reference claim保持；没有 Markdown/Git/BIE/QZ/estimator/historical/reference read，也没有 formal可
+   复用 cache。
+5. **Formal/shared writer unchanged.** One-input formal control flow、formal raw mass predicate、119-solve
+   schedule、coverage/refinement/uncertainty gates及 generic `LOCAL_write_csv`/`LOCAL_csv_value`保持 prior
+   reviewed语义；type gate只由 mass diagnostic writers调用。当前 formal `chol`仍是其原 one-output gate，
+   不受 diagnostic evidence/helper改变。
+6. **Commit/failure order.** Empty bulk/mass headers先发布；source evidence后四张 ledgers逐文件 atomic
+   replace；mass-summary row audit后发布 CSV/MAT；required-artifact/no-partial gate随后形成
+   `evidence_complete`；terminal row audit后写 terminal MAT，最后 CSV commit marker。Positive raw flag只在
+   complete terminal publication后 intentional raise；earlier schema/type/writer exception回 existing catch
+   成为 incomplete。Terminal row自身不安全时两种 terminal artifact均不写，缺 commit即 authority。
+7. **Current artifacts/history.** `diagnostics/mass-gate-002/`不存在。001的11个 current SHA-256逐项等于
+   §21 table，且 current inventory/mtime与§X narrative一致。`run-005`仍为20个 preserved files，包含九张
+   work mesh caches和 original terminal artifacts；run-001--005及 mesh diagnostic files均早于 current
+   design/source edits，未出现在 Git diff或002 source call graph。因缺更早 hash manifest，这里只作
+   bounded no-observed-mutation结论。
+8. **Resource and docs.** 新增工作是约233-row scalar type iteration和五个 scalar conversions；不改变
+   factorization/payload规模，2 min/1 GiB plan可信且低于30 min/2 GiB hard caps。README/SYMBOLS只登记 exact
+   002、not-run、type/storage gate和 nonauthorization；README遗留的九-mesh旧时态是 minor documentation
+   issue，不影响 command或 artifact authority。
+
+### Z.6 What survived and claim boundary
+
+Independent source rebuild、frozen continuous/FEM problem、raw as-built mass object、natural two-output `chol`
+diagnostic及 create-once provenance均可进入一次 zero-eigensolve runtime check。Static PASS不说明 raw mass
+positive definite，不解析 `run-005`，不产生 reference collection，也不授权 formal/effectivity comparison。
+
+### Z.7 Exact one-command authorization and monitor contract
+
+只在 `/Users/whc/Documents/Work/epost/test/i4/femref-a1` 作为 working directory，授权**一次** exact command：
+
+```text
+/usr/bin/time -lp /Applications/MATLAB_R2023b.app/bin/matlab -batch "run_i4_1a('mass-gate-002','mass-diagnostic')"
+```
+
+Code Runner须每30 s记录 process tree、aggregate RSS、elapsed、namespace/terminal state，并保留 start/final
+snapshot及 `/usr/bin/time -lp`。Plan为2 min/1 GiB；30 min wall或2 GiB aggregate RSS是本 diagnostic hard
+stop，不使用 grace。Planned value crossing须记录并交回 review；hard cap到达必须停止。不得改 command、
+ID/mode、拆分 budget、预运行 MATLAB snippet或 auto-retry。002 namespace一旦出现，无论 complete、scientific
+fail或 incomplete都永久消费 ID，不得删除、覆盖、追加、补写、清理或改用003。Shell exit只作 launcher
+evidence，存在时以 final `diagnostic-summary.csv` 为 terminal status authority；若 final CSV缺失，则 outcome
+只能是 operational incomplete。
+
+本 authorization不包含任何 code/doc/artifact repair、001 mutation、formal mass/header/representation
+repair、`run-006`、second diagnostic、reference/effectivity reveal或 project-document synchronization。
+
+### Z.8 Mandatory postdiagnostic obligations and decision tree
+
+Command结束后必须回到同一 Skeptic并在本文件追加直接 artifact audit：
+
+1. exact command/cwd、start/end、30 s monitor、shell exit、external real/max RSS/footprint及 cap decision；
+2. 002 create-once inventory、file mtimes、terminal CSV/MAT一致性、最终 commit存在性和所有 `.partial` peers；
+3. mesh ledger header+1 row/36、seam header+1/12、frozen identity/$\alpha$/$\beta$/oracle values；bulk bands
+   10-column header-only、bulk gaps 14-column header-only；
+4. node header+233 rows/9、master header+208 rows/7、matrix header+2 rows/14、pivot header+1 row/23、mass
+   summary header+1 row/26、terminal header+1 row/16；actual counts若由 artifact identity不同则 fail closed，
+   不得凭 expected count补齐；
+5. MAT payload的 exact points/triangles/incidence/master groups/$P$/full-reduced masses/partial factor、matrix
+   diagnostics、raw `chol_flag`和 pivot mapping；CSV/MAT identity/value一致，所有 required artifacts无 partial；
+6. `completed_eigensolves=0`、`reference_exported=0`、zero bulk rows、no output/work/reference cache，001 hashes
+   仍逐项等于§21 table，run-005/history无 observed mutation；
+7. external resource与2 min/1 GiB plan、30 min/2 GiB hard contract比较，并复核 exact allowed claim。
+
+Postdiagnostic只允许以下分类：
+
+- `MASS_DIAGNOSTIC_COMPLETE_CHOL_PASS`：durable raw flag为0，只证明 current source rebuild未复现 positive
+  flag；按§18.7报告与run-005 discrepancy并停在新的 bounded review，**不自动授权** formal repair/retry；
+- `MASS_DIAGNOSTIC_COMPLETE_CHOL_FAIL`：durable positive natural flag及完整 pivot/matrix evidence构成 frozen
+  diagnostic scientific negative/root-cause evidence；intentional nonzero shell exit不推翻 terminal artifact，
+  但仍只允许另行设计最小 representation investigation，**不自动授权** repair或run-006；
+- `MASS_DIAGNOSTIC_INCOMPLETE`、缺 terminal commit、schema/type/atomic矛盾或 cap stop：002是 operational
+  incomplete，ID已消费；不得 auto-retry、补写或创建新 ID，须先由同一 Skeptic界定最小后续 authority。
+
+只有 postdiagnostic review完成且另有明确 authorization，才可修改 source或同步任何 project result。
+
+### Z.9 Minimal handoff
+
+Goal-relative handoff：stage `I4.1a mass-gate-002 one-command diagnostic`；category
+`IMPORTANT CAVEAT`；blocking scope `all repair, run-006 and reference/effectivity claims`；cheapest next check
+`one monitored create-once zero-eigensolve command plus direct artifact audit`；建议 ledger status
+`SPEC-TO-CODE PASS WITH CONDITIONS / MASS-GATE-002 AUTHORIZED ONCE / NO REPAIR OR RUN-006`。项目 ledger由主
+agent维护。
+
+## AA. `mass-gate-002` postdiagnostic artifact and representation audit
+
+### AA.1 Audit frame and evidence authority
+
+本节审查 Z.7 唯一授权的 corrected source-rebuild mass diagnostic，目标是判断002是否完成§18 evidence
+contract、`chol_flag=1`能否被可靠分类，以及哪些§U blockers关闭。直接核查了002全部 CSV、MAT file identity/
+field-name inventory、row/column counts、absence of partial/cache/output、001 hashes和 preserved run history；
+exact command、shell exit 1、external real 13.62 s、maximum RSS 721502208 B、peak footprint 494556160 B来自
+Code Runner record。本 Skeptic没有运行 MATLAB、Octave、Python或任何数值程序，也没有修改
+design/code/docs/artifacts。
+
+Terminal `diagnostic-summary.csv` 是 status authority：
+`MASS_DIAGNOSTIC_COMPLETE_CHOL_FAIL`、`evidence_complete=1`、internal elapsed
+0.6171102083333333 s、completed eigensolves为0、reference exported为false、bulk rows为0；failure reason明确
+为 raw reduced mass natural 1-based `chol_flag 1`。因此 shell exit 1是 complete terminal publication后的
+intentional raise，不是 operational failure。
+
+### AA.2 Verdict
+
+**Diagnostic artifact verdict: `PASS WITH CONDITIONS`（high confidence）。** 002完整、可复现且没有
+unresolved artifact/schema/resource blocker；它成功关闭§X publication blocker和§U.4 item 1的
+“mass failure cause unresolved”部分。允许的结论是：current source的 mathematically Hermitian reduced
+mass以 raw floating storage进入 MATLAB `chol` 时，在 first pivot因 exact-Hermitian representation defect
+失败；这**不是** positive-definiteness failure的证据。
+
+**Formal-chain disposition: `REVISE / NOT AUTHORIZED`。** §U.4 item 2 的 reached-bulk formal artifact
+blocker未关闭，且 branch-4 representation amendment尚未存在。`run-006`、任何 code repair和 formal/
+effectivity synchronization继续停止。
+
+### AA.3 Strongest challenge
+
+最危险的解释错误是把 complete `CHOL_FAIL` 等同于 $M_{\mathrm{red}}$ 不正定。Artifact给出 failing pivot
+$p=1$，partial factor为$0\times208$，但同一 first diagonal为
+$0.0034722222222222255-1.0842021724855044\times10^{-19}\mathrm{i}$：real part严格正，唯一 first-pivot
+异常是理论 Hermitian matrix不应有的 tiny imaginary diagonal。与此同时 full/reduced matrices无
+zero/nonfinite rows/columns，$P$满 support，所有 nodes被 triangles使用。故 raw `chol` failure是 exact
+storage predicate failure；它不能反证 consistent $P_1$ mass在数学上的正定性，也不能被当作 FEM method
+negative。
+
+### AA.4 Direct artifact, budget, and retry audit
+
+002 final namespace恰有12个 required artifacts且没有 `.partial`：bulk bands/gaps CSV、mesh/seam CSV、四张
+mass evidence CSV、mass-summary CSV/MAT和terminal-summary CSV/MAT。MAT files均为 MATLAB v7.3、唯一
+top-level `payload`；直接 field-name inventory包含 identity、`phase_prolongation`、`mass_full`、
+`mass_reduced`、`partial_factor`、`chol_flag`、matrix diagnostics、pivot support、zero-eigensolve和
+no-reference fields。没有 `output/mass-gate-002`、diagnostic work/cache或 reference artifact。
+
+CSV schema/rows全部闭合且每行列宽一致：
+
+- bulk bands为10-column header only，bulk gaps为14-column header only；
+- mesh为header+1 row/36，seam为header+1/12，identity是 `bulk-s12-g24`、$N=0$、$s=12$、
+  $n_\Gamma=24$、$\alpha=0$、$\beta=0.5$，reached boundary为 `MESH_AND_SEAM_COMPLETE`；
+- node为header+233 rows/9：233/233 nodes均 used，unused为0，每行$P$ support和entry modulus均为1；
+- master为header+208 rows/7：IDs $1{:}208$，group sizes合计233，$P$ column supports合计233，entry modulus
+  range为$[1,1]$；
+- matrix为header+2 rows/14，pivot为header+1/23，mass summary为header+1/26，terminal为header+1/16。
+
+External 13.62 s、721502208 B（约0.672 GiB RSS）和494556160 B（约0.461 GiB footprint）均低于2 min/
+1 GiB plan以及30 min/2 GiB hard caps；没有 grace、kill或 retry。002 create-once ID已由这个 complete result
+永久消费。001的11个 current SHA-256仍逐项等于§21 snapshot，包括 immutable node `.partial`；run-001--005
+和 mesh diagnostic files没有晚于 current source的写入，`run-005`仍保留原20 files/九 mesh caches。
+
+### AA.5 Numerical classification and §U blocker closure
+
+Direct ledgers形成以下 dependency chain：
+
+1. full space有233 points、416 triangles，全部 points used；full mass为$233\times233$、`nnz=1529`，无
+   zero/nonfinite row/column，real diagonal range
+   $[0.00052123279916479895,0.076555047333841247]$，imaginary diagonal和Hermitian defects均为0；
+2. periodic prolongation为$233\times208$、`nnz=233`，每row恰一 unit-modulus entry、208 columns全部有
+   support、master IDs contiguous；因此 source evidence与 full-column-rank $P$一致；
+3. raw reduced mass为$208\times208$、`nnz=1456`，无 zero/nonfinite row/column，real diagonal仍在同一
+   strictly-positive range；maximum diagonal imaginary part为$1.0842021724855044\times10^{-19}$，absolute
+   和normalized Hermitian defect均为$2.7105054312137611\times10^{-19}$；
+4. raw two-output `chol`正常返回 natural flag 1，partial factor $0\times208$。Pivot 1对应 master group
+   nodes `1;13;221;233`、四个 unit $P$ supports，reduced row/column各7 nonzeros，pivot row/column无
+   nonfinite，且其 positive real diagonal只带上述 tiny negative imaginary part。
+
+所以§18.7 branch 1--3的 unused/assembly/master/$P$/zero/nonfinite/support failure mechanisms均由 direct
+evidence排除；branch 5 source discrepancy不成立；branch 6 incomplete不成立。**唯一支持的分类是branch 4：
+全部 structural evidence正常，positive raw flag只剩 tiny non-Hermitian representation。**
+
+对§U两个 blockers的处理必须分开：
+
+- §U.4 item 1的 diagnostic/classification blocker **关闭**：cause不再 unresolved，generic
+  “not positive definite”不得保留为 scientific interpretation；
+- 该 item对应的 formal execution blocker **没有关闭**：raw representation仍会在 first pivot停止，直到
+  prospective representation contract通过 review；
+- §U.4 item 2 **没有关闭**：002只在 diagnostic namespace发布 header-only bulk ledgers，没有修改
+  `run-005`，也没有冻结/实现 future one-input formal path在 mass gate前的 reached-bulk/mass evidence
+  publication。
+
+### AA.6 Classified findings
+
+1. **`BLOCKER`（blocking formal repair/run, not diagnostic acceptance）— canonical operator representation
+   尚未规格化。** Existing design明确禁止 matrix post-symmetrization；即使 data强烈支持 roundoff-only
+   representation，Engineer也无权选择 triangle、清理 diagonal或绕过 raw `chol`。最便宜的 resolution是
+   AA.7的单一 Researcher prospective amendment，随后同一 Skeptic design review；不能直接改 code。
+2. **`BLOCKER`（blocking future formal run）— reached-bulk/mass failure publication尚未闭合。** Future
+   one-input path仍必须在 first mass gate前发布 schema-complete header-only bulk ledgers及明确的 mass
+   representation evidence。002 artifacts不能作为 formal cache或替代 future current-run artifact。
+3. **`IMPORTANT CAVEAT` — complete raw `CHOL_FAIL`不是 SPD certificate的反面。** Positive diagonals、
+   support和tiny defect本身也不是一个 standalone numerical SPD certificate；允许的 SPD claim来自 frozen
+   finite-element congruence structure的proof obligation，加上 canonical representation上的 actual
+   factorization gate。两者缺一不可。
+4. **`MINOR CAVEAT` — external resource authority仍在 namespace之外。** 这不影响 complete terminal
+   classification，但 future review仍须同时保留 machine commit和external monitor，不能只看 shell exit。
+
+### AA.7 Minimum explicit Researcher specification amendment
+
+在任何 representation code change前，同一 Researcher须在 existing `design-4-1a.md` 作一个 bounded、
+prospective amendment，至少冻结以下内容；不得只写“容忍 tiny imaginary part”或删除 `chol` gate：
+
+1. **Proof obligation.** 明确证明 frozen consistent full mass对当前 conforming active nodal space正定，且
+   frozen periodic $P$满列秩，所以数学对象$P^*M_{\mathrm{full}}P$为 Hermitian positive definite；把002的
+   node/master/support evidence作为 implementation hypotheses check，而不是把 raw `chol` flag当作数学反例。
+2. **One-triangle canonical Hermitian view.** 对每个理论 Hermitian reduced operator$A_{\mathrm{raw}}$
+   冻结一个 deterministic stored triangle（建议 upper triangle，与 MATLAB Cholesky convention一致），令
+   $U=\operatorname{triu}(A_{\mathrm{raw}},1)$，并定义
+
+   $$
+   A_{\mathrm H}=U+U^*+\operatorname{diag}(\operatorname{Re}\operatorname{diag}A_{\mathrm{raw}}).
+   $$
+
+   这不是 averaging；不得使用$(A+A^*)/2$，不得 threshold、shift、regularize、reorder或 tolerance-based
+   entry selection。Amendment必须显式、狭窄地替换现有“任何 post-symmetrization均禁止”的条款，而不能让
+   Engineer自行解释例外。
+3. **Consistent solver object.** 不能只让 canonical mass通过 `chol`、随后把 raw mass交给 `eigs`。必须冻结
+   $M_{\mathrm H}$作为 factorization、generalized `eigs`、mass normalization、orthogonality和 residual/
+   downstream mass algebra的一致对象；保留$M_{\mathrm{raw}}$只作 audit。因为 solver设置
+   `options.issym=true`，amendment还必须选择：同样 canonicalize理论 Hermitian reduced stiffness
+   $K_{\mathrm{raw}}$，或以 all-formal-phase evidence证明 raw $K$ exact Hermitian。只有phase-zero stiffness
+   defect 0不足以默许后者；最小稳健路线是对$K$与$M$使用同一个 one-triangle rule。
+4. **No hidden drift gates.** 对每个 formal solve发布 raw Hermitian defect、
+   $\|A_{\mathrm H}-A_{\mathrm{raw}}\|_1/\max(1,\|A_{\mathrm{raw}}\|_1)$、exact-Hermitian check、
+   raw/canonical diagonal evidence和 canonical mass `chol_flag`；raw defect超过既有 frozen Hermitian
+   tolerance、canonical diagonal非正/nonfinite或 canonical `chol` nonzero必须 fail closed。不得放宽 tolerance
+   或把 representation delta计为0而不记录。
+5. **Formal artifact order.** 在 future one-input run的 `BULK_INVENTORY stage-start` 后、任何 raw/canonical
+   mass gate或 `eigs`前，原子发布 current-run header-only bulk ledgers和 mass-representation ledger；任一
+   raise前保留 reached evidence。002 MAT不得被读取或复用。
+6. **Preformal cheapest check.** Design应冻结一个 zero-eigensolve、create-once current-source diagnostic，
+   至少验证 raw diagnostics、canonical exact Hermitian、canonical mass `chol_flag=0`及同一 $K/M$ view将被
+   formal solver消费。其 ID、schema、budget和retry semantics必须另经 Researcher/Skeptic gate；本节不预先
+   授权或命名该 execution。
+
+**Option comparison.** “Proof-based SPD gate only”不足：proof说明离散数学对象正定，却不能让 MATLAB
+`chol`或 generalized `eigs(...,options.issym=true)`接受 raw non-exact-Hermitian storage，也不能保证 solver、
+normalization和residual使用同一 operator。单三角+real-diagonal view是最小可执行 representation，但若没有
+上述 proof与perturbation ledger，它仍会成为未经解释的 matrix repair。故最低可接受方案是
+**proof-backed one-triangle canonical view**，两者不是互斥替代项。
+
+### AA.8 Authorization and claim boundary
+
+当前只授权同一 Researcher起草 AA.7的 bounded specification amendment并交回同一 Skeptic design review。
+**不授权** Engineer改 code/docs、不授权 canonicalization、proof-only bypass、tolerance relaxation、修改
+shared serializer或 raw artifacts、不授权新 diagnostic execution、`run-006`、auto-retry、formal
+header/mass repair、reference/effectivity reveal或 project-document synchronization。
+
+`mass-gate-001`、`mass-gate-002`及其 artifacts和 `run-005`必须保持 immutable。002不消费 scientific
+attempt；它消费且完成自己的 create-once diagnostic ID。任何未来 formal ID和 retry/attempt status只能在
+representation + reached-artifact specifications、implementation mapping和 independent pre-run review全部
+通过后另行决定。
+
+### AA.9 What survived and open-problem handoff
+
+Surviving claims：同一 continuous/FEM problem、mesh/assembly/periodic identity、full mass结构、$P$ support、
+zero-eigensolve information isolation、artifact atomicity和resource plan均通过本 diagnostic；root cause已从
+“可能的 SPD failure”收缩为 raw exact-Hermitian storage mismatch。不能存活的 claims仍包括任何 bulk
+spectrum、gap、guided mode、reference resolution、$\Delta_{\mathrm{ref}}^{\mathrm{obs}}$或 effectivity。
+
+Goal-relative handoff：stage `I4.1a exact-Hermitian representation specification`；category `BLOCKER`；
+blocking scope `all code repair, preformal diagnostic, run-006 and reference/effectivity claims`；cheapest next
+check `Researcher proof-backed one-triangle canonical-view amendment plus formal reached-artifact contract`；
+建议 ledger status
+`MASS-GATE-002 COMPLETE / ROOT CAUSE CLASSIFIED AS REPRESENTATION / FORMAL CHAIN REVISE / RUN-006 NOT AUTHORIZED`。
+项目 ledger由主 agent维护。
+
+## AB. Independent proof/spec/budget review of design §22
+
+### AB.1 Audit frame and proof-review mode
+
+**Rigorous-proof mode: `Review only`.** Target是 existing `design-4-1a.md` §22，尤其§22.2--§22.4的
+discrete SPD/representation proof及§22.5--§22.9的 executable contract。成功标准是：证明在明确假设下
+成立；canonical operator identity/bound正确；同一 canonical $K/M$ metric在所有消费者中无歧义；derived
+Hermitian self-Grams与rectangular cross-Grams不混淆；raw mesh matrices/oracles不被canonicalization掩盖；
+artifact/first-failure/resource合同足以交 Engineer。本节只追加 review，没有修改 proof/design/code/docs/
+artifacts，也没有运行 MATLAB、Octave、Python或任何数值程序。
+
+§22没有引用外部 theorem、论文或数值规范；全部主张可由有限维线性代数和 frozen $P_1$ 定义直接审查。
+因此不存在 unavailable-source dependency，source/citation status为 self-contained / no external reference。
+
+### AB.2 Verdict
+
+**Verdict: `REVISE`（high confidence）。** Exact-mathematics SPD proof和 canonical inequality通过；但有两个
+unresolved `BLOCKER` 使 theory-to-code map不唯一：global cluster normalization同时受到相互冲突的 metric
+规则约束，且 frozen 33-column evidence schema不能记录§22.5自己要求的 `operator_contract_id`。此外30.0 min
+forecast没有可审计的正余量，必须把既已要求的 zero-eigensolve diagnostic扩展成 additive resource benchmark
+gate。当前**不授权 Engineer**、implementation diagnostic或 `run-006`；最小 Researcher修订见AB.8。
+
+### AB.3 Strongest challenge
+
+最可能使整个 representation方向失去科学可解释性的 failure不是 $\mathcal H$ 公式，而是 metric split：
+solver/eigenvectors按$M_{\phi,\mathrm H}$归一化，cluster helper若仍以
+$U^*M_hU$（raw full mass）做第二次 Cholesky normalization，就会把同一 subspace换到另一个 rounded metric；
+若直接删除这一步而不冻结替代 Gram，又会改变 basis-invariant localization pipeline。§22.5一方面把
+“dense global mass Gram”列入 canonical/`chol` allowlist，另一方面明确禁止 raw full mass二次
+re-normalization，却没有定义该 global Gram究竟由 reduced canonical object还是 raw full object形成。这不是
+注释问题；它决定 cluster basis、restricted Gram spectra和continuation overlap，必须在 design层唯一化。
+
+### AB.4 Rigorous proof audit: what is valid
+
+1. **Full $P_1$ mass SPD — valid.** 对任意$c\ne0$，nodal coefficient中至少一个非零。对应 active node属于
+   positive-area triangle；该 triangle上的 affine $u_h$在该 vertex非零，故由连续性/affine polynomial性质，
+   $u_h$在一个正测度子集非零。因此$\int|u_h|^2>0$，再由$q_h\ge1$得$c^*M_hc>0$。Conforming connectedness
+   不是正定性的必要条件；every-node positive-area support足够。Conjugate symmetry也可直接由 integral
+   definition得出，故 complex coefficient case闭合。
+2. **Nodal independence — valid under stated mesh hypotheses.** Nondegenerate conforming triangulation和
+   distinct active nodal DOFs给出standard nodal interpolation property；duplicate/overlap/hole gates不是线性
+   无关性的全部必要条件，但作为更强 implementation hypotheses无害。Proof没有把 numerical mesh oracle
+   tolerance误当作数学 SPD certificate。
+3. **Periodic prolongation full rank — valid.** Every row恰一 unit-modulus entry使不同 columns的 row support
+   不相交；every column supported给$s_j\ge1$。因此$P_\phi^*P_\phi=\operatorname{diag}(s_j)$且kernel为0。
+   Congruence argument随即给$z^*P_\phi^*M_hP_\phi z>0$和rank $r$。这里 phase/corner factors只需 modulus
+   one；proof不依赖它们的具体角度。
+4. **Canonical Hermitian identity — valid.** Strict upper entries保持，strict lower entries成为 upper的exact
+   conjugate，diagonal取real part，所以$\mathcal H(A)^*=\mathcal H(A)$；exact Hermitian input上它为identity。
+   这确实是one-stored-triangle rule而不是$(A+A^*)/2$ averaging。
+5. **Raw-to-canonical 1-norm inequality — valid.** 对每个column$j$，change只含$i>j$的lower entries，且
+   $D_{ij}=-(A-A^*)_{ij}$；diagonal change的magnitude是$|(A-A^*)_{jj}|/2$；upper change为0。因此每column
+   change sum不超过相同column的anti-Hermitian defect sum，取maximum column sum即得
+   $\|\mathcal H(A)-A\|_1\le\|A-A^*\|_1$。该 bound不蕴含 canonical SPD，§22保留 actual Cholesky gate是
+   必要且正确的。
+
+Proof-level结论没有 unresolved logical gap。一个纯排版错误是§22.2的
+`s_j\in\mathbb N,quad s_j\ge1`，应为 `s_j\in\mathbb N,\quad s_j\ge1`；它不改变证明，但应在bounded
+revision中机械修正。
+
+### AB.5 Canonical consumers, localization, and raw-oracle audit
+
+以下 design choices可保留：
+
+- primary canonical pair由同一 in-memory $K_{\phi,\mathrm H},M_{\phi,\mathrm H}$供 `chol`、generalized
+  `eigs`、normalization、orthogonality和algebraic residual，避免“gate canonical / solve raw”；
+- theoretical-Hermitian restricted center/core/tail compressions是square self-Grams，可先过raw defect gate再用
+  one-triangle view取extremal eigenvalues；common-core的两个self-Grams同理；
+- adjacent-twist、different-mesh和common-core cross-Grams一般是rectangular/non-Hermitian，只用于singular
+  values，不得canonicalize；这一边界数学上正确；
+- full assembled $K_h,M_h,M_D$、$P_\phi$、fields、mesh/reflection/seam oracles继续消费raw objects。Raw
+  defect必须先过既有$5\times10^{-13}$ gate，故 canonicalization不会掩盖 full-mesh/connectivity/material
+  failure；full matrices仍禁止 averaging；
+- parity compression只有在物理 parity label有意义的$\vartheta=0,\pi$才消费。其 Hermitian性需要在修订中
+  补一句直接证明：reflection permutation $R=R^*=R^{-1}$且 raw reflection oracle给$R^*M_hR=M_h$，所以
+  $M_hR=RM_h$并且$(M_hR)^*=M_hR$，从而$U^*M_hRU$ Hermitian。Interior-twist parity不得继续构造后丢弃，
+  应明确标记为not applicable。
+
+但 global cluster normalization存在**确定冲突**：§22.5 allowlist item 2和§22.6 item 5仍允许一个global
+mass self-Gram经canonical `chol`；紧邻 paragraph又禁止用 raw full mass二次re-normalize。Current code的
+`gram_full=U^*M_hU`及其 Cholesky正是被禁止的路径。Design没有冻结以下二者之一：
+
+1. 取消第二次 normalization，直接依靠 spectrum-level $M_{\phi,\mathrm H}$ orthogonality gate；或
+2. 用 reduced vectors明确构造$G_C=V_C^*M_{\phi,\mathrm H}V_C$，canonicalize/factorize $G_C$，再以同一
+   change同时更新$V_C$和$U_C=P_\phi V_C$。
+
+只有第二种路线保留 current “cluster re-orthonormalization” robustness且不切换 metric；若选择它，spectrum
+cache/struct、memory estimate和`operator_contract_id`必须携带所需 reduced basis/contract linkage。未经该
+选择，Engineer无法判断 global mass Gram、normalizer和localized subspace的权威对象。
+
+### AB.6 Artifact and first-failure contract audit
+
+Header-first bulk publication、per-phase MAT then CSV commit、failure前checkpoint、terminal after reached
+evidence、002/no-history read prohibition及create-once `run-006`边界总体正确。33 columns逐项计数也确为33，
+K/M primary rows、derived object IDs、factorization kind/flag和consumer strings足以描述大部分scalar evidence。
+
+但存在两个 executable schema gaps：
+
+1. §22.5强制 `spectrum.operator_contract_id`证明 solver、norm、orthogonality和residual引用同一 pair；33-column
+   CSV与fixed MAT mirror fields均没有该ID。`consumer_contract='chol|eigs|...'`只是声明，不是 pair linkage；
+   K row、M row、spectrum cache和derived rows无法在artifact中machine-join。这个 mismatch是 `BLOCKER`。
+2. 若 stiffness raw gate先失败，§22.6要求mass row只保存“可安全取得的 raw evidence”，但没有冻结该row的
+   `gate_pass`、canonical/factorization blanks和 first-failure fields语义。若复制 stiffness code会误称mass
+   failed；若全部留空又无法区分not-evaluated与writer omission。修订必须指定一个明确
+   `evaluation_status`（或等价 frozen encoding），并保持phase first failure只归于实际 first object。
+
+`operator-representation.mat`不保存 raw/canonical matrices、也不作为solver cache是正确的信息隔离选择；
+但加入contract linkage和evaluation status后，CSV header、MAT mirror、schema version及row-width必须同步
+重冻结，不能继续称原33-column schema完整。
+
+### AB.7 Budget audit
+
+Peak estimate 1.3 GiB低于1.5 GiB preflight和2 GiB hard cap；one-triangle canonical pair可能取raw/canonical
+pattern union，但§22已要求以actual canonical pattern重算fill，memory design目前没有 blocker。
+
+Wall forecast恰为30.0 min则没有任何可审计余量。`test/AGENTS.md`只允许launch一个**预计不超过**30 min的
+完整结果；decimal 30.0本身不是自动超限，但当前新增成本同时包含119次 sparse canonical construction、
+至少238 primary rows、derived Gram rows以及per-phase growing MAT/CSV atomic rewrites，§22只给“约0.2 min”
+而没有计数/benchmark依据。故不能把equal-to-limit estimate直接当成 prelaunch evidence。
+
+这不是永久 resource failure，也不需要扩大理论研究；§22.8已要求的 two-object zero-eigensolve diagnostic是
+最便宜的 decisive check，但其现有合同只验证representation correctness，没有冻结计时外推。修订应要求它：
+
+- 分别记录coarse bulk和finest defect的raw diagnostics、canonical construction、factorization、row/MAT/CSV
+  checkpoint wall及peak RSS；
+- 由exact 119 primary pair count和derived-row upper count外推 additive overhead，并计入MAT/CSV growing rewrite；
+- 与原29.8 min floor合成一个**未四舍五入且严格小于30 min**的 preformal forecast，同时peak严格不超过
+  1.5 GiB；否则 `RESOURCE_BUDGET_UNAVAILABLE`，不得授权formal run；
+- diagnostic仍受2 min/1 GiB自身 envelope且不调用 `eigs`。它只能测additive representation/I/O成本，不能
+  宣称重新验证119 eigensolve基线。
+
+因此 zero wall margin是 **`IMPORTANT CAVEAT` at Engineer-design stage and a `BLOCKER` for any formal launch**。
+它可由已规划的 cheap diagnostic解决，不需要在本轮把方法判为资源失败；但在补齐上述合同前，§22 resource
+gate尚不完整。
+
+### AB.8 Classified findings and minimum bounded revision
+
+1. **`BLOCKER` — cluster global normalization metric contract自相矛盾。** Location §22.5 items 2及后续
+   localization paragraph。Effect：可能让 solver和localization使用不同 rounded mass metric。Minimum
+   repair：选择并写出AB.5的canonical reduced-Gram路线或明确删除第二次normalization；同步理论对象、cache/
+   memory和derived row consumer。
+2. **`BLOCKER` — `operator_contract_id`不在33-column/MAT mirror。** Location §22.5 versus §22.7。
+   Effect：artifact不能证明same-pair consumer identity。Minimum repair：为每个phase生成一个K/M共享、
+   spectrum继承的 deterministic contract ID；加入重编号schema/MAT mirror及derived parent linkage，更新
+   schema version/width。
+3. **`IMPORTANT CAVEAT` — prior-object failure后的row state未冻结。** Location §22.6--§22.7。Effect：mass
+   raw-only row可能冒充mass failure或missing row。Minimum repair：冻结 evaluation status、blank fields、
+   gate/failure ownership和MAT/CSV mirror semantics。
+4. **`IMPORTANT CAVEAT` — 30.0 min无正余量。** Location §22.9。Effect：当前无法诚实证明launch forecast
+   不超过默认上限。Minimum repair：把AB.7 timing/extrapolation作为zero-eigs diagnostic的hard preformal gate；
+   forecast不严格小于30 min即resource blocker。
+5. **`IMPORTANT CAVEAT` — parity Hermitian/endpoint消费缺显式 bridge。** Location §22.5。Effect：实现可能
+   对interior twists继续输出无物理意义的parity labels。Minimum repair：加入$M_hR$ Hermitian的一行证明，
+   endpoints only，interior status not applicable。
+6. **`MINOR CAVEAT` — `\quad`排版缺反斜杠。** Location §22.2。Effect：不影响逻辑；机械修正即可。
+
+### AB.9 Authorization boundary
+
+由于存在 unresolved blockers，**不授权 Engineer** 修改 `run_i4_1a.m`/README/SYMBOLS；不授权任何
+canonical helper、schema writer、preformal diagnostic、`run-006`、auto-retry、history/001/002 mutation、
+reference/effectivity reveal或 project-document synchronization。
+
+只授权同一 Researcher对§22作一次有界修订：关闭AB.8 items 1--5，机械修正item 6，保留已通过的SPD proof、
+canonical formula/inequality、raw full matrices/oracles、no-averaging rule、119 schedule和claim boundary。
+修订后回同一 Skeptic re-review；不得让 implementation output反向选择规格。
+
+### AB.10 Proof-review completion record
+
+- **Task mode:** `Review only`；
+- **Proof status:** exact SPD与canonical-bound proofs valid under stated hypotheses；executable specification
+  has two blockers；
+- **Source file:** `research/projects/eig-apost/implementation/i4/design-4-1a.md`；
+- **Theorem/claim:** §22.3 discrete mass positivity claim及§22.4 representation identity/bound；
+- **Target environment/location:** Markdown §22.2--§22.4及其§22.5--§22.9 consumers；
+- **Output file:** 本 `review-4-1a.md` append-only §AB；
+- **Original-text integrity:** proof/design file未修改；review以外无写入；
+- **Verified references:** none required；proof self-contained；
+- **References downloaded/missing locally:** none；
+- **Steps awaiting literature verification:** none；
+- **Remaining proof gaps:** none in SPD/inequality claims；parity Hermitian bridge需补写但可由stated raw reflection
+  identity直接完成；
+- **Review-only findings:** AB.8给出location、effect和minimum repair；
+- **Literature status:** `Review literature verification completed.`
+
+Goal-relative handoff：stage `I4.1a §22 bounded design revision`；category `BLOCKER`；blocking scope
+`Engineer handoff, representation diagnostic, run-006 and all reference/effectivity claims`；cheapest next check
+`Researcher resolves canonical cluster metric + contract-linked schema, then adds diagnostic resource extrapolation`；
+建议 ledger status `§22 REVISE / PROOFS VALID / EXECUTABLE CONTRACT BLOCKED / NO ENGINEER OR RUN-006`。项目
+ledger由主 agent维护。
+
+## AC. Independent re-review of design §22.12
+
+### AC.1 Audit frame
+
+**Rigorous-proof mode: `Review only`.** Target是 existing `design-4-1a.md` §22.12 对 review §AB.8 的 bounded
+revision。当前 gate的成功标准不是产生 eigenvalue，而是让 proof-backed canonical representation、artifact
+linkage和 zero-eigensolve resource gate足够唯一且可实现，之后才可考虑 Engineer handoff。本节只审查
+design；没有修改 design/code/docs/artifacts，没有运行 MATLAB、Octave、Python或任何数值程序。
+
+审查权威包括 root/research/test `AGENTS.md`、本 design 的 frozen branch/output/budget sections、§22及
+§22.12，以及 current source中既有 `branch-inventory.csv` row semantics。§22.12没有使用外部文献；线性代数
+主张仍为 self-contained，因此没有 citation blocker。
+
+### AC.2 Verdict
+
+**Verdict: `REVISE`（high confidence）。** §AB的 cluster-metric与33-column linkage blockers在数学对象层面
+基本关闭：canonical reduced Gram、同步的 $V_C/U_C$、OP2/DRV2以及36-column mirror均可唯一解释；行数和
+checkpoint算术也成立。但是当前 preformal diagnostic有两个新的 executable `BLOCKER`：MATLAB读取
+external-monitor sidecar与 repository `test/AGENTS.md` 的 MATLAB-only runtime contract冲突，而且 MATLAB
+在退出前不可能核验退出后才产生的 `/usr/bin/time` whole-command record；同时 resource proxy没有覆盖新增
+cluster synchronization的实际 full-height操作，并用最粗 bulk pair外推全部72个 bulk pairs。在原 baseline
+只剩12 s余量时，这不能支撑严格 $T_{\mathrm{forecast}}<1800$ s。当前不授权 Engineer、
+`representation-gate-001` execution或 `run-006`。
+
+### AC.3 Strongest challenge
+
+最强 failure mode是 resource terminal claim的因果顺序不可能成立。§22.12.5把 `/usr/bin/time`
+whole-command record列为 complete evidence，§22.12.8却要求 MATLAB在退出前读取 sidecar并先提交
+`diagnostic-summary.mat/.csv`。`/usr/bin/time -lp` 的 final `real`/maximum RSS只能在 MATLAB process退出后
+产生；因此 MATLAB summary不能同时成为 last terminal commit marker并诚实断言 whole-command evidence
+complete。即使忽略这一时序，MATLAB entry依赖 monitor token/sidecar才运行也违反本 experiment适用的
+MATLAB runtime portability rule。这个问题不能留给“运行后再解释”；必须先改成 observational external
+monitor + post-run Skeptic resource gate，或另一个不让 MATLAB消费非-code artifact的同等明确合同。
+
+### AC.4 What survived the proof and specification audit
+
+1. **Canonical cluster route通过。** 对
+   $G_{C,\mathrm{raw}}=(V_C^{(0)})^*M_{\phi,\mathrm H}V_C^{(0)}$ 取
+   $G_{C,\mathrm H}=R_C^*R_C$ 后，`V_C = V_C_0 / R_C`给
+   $V_C^*M_{\phi,\mathrm H}V_C=I$；随后唯一重建 $U_C=P_\phi V_C$ 是同一 basis change。任意另一个
+   $M_{\phi,\mathrm H}$-orthonormal basis只与其相差 unitary transform，故 restricted self-Gram spectra、
+   principal angles和continuation singular values保持 basis-invariant。禁止 full raw mass二次 normalization
+   已写清，existing localization/coverage thresholds不变。
+2. **OP2/DRV2核心 linkage通过。** OP2只依赖 model/mesh/phase kind/exact `num2hex` phase，同一 tight/count
+   operator pair可稳定复用；primary K/M共享OP2，derived self-object以DRV2指回唯一 parent OP2，避免以
+   result/ranking生成identity。36-column header独立计数确为36，新增 contract/evaluation fields与MAT cell
+   mirror足以记录 primary/derived representation evidence。
+3. **Stiffness-first semantics通过。** stiffness first failure独占 owner；mass的 raw-only row用
+   `RAW_ONLY_BLOCKED_BY_PRIOR_OBJECT`，canonical/gate/failure cells为空而非伪造0/`NaN`，且先提交两行再
+   raise。这既保存 reached evidence，也不把未评估mass冒充第二个 verdict。
+4. **Parity proof通过。** 从 $R=R^*=R^{-1}$ 和 $R^*M_hR=M_h$ 可得 $M_hR=RM_h$，再得
+   $(M_hR)^*=M_hR$；endpoint compression理论 Hermitian。只在 $\vartheta=0,\pi$ 形成 parity object、
+   interior不形成该matrix，是原§5.3物理定义的正确边界。
+5. **Raw/canonical边界通过。** full assembled $K_h/M_h/M_D$、mesh/reflection/seam oracles、$P_\phi$与
+   rectangular cross-Grams保持raw；只有allowlist中的reduced/theoretically-Hermitian objects使用
+   one-upper-triangle/real-diagonal view。没有 averaging、tolerance relaxation或将 representation delta冒充
+   eigenvalue/reference uncertainty。
+
+### AC.5 Independent count audit
+
+- Defect schedule的42个`nev=40`和5个`nev=48`给
+  $42\cdot40+5\cdot48=1920$ cluster slots。
+- Global、three restricted、endpoint parity和cached common-core上界分别为
+  $1920$、$5760$、$6\cdot2\cdot40+1\cdot2\cdot48=576$、$1920$；合计
+  $10176$ derived rows。加119 pairs的238 primary rows得到 $10414$。其中 common-core与parity计数是安全
+  上界；它们可高估但未低估 frozen union。
+- `1 + 119 + 47 + 47 + 47 = 261` checkpoint算术成立。其科学含义只能是 batch upper bound；empty batch
+  可跳过且 common-core self-Gram必须缓存复用，design已明确这一点。
+
+因此 row/checkpoint算术本身不是 blocker；问题在这些上界如何被 resource timing proxy使用。
+
+### AC.6 Classified findings
+
+1. **`BLOCKER` — external RSS handshake违反runtime authority且terminal evidence存在因果矛盾。**
+   Location：§22.12.5、§22.12.8；authority：`test/AGENTS.md` MATLAB runtime portability。Evidence：MATLAB
+   等待并读取 monitor token/sidecar才继续，而适用规则要求实际 entry point只依赖 MATLAB与真正需要的
+   source；另外 whole-command `/usr/bin/time` record在 MATLAB退出后才完成，不能被退出前的
+   summary-last marker验证。Consequence：`resource_evidence_complete=1`和`peak_rss_bytes`没有唯一可实现的
+   authority，create-once diagnostic可能因monitor plumbing而 operationally fail，或提前声称完整。
+   Cheapest repair：外部monitor保持纯 observational，MATLAB不读token/RSS artifact、不以其输入决定状态；
+   MATLAB只提交 internal correctness/timing/array evidence并明确等待post-run resource audit。同一 Skeptic在
+   command结束后把 frozen monitor ledger与 `/usr/bin/time` final record结合，才判 peak/wall gate。若仍要
+   machine sidecar，必须冻结被监控PID/command identity、atomic close和post-exit authority，但不得让MATLAB
+   science/diagnostic消费它。
+2. **`BLOCKER` — additive resource forecast没有覆盖实际新增路径，且bulk sample不是保守代表。**
+   Location：§22.12.1、§22.12.5。Evidence：$72t_{\mathrm{bulk}}$只从最粗
+   `bulk-s12-g24`取得，未按largest bulk pair或actual size schedule分层；48-by-48 principal-block probe只测
+   已形成dense object后的diagnostics/$\mathcal H$/`chol|eig`，没有测 global route新增的
+   `V_C_0/R_C`、full-height `P_\phi V_C`、$V_C^*M_{\phi,\mathrm H}V_C-I$和
+   $U_C-P_\phi V_C$ checks。它也把最多rows与max-width dense cost混为一个
+   `10176t_{\mathrm{derived}}`项，既不对应actual operation partition，也不能解释为可信 tight forecast。
+   Consequence：在 $1788$ s baseline后仅有12 s时，strict `<1800` pass可能低估真实新增成本，或因互不同时
+   达到的worst cases而产生无意义false failure；两者都不能作为launch authority。Cheapest repair：至少以
+   largest bulk mesh（或逐level size-weighted schedule）测 primary overhead；把derived row serialization、
+   dense canonical/factorization和global $V/U$ synchronization分项计时；用一个 deterministic、
+   zero-eigenobject、full-height width-at-most-48 probe实际走 `/R`、`P*V`和两个recheck，再按 cluster-dimension
+   partition的安全上界外推。Growing writer的10414/261实测继续单列，不得重复计入per-row writer cost。
+3. **`IMPORTANT CAVEAT` — `branch-inventory.csv`的interior parity cell语义与现有schema冲突。**
+   Location：§22.12.6 versus frozen/current branch writer。Existing file一行对应一个branch slice，但
+   `parity_signature`/`parity_ambiguous`当前是branch-level endpoint aggregate并在所有slice rows重复；
+   §22.12.6又要求interior row写`NOT_APPLICABLE_INTERIOR_TWIST/false`。Consequence：Engineer虽可任选一种写法，
+   但后一写法会把同一列从branch-level变成slice-level，并可能让审查者误以为该branch没有endpoint ambiguity。
+   Cheapest repair：保留existing branch-level aggregate在每一slice row，只让interior cluster cache的
+   parity spectrum为空；或显式版本化schema并增加separate parity scope/status field。无论哪种，
+   `MODE_ID_AMBIGUOUS`仍只由两个endpoints aggregate决定。
+4. **`IMPORTANT CAVEAT` — spectrum/eigenobject的OP2 artifact继承语句不闭合。**
+   Location：§22.12.2 versus frozen `bulk-bands.csv`/`spectrum-inventory.csv` headers。Design声称每个
+   eigenobject row继承OP2，但这两个scientific ledgers没有该column；目前只能通过`solve_id`间接join到primary
+   operator row。Consequence：不是operator v2-36本身的宽度错误，但direct inheritance claim不可机械验证。
+   Cheapest repair：明确规定`solve_id -> OP2`是唯一权威join并把“row继承”改为“cache继承/row经solve_id
+   join”，或对两个ledger作显式、versioned schema扩展；不得让Engineer临场决定。
+5. **`MINOR CAVEAT` — benchmark temp hash没有schema位置。** Location：§22.12.5。Text要求timing/hash/byte
+   counts后删除temporary files，但11-column rewrite ledger只有timing和byte fields。Hash对本 gate并非必要；
+   删除该要求或给出单独machine-only field即可，不能把未记录hash声称为已保存证据。
+
+### AC.7 Implementation audit and authorization boundary
+
+§22.12尚未实现，因此本轮不能给 spec-to-code PASS。两个 blockers均发生在 Engineer可执行合同之前；不能以
+future runtime fail-closed替代 design修订。尤其不应让同一 Engineer同时发明external monitor protocol、
+resource estimator和canonical scientific plumbing。
+
+**当前不授权 Engineer。** 也不授权创建/执行 `representation-gate-001`、`run-006`、auto-retry、修改
+historical run/diagnostic、读取 BIE/QZ/current reference、同步 project/effectivity结论。
+
+最小下一步是同一 Researcher仅修订AC.6 items 1--4并机械处理item 5。修订通过后，建议权限仍分 gate：
+
+1. 先授权 Engineer实现 canonical helper、formal consumer linkage/v2 evidence writers，以及不会读取external
+   artifacts的 zero-eigensolve diagnostic plumbing；
+2. Researcher做 theory-to-code mapping、同一 Skeptic做 pre-execution spec/code/resource review；
+3. 另行授权至多一次 diagnostic command；postdiagnostic review通过 strict wall/peak gates后，才讨论
+   `run-006`。
+
+### AC.8 Open-problem handoff
+
+Goal-relative handoff：stage `I4.1a §22.12 executable representation/resource contract`；category `BLOCKER`；
+blocking scope `Engineer handoff, representation diagnostic, run-006 and all reference/effectivity claims`；
+cheapest next check `Researcher replaces MATLAB-consuming RSS handshake with post-exit observational audit and
+freezes a size-aware/full-path additive benchmark`；suggested ledger status
+`§22.12 REVISE / PROOFS AND COUNTS VALID / RESOURCE TERMINAL CONTRACT BLOCKED / NO ENGINEER OR EXECUTION`。
+项目 ledger由主 agent维护。
+
+**Review literature verification completed.**
+
+## AK. Design review of §23 user-authorized 2 GiB representation continuation
+
+### AK.1 Audit frame
+
+本节独立审查 [[research/projects/eig-apost/implementation/i4/design-4-1a|design §23]] 的 prospective amendment，而不复审或改写 [[research/projects/eig-apost/implementation/i4/review-4-1a|review §AJ]] 的历史 postdiagnostic verdict。当前问题是：能否在 continuous model、FEM weak form、scientific/evidence workload、120 s wall envelope、information isolation 和 claim boundary 均不变时，以新的 exact create-once ID 在用户明确授权的 $2147483648$-byte actual-RSS 上限内继续 zero-scientific-eigensolve representation diagnostic。当前阶段是 pre-implementation design gate；目标 artifact 是用于判断 future formal preflight 是否可解释的 representation correctness/resource diagnostic，不是 guided-mode numerical result。
+
+Authority 为用户本轮明确授权、仓库根目录及 `research/AGENTS.md`、`test/AGENTS.md`、design §23、历史 review §AJ、current `run_i4_1a.m`/`README.md`/`SYMBOLS.md` 和 preserved 001 artifacts。成功标准是：001 immutable/consumed；002 identity、namespace、collision 和 consumption 语义唯一；002 的唯一 current-diagnostic memory stop 是 external aggregate observed RSS 达到 $2147483648$ bytes；120 s wall 与不粗于30 s的 process-tree/RSS monitoring保持；旧1.5 GiB字段只作 future-formal observation；all probes/counts/schemas/DP/writer与zero-eigensolve claim不变；`run-006`继续冻结。本节没有执行 MATLAB、Octave、Python或其他 numerical computation。
+
+### AK.2 Verdict
+
+**Design verdict: `PASS WITH CONDITIONS`（high confidence）。** 没有 unresolved `BLOCKER`。§23以最小 prospective amendment明确关闭了§AJ中“没有新ID authority”的 blocker，同时保留001的资源失败与create-once历史。002的 actual-RSS authority、wall/monitor、consumption、no-reuse、artifact及postreview gates足够明确，可交同一 Engineer作 bounded source/README/SYMBOLS implementation。条件只约束实现不得重新引入较低 memory gate及不得制造schema语义混淆；本 verdict不授权执行002，更不授权`run-006`。
+
+### AK.3 Strongest challenge
+
+最能推翻本次授权的 failure mode 是旧1.5 GiB array forecast仍在 implementation中进入 `internal_gate_pass`，从而在 observed RSS尚未达到2 GiB时把002标成internal resource failure。Current source确实仍是pre-amendment状态：representation runner硬编码001，且 `internal_pass = wall_pass && peak_pass && timing_pass`，failure reason还包含`array-peak`。这不是§23 design defect，而是 Engineer必须消除且后续双重静态review必须验证的唯一关键implementation risk；若它在002 path残留，即构成阻止执行的 spec-to-code `BLOCKER`。
+
+### AK.4 Classified findings
+
+1. **`IMPORTANT CAVEAT` — 002 policy必须dispatch-local，不能全局改写formal或历史001语义。** Location：design §§23.2、23.5；current source entry dispatch、representation runner、forecast/status block和summary expected-dispatch。Evidence：current source只allowlist并硬编码`representation-gate-001`，且old `internal_pass`含`peak_pass`。Consequence：若只机械换ID或全局删除peak gate，前者违反用户2 GiB authority，后者会误改尚未获准的formal 1.5 GiB preflight。Uncertainty：bounded且可由静态映射完全消除。Cheapest decisive check：implementation后逐行确认002 exact allowlist、validated ID传入runner、002-only gate expression及formal `spec.preflight_peak_cap_gib=1.5`未变。
+2. **`MINOR CAVEAT` — 27-column forecast schema复用时必须显式记录列语义的dispatch-local supersession。** Location：design §§23.3、23.5--23.6；`representation-forecast.csv` header及`SYMBOLS.md` representation objects。Evidence：`forecast_at_most_1p5_gib`仍准确表示1.5 GiB comparison，但002的`internal_gate_pass`改为只含wall/timing；forecast row自身没有diagnostic-ID列。Consequence：脱离namespace读取单个CSV可能误用旧§22语义，但不会使本设计不可执行。Cheapest decisive repair：保持冻结27列不变，在README/SYMBOLS明确002的两列关系，并确保summary中的exact `diagnostic_id`/`expected_dispatch`与002 namespace一致。无需新增schema版本或列；namespace加summary identity已足以消歧，擅自版本化/扩列反而违反§23.3。
+
+### AK.5 Implementation audit and exact conditions
+
+Same Engineer只获准作以下 bounded changes：
+
+1. 在two-argument entry中加入且只加入 exact `representation-gate-002` / `representation-diagnostic` pair；不得接受任意ID、alias或path。
+2. 令representation runner使用已经exact-validated的`diagnostic_id`形成current namespace和summary；002不得读取、stat、hash、复制或复用001。001 dispatch、namespace和7个preserved files保持不写不补，现有001 collision语义保持。
+3. `expected_dispatch`必须对002精确写为 `run_i4_1a('representation-gate-002','representation-diagnostic')`；不得继续硬编码001，也不得由未验证runtime string形成路径或authority。
+4. 继续如实计算并写出`peak_pass = forecast_peak_bytes <= 1.5 * 1024^3`对应的`forecast_at_most_1p5_gib` observation；对002仅令 `internal_gate_pass = wall_pass && timing_pass`。该observation不得触发early return、删减benchmark、terminal internal-resource failure或failure reason。
+5. 002的non-memory internal failure reason只能指向strict wall、CV或propagated-spread/margin gate；不得保留`array-peak`措辞。若correctness与这些non-memory gates通过，terminal必须pending external review，即使1.5 GiB observation为false。
+6. 不修改2 mesh、3 seam、6 primary、294 probe、8 partition、$10414\times36$ padding、261 rewrite、one 27-column forecast、36/17/16/7/11/27/19 schemas、warm-up/repeat、DP、timing、canonicalization、tolerances或zero-eigensolve/no-reference gates。
+7. README和SYMBOLS只追加002 identity、001 consumed history、2 GiB unique external stop以及002 dispatch-local `internal_gate_pass`语义；不得把pending status写成resource PASS。
+8. External runner而非MATLAB拥有actual process-tree RSS authority。Prospective execution monitor必须从process start起以不粗于30 s记录process-alive与aggregate RSS；first observed RSS $\ge2147483648$ bytes时立即停止。不得设置或沿用1 GiB、1.5 GiB或其他较低actual-RSS stop。`/usr/bin/time -lp`只作post-exit authority；120 s wall达到即stop，无grace。
+
+### AK.6 What survived scrutiny
+
+1. 001 historical boundary完整保留：direct artifact inspection仍见恰7个reached files；001 consumed且不得重跑、补齐或有利重解释。
+2. Freeze时002 namespace与`output/run-006/`均不存在；new ID不构成same-ID retry，也不消费scientific method attempt。
+3. §23.2的source rebuild/no-history/no-reference isolation足以阻断001 evidence leakage；001不是002 prerequisite或completion input。
+4. 2 GiB rule使用exact bytes和aggregate observed process-tree RSS，且明确排除了旧1 GiB stop与1.5 GiB internal forecast作为current diagnostic memory control。
+5. 120 s shared wall、30 s-or-finer monitoring、complete/incomplete皆消费002、无auto-retry、post-exit same-Skeptic authority及`run-006`冻结均清楚且可执行。
+6. Scientific model、FEM forms、representation objects、counts、schemas、timing/DP/writer workload、information isolation和claim boundary均未被扩大或改变。
+
+### AK.7 Minimal resolution and authorization
+
+**仅授权同一 Engineer按AK.5实现bounded source/README/SYMBOLS change。** 不授权创建002 namespace，不授权MATLAB/Octave/Python execution，不授权`run-006`、auto-retry、003、reference/effectivity reveal或project result sync。Implementation完成后必须先由同一 Researcher作theory-to-code audit，再由同一 Skeptic作spec-to-code/resource pre-execution review；任一review发现002仍有低于2 GiB的memory stop即`REVISE`。只有两道review均无blocker，才可讨论恰一次§23.7 exact 002 command。002无论complete、incomplete、external stop、MATLAB或environment failure都消费该ID，且必须先完成same-Skeptic postdiagnostic review；在此之前`run-006`绝对不授权。
+
+### AK.8 Open-problem handoff
+
+- Stage：`I4.1a representation-gate-002 pre-implementation`；category：`IMPORTANT CAVEAT`；blocking scope：`002 execution`；cheapest next check：`bounded implementation followed by Researcher theory-to-code and same-Skeptic spec-to-code review`；suggested ledger status：`DESIGN PASS WITH CONDITIONS / IMPLEMENTATION ONLY AUTHORIZED / EXECUTION AND RUN-006 BLOCKED`。
+- Stage：`I4.1a representation-gate-002 postdiagnostic resource feasibility`；category：`IMPORTANT CAVEAT`；blocking scope：`run-006 and formal reference computation`；cheapest next check：`one exact create-once 002 execution only after all pre-execution gates, then audit complete artifacts, actual peak RSS, wall and 1.5 GiB observation`；suggested ledger status：`CONDITIONAL / NOT YET EXECUTED`。
+
+这些是阶段内handoff，不需要在Engineer implementation前扩写project-level open-problem ledger。项目ledger仍由主agent维护。
+
+**Review literature verification completed; no external literature claim was required for this bounded design audit.**
+
+## AH. Pre-execution spec-to-code/resource re-review after §22.16
+
+### AH.1 Audit frame
+
+Target是 current `test/i4/femref-a1/run_i4_1a.m`、`README.md`、`SYMBOLS.md` against design §§22--22.16与
+review §AF.7。成功标准是：AF的三个static blockers确实关闭，create-once representation diagnostic可以作为
+zero-scientific-eigensolve correctness/resource gate执行一次；不是 canonical numerical result或formal-run
+authorization。本节只读核查source/doc diff、function/call graph、schemas、artifact gates与namespace；没有改
+code/design/docs/artifacts，也没有执行 MATLAB、Octave、Python或任何 diagnostic。
+
+### AH.2 Verdict
+
+**Verdict: `PASS WITH CONDITIONS`（high confidence for static readiness）。** 没有 unresolved blocker。三阶段
+derived checkpoint、formal/benchmark shared writer以及formal/diagnostic shared endpoint-parity helper均在当前
+source中成立；119-solve scientific contract、B3 alias、branch/refinement/uncertainty与information isolation未漂移。
+Conditions只涉及本来就必须由一次运行与post-exit review决定的MATLAB runtime、actual 261-write cost及external
+wall/RSS；它们不阻止执行该 diagnostic。下文仅授权一次 exact `representation-gate-001` command，绝不授权
+`run-006`。
+
+### AH.3 Strongest remaining challenge
+
+当前最可能推翻“可进入formal preflight”的不是未关闭的source mismatch，而是actual shared writer/resource
+evidence：261次从0增长到10414 rows的v2 MAT/CSV atomic rewrite可能使 diagnostic越过2 min/1 GiB，或使
+$29.8\,\mathrm{min}+T_{\mathrm{add}}$没有strict positive margin。该风险已被测量而非假定：同一 formal writer被
+完整benchmark，internal gate要求$T_{\mathrm{forecast}}<1800\,\mathrm{s}$且margin大于spread/floor，external
+runner另在120 s/1 GiB停止。任一失败都给resource/operational negative，不得靠删rows/checkpoints或自动retry
+规避。
+
+### AH.4 Findings
+
+1. **`IMPORTANT CAVEAT` — runtime/resource feasibility仍未观测。** Location：diagnostic lines 981--1349，
+   `LOCAL_benchmark_growing_writer` lines 1819--1879及forecast lines 1233--1300。Static evidence已经足以执行，
+   但MATLAB parser/API、filesystem atomic-write cost、timing CV、strict wall margin与whole-process RSS只能由一次
+   authorized command判定。Consequence只阻止后续`run-006`，不阻止本 diagnostic。Cheapest decisive test就是
+   AH.8授权的单次command与same-Skeptic post-exit audit。
+2. **`MINOR CAVEAT` — B3继续是machine-join的显式non-solve exception。** Location：formal lines
+   4506--4519。B3 synthetic IDs只把odd B4 spectra登记为`alias-reuse-no-solve`，不拥有primary OP2。它保持冻结
+   science、旧CSV schema与72-solve count；不得为了字面`solve_id -> OP2`而伪造OP2或增加solve。该例外不影响
+   representation diagnostic或formal actual-solve OP2 mapping。
+
+### AH.5 Implementation audit
+
+1. **Pre-consumer evidence顺序通过。** `LOCAL_normalize_defect_clusters`先prepare全部global raw/canonical Gram、
+   `chol` factor和DRV2 row，lines 4395--4396 checkpoint后才在4400执行`/ normalizer`、重建$U=P_\phi V$与
+   rechecks。`LOCAL_gap_clusters`先prepare center/core/tail及endpoint parity rows，5107--5108 checkpoint后才在
+   5113/5122调用restricted/parity `eig` consumer；再prepare common-core self-Gram/factor，5159--5160
+   checkpoint后才在5164执行`/ common_factor`。Prepare/evaluation failure先发布reached batch再raise；
+   post-checkpoint consumer failure不修改或重复已提交row，而由existing terminal path fail closed。
+2. **Shared writer/resource path通过。** Formal checkpoints和benchmark都进入
+   `LOCAL_write_operator_representation`，outer timer在`LOCAL_prepare_operator_payload`前启动，后者执行同一
+   36-column gate、stable OP2/DRV2-parent inventories、first-failure/model/planned/checkpoint payload；MAT与CSV均
+   走same atomic temporary-to-final writers，total timer在两次move后停止。Padding每次从未分配container构造
+   exact $10414\times36$，含238 parent-empty alternating `reduced-stiffness`/`reduced-mass` primary shapes及
+   10176 nonempty-parent DRV2 shapes。Schedule为$1+119+47+47+47=261$ checkpoints，additions总和10414；
+   rewrite gate核对before/add/after identities、finite/nonnegative timings/bytes、monotone cumulative time及
+   MAT+CSV-to-total consistency。Row-preparation的2 warmups/5 repeats每次均含dimension/type/parent-shape gate；
+   timing values有finite/nonnegative/CV/$10^{-4}$ s conservative-floor gate。
+3. **Shared endpoint parity通过。** Formal与diagnostic都调用唯一
+   `LOCAL_prepare_parity_object`和`LOCAL_consume_parity_object`。Diagnostic只在source-rebuilt finest defect
+   $artheta=0$ pair形成global-normalized full basis后测该helper；interior$artheta=\pi/4$不构造parity。
+   `eigs`唯一静态调用仍在formal `LOCAL_low_spectrum`；diagnostic只调用allowlisted small dense `eig` consumers，
+   不产生scientific eigenpair。
+4. **Schema/MAT/terminal path通过。** Code冻结operator 36、resource 17、probe 16、partition 7、rewrite 11、
+   forecast 27、summary 19 columns，并保留mesh 36/seam 12与header-only bulk 10/14 schemas。Completion gate要求
+   exact 2 mesh、3 seam、6 primary、294 probe、8 partition、261 rewrite、one forecast row、$10414\times36$
+   padding；operator MAT mirror必须有6 rows、3 primary OP2、0 derived rows、4 completed checkpoints、empty first
+   failure。Required current-namespace files、zero bulk data rows、0 scientific eigensolves、no reference/field/
+   spectrum和no `.partial`在pending status前fail closed。Summary按MAT后CSV提交，external review status只能是
+   `PENDING_SAME_SKEPTIC_POST_EXIT_REVIEW`。
+5. **Formal science/no-leak通过。** Primary K-first/M-second evidence在`eigs`前checkpoint；同一in-memory
+   canonical K/M进入`chol|eigs|normalization|orthogonality|residual`，raw full matrices/oracles、restricted full
+   masses及rectangular cross-Grams不canonicalize。72 bulk +47 defect$=119$、40/48 sentinels、branch/coverage/
+   refinement/$\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ empirical-only boundary未改变。Executable source没有absolute
+   repository path，也不读取Markdown/Git/history/prior output/external monitor/BIE/QZ/estimator/reference。
+   `diagnostics/representation-gate-001/`与`output/run-006/`当前均不存在。
+6. **Static MATLAB/API/signature audit通过但不冒充runtime。** 163个`LOCAL_` definitions无duplicate或undefined
+   reference；shared parity output arities、writer calls及primary/derived signatures静态相容。使用的R2023b APIs
+   (`onCleanup`, `tempname`, `unique(...,'stable')`, sparse `chol`, `movefile(...,'f')`, `all(...,'all')`)没有obvious
+   syntax/API blocker；`git diff --check`通过。本项没有运行parser或`checkcode`，其剩余风险由create-once
+   diagnostic fail-closed覆盖。
+
+### AH.6 What survived
+
+- Canonical rule仍是strict upper triangle + adjoint copy + real raw diagonal；没有averaging、shift、drop、reorder或
+  tolerance relaxation。
+- Derived basis synchronization、basis-invariant restricted spectra、endpoint-only parity、common-core normalized
+  samples与rectangular cross-Gram的职责分离保持可审计。
+- Diagnostic final namespace create-once、temporary benchmark cleanup、atomic publication、summary-last与
+  no-history/no-reference isolation保持成立；任何complete或incomplete run都消费`representation-gate-001`，不得
+  自动改名或重试。
+
+### AH.7 Post-execution evidence obligations
+
+同一 Skeptic必须在process完全退出后审查：exact command与cwd、shell exit、`/usr/bin/time -lp`的unrounded
+`real`、maximum resident set size及peak memory footprint；terminal summary而非shell exit单独决定MATLAB status。
+还必须直接核对14个required artifacts、所有上述exact counts/schemas、operator CSV/MAT equality与inventories、
+header-only bulk ledgers、zero `eigs`/reference、no forbidden/no `.partial`、probe repetitions/CV/quantization、DP
+partitions、261 rewrite identities/timings、strict forecast margin与internal array peak。Internal或external resource
+gate失败都不得授权formal run；artifact/schema/API failure也不得自动retry，先回同一 review分类。
+
+### AH.8 One-command authorization and hard boundary
+
+**授权 Code Runner仅在** `test/i4/femref-a1` **执行一次：**
+
+```text
+/usr/bin/time -lp /Applications/MATLAB_R2023b.app/bin/matlab -batch "run_i4_1a('representation-gate-001','representation-diagnostic')"
+```
+
+External monitor至少每30 s记录MATLAB process tree alive与aggregate observed RSS；`/usr/bin/time -lp` stderr/terminal
+record必须完整保留，不能写回diagnostic science namespace。Diagnostic envelope为2 min/1 GiB：wall达到120 s或
+observed RSS达到$1{,}073{,}741{,}824$ bytes立即停止，无grace、无auto-retry。若提前结束，也必须保留namespace与
+全部partial/final evidence并交同一 Skeptic。只有process退出后的same-Skeptic artifact/resource verdict才可决定
+下一步；**本节绝不授权`run-006`、formal command、reference/effectivity reveal或project-result sync。**
+
+Handoff：stage `I4.1a representation-gate-001 pre-execution`；category `IMPORTANT CAVEAT`；blocking scope
+`run-006 and every reference/effectivity claim, not the one diagnostic command`；cheapest next check
+`execute the exact command once under the 120 s/1 GiB monitor, then same-Skeptic post-exit audit`；suggested ledger
+status `SPEC-TO-CODE PASS WITH CONDITIONS / REPRESENTATION-GATE-001 AUTHORIZED ONCE / RUN-006 NOT AUTHORIZED`。
+项目ledger由主agent维护。
+
+**Review literature verification completed.**
+
+## AF. Independent spec-to-code/resource review after design §22.15
+
+### AF.1 Audit frame
+
+Target是 current `test/i4/femref-a1/run_i4_1a.m`、`README.md`、`SYMBOLS.md` against design §§22--22.14及
+Researcher §22.15 findings。当前成功标准是 static implementation足以进入一次 representation diagnostic
+pre-execution gate；不是数值PASS。审查覆盖 canonical formulas/consumers、evidence-before-consumer、formal/
+benchmark writer parity、resource timing、identities/counts、B3 alias、dispatch/call graph/create-once/no-leak/
+zero-eigs边界。本节只追加review；没有改 code/design/docs/artifacts，也没有执行 MATLAB、Octave、Python或
+diagnostic。
+
+### AF.2 Verdict
+
+**Verdict: `REVISE`（high confidence）。** Researcher §22.15的三个 blockers均由source直接证实：derived
+objects在evidence checkpoint前已被normalization/`eig`消费；261-checkpoint benchmark没有执行formal v2
+payload/inventory/type/publication path；endpoint diagnostic复制而非复用formal parity path。Resource和terminal
+evidence另有有界缺口。Canonical mathematics、continuous model、119-solve schedule与zero-eigs isolation仍然
+成立。只授权同一 Engineer做AF.7列出的局部修复；不授权 diagnostic或`run-006`。
+
+### AF.3 Strongest challenge
+
+最强 failure mode是“artifact显示representation已在consumer前冻结”这一核心 claim为假。
+`LOCAL_normalize_defect_clusters`在global row仍位于`pending_rows`时已执行`initial_reduced / normalizer`、
+$P_\phi V$和rechecks；`LOCAL_gap_clusters`在restricted/parity rows仍pending时调用`eig`，并在common-core row
+pending时执行`common_samples/common_factor`。成功路径到每solve末尾才写batch。若consumer或recheck失败，
+ledger只能事后发布，无法证明失败前使用的是已冻结对象。这正是§22.12.4的pre-consumer gate要排除的情形，
+必须先用prepare/checkpoint/consume passes修复。
+
+### AF.4 Findings
+
+1. **`BLOCKER` — derived checkpoint发生在first scientific consumer之后。** Locations：
+   `LOCAL_normalize_defect_clusters` current lines 4155--4205；`LOCAL_gap_clusters` current lines 4828--4937。
+   Evidence：global `/R`和$U=PV$在checkpoint前；restricted/parity `eig`在checkpoint前；common-core `/factor`
+   与orthogonality recheck在checkpoint前。Current success schedule只有47 global +47 combined
+   restricted/parity/common checkpoints，而非formal contract的47+47+47。Consequence：reached evidence与
+   first-use ordering不可审计，formal checkpoint schedule也不匹配resource benchmark。Repair：每defect solve
+   分三阶段：(a) prepare全部reached global rows/canonical factors，atomic checkpoint，再normalize/synchronize；
+   (b) prepare全部restricted/parity rows/canonical matrices，atomic checkpoint，再`eig`；(c) prepare全部
+   common-core self rows/factors，atomic checkpoint，再normalize/publish samples。Evaluation failure先checkpoint
+   reached rows再raise。Post-checkpoint normalization/eig/recheck failure不得retroactively改已提交的
+   representation row或追加duplicate row；它应由existing terminal failure ledger承载，从而保持immutable
+   first cause和10414/261 bounds。
+2. **`BLOCKER` — 261 rewrite benchmark不是formal v2 writer。** Location：
+   `LOCAL_benchmark_growing_writer` current lines 1664--1725 versus
+   `LOCAL_write_operator_representation` lines 3799--3835。Evidence：benchmark payload仅五个fields，MAT timer在
+   payload construction后才开始；未调用`LOCAL_assert_operator_rows`，未构造primary/derived inventories、
+   first-failure/model/planned/checkpoint metadata；padding rows全部parent为空，因而formal growing derived-parent
+   inventory的去重/循环成本完全未测。Consequence：`rewrite_seconds`可能严重低估formal writer，strict
+   $<1800$ s forecast无效。Repair：抽取formal与benchmark共同使用的pure payload-preparation与publication
+   functions；benchmark prefixes必须包含238个parent-empty primary-shaped rows及至多10176个nonempty-parent
+   DRV2-shaped rows，执行同一assert/inventories/metadata/MAT/CSV atomic path。每checkpoint timer在shared
+   preparation前开始并在两次atomic move后结束；任何inventory优化必须两边共享。
+3. **`BLOCKER` — endpoint parity diagnostic不是same-helper验证。** Location：formal block in
+   `LOCAL_gap_clusters` versus `LOCAL_probe_parity_path` current lines 1496--1513。Evidence：两处独立重复
+   reflection/compression/canonical/`eig`。Consequence：diagnostic即使PASS也不能证明formal parity plumbing相同，
+   且future drift不会被gate捕获。Repair：抽取pure parity prepare helper（形成reflection compression、
+   canonical evaluation/evidence）和consume helper（`eig`/finite result）；formal在prepare后先checkpoint再
+   consume，diagnostic endpoint $\vartheta=0$计时同一prepare+consume，无formal-ledger混入。
+4. **`IMPORTANT CAVEAT` — row-preparation与rewrite timing gates未完整实现。** Location：
+   `LOCAL_measure_row_preparation` lines 1615--1649及writer lines 1696--1722。Evidence：10414-by-36 dimensions与
+   `LOCAL_assert_operator_rows`只在五次timed actions全部结束后执行，故timing排除了required gate；warmups也
+   不过gate；row repetitions没有explicit nonfinite/negative rejection。Single rewrite的MAT/CSV/checkpoint/
+   cumulative fields也未在forecast前逐项finite/nonnegative gate。Consequence：resource row可能把不完整或
+   非法timing提升为internal benchmark complete。Repair：把build+exact dimensions+same type/width assert放入
+   每次warmup/timed action，保留最终container；复用`LOCAL_measure_repeated`等价的finite/nonnegative/CV/floor
+   semantics；rewrite完成后逐行验证timings与monotone row/checkpoint identities，再允许forecast。
+5. **`IMPORTANT CAVEAT` — exact evidence identities尚有漂移。** Location：
+   `LOCAL_prepare_primary_pair`及`LOCAL_gap_clusters`/diagnostic width rows。Primary literals当前为
+   `stiffness-reduced`/`mass-reduced`而frozen names是`reduced-stiffness`/`reduced-mass`；restricted IDs多出
+   `restricted-`前缀；global width probe把parent OP2同时写进contract与parent columns，而不是DRV2 global-probe
+   ID。Consequence：v2 rows不能按冻结object vocabulary和parent graph machine-audit。Repair只改evidence
+   literals/IDs：使用latest non-superseded names；global probe生成deterministic
+   `DRV2|<OP2>|global-probe|width-<m>`，OP2只留parent field。不得改数学对象或solver。
+6. **`IMPORTANT CAVEAT` — pending terminal correctness gate不足。** Location：summary block current
+   lines 1300--1304。Evidence：只检查2 mesh/3 seam/6 operator/294 probe rows；没有硬核对8 partition rows、261
+   rewrite rows、one 27-column forecast row、10414-by-36 prepared container、operator checkpoint/inventory mirror、
+   header-only zero-row bulk ledgers、zero eigensolve/reference artifacts或`.partial` absence。Consequence：缺失
+   resource/artifact evidence仍可能获得`...PENDING_EXTERNAL_RESOURCE_REVIEW`。Repair：在pending status前逐项
+   hard gate上述exact counts/schema/current-namespace artifacts；失败只能`REPRESENTATION_GATE_INCOMPLETE`。
+7. **`MINOR CAVEAT` — B3是solve-ID join的明确non-solve exception。** Location：
+   `LOCAL_bulk_inventory` current lines 4298--4311。B3 rows以`role='alias-reuse-no-solve'`和
+   `B3-reuse-B4-pXX` synthetic ID复用odd B4 cache，不拥有primary OP2。Scientific semantics保持原frozen B3
+   alias且未增加solve；但这些rows不能按字面`solve_id -> OP2`直接join。Engineer不得为“修复”它而增加solve、
+   修改旧bulk schema或伪造primary row。后续design/ledger可把§22.13.5限定为actual formal solves，或另行增加
+   machine-readable alias relation；本bounded code repair保持B3不动。
+
+### AF.5 Implementation and call-graph audit: what survived
+
+- `LOCAL_canonical_hermitian`严格使用upper triangle、adjoint copy和real diagonal；没有 averaging、shift、drop、
+  reorder或full-matrix repair。Raw gates先于canonical construction；canonical mass/self-Gram使用two-output
+  `chol`和positive real diagonal gate。
+- Formal primary pair在K-first/M-second两行checkpoint后才进入`eigs`；同一 in-memory canonical K/M用于
+  `chol|eigs|normalization|orthogonality|residual`，没有raw fallback。Stiffness failure后的mass raw-only empty
+  fields语义正确。
+- Cluster $G_C$使用canonical reduced mass，basis change是`V/R`后重建$U=PV$；restricted full masses、raw full
+  matrices/oracles及rectangular cross-Grams不canonicalize。Interior parity为空且branch aggregate仍由endpoints
+  决定。
+- Formal 72+47=119、40/48 gates、branch/coverage/refinement/$\Delta_{\mathrm{ref}}^{\mathrm{obs}}$与blindness
+  未被representation改写。Old scientific CSV headers保持。
+- Diagnostic dispatch只接受exact
+  `representation-gate-001/representation-diagnostic`，final namespace create-once且当前不存在；它source-
+  rebuilds 2 meshes/3 phases、没有`LOCAL_low_spectrum`/`eigs` call、没有history/Markdown/Git/external resource
+  read，也不写field/spectrum/reference。`run-006` output当前不存在。
+- Static helper-name inventory未显示undefined helper或obvious call-signature mismatch；这不是MATLAB parser/runtime
+  结果。README/SYMBOLS保持“implemented/not run”边界，但必须在局部修复后机械同步locators/schema/status。
+
+### AF.6 Resource and atomicity consequence
+
+External `/usr/bin/time` authority与MATLAB pending summary仍正确解耦；2 min/1 GiB diagnostic envelope、29.8 min
+baseline、strict formal `<1800` s/1.5 GiB internal gates和post-exit review规则可保留。当前不能执行的原因不是
+预计结果已超限，而是 benchmark尚未测formal writer、timing completeness可被漏过。修复后如果shared full
+writer或conservative DP给出无正余量，唯一合法结果仍是`RESOURCE_BUDGET_UNAVAILABLE`；不得删rows/checkpoints
+或调整科学规格。
+
+### AF.7 Bounded repair authorization
+
+**只授权同一 Engineer在 existing attempt做以下局部修复：**
+
+1. 将global、restricted/parity、common-core改为prepare/checkpoint/consume passes，并保持每solve至多
+   1+1+1 derived checkpoints、immutable rows和existing terminal failure path；
+2. 抽取formal/benchmark共享的v2 payload preparation与atomic publication；构造238 primary-shaped +10176
+   derived-parent-shaped padding schedule并完整计时261 checkpoints；
+3. 抽取formal/diagnostic共享parity prepare/consume helpers；
+4. 把10414-by-36 type/width gate纳入每次row-prep timing，并补齐row/rewrite finite/nonnegative/monotone gates；
+5. 机械修正primary/restricted object literals及global-probe DRV2 parentage；
+6. 补齐pending summary前的exact count/schema/artifact/zero-eigs/no-reference/current-namespace checks；
+7. 对existing `README.md`/`SYMBOLS.md`仅作上述function locators、schemas和“仍未运行”机械同步。
+
+不得修改design/review/method/project docs、physical parameters、mesh/phase/formula/tolerances、119 schedule、
+B3 alias或旧scientific schemas、branch/refinement/uncertainty、package/main code、historical artifacts；不得创建或
+执行`representation-gate-001`、`run-006`、auto-retry、reference/effectivity reveal或project result sync。
+
+### AF.8 Required next gates
+
+修复后先由同一 Researcher重复§22.15 THEORY-TO-CODE audit并给明确PASS/REVISE；只有PASS后，回同一 Skeptic
+做完整spec-to-code/resource re-review，重点逐行验证三个checkpoint boundaries、shared writer实际call graph、
+261 schedule/inventories、shared endpoint parity helper、all timing/terminal gates和历史/namespace immutability。
+只有该re-review无blocker，才可另行授权一次 exact diagnostic command；本节不授权execution。
+
+Handoff：stage `I4.1a representation implementation repair`；category `BLOCKER`；blocking scope
+`representation-gate-001 execution, run-006 and all reference/effectivity claims`；cheapest next action
+`same Engineer performs exactly AF.7, then Researcher T2C and same-Skeptic re-review`；suggested ledger status
+`SPEC-TO-CODE REVISE / BOUNDED ENGINEER REPAIR AUTHORIZED / NO DIAGNOSTIC OR RUN-006`。项目ledger由主agent维护。
+
+## AD. Independent re-review of design §22.13
+
+### AD.1 Audit frame
+
+**Rigorous-proof mode: `Review only`.** Target是 existing `design-4-1a.md` §22.13 对 review §AC.6 的第二次
+bounded revision。成功标准是：MATLAB entry不依赖external artifacts；post-exit resource authority不提前
+宣称complete；size-aware/cluster-partition benchmark对正式新增成本给出可审查的保守估计；parity和OP2
+artifact semantics保持冻结；create-once/retry/claim boundary足以交 Engineer implementation。本节只追加
+review；没有修改 design/code/docs/artifacts，也没有运行任何数值程序。
+
+### AD.2 Verdict
+
+**Verdict: `REVISE`（high confidence）。** §AC的 external-resource blocker已关闭，cluster-partition DP及
+artifact/summary authority也基本闭合。但仍有一个 bounded executable `BLOCKER`：diagnostic唯一 finest
+defect phase冻结为 interior $\vartheta=\pi/4$，同时要求“实际形成 endpoint parity”路径；这与仍有效的
+endpoint-only rule冲突。Engineer无法既复用formal helper又不在interior构造被禁止的parity operator。最小
+修订只需在同一 finest mesh上额外形成 source-owned $\vartheta=0$ 或 $\pi$ 的 zero-eigensolve phase reduction
+供 parity probe，保留 $\pi/4$ primary complex-phase sample。当前不授权 Engineer、diagnostic execution或
+`run-006`。
+
+### AD.3 Strongest challenge
+
+§22.13.2把 full-height probes全部建立在 `defect-N5-s24-g48 at $\vartheta=\pi/4$`，随后又要求 endpoint
+parity实际执行 $U_m^*M_hRU_m$。§22.12.6及§22.13.5却继续要求所有
+$0<\vartheta<\pi$ slice不得构造 parity operator，formal cache也必须为空/N/A。若 Engineer让formal
+endpoint helper在 $\pi/4$ 运行，便改变冻结的物理消费边界；若另写 diagnostic-only bypass，则 benchmark
+不再验证同一 formal path。这个矛盾会直接阻止 theory-to-code/spec-to-code PASS，但不要求新方法或新
+实验：同一已建mesh上无 eigensolve地形成 endpoint $P_0$ 即可关闭。
+
+### AD.4 What survived
+
+1. **MATLAB/external authority解耦通过。** MATLAB不等待、读取或搜索monitor/token/RSS/`time` output，
+   terminal只能写 `PENDING_SAME_SKEPTIC_POST_EXIT_REVIEW`；外部monitor纯observational且不写science
+   namespace。`/usr/bin/time`的final `real`/maximum RSS在process退出后才由同一 Skeptic审查，因此不再有
+   summary-before-exit的虚假complete，也符合 `test/AGENTS.md` runtime portability。
+2. **Post-exit gate通过。** Internal unrounded forecast/array evidence与external command identity、exit、
+   whole-command wall/RSS分属明确authority。MATLAB pending status不自行授权下一阶段；external record缺失
+   只得到 `RESOURCE_EVIDENCE_INCOMPLETE`，不能重跑补证。
+3. **Primary sample保守方向通过。** Largest bulk `bulk-s24-g48`用于全部72 pairs，finest defect用于全部47
+   pairs，消除了coarsest-bulk外推。Primary timings、derived algebra、row preparation和growing writer明确要求
+   不重叠；writer的10414/261 cumulative cost只出现一次。
+4. **Cluster-partition DP数学上成立。** 对任意positive partition $n=m_1+\cdots+m_k$，递推
+   $C_a(n)=\max_m(a_m+C_a(n-m))$枚举全部ordered partitions，故在measured width-cost table上不低估任一
+   partition。$42/5$ global/restricted/common-core counts和$12/2$ parity endpoint counts与冻结schedule一致；
+   common-core按全部47 solves计算是允许的保守上界。
+5. **Probe覆盖方向通过。** $m=1,\ldots,48$ 的full-height、full-rank $V_m^{(0)}$实际走 reduced Gram、
+   canonical `chol`、`/R`、$P_\phi V$及两个recheck，关闭了§AC指出的只测48-by-48 tail问题。Restricted和
+   common-core probes也形成actual full-height contractions，而非只测已形成dense matrix。
+6. **Artifacts/summary通过。** 15/7/7/11/27-column ledgers及19-column summary独立计数一致；summary-last
+   CSV只承诺MATLAB-owned internal completion，external review不回写。Hash要求已删除，header-only bulk
+   ledgers、zero eigensolves/no reference、create-once namespace和any complete/incomplete ID consumption继续
+   由§22.12继承。
+7. **Parity aggregate与OP2 join通过。** Existing branch rows继续重复branch-level two-endpoint aggregate，
+   interior cache为空但不清除ambiguity。Scientific rows以unique `solve_id` join到同一solve的K/M共享OP2；
+   tight/count不同solve IDs可映射同一OP2，cache直接携带OP2，DRV2再指回parent。
+8. **Claim boundary通过。** No averaging、raw full matrices/oracles、119 solves、branch/refinement/
+   uncertainty rules和effectivity隔离均未改变。
+
+### AD.5 Classified findings
+
+1. **`BLOCKER` — parity resource probe的phase违反endpoint-only contract。** Location：§22.13.2 versus
+   §22.12.6/§22.13.5。Evidence：唯一 defect probe phase是 $\vartheta=\pi/4$，却要求实际执行endpoint parity
+   path。Consequence：formal helper要么越界在interior生成parity object，要么diagnostic另写不可代表formal
+   path的bypass。Cheapest repair：primary/canonical sample仍用 $\vartheta=\pi/4$；在同一 rebuilt finest mesh
+   上另调用 unchanged phase reduction形成 $P_0$（或$P_\pi$），由同一 deterministic $V_m^{(0)}$经该 endpoint
+   pair形成 $U_m$并计时 formal parity helper。不得新增 eigensolve、scientific row、mode claim或另一mesh。
+2. **`IMPORTANT CAVEAT` — aggregate row-preparation cost缺显式row count。** Location：§22.13.2--§22.13.4。
+   Evidence：formula只加一次 $T_{\mathrm{row\ preparation}}$，文本“形成 schema-safe operator rows”未明确
+   是全部10414 rows；15-column resource schema也没有row-count field。Consequence：若 Engineer只计一个row，
+   会漏计；若 growing writer又包含padding construction，可能重复。Cheapest repair：冻结
+   `row-preparation`为在timer内一次形成恰10414个36-cell padding rows、记录count=10414；growing-rewrite
+   timer从prebuilt rows开始，只计261次conversion/write/rename。可在`notes`记录count，或新增明确field并
+   version schema。
+3. **`IMPORTANT CAVEAT` — point timing需要post-review保守性判据。** Location：§22.13.3。Evidence：DP对
+   measured table是exact upper，但单次elapsed不是runtime upper，且formal余量最多12 s。Consequence：
+   `1799.999...`的形式PASS未必支持“预计不超过30 min”。Cheapest resolution：pre-execution implementation
+   必须拒绝nonfinite/negative timing，并用每个component的重复max或明确timer-resolution/safety floor；若
+   diagnostic结果接近threshold到不足以覆盖measurement variability，同一 Skeptic post-exit review应判
+   `RESOURCE_BUDGET_UNAVAILABLE`，不能仅凭一条rounded-below-threshold row授权formal run。该问题不阻止
+   bounded implementation，但限制未来resource PASS。
+
+### AD.6 Implementation audit and minimum revision
+
+External authority、DP公式、strict internal
+$T_{\mathrm{forecast}}<1800$ s、internal $\le1.5$ GiB与diagnostic external
+$\le120$ s/$\le1$ GiB gates均可实现；诊断失败会产生resource/operational evidence而不是scientific mode
+negative。Create-once、no auto-retry、history immutability和post-exit review顺序也足够明确。
+
+但AD.5 item 1必须先在design层修正，item 2应同次机械闭合；item 3可作为implementation/post-run condition
+冻结。**当前不授权 Engineer** 修改 canonical formal path、diagnostic或README/SYMBOLS，也不授权执行
+`representation-gate-001`、创建`run-006`、运行formal command、同步project/effectivity文档。
+
+若 bounded revision关闭上述phase与row-count问题，下一 gate可授权同一 Engineer只做：
+
+- `run_i4_1a.m` 内 proof-backed canonical helper、formal K/M/cluster/derived consumer linkage、v2-36
+  reached-evidence writer与 `representation-gate-001` source plumbing；
+- existing attempt `README.md`、`SYMBOLS.md` 的机械schema/locator/dispatch同步。
+
+该 implementation后仍必须先由同一 Researcher给 `THEORY-TO-CODE PASS`，再由同一 Skeptic完成完整
+spec-to-code/resource review；只有后者通过才可另行授权 exact diagnostic command。Diagnostic post-exit review
+通过 internal/external gates后才可讨论 `run-006`。本 review不授权任何 execution。
+
+### AD.7 Open-problem handoff
+
+Stage `I4.1a §22.13 representation diagnostic contract`；category `BLOCKER`；blocking scope
+`Engineer handoff, representation-gate-001 execution, run-006, project/effectivity sync`；cheapest next check
+`Researcher binds parity timing probe to an endpoint phase on the same finest mesh and freezes aggregate row-prep
+count/timing boundary`；suggested ledger status
+`§22.13 REVISE / EXTERNAL AUTHORITY AND DP VALID / ENDPOINT PROBE CONTRACT BLOCKED / NO IMPLEMENTATION OR RUN`。
+项目 ledger由主 agent维护。
+
+**Review literature verification completed.**
+
+## AE. Independent re-review of design §22.14
+
+### AE.1 Audit frame and verdict
+
+**Rigorous-proof mode: `Review only`.** Target是 existing `design-4-1a.md` §22.14 对 review §AD.5 的 minimal
+revision。审查目标是 endpoint parity sample不改变formal union；row preparation与writer不漏计/重复；timing
+guard足以使近阈值结果 fail closed；授权范围停在 implementation而非execution。本节只追加review，没有修改
+design/code/docs/artifacts，也没有运行 MATLAB、Octave、Python或任何数值程序。
+
+**Verdict: `PASS WITH CONDITIONS`（high confidence）。** §AD唯一 blocker已关闭。Endpoint $\vartheta=0$
+reduction、10414-by-36 all-row preparation和warmup/repeat/floor/near-threshold contracts均足以交同一 Engineer
+作 bounded implementation。Conditions只约束后续 static mapping与resource computation的保守实现，不阻止
+implementation；diagnostic和`run-006`仍未授权。
+
+### AE.2 Endpoint probe, identities and count audit
+
+1. Primary correctness samples仍是 largest bulk $\alpha=\pi/4$ 与 finest defect
+   $\vartheta=\pi/4$，因此 complex-phase canonical path不被endpoint sample替代。额外 $\vartheta=0$ reduction
+   复用同一 rebuilt finest mesh，不增加mesh，也不调用 `eigs`。
+2. Endpoint path调用同一 periodic reduction、raw/canonical gates、mass `chol`、global normalization和formal
+   parity helper。Interior $\vartheta=\pi/4$不再形成parity operator，故 endpoint-only物理边界和branch rules
+   均保持。
+3. Zero phase的`num2hex`部分为`0000000000000000`，endpoint OP2唯一；48个parity-probe DRV2按width指回该
+   parent。Implementation仍须给这个diagnostic phase一个source-owned unique `solve_id`，但这只是后续静态
+   locator/schema检查，不是design gap。
+4. Diagnostic counts闭合：2 mesh rows、3 seam rows、3 phase reductions的6 K/M primary rows；六类
+   width-indexed paths乘48得288 rows，再加用于formal forecast的largest-bulk/finest-defect三类primary
+   timings各3 rows，共294 probe-cost rows。Endpoint phase/global setup只进入diagnostic own-budget的resource
+   row，不混入formal additive forecast。
+5. Formal union仍是119 pairs/238 primary rows。$t_D$已保守代表包括formal endpoints在内的47 defect primary
+   pairs；$C_g$包含formal endpoint global normalization；$p_m$从同一 endpoint-normalized $U_m$就绪后开始，
+   因而$12C_p(40)+2C_p(48)$不重复primary或global cost。Diagnostic的额外OP2/6 rows/294 timing rows不得进入
+   formal 10414-row ledger，design已明确。
+
+### AE.3 Row preparation, writer and resource gates
+
+`row-preparation`现在从unallocated container开始，恰形成10414-by-36 schema-valid cells并运行type/width gate；
+17-column resource row机器记录两个dimensions。Timer在任何serialization之前停止。`growing-rewrite`只消费
+已经验证的prebuilt rows，按至多261 cumulative checkpoints计conversion/temp write/atomic rename，不重建
+padding rows。故
+$T_{\mathrm{row\ preparation}}+T_{\mathrm{growing\ rewrite}}$各出现一次，边界可静态审查。
+
+Primary及width-indexed costs统一用2次discarded warm-ups、5次timed repetitions，并以
+
+$$
+t_{\mathrm{cons}}
+=\max\left\{10^{-4},10^{-4}
+\left\lceil\frac{\max_jt_j}{10^{-4}}\right\rceil\right\}
+$$
+
+进入DP/forecast；zero-looking interval不会变成0。任一nonfinite/negative repetition、CV大于0.25，或
+$1800-T_{\mathrm{forecast}}$不超过1 s与propagated timing spread中的较大者，都 fail closed为
+`RESOURCE_BUDGET_UNAVAILABLE`。Growing writer使用一次完整schedule而非乐观per-write mean，也符合目标。
+
+Strict internal $T_{\mathrm{forecast}}<1800$ s、array forecast不超过1.5 GiB，以及post-exit whole diagnostic
+不超过120 s/1 GiB均保持。MATLAB仍只给pending-external-review status；同一 Skeptic在退出后结合 exact
+command、external wall/RSS和timing stability才可给resource verdict。不存在自动继承PASS。
+
+### AE.4 Classified conditions and caveats
+
+没有 unresolved `BLOCKER`。
+
+1. **`IMPORTANT CAVEAT` — near-threshold spread必须按DP partition保守传播。** Location：§22.14.3。
+   `sum_forecast_multipliers`在实现时不得只取一个global max-minus-min或只沿nominal fastest partition。
+   Spec-to-code gate应要求：primary贡献使用$72\Delta t_B+47\Delta t_D$；每个$g/d/p/c$ family对
+   $\Delta a_m=t_{m,\max}-t_{m,\min}$再作同一partition DP，并乘42/5或12/2 schedule counts；row-preparation
+   spread乘1。Writer虽只有一次full trial，post-exit Skeptic仍可因external variability拒绝近阈值PASS。
+2. **`IMPORTANT CAVEAT` — timing statistics必须machine-complete。** Implementation应固定finite/nonnegative
+   raw repeat rows、sample CV的同一公式及mean-zero处理；任何undefined CV不得被序列化成一个通过值。两次
+   warm-up虽不进入formal multiplier，diagnostic own elapsed/array budget仍必须包含它们。若first-call/JIT或
+   timer resolution使external evidence与internal forecast不相容，post-exit verdict应降级resource unavailable。
+3. **`MINOR CAVEAT` — diagnostic endpoint setup不是formal cost sample。** 其aggregate resource row必须明确
+   `partition_role='diagnostic-own-budget-only'`，避免未来审查把它遗漏于diagnostic 2 min/1 GiB或误加到formal
+   $T_{\mathrm{add}}$。这一点已由§22.14.1科学语义确定，可在code/doc机械映射时落实。
+
+### AE.5 Authorization boundary
+
+**授权同一 Engineer仅实现以下 bounded scope：**
+
+- `test/i4/femref-a1/run_i4_1a.m` 中§22--§22.14的 one-triangle canonical helper；formal primary
+  K/M、cluster $V/U$ synchronization、restricted/parity/common-core consumers；OP2/DRV2 linkage；v2-36
+  reached-evidence/first-failure writers；以及 create-once `representation-gate-001` dispatch、probes、DP、
+  row-preparation/rewrite、internal summary plumbing；
+- existing `test/i4/femref-a1/README.md` 与 `SYMBOLS.md` 的必要机械同步，仅限dispatch、schema、artifact、
+  function/symbol locator和未执行状态。不得把docs同步写成 diagnostic PASS或formal result。
+
+不授权修改design/method/project docs、historical artifacts、physical/configuration parameters、119-solve
+schedule、branch/refinement/uncertainty rules或package/main code；不授权执行
+`representation-gate-001`、创建/执行`run-006`、auto-retry、reference/effectivity reveal或project-document
+result synchronization。
+
+### AE.6 Mandatory gates after implementation
+
+1. **Researcher THEORY-TO-CODE gate：**逐项核对$\mathcal H$ identity/no averaging、raw-first gates、同一
+   canonical K/M供`chol|eigs|normalization|orthogonality|residual`、cluster `V/R`与$U=PV$同步、endpoint-only
+   parity、rectangular cross-Gram不canonicalize、OP2/DRV2 parentage、formal 119/238/10414/261与diagnostic
+   6/294隔离、zero-eigs/no-reference/no-history boundary，并明确给 PASS/REVISE。
+2. **同一 Skeptic pre-execution spec-to-code/resource gate：**只读审查完整source/doc diff，验证MATLAB API/
+   syntax、all 36/17/16/7/11/27/19-column widths及MAT mirrors、first-failure/atomic/create-once semantics、exact
+   $\vartheta=0$ parity dispatch、10414-by-36 preparation、261 writer、DP与spread propagation、summary pending
+   semantics、formal path/no-leak/history immutability、absence of diagnostic namespace/`run-006`。只有该gate无
+   blocker，才可另行授权 exact diagnostic command。
+3. **Postdiagnostic gate：**只有一次authorized command结束后，必须审查全部internal artifacts、external exact
+   command/exit/`real`/maximum RSS、2 min/1 GiB envelope、strict formal forecast/array gates和timing stability。
+   只有该review PASS才可另行考虑`run-006`；本节不预授权。
+
+### AE.7 Handoff
+
+Stage `I4.1a §22--§22.14 canonical representation implementation`；category `IMPORTANT CAVEAT`；blocking scope
+`diagnostic execution and run-006, not bounded implementation`；cheapest next check
+`same Engineer implements exactly the authorized code/docs, then Researcher T2C and same-Skeptic spec-to-code`；
+suggested ledger status
+`§22.14 PASS WITH CONDITIONS / ENGINEER IMPLEMENTATION AUTHORIZED / REPRESENTATION-GATE-001 EXECUTION AND RUN-006 NOT AUTHORIZED`。
+项目 ledger由主 agent维护。
+
+**Review literature verification completed.**
+
+## AG. Current control note for the §22.15 spec-to-code/resource review
+
+The full independent audit is recorded in §AF. Sections §AD--§AE were appended concurrently from earlier bounded
+design-review turns, so this control note fixes the current authority without deleting or reordering append-only history.
+
+**Current verdict: `REVISE`（high confidence）。** The three unresolved blockers are exactly: (1) global,
+restricted/parity and common-core DRV2 evidence is not atomically checkpointed before its first normalization/`eig`/
+factor consumer; (2) the 261-checkpoint benchmark does not exercise the formal v2 payload, inventories, assertions and
+atomic CSV/MAT publication path; and (3) the endpoint parity diagnostic duplicates rather than shares the formal parity
+helper. The row-preparation/rewrite gates, exact object identities and terminal exact-count checks are the bounded
+important corrections listed in §AF.4. B3 remains a scientifically valid zero-solve alias exception and must not be
+turned into a new solve, a fabricated OP2 row or an old-schema change.
+
+Only the same Engineer is authorized to perform the bounded repairs in §AF.7, including mechanical existing
+`README.md`/`SYMBOLS.md` synchronization. This does **not** authorize creation or execution of
+`representation-gate-001`, any MATLAB/Octave/Python execution, `run-006`, auto-retry, artifact mutation, reference/
+effectivity reveal or project-result synchronization. After repair, the required gates remain same-Researcher
+THEORY-TO-CODE review followed by same-Skeptic full spec-to-code/resource re-review.
+
+**Review literature verification completed.**
+
+## AI. Current control note after the §22.16 re-review
+
+The complete current pre-execution audit is §AH. It supersedes §AF/§AG only as to the status of the now-completed
+AF.7 repair; all historical findings and prior run verdicts remain unchanged.
+
+**Current verdict: `PASS WITH CONDITIONS`（high confidence for static readiness）。** No unresolved blocker remains.
+The exact one-command `representation-gate-001` diagnostic is authorized once under the §AH.8 120 s/1 GiB external
+stop boundary and 30 s process/RSS monitoring. The full `/usr/bin/time -lp` terminal record and all diagnostic artifacts
+must return to the same Skeptic for post-exit review. This does not authorize `run-006`, automatic retry, reference/
+effectivity reveal or project-result synchronization.
+
+**Review literature verification completed.**
+
+## AJ. Postdiagnostic audit of `representation-gate-001`
+
+### AJ.1 Audit frame and evidence authority
+
+Target是唯一authorized command在 `test/i4/femref-a1` 形成的 preserved
+`diagnostics/representation-gate-001/` namespace。成功标准原为：完整zero-scientific-eigensolve representation
+correctness/resource artifact、external wall$<120$ s且maximum RSS$<1$ GiB，再由同一 Skeptic决定是否可讨论
+formal run。Repo artifacts由本节直接检查；exact command、process samples、exit和`/usr/bin/time -lp`数字来自
+Code Runner external record，未写回science namespace。本节没有改code/design/docs/artifacts，也没有执行任何
+程序或数值计算。
+
+### AJ.2 Verdict
+
+**Postdiagnostic verdict: `BLOCKED`（high confidence）。** `representation-gate-001`是
+**`INCOMPLETE / EXTERNAL_RESOURCE_BUDGET_UNAVAILABLE`**，不是complete representation PASS，也不是FEM/
+guided-mode scientific negative。约73 s时observed RSS已越过冻结1 GiB stop gate，runner按授权立即中断；因而
+缺失probe/resource/rewrite/forecast/summary是预算截停后的expected incomplete boundary，而不是已证明的source/
+schema bug。该资源failure是阻止`run-006`的unresolved `BLOCKER`。Diagnostic ID永久消费；不授权rerun、换ID、
+code repair或formal run。
+
+### AJ.3 Strongest challenge
+
+最强且决定性的failure mode已经发生：在尚未发布任何width-probe/resource ledger、尚未进入10414-row preparation
+和261-writer benchmark前，MATLAB RSS已经超过1 GiB。即使reached primary objects全部PASS，也不能外推未执行的
+294 probes、DP、writer成本或strict $29.8\,\mathrm{min}+T_{\mathrm{add}}<30\,\mathrm{min}$。因此没有证据支持
+formal run的representation completeness或resource feasibility；`run-006`必须保持冻结。
+
+### AJ.4 Direct artifact audit
+
+1. Final namespace只有7个files：`bulk-bands.csv`、`bulk-gaps.csv`、`mesh-ledger.csv`、
+   `seam-checks.csv`、`operator-representation.csv/.mat`、`progress.csv`。没有任何`.partial`，
+   `output/run-006/`不存在。MAT文件被识别为valid MATLAB v7.3 container；在禁止MATLAB/Python执行的本节没有
+   解码其payload，且这不改变下述decisive resource verdict。
+2. `bulk-bands.csv`与`bulk-gaps.csv`各只有header，宽度分别10/14。`mesh-ledger.csv`为header+2 rows且每行
+   36 columns；largest bulk与finest defect均到
+   `REPRESENTATION_DIAGNOSTIC_MESH_COMPLETE`，planar/reflection/material gates pass。
+   `seam-checks.csv`为header+3 rows、每行12 columns，覆盖bulk $\alpha=\pi/4$、defect
+   $\vartheta=\pi/4$与$\vartheta=0$。
+3. `operator-representation.csv`为header+6 rows且每行36 columns。三个K/M pairs各共享一个deterministic OP2；
+   object IDs恰为`reduced-stiffness`/`reduced-mass`，parent均empty。六行均`EVALUATED_PASS`、raw/canonical
+   nonfinite count 0、canonical exact-Hermitian true、canonical Hermitian defect 0、gate true；三个mass rows均
+   `chol` flag 0。该证据只建立largest-bulk/finest-defect两phase加endpoint的primary representation。
+4. `progress.csv`只有`HEADER_FIRST`、`SOURCE_MESH_REBUILD`、`THREE_PRIMARY_PAIRS`三个complete data rows，最后
+   elapsed约2.779 s；没有`INTERNAL_BENCHMARK` checkpoint。缺失的7个required terminal artifacts恰是
+   `representation-resource.csv`、`representation-probe-costs.csv`、
+   `representation-partition-bounds.csv`、`representation-rewrite-benchmark.csv`、
+   `representation-forecast.csv`、`diagnostic-summary.csv/.mat`。所以没有294-probe、8-partition、261-rewrite、
+   one-forecast、internal gate或summary commit evidence。
+
+### AJ.5 Budget and termination audit
+
+Exact external command与AH.8 authorization相同。Runner记录约48 s MATLAB RSS为996384 KiB，仍低于
+$1{,}048{,}576$ KiB；约73 s为1266400 KiB，已经越界并立即`Ctrl-C`。Process在`real 80.74` s结束，exit 1；
+`user 404.94` s、`sys 171.73` s反映parallel work而不改变wall gate。`/usr/bin/time -lp` maximum resident set
+size为1355071488 bytes，明确大于$1{,}073{,}741{,}824$ bytes；peak memory footprint 777329920 bytes虽较低，
+但冻结判据是RSS，不能用footprint替代。Wall未到120 s，memory gate已先失败。Monitor/termination符合授权，
+没有预算违规或grace。
+
+### AJ.6 Classified findings and retry ledger
+
+1. **`BLOCKER` — representation diagnostic超过external RSS envelope且未完成。** Evidence：monitor crossing、
+   maximum RSS及missing terminal ledgers。Consequence：representation/resource gate未通过，formal preflight/
+   `run-006`不可解释也不可启动。Cheapest next action不是rerun；保持blocked。若未来要研究更低内存但等价的
+   evidence acquisition，必须由Researcher提出新bounded specification并取得用户明确授权，再经同一设计/
+   code gates；本节不预授权。
+2. **`IMPORTANT CAVEAT` — reached primary PASS不可提升为all-representation PASS。** 六行只覆盖primary K/M。
+   Width-indexed global/restricted/parity/common-core paths可能已在memory中部分执行，但没有atomic ledger，故其
+   completion、timing与result均unknown。不得从process duration或absence of `.partial`作有利推断。
+3. **`MINOR CAVEAT` — operator MAT payload未在本只读/no-runtime gate解码。** CSV、file identity和atomic final
+   presence足以审计reached primary boundary；即使MAT mirror另有问题，resource blocker与no-run conclusion不变。
+
+`representation-gate-001`无论PASS或incomplete均create-once，现已永久消费。该run是preformal diagnostic，
+不消费新的scientific method attempt；但它也不给任何same-ID retry entitlement。不存在`run-006`，不授权
+`representation-gate-002`、改ID、auto-retry、implementation repair或另一command。
+
+### AJ.7 Numerical and claim boundary
+
+Defensible claim仅为：两张source-rebuilt mesh与三条phase seam到达；三个primary canonical K/M pairs通过raw/
+exact-Hermitian/canonical-mass-Cholesky gates；未调用formal scientific `eigs`，未生成band/gap data row、field、
+branch或reference。不能声称shared parity全width、all derived objects、10414/261 writer、internal forecast、
+guided-mode eigenpair、reference resolution或effectivity得到验证。这个结果不是对fitted-FEM method的scientific
+反例，也不改变任何历史公式、证书或结论。
+
+### AJ.8 Final action and project synchronization
+
+- **`run-006`：不授权。** 不授权任何formal command、retry、new diagnostic ID、code/design change或artifact
+  mutation。
+- Same Researcher若无新的用户授权，应在此停止；不得为通过budget而删probe、rows/checkpoints、放宽1 GiB或
+  改变scientific contract。
+- Post-run review现已完成，因此project-level `STATUS.md`可以由主agent作最小状态同步，仅记录
+  `representation-gate-001 INCOMPLETE / EXTERNAL_RESOURCE_BUDGET_UNAVAILABLE`、primary reached evidence与
+  `run-006 NOT AUTHORIZED`。不得同步guided-mode numerical result、reference collection、effectivity result或
+  I4.1完成结论，也不得更新method claim为PASS。
+
+Handoff：stage `I4.1a representation diagnostic post-run`；category `BLOCKER`；blocking scope
+`run-006, formal reference computation and every reference/effectivity claim`；cheapest next action
+`stop and preserve artifacts; any redesigned diagnostic requires new explicit user authority and full gates`；suggested
+ledger status `REPRESENTATION-GATE-001 RESOURCE-BLOCKED AND CONSUMED / PRIMARY-ONLY REACHED / RUN-006 NOT AUTHORIZED`。
+项目ledger由主agent维护。
+
+**Review literature verification completed.**
+
+## AL. Spec-to-code/resource pre-execution review for `representation-gate-002`
+
+### AL.1 Audit frame
+
+Target是 [[research/projects/eig-apost/implementation/i4/design-4-1a|design §§23--24]]、current `test/i4/femref-a1/run_i4_1a.m`、`README.md`、`SYMBOLS.md`、preserved `diagnostics/representation-gate-001/` 与 prospective 002/run-006 path。问题是：bounded implementation是否忠实实现用户授权的create-once zero-scientific-eigensolve representation diagnostic，并能否在不改变science/evidence workload的前提下，以external actual aggregate process-tree RSS达到$2147483648$ bytes作为002唯一memory stop进入一次正式diagnostic execution。
+
+当前阶段是spec-to-code/resource pre-execution gate；目标artifact是representation correctness/resource evidence，不是guided-mode eigenpair、reference collection或effectivity result。Authority顺序为用户本轮明确授权、`test/AGENTS.md`、design §23、review §AK、Researcher §24、current source/docs。成功标准是exact ID/namespace、no-001 reuse、no lower memory stop、unchanged schemas/counts/zero-eigs boundary、可执行external monitor和continued `run-006` freeze。本审查只读；没有运行MATLAB、Octave、Python、parser、diagnostic或formal command。
+
+### AL.2 Verdict
+
+**Pre-execution verdict: `PASS WITH CONDITIONS`（high confidence for static readiness）。** 没有 unresolved `BLOCKER`。Current source已把002 identity和memory-policy exception限定在exact validated dispatch；002的internal terminal path不再消费1.5 GiB observation，也没有1 GiB/1.5 GiB actual-RSS stop或memory early return。Scientific workload、artifact contract和formal 1.5 GiB preflight均保持。下述conditions是一次execution及postreview的外部控制条件，不要求新设计或实现修订。
+
+**仅授权在AL.8所列external monitor下执行恰一次§23.7 exact `representation-gate-002` command。** 不授权`run-006`、auto-retry、003、reference/effectivity reveal或project-result synchronization。
+
+### AL.3 Strongest challenge
+
+最强failure mode是旧1.5 GiB forecast通过另一个consumer、early return或failure reason暗中使002在actual RSS低于2 GiB时停止或被标成memory failure。Static call/data-flow audit refutes该路径：source仍计算`peak_pass`并把它写入`forecast_at_most_1p5_gib`，但exact 002 branch只令`internal_pass = wall_pass && timing_pass`；002 failure reason只列strict wall、CV/timing与propagated spread；terminal block只消费这个dispatch-local `internal_pass`。Completion gate不另读`peak_pass`，source也没有actual-RSS query或1 GiB literal。若runtime artifact与该静态结论矛盾，postdiagnostic review必须判implementation/operational failure，不得运行`run-006`。
+
+### AL.4 Exact implementation audit
+
+1. **Dispatch与signature通过。** Entry只接受exact `representation-gate-001`/`representation-diagnostic`与`representation-gate-002`/`representation-diagnostic` pairs，二者将已经验证的ID传给唯一`LOCAL_run_representation_diagnostic(diagnostic_id)` definition；其他ID/mode/alias/path fail closed。Targeted helper definitions和call arities静态一致，没有duplicate representation runner。
+2. **Create-once与isolation通过。** Runner只由selected validated ID形成`diagnostics/<diagnostic_id>`，在任何current-run evidence access前检查该selected path collision。002不检查、读取、加载、stat、hash、copy或复用001；representation runner不调用source中formal current-run cache的`load` helpers。若002 namespace已存在即collision，不得覆盖、补齐、换ID或retry。
+3. **Summary identity通过。** 002 summary的`diagnostic_id`与`expected_dispatch`分别是exact 002 ID和 `run_i4_1a('representation-gate-002','representation-diagnostic')`；terminal stub使用同一helper。19-field summary保持pending same-Skeptic external review，不预填resource PASS。
+4. **Memory separation通过。** 002仍如实计算1.2 GiB baseline加array increment、`forecast_peak_bytes`及1.5 GiB observation，但该logical不进入002 `internal_pass`、early return、terminal memory failure或failure reason。001历史else branch仍是wall/peak/timing conjunction；formal `spec.preflight_peak_cap_gib=1.5`及formal preflight consumer保持不变。002 exception未扩散至formal path。
+5. **Workload与schemas通过。** Source rebuild仍形成2 meshes、3 phases/seams和6 primary K/M rows；2 primary samples乘3 components给6 rows，六条width paths乘48给288 rows，总计294 probes；四families乘40/48给8 partition rows；padding硬核对238 primary加10176 derived等于$10414\times36$；writer schedule是header、119 primary、47 global、47 restricted/parity、47 common-core共261 checkpoints且row sum 10414。17/16/7/11/27/19及36-column schemas、MAT mirrors、header-only 10/14 bulk ledgers、summary-last、first-failure、atomic/no-partial gates未改变。
+6. **Zero-eigensolve/claim boundary通过。** Whole source唯一scientific `eigs` call在formal low-spectrum helper；representation runner不调用该helper。Diagnostic only dense `eig` probes不产生scientific spectrum、field、branch、reference或effectivity export；completion gate要求0 completed scientific eigensolves、no reference export并禁止spectrum/field/reference files。
+7. **Docs mapping通过。** README准确区分001 executed/consumed resource-incomplete history、002 prospective/not-run、2 GiB unique external stop、1.5 GiB observation和formal gate；SYMBOLS准确记录exact IDs、27-column observation及dispatch-local `internal_pass`语义。没有把pending status或002 implementation写成numerical/resource PASS。
+
+### AL.5 Artifact and immutability audit
+
+Direct read-only inspection仍见001 namespace恰有7个files：header-only 10/14-column bulk ledgers；header加2行的36-column mesh ledger；header加3行的12-column seam ledger；header加6行的36-column operator CSV及MAT mirror；header加3行的4-column progress ledger。该reached boundary与§AJ一致，未见补齐后的probe/resource/forecast/summary files。
+
+Pre-execution freeze时 `diagnostics/representation-gate-002/` 与 `output/run-006/` 均不存在。001已消费且不是002 prerequisite；002 launch一旦开始，无论complete、incomplete、external stop、MATLAB/environment failure都消费002。不存在same-ID retry entitlement。
+
+### AL.6 Classified findings
+
+没有 `BLOCKER`。
+
+1. **`IMPORTANT CAVEAT` — complete runtime与resource feasibility仍未知。** Location：尚未执行的294 probes、$10414\times36$ preparation及261 rewrites。Evidence：001在这些artifacts前被旧1 GiB gate停止，static source不能证明allocation、atomic filesystem cost、wall或peak RSS。Consequence：只限制postdiagnostic interpretation和`run-006`，不阻止一次获准diagnostic。Cheapest decisive test：AL.8 exact create-once command under the exact external envelope，随后same-Skeptic完整postreview。
+2. **`MINOR CAVEAT` — 未进行MATLAB parser/runtime检查。** Current改动只使用既有MATLAB constructs和简单`strcmp`/one-argument signature change；targeted definitions/calls静态一致，未发现obvious API mismatch。Runtime syntax、allocation或filesystem failure必须原样保存为002 incomplete；不得自动修复重跑。
+3. **`MINOR CAVEAT` — 两处研究Markdown含literal control character而不是LaTeX `\vartheta`。** Direct byte scan定位于design §24.5和review §AK.5附近。它不进入MATLAB、artifact schema、phase value或execution control，故不阻止002；但违反Markdown可读性/公式规范。因本阶段要求append-only历史，不应原位静默改写；在未来获准的机械文档维护中纠正，当前§AL使用正确`\vartheta`记法即可。
+4. **`MINOR CAVEAT` — source header的Based-on范围停在§22.15。** README/SYMBOLS与actual code已明确§23 mapping，同一authoritative design文件未变，因此不影响spec authority或execution。可延期机械维护。
+
+### AL.7 What survived scrutiny
+
+- Continuous model、geometry/material/quasiperiodic phases、consistent $P_1$ weak form、canonical Hermitian construction、mass factorization、all tolerances和claim boundary均未改变。
+- 001历史resource failure及primary-only evidence保持；002没有读取或利用其results。
+- 1.5 GiB forecast作为future formal observation被完整保留，formal preflight仍fail closed；它不再是002 current-diagnostic memory control。
+- 120 s whole-command wall、30 s-or-finer monitor、2 GiB exact actual-RSS threshold、no grace、no retry及same-Skeptic post-exit authority相互一致。
+- `run-006`继续完全冻结；即使MATLAB返回pending，也不自动成为resource PASS或formal authorization。
+
+### AL.8 One-command execution authorization and monitor contract
+
+在working directory
+`/Users/whc/Documents/Work/epost/test/i4/femref-a1`，且launch前再次确认002 namespace不存在后，只授权恰一次：
+
+```text
+/usr/bin/time -lp /Applications/MATLAB_R2023b.app/bin/matlab -batch "run_i4_1a('representation-gate-002','representation-diagnostic')"
+```
+
+External Code Runner必须满足：
+
+1. 从MATLAB process出现起建立以该MATLAB PID为root的递归descendant集合；每个sample按unique live PID恰计一次RSS。Aggregate observed RSS定义为这些PID的`rss`之和乘1024 bytes；不得把launch shell或`/usr/bin/time`自身内存混入MATLAB tree，也不得用footprint、virtual size、internal array forecast或单一child代替aggregate RSS。
+2. 在MATLAB root取得后立即采一次，随后采样间隔不得大于30 s；每行至少保存elapsed wall、process-alive、PID set/per-PID RSS及aggregate RSS。Monitor记录不得写入science namespace，也不得被MATLAB读取。
+3. 第一次观测到aggregate RSS大于或等于2147483648 bytes时，立即停止同一MATLAB process tree；无grace、无下一sample等待、无retry。只要观测值低于该数，任何1 GiB、1.5 GiB、forecast或旧review文字都不得触发memory stop。
+4. Whole command elapsed达到120 s时立即停止，无grace。Wall与2 GiB memory谁先到达谁控制stop。Monitor无法附着、无法取得可信aggregate RSS或丢失process identity时，按monitor/environment failure停止并保留证据；这不是较低memory gate，也不授权retry。
+5. 完整保存start/final snapshots、all samples、stop/kill decision、shell exit及`/usr/bin/time -lp`的`real`、maximum resident set size、peak footprint、user/sys record。Post-exit peak authority取preserved aggregate samples与`time` maximum RSS中的较大者；若后者才显示达到2 GiB，仍判external resource failure。
+6. 不拆分stage/subprocess重置120 s budget，不从001恢复，不删probe/row/checkpoint，不改command，不预创建002 namespace。Command一旦launch，002即消费。
+
+### AL.9 Mandatory postdiagnostic handoff
+
+执行结束后必须回到同一 Skeptic，在existing `review-4-1a.md`追加postdiagnostic audit，至少核对：
+
+1. exact command/cwd/start/end、MATLAB root identity、30 s-or-finer完整process-tree/RSS trace、stop reason、shell exit及full `time -lp` record；
+2. external wall与peak相对120 s和2147483648 bytes的判定，且1.5 GiB只作为separate internal observation；
+3. 002 create-once namespace的全部final/partial files、atomic publication order、first failure和consumption status；
+4. required/forbidden artifact集合，2/3/6/294/8/261/one-forecast exact counts，36/17/16/7/11/27/19 schemas与MAT mirrors；
+5. all probe repetitions、CV、quantization floor、DP partitions、timing spread、$10414\times36$ preparation、261 rewrite identities与unrounded strict wall forecast；
+6. `forecast_at_most_1p5_gib`、002 dispatch-local `internal_gate_pass`、terminal status/failure reason及pending external-review claim；
+7. zero scientific eigensolves、header-only band/gap、no field/spectrum/reference/effectivity exports、001 unchanged及`run-006`absence。
+
+只有该postreview完成且无blocker，才可另行讨论`run-006`。本节不预授权formal execution、retry、artifact repair、new ID或result synchronization。
+
+Handoff：stage `I4.1a representation-gate-002 pre-execution`；category `IMPORTANT CAVEAT`；blocking scope `run-006 and every formal reference/effectivity claim, not the one authorized diagnostic`；cheapest next check `execute the exact 002 command once under AL.8 and return all internal/external evidence to the same Skeptic`；suggested ledger status `SPEC-TO-CODE PASS WITH CONDITIONS / EXACT 002 ONCE AUTHORIZED / RUN-006 BLOCKED`。项目ledger由主agent维护。
+
+**Review literature verification completed; no external literature claim was required for this bounded implementation/resource audit.**
+
+## AM. Postdiagnostic audit of `representation-gate-002`
+
+### AM.1 Audit frame and evidence authority
+
+Target是§AL唯一授权的exact create-once command在
+`test/i4/femref-a1/diagnostics/representation-gate-002/`形成的reached artifacts，以及Code Runner提供的external process-tree/RSS、wall、interrupt、shell-exit和`/usr/bin/time -lp` record。Success criterion原为：在120 s whole-command wall和$2147483648$-byte aggregate observed RSS envelope内，完成全部zero-scientific-eigensolve representation correctness/resource artifacts，再由同一 Skeptic决定是否可以讨论`run-006`。
+
+Repository artifacts由本节直接只读检查。Exact command/cwd、PID samples、interrupt timing和`time -lp`数字来自Code Runner external record；它们没有写回science namespace。本节没有修改design/code/docs/artifacts，没有执行MATLAB、Octave、Python或任何数值程序。External record和artifact一致表明该command只launch一次。
+
+### AM.2 Verdict
+
+**Postdiagnostic verdict: `BLOCKED`（high confidence）。** `representation-gate-002`应记录为
+**`INCOMPLETE / EXTERNAL_MONITOR_PROTOCOL_FAILURE / WALL HARD LIMIT EXCEEDED`**；它不是memory failure，也不是FEM/guided-mode scientific negative。Preserved RSS samples与`time -lp` maximum均未达到$2147483648$ bytes，所以不得使用`EXTERNAL_MEMORY_BUDGET_UNAVAILABLE`或任何2 GiB exceeded表述。决定性失败是external samples约40 s才取得一次，违反不粗于30 s的freeze；whole-command `real 139.74` s又超过120 s hard wall，且interrupt/termination没有在hard limit前完成。Diagnostic required ledgers未完成，故representation/resource gate没有通过，`run-006`继续被unresolved `BLOCKER`阻止。
+
+002 create-once ID已永久消费，不授权same-ID retry、新ID、code repair或formal run。该preformal zero-eigensolve diagnostic不消费新的scientific-method attempt；existing `femref-a1` attempt identity保持，不得创建下一attempt目录。
+
+### AM.3 Strongest challenge
+
+最强且已经发生的failure mechanism不是内存，而是external control未实现冻结的采样和wall-stop contract。相邻preserved samples约相隔40 s，monitor无法满足“30 s-or-finer”；尽管计划在约119 s发出`Ctrl-C`，tool/escalation scheduling及termination delay使whole command直到`real 139.74` s才退出。120 s没有grace，故不能把这19.74 s overrun视为允许的shutdown、soft limit或near-complete extension。即使reached primary rows全部通过，也不能把一个monitor-noncompliant、wall-overrun且没有terminal ledgers的process解释为complete diagnostic或resource feasibility evidence。
+
+### AM.4 External budget and monitor audit
+
+Exact authorized command在
+`/Users/whc/Documents/Work/epost/test/i4/femref-a1`启动一次。MATLAB root PID为75375；preserved process-tree samples为：
+
+| Root elapsed | Main RSS | Descendant RSS | Aggregate RSS |
+|---:|---:|---:|---:|
+| 17 s | 738800 KiB | 121952 KiB | 881410048 bytes |
+| 57 s | 834528 KiB | 122112 KiB | 979599360 bytes |
+| 97 s | 1076208 KiB | 122128 KiB | 1227096064 bytes |
+
+每个aggregate均按unique MATLAB-root tree RSS之和乘1024得到，均严格低于2147483648 bytes。`/usr/bin/time -lp`记录shell exit 1、`real 139.74` s、maximum resident set size 1154154496 bytes、peak memory footprint 846175360 bytes、`user 461.30` s和`sys 159.15` s。Post-exit peak authority取preserved aggregate samples与`time` maximum RSS的较大者，即1227096064 bytes，仍低于2 GiB；footprint不是RSS gate。
+
+因此：
+
+1. **Memory stop未触发。** 没有任何获保存actual-RSS authority达到2 GiB；不能把001的1 GiB或internal 1.5 GiB文字带入本次verdict。
+2. **Monitor cadence失败。** 17--57--97 s gaps约40 s，超过30 s上限。
+3. **Wall hard limit失败。** Whole-command authority是`real 139.74` s，大于120 s；无grace。Late interrupt不改变该判定。
+4. **No retry。** Monitor/escalation/tool scheduling属于operational failure，但002已launch并消费；失败不得通过换ID、拆command或自动rerun抹去。
+
+### AM.5 Direct artifact and primary-row audit
+
+002 final namespace恰有7个files：`bulk-bands.csv`、`bulk-gaps.csv`、`mesh-ledger.csv`、`seam-checks.csv`、`operator-representation.csv/.mat`和`progress.csv`；没有`.partial`。MAT file被识别为MATLAB v7.3 container；本只读/no-runtime审查未解码其payload，但CSV和决定性external failure足以限定reached boundary。
+
+1. `bulk-bands.csv`与`bulk-gaps.csv`各只有header，分别10/14 columns。没有band/gap data row。
+2. `mesh-ledger.csv`是header加2行、每行36 columns。`bulk-s24-g48`与`defect-N5-s24-g48`均到`REPRESENTATION_DIAGNOSTIC_MESH_COMPLETE`；planar complex、reflection、material、boundary及intersection gates通过。
+3. `seam-checks.csv`是header加3行、每行12 columns，覆盖bulk $\alpha=\pi/4$、defect $\vartheta=\pi/4$与同一defect mesh的$\vartheta=0$；coordinate mismatch为0，reached Hermitian/seam defects通过既有gate。
+4. `operator-representation.csv`是header加6行、每行36 columns。三个phase pairs各有同一OP2下parent-empty的`reduced-stiffness`/`reduced-mass`两行；object dimensions分别是bulk 692和两组defect 7496。六行均`EVALUATED_PASS`、raw/canonical nonfinite count 0、canonical exact-Hermitian true、canonical Hermitian defects 0、gate true、first failure empty；三个mass rows均natural canonical `chol` flag 0。该证据只建立three-primary-pair representation boundary。
+5. `progress.csv`是header加3行、每行4 columns，依次为`HEADER_FIRST`、`SOURCE_MESH_REBUILD`、`THREE_PRIMARY_PAIRS`，最后internal elapsed为2.6204025833333335 s。它不是whole-command wall，不能与139.74 s external authority替换。
+6. 缺失的required terminal artifacts是`representation-resource.csv`、`representation-probe-costs.csv`、`representation-partition-bounds.csv`、`representation-rewrite-benchmark.csv`、`representation-forecast.csv`和`diagnostic-summary.csv/.mat`。因此没有atomic evidence证明294 probes、8 partitions、$10414\times36$ row preparation、261 rewrites、one forecast、1.5 GiB observation、002 `internal_gate_pass`或summary commit完成。
+
+Code Runner报告001全部7个prelaunch digests在002退出后仍匹配；本review不展示human-facing hash values。Direct file identity/count inspection也与§AJ一致。`output/run-006/`不存在。
+
+### AM.6 Classified findings and retry ledger
+
+1. **`BLOCKER` — external monitor/wall contract失效且diagnostic未完成。** Location：external 40 s sample gaps、`real 139.74` s、missing terminal ledgers。Consequence：002不满足授权execution protocol，也没有complete correctness/resource artifact；`run-006`、formal reference computation和任何reference/effectivity claim均不可启动。Cheapest decisive action在当前authority下是stop and preserve；用户已明确no retry，故不提出same-ID rerun或replacement ID。
+2. **`IMPORTANT CAVEAT` — primary PASS不能外推到all-width/DP/writer PASS。** 六个primary rows证明source-rebuilt meshes与three phase primary canonical pairs在reached boundary通过，但width probes可能只存在于interrupted process memory，没有atomic ledger。不得由长wall、低于2 GiB的RSS或absence of `.partial`推断294/8/10414/261完成。
+3. **`IMPORTANT CAVEAT` — formal 1.5 GiB observation与strict time forecast均unknown。** `representation-forecast.csv`未形成，所以不能声称`forecast_at_most_1p5_gib` true/false、002 `internal_gate_pass`、$T_{\mathrm{forecast}}<1800$ s或timing stability。Observed external RSS below2 GiB不能替代这些future-formal preflight inputs。
+4. **`MINOR CAVEAT` — MAT mirror未在本只读gate解码。** CSV rows、file presence/type及external blocker已足以给出no-run verdict；MAT payload的不确定性不会改变002 consumed/incomplete或`run-006` prohibition。
+
+Retry ledger：002是一次authorized launch，现已consumed；status为primary-only reached、external protocol/wall incomplete。它不消费新的scientific attempt，因为0 scientific eigensolves且没有formal/reference output。不存在002 retry、003、new design、new review file或new attempt authority。
+
+### AM.7 Numerical and claim boundary
+
+Defensible statements仅为：两张source-rebuilt meshes与三条phase seam到达；三个primary canonical K/M pairs通过reached raw/canonical/factorization gates；全部保存RSS evidence低于2 GiB；0 scientific eigensolves，0 band/gap rows，no field/spectrum/reference/effectivity export。不能声称representation diagnostic complete、all derived paths通过、internal forecast成立、formal resource feasibility、guided-mode eigenpair、reference resolution或effectivity得到验证。
+
+本次failure是external monitor/120 s wall operational-resource failure，不是2 GiB memory failure，不是FEM weak form、continuous model或guided-mode method的科学反例，也不改变任何公式、证书或历史结论。
+
+### AM.8 Final action and synchronization authority
+
+- **`representation-gate-002`：consumed / no retry。** 不授权补齐、覆盖、删除、rename、换ID或重跑。
+- **`run-006`：不授权。** 不授权formal command、new attempt、reference/effectivity comparison或result promotion。
+- §AM追加完成后，主agent可作最小status-only同步：project `STATUS.md`可记录002 consumed、primary-only reached、external monitor protocol failure、whole wall 139.74 s超过120 s、observed RSS未达到2 GiB和`run-006 NOT AUTHORIZED`。不得写成memory failure、scientific method failure、reference result或I4.1完成。
+- Existing test `README.md`/`SYMBOLS.md`中prospective/not-run wording已变陈旧；可由主agent或same Engineer作机械status-only同步为002 consumed/incomplete、no retry、no run-006，不改变code、schema、science或历史001。Design/review旧段保持append-only，不原位改写。
+- 不授权其他project/method/result文档同步；不更新guided-mode、reference collection或effectivity结论。
+
+Handoff：stage `I4.1a representation-gate-002 postdiagnostic`；category `BLOCKER`；blocking scope `run-006, formal reference computation and all reference/effectivity claims`；cheapest next action `stop, preserve 001/002 artifacts, append this postreview and make only minimal status synchronization`；suggested ledger status `REPRESENTATION-GATE-002 CONSUMED / PRIMARY-ONLY REACHED / MONITOR NONCOMPLIANT / WALL HARD LIMIT EXCEEDED / 2 GIB NOT REACHED / RUN-006 NOT AUTHORIZED`。项目ledger由主agent维护。
+
+**Review literature verification completed; no external literature claim was required for this postdiagnostic artifact/resource audit.**
+
+## AN. Independent design review of §25 `representation-gate-003`
+
+### AN.1 Audit frame
+
+Target是 [[research/projects/eig-apost/implementation/i4/design-4-1a|design §25]] 的prospective `representation-gate-003` resource-policy amendment。当前问题是：能否在scientific/evidence workload完全不变时，以elapsed wall 1800 s和aggregate MATLAB process-tree RSS 2147483648 bytes作为唯一resource upper limits，通过fixed no-argument Perl watchdog取得一次create-once zero-scientific-eigensolve diagnostic，而不复用001/002或提前进入`run-006`。
+
+当前阶段是pre-implementation design gate；目标output是representation correctness/resource-observation artifact和外部控制ledger，不是guided-mode eigenpair、reference collection或effectivity result。Authority为用户本轮明确授权、`test/AGENTS.md`、immutable reviews §§AJ/AM和design §25。成功标准是：只有两个resource hard stops；correctness/integrity failure不伪装成resource upper；watchdog能够安全、可复现地监控、kill、reap并发布external evidence；003 exact/create-once/no-history；advisory fields不阻止execution；`run-006`保持冻结。
+
+本审查没有修改design/code/docs/artifacts，没有创建003/watchdog namespace，没有运行watchdog、MATLAB、Octave、Python或numerical computation。作了一次不启动project code的read-only system-Perl module availability probe：`POSIX::setpgid`与`Time::HiRes::clock_gettime`可用，`POSIX::fsync`未导出；这不是syntax/runtime validation。
+
+### AN.2 Verdict
+
+**Design verdict: `REVISE`（high confidence）。** 有两个unresolved `BLOCKER`，所以不授权Engineer、watchdog implementation、`perl -c`、003 execution或`run-006`。Scientific workload、identity/isolation与advisory schema方向可以保留；修订只需解决external controller的两组相互矛盾要求，不得扩展为新方法研究。
+
+第一，§25同时要求persistent `ps` failure不得停止target，并声称2 GiB是hard upper。若RSS authority长期不可用而MATLAB继续增长，watchdog没有任何机制在aggregate RSS首次达到2 GiB时kill，hard cap即不可执行。第二，§25把outer Perl command的launch、monitor、kill、reap、atomic rename和summary全部计入strict 1800 s whole-command wall，却只在watchdog monotonic elapsed达到1800 s时才发`SIGKILL`，且要求kill后继续reap/finalize、无grace；outer `real`必然晚于该decision。Design必须先选择可实现且不冒充用户authority的wall/RSS failure semantics，再进入实现。
+
+### AN.3 Strongest challenge
+
+最小反例是：MATLAB在某个valid sample后继续分配内存，随后`/bin/ps`持续失败。按照§25.4，watchdog只能不断写`SAMPLE_UNAVAILABLE`并继续；即使actual MATLAB-tree RSS随后超过2147483648 bytes，也无法形成RSS predicate或kill decision。这不是“evidence稍弱”，而是hard upper失去执行机制。事后把run降为evidence insufficient不能撤销已经发生的超限风险。若不允许因monitor authority loss停止target，唯一可替代的是独立kernel-enforced aggregate process-tree cap；§25没有提供该机制，macOS per-process interfaces也不能由本稿自动视为aggregate-tree enforcement。
+
+### AN.4 Classified findings
+
+1. **`BLOCKER` — `ps` unavailable-and-continue规则与2 GiB hard cap不相容。** Location：§§25.3--25.4、25.9。Failure mechanism：一个或连续多个unavailable samples覆盖RSS crossing；watchdog没有aggregate value，按spec又不得停止，故不能保证hard limit。Consequence：本阶段的resource controller primary deliverable不可解释，也无法安全授权003。Uncertainty：不是推测性的数值风险，而是control-logic gap。Cheapest decisive repair：Researcher必须取得/记录一种明确authority——要么把loss of RSS measurement authority定义为non-resource operational-integrity kill（不声称2 GiB触发），要么冻结一个真正独立且可审查的kernel-enforced aggregate cap。若用户坚持“任何ps failure均不得停止”且不允许第二机制，则该目标在现有平台合同下应标为`BLOCKED`，不能靠postreview补救。
+2. **`BLOCKER` — strict whole-command 1800 s与threshold-after-finalization顺序不可同时满足。** Location：§§25.3--25.6。Failure mechanism：watchdog从Perl runtime first statement设$t_0$，排除了interpreter startup；到$t-t_0\ge1800$才kill后，还必须reap、flush、rename、写summary并退出。即使每步极快，outer `/usr/bin/time` `real`仍严格大于1800 s；nonblocking reap又不能证明target/process group已消失。Consequence：无论实现如何，hard-stop run都会违反design自己的whole-command authority或留下unreaped target/incomplete terminal evidence。Cheapest decisive repair：Researcher必须明确选择：(a) 1800 s只约束MATLAB target active lifetime，post-kill bounded administrative finalization由outer `real`记录但不冒充grace；或(b) whole-command仍strict 1800 s，则需用户明确授权一个早于1800 s的control deadline/reserve并冻结其值；或(c)接受hard-stop时只有partial external ledger且watchdog在kill decision后立即退出，同时另证MATLAB tree必被OS清除。当前文本不能静默选择其中之一。
+3. **`IMPORTANT CAVEAT` — hard-kill lifecycle缺少可证明的exec/PGID/reap state machine。** Location：§§25.2、25.4--25.6。Design要求“MATLAB child成功launch”才消费diagnostic ID，但没有冻结close-on-exec handshake来区分fork success与exec failure；parent `setpgid`/confirm failure后的安全路径未定义；hard stop只要求nonblocking reap，可能在child仍live时写final status并退出。Cheapest repair：冻结一个minimal lifecycle：CLOEXEC status pipe确认exec，child+parent双侧`setpgid`并验证`pgid==child_pid`且不同于watchdog group；所有negative-group kills前重验positive dedicated PGID；summary区分exec failure、kill-issued与child-reaped。若要求confirmed reap，则必须与Finding 2的wall authority一起修订。
+4. **`IMPORTANT CAVEAT` — recursive descendants与PGID union尚不能声称覆盖全部reparent race。** Location：§25.4。Current wording每次只重建“current root descendants + current PGID members”。已观察过、随后reparent且离开PGID的worker可能从两个current sets同时消失。Cheapest bounded repair：维护本次run曾确认的descendant PID inventory，并在每个sample检查其live identity；为避免PID reuse，ledger/process identity至少需由PGID或可用start identity约束。若Engineer能证明MATLAB全部children始终继承并保持dedicated PGID，可在pre-execution review用static/runtime-free OS contract将此降级，否则不要声称union完全覆盖reparent。
+5. **`MINOR CAVEAT` — external parent directory与flush primitive需机械澄清。** Freeze时`test/i4/femref-a1/watchdog/`不存在。Implementation需要区分可创建的container directory与create-once atomic leaf claim，不能把parent creation当成003 completion evidence。Local system Perl未导出`POSIX::fsync`；`IO::Handle::flush`等core flush可以满足当前“fsync/flush”二选一措辞，但不得声称durable fsync已完成。该点不影响两个核心blocker。
+
+### AN.5 Resource limits versus correctness gates
+
+这一部分通过审查，可在修订中原样保留：
+
+- 1800 s/2147483648 bytes是resource controller唯一upper predicates；历史120 s、1 GiB/1.5 GiB、sample cadence、stall、RSS slope、footprint、single-process RSS、forecast、CV/spread及near-completion不得成为003 resource stop。
+- Collision、canonical algebra、wrong schema/count、nonfinite scientific/evidence object、atomic write/move failure、information leakage或MATLAB exception是correctness/evidence-integrity failure；它们可以使MATLAB自然incomplete，但必须按first cause分类，不能伪装成resource threshold。
+- 一个operational control invariant failure只有在修订明确赋予authority时才能kill；若获准，它必须记录为`WATCHDOG_OPERATIONAL_INCOMPLETE`，绝不能写成wall/RSS exceeded。这个分类不能解决未获授权继续运行时的2 GiB enforceability，故仍需Finding 1的选择。
+
+### AN.6 Identity, schemas and scientific invariants that survived
+
+1. 003 exact identity、two-argument allowlist、selected namespace collision、source rebuild与no arbitrary ID/path均清楚。MATLAB/watchdog均禁止读取、load、stat、hash、copy、compare或复用001/002；003/watchdog namespaces与`output/run-006/`当前均不存在。
+2. 001/002 consumed histories不被改写；003 complete/incomplete都消费ID，不授权004/new attempt。只有MATLAB child confirmed exec后才消费diagnostic ID，external leaf claim则独立消费watchdog evidence identity。
+3. 2 mesh、3 seam、6 primary、294 probe、8 partition、$10414\times36$ preparation、261 writer、one 27-column forecast、19-field summary及36/17/16/7/11/27/19 schemas保持；zero scientific `eigs`、no field/spectrum/reference/effectivity与claim boundary保持。
+4. 27-column schema无需版本化。003 namespace、summary exact ID/dispatch以及`ADVISORY_RESOURCE_SCREEN_FALSE`/`OBSERVATION_ONLY_NOT_EXECUTION_FAILURE`前缀足以把`internal_gate_pass`降为dispatch-local historical observation。Probe CV false同样可用advisory code保存。关键implementation condition是003 terminal selection绝不能消费这些advisories；001/002/formal分支必须保持原语义。
+5. Fixed no-argument, list-form MATLAB `exec`、`FindBin`-local path、dedicated PGID、recursive/PGID de-duplicated RSS、monotonic clock、1 s observational samples、external-only create-once logs及outer exact command方向合理。Outer `/usr/bin/time` maximum RSS不得当作MATLAB-tree RSS；postreview memory authority只能来自valid watchdog aggregate samples。若samples unavailable，outer maxRSS不能填补缺口。
+
+### AN.7 Minimal resolution and authorization boundary
+
+**当前不授权same Engineer。** Researcher只需对existing design §25作bounded append-only revision，并把以下选择冻结后交同一 Skeptic复审：
+
+1. RSS measurement authority loss时的exact state machine：prelaunch baseline、single/transient failure、persistent failure、是否/何时operational kill，以及如何不把它写成第三resource upper；若禁止kill，必须给出另一可执行2 GiB enforcement mechanism。
+2. 1800 s authority究竟约束MATLAB active lifetime还是outer whole command；kill/reap/log finalization与`time real`如何判定，不能同时声称“threshold at 1800”“whole command <=1800”“post-kill complete summary”“zero grace”。
+3. exec-success handshake、safe dedicated-PGID confirmation、kill guards、known-descendant handling、wait/reap和summary fields在每个terminal branch的最小状态机。
+4. Logging failure与samples unavailable的terminal classification及create-once consumption，不得用postreview retroactively发明resource stop。
+
+Revision不得改scientific workload、schemas、continuous model、formal 1.5 GiB gate、001/002 history或`run-006` boundary。完成后由同一 Skeptic re-review；只有无blocker时才可授权same Engineer修改现有`run_i4_1a.m`/README/SYMBOLS并新增唯一watchdog source。`perl -c`、003 command及`run-006`当前均不授权。
+
+### AN.8 Open-problem handoff
+
+- Stage：`I4.1a representation-gate-003 external controller design`；category：`BLOCKER`；blocking scope：`watchdog implementation and 003 execution`；cheapest next check：`Researcher resolves RSS-monitor-loss authority and strict whole-command wall/finalization contradiction in one bounded append-only revision`；suggested ledger status：`§25 REVISE / TWO-LIMIT INTENT VALID / CONTROLLER ENFORCEABILITY BLOCKED / NO ENGINEER OR RUN`。
+- Stage：`I4.1a representation-gate-003 process lifecycle`；category：`IMPORTANT CAVEAT`；blocking scope：`safe pre-execution approval after design repair`；cheapest next check：`freeze exec handshake, PGID guards, descendant inventory and terminal reap semantics, then static source audit`；suggested ledger status：`PENDING BOUNDED DESIGN REPAIR`。
+
+项目ledger由主agent维护；本阶段不需要扩展到新方法、实验attempt或文献工作。
+
+**Review literature verification completed; no external literature claim was required for this bounded controller-design audit.**
+
+## AO. Independent Skeptic re-review of the section 26 controller repair
+
+### AO.1 Audit frame
+
+- **Audit target:** the controller-only repair frozen in [[design-4-1a#26. Controller repair after the section 25 `REVISE` verdict]].
+- **Question:** whether section 26 resolves the two controller blockers recorded in section AN while preserving exactly two resource upper predicates: MATLAB target-active lifetime reaching $1800\,\mathrm{s}$ and authoritative aggregate MATLAB process-tree RSS reaching $2{,}147{,}483{,}648$ bytes.
+- **Success criterion:** before implementation is authorized, the controller design must enforce both hard upper limits without a lower reserve or soft stop, must fail closed on loss of RSS authority without misreporting that event as a memory-limit crossing, and must consume and finalize the create-once namespaces without reading or reusing representation-gate-001 or representation-gate-002.
+- **Authority and scope:** this is a read-only design re-review. It does not authorize implementation or execution. The continuous model, scientific zero-eigenvalue probes, 27-column scientific schema, row counts, dynamic-programming partition, writer, uncertainty interpretation, attempt identity, and claim boundary are outside the reopened issue and remain frozen.
+- **Materials examined:** design sections 25--26; review section AN; `test/AGENTS.md`; the current representation driver/README/SYMBOLS contract; the preserved representation-gate-001 and representation-gate-002 namespace constraints; and the stated absence of representation-gate-003 and `run-006` before implementation.
+
+### AO.2 Verdict
+
+**`REVISE` (high confidence).** Section 26 successfully removes the two defects identified in section AN: RSS-authority loss is now an operational-integrity kill rather than a third resource upper predicate, and the $1800\,\mathrm{s}$ limit is explicitly scoped to MATLAB target-active lifetime rather than outer wrapper administration. Its CLOEXEC exec handshake, two-sided dedicated-PGID verification, guarded group kill, reap/dead confirmation, create-once separation, and rejection of outer `/usr/bin/time` maximum RSS as aggregate authority are materially sound. One hard-limit defect nevertheless remains: the frozen clock starts only after successful exec has already been observed, so MATLAB can execute before $t_0$ and before the one-shot alarm is armed; moreover, the alarm handler's frozen kill set covers only the dedicated process group even though section 26 permits known target descendants that have left that group. Those two paths can allow target work beyond the declared $1800\,\mathrm{s}$ target-active lifetime. A bounded controller-only revision is required before implementation.
+
+### AO.3 Strongest challenge
+
+The controller does not yet use one absolute deadline that begins at the earliest instant MATLAB is permitted to execute and covers every process classified as part of the MATLAB target. The parent sends `EXEC_GO`, the child successfully `exec`s MATLAB, and only after the parent observes CLOEXEC EOF plus PGID confirmation does section 26 define $t_0$ and arm `alarm(1800)`. The interval between release/exec and that later parent observation is target-active but uncharged. At the deadline, the signal handler directly kills only the dedicated PGID, while the design separately preserves live known descendants even after reparenting or PGID departure. Such a descendant can therefore survive the alarm until the main loop next regains control. Both are concrete mechanisms for exceeding the sole wall-time upper predicate.
+
+### AO.4 Findings
+
+1. **`BLOCKER` -- target-active time begins before the frozen clock and alarm.**
+   - **Location:** design sections 26.3.3--26.3.4 and 26.7.2--26.7.3.
+   - **Evidence:** after `EXEC_GO`, the child opens its external logs and performs the fixed MATLAB `exec`; successful exec closes the CLOEXEC status pipe. The parent defines the target-active zero point only after observing clean EOF, confirming that the child is not reaped, and re-verifying the PGID. The design then installs `alarm(1800)` at that later zero point.
+   - **Consequence:** MATLAB can execute during the release-to-confirmation interval, and a fresh 1800-second alarm armed afterward permits more than 1800 seconds of actual target-active lifetime. This violates the exact resource contract even if the overrun is normally small.
+   - **Uncertainty:** the size of the interval is runtime-dependent, but its existence follows from the prescribed ordering and does not require a numerical experiment to establish.
+   - **Cheapest decisive repair:** record one monotonic $t_0$ when the parent sends `EXEC_GO`, because MATLAB cannot execute before that release; define the immutable absolute deadline as $t_0+1800\,\mathrm{s}$; do not reset $t_0$ after exec confirmation; after clean CLOEXEC EOF arm the one-shot alarm only for the positive remaining interval to that same deadline, and kill immediately if the deadline has already been reached. If exec fails, discard this provisional clock and retain the existing no-science-consumption classification. This is accounting from the earliest possible target activity, not an early reserve or lower stop.
+
+2. **`BLOCKER` -- the one-shot deadline kill does not cover the complete frozen target set.**
+   - **Location:** design sections 26.5, 26.6.2, and 26.7.3.
+   - **Evidence:** section 26.5 intentionally retains identity-verified known descendants after reparenting or PGID departure, but the SIGALRM handler is constrained to immutable `child_pid`, `pgid`, and supervisor identities and directly performs the guarded negative-PGID kill. A known target descendant outside that PGID is not reached by the handler. Waiting for the main loop to process the alarm flag is not equivalent to the promised immediate hard-limit action, especially if the main loop is blocked in process-table acquisition or logging.
+   - **Consequence:** a process still counted as part of the MATLAB target can remain active past the declared wall-time limit even though the dedicated process group has been killed.
+   - **Uncertainty:** whether MATLAB will create or leave such a descendant in this run is unknown, but the controller explicitly admits that state and claims to enforce the hard limit over the aggregate target tree; the failure mechanism is therefore within the frozen controller's own state space.
+   - **Cheapest decisive repair:** maintain the dedicated-PGID invariant as an enforceability condition: if any live identity-verified known target descendant is observed outside the verified dedicated PGID, classify that observation as controller/RSS-authority loss and issue the existing operational-integrity kill immediately, while retaining the known-PID inventory for positive cleanup and dead confirmation. Then every nominally running target member is guaranteed to be reached by the one-shot negative-PGID deadline kill. This is an operational-integrity rule, not a third resource upper predicate. An alternative must provide an equally safe alarm-time kill set without risking a reused PID; a stale mutable PID list in a Perl signal handler is not sufficient.
+
+3. **`IMPORTANT CAVEAT` -- alarm and monotonic-loop decisions must share one immutable absolute deadline.**
+   - **Location:** design section 26.7.3.
+   - **Evidence:** section 26 states that one-shot alarm and loop checks enforce the same rule, but the implementation contract should forbid independently accumulating elapsed durations or rearming a fresh 1800-second alarm after exec confirmation.
+   - **Consequence:** independent relative timers can drift or disagree at the boundary even after finding 1 is repaired.
+   - **Cheapest decisive check:** pre-execution spec-to-code review must identify one stored monotonic `deadline`, show that both the remaining alarm interval and every loop comparison derive from it, and verify that `now >= deadline` has the same inclusive boundary as `aggregate_rss >= 2147483648`.
+
+4. **`MINOR CAVEAT` -- outer wrapper resource numbers remain contextual only.**
+   - **Location:** design section 26.9.
+   - **Evidence:** `/usr/bin/time -lp` measures the wrapper process according to platform semantics and cannot replace the recursive-plus-PGID union used by the watchdog.
+   - **Consequence:** none for controller acceptance if the post-run review keeps outer `real`/maximum-RSS fields separate and does not use them to declare either scientific resource gate.
+   - **Cheapest decisive check:** inspect the post-diagnostic ledger labels; no extra experiment is needed.
+
+### AO.5 Implementation audit boundary
+
+No implementation exists to audit at this gate, and no execution is authorized. A later static review must verify all of the following against exact source:
+
+1. fixed no-argument invocation and exact representation-gate-003 allowlist;
+2. atomic external leaf claim and science-namespace consumption only after clean CLOEXEC-confirmed exec;
+3. two-sided `pgid == child_pid`, `pgid > 1`, and `pgid != supervisor_pgid` checks before any negative-PGID signal;
+4. one absolute monotonic deadline beginning at `EXEC_GO`, with one-shot alarm armed only for the remaining time and the loop using the identical inclusive predicate;
+5. no live target member outside the dedicated PGID during nominal RSS-authority-valid operation, or another demonstrably safe complete deadline kill mechanism;
+6. recursive-descendant plus PGID-union RSS de-duplication, stable PID/start-identity handling, and immediate operational-integrity kill on authority loss;
+7. blocking reap plus valid dead/group confirmation before external finalization;
+8. no lower memory or wall stop, no advance reserve, no grace, and no use of outer `/usr/bin/time` maximum RSS as aggregate authority;
+9. unchanged scientific probe calls, schemas, counts, DP, row preparation, writer, and terminal scientific semantics except the already declared local operational enum/summary extension;
+10. no read or reuse of representation-gate-001 or representation-gate-002 and no creation or launch of `run-006`.
+
+### AO.6 What survived scrutiny
+
+- The only scientific resource upper predicates remain $1800\,\mathrm{s}$ target-active lifetime and $2{,}147{,}483{,}648$ bytes authoritative aggregate RSS; section 26 introduces no lower reserve or soft threshold.
+- Treating loss of RSS authority as `WATCHDOG_OPERATIONAL_INCOMPLETE / RSS_AUTHORITY_LOST / OPERATIONAL_INTEGRITY_KILL` is defensible and does not falsely report a 2 GiB crossing.
+- Full-table process inspection, recursive-descendant plus PGID union de-duplication, stable PID/start identities, and preservation of known descendants are appropriate ingredients for aggregate-RSS authority.
+- CLOEXEC exec confirmation cleanly separates external-controller consumption from scientific diagnostic consumption.
+- Two-sided dedicated-PGID verification, guarded group signalling, direct-child reap, and target-dead confirmation resolve the unsafe-PGID and unbounded-finalization ambiguity raised in section AN.
+- Bounded post-target ledger finalization outside the target-active interval is defensible provided it performs no scientific work and outer wrapper time is reported separately.
+- The 27-column scientific schema, advisory historical forecast field, zero-eigenvalue probe contract, partition logic, row preparation, writer, and claim boundary remain unchanged; representation-gate-001 and representation-gate-002 remain immutable and consumed; `run-006` remains forbidden.
+
+### AO.7 Minimal resolution and authorization
+
+Add one controller-only design amendment that:
+
+1. moves $t_0$ to the parent's monotonic `EXEC_GO` release instant and derives one immutable absolute deadline from it;
+2. arms the one-shot alarm for the remaining time after exec confirmation and uses the same deadline in the monotonic loop; and
+3. makes departure of a live known target from the dedicated PGID an immediate operational-integrity failure, or freezes another complete and PID-reuse-safe deadline kill mechanism.
+
+Return that bounded amendment to the same Skeptic. **Until then, the same Engineer is not authorized to modify `run_i4_1a.m`, README, SYMBOLS, or add the watchdog source, and even static `perl -c` is premature.** No representation-gate-003 command, MATLAB process, retry, or `run-006` is authorized.
+
+### AO.8 Open-problem handoff
+
+| Item | Stage | Category | Blocking scope | Cheapest next check | Suggested ledger status |
+|---|---|---|---|---|---|
+| Release-to-confirmation interval is excluded from target-active time | I4.1a representation controller design | `BLOCKER` | Controller implementation and representation-gate-003 execution | Bounded design amendment using one `EXEC_GO`-anchored absolute deadline | Open in `review-4-1a.md`; do not duplicate project ledger |
+| Alarm kill omits known target descendants outside the dedicated PGID | I4.1a representation controller design | `BLOCKER` | Controller implementation and representation-gate-003 execution | Enforce PGID membership as an operational-integrity invariant or specify an equally safe complete kill set | Open in `review-4-1a.md`; do not duplicate project ledger |
+| Perl alarm delivery and source-level state transitions | I4.1a pre-execution controller audit | `IMPORTANT CAVEAT` | Static authorization only after the two blockers are repaired | Same-Skeptic exact source review plus permitted `perl -c`; no MATLAB execution | Pending |
+
+## AP. Independent Skeptic final controller-design re-review of section 27
+
+### AP.1 Audit frame
+
+- **Audit target:** the bounded controller amendment in [[design-4-1a#27. 2026-08-29 minimal controller amendment after review §AO]], read together with design section 26 and review sections AN--AO.
+- **Question:** whether section 27 closes the two remaining controller blockers by using one `EXEC_GO`-anchored absolute deadline and by making dedicated-PGID membership an operational enforceability invariant, while retaining exactly two resource upper predicates.
+- **Success criterion:** the design must count from the earliest instant at which MATLAB can be released, must never reset or replace that deadline, must kill immediately when the remaining interval is nonpositive, and must ensure that nominally active target members remain covered by the guarded dedicated-PGID kill. It must introduce no lower reserve or third resource threshold and must leave all scientific contracts and historical namespaces unchanged.
+- **Authority and scope:** read-only final controller-design review. This section may authorize bounded implementation and static source checks, but it cannot authorize representation-gate-003 execution or `run-006`.
+- **Materials examined:** design sections 26--27; review sections AN--AO; the frozen controller/resource contract in `test/AGENTS.md`; and the unchanged scientific/history boundaries stated in section 27.
+
+### AP.2 Verdict
+
+**`PASS WITH CONDITIONS` (high confidence).** Section 27 closes both blockers in section AO at design level. The single monotonic clock is now captured immediately before `EXEC_GO`, the immutable deadline is $t_0+1800\,\mathrm{s}$, neither clean exec confirmation nor any later event may reset it, and a nonpositive remaining interval requires immediate wall-limit kill instead of a fresh timer. The dedicated-PGID rule now makes any observed live known target outside the verified group an operational-integrity failure, so nominal deadline enforcement and known-descendant cleanup no longer rely on an acknowledged out-of-group target. The only resource upper predicates remain target-active time reaching 1800 seconds and authoritative aggregate RSS reaching 2,147,483,648 bytes. The conditions below concern faithful implementation and mandatory pre-execution review; there is no unresolved design blocker.
+
+### AP.3 Strongest remaining challenge
+
+The strongest remaining risk is implementation drift between three representations of one wall rule: the `EXEC_GO` release timestamp, the remaining interval passed to the one-shot alarm after exec confirmation, and the main-loop monotonic comparison. A fresh `alarm(1800)`, a reset of $t_0$, a strict `>` comparison, or a PID/group cleanup path that bypasses the dedicated-PGID invariant would silently recreate the rejected controller. This is now a source-review risk rather than a design defect and is decidable by exact static inspection before any execution.
+
+### AP.4 Findings
+
+1. **`IMPORTANT CAVEAT` -- the absolute deadline must remain a single source of truth in code.**
+   - **Location:** design section 27.1.
+   - **Evidence:** section 27 freezes $t_0$ immediately before the release write and defines exactly one immutable $t_{\mathrm{deadline}}=t_0+1800\,\mathrm{s}$. The alarm is armed only for the positive remaining interval after clean exec confirmation, while the loop uses `now >= deadline`.
+   - **Consequence:** a source-level reset, a fresh relative 1800-second alarm, or inconsistent inclusive boundaries would violate the hard wall contract.
+   - **Uncertainty:** no controller source yet exists to inspect.
+   - **Cheapest decisive check:** the Researcher theory-to-code map and same-Skeptic spec-to-code review must trace one stored monotonic deadline into both alarm arming and loop comparison and must verify immediate guarded kill when `remaining <= 0`.
+
+2. **`IMPORTANT CAVEAT` -- dedicated-PGID membership must be checked as part of every valid authority snapshot and preserved through cleanup.**
+   - **Location:** design section 27.2, with sections 26.4--26.6.
+   - **Evidence:** an identity-verified live known target with `pgid != dedicated_pgid` now requires `WATCHDOG_OPERATIONAL_INCOMPLETE / TARGET_LEFT_DEDICATED_PGID / OPERATIONAL_INTEGRITY_KILL`; it may not remain a nominal running state. Known identities remain available for positive cleanup and dead confirmation.
+   - **Consequence:** omitting the membership test, treating it as a warning, or dropping the known inventory would reopen the incomplete deadline kill set.
+   - **Uncertainty:** implementation is pending.
+   - **Cheapest decisive check:** exact static review of the full-table parsing, membership branch, guarded negative-group kill, identity-verified positive cleanup, and post-kill dead confirmation.
+
+3. **`MINOR CAVEAT` -- the release timestamp conservatively includes only the unavoidable dispatch interval.**
+   - **Location:** design section 27.1.
+   - **Evidence:** $t_0$ is captured immediately before writing `EXEC_GO`, the earliest causal point at which the child may proceed toward MATLAB exec. It is not an arbitrary earlier setup timestamp and cannot be reset later.
+   - **Consequence:** a very small release/exec dispatch interval is charged to the target budget, but this is conservative enforcement of the authorized hard cap, not a lower reserve, soft stop, or third resource predicate.
+   - **Cheapest decisive check:** verify the timestamp and release write are adjacent in source and that no unrelated setup is inserted between them.
+
+No `BLOCKER` remains.
+
+### AP.5 Controller and resource conclusions
+
+1. The wall resource upper predicate is exactly the immutable absolute deadline $t_0+1800\,\mathrm{s}$, with $t_0$ captured immediately before `EXEC_GO`.
+2. Exec confirmation consumes the science ID but does not reset the clock. `remaining <= 0` causes immediate guarded wall-limit kill; otherwise the one-shot alarm receives only that remaining interval.
+3. The redundant monotonic loop and alarm implement the same inclusive deadline; they are not separate timers, reserves, retries, or grace periods.
+4. The memory resource upper predicate remains exactly authoritative aggregate process-tree RSS `>= 2147483648` bytes.
+5. Loss of RSS authority, loss of the dedicated-PGID invariant, kill-guard failure, or controller failure is an operational-integrity kill. None is a resource upper predicate or evidence that either numerical threshold was reached.
+6. Nominal target operation requires every identity-verified live known descendant to remain in the verified dedicated PGID. The known inventory is still retained for PID-reuse exclusion, positive cleanup, and target-dead confirmation.
+7. Outer `/usr/bin/time -lp` maximum RSS remains contextual wrapper evidence only and is not aggregate MATLAB RSS authority.
+8. The continuous problem, FEM weak form, all frozen scientific counts and schemas, zero-scientific-eigensolve boundary, advisory historical forecast semantics, 001/002 immutable consumed histories, and the prohibition on `run-006` remain unchanged.
+
+### AP.6 What survived scrutiny
+
+- The CLOEXEC exec-status handshake still distinguishes a successful fixed MATLAB exec from a pre-exec controller failure and preserves the science-ID consumption boundary.
+- Two-sided PGID verification and the release barrier prevent MATLAB from starting before the dedicated group is established.
+- The repaired `EXEC_GO` clock removes the uncharged exec-confirmation interval identified in section AO without adding an early reserve.
+- The new membership invariant removes the admitted nominal state in which an active known target could evade the alarm's group kill.
+- Recursive-descendant plus PGID union RSS accounting, stable start identities, PID-reuse exclusion, guarded signalling, direct-child reap, and target-dead confirmation remain coherent with the repaired controller.
+- Scientific schemas and interpretations do not require versioning merely because the existing textual operational enums gain `TARGET_LEFT_DEDICATED_PGID`; no scientific column meaning changes.
+
+### AP.7 Bounded implementation authorization and required next gates
+
+**Authorization granted only to the same Engineer** for the following bounded implementation:
+
+- modify the existing `test/i4/femref-a1/run_i4_1a.m` only where required by the frozen representation-gate-003 dispatch/terminal contract;
+- modify the existing `test/i4/femref-a1/README.md` and `test/i4/femref-a1/SYMBOLS.md` only to document the frozen controller contract;
+- add exactly one controller source: `test/i4/femref-a1/run_representation_gate_003_watchdog.pl`;
+- perform source inspection and the non-executing syntax check `perl -c` on that Perl source.
+
+This authorization does **not** permit creation or claiming of the representation-gate-003 evidence leaf, execution of the watchdog, MATLAB, Octave, Python numerical work, any diagnostic command, any retry, or `run-006`. It does not permit changes to design/review history, scientific formulas, probe inventory, schemas, I1--I3 artifacts, package/main code, representation-gate-001, or representation-gate-002.
+
+After implementation and before any representation-gate-003 execution:
+
+1. the same Researcher must append a theory-to-code mapping that traces the section 27 deadline, PGID invariant, RSS authority, consumption boundary, terminal enums, scientific no-change contract, and exact external command to named source locations;
+2. the same Skeptic must perform an independent spec-to-code/resource pre-execution review of the exact diff and `perl -c` result;
+3. that review must explicitly verify the single absolute deadline, no reset/rearm to 1800 seconds, `remaining <= 0` immediate kill, inclusive `>=` thresholds, complete PGID/member enforcement, guarded kill/reap/dead confirmation, exact create-once namespace, no 001/002 reads, no lower stops, unchanged scientific calls/schemas/counts, and absence of `run-006`;
+4. only a later explicit no-blocker pre-execution verdict may authorize one exact representation-gate-003 command under the already frozen external wrapper.
+
+### AP.8 Open-problem handoff
+
+| Item | Stage | Category | Blocking scope | Cheapest next check | Suggested ledger status |
+|---|---|---|---|---|---|
+| Exact implementation of one `EXEC_GO`-anchored deadline | I4.1a controller implementation | `IMPORTANT CAVEAT` | Execution authorization, not bounded coding | Researcher theory-to-code map plus same-Skeptic exact source review | Pending implementation review |
+| Exact implementation of dedicated-PGID membership and cleanup | I4.1a controller implementation | `IMPORTANT CAVEAT` | Execution authorization, not bounded coding | Same-Skeptic inspection of membership, kill, reap, and identity paths | Pending implementation review |
+| Perl syntax/API availability | I4.1a static implementation validation | `MINOR CAVEAT` | Execution authorization only if syntax/API defect appears | Authorized `perl -c` plus source-level API audit | Pending static check |
+
+## AQ. Mandatory independent spec-to-code/resource pre-execution review
+
+### AQ.1 Audit frame
+
+- **Audit target:** current `test/i4/femref-a1/run_representation_gate_003_watchdog.pl`, the dispatch-local representation-gate-003 changes in `run_i4_1a.m`, and the corresponding README/SYMBOLS mappings, against design §§25--29 and review §§AN--AP.
+- **Question:** whether the exact create-once zero-scientific-eigensolve diagnostic can now be executed once under the sole $1800\,\mathrm{s}$ target-active wall upper and $2{,}147{,}483{,}648$-byte authoritative aggregate RSS upper, with no lower stop, history reuse, cleanup hang, schema drift, or premature `run-006` authority.
+- **Success criterion:** every threshold or authority-loss branch must stop the target before any operation that can block indefinitely; the watchdog must preserve the exact ID/command/deadline/process-tree/accounting/publication contract; MATLAB must retain the frozen workload and advisory-only 003 semantics; 001/002 and `run-006` must remain outside the execution path.
+- **Authority and scope:** read-only mandatory pre-execution review. The only executed checks were `/usr/bin/perl -c`, a nonlaunching Perl core-API identity check, namespace/file inspection, and `git diff --check`. No watchdog, MATLAB, Octave, Python numerical work, diagnostic, or formal run was executed.
+- **Materials examined:** design §§25--29; review §§AN--AP; the complete current watchdog source; targeted 003 MATLAB dispatch, representation runner, completion/advisory/schema code; README/SYMBOLS; current filesystem namespace state; and the current diff.
+
+### AQ.2 Verdict
+
+**`REVISE` (high confidence).** The section 28 cleanup/reap blocker is closed: released-unconfirmed targets receive guarded group cleanup, alarm guard/signal failure no longer enters unsafe blocking reap, blocking wait is guarded by an accepted/absent direct-child kill, and dead confirmation remains fail closed. The fixed ID, single `EXEC_GO` deadline, exact inclusive thresholds, full-table aggregate accounting, dedicated-PGID invariant, MATLAB advisory semantics, and scientific no-change boundary also pass static inspection. One unresolved controller blocker remains, however: the RSS-limit and RSS-authority-loss branches perform required sidecar/stdout write-and-flush operations before sending `SIGKILL`. A blocked log sink can therefore leave MATLAB running after the 2 GiB predicate is already observed or after RSS authority has already been lost. This contradicts the immediate hard-stop/fail-closed contract, so representation-gate-003 execution is not authorized yet.
+
+### AQ.3 Strongest challenge
+
+The controller correctly computes the resource decision but does not always act on it first. At an authoritative RSS crossing, line 314 calls `LOCAL_record_sample` before line 315 calls `LOCAL_issue_group_kill`; on process-table or authority failure, lines 265/289 call `LOCAL_record_unavailable_sample` before lines 269/293 issue the kill. Both record helpers synchronously write and flush `samples.tsv.partial` and watchdog stdout. A write or flush can block without throwing, so neither the exception cleanup nor the one-second loop can guarantee prompt termination. The wall alarm would eventually kill at 1800 seconds, but that does not enforce the independent 2 GiB hard cap and does not make RSS-authority loss fail closed.
+
+### AQ.4 Classified findings
+
+1. **`BLOCKER` -- RSS threshold and authority-loss branches log before killing the live target.**
+   - **Location:** `run_representation_gate_003_watchdog.pl:264-270`, `:288-294`, `:312-318`; blocking publication operations in `:750-789`.
+   - **Evidence:**
+     - process-table failure calls `LOCAL_record_unavailable_sample('OPERATIONAL_INTEGRITY_KILL')` before `LOCAL_issue_group_kill`;
+     - authoritative-sample/PGID-membership failure does the same;
+     - aggregate RSS `>= 2147483648` calls `LOCAL_record_sample(..., 'RSS_HARD_LIMIT_KILL')` before group/positive cleanup;
+     - both record helpers synchronously write and flush the sidecar and unbuffered stdout before returning.
+   - **Consequence:** if either sink blocks, the target remains live after a measured hard-limit crossing or after the controller can no longer prove the hard cap. This directly invalidates the current pre-execution resource-enforcement deliverable.
+   - **Uncertainty:** no runtime assumption is needed; blocking is permitted by the source ordering. Ordinary fast writes would hide rather than eliminate the defect.
+   - **Cheapest decisive repair:** freeze the computed sample/error and terminal classification in memory, issue the existing guarded group plus identity-safe positive cleanup first, and only then attempt the required row publication. If post-kill publication fails, retain `WATCHDOG_OPERATIONAL_INCOMPLETE` with the truthful logging/RSS-authority cause; if the frozen threshold row publishes to both required sinks, retain `RSS_HARD_LIMIT_KILLED`. The repair must not add a threshold, retry, grace, sample, or schema field.
+
+2. **`IMPORTANT CAVEAT` -- an early nonblocking wait can reap the child without recording the reap result.**
+   - **Location:** `run_representation_gate_003_watchdog.pl:179-188` and later reap logic at `:495-511`.
+   - **Evidence:** `waitpid($child_pid, WNOHANG)` is called during exec confirmation; when it returns the child PID, source raises `PRELAUNCH_FAILURE` without first setting `child_reaped` or `child_wait_status`. The later helper then calls `waitpid` again and can only return unconfirmed.
+   - **Consequence:** a very fast post-exec exit cannot cause an unsafe blocking wait after the §28 fix, but exact child status and target-dead evidence can be lost and the external ledger is unnecessarily degraded. The external create-once leaf still prevents retry, so this does not independently invalidate normal-run authorization once the blocker above is repaired.
+   - **Uncertainty:** MATLAB normally cannot complete during this short interval, but executable/environment failure can take this path.
+   - **Cheapest decisive repair/check:** when the early wait returns the exact child PID, record `child_reaped=1` and `$?` before raising the existing fail-closed classification. Do not widen the clean-confirmation or retry rule.
+
+3. **`MINOR CAVEAT` -- static syntax/API success is not runtime process-control evidence.**
+   - **Location:** system Perl and the not-yet-executed watchdog.
+   - **Evidence:** `/usr/bin/perl -c test/i4/femref-a1/run_representation_gate_003_watchdog.pl` returned `syntax OK`; a nonlaunching symbol check found `POSIX::setpgid`, `Time::HiRes::clock_gettime`, and `Time::HiRes::alarm`. Both commands emitted only the host `C.UTF-8` to `C` locale fallback warning.
+   - **Consequence:** source availability is established, but PGID, signal, `ps`, and dead-confirmation runtime behavior remains evidence for the later postdiagnostic review.
+   - **Cheapest decisive test:** after the blocker is repaired and the static gate is repeated, the single exact diagnostic command is the decisive runtime check; no auxiliary watchdog run or retry is authorized.
+
+### AQ.5 Implementation audit
+
+#### AQ.5.1 Controller items that pass
+
+1. **Exact identity and no arguments:** watchdog constants fix `representation-gate-003`, the exact MATLAB path, and the exact batch string; `@ARGV == 0` is enforced before leaf creation.
+2. **Create-once separation:** science and external collisions are checked; only `watchdog/representation-gate-003/` is atomically claimed by Perl; MATLAB alone owns `diagnostics/representation-gate-003/`. Current science and external 003 leaves are absent.
+3. **CLOEXEC/release/PGID:** the two-pipe handshake, child and parent `setpgid`, exact `PGID_READY`/`EXEC_GO`, post-exec PGID check, and list-form exec match the frozen contract.
+4. **One wall deadline:** `target_start` is captured immediately before the complete `EXEC_GO` write; `deadline=target_start+1800` is assigned once; clean confirmation does not reset it; positive remaining time alone is passed to the one-shot alarm; `remaining <= 0` immediately enters guarded kill; every loop test uses inclusive `now >= deadline`.
+5. **No lower resource gate:** watchdog source contains no 120-second, 1 GiB, 1.5 GiB, forecast, cadence, stall, grace, or early-reserve stop. The nominal one-second sleep is observational only.
+6. **Exact memory predicate:** arbitrary-precision aggregate bytes are compared inclusively with `2147483648`.
+7. **RSS coverage:** exact full-table `/bin/ps` fields include PID, PPID, PGID, RSS, start identity, state, and command; current descendants and dedicated-PGID members are unioned and PID-deduplicated; stable known identities and PID-reuse exclusions are retained.
+8. **Dedicated-PGID invariant:** an identity-verified live known target outside the dedicated group yields `TARGET_LEFT_DEDICATED_PGID` and operational-integrity cleanup, not a resource crossing.
+9. **Section 28/29 cleanup:** alarm guard/signal failure returns to main-loop guarded cleanup before reap; released-unconfirmed targets use guarded group cleanup; blocking reap is used only after already-reaped or exact accepted/absent direct-child kill; later process-table/group/known-identity checks control target-dead confirmation.
+10. **External artifacts:** exclusive child logs, partial samples, atomic samples rename, and exclusive temporary-summary-to-final rename implement the frozen 11- and 18-column external schemas. Outer `/usr/bin/time` maximum RSS is not consumed by the controller.
+
+#### AQ.5.2 MATLAB/scientific items that pass
+
+1. Entry dispatch accepts the exact 003 pair and no arbitrary ID/path; its selected ID alone forms the diagnostic namespace.
+2. The 003 path rebuilds two meshes and three phase reductions and prepares six primary rows; it does not call `LOCAL_low_spectrum` or the sole `eigs` site.
+3. Frozen completion counts remain 2 mesh rows, 3 seam rows, 6 primary rows, 294 probe rows, 8 partition rows, a $10414\times36$ prepared container, 261 rewrite rows, one 27-column forecast row, and a 19-field summary.
+4. The 17/16/7/11/27 representation ledger widths, 36-column operator representation, header-only bulk/gap ledgers, zero completed eigensolves, no reference export, forbidden-output checks, and no-partial completion gate remain hard correctness conditions.
+5. For 003, false CV uses `ADVISORY_TIMING_VARIABILITY`; false forecast/CV/spread/1.5-GiB observation uses `ADVISORY_RESOURCE_SCREEN_FALSE` with `OBSERVATION_ONLY_NOT_EXECUTION_FAILURE`; `internal_pass` is recorded but is not consumed by 003 terminal selection.
+6. Correctness-complete 003 ends only at `REPRESENTATION_GATE_COMPLETE_PENDING_EXTERNAL_RESOURCE_REVIEW`; it cannot select `REPRESENTATION_GATE_COMPLETE_INTERNAL_RESOURCE_FAIL`.
+7. Formal 1.5-GiB preflight and formal solve-wall logic remain in the one-input scientific path; they are not reached by the two-input 003 path.
+8. The watchdog contains no 001/002 path or artifact reference. Existing 001/002 namespaces remain present and were not written by this audit. `output/run-006/` is absent.
+
+### AQ.6 What survived scrutiny
+
+- The §27 single-deadline repair and dedicated-PGID membership repair are faithfully represented in source.
+- The §28/29 alarm-failure, released-unconfirmed, no-hang reap, identity cleanup, and dead-confirmation fixes materially resolve the earlier controller blocker.
+- Exactly two resource upper predicates remain; correctness and operational-integrity failures are not mislabeled as threshold crossings.
+- The external wrapper identity, fixed child command, schemas, create-once paths, and summary claim boundary are reproducible and appropriately separate from MATLAB science artifacts.
+- The MATLAB 003 branches preserve the scientific representation workload, schemas, zero-eigensolve boundary, historical advisory fields, and pending-review claim strength.
+- Static checks passed: Perl syntax and required core API symbols are available; `git diff --check` passed; 003 science/external leaves and `run-006` are absent.
+
+### AQ.7 Minimal resolution and authorization boundary
+
+Return only the ordering defect in AQ.4 finding 1 to the same Engineer; the adjacent early-wait bookkeeping caveat may be repaired in the same bounded controller edit. The permitted change remains confined to `run_representation_gate_003_watchdog.pl` and any strictly mechanical README/SYMBOLS locator update. It must not change MATLAB science, thresholds, timer origin, sample schemas, terminal claim boundary, IDs, or artifact paths.
+
+After the bounded fix:
+
+1. the same Researcher must append a delta theory-to-code mapping showing kill-before-log ordering for RSS crossing, process-table failure, authoritative-sample failure, and target-left-PGID failure;
+2. rerun only `/usr/bin/perl -c` and `git diff --check` plus namespace-absence checks;
+3. return the exact source to the same Skeptic for a focused re-review.
+
+**The command `/usr/bin/time -lp /usr/bin/perl ./run_representation_gate_003_watchdog.pl` is not authorized by this verdict.** No watchdog/MATLAB execution, representation-gate-003 leaf creation, retry, new diagnostic ID, or `run-006` is authorized.
+
+### AQ.8 Open-problem handoff
+
+| Item | Stage | Category | Blocking scope | Cheapest next check | Suggested ledger status |
+|---|---|---|---|---|---|
+| RSS threshold/authority-loss branches publish before kill | I4.1a representation-gate-003 controller implementation | `BLOCKER` | Exact 003 execution | Bounded kill-before-log source repair, Researcher delta map, same-Skeptic static re-review | Open in `review-4-1a.md`; execution blocked |
+| Early `waitpid(WNOHANG)` reap bookkeeping | I4.1a controller implementation | `IMPORTANT CAVEAT` | Failure-ledger completeness, not normal target execution | Record exact reap flag/status before existing fail-closed return | Pending bounded cleanup |
+| PGID/signal/process-table runtime behavior | I4.1a postdiagnostic evidence | `MINOR CAVEAT` | Postrun interpretation only after static pass | One exact authorized command followed by same-Skeptic postreview | Not yet executable |
+
+## AR. Focused exact-source re-review after section 30
+
+### AR.1 Audit frame
+
+- **Audit target:** the section 30 source delta in `test/i4/femref-a1/run_representation_gate_003_watchdog.pl`, limited to kill-before-log ordering, post-kill publication downgrade, RSS hard-limit status retention, early reap bookkeeping, and preservation of the two-upper-limit contract.
+- **Question:** whether review §AQ's execution blocker is closed without adding a lower stop, retry path, schema change, or new scientific authority.
+- **Success criterion:** process-table failure, authoritative-sample/PGID failure, and authoritative RSS crossing must all terminate the live target before any potentially blocking log write/flush; failed post-kill publication or dead confirmation must prevent retention of a complete hard-limit terminal; an early exact reap must preserve its wait status; the only resource uppers must remain 1800 target-active seconds and 2,147,483,648 aggregate RSS bytes.
+- **Authority and scope:** read-only focused pre-execution review. Checks were limited to exact source inspection, `/usr/bin/perl -c`, `git diff --check`, lower-threshold string inspection, and namespace absence. No watchdog, MATLAB, Octave, Python numerical work, diagnostic, or formal run was executed.
+- **Materials examined:** design §30 together with §§25--29; review §AQ together with §§AN--AP; current watchdog source; and the current 003/run-006 filesystem state.
+
+### AR.2 Verdict
+
+**`PASS WITH CONDITIONS` (high confidence).** The §AQ blocker is closed. All three reopened branches now freeze their truthful in-memory classification, issue guarded group and identity-safe positive cleanup, and only then attempt the sidecar/stdout write-and-flush. A post-kill row-publication exception enters the existing operational-incomplete exception path; samples close/rename failure also downgrades before summary construction; reap/dead-confirmation failure downgrades before summary; and summary-publication failure leaves no completed summary authority and reports operational incomplete on stderr. Therefore `RSS_HARD_LIMIT_KILLED` survives only when the authoritative threshold row is published to both required live sinks and the later target-death/samples/summary finalization succeeds. The early exact `waitpid` result is now retained. No unresolved blocker remains; the conditions are runtime evidence and postdiagnostic-review requirements, not source repairs.
+
+### AR.3 Strongest remaining challenge
+
+The strongest remaining uncertainty is runtime rather than static: macOS process-group signalling, safe-signal delivery, full-table `ps` identity/accounting, post-kill descendant disappearance, and external atomic publication have not yet been exercised together. Static source now fails closed if any of those mechanisms loses authority, so this uncertainty is exactly what the one authorized create-once diagnostic and subsequent postdiagnostic review must test; it is not a reason for another design or implementation cycle.
+
+### AR.4 Classified findings
+
+1. **`IMPORTANT CAVEAT` -- a post-kill logging failure deliberately destroys complete hard-limit evidence.**
+   - **Location:** watchdog threshold/failure branches at current lines 269--323; exception downgrade at 359--407; samples finalization at 414--423; summary publication at 447--454.
+   - **Evidence:** kill precedes the row writer in every reopened branch. If the row writer throws, the outer exception branch forces `WATCHDOG_OPERATIONAL_INCOMPLETE` and repeats guarded cleanup before safe reap/dead confirmation. If samples close/rename fails, status is downgraded before the summary row is formed. If summary publication fails, no summary commit marker is established and stderr reports operational incomplete.
+   - **Consequence:** the target is safely stopped, but postreview must not reconstruct a complete RSS hard-limit verdict from a partial sidecar or one sink alone.
+   - **Uncertainty:** only runtime can show whether both sinks and the summary complete.
+   - **Cheapest decisive test:** the exact once-only command below, followed by same-Skeptic cross-check of sidecar, mirrored stdout, final samples file, summary, child logs, target-dead evidence, and outer `time`.
+
+2. **`MINOR CAVEAT` -- syntax success does not establish signal/process runtime behavior.**
+   - **Location:** host system Perl and controller runtime APIs.
+   - **Evidence:** `/usr/bin/perl -c test/i4/femref-a1/run_representation_gate_003_watchdog.pl` returned `syntax OK`; only the known unsupported `C.UTF-8` to `C` locale fallback warning was emitted.
+   - **Consequence:** none for launch authorization; runtime PGID/RSS/dead-confirmation evidence remains conditional on the diagnostic.
+   - **Cheapest decisive test:** no auxiliary dry run or new ID; use only the authorized exact command.
+
+No `BLOCKER` remains.
+
+### AR.5 Focused implementation findings
+
+1. **Process-table failure passes.** Source freezes `WATCHDOG_OPERATIONAL_INCOMPLETE / RSS_AUTHORITY_LOST` and the stop timestamp, calls `LOCAL_issue_group_kill`, then writes the unavailable operational-integrity row.
+2. **Authoritative-sample/PGID failure passes.** The exact authority cause, including `TARGET_LEFT_DEDICATED_PGID`, is frozen before guarded group/positive cleanup; only the stopped-target branch attempts the unavailable row.
+3. **RSS crossing passes.** The arbitrary-precision aggregate is compared inclusively with `2147483648`; source freezes `RSS_HARD_LIMIT_KILLED / RSS_HARD_LIMIT_REACHED`, kills first, then writes the frozen `SAMPLE_OK / RSS_HARD_LIMIT_KILL` row.
+4. **Post-kill downgrade passes.** A required row write/flush exception cannot leave a live target waiting for logging and cannot retain the hard-limit status. Reap/dead-confirmation, samples close/rename, and summary publication remain necessary for complete terminal authority.
+5. **Early reap bookkeeping passes.** When the confirmation-stage `waitpid(..., WNOHANG)` returns the exact child PID, source records `child_reaped=1` and exact `$?` before entering the existing fail-closed pre-confirmation branch; later code does not lose or double-reap that status.
+6. **Wall enforcement is unchanged.** One monotonic timestamp immediately precedes `EXEC_GO`; one immutable deadline equals that timestamp plus 1800 seconds; `remaining <= 0` kills immediately; alarm and loop use the same inclusive deadline; no reset or early reserve appears.
+7. **Memory enforcement is unchanged.** The only memory upper is authoritative aggregate RSS `>= 2147483648` bytes. Recursive descendants, dedicated-PGID members, and stable known identities remain PID-deduplicated; leaving the dedicated group remains operational-integrity failure.
+8. **No hidden lower resource stop was introduced.** Source contains no 120-second, 1 GiB, 1.5 GiB, forecast, cadence, stall, grace, or reserve stop. The one-second interval remains observation only.
+9. **Schemas and science remain unchanged.** The fixed 11/18-column external schemas, fixed no-argument command, MATLAB 003 dispatch, advisory-only internal forecast/CV fields, zero-scientific-eigensolve workload, 001/002 isolation, and no-reference/no-effectivity claim boundary are unchanged by this delta.
+10. **Prelaunch state passes.** `diagnostics/representation-gate-003/`, `watchdog/representation-gate-003/`, and `output/run-006/` are absent. `git diff --check` passed.
+
+### AR.6 What survived scrutiny
+
+- The single `EXEC_GO`-anchored wall deadline and exact 2 GiB aggregate threshold remain the only resource uppers.
+- Operational-integrity and correctness failures remain distinct from resource crossings and may fail closed without inventing a lower resource limit.
+- The CLOEXEC handshake, verified dedicated PGID, full-table RSS authority, stable known identities, guarded kill, nonhanging reap policy, and dead confirmation remain internally coherent after the ordering repair.
+- External create-once ownership and atomic publication remain separate from MATLAB's science namespace.
+- MATLAB's 003-specific advisory and pending-review terminal semantics remain intact; no scientific eigensolve, reference export, effectivity comparison, or formal-run authority is introduced.
+
+### AR.7 Exact one-time execution authorization
+
+With no unresolved blocker, **one and only one** representation-gate-003 execution is authorized. It must be launched from
+`/Users/whc/Documents/Work/epost/test/i4/femref-a1` with exactly:
+
+```text
+/usr/bin/time -lp /usr/bin/perl ./run_representation_gate_003_watchdog.pl
+```
+
+No arguments, wrapper loop, alternate cwd, alternate MATLAB command, precreated 003 leaf, manual polling controller, retry, or replacement ID is authorized. The successfully claimed external leaf is create-once. After confirmed MATLAB exec, the science ID is consumed regardless of natural completion, hard stop, operational failure, correctness failure, environment failure, or incomplete artifacts.
+
+During the run, the only **resource** stop predicates are:
+
+$$
+t-t_0\ge1800\ \mathrm{s},
+$$
+
+and
+
+$$
+B_{\mathrm{RSS}}^{\mathrm{agg}}\ge2147483648\ \mathrm{bytes}.
+$$
+
+The diagnostic may also stop fail closed for an actual operational-integrity, correctness, schema, atomic-publication, isolation, MATLAB, or environment failure. Such a stop must retain its truthful classification and must not be relabeled as a lower resource limit. Historical 120-second, 1 GiB, 1.5 GiB, cadence, forecast, CV, spread, or progress observations cannot stop 003 as resource gates.
+
+Completion or failure must return to the same Skeptic for full postdiagnostic review before any further action. **This authorization does not authorize `run-006`, a retry, representation-gate-004, another attempt, guided-mode eigensolves, reference/effectivity comparison, artifact repair, or project-result promotion.**
+
+### AR.8 Mandatory postdiagnostic evidence
+
+The postdiagnostic review must receive and audit:
+
+1. exact cwd, outer command, shell exit, and complete `/usr/bin/time -lp` record;
+2. external samples partial/final state, mirrored watchdog stdout, MATLAB stdout/stderr, and summary-last state;
+3. every valid sample's PID list, de-duplicated KiB sum, byte conversion, peak, decision, elapsed, and gap;
+4. any unavailable/operational row and the preceding kill timestamp/order;
+5. wall alarm/loop decision, target-stop, child wait status, target-dead confirmation, ledger-finalized timestamp, and outer real time;
+6. exact MATLAB terminal or reached partial artifacts, all required counts/schemas if complete, advisory forecast/CV semantics, and zero scientific eigensolves/no-reference boundary;
+7. immutable 001/002 evidence and continued absence of `run-006`.
+
+### AR.9 Open-problem handoff
+
+| Item | Stage | Category | Blocking scope | Cheapest next check | Suggested ledger status |
+|---|---|---|---|---|---|
+| Combined PGID/RSS/dead-confirmation runtime behavior | I4.1a representation-gate-003 execution | `IMPORTANT CAVEAT` | Postdiagnostic interpretation and any later formal-run discussion | One exact authorized command plus same-Skeptic postdiagnostic audit | Authorized once / not yet executed |
+| Host locale fallback warning | I4.1a controller runtime | `MINOR CAVEAT` | None unless it changes fixed parser output | Record stderr and verify exact `ps` parsing in reached evidence | Monitor only |
+
+## AS. Independent postdiagnostic audit of `representation-gate-003`
+
+### AS.1 Audit frame
+
+- **Audit target:** the one create-once execution of `representation-gate-003`, including its external watchdog ledger, MATLAB zero-scientific-eigensolve representation artifacts, resource record, retry/ID boundary, and claim boundary.
+- **Exact execution evidence:** cwd `/Users/whc/Documents/Work/epost/test/i4/femref-a1`; command `/usr/bin/time -lp /usr/bin/perl ./run_representation_gate_003_watchdog.pl`; shell exit 0. The supplied outer record reports `real 761.52`, `user 992.77`, `sys 274.34`, maximum resident set size 1,175,863,296 bytes, and peak memory footprint 15,680,512 bytes. The outer memory fields are contextual wrapper evidence, not aggregate MATLAB-tree authority.
+- **Question:** whether the exact frozen representation workload completed correctly and atomically before either authorized resource upper was reached, without history reuse, scientific eigensolve, reference/effectivity output, retry, or `run-006`.
+- **Success criterion:** complete frozen internal counts/schemas and pending-review terminal; externally authoritative PID-deduplicated aggregate RSS always below 2,147,483,648 bytes; target-active elapsed below 1800 seconds; natural child/group/known-target death before final ledger commit; no unavailable or operational row; no partial artifact; and an honest zero-eigensolve/no-reference claim.
+- **Authority and scope:** read-only postdiagnostic review under design §§25--30 and review §§AN--AR. No artifact, source, design, review, status, or documentation file was modified. No MATLAB, Octave, Python numerical work, watchdog rerun, diagnostic retry, or formal computation was executed.
+- **Checks used:** read-only filesystem/file-identity inspection; CSV/TSV parsing and integer arithmetic with system Perl; line/schema/count checks; source-to-artifact consistency checks; `file`, `stat`, `find`, `wc`, `du`, `rg`, `git status`, branch, and HEAD inspection.
+
+### AS.2 Verdict
+
+**Postdiagnostic verdict: `PASS WITH CONDITIONS` (high confidence).** The exact 003 command completed naturally and produced a complete, internally and externally consistent zero-scientific-eigensolve representation artifact. The watchdog observed 737 valid samples, no unavailable or operational sample, and a PID-deduplicated aggregate peak of 1,296,187,392 bytes ($1.207168579102$ GiB), strictly below 2,147,483,648 bytes. Target-active elapsed was 761.486755 seconds (12.69145 minutes), strictly below 1800 seconds. MATLAB exited with status 0 and no signal; the final zero-live-PID sample recorded `NATURAL_EXIT_OBSERVED`; target death preceded ledger finalization. Every frozen internal count/schema gate passed, no partial or forbidden scientific artifact exists, and MATLAB reported `REPRESENTATION_GATE_COMPLETE_PENDING_EXTERNAL_RESOURCE_REVIEW`. The condition is prospective: the internal formal forecast remains 2671.67 seconds (44.53 minutes) with substantial timing variability, so this successful diagnostic does not authorize `run-006`, a formal reference run, or any effectivity claim.
+
+### AS.3 Strongest challenge
+
+The result most capable of being overclaimed is the contrast between a successful 12.69-minute diagnostic and the diagnostic's own 44.53-minute future-formal forecast. The executed workload contained zero scientific eigensolves and measured representation preparation/writer paths; it did not execute the 119-solve guided-mode reference workload. Therefore the actual diagnostic wall/RSS pass establishes representation correctness and current diagnostic resource feasibility only. It does not refute the failed formal wall forecast, establish formal-run feasibility, produce a guided-mode eigenpair, or validate effectivity.
+
+### AS.4 Classified findings
+
+1. **`IMPORTANT CAVEAT` -- the future-formal wall forecast remains above the default plan budget and timing stability is poor.**
+   - **Location:** `diagnostics/representation-gate-003/representation-forecast.csv` and `representation-probe-costs.csv`.
+   - **Evidence:** `forecast_seconds=2671.6706757083334`, `forecast_minutes_unrounded=44.527844595138887`, `forecast_strictly_below_30=0`, `timing_pass=false`, and `internal_gate_pass=0`. The row truthfully uses `ADVISORY_RESOURCE_SCREEN_FALSE` and `OBSERVATION_ONLY_NOT_EXECUTION_FAILURE;wall_pass=false;forecast_at_most_1p5_gib=true;timing_pass=false`. Exactly 114 of 294 probe rows carry `ADVISORY_TIMING_VARIABILITY`, with no `RESOURCE_BUDGET_UNAVAILABLE` row; the largest observed CV is about 1.36565.
+   - **Consequence:** this does not invalidate 003, because those fields were prospectively frozen as observation-only for this diagnostic. It does prevent using 003 as automatic authority for a 30-minute formal `run-006`; any later formal proposal requires a new explicit Researcher/design/resource review flow.
+   - **Uncertainty:** the forecast is empirical and timing-variable, not a certified runtime bound; nevertheless, current evidence does not support silently ignoring it.
+   - **Cheapest decisive next action:** stop at the current postdiagnostic result. If the user later requests formal continuation, return the 44.53-minute/timing evidence to a new bounded design and budget gate before any command.
+
+2. **`MINOR CAVEAT` -- MAT mirrors were identity-checked but not independently decoded in this no-MATLAB/no-Python audit.**
+   - **Location:** `diagnostic-summary.mat` and `operator-representation.mat`.
+   - **Evidence:** both are valid MATLAB v7.3 containers with nonzero sizes; their CSV peers are schema-valid and the runtime completion gate reports the in-memory mirror/count checks passed. No permitted local HDF5 inspection utility was available, and this audit intentionally did not run MATLAB or Python.
+   - **Consequence:** no effect on the postdiagnostic verdict because the CSV ledger, source-owned runtime mirror gate, summary-last state, and external resource result independently establish the current claim. It limits only an optional extra binary-mirror robustness assertion.
+   - **Cheapest decisive check:** defer; decode only if a later authorized artifact-integrity audit specifically requires it.
+
+3. **`MINOR CAVEAT` -- 001/002 immutability is supported by isolation and timestamps, but no fresh pre/post-003 digest pair was supplied to this Skeptic.**
+   - **Location:** existing `diagnostics/representation-gate-001/` and `representation-gate-002/`.
+   - **Evidence:** each still contains exactly seven files; all recorded mtimes predate the 003 launch; the 003 controller/source contains no 001/002 artifact path; and no audit action wrote them. Earlier reviews preserve the available digest history.
+   - **Consequence:** there is no evidence of mutation and no history dependency in 003. The present check is metadata/source-isolation confirmation rather than a newly established cryptographic before/after proof.
+   - **Cheapest decisive check:** none needed for the current verdict; retain the existing immutable histories and do not rewrite them.
+
+No `BLOCKER` remains for the representation-gate-003 diagnostic deliverable.
+
+### AS.5 External watchdog and resource audit
+
+1. **Create-once artifacts:** the external leaf contains exactly the four terminal files `samples.tsv`, `watchdog-summary.tsv`, `matlab.stdout.log`, and `matlab.stderr.log`; the live `samples.tsv.partial` was atomically renamed and no `.partial` remains.
+2. **External schemas:** `samples.tsv` has exactly 11 columns and 737 data rows; `watchdog-summary.tsv` has exactly 18 columns and one data row.
+3. **Sequence and identity:** sample sequences are exactly 1--737. Every row records root PID 81968 and dedicated PGID 81968. The only observed target PIDs are 81968 and 82034; every per-row PID list is strictly sorted and duplicate-free.
+4. **Arithmetic:** every row's `live_pid_count` equals its parsed PID-pair count, and every `aggregate_rss_bytes` equals $1024$ times the sum of the recorded RSS KiB values. No arithmetic, sequence, schema, monotonic-time, or stored-gap mismatch was found.
+5. **Peak:** the authoritative peak is 1,296,187,392 bytes at sequence 81. Its exact row contains `81968:1145984;82034:119824`; the KiB sum is 1,265,808 and $1{,}265{,}808\times1024=1{,}296{,}187{,}392$. This is 851,296,256 bytes below the 2 GiB hard upper.
+6. **Sampling:** all 737 rows are `SAMPLE_OK`; `unavailable_sample_count=0`; no operational-integrity decision appears. The observed post-first-sample gaps range from about 1.024682 to 1.099532 seconds, with mean about 1.034596 seconds. Cadence remains observational, but the evidence is continuous and well resolved.
+7. **Natural terminal:** the sole nonempty decision is sequence 737 `NATURAL_EXIT_OBSERVED`, with elapsed 761.48668099986389, live count 0, empty PID pairs, and aggregate 0. Summary status is `TARGET_EXITED / NATURAL_EXIT`, child wait status 0, exit code 0, signal 0, and diagnostic namespace present.
+8. **Ordering:** supplied controller evidence gives `target_dead=2849620.6282569999` and `ledger_finalized=2849620.6288549998`; ledger commit follows confirmed target death by about 0.000598 seconds. The last sample precedes target-dead elapsed by about 0.000074 seconds. No scientific process remained live during finalization.
+9. **Wall:** summary target-active elapsed 761.4867549999617 seconds is below 1800 seconds; outer `real 761.52` transparently includes controller setup/finalization and is consistent with the target record.
+10. **Outer/aggregate distinction:** outer maximum RSS is 1,175,863,296 bytes ($1.095108032227$ GiB), lower than the watchdog's aggregate MATLAB-tree peak. It was correctly not used as aggregate authority. The reported 15,680,512-byte outer peak footprint is also contextual only.
+11. **Child logs:** MATLAB stdout contains only the expected pending-review terminal line. MATLAB stderr contains two Java package warnings and no scientific or controller failure.
+
+### AS.6 MATLAB science-artifact audit
+
+1. **Terminal summary:** the 19-field CSV summary records exact ID/dispatch, `completed_eigensolves=0`, `reference_exported=0`, six primary rows, correctness pass, internal benchmark complete, empty terminal failure fields, claim boundary `ZERO_EIGENSOLVE_REPRESENTATION_AND_RESOURCE_EVIDENCE_ONLY`, and external review pending.
+2. **Exact row counts and widths:** independent CSV parsing found:
+   - mesh ledger: 2 rows, 36 columns;
+   - seam ledger: 3 rows, 12 columns;
+   - operator representation: 6 rows, 36 columns;
+   - representation resource: 293 rows, 17 columns;
+   - probe costs: 294 rows, 16 columns;
+   - partition bounds: 8 rows, 7 columns;
+   - rewrite benchmark: 261 rows, 11 columns;
+   - forecast: 1 row, 27 columns;
+   - diagnostic summary: 1 row, 19 columns;
+   - bulk bands/gaps: header-only 10/14 columns;
+   - progress: 4 reached rows ending at `INTERNAL_BENCHMARK / COMPLETE`.
+   Every data row has its header's exact width.
+3. **Primary representation:** the six operator rows form exactly three stiffness/mass pairs. All have `EVALUATED_PASS`, `gate_pass=1`, zero raw/canonical nonfinite counts, exact canonical Hermitian status, and empty first-failure fields.
+4. **Mesh/seam correctness:** both meshes have complete planar-complex pass, zero unpaired triangles, zero material mismatches, zero invalid/nonmanifold/interior-free/missing-boundary/intersection counts, one connected triangle component, and empty failure fields. All three seam rows have zero coordinate mismatch and tiny seam/Hermitian defects below the frozen tolerance.
+5. **Probe inventory:** path counts are six primary component rows plus 48 rows for each of global, restricted-center, restricted-core, restricted-tail, endpoint-parity, and common-core, totaling 294. All false timing gates are correctly advisory; none becomes a diagnostic terminal failure.
+6. **Partition and writer:** all eight maximizing partitions sum to their declared 40/48 target and match their cluster counts. The 261 rewrite rows have exact sequential checkpoints, chained before/after counts, finite nonnegative timing/byte fields, monotone cumulative time, and final `rows_after=10414`. Checkpoint kinds are exactly 1 header, 119 primary-pair, 47 global-normalization, 47 restricted-parity, and 47 common-core.
+7. **$10414\times36$ evidence:** the runtime completion gate reports the in-memory prepared container passed the exact $10414\times36$ check; the independent rewrite ledger reaches exactly 10414 rows under the 36-column operator contract.
+8. **Atomic publication:** all required final artifacts are present; no `.partial` remains in either science or watchdog leaf. Summary MAT/CSV and external summary-last files are present after their dependent ledgers.
+9. **No scientific result leakage:** bulk band/gap files are header-only; no field, spectrum, eigenvalue, reference collection, or effectivity artifact exists. Strings such as `eigs` in operator consumer-contract fields describe future consumers and do not represent an executed solve; the runtime summary confirms zero completed eigensolves.
+
+### AS.7 Budget, retry, history, and claim boundary
+
+- **Budget:** target-active time was 12.69 minutes and authoritative aggregate peak RSS was 1.2072 GiB, both below the user-authorized 1800-second/2-GiB uppers. The science leaf occupies about 400 KiB and the external leaf about 144 KiB.
+- **Attempt/ID:** representation-gate-003 has now been launched exactly once and is permanently consumed. Existing representation IDs are exactly 001, 002, and 003; there is one external 003 leaf and no representation-gate-004.
+- **Retry:** no retry occurred and none is authorized. A successful result does not create a right to repeat the ID for robustness or overwrite artifacts.
+- **History:** 001 and 002 remain preserved as their earlier consumed incomplete histories. The current result does not reinterpret either failure.
+- **Formal boundary:** `output/run-006/` is absent. Existing output directories stop at `run-005`.
+- **Git:** branch is `codex/epost`; HEAD remains the pre-existing 2026-08-28 commit and the task files/artifacts remain uncommitted in the working tree. This Skeptic made no commit.
+- **Claim:** the defensible claim is only: *the frozen zero-scientific-eigensolve representation correctness/resource diagnostic completed naturally once, with complete internal schemas/counts, external target-active elapsed about 761.49 seconds, and observed aggregate peak RSS 1,296,187,392 bytes below 2 GiB.* It is not a guided-mode eigenpair, independent reference result, reference-error bound, effectivity validation, or formal-run feasibility proof.
+
+### AS.8 Allowed minimal synchronization and prohibited next actions
+
+After appending this review, the main Researcher/agent may make only minimal status/documentation synchronization needed to replace prospective wording with the verified facts above. Appropriate scope is:
+
+1. project `STATUS.md`: record 003 consumed, complete zero-eigensolve representation diagnostic, natural exit, exact target wall/aggregate peak, advisory 44.53-minute formal forecast, and `run-006 NOT AUTHORIZED`;
+2. `test/i4/femref-a1/README.md` and `SYMBOLS.md`: mechanically update 003 from prospective/not-run to consumed/complete and preserve the exact claim boundary;
+3. the existing review file: append this postdiagnostic audit.
+
+No formula, scientific design, I1--I3 artifact, 001/002 history, MATLAB code, watchdog code, experiment output, method claim, reference/effectivity result, or formal result may be changed or promoted in that synchronization.
+
+**This verdict does not authorize `run-006`, another representation diagnostic, a retry, a new ID, a formal guided-mode computation, effectivity comparison, reference/result promotion, or a commit.** Any such continuation requires a new explicit user-authorized Researcher--Engineer--Skeptic flow beginning from the unresolved formal forecast/timing evidence.
+
+### AS.9 Open-problem handoff
+
+| Item | Stage | Category | Blocking scope | Cheapest next check | Suggested ledger status |
+|---|---|---|---|---|---|
+| Formal forecast 44.53 minutes and timing instability | Any future I4.1a formal-run proposal | `IMPORTANT CAVEAT` | `run-006` and any formal reference/effectivity claim; not the completed 003 diagnostic | New explicit bounded design/resource review if the user requests continuation | Open / formal execution not authorized |
+| Independent MAT-payload decode | Optional artifact-integrity extension | `MINOR CAVEAT` | No current claim | Defer unless specifically authorized and needed | Deferred |
+| Fresh cryptographic pre/post proof for 001/002 | Historical immutability robustness | `MINOR CAVEAT` | No current claim | Preserve existing files; do not reopen history | Closed by scope / retain immutable |

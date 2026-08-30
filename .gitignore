@@ -58,6 +58,8 @@ research/**/checkpoints/
 
 # Local experiment outputs (already tracked files remain tracked)
 test/**/output/
+test/i4/femref-a1/diagnostics/
+test/i4/femref-a1/watchdog/
 
 # Reference library: track only the catalog and BibTeX index
 ref/**
