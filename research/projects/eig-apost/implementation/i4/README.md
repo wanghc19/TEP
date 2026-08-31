@@ -4,17 +4,38 @@
 
 I4.1 literature/method research 已完成，独立
 [[research/projects/eig-apost/implementation/i4/method-review|method review]] 的最终 verdict 为
-`PASS WITH CONDITIONS`。随后唯一 `femref-a1` attempt 按冻结的
+`PASS WITH CONDITIONS`。随后 `femref-a1` attempt 按冻结的
 [[research/projects/eig-apost/implementation/i4/design-4-1a|design-4-1a]] 实施；同一 Skeptic 在
 [[research/projects/eig-apost/implementation/i4/review-4-1a|review-4-1a]] 完成 design、
-spec-to-code 和 post-run gates。最终 artifact verdict 为 `PASS`，科学结果为
-`MESH_QUALITY_UNRESOLVED / VALID SCIENTIFIC NEGATIVE / FROZEN M1 METHOD FAILED`：首个
-`bulk-s12-g24` mesh 的 reflection stiffness defect 为
-$2.410043158511017\times10^{-15}$，但 reflection mass defect 为
-$0.014666412555809508>5\times10^{-11}$。运行在 `MESH_ORACLES` fail closed，完成
-$0/119$ eigensolves；没有 eigenvalue、field、qualified reference collection 或 effectivity
-evidence。该 attempt 已消费，不授权 `run-005` 或同方法重试；任何实质不同方法必须另行设计和
-审查。
+spec-to-code 和 post-run gates。当前权威终态为 review §BB 的
+`PASS WITH CONDITIONS / SCIENTIFIC_READY / FEM_REFERENCE_CANDIDATE_READY`：create-once
+`run-007/execution-001` 已自然完成并消费，完成 $119/119$ 次 solve、collection size $16$；48-root fine
+spectra 已覆盖 $W_3$，未进入 conditional 60-root rung。Lexicographic winner 为 candidate $7$，
+$\lambda_{\mathrm{ref}}^{\mathrm{FEM}}=3.3697211020626927$、
+$k_{\mathrm{ref}}^{\mathrm{FEM}}=1.8356800108032698$，且
+
+$$
+(\delta_{\mathrm{FEM}}^{\mathrm{obs}},
+\delta_{\mathrm{supercell}}^{\mathrm{obs}},
+\delta_{\mathrm{twist}}^{\mathrm{obs}},
+\delta_{\mathrm{alg}}^{\mathrm{obs}})
+=(0.0019799758723477723,
+3.3059115711608911\times10^{-5},
+3.0119180025600656\times10^{-6},0),
+$$
+
+$$
+\Delta_{\mathrm{ref}}^{\mathrm{obs}}=0.0020160469060619413.
+$$
+
+Winner分类为 `cue-member / gap-edge-or-safe-buffer / weakly-localized / stable-parity-assignment /`
+`empirical-resolution-complete / spectrum-covered-through-W3`，同时bulk仍为
+`BULK_GAP_UNRESOLVED_DIAGNOSTIC`。Whole-command elapsed 为 $140.273679$ s，authoritative aggregate peak
+RSS 为 $1353826304$ B，低于 $2700$ s/$2147483648$ B hard uppers。该artifact只是
+`EMPIRICAL_FEM_REFERENCE_CANDIDATE_NO_EFFECTIVITY`：$\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ 是non-certified
+observed sensitivity sum，不是continuous error upper bound；结果不证明continuous eigenvalue/guided-mode
+existence，也未进行或授权effectivity validation。`run-007`已消费且不得重试。先前`run-006`的§AW合法科学负结果
+仍作为历史记录保留，不再是当前权威终态。
 
 I4.2 的 reliable enclosure、projected gap、存在性和可计算上界仍不在本次范围内。
 
@@ -55,13 +76,14 @@ I4.2 的 reliable enclosure、projected gap、存在性和可计算上界仍不�
 4. 只有 unresolved `blocker` 可以阻止未来进入 `design-4-1.md`。`PASS` 或
    `PASS WITH CONDITIONS` 也不自动授权实验设计或运行。
 
-I4.1a 的后续 Researcher--Engineer--Skeptic gate 及全部 bounded revision/retry 已记录在
-`review-4-1a.md`。post-run gate 已关闭；其 `FROZEN M1 METHOD FAILED` verdict 禁止在当前
-attempt 内继续调网格、oracle 或阈值。
+I4.1a 的后续 Researcher--Engineer--Skeptic gate 及全部 bounded revision 已记录在
+`review-4-1a.md`。§BB post-run gate 已关闭；`run-007/execution-001` 已作为完整 empirical-candidate run
+消费，不得重跑。任何新方法、attempt或effectivity comparison都需要新的明确授权和完整 gate。
 
 ## Claim boundary
 
-方法研究只通过一条 candidate independent-reference 路线及其 resolution/uncertainty 语义；
-I4.1a 数值阶段随后在 reference solve 前以有效科学负结果结束。它没有计算
-$k_{\mathrm{ref}}$，没有评价 effectivity，也不改变 I3 estimator、BIE density、QZ eigenvector、
-证书、公式或历史结论。位置一致、reference resolution 或 estimator validation 均未建立。
+I4.1a 已产生field-bearing empirical FEM candidate及完整四轴observed sensitivity，且selection path未使用I3 estimator、
+BIE density、QZ eigenvector或历史reference output。由于winner为`gap-edge-or-safe-buffer / weakly-localized`且bulk gap
+仍 unresolved，该结果不能提升为continuous guided-mode/eigenvalue existence、唯一mode或certified reference；
+$\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ 不是误差上界。当前estimator尚未与该reference比较，I4.1 effectivity validation
+未完成也未获授权；I3证书、公式和历史结论均不改变。

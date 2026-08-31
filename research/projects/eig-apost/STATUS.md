@@ -1,8 +1,40 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-08-29。
+更新日期：2026-08-31。
 
 ## 当前状态
+
+- **2026-08-31 I4.1a `run-007/execution-001` empirical FEM candidate：** create-once formal run 已
+  自然完成并永久消费；[[research/projects/eig-apost/implementation/i4/review-4-1a|post-run review §BB]]
+  verdict 为 `PASS WITH CONDITIONS / SCIENTIFIC_READY / FEM_REFERENCE_CANDIDATE_READY`。冻结 schedule
+  完成 $119/119$ 次 solve，collection size 为 $16$；48-root fine spectra 已覆盖 $W_3$，故未进入
+  conditional 60-root rung。Lexicographic winner 为 candidate $7$，
+  $\lambda_{\mathrm{ref}}^{\mathrm{FEM}}=3.3697211020626927$、
+  $k_{\mathrm{ref}}^{\mathrm{FEM}}=1.8356800108032698$；四项 observed changes 分别为
+  $\delta_{\mathrm{FEM}}^{\mathrm{obs}}=0.0019799758723477723$、
+  $\delta_{\mathrm{supercell}}^{\mathrm{obs}}=3.3059115711608911\times10^{-5}$、
+  $\delta_{\mathrm{twist}}^{\mathrm{obs}}=3.0119180025600656\times10^{-6}$ 和
+  $\delta_{\mathrm{alg}}^{\mathrm{obs}}=0$，所以
+  $\Delta_{\mathrm{ref}}^{\mathrm{obs}}=0.0020160469060619413$。分类为 `cue-member /`
+  `gap-edge-or-safe-buffer / weakly-localized / stable-parity-assignment /`
+  `empirical-resolution-complete / spectrum-covered-through-W3`；bulk 仍为
+  `BULK_GAP_UNRESOLVED_DIAGNOSTIC`。Whole-command elapsed 为 $140.273679$ s，authoritative aggregate
+  peak RSS 为 $1353826304$ B，均低于 $2700$ s/$2147483648$ B hard uppers。该结果只是
+  `EMPIRICAL_FEM_REFERENCE_CANDIDATE_NO_EFFECTIVITY`：$\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ 不是certified
+  upper bound，结果不证明continuous eigenvalue/guided-mode existence，也未进行或授权effectivity validation。
+  本次完整run不得重试。
+
+- **2026-08-30 I4.1a `run-006` 合法科学负结果：** create-once formal `run-006` 已执行一次并
+  永久消费；[[research/projects/eig-apost/implementation/i4/review-4-1a|post-run review §AW]] verdict
+  为 `PASS WITH CONDITIONS / VALID SCIENTIFIC NEGATIVE`。冻结的 fitted-$P_1$ FEM protocol 在完成
+  $67/119$ 次 solve 后于首个 bulk prerequisite 以 `BULK_GAP_UNRESOLVED` 停止，collection size 为
+  $0$。Whole-command elapsed 为 $21.435584$ s，authoritative aggregate peak RSS 为
+  $812744704$ B，均低于唯一 hard uppers $2700$ s 与 $2147483648$ B；本次不是 operational 或
+  resource failure。该结果只说明冻结协议未通过其 B1 combined cue/guard target-gap gate，不是关于
+  continuous problem、FEM 方法族或 mode 不存在的定理；没有形成 independent reference eigenpair、field、
+  empirical reference collection 或 effectivity evidence。当前 execution 不得无理由重跑，也未授权
+  effectivity comparison；任何未来新方法或 attempt 均须另行开展 Researcher--Engineer--Skeptic 研究、设计和
+  审查 gate。
 
 - **2026-08-29 I4.1a representation-gate-003 完成：** create-once
   `representation-gate-003` 已自然退出、执行一次并永久消费；

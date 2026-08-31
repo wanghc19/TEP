@@ -4262,3 +4262,973 @@ fallback warning）；`git diff --check`通过；003 science namespace、003 ext
 没有运行watchdog、MATLAB、Octave、Python或numerical computation。
 
 **Researcher decision: `GO TO SAME SKEPTIC FOCUSED RE-REVIEW / EXECUTION REMAINS BLOCKED PENDING THAT VERDICT`.**
+
+## 31. 2026-08-30 `run-006` core formal path revision
+
+Status: **`PROSPECTIVE CORE-PATH DESIGN / NOT IMPLEMENTED / NOT RUN`**.
+
+本节响应用户在003完成并提交后的新明确授权，只把同一M1 fitted-FEM方法、同一`femref-a1` attempt的下一次formal
+execution限定为`run-006` core path。它前瞻性取代旧formal runtime中的资源门和非数学审计负担，但不删除或改写
+`run-001`--`run-004`、`representation-gate-001`--`003`、§§1--30或既有review verdict；历史artifacts保持immutable，
+`run-006`不得读取、复制或复用它们。只有同一Skeptic design review、Engineer bounded implementation、Researcher
+theory-to-code mapping和同一Skeptic spec-to-code review依次通过后，才可启动一次formal command。本节本身不授权实现
+或运行。
+
+### 31.1 不变的科学合同
+
+`run-006`仍求解[[research/projects/eig-apost/implementation/i4/method-4-1|method-4-1]]及其
+[[research/projects/eig-apost/implementation/i4/method-review|method review]]通过的同一continuous problem：
+$A=I$、$B=q$、$\beta=0.5$、半径$0.2$的sharp circular interfaces、缺失$x=0$材料柱、$\lambda=k^2$，以及同一
+geometry-fitted conforming $P_1$ supercell weak form。以下对象全部冻结，不得借“精简”改变：
+
+1. geometry、材料、quasiperiodic phases、频率归一化和现有bulk/defect mesh、supercell、twist、tolerance schedules；
+2. $72$个bulk加$47$个defect的完整$119$-solve union、root counts、sentinels和full branch/cluster inventory；
+3. safe-gap、coverage、subspace continuation、collapse、localization、tail、parity/common-core mode identification；
+4. FEM、supercell、twist和algebraic四轴refinement，以及经验
+   $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$的既有公式、门和“not an upper bound”语义；
+5. information isolation：MATLAB只可读取source-owned parameters及本次`run-006`的current-run transient objects，
+   不得读取Markdown、Git、历史output、BIE/QZ density/eigenvector、当前estimator或same-trial diagnostics；
+6. claim boundary：最多形成finite empirical observed reference collection和经验resolution；不得称为certified
+   continuous truth、error bound、existence result或effectivity validation，且必须在任何reveal/comparison前停止。
+
+因此本轮是**同一FEM方法的runtime reduction**，不是新方法、放宽科学门、减少branch coverage或改变历史失败解释。
+
+### 31.2 active core path的三类边界
+
+Engineer必须以“是否直接产生或解释上述数学对象”为唯一删减准则。旧helper名称不是权威；实现可重写为更短的
+local helpers，但下面A/B/C职责不可混用。
+
+#### A. 必须保留的数学代码
+
+| Core object | 最小保留内容 | 保留原因 |
+|---|---|---|
+| Fitted mesh | 生成冻结polygonal circle interfaces与supercell；检查finite coordinates、非退化正面积triangles、每个fitted interface constraint实际存在、每个element有唯一材料标签、periodic boundary node pairing和必要的reflection pairing | 这些条件直接决定$P_1$ space、sharp-interface material integral、quasiperiodic identification及parity解释；缺一项会改变或使离散问题不可解释。 |
+| Assembly and phase reduction | 组装stiffness、weighted mass及center/core/tail mass forms；形成唯一消费用Hermitian reduced pair；检查finite entries、实际Hermitian defect、positive mass factorization和phase-seam residual | 这些是弱形式、eigs、归一化、residual与localization quotient的直接离散对象。允许一次数值Hermitian canonicalization，但不得为审计同时保存raw/canonical mirrors。 |
+| Low spectra | 冻结的`eigs` calls、root ordering、normalization、finite/positive eigenvalue、solver completion、algebraic residual、orthogonality、root-count sentinel和cluster multiplicity | 它们直接决定完整finite spectral inventory；残量和有限性检查不得因精简删除。 |
+| Bulk and defect inventories | frozen target-gap construction、所有$119$个计划solve的role/phase/root inventory及到达的合法早停gate | 主reference不能由“最接近当前$k_h$”的root替代，也不能省略branch coverage。 |
+| Branch and mode identity | safe-gap filtering、basis-invariant cluster subspaces、continuation edges、all-object coverage、localization/core/tail、parity、common-core matching和twist/tail collapse | 这些是独立识别同一guided-mode family和排除未局域branch的科学规则。必要的reflection action/compatibility属于这里；与此无关的全图审计不属于这里。 |
+| Resolution and reference | 四轴changes、collapse/total gates、qualified finite collection、anchor subspaces/fields及failure-state reached fields | 这些直接形成$\Delta_{\mathrm{ref}}^{\mathrm{obs}}$、reference field和未来只读comparison所需对象。 |
+
+“最小mesh合法性”不表示只检查数组维度：若constraint丢失、element跨越材料interface、triangle退化、periodic pairing
+错误或parity所需reflection action不成立，continuous/discrete matching已被破坏，必须fail closed。反之，仅用于生成36列
+mesh ledger的duplicate/global graph/Euler/incidence/component/nonincident-intersection inventories，若不改变上述判定，不得留在
+active core path。
+
+#### B. 必须从active runtime删除或旁路的非数学审计
+
+下列代码不得在`run-006` call graph中执行，也不得为了复现已消费diagnostic而保留成active formal entry的dead branches：
+
+1. `mesh-repair-*`、`mass-gate-*`、`representation-gate-*` dispatch，以及它们的mass/representation probes、padding、
+   width sweeps、row-preparation、writer-rewrite benchmarks和forecast；
+2. OP2/DRV2 36-column operator ledger、raw/canonical MAT/CSV mirrors、每个primary/derived object消费前的checkpoint/rewrite及
+   `10414`-row/$261$-writer evidence contract；
+3. `symbfact`/workspace/resource forecast、1 GiB或1.5 GiB internal screen、CV/spread/JIT/timer-resolution、stall和纯性能
+   diagnostics；这些可作为既有003历史证据，但不再是formal correctness或execution stop；
+4. exhaustive model/source hashes、repository/environment/cache/provenance inventories、重复dependency assertions、
+   first-failure/schema mirrors及为相同scientific object反复重写完整CSV/MAT；
+5. 与A类合法性或mode interpretation无直接关系的mesh graph、global intersection、reflection bookkeeping inventories和
+   failure-marker expansion；不得仅因旧schema存在而继续计算；
+6. 与最终scientific object无关的padding arrays、duplicate payloads、atomic-publication stress paths和历史diagnostic
+   watchdog integration。
+
+删除B类代码不允许删除A类有限性、Hermitian/mass、eigensolver residual、localization或coverage checks。Engineer必须在
+implementation handoff列出每一条旧formal call edge是“保留为A”“缩为C”还是“不可达/删除为B”；不要求保存历史
+diagnostic source可执行性，因为其已提交artifacts和§§22--30 ledger本身就是immutable history。
+
+#### C. 仅保留的最小操作代码
+
+1. exact `output/run-006/` create-once claim，且不得从其他output恢复、续算或调参；
+2. MATLAB exception或controller enforcement failure立即停止，写一条简短terminal record，不把operational failure伪装成
+   scientific negative；
+3. 一个外部resource controller，覆盖完整formal command及其MATLAB process tree，只执行§31.4的$45$ min/$2$ GiB
+   hard stops；
+4. 简短append-only stage/solve progress、aggregate RSS observation和one-row terminal summary。Sampling interval只服务于
+   RSS enforcement和记录，不是额外的cadence pass/fail gate；不得因output stall、CV、spread或forecast停止；
+5. 若控制实际aggregate RSS所需的process-tree authority丢失，必须停止并报告
+   `OPERATIONAL_RESOURCE_CONTROL_UNAVAILABLE`；这是无法执行已授权$2$ GiB hard limit的operational failure，不是第三个
+   resource threshold，也不得声称内存达到$2$ GiB。
+
+### 31.3 最小输出集合
+
+`run-006`只允许一个canonical scientific representation，避免同一对象的schema mirror。Engineer可给文件采用更短名称，
+但在spec-to-code review前必须一次性冻结到以下职责，正式运行后不得改名或加第二套镜像：
+
+1. `scientific-result.mat`：冻结spec、最小mesh descriptors、bulk gap/bands、全部defect spectra、branch edges/inventory、
+   coverage、四轴resolution、qualified reference collection和到达的field/subspace objects的唯一canonical container；
+2. `fields.mat`：仅在确有reached anchor fields时保存mesh、material labels、anchor subspaces/simple-mode representatives和
+   qualification status；它不单独提升reference资格；
+3. `run-summary.csv`：一行记录`run_id`、scientific terminal、completed/planned solves、collection size、first direct failure、
+   empirical claim boundary、whole-command elapsed和observed aggregate peak RSS；
+4. `run.log`：只追加stage start、solve count和terminal exception，不保存全对象dump；
+5. `resource.tsv`：controller为实际$2$ GiB enforcement留下的最小elapsed/aggregate-RSS ledger。
+
+为控制内存而生成的current-run spectrum/mesh transient cache属于A类内部工作对象，可以位于`output/run-006/work/`，但不是
+authoritative artifact，不得读取历史run，也不得为它建立hash/schema/provenance镜像。科学terminal时以
+`scientific-result.mat`为唯一解释入口；operational/resource interruption可以只有reached log/summary，不得伪造完整
+scientific container。
+
+### 31.4 唯一资源合同与基于现有证据的估计
+
+用户本轮把一个完整`run-006` command的hard budget明确改为：
+
+$$
+T_{\mathrm{hard}}=2700\ \mathrm{s},\qquad
+R_{\mathrm{hard}}=2147483648\ \mathrm{bytes}.
+$$
+
+同一controller、MATLAB、所有subprocess、mesh/solve/postprocess和必要publication共享同一wall clock；不得拆分重置，
+没有grace。Elapsed达到或超过$2700$ s，或authoritative aggregate MATLAB-process-tree RSS达到或超过
+$2147483648$ bytes时，controller必须立即停止target并给出相应resource terminal。不存在30/40 min、120/1800 s、
+1/1.5 GiB、forecast、stall、CV、spread或cadence的lower execution gate。Controller launch/setup必须最小；hard stop后的
+reap和terminal record不是继续科学计算或grace，outer command若超过$2700$ s仍须如实归类wall hard-limit exceeded。
+
+现有003工件提供以下**规划证据而非新benchmark**：
+
+- `representation-forecast.csv`把current audited formal forecast分解为$1788$ s scientific baseline和
+  $883.67067570833342$ s representation/audit additive，其中writer rewrite单项为
+  $674.58177570833345$ s；总计$2671.6706757083334$ s只是带timing variability的advisory；
+- 同一文件的baseline peak为$1288490188.8$ bytes，representation-only incremental arrays为$222587516$ bytes，
+  合计forecast $1511077704.8$ bytes；
+- external watchdog实测003 aggregate peak为$1296187392$ bytes，target-active time为$761.486755$ s，但003完成$0$次
+  scientific eigensolve，故它不能单独证明formal runtime。
+
+B类删减正好移除上述$883.67$ s附加量的representation probes、rows和rewrites，而不是减少$119$个scientific solves。
+因此删减后的best current planning point为原scientific baseline约$1788$ s（$29.8$ min）加最小controller/log overhead；
+内存planning range由约$1.20$ GiB baseline到含旧incremental evidence的$1.4073$ GiB，均低于$2$ GiB。该推断标为
+**`CONDITIONAL`**：它不是wall/RSS upper bound，也没有测量$119$个eigensolves；尤其003记录的timing variability禁止把
+$1788$ s写成保证。尽管如此，去除有实证分解的$883.67$ s非数学负担后，相对$2700$ s获得约$912$ s设计余量，且现有
+aggregate/forecast memory均距$2$ GiB有明确余量，所以当前没有resource `blocker`。Skeptic必须检查Engineer确已让B类
+call paths不可达；若仍保留大规模rewrite/probe，则该估计失效并须`REVISE`，不得运行。
+
+### 31.5 formal command、attempt与retry语义
+
+Engineer可为core MATLAB entry和minimal controller各选一次短文件名，但必须满足：controller无scientific CLI参数，内部
+literal绑定`run-006`、唯一core entry、$2700$ s和$2147483648$ bytes；Researcher theory-to-code mapping与同一Skeptic
+spec-to-code review必须记录并冻结**一个exact no-argument shell command**，之后不得存在备用launcher或手工多阶段命令。
+任何static check只能检查syntax/call graph，正式命令之前不得用缩小workload、benchmark或hidden probe运行MATLAB。
+
+`run-006`是同一attempt内一个create-once scientific identity。只有dependency、path、syntax、schema或controller等真实
+operational failure才可按`test/AGENTS.md`在同一`femref-a1`和同一`run-006` root内有界修复；失败log必须保留，corrected
+execution使用append-only execution label，不覆盖已存在文件，也不新建attempt。任一到达的科学gate、完整method failure、
+wall hard limit或RSS hard limit都消费`run-006`，不得以“重试”更改mesh、threshold、solver或科学schedule。
+
+### 31.6 terminal与验收标准
+
+`run-006`只有以下合法terminal classes：
+
+1. `REFERENCE_COLLECTION_READY`：若流程到达defect stage，全部$119$个solve完成；bulk gap、root sentinels、full
+   coverage、branch/mode identification、collapse和四轴resolution均通过；canonical collection及reached fields完整，
+   同时仍只具有finite empirical claim；
+2. **valid scientific negative**：某个A类预注册数学门首先失败，例如bulk gap、spectrum completeness/residual、coverage、
+   localization/tail/twist、mode continuation或reference resolution unresolved；只保存到达对象和exact direct reason，
+   不要求为了凑满$119$ solves越过已失败的先决门，也不得由B类schema/audit失败触发；
+3. **operational failure**：source/dependency/path/controller/publication错误；不消费method conclusion，仅在符合§31.5时允许
+   同attempt有界修复；
+4. **resource failure**：whole-command wall或aggregate RSS触及唯一hard upper；保存observed terminal并停止，不得给
+   scientific/reference结论。
+
+验收还要求：科学call graph只含A+C；`run-006` namespace在formal launch前不存在；历史diagnostic/output未被读取或修改；
+没有BIE/QZ/estimator reveal；没有effectivity comparison；没有新增attempt、设计或隐藏pre-run computation。Important或
+minor caveat只限制解释，不能阻止本阶段；只有直接破坏同一数学问题、完整branch/reference解释或$45$ min/$2$ GiB
+hard-budget enforcement的unresolved issue才是`blocker`。
+
+### 31.7 Researcher design decision
+
+基于003保存的forecast decomposition、aggregate RSS evidence和current formal call graph，核心$119$-solve数学工作在删除
+representation/audit rewrites后具有低于新预算的有依据规划估计；当前未发现必须改科学方法才能执行的blocker。最小下一门
+是同一Skeptic独立检查本节的A/B/C边界、资源推断、输出集合和valid-negative语义；通过后才交Engineer实现。
+
+**Researcher decision: `GO TO SAME SKEPTIC DESIGN REVIEW / IMPLEMENTATION AND RUN-006 EXECUTION REMAIN BLOCKED`.**
+
+## 32. 2026-08-30 theory-to-code review of the core formal implementation
+
+Status: **`MATHEMATICAL MAPPING PASS / ONE WHOLE-COMMAND CLOCK BLOCKER / NOT RUN`**.
+
+本节只审查current Engineer source diff；不修改MATLAB/Perl、README、SYMBOLS、review或artifacts，也不执行numerical
+program。Line locators均指本次审查时的current source。
+
+### 32.1 Frozen mathematics and core call graph
+
+| §31 object | Current source mapping | Researcher finding |
+|---|---|---|
+| Exact entry/spec | `test/i4/femref-a1/run_i4_1a.m:1-34,135-195` | 只接受literal `run-006`；$q_{\mathrm{in}}=17$、$q_{\mathrm{out}}=1$、radius $0.2$、missing column $0$、$\beta=0.5$、cue/guard windows、phase grids、root counts、solver tolerances和scientific thresholds不变。删去的spec字段只属resource/provenance/operator-ledger。 |
+| Mesh/schedules | `run_i4_1a.m:304-811,1031-1196` | 九张$s/n_\gamma/N$ meshes不变；bulk $17+17+33+5=72$，defect $5+5+17+5+5+5+5=47$。Bulk tolerances $10^{-9},10^{-10},10^{-11}$及defect $10^{-11}/10^{-8}$不变。Mesh保留finite connectivity、reflection-compatible constraints、positive/nonduplicate triangles、interface constraints、cross-interface/material、assembly finite、reflection、periodic及finest-geometry gates；wide graph/intersection ledger已删除。 |
+| Operators/eigs | `run_i4_1a.m:691-1009` | $P_1$ stiffness、weighted mass、center/core/tail forms不变。Raw Hermitian defect在roundoff canonicalization前检查；mass diagonal/`chol` SPD、seam、finite/positive roots、normalization、residual、orthogonality、ordering、sentinels及multiplicity均保留。 |
+| Branch/coverage/mode | `run_i4_1a.m:1236-1858` | 全raw-gap clusters进入restricted Grams、parity、common-core、twist continuation、cross-configuration matching、all-object coverage、localization、tail/twist collapse和ambiguity flag；无nearest-$k_h$ selection或current-chain input。 |
+| Four-axis resolution | `run_i4_1a.m:1860-1993` | FEM、supercell、twist、algebraic changes及原collapse/total gates逐式保留；uncertainty仍标记`EMPIRICAL_SENSITIVITY_ENVELOPE_NOT_AN_UPPER_BOUND`。 |
+| Canonical output | `run_i4_1a.m:1998-2104` | `scientific-result.mat`唯一保存spec、mesh descriptors、compact bulk/defect/branch、coverage及resolution/collection；`fields.mat`只保存reached subspaces和mesh/material，并明确非effectivity。 |
+
+Static token audit得到**67个unique `LOCAL_*` tokens、67个definitions、0 undefined**。Formal source现为2104 lines；
+executable call graph中不存在diagnostic dispatch、OP2/DRV2、mass/representation probes、padding、10414-row/261-writer
+rewrite、forecast/preflight、1/1.5 GiB screen、CV/spread/stall、hash/digest、Git/history或BIE/QZ/estimator input。相关词只在
+说明deleted paths的header comments中出现。
+
+### 32.2 Terminals, runner and exact command
+
+`run_i4_1a.m:67-130`只在all $119$ solves、coverage、nonempty qualified branch及four-axis resolution全部通过后设置
+`SCIENTIFIC_READY / REFERENCE_COLLECTION_READY`；直接数学门进入`SCIENTIFIC_NEGATIVE`，unknown/dependency/
+publication exception保持`OPERATIONAL_FAILURE`并rethrow。MATLAB只写`scientific-result.mat`、conditional
+`fields.mat`、append-only `run.log`和current-run `work/`。
+
+`run_formal.pl:9-35`固定no arguments、literal `run-006`、exact `run_i4_1a('run-006')`和create-once output claim。
+`:118-160`用full `ps` table形成recursive-descendant与dedicated-PGID union并按PID key去重RSS；authority丢失走
+operational stop。`:218-245`最后发布`run-summary.csv`，controller非natural exit时不保留READY。
+
+Post-run leaves冻结为`output/run-006/scientific-result.mat`、conditional `fields.mat`、`run.log`、
+`resource.tsv`、最后发布的`run-summary.csv`及非权威current-run `work/`。Formal command冻结为在working directory
+`/Users/whc/Documents/Work/epost/test/i4/femref-a1`执行：
+
+```text
+/usr/bin/perl ./run_formal.pl
+```
+
+本节因下述blocker不授权该命令。
+
+### 32.3 Resource-controller blocker
+
+**`BLOCKER — WHOLE-COMMAND WALL CLOCK IS SAMPLED BEFORE REQUIRED FINAL PUBLICATION`.**
+`run_formal.pl:16`正确在setup前建立monotonic start，且`:12-13,67-75`只有$2700$ s与$2147483648$ bytes两个
+inclusive resource uppers；1 s sleep只采样，无lower gate、stall、CV、spread或forecast stop。RSS mapping通过。
+
+Wall side仍有一个精确缺口：
+
+1. `:44-46`先冻结`$now/$elapsed`再运行external `ps`，`:67`比较的仍是pre-`ps` stale elapsed；
+2. child reap后`:103`只计算一次elapsed，随后`:111-115`才写`resource.tsv`、读取terminal draft并发布最终
+   `run-summary.csv`；required publication没有fresh deadline comparison，且名为`whole_command_elapsed_seconds`的值
+   排除了这些finalization steps；
+3. 因而deadline附近的natural exit可在$2700$ s后仍发布`NATURAL_EXIT / SCIENTIFIC_READY`并exit 0，违反§31.4
+   setup、target、postprocess和必要publication共享一个wall clock且无grace的合同。这不是style caveat。
+
+最小修复不得引入早于$2700$ s的reserve或第三threshold：只从现有`$start`形成一个immutable absolute deadline；在
+`ps`返回后、reap后及每个required final-publication boundary前用fresh monotonic time比较同一deadline；任何
+$T\ge2700$ s都必须降为`WALL_HARD_LIMIT_REACHED / RESOURCE_FAILURE`，不得发布或保留success summary。Final summary
+elapsed必须取其publication boundary而非line 103的prepublication snapshot。Engineer应采用最短等价实现，不得恢复003的
+复杂alarm/identity/logging machinery。
+
+### 32.4 Over-defence and checks
+
+245-line runner的fork/PGID、recursive RSS dedupe、kill/reap、terminal-draft bridge、CSV escaping和minimal terminal
+records都直接服务create-once、resource enforcement或claim boundary。Unused process `state`等可删但不构成blocker；
+不得因style扩大controller。当前唯一需修复的是§32.3。
+
+- `/usr/bin/perl -c test/i4/femref-a1/run_formal.pl`返回`syntax OK`（仅host locale fallback warning）；
+- `git diff --check`通过；
+- `output/run-006/`不存在；Git diff未列出任何001--003或`run-001`--`run-005` artifact；
+- 没有运行MATLAB、Octave、Python、Perl runner或numerical computation。
+
+**Researcher decision: `REVISE / RETURN THE §32.3 CLOCK-BOUNDARY FIX TO THE SAME ENGINEER / RUN-006 AND SAME-SKEPTIC SPEC-TO-CODE VERDICT REMAIN BLOCKED`.**
+
+## 33. 2026-08-30 controller deadline-fix delta review
+
+Status: **`DEADLINE PREDICATE MAPPED / REPEATED FINAL-PUBLICATION BLOCKER / NOT RUN`**.
+
+本节只审查§32返回后的current `run_formal.pl`；§32.1--32.2的MATLAB mathematics、call graph、outputs及exact command
+mapping不重开。
+
+### 33.1 Closed §32 clock points
+
+1. `run_formal.pl:16-17`现在只形成一个immutable
+   `deadline = start + 2700`；source没有reserve、grace、fresh 2700 s rearm或第三resource threshold。
+2. `:45-50`先完成process-table acquisition，再在消费table/RSS前用fresh monotonic time作inclusive deadline check；
+   `:77-92`在nonblocking reap后再检查同一deadline，故§32指出的pre-`ps` stale comparison已关闭。
+3. `:100-119`在blocking reap后、读取MATLAB terminal draft前后均检查同一deadline；`:158-164`唯一predicate是
+   `now >= absolute_deadline`。一旦成立，`controller_terminal`不能恢复为`NATURAL_EXIT`。
+4. `:266-275`在任何non-natural controller terminal下把draft降为`RESOURCE_FAILURE`或
+   `OPERATIONAL_FAILURE`，不会把§32之后观察到的wall crossing保留成READY。
+5. RSS仍只有`aggregate >= 2147483648`；1 s sleep只采样。没有1/1.5 GiB、30/40 min、120/1800 s、stall、CV、
+   spread、forecast或cadence pass/fail gate。
+
+因此§32的deadline identity、post-`ps`/post-reap fresh checks和success downgrade原则已在source中出现。
+
+### 33.2 Bounded over-defence blocker
+
+**`BLOCKER — CORRECTED TERMINALS ARE REPUBLISHED THROUGH MULTIPLE OVERWRITES`.** Finalization
+`run_formal.pl:121-155`不是single final decision：
+
+- `resource.tsv`先在`:123-124`写一次，deadline变化时可在`:128-129`写第二次，又可在`:136-137`写第三次；
+- `run-summary.csv`先在`:141-142`写一次，post-write crossing时再在`:152-153`写第二次；
+- 第一次summary以后，`:145-149`还可能先重写resource。若这次open/close/rename失败，filesystem留下的是旧summary和
+  新旧不一致的resource，且承诺的“summary-last”尚未恢复；
+- 每个rewrite都重新创建同名`.partial`并rename覆盖已有complete leaf。它不增加数学证据或resource authority，却在
+  已有terminal之后增加I/O、collision/rename failure points和claim-conflict paths。
+
+这不是line count或style问题，而是用户明确禁止的非数学重复publication直接扩大formal failure surface。293 LOC中的
+fork/PGID、RSS union、kill/reap、draft parsing和CSV escaping仍有C-path职责；需删减的仅是`:121-155`的correct-and-
+rewrite loop。
+
+最小修复是**single final decision, one resource write, summary last**：完成target death/reap和一次draft read后，对同一
+absolute deadline作一个fresh inclusive final check并冻结controller terminal/elapsed；随后恰好一次发布
+`resource.tsv`，再恰好一次最后发布`run-summary.csv`，不得在summary后重写resource，也不得二次发布summary。若实现
+需要把serialization preparation放在final decision前，可先准备non-authoritative temporary content，再以冻结terminal作
+一次final publication；不得增加lower deadline、reserve、第二计时器或003式publication protocol。Publication异常仍作为
+普通operational failure，不通过rewrite修复。
+
+### 33.3 Checks and Researcher decision
+
+- `/usr/bin/perl -c test/i4/femref-a1/run_formal.pl`返回`syntax OK`（仅host locale fallback warning）；
+- `git diff --check`通过；
+- `output/run-006/`不存在；没有执行Perl runner、MATLAB、Octave、Python或numerical computation。
+
+Exact prospective command仍是在
+`/Users/whc/Documents/Work/epost/test/i4/femref-a1`运行
+`/usr/bin/perl ./run_formal.pl`，但本节不授权执行。
+
+**Researcher decision: `REVISE / RETURN THE §33.2 SINGLE-PUBLICATION SIMPLIFICATION TO THE SAME ENGINEER / RUN-006 AND SAME-SKEPTIC SPEC-TO-CODE VERDICT REMAIN BLOCKED`.**
+
+## 34. 2026-08-30 single-publication controller delta map
+
+Status: **`§33 BLOCKER CLOSED / STATIC THEORY-TO-CODE PASS / NOT RUN`**.
+
+本节只复核§33.2的bounded source delta；§32的MATLAB mathematics、67/67 call graph、minimal outputs和exact command
+mapping继续有效。
+
+1. **One draft read.** `test/i4/femref-a1/run_formal.pl:115`只调用一次
+   `read_terminal_draft`；其唯一helper definition在`:200-223`，finalization不存在第二次read或history fallback。
+2. **One fresh final decision.** `:116-118`在draft read之后对§33已核验的同一immutable
+   `deadline = start + 2700`作一次fresh inclusive check，随后把`final_terminal`和`final_elapsed`冻结。该值之后不再
+   reclassify、rearm或进入correct-and-rewrite loop。
+3. **Exactly one resource write.** `:119-120`只有一个`write_resource` call；source-wide search除`:186`的helper
+   definition外没有第二个caller。`resource.tsv`因此只形成一次complete publication。
+4. **Exactly one summary-last.** `:121-122`只有一个`write_summary` call，紧随resource且是exit前最后一个publication；
+   source-wide search除`:233`的helper definition外没有第二个caller。不存在summary后的resource rewrite或第二个
+   summary。
+5. **Hard limits unchanged.** `:12-17,44-98,125-130`仍只有absolute $2700$ s inclusive deadline；
+   `:13,65-74`仍只有aggregate $2147483648$-byte inclusive RSS stop。1 s sleep只采样；没有reserve、grace、lower
+   wall/RSS、stall、CV、spread、forecast、cadence gate或第三timer。
+6. **Failure truthfulness.** Final deadline crossing在freeze前把terminal置为`WALL_HARD_LIMIT_REACHED`；
+   `write_summary:233-242`把wall/RSS crossing降为`RESOURCE_FAILURE`，其他non-natural controller result降为
+   `OPERATIONAL_FAILURE`，所以finalization不能保留`NATURAL_EXIT / READY`。Publication exception本身直接使runner
+   nonzero，不通过重复写入“修复”。
+
+Current runner已由293 lines降至260 lines；剩余fork/PGID、RSS union、kill/reap、draft parser、CSV escaping和single
+publication分别直接服务create-once/resource/claim-boundary C-path。Unused `ps state` field是minor style simplification，
+没有可改变预算或下一计算的故障面，不构成blocker，也不应再次扩展controller。
+
+Checks：
+
+- `/usr/bin/perl -c test/i4/femref-a1/run_formal.pl`返回`syntax OK`（仅host locale fallback warning）；
+- `git diff --check`通过；
+- `output/run-006/`不存在；
+- 没有运行Perl controller、MATLAB、Octave、Python或numerical computation。
+
+Exact command仍冻结为在
+`/Users/whc/Documents/Work/epost/test/i4/femref-a1`执行
+`/usr/bin/perl ./run_formal.pl`。本节只移交review，不自行授权formal execution。
+
+**Researcher decision: `GO TO SAME SKEPTIC SPEC-TO-CODE REVIEW / IMPLEMENTATION MAPPING PASSES / RUN-006 EXECUTION REMAINS BLOCKED PENDING THAT VERDICT`.**
+
+## 35. 2026-08-30 §AU bounded implementation delta map
+
+Status: **`STATIC THEORY-TO-CODE PASS / NOT RUN`**.
+
+本节只复核 review §AU 返回的两个 blocker；§31--34 已冻结的 continuous model、fitted-$P_1$ weak form、完整
+branch/coverage/refinement/empirical-uncertainty 合同和 single-publication C-path 不重开。
+
+1. **Reached scientific state survives a scientific-negative stage exit.**
+   `test/i4/femref-a1/run_i4_1a.m:72-81` 现在先从 bulk/defect stage 接收 inventory、`run_state` 和
+   `stage_failure`，再由 top level raise；因此 `:112-124` 的唯一 canonical-negative save 看到的是本次调用已返回的
+   state，而不是调用前的空变量。Bulk path 在每个 main solve 的 current-run cache 成功后，于 `:1074-1079` 写入
+   frequencies/residuals/path、`completed_phases` 和 count；count sentinel 在 `:1134-1137` 先写 entry/count，再执行
+   mismatch gate；target-gap exception 被 `:1098-1111` 转为 failure return，且 refinement failure 前已在
+   `:1184-1189` 写入 triggering gap object。Defect path 在每个 spectrum cache 后，于 `:1228-1234` 先形成 summary、
+   entry、inventory 和 count，再执行 `:1244-1251` raw-edge-buffer gate及 `:1253-1280` count-sentinel gate。
+   所有这些 preregistered scientific failures 都以 failure object 正常返回，top-level canonical artifact 因而保留全部
+   已成功到达的 bulk/defect spectra、cache references、counts、entries 和直接 triggering object。Operational I/O/code
+   exception 仍按 operational failure fail closed；本修复没有把它伪装成 scientific negative。
+2. **READY science is unchanged.** `:141-200` 的模型、参数、phase grids、tolerances和 $72+47=119$ counts未变；
+   bulk loops仍是 $17+17+33+5=72$，`LOCAL_defect_schedule:322-339` 仍是
+   $5+5+17+5+5+5+5=47$。`REFERENCE_COLLECTION_READY` 仍只可能在 `:83-111` 的完整119-solve、coverage、nonempty
+   collection和resolution gates之后形成。Mesh/assembly/phase reduction/eigs、branch identity、四轴resolution及
+   $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ 的 empirical/non-certified claim boundary没有进入本次source delta。
+3. **The same absolute deadline remains live through summary-last and exit.**
+   `test/i4/femref-a1/run_formal.pl:7,12-25` 只为既有
+   `deadline = start + 2700` 增加一个 one-shot high-resolution alarm，arm value是该同一deadline减去当前monotonic
+   time；source没有cancel、reset或第二次arm。它因此贯穿 MATLAB supervision、draft read、唯一resource write、
+   summary-last和随后的exit。Handler只对target发出kill、向stderr写明 wall terminal并 `_exit(2)`；它不调用
+   `write_resource`/`write_summary`，也不发布、修正或覆盖任何artifact。Loop和final fresh checks仍比较同一absolute
+   deadline，alarm只关闭blocking/publication boundary上的zero-exit窗口，不构成第二threshold、reserve、grace或低门。
+4. **RSS and deleted B paths remain unchanged.** 唯一memory predicate仍是 `run_formal.pl:79`
+   的 aggregate RSS `>= 2147483648` bytes。Static searches未发现重新引入 representation dispatch、OP2/DRV2、
+   mirror、checkpoint/rewrite、history/hash/provenance、preflight/forecast、stall/CV/spread或lower wall/RSS gate；源码中
+   剩余 `diagnostic` 名称仅标识 reflection、phase/seam和common-core等直接数学量。
+
+Checks：
+
+- `/usr/bin/perl -c test/i4/femref-a1/run_formal.pl` 返回 `syntax OK`（仅host locale fallback warning）；
+- `git diff --check` 通过；
+- `output/run-006/` 不存在；
+- 未运行 Perl controller、MATLAB、Octave、Python、benchmark、diagnostic 或 numerical computation。
+
+**Researcher decision: `PASS / GO TO THE SAME SKEPTIC FOR THE §AU FOCUSED SOURCE RE-REVIEW / RUN-006 EXECUTION REMAINS NOT AUTHORIZED`.**
+
+### 35.1 Evidence-location precision
+
+对§35(1)作append-only措辞精确化：current-run cache files及其stage-local path references在failure gate之前已经形成并
+留在`work/`，但`LOCAL_compact_bulk:2114-2131`和`LOCAL_compact_defect:2133-2141`有意从canonical payload删除
+cache paths。`scientific-result.mat`保留的是bulk frequencies/residuals/sentinel summaries、defect spectrum summaries、
+counts/entries和triggering gap/gate object，而不是第二份cache-path mirror；这正是single scientific authority边界。
+
+## 36. 2026-08-31 `run-007` diagnostic-ranking reference revision
+
+Status: **`PROSPECTIVE CORE REVISION FROZEN / SAME FEM METHOD AND SAME femref-a1 ATTEMPT / NOT IMPLEMENTED / NOT RUN`**.
+
+本节由新的明确授权触发，append-only supersede §§1--35 中把 gap、coverage、localization、parity、collapse 或
+refinement quality threshold 当作 candidate-cancelling hard gate 的部分；历史 `run-001`--`run-006`、其 verdict 和
+artifacts 全部保持原义。该修订不是 M2/RtR、PML、BIE 或另一 continuous method；它仍是同一 geometry-fitted
+conforming $P_1$ FEM supercell method，只把经验 qualification thresholds 改为 candidate classification/ranking
+evidence。它不授权本节内 implementation 或 execution。
+
+### 36.1 Immutable scientific and operational boundary
+
+下列对象完全不变：$Omega=\mathbb R\times(-1/2,1/2)$、period $1$、sharp disk radius $0.2$、
+$q_{\mathrm{in}}=17$、$q_{\mathrm{out}}=1$、missing column $0$、$\beta=0.5$、
+$u(x,y+1)=e^{\mathrm i\beta}u(x,y)$、supercell twist、$A=I$、$B=q$、
+$\lambda=k^2$ 以及
+
+$$
+\int \nabla u\cdot\nabla\overline v
+=\lambda\int q u\overline v.
+$$
+
+Geometry-fitted $P_1$ assembly、material assignment、quasiperiodic reduction 和 mass normalization 不变。Active
+MATLAB source仍不得读取 Markdown、Git、BIE/QZ density/eigenvector、I3 estimator、same-trial diagnostic、
+$\widehat k_h$、`run-001`--`run-006` 或任何 historical/reference output；本轮 search、tracking、ranking、window
+extension 和 stopping 只能消费 current-run FEM matrices/eigenpairs/fields及上述 physical specification。揭盲和
+effectivity comparison 均不在本节授权内。
+
+Whole-command resource hard uppers仍且仅为
+
+$$
+T_{\mathrm{hard}}=2700\ \mathrm{s},
+\qquad
+R_{\mathrm{hard}}=2147483648\ \mathrm{bytes},
+$$
+
+由同一 non-resetting controller 计量；无 lower wall/RSS gate、reserve、grace、forecast、stall、CV、spread 或
+cadence pass/fail predicate。
+
+`test/i4/femref-a1/output/run-001`--`run-006` 均已存在而 `output/run-007` 当前不存在，故本节冻结同一
+`femref-a1` attempt 的新 exact create-once identity **`run-007`**。不得覆盖、读取或复用旧 run artifacts；launch
+confirmed 后 complete/incomplete 均消费 `run-007`。若 implementation 前发现该 root 已出现，必须停止并回到
+Researcher--Skeptic gate；不得自行改成另一 ID。
+
+### 36.2 Heuristic gates are diagnostics, not cancellation rules
+
+以下数值和定义保留，便于与历史及跨轴结果解释一致，但一律只产生 diagnostic/caveat/classification，不能停止
+spectrum、field、branch、refinement、ranking 或 top-candidate publication：
+
+- initial cue $I_{\mathrm{cue}}=[1.65,2.05]$、former guard $[1.25,2.45]$、full-cue containment、bulk-gap
+  uniqueness、bulk refinement、safe-interior ratio和raw/safe edge buffer；
+- finest Hausdorff accuracy cap、reflection defect和reflection parity quality；其中非法 connectivity/interface/
+  periodic identification仍按§36.8的数学合法性处理；
+- localization thresholds $L_0\ge0.15$、$L_{\mathrm{core}}\ge0.60$、tail $\le0.02$、tail plateau、
+  collapse factor $0.80$ 和 twist-width collapse；
+- simple/cluster overlap thresholds $0.90/0.80$、mutual-best condition、constant cluster-count、parity threshold
+  $0.80$ 及 mode-ID ambiguity；
+- FEM/supercell/twist/algebraic/total resolution pass thresholds、monotonicity 和
+  `REFERENCE_SET_COVERAGE_UNRESOLVED`/`REFERENCE_RESOLUTION_UNRESOLVED` flags；
+- 40/48-root agreement、bulk count-sentinel mismatch和spectrum-ceiling margin。
+
+特别地，旧 `BULK_GAP_UNRESOLVED` 只能出现在 `bulk_gap_diagnostic`/classification 中，绝不能再是
+scientific terminal、exception、early return 或 empty-candidate reason。A valid field-bearing eigenobject可被标记为
+`gap-interior`、`gap-edge`、`embedded-or-bulk-overlap`、`near-continuum`、`weakly-localized`、
+`parity-ambiguous`、`pre-asymptotic` 或 `coverage-partial`；任何这些标签都不能删除它或阻止排名。
+
+### 36.3 Finite reference-own spectrum expansion
+
+$I_{\mathrm{cue}}$ 只是初始 search hint。以其宽度 $0.4$ 为与 current chain 无关的固定扩展步长，预注册
+
+$$
+W_m=[1.65-0.4m,\,2.05+0.4m],
+\qquad m=0,1,2,3,
+$$
+
+即
+
+$$
+W_0=[1.65,2.05],\quad
+W_1=[1.25,2.45],\quad
+W_2=[0.85,2.85],\quad
+W_3=[0.45,3.25].
+$$
+
+所有 windows 和 root counts 在 reveal 前固定；不得因 BIE/QZ location 或 field 改动。Actual eigensolve schedule为：
+
+1. 保留现有9个 fitted meshes、72个bulk solves及7组47个defect solves；bulk 仍为67个40-root main spectra加5个
+   48-root count spectra。
+2. 47个base defect solves全部直接请求最低48个正 generalized eigenpairs，保留原 mesh、$N$、twist grids及
+   tight/loose tolerance role；这是真实的40-to-48 spectrum expansion，不是window label。
+3. 对selection authority `fine = (N,s,n_\Gamma,\mathrm{tol},\vartheta\text{-grid})
+   =(5,24,48,10^{-11},\vartheta_{17})`，令 $k_{48}^{(r)}$ 是第$r$个twist slice的第48个有效频率，并用
+   现有 upper sentinel margin $\mu=0.10$ 定义 window $W_m=[a_m,b_m]$ 的 finite-spectrum coverage diagnostic
+
+   $$
+   C_{48,m}=\bigwedge_{r=1}^{17}\left(k_{48}^{(r)}>b_m+\mu\right).
+   $$
+
+4. 若 $C_{48,3}$ 为 false，则必须在同一 command、同一 meshes/source、同一 tight tolerance下对**全部17个**
+   `fine` twists实际追加60-root solves，形成唯一 expansion rung `fine-expand60`；不得只重算看似接近某个 current
+   root 的slice。以第60根同式定义 $C_{60,m}$。若 $C_{48,3}$ 已为 true，不运行60-root rung。
+5. Spectrum expansion在 `W3 covered` 或 fixed 60-root cap 达到时确定性停止；没有第三root rung、shift target或
+   事后扩窗。若60-root ceiling仍未覆盖 $W_3$，保存 largest covered $m$、每slice ceiling和margin，并标为
+   `SPECTRUM_COVERAGE_PARTIAL`。这会降低第6项ranking key和claim strength，但不能取消任何已经数值有效的候选。
+
+Candidate inventory取所有returned clusters中与 $W_3$ 相交的正频率 eigenobjects；cluster跨window edge时保留整个
+cluster并加 `WINDOW_EDGE_STRADDLE`。因此扩展不足不会借由full-containment rule删除已有 field。只有§36.8定义的
+数学/数值无效对象才不进入candidate inventory。
+
+### 36.4 Candidate generation and threshold-free tracking
+
+每个数值有效candidate object必须含 finite positive $\lambda$、$k=\sqrt\lambda$、mass-normalized eigenfunction/
+cluster subspace、normalized residual和current-run mesh/phase identity。Existing cluster tolerance只定义multiplicity
+group，不是通过门。
+
+Tracking以`fine`的 $\vartheta=0$ clusters为首选anchor；若该slice无valid object，则按固定优先级
+`fine`其余递增twist、`N4-fine`、`fem-medium`、`N4-medium`、`N3-medium`、`fem-coarse`、
+`fine-loose-count` 取第一个存在valid object的anchor level/slice。每个anchor cluster按其所在spectrum的递增root index
+取得永久 `candidate_id`。
+
+Within-twist及cross-configuration continuation均使用 current-run common-core principal overlap；不同dimension时用
+两subspace较小dimension上的最小principal overlap。每一步执行maximum-total-overlap one-to-one assignment，exact tie按
+较小frequency-envelope distance、较小target root index、较小source `candidate_id` 依次打破。Birth/death、changing
+cluster counts、non-mutual best、overlap低于旧0.90/0.80或dimension变化均写入tracking diagnostics，但不终止和不删除
+assigned或unmatched objects；unmatched object作为新branch component保留。
+
+一个rankable candidate须有valid anchor field，并在至少一个不同预注册refinement configuration中有上述确定性
+continuation record。Singleton仍保存为`UNTRACKED_AUXILIARY_EIGENOBJECT`，但不声称“跨refinement可追踪”。只要至少
+一个rankable candidate存在，程序必须完成排序并交付第一名；不得因gap、localization、parity、coverage或resolution
+diagnostic较差而返回no-reference。
+
+### 36.5 Exact lexicographic ranking and selected FEM reference
+
+对每个rankable candidate $j$ 构造下列key，并按所列顺序作**ascending lexicographic order**；这是唯一selection rule：
+
+1. **branch persistence**
+   $P_j=(-n_{\mathrm{axes},j},-n_{\mathrm{config},j},-n_{\vartheta,j})$，其中counts分别是出现continuation
+   record的四类refinement axes数、七个configuration数和distinct twist slices数；
+2. **refinement drift**
+   $D_j=(n_{\mathrm{missing},j},\sum\delta_{a,j}^{\mathrm{obs}})$，missing component在stored schema中为`NaN`，
+   排序时只通过先比较missing count而置后，不伪造成有限误差；
+3. **residual** $R_j=\max$ of normalized residuals over the tracked component，越小越优；
+4. **field localization** $L_j=(-\min L_0,-\min L_{\mathrm{core}},\max T_{\mathrm{tail}})$，只排序不通过；
+5. **parity** $Q_j=0,1,2$ 分别表示stable assigned parity、ambiguous/mixed parity、parity unavailable；even和odd之间
+   不设偏好；
+6. **spectrum coverage** $S_j=(-m_{\mathrm{covered}},-n_{\mathrm{covered\ slices}},
+   -\min\mathrm{ceiling\ margin})$；
+7. **final tie-break**：较小anchor configuration priority、较小anchor twist index、较小root index、较小
+   `candidate_id`。
+
+不存在weighted score、nearest-$1.85$、nearest-$\widehat k_h$ 或revealed-field tie-break。第一名记为 $j_1$。在其
+richest available branch level上，令全部已追踪twists和cluster multiplicity给出
+$[\lambda_{j_1}^{\min},\lambda_{j_1}^{\max}]$，冻结
+
+$$
+\lambda_{\mathrm{ref}}^{\mathrm{FEM}}
+=\frac{\lambda_{j_1}^{\min}+\lambda_{j_1}^{\max}}{2},
+\qquad
+k_{\mathrm{ref}}^{\mathrm{FEM}}
+=\sqrt{\lambda_{\mathrm{ref}}^{\mathrm{FEM}}}.
+$$
+
+Reference field取该richest level的declared anchor-twist mass-normalized subspace；multiplicity one时另以最大幅值DOF为
+pivot固定global phase。Multiplicity大于一时只交付subspace，不伪造唯一basis vector。
+
+### 36.6 Refinement ladder and $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$
+
+七个base configurations继续提供FEM、supercell、twist和algebraic axes。对branch frequency envelope
+$E=[k^-,k^+]$ 定义
+
+$$
+d_\infty(E,E')=\max\{|k^--k'^-|,|k^+-k'^+|\}.
+$$
+
+只要对应continuation object存在，就沿用已实现的observable formulas：
+
+$$
+\delta_{\mathrm{FEM}}^{\mathrm{obs}}
+=d_\infty(E_{N5,s24,\vartheta_5}^{\mathrm{tight}},
+E_{N5,s18,\vartheta_5}^{\mathrm{tight}}),
+$$
+
+$$
+\delta_N^{\mathrm{obs}}
+=d_\infty(E_{N5,s24,\vartheta_5},E_{N4,s24,\vartheta_5})
++\left|d_\infty(E_{N5,s24,\vartheta_5},E_{N4,s24,\vartheta_5})
+-d_\infty(E_{N5,s18,\vartheta_5},E_{N4,s18,\vartheta_5})\right|,
+$$
+
+$$
+\delta_{\mathrm{twist}}^{\mathrm{obs}}
+=\frac{k_{f,17}^{+}-k_{f,17}^{-}}{2}
++d_\infty(E_{f,17},E_{f,9}),
+$$
+
+$$
+\delta_{\mathrm{alg}}^{\mathrm{obs}}
+=\max_{\vartheta\in\vartheta_5}
+d_\infty(E_{f,\mathrm{tight}}(\vartheta),
+E_{f,\mathrm{loose}}(\vartheta)).
+$$
+
+当四项均finite时定义且只定义
+
+$$
+\Delta_{\mathrm{ref}}^{\mathrm{obs}}
+=\delta_{\mathrm{FEM}}^{\mathrm{obs}}
++\delta_N^{\mathrm{obs}}
++\delta_{\mathrm{twist}}^{\mathrm{obs}}
++\delta_{\mathrm{alg}}^{\mathrm{obs}}.
+$$
+
+任一axis missing时保存该component为`NaN`、`delta_ref_obs=NaN`及`EMPIRICAL_RESOLUTION_PARTIAL`，但候选仍排名并
+可成为第一名。旧collapse/total thresholds只生成per-axis pass/caveat flags。即使四项finite，
+$\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ 仍只是 observed sensitivity sum，不是
+$|k_*-k_{\mathrm{ref}}^{\mathrm{FEM}}|$ upper bound、confidence interval或certified uncertainty。
+
+### 36.7 Field, spectral and mode classifications
+
+每个candidate至少保存以下non-cancelling labels：
+
+- `cue-member`或`expansion-shell-1/2/3`；
+- `gap-interior`、`gap-edge-or-safe-buffer`、`embedded-or-bulk-overlap`或`bulk-gap-unresolved`，由current-run
+  bulk spectra、former guard和safe-interior diagnostics给出；
+- `localized`或`weakly-localized`，并附全部 $L_0,L_{\mathrm{core}},T_{\mathrm{tail}}$ 和collapse histories；
+- `even`、`odd`、`mixed/ambiguous`或`parity-unavailable`；
+- `refinement-stable-diagnostic`、`pre-asymptotic-diagnostic`或`resolution-partial`；
+- `spectrum-covered-through-Wm`或`spectrum-coverage-partial`，以及near-ceiling margin。
+
+这些labels只控制claim措辞。尤其 `embedded-or-bulk-overlap` 或 `weakly-localized` 的第一名仍必须输出
+$k_{\mathrm{ref}}^{\mathrm{FEM}}$、$\lambda_{\mathrm{ref}}^{\mathrm{FEM}}$ 和field，但其status须明确是
+`EMPIRICAL_FEM_CANDIDATE_WITH_CAVEATS`，不能称continuous guided-mode existence proof或certified reference。
+
+### 36.8 Exact global no-reference blockers
+
+本轮只有以下状态可导致**没有** top FEM candidate；不得新增 heuristic blocker：
+
+1. 所有可用refinement configurations均因非法mesh/phase space而无法形成离散对象：nonfinite/out-of-range或
+   duplicate/nonpositive elements、material-interface crossing/missing required constraints、nonbijective periodic pairing或
+   invalid quasiperiodic reduction；accuracy-only Hausdorff/reflection size不在此列。
+2. 所有potential candidate objects均因nonfinite matrix/eigenobject、raw Hermitian failure、mass non-SPD、eigensolver未返回
+   finite positive eigenpair、invalid field、或normalized residual/orthogonality failure而无效。单个level/object失败只记录并
+   继续；不能取消其他valid candidate。
+3. 完整base加conditional expansion schedule结束后，所有refinement levels合起来仍没有一个valid field-bearing eigenpair
+   component能形成§36.4要求的cross-configuration continuation；terminal为
+   `NO_TRACKABLE_EIGENPAIR_FIELD_ACROSS_REFINEMENTS`。
+4. Whole command达到 $2700$ s或aggregate RSS达到 $2147483648$ B；立即停止，无grace。
+5. Create-once canonical artifact无法发布；这是`CANONICAL_PUBLICATION_FAILURE`，不得伪造READY。
+
+Dependency/path/controller/environment错误仍是operational failure，可在保留证据和bounded re-review后按同attempt规则修复；
+它们不是FEM scientific no-reference结论。Active source若违反信息隔离，则spec-to-code review必须在launch前阻止执行，不能
+靠run-time terminal洗白。
+
+### 36.9 Canonical, field and partial artifact contract
+
+Root仍只允许 `scientific-result.mat`、conditional `fields.mat`、`run.log`、`resource.tsv` 和summary-last
+`run-summary.csv`；`work/`保存create-once mesh/spectrum caches和terminal draft，不恢复mirror/checkpoint/history/forecast
+系统。
+
+`scientific-result.mat`升级为一个single-authority schema，至少含：`schema_version`、`run_id`、immutable `spec`、
+`search_windows`、base/expansion schedule及actual counts、mesh descriptors、bulk/defect spectra、root-ceiling coverage、
+all candidate/track inventories、diagnostic/classification ledger、exact rank keys和ordered IDs、four-axis components、
+`delta_ref_obs`、`selected_candidate`、terminal、first direct failure和claim boundary。`selected_candidate`必须含
+`candidate_id`、`lambda_ref_fem`、`k_ref_fem`、lambda/k envelopes、multiplicity、anchor mesh/twist、rank key、
+classification、四个delta components、`delta_ref_obs`和resolution status。
+
+`fields.mat`至少含选中anchor的points/triangles/material identity、mass-normalized subspace、multiplicity、normalization和phase
+status；可含其余candidate anchor subspaces，但不得形成第二scalar selection authority。若存在rankable candidate，terminal
+必须是 `FEM_REFERENCE_CANDIDATE_READY`，collection size至少1，且summary直接给第一名两个reference scalars和
+`EMPIRICAL_FEM_REFERENCE_CANDIDATE_NO_EFFECTIVITY` boundary；diagnostic caveats不能把它改成negative。
+
+在§36.8 blocker处停止时，canonical partial artifact仍保存全部已成功到达的current-run spectra/fields、invalid-object reasons、
+schedule position和empty selected candidate；resource/operational stop由controller truth覆盖。任何 complete/incomplete launch都
+不覆盖旧run，也不把partial写成READY。
+
+### 36.10 Budget estimate
+
+`run-006` 的 $21.435584$ s/$812744704$ B只证明67个bulk solves和controller overhead，不外推为full-run cost。
+保守planning仍以§31接受的119-solve core point $1788$ s和此前约 $1.20$--$1.4073$ GiB full-workload evidence为基准。
+旧schedule的requested-root work为
+
+$$
+67\cdot40+5\cdot48+42\cdot40+5\cdot48=4840.
+$$
+
+新base为 $67\cdot40+5\cdot48+47\cdot48=5176$；最坏再加17个60-root fine solves，总量
+$6196$，即旧root-work的约 $1.2802$ 倍。按该比例，core planning约 $2289$ s；再给controller、branch processing和single
+publication约 $10\%$ planning allowance，whole-command estimate约 $2518$ s，严格小于 $2700$ s。Memory用更保守的
+$1.4073$ GiB evidence按60/48线性放大为约 $1.7591$ GiB，低于 $2$ GiB。两者都只是prospective estimates，实际hard
+controller仍为唯一资源裁决；不得设置 $2518$ s或 $1.7591$ GiB stop。
+
+因此本设计在max 136 eigensolves、single command、$2700$ s/$2$ GiB内有evidence-based feasibility；若Skeptic认为
+root-work scaling不足以支持launch，真正blocker只能是该完整schedule预计越过hard upper，而不能以较低预防门替代用户授权。
+
+### 36.11 Engineer boundary, theory-to-code gate and pre-run acceptance
+
+同一Engineer的未来bounded implementation只可修改 `test/i4/femref-a1/run_i4_1a.m`、`run_formal.pl`、`README.md`和
+`SYMBOLS.md`：把exact ID/launcher改为`run-007`，实现48-root base、conditional 60-root fine expansion、threshold-free
+tracking、exact ranking/Delta/classifications及本节schema。不得改package/main code、I1--I3、methods/manuscript、design/review
+history或`output/run-001`--`run-006`；不得恢复diagnostic/audit mirrors。Implementation阶段不授权run。
+
+Mandatory Researcher theory-to-code audit必须逐项确认：
+
+1. continuous/discrete forms、meshes、phase grids/tolerances和information isolation未变；
+2. exact `run-007` allowlist、create-once namespace和旧outputs无read/stat/hash/copy/reuse；
+3. `BULK_GAP_UNRESOLVED`及§36.2全部heuristics只写diagnostic，不可达terminal/early-return/candidate filter；
+4. base 72+47及conditional 17-by-60 actual eigensolve call graph、coverage formulas和max136 count；
+5. births/deaths/low overlap/parity/localization/refinement failures不阻止total assignment/ranking；
+6. rank key逐字段、tie-break、$\lambda_{\mathrm{ref}}^{\mathrm{FEM}}$、$k_{\mathrm{ref}}^{\mathrm{FEM}}$、field和
+   $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ 与§36.5--36.7一致；
+7. global no-reference paths恰为§36.8，partial/success schemas single-authority且summary-last；
+8. controller仍只有absolute 2700 s和aggregate 2147483648 B，且source无BIE/QZ/estimator/effectivity path。
+
+随后同一Skeptic必须给focused design review；Engineer实现后再经Researcher theory-to-code和同一Skeptic exact
+spec-to-code/resource review。只有无unresolved blocker的pre-run verdict才能授权从
+`/Users/whc/Documents/Work/epost/test/i4/femref-a1`执行一个fixed no-argument runner command。Post-run review完成前不得
+同步reference、揭示estimator或进行effectivity comparison。
+
+**Researcher design decision: `GO TO THE SAME SKEPTIC FOR BOUNDED §36 DESIGN REVIEW / NO CURRENT BLOCKER / IMPLEMENTATION AND RUN-007 EXECUTION NOT YET AUTHORIZED`.**
+
+## 37. 2026-08-31 §AX candidate-domain and lifecycle clarification
+
+Status: **`BOUNDED §36 REVISION / NOT IMPLEMENTED / NOT RUN`**.
+
+本节只关闭 review §AX 的唯一 blocker并冻结两个实现歧义；§36的continuous model、$W_0$--$W_3$、base 119加
+conditional 17的max-136 schedule、ranking字段顺序、$\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ formulas、
+$2700$ s/$2147483648$ B、information isolation和no-effectivity boundary全部不重开。
+
+### 37.1 Every valid field-bearing $W_3$ object is rankable
+
+完成当前有限schedule后，所有来自legal configuration、数值有效、field-bearing且frequency cluster与 $W_3$ 相交的
+eigenobject/component都进入§36.5的同一个lexicographic ranking。Cross-configuration edge、twist continuation、
+overlap threshold或完整refinement axis都不是membership条件。
+
+没有continuation edge的singleton也取得永久`candidate_id`，labels固定为
+`UNTRACKED_SINGLE_CONFIGURATION / EMPIRICAL_RESOLUTION_PARTIAL`。为使§36.5第一key自然偏好真实persistence而不设门，
+persistence counts改为anchor之外的evidence counts：
+
+$$
+n_{\mathrm{axes}}=\#\{\text{axes with a continuation edge}\},\qquad
+n_{\mathrm{config}}=\max(\#\{\text{linked configurations}\}-1,0),
+$$
+
+$$
+n_{\vartheta}=\max(\#\{\text{linked valid twist nodes}\}-1,0).
+$$
+
+因此untracked singleton的三项均为0；有persistence的candidate通过原第一key
+$(-n_{\mathrm{axes}},-n_{\mathrm{config}},-n_{\vartheta})$ 排在其前面，但singleton绝不被删除。其missing delta components
+和`delta_ref_obs`保存为`NaN`。
+
+§36.8(3)由本节完全替换：只有complete base/conditional schedule结束后，**所有legal configurations合计没有任何一个
+数值有效、field-bearing、与 $W_3$ 相交的eigenobject/component**，才可返回
+`NO_VALID_FIELD_BEARING_W3_EIGENOBJECT`。缺少tracking、continuation、overlap、parity、localization、coverage或
+refinement evidence不能产生no-reference terminal。§36.8(1)、(2)、(4)、(5)保持不变。
+
+### 37.2 Total publication level, anchor and missing-value order
+
+对排名第一的component，publication level从其全部valid realizations按下列tuple取唯一最小者：
+
+$$
+(-n_{\vartheta}^{\mathrm{valid}},\ p_{\mathrm{config}},\ i_{\vartheta}^{\min},\
+i_{\mathrm{root}}^{\min},\ \mathrm{candidate\_id}),
+$$
+
+其中先最大化该realization的valid twist count；`configuration` total priority固定为
+`fine`、`N4-fine`、`fem-medium`、`N4-medium`、`N3-medium`、`fem-coarse`、
+`fine-loose-count`；其后依次取最小valid twist index、最小cluster root index和最小`candidate_id`。Published
+$\lambda_{\mathrm{ref}}^{\mathrm{FEM}}$、$k_{\mathrm{ref}}^{\mathrm{FEM}}$ 和lambda/k envelopes只用该唯一level的
+全部valid twists；published field取该level的最小valid twist index，multiplicity-one phase fixing及higher-multiplicity
+subspace规则仍按§36.5。
+
+所有raw missing quantities保留`NaN`，不得原位伪造数值。构造rank-comparison projection时，待最小化scalar的`NaN`
+映为$+\infty$，待最大化scalar的`NaN`映为$-\infty$，所以finite总是优于同一lex position的missing；parity
+unavailable仍用§36.5的rank 2。Refinement key精确为
+
+$$
+D_j=(n_{\mathrm{missing},j},s_{\mathrm{finite},j}),\qquad
+s_{\mathrm{finite},j}=\sum_{a:\,\delta_{a,j}^{\mathrm{obs}}\text{ finite}}
+\delta_{a,j}^{\mathrm{obs}},
+$$
+
+empty finite-part sum定义为0。`delta_ref_obs`只有四项全finite时才取§36.6的和，否则仍为`NaN`；ranking只用上述
+missing count加finite-part sum。最终`candidate_id` tie-break保证total order，任何实现不得使用native `NaN` comparison。
+
+### 37.3 Exact `run-007` lifecycle
+
+`run-007`是唯一scientific identity。首次launch冻结append-only execution label `execution-001`；每个execution label只写
+自己的create-once leaf namespace，不覆盖先前label。Scientific terminal、wall/RSS resource terminal或canonical publication
+failure均消费`run-007`，不得重跑或创建下一execution label。
+
+只有经post-failure review确认为dependency/path/source/controller/environment等真实operational failure时，才不消费
+scientific `run-007`；其失败evidence和`execution-001`永久保留。同一Researcher--Engineer--Skeptic完成bounded修订与
+pre-run re-review后，仍使用同一`femref-a1/run-007` identity，并冻结最小未用的显式
+`execution-002`、`execution-003`等label。不得auto-retry、不得覆盖、不得创建新run ID，也不得由MATLAB读取旧execution
+content；runner只可检查当前明确冻结label的collision。§36.9所称root artifact contract逐execution label适用，post-run
+review以exact shell exit和对应label的single-authority leaves判定。
+
+Theory-to-code和same-Skeptic focused review必须额外确认：singleton进入排序且persistence为0；§36.8(3)旧terminal不可达；
+publication tuple及`NaN` projection逐字段实现；`execution-001` lifecycle无历史science input。通过前仍不授权Engineer或
+`run-007` execution。
+
+**Researcher decision: `GO TO THE SAME SKEPTIC FOR FOCUSED §37 RE-REVIEW / §AX BLOCKER CLOSED IN DESIGN / NO IMPLEMENTATION OR RUN AUTHORIZATION`.**
+
+## 38. 2026-08-31 Researcher theory-to-code audit of the §§36--37 implementation
+
+Status: **`REVISE / ONE SOURCE-LOCAL BLOCKER / NOT RUN`**. 本节只审查当前四文件implementation diff；没有运行
+MATLAB、Octave、Python、runner或任何数值程序，也没有创建`run-007`。
+
+### 38.1 Static mapping that passed
+
+以下结论为静态源码层面的`ESTABLISHED`，不等同于runtime validation：
+
+1. `run_i4_1a.m`仍冻结相同continuous scalar problem、conforming fitted-$P_1$弱形式、材料与几何、
+   $\beta=0.5$、$\lambda=k^2$、mesh/phase/tolerance grids及mass-normalized generalized eigensolve。
+   Active source只使用源码常量与current-execution cache；未发现读取historical output、BIE/QZ、density、estimator、
+   Markdown或Git的路径。
+2. MATLAB和controller均只接受`run-007/execution-001`。Bulk call graph为
+   $17+17+33+5=72$，base defect call graph为$5+5+17+5+5+5+5=47$；47个base solves请求48 roots。
+   若17个fine base slices不能全部满足第48根高于$W_3$上端加$0.10$，则全部17个slices追加60-root solves，
+   所以actual cap为$119+17=136$。Expansion失败slice不会删除其已有valid 48-root spectrum。
+3. Top-level正确检查`isempty(candidate_inventory.objects)`，不是检查非空wrapper struct；tracking components从全部
+   retained objects建立，因此singleton也形成component。Persistence counts、four observed deltas、missing-count加
+   finite-part-sum、`NaN` rank projection、publication-level tuple、$\lambda_{\mathrm{ref}}^{\mathrm{FEM}}$、
+   $k_{\mathrm{ref}}^{\mathrm{FEM}}$、multiplicity-one phase fixing和higher-multiplicity subspace均对应§§36--37。
+   Gap、coverage、overlap、parity/localization thresholds及missing refinement本身未直接出现在top-level terminal allowlist。
+4. Per-mesh和per-spectrum numerical failure均被局部记录后继续；current-run mesh/spectrum caches、canonical MAT、conditional
+   fields及summary-last字段保持single-execution audit path。Controller只含inclusive $2700$ s与
+   $2147483648$ B两个resource upper；未发现forecast、stall、CV、lower wall/RSS或documentation-controlled gate。
+
+### 38.2 Blocker: a derived diagnostic can still cancel a valid field
+
+`REFUTED`：当前实现尚不能保证§37.1所要求的“每个数值有效、field-bearing、与$W_3$相交的object都进入ranking”。
+
+精确路径在`LOCAL_w3_clusters`。Lines 1497--1509先正确验证finite subspace及full-mass Gram；但lines
+1510--1525随后把三个localization restricted Grams和endpoint parity Gram放在同一个outer object-validity `try`内。
+这些派生量调用`LOCAL_checked_hermitian(...,'NUMERICAL_OBJECT_INVALID')`。任一localization/parity diagnostic因nonfinite、
+Hermitian tolerance或derived eigendecomposition失败，都会落入lines 1571--1577的outer `catch`，把整个cluster写为invalid而
+不执行`clusters(end+1)=object`。若它是唯一valid $W_3$ field，top-level随后会错误返回
+`NO_VALID_FIELD_BEARING_W3_EIGENOBJECT`。因此parity/localization diagnostic仍是可构造的candidate-cancelling gate；这直接
+违反§37.1、review §AY.2(2)及用户限定的no-reference allowlist，属于`BLOCKER`而不是style caveat。
+
+### 38.3 Minimal bounded repair and next gate
+
+Engineer只需在`LOCAL_w3_clusters`及其直接record/classification consumer作source-local修复，不改scientific schedule、
+weak form、threshold数值、ranking顺序、schema authority或controller：
+
+1. finite subspace、full-mass normalization、eigenvalue/residual/orthogonality仍是hard object-validity checks；不得降级。
+2. Localization restricted-Gram计算使用独立local `try/catch`。失败时保留该object，三个raw metric写`NaN`，保存
+   diagnostic-unavailable reason并给`localization-unavailable` caveat；不得写入invalid-object allowlist。
+3. Parity Gram使用另一个独立local `try/catch`。失败时保留该object，写空parity values、`parity-unavailable`及reason；
+   common-core sampling现有diagnostic-only catch保持不变。
+4. Candidate aggregation对上述missing metrics使用§37.2的finite/`NaN` projection，并确保missing diagnostic必定产生
+   `EMPIRICAL_FEM_CANDIDATE_WITH_CAVEATS`，但不取消candidate、field或READY terminal。
+
+其余静态mapping没有发现需要扩大修复范围的blocker。修复后必须由同一Researcher只复核上述negative paths、struct fields和
+empty/`NaN` consumers，再交同一Skeptic作focused spec-to-code review。当前不得运行`run_formal.pl`或MATLAB。
+
+**Researcher decision: `REVISE / DERIVED LOCALIZATION-PARITY DIAGNOSTIC CAN CANCEL A VALID W3 FIELD / MINIMAL SOURCE-LOCAL REPAIR THEN SAME-RESEARCHER DELTA AUDIT AND SAME-SKEPTIC REVIEW / RUN-007 NOT AUTHORIZED`.**
+
+## 39. 2026-08-31 Researcher delta audit of the §38 source-local repair
+
+Status: **`REVISE / OBJECT-RETENTION BLOCKER CLOSED / ONE NaN-CONSUMER BLOCKER / NOT RUN`**. 本节只静态复核
+`LOCAL_w3_clusters`修复及其直接rank/classification consumers。
+
+### 39.1 What the repair closed
+
+`ESTABLISHED`：finite subspace和full-mass normalization仍在outer hard-validity path；upstream finite-positive
+eigenvalue、residual及orthogonality gates未改变。Localization restricted Grams和endpoint parity Gram现已分别置于local
+`try/catch`。失败时保存`NaN` localization metrics或`parity-unavailable`、status及reason，随后仍执行
+`clusters(end+1)=object`；这些派生诊断不再进入`invalid_objects`，所以§38.2的field-deletion/no-object反例已关闭。
+未发现该局部差分改变window、schedule、tracking、Delta formulas或hard object-validity checks。
+
+### 39.2 Remaining blocker in the direct consumer
+
+`REFUTED`：§38.3要求的“missing diagnostic必定进入`NaN` rank projection并产生caveat”尚未对multi-realization
+component成立。
+
+`LOCAL_candidate_record`仍以无missing flag的`min([objects(ids).L0_min])`、`min(...)`和`max(...)`聚合localization。
+MATLAB R2023b的`min`/`max`默认omit missing values；因此一个realization保存`NaN`而同component另一个realizationfinite时，
+aggregate仍为finite，现有`~all(isfinite(...))`不会触发，`localization-unavailable`及mandatory caveat均可消失。
+同样，`LOCAL_candidate_parity_rank`忽略`parity-unavailable` labels；若一个endpoint parity diagnostic失败而另一个endpoint给出
+stable even/odd，rank可仍为0，新增`parity_status/parity_reason`没有consumer，failure caveat再次被掩盖。两条路径不再取消
+candidate，但会把有缺失派生诊断的candidate误标为无此caveat，违反§38.3(4)和冻结claim classification。
+
+### 39.3 Minimal remaining repair and gate
+
+Engineer只需修改直接consumer：
+
+1. 先检查component内所有`localization_status`；只有全部`AVAILABLE`才计算三个aggregate，否则显式把三个aggregate都设为
+   `NaN`，使现有§37.2 projection、`localization-unavailable`和candidate caveat可达，不依赖`min`/`max`默认missing语义。
+2. 用`parity_status/parity_reason`区分正常的`NOT_ENDPOINT_TWIST`与endpoint计算失败；任一endpoint diagnostic failure必须令
+   parity classification/rank为unavailable或partial并触发candidate caveat。非endpoint未计算parity本身不新增caveat。
+3. 不改object membership、ranking字段顺序、threshold、科学模型、schedule、schema authority或controller。
+
+修复后同一Researcher只需复核上述两个mixed-component反例，再移交同一Skeptic。当前仍不得运行runner或MATLAB。
+
+**Researcher decision: `REVISE / FIELD RETENTION FIXED BUT MIXED-COMPONENT MISSING LOCALIZATION OR ENDPOINT PARITY CAN BE SILENTLY OMITTED / MINIMAL DIRECT-CONSUMER REPAIR THEN SAME-RESEARCHER DELTA AUDIT / RUN-007 NOT AUTHORIZED`.**
+
+## 40. 2026-08-31 Researcher closure audit of the §39 consumers
+
+Status: **`PASS / §38--§39 BLOCKERS CLOSED / STATIC ONLY / NOT RUN`**. 本节只复核§39指定的两个direct consumers。
+
+`ESTABLISHED`：`LOCAL_candidate_record`先显式检查component内全部`localization_status`。只有全部为`AVAILABLE`才聚合
+$L_0$、$L_{\mathrm{core}}$和tail；任一missing便显式写三个`NaN`。现有rank projection于是把这些待最小化/最大化的missing
+量置后，classification写`localization-unavailable`，candidate status写
+`EMPIRICAL_FEM_CANDIDATE_WITH_CAVEATS`；object、field、ranking membership及READY能力均不受取消。
+
+`ESTABLISHED`：`LOCAL_candidate_parity_rank`只在实际endpoint twists上检查parity。没有endpoint或任一endpoint
+`parity_status`不是`AVAILABLE`时rank为2并产生`parity-unavailable` caveat；全部endpoint可用时才按共同even/odd给0，
+否则给mixed/ambiguous的1。非endpoint的`NOT_ENDPOINT_TWIST`不会单独制造failure gate。该逻辑关闭了§39.2的mixed-endpoint
+反例，同时保持§§36--37的parity只排序/分类、不取消候选规则。
+
+本delta未新增terminal、threshold、early return或filter；full-mass/finite-positive eigenobject、residual及orthogonality仍是
+hard validity，scientific schedule、ranking字段顺序、Delta formulas、schema authority和resource controller未改变。
+未发现剩余source-local blocker。下一步只允许同一Skeptic作focused spec-to-code/resource review；其通过前仍不得执行
+`run-007`。
+
+**Researcher decision: `PASS / GO TO THE SAME SKEPTIC FOR FOCUSED SPEC-TO-CODE REVIEW / RUN-007 NOT AUTHORIZED BY THIS AUDIT`.**
+
+## 41. 2026-08-31 Researcher delta audit of the §AZ exception routing
+
+Status: **`REVISE / §AZ ROUTING MOSTLY CLOSED / ONE NUMERICAL-ALLOWLIST NARROWING / NOT RUN`**. 本节只静态复核
+§AZ要求的catch、canonical terminal和summary handoff差分。
+
+### 41.1 Routes that are now correct
+
+`ESTABLISHED`：`LOCAL_mesh_registry`只记录显式mesh/seam numerical codes，其他I4A code以及generic
+`EXECUTION_UNAVAILABLE`/`OUTPUT_*`均重抛；`LOCAL_attempt_spectrum`同样只记录显式phase/eigensolver/eigenobject numerical
+codes，generic/source/output不再伪装成invalid solve。Candidate/object catches继续重抛generic/source/output；其可达的本地
+numerical-object failure仍只删除该对象。
+
+`ESTABLISHED`：`LOCAL_publish_scientific`已把`scientific-result.mat`的create-once save failure统一映为
+`CANONICAL_PUBLICATION_FAILURE`。Top-level将该code识别为消费性的scientific terminal，但显式跳过第二次
+`LOCAL_publish_scientific`，所以不会重复发布同一canonical leaf；随后直接写terminal draft并正常返回，使runner读取exact
+terminal并发布summary-last的路径可达。`fields.mat` publication仍使用同一canonical code。该差分没有把generic failure误记为
+scientific negative，也没有把canonical failure降为可修复operational failure。
+
+### 41.2 Remaining blocker: one allowed mesh failure now aborts globally
+
+`REFUTED`：numerical allowlist尚未保持不缩窄。`LOCAL_mesh_registry`允许把`MESH_QUALITY_UNRESOLVED`记录为单mesh
+numerical failure并继续；该mesh因此不会进入registry。后续对应solve调用`LOCAL_load_mesh`时会再次产生
+`MESH_QUALITY_UNRESOLVED`，但`LOCAL_attempt_spectrum`的`recordable`集合只有
+`QUASIPERIODIC_SEAM_UNRESOLVED`、`SPECTRUM_INVENTORY_TRUNCATED`和`NUMERICAL_OBJECT_INVALID`。由于
+`~recordable`，首次使用该已知失败mesh便全局重抛，其他legal meshes/configurations不再运行。这把§36.8允许的per-mesh
+numerical invalid错误升级成global operational stop，违反single mesh failure继续及“所有legal configurations合计无valid
+field才no-reference”的合同。
+
+最小修复只是在`LOCAL_attempt_spectrum`的显式`recordable`集合加入`MESH_QUALITY_UNRESOLVED`；generic/source/output及所有
+未列出的I4A code仍必须重抛。不得改变mesh checks、scientific allowlist的其他成员、schedule、candidate规则或terminal
+classification。修复后同一Researcher只需复核该一行集合与四条异常反例，再移交同一Skeptic；当前不得执行`run-007`。
+
+**Researcher decision: `REVISE / CANONICAL AND GENERIC ROUTING CLOSED BUT MESH_QUALITY_UNRESOLVED IS MISSING FROM THE PER-SOLVE NUMERICAL ALLOWLIST / ONE-LINE SOURCE-LOCAL FIX THEN DELTA AUDIT / RUN-007 NOT AUTHORIZED`.**
+
+## 42. 2026-08-31 Researcher closure audit of the §41 allowlist line
+
+Status: **`PASS / §AZ EXCEPTION-ROUTING BLOCKER CLOSED / STATIC ONLY / NOT RUN`**. `LOCAL_attempt_spectrum`的显式
+`recordable`集合现为`MESH_QUALITY_UNRESOLVED`、`QUASIPERIODIC_SEAM_UNRESOLVED`、
+`SPECTRUM_INVENTORY_TRUNCATED`和`NUMERICAL_OBJECT_INVALID`。因此registry中缺失的已记录invalid mesh会使对应solve返回
+local invalid并由现有schedule loop继续其他meshes/configurations，不再升级成global operational stop。同时
+`EXECUTION_UNAVAILABLE`、所有`OUTPUT_*`及任何未列明I4A code仍由同一条件重抛；numerical allowlist没有再扩大或缩窄，
+canonical/terminal routing及全部数学路径未改变。未发现剩余blocker。
+
+**Researcher decision: `PASS / GO TO THE SAME SKEPTIC FOR FOCUSED §AZ RE-REVIEW / RUN-007 NOT AUTHORIZED BY THIS AUDIT`.**

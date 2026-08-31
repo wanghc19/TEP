@@ -4280,3 +4280,874 @@ No formula, scientific design, I1--I3 artifact, 001/002 history, MATLAB code, wa
 | Formal forecast 44.53 minutes and timing instability | Any future I4.1a formal-run proposal | `IMPORTANT CAVEAT` | `run-006` and any formal reference/effectivity claim; not the completed 003 diagnostic | New explicit bounded design/resource review if the user requests continuation | Open / formal execution not authorized |
 | Independent MAT-payload decode | Optional artifact-integrity extension | `MINOR CAVEAT` | No current claim | Defer unless specifically authorized and needed | Deferred |
 | Fresh cryptographic pre/post proof for 001/002 | Historical immutability robustness | `MINOR CAVEAT` | No current claim | Preserve existing files; do not reopen history | Closed by scope / retain immutable |
+
+## AT. Independent design review of §31 `run-006` core formal path
+
+### AT.1 Audit frame
+
+- **Audit target:** `design-4-1a.md` §31 的 prospective `run-006` core-path revision，尤其是 A/B/C 边界、最小 FEM 合法性、科学输出、资源依据和最小 external controller。
+- **Current stage:** 同一 M1 geometry-fitted conforming $P_1$ FEM 方法的 formal-runtime 精简设计；尚未实现、未创建 `run-006`、未运行 MATLAB，也未形成 reference/effectivity 结果。
+- **Question:** 删除 representation/resource/provenance 审计负担后，是否仍完整求解同一 continuous guided-mode problem，并留下足以独立审查 eigenvalues、fields、branch/mode identity、coverage 和 empirical resolution 的最小工件；同时，是否有充分的 planning evidence 在单一 $2700$ s/$2147483648$ byte hard budget 下进入 bounded implementation。
+- **Success criterion:** 科学合同和所有决定 reference 资格的数学 gate 不变；B 类路径确属非数学审计且在 formal call graph 中不可达；最小 mesh/assembly/spectral checks 能拒绝错误 FEM 离散；canonical outputs 可区分 ready、scientific negative、operational failure 和 resource failure；external controller 只执行两个 user-authorized resource upper 和 enforcement-integrity stop。
+- **Authority and materials:** repository/test/research rules，`method-4-1.md`、`method-review.md`、`design-4-1a.md` §§1--31，以及 `review-4-1a.md` 既有 postdiagnostic evidence，尤其 §AS 对 003 的资源和 claim-boundary 审计。历史 diagnostic 结果只作为 planning evidence，不作为 formal science authority。
+- **Scope:** 本审查只读；未修改 design、review、source、artifact 或 status，未运行 MATLAB、Octave、Python、Perl 或任何 numerical/diagnostic command。
+
+### AT.2 Verdict
+
+**Design verdict: `PASS WITH CONDITIONS` (high confidence).** §31 完整保留了 continuous model、fitted-$P_1$ weak form、geometry/material/quasiperiodic identification、$72+47=119$ solve union、full branch/cluster inventory、coverage/collapse/mode-identity rules、四轴 resolution、$\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ 的 empirical/non-certified 语义、information isolation 和 claim boundary。拟删除的 OP2/DRV2 mirrors、representation dispatch/probes、$10414\times36$ writer contract、$261$ rewrites、forecast/CV/stall gates、低于 $2$ GiB 的 internal screens、hash/provenance 和不影响离散判定的 exhaustive mesh ledgers 均不是该 FEM 方法的数学定义。最小输出集合足以在 post-run review 中重建科学 terminal。$1788$ s core planning point 和现有约 $1.20$--$1.4073$ GiB evidence 不是上界，但在明确删除已分解的 $883.67$ s audit additive 后，为 $2700$ s/$2$ GiB 启动提供了合理而非保证性的依据。下列 conditions 只约束实现解释和下一审查门；它们不是要求恢复旧审计系统，也不阻止 bounded implementation。
+
+### AT.3 Strongest challenge
+
+最强挑战是资源推断仍未由一次完整 $119$-solve run 实测：003 的 $761.49$ s/$1.2072$ GiB 结果包含零次 scientific eigensolve，而 $1788$ s 是原 formal scientific baseline planning point，不是 certified runtime bound。若 Engineer 仅删除文件名而让 representation rows、rewrite/checkpoint、forecast 或 mirror construction 仍可达，则减去 $883.67$ s 的推断立即失效，$2700$ s 设计余量也不再可信。最便宜且足够的决定性检查不是新增 benchmark，而是 implementation 后的 exact call-graph/source audit，证明全部 B 类工作在 formal entry 下不可达，同时 controller/log publication 保持常数级最小负担。
+
+### AT.4 Classified findings
+
+1. **`IMPORTANT CAVEAT` -- resource feasibility is evidence-based but conditional, not measured or bounded.**
+   - **Location:** §31.4 and prior §AS resource evidence.
+   - **Evidence:** current decomposition is $1788$ s scientific baseline plus $883.67067570833342$ s representation/audit additive, including $674.58177570833345$ s writer rewrite; 003 measured aggregate peak $1296187392$ bytes but executed zero scientific eigensolves. Removing the identified additive leaves about $912$ s planning margin under $2700$ s; available memory estimates remain below $2147483648$ bytes.
+   - **Consequence:** enough to accept the design and implement under the explicit hard budget, but not enough to promise completion or support a later reference claim before execution. Any reachable large rewrite/probe path would invalidate the planning premise and become a pre-execution blocker.
+   - **Uncertainty:** eigensolver timing and peak workspace remain unmeasured for the full union.
+   - **Cheapest decisive check:** at spec-to-code review, trace the single formal entry and verify every B call edge is absent/unreachable; do not add a probe, benchmark, forecast gate, reserve, or lower memory/time threshold.
+
+2. **`IMPORTANT CAVEAT` -- the A/B mesh boundary must retain cheap connectivity validity, not its old evidence ledger.**
+   - **Location:** §31.2 fitted-mesh row and the following deletion paragraph.
+   - **Evidence:** §31 already makes mathematical consequence the governing rule and fail-closes on missing interface constraints, interface-crossing elements, degeneracy, periodic mismatch, and invalid reflection action. Under that rule, exact duplicate triangle connectivity cannot be treated as a removable audit: duplicate elements would count the same cell twice in stiffness/mass assembly and change the discrete bilinear forms. By contrast, a 36-column mesh ledger, Euler/incidence/component reports, exhaustive nonincident-intersection inventory, and duplicate payload mirrors are not required when the constrained triangulation and the direct mathematical checks pass.
+   - **Consequence:** no design revision is needed, because §31's own “affects the mathematical object” criterion classifies a cheap unordered-triangle uniqueness rejection as A. If the implementation omits it, or merely logs duplicates without failing, the later spec-to-code review must return `REVISE` before execution.
+   - **Uncertainty:** only the future source mapping is unavailable at this design stage.
+   - **Cheapest decisive check:** one direct uniqueness check on active triangle connectivity, together with finite coordinates, strictly positive areas, unique material classification, required interface/constraint edges, periodic pairing, and required reflection compatibility; do not recreate the historical global mesh-audit schema.
+
+3. **`IMPORTANT CAVEAT` -- minimal canonical publication needs an exact, non-mirrored completion contract at the next gate.**
+   - **Location:** §§31.3, 31.5 and 31.6.
+   - **Evidence:** the proposed five-file responsibility split contains the spec, mesh descriptors, all reached spectra/branches/coverage/resolution, fields/subspaces, terminal summary, stage log, and authoritative resource ledger. This is sufficient in substance, and §31 forbids fabricating a complete scientific container after interruption, but exact MAT field names, terminal enum values, and final-publication ownership are intentionally not yet frozen.
+   - **Consequence:** post-run interpretability is preserved only if `scientific-result.mat` is unambiguously complete or absent/incomplete and `run-summary.csv` is terminal-summary-last. This requires a minimal atomic finalization/completion convention, not the deleted atomic-publication stress suite or mirror schemas.
+   - **Uncertainty:** bounded to the not-yet-written source/schema.
+   - **Cheapest decisive check:** Researcher freezes one concise field/terminal map in theory-to-code; same Skeptic verifies a single canonical publication path and no second scientific mirror before execution.
+
+4. **`MINOR CAVEAT` -- same-root operational correction needs one simple append-only execution label.**
+   - **Location:** §31.5.
+   - **Evidence:** create-once `run-006` and non-overwrite correction semantics are both stated, but the concrete leaf naming is deferred.
+   - **Consequence:** none for the mathematical design. A future genuine operational repair must not overwrite a failed log or masquerade as a new scientific attempt.
+   - **Cheapest decisive check:** freeze one monotone execution-label convention only if an operational failure actually occurs; do not build a retry ledger in advance.
+
+There is **no unresolved `BLOCKER`** at the design stage.
+
+### AT.5 Scientific-contract and implementation audit
+
+The following objects survive intact and are sufficient for the intended finite empirical reference claim:
+
+1. **Continuous/discrete matching:** $A=I$, $B=q$, $\beta=0.5$, radius-$0.2$ sharp circular material target, missing $x=0$ cylinder, $\lambda=k^2$, and the same fitted polygonal-interface conforming $P_1$ variational discretization, mesh/supercell/twist/tolerance schedules and quasiperiodic phase reduction.
+2. **Complete inventory:** all 72 bulk and 47 defect solves, root counts, sentinels, finite positive spectra, residual/orthogonality checks, cluster multiplicity, gap construction and full defect branch inventory remain scientific A work. A legal prerequisite failure may stop early, but `REFERENCE_COLLECTION_READY` still requires the complete 119-solve union.
+3. **Mode identity:** safe-gap filtering, basis-invariant subspaces, continuation edges, all-object coverage, localization, core/tail, parity, common-core matching and twist/tail collapse are unchanged. No nearest-$k_h$ selection is introduced.
+4. **Resolution:** FEM, supercell, twist and algebraic axes and the existing total/collapse gates remain unchanged; $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ remains empirical and explicitly not a certified upper bound.
+5. **Information and claims:** no Markdown/Git/history/BIE-QZ/estimator read, no reveal before freeze, and no certified truth/existence/effectivity claim.
+6. **Minimum FEM integrity:** finite coordinates; nonduplicate, strictly positive-area active triangles; one material label per element with correct fitted-interface classification; all required interface/constraint edges; periodic node pairing and required reflection action; finite assembled entries; raw/as-assembled Hermitian defect within its frozen tolerance before any roundoff-only canonicalization; positive-definite mass factorization; seam residual; eigensolver completion/residual/orthogonality. These are A checks. Their old wide ledgers and mirrors are not.
+
+The proposed canonical MAT/fields/one-row summary/log/resource outputs are sufficient to audit eigenvalues, reached fields/subspaces, branch inventory, coverage, resolution, direct failure and resource terminal. They need not preserve OP2/DRV2, row-writer, forecast, provenance, hash or exhaustive graph payloads.
+
+### AT.6 Resource-controller audit
+
+The acceptable controller is deliberately small:
+
+- one exact no-argument formal launcher and one MATLAB target tree;
+- one non-resetting whole-command wall clock with hard stop at elapsed $\geq2700$ s;
+- authoritative deduplicated aggregate target-tree RSS with hard stop at $\geq2147483648$ bytes;
+- process-alive/death observation sufficient to stop safely and reap the target;
+- immediate operational stop if aggregate-RSS enforcement authority is lost;
+- a short append-only resource/terminal record, including observed peak and exit reason.
+
+Sampling cadence may be chosen only to enforce/record RSS; it is not a correctness threshold. There must be no 30/40-minute, 120/1800-second, 1/1.5-GiB, reserve, forecast, stall, CV, spread, timer-resolution, writer-throughput or cadence pass/fail predicate. Controller setup, MATLAB, descendants, mesh/solve/postprocess and necessary publication share the same 2700-second budget; no grace or clock reset is permitted. These requirements do not justify reconstructing the 003 handshake/audit schemas, PID proof ledgers, performance forecasts or stress paths.
+
+### AT.7 What survived scrutiny
+
+- The revision is a runtime reduction of the same independent FEM method, not a new method or a weakened reference gate.
+- The A/B/C criterion is scientifically coherent: checks that determine the finite element space, bilinear forms, spectral inventory, mode identity or reference qualification remain; evidence-mirroring and performance-audit machinery does not.
+- The minimal outputs retain every object needed for a finite empirical reference or an honest scientific negative while avoiding multiple authorities for the same object.
+- The $2700$ s/$2$ GiB launch plan is proportionate to the evidence. It is explicitly conditional and fail-closed at the only authorized resource uppers; uncertainty about completion is not itself a blocker.
+- Valid early scientific-negative semantics do not weaken the full-inventory requirement: early stop is allowed only after a prerequisite A gate fails, while a ready collection still requires all 119 solves and all qualification gates.
+
+### AT.8 Minimal resolution and implementation authorization
+
+**Authorized now:** the same Engineer may perform one bounded implementation pass only inside `test/i4/femref-a1/`:
+
+1. simplify the existing `run_i4_1a.m` to the §31 A+C core path;
+2. update the existing `README.md` and `SYMBOLS.md` only for the new prospective source/output contract;
+3. add or replace exactly one minimal formal runner implementing the $2700$ s/$2147483648$ byte controller;
+4. remove the already historical diagnostic-controller source only if it is no longer an active entry and no immutable diagnostic artifact, design/review ledger or historical result is altered.
+
+Static source/call-graph inspection and non-executing syntax checks, including `perl -c`, are allowed. This verdict does **not** authorize creating `output/run-006/`, launching MATLAB/Octave, running the formal runner, performing a benchmark/probe, reading historical output, changing package/main code, adding a new attempt, or starting effectivity comparison.
+
+After implementation and before any formal command, the mandatory gates are:
+
+1. **Researcher theory-to-code mapping:** enumerate every retained A object/formula/gate and its source owner; classify each old formal call edge as A, minimal C, or unreachable/deleted B; freeze exact canonical MAT/summary fields, valid terminal states, output filenames, one core entry and one exact no-argument shell command.
+2. **Same-Skeptic spec-to-code/resource review:** verify the continuous problem and 119-solve schedules are unchanged; minimum mesh/assembly/eigs checks above are executable; B paths and historical reads are unreachable; raw Hermitian failure cannot be hidden by canonicalization; output publication is single-authority and fail-closed; `run-006` is still absent; the controller contains only the exact 2700-second and 2147483648-byte uppers plus enforcement-integrity stop; no lower/forecast/cadence/stall/CV gate exists.
+
+Only a separate no-blocker pre-execution verdict may authorize the one exact formal command.
+
+### AT.9 Open-problem handoff
+
+| Item | Stage | Category | Blocking scope | Cheapest next check | Suggested ledger status |
+|---|---|---|---|---|---|
+| Conditional full-run wall/RSS feasibility | I4.1a pre-execution | `IMPORTANT CAVEAT` | Does not block implementation; blocks execution only if B paths remain active or hard limits cannot be enforced | Static call-graph and minimal-controller review; then let the hard budget decide in the authorized formal run | Open / verify at spec-to-code gate |
+| Cheap triangle-connectivity uniqueness and raw Hermitian ordering | I4.1a theory-to-code/spec-to-code | `IMPORTANT CAVEAT` | Future FEM interpretability if omitted | Direct source check; no ledger or numerical probe | Must satisfy before execution |
+| Canonical publication/terminal field map | I4.1a theory-to-code/spec-to-code | `IMPORTANT CAVEAT` | Future post-run interpretability if ambiguous | Freeze one minimal schema and summary-last rule | Must satisfy before execution |
+| Append-only operational correction label | Only after a genuine operational failure | `MINOR CAVEAT` | No current implementation/run claim | Define only if needed | Deferred |
+
+**Final gate statement:** `PASS WITH CONDITIONS / BOUNDED CORE IMPLEMENTATION AUTHORIZED / RUN-006 EXECUTION NOT AUTHORIZED`.
+
+## AU. Independent exact spec-to-code/resource pre-execution review
+
+### AU.1 Audit frame
+
+- **Audit target:** current exact implementation diff for the prospective `run-006` core path: `test/i4/femref-a1/run_i4_1a.m`, `run_formal.pl`, `README.md`, and `SYMBOLS.md`, checked against design §§31--34 and review §AT.
+- **Current stage:** same M1 geometry-fitted conforming $P_1$ FEM method, implemented but not run; `output/run-006/` remains absent.
+- **Question:** whether the source preserves the frozen continuous/discrete problem and complete $72+47=119$ scientific chain, removes all B-class diagnostic/audit work, publishes a reviewable single-authority result for every legal terminal, and enforces the exact whole-command $2700$ s/$2147483648$ byte contract.
+- **Success criterion:** no direct mathematical drift; all required cheap FEM validity and spectral/coverage/resolution gates executable; no diagnostic/history path; READY possible only after the full union; scientific negatives retain the reached evidence needed to audit the direct failure; and the runner cannot return or publish success after either hard upper is reached.
+- **Materials and checks:** root/research/test rules; `method-4-1.md`, `method-review.md`; `design-4-1a.md` §§1--34; `review-4-1a.md` §AT; current tracked/untracked source and documentation. Read-only checks used `rg`, line-numbered source inspection, `git status`, `git diff --check`, `find`, and `/usr/bin/perl -c`. No runner, MATLAB, Octave, Python, benchmark, diagnostic, or numerical computation was run; no artifact or source was modified.
+
+### AU.2 Verdict
+
+**Pre-execution verdict: `REVISE` (high confidence).** The active MATLAB source preserves the frozen continuous model, nine mesh schedules, $72+47$ solve union, weak-form assembly, raw-Hermitian-before-canonicalization rule, mass SPD, seam/eigensolver gates, complete branch/coverage/mode machinery, and four-axis empirical resolution. Static inspection also confirms that the old representation/OP2--DRV2/probe/padding/rewrite/forecast/preflight/history paths are not active. However, two concrete source-ordering defects remain. First, scientific exceptions raised inside bulk/defect stage functions do not return their partial inventories to the top-level catch, so `scientific-result.mat` can omit all already completed spectra while claiming a valid scientific negative. Second, the runner freezes the final deadline decision before its two required publications; a boundary-near natural exit can therefore write a success summary and return zero after the whole command has exceeded $2700$ s. These defects directly violate canonical-output interpretability and the only authorized wall upper. They are bounded implementation defects, not failures of the FEM method.
+
+### AU.3 Strongest challenge
+
+The strongest challenge is the canonical negative path. `run_i4_1a.m` initializes the stage inventories as empty, invokes `LOCAL_bulk_inventory`/`LOCAL_defect_inventory` through output assignment, and only receives those outputs if the function returns normally. A scientific exception after many valid solves therefore transfers control to the top-level catch with the old empty variable. The catch then atomically publishes that empty variable as the single scientific authority. The non-authoritative `work/` cache may contain some reached spectra, but §31 explicitly makes `scientific-result.mat` the canonical interpretive object. A post-run reviewer could see a direct failure string and a solve count without the eigenvalues/residuals/cluster objects that caused or preceded the failure. That is not a merely optional ledger omission; it makes an authorized scientific-negative terminal insufficiently auditable.
+
+### AU.4 Classified findings
+
+1. **`BLOCKER` -- scientific-negative exceptions discard reached bulk/defect inventories from the canonical result.**
+   - **Location:** `run_i4_1a.m:49-54,61-76,96-113,1031-1131,1133-1196,1998-2020`.
+   - **Evidence:** top-level `bulk_inventory` and `defect_inventory` start empty. MATLAB output assignment occurs only when the called stage returns normally. `LOCAL_bulk_inventory` can complete and cache all 72 spectra, then raise `BULK_GAP_UNRESOLVED` at the target-gap/refinement gates (`:1069-1124`) before returning its inventory. The top-level catch consequently passes the still-empty `bulk_inventory` into `LOCAL_save_scientific`. Likewise, `LOCAL_defect_inventory` can compute a valid spectrum and detect a raw-gap edge-buffer object at `:1150-1158` before saving that spectrum, incrementing the solve count, appending the entry, or returning any prior partial entries. Other later in-stage scientific failures have the same output-loss mechanism.
+   - **Consequence:** `scientific-result.mat` can label a valid scientific negative while omitting the reached spectra, residuals, gap data, cluster inventory, and exact triggering eigenobject needed to verify the conclusion. The `work/` cache is explicitly non-authoritative and cannot substitute for the canonical artifact. This violates §§31.3 and 31.6 and prevents post-run acceptance of those legal terminals.
+   - **Uncertainty:** none about the control flow; the defect is statically demonstrated. Which scientific gate would be reached at runtime is unknown and irrelevant.
+   - **Smallest repair:** keep a current-run partial scientific state that survives every preregistered scientific gate. In particular, a valid spectrum must be cached/registered and its solve count advanced before an edge-buffer decision; bulk/defect stage functions must return partial inventories plus a failure object, or the top level must reconstruct only current-run reached objects before the single canonical save. Do not add a mirror ledger, history read, checkpoint/rewrite benchmark, or second scientific authority. After repair, one static negative-path trace must show that every scientific terminal publishes all successfully reached objects and the exact direct failure.
+
+2. **`BLOCKER` -- the whole-command deadline is no longer live during required final publication.**
+   - **Location:** `run_formal.pl:16-17,107-122,125-130,186-259`; design §§31.4, 33.2 and 34.
+   - **Evidence:** the runner correctly creates one immutable `deadline = start + 2700` and performs fresh checks after `ps`, reap, and draft read. But at `:116-118` it freezes `final_terminal` and `final_elapsed`, then executes `write_resource` and `write_summary` at `:119-122` with no deadline enforcement or fresh post-publication classification. Both helpers perform open/write/close/rename I/O. Therefore a natural exit checked at, for example, $2699.999$ s can cross $2700$ s while publishing these required leaves, retain `NATURAL_EXIT`, record a prepublication elapsed below the hard limit, and return zero after the outer command has exceeded the authorized wall.
+   - **Consequence:** the exact $2700$ s whole-command upper is not enforceable for setup + MATLAB + postprocess + necessary publication, and success can be misclassified at the boundary. This is the same contract-level failure mechanism identified in §32, not a request for optional controller robustness.
+   - **Uncertainty:** the normal publication cost is small, but the forbidden path exists for any positive I/O duration and is most relevant precisely near the hard boundary.
+   - **Smallest repair:** retain the single start/deadline and single resource/summary-last publication, but keep one fail-closed deadline mechanism active through the final summary rename and process exit. A deadline firing during finalization must prevent a success terminal/zero exit and leave an honest wall-resource failure indication; it must not use a reserve, lower threshold, grace, repeated publication, correction rewrite, cadence gate, or 003-style audit system. The same Researcher and Skeptic must review the exact bounded delta before launch.
+
+3. **`IMPORTANT CAVEAT` -- full-run resource feasibility remains conditional rather than measured.**
+   - **Location:** design §31.4 and review §AT.
+   - **Evidence:** the $1788$ s core planning point and roughly $1.20$--$1.4073$ GiB evidence do not include a completed 119-solve execution; 003 completed zero scientific eigensolves.
+   - **Consequence:** this does not block execution after the two source defects are repaired, because the user explicitly authorized $2700$ s/$2$ GiB and the runner is supposed to let those exact hard uppers decide. It only limits any pre-run promise of completion.
+   - **Cheapest decisive check:** no benchmark or lower gate; preserve this condition and audit the actual formal resource artifact after the one authorized run.
+
+No additional optional robustness issue is promoted to a blocker.
+
+### AU.5 Scientific implementation audit
+
+The following current mappings survive independent static review:
+
+1. **Exact entry and continuous model:** `run_i4_1a` requires exactly one input and accepts only literal `run-006`. `LOCAL_spec` retains $A=I$, $B=q$, $q_{\mathrm{in}}=17$, $q_{\mathrm{out}}=1$, radius $0.2$, missing column $0$, $\beta=0.5$, $\lambda=k^2$, the cue/guard intervals, solver controls, and the empirical-only claim boundary. No current BIE/QZ or estimator input exists.
+2. **Nine meshes and schedules:** the three bulk and six defect mesh identities remain $(s,n_\Gamma)=(12,24),(18,36),(24,48)$ with $N=3,4,5$ as frozen. The defect groups contain $5+5+17+5+5+5+5=47$ solves; bulk contains $17+17+33+5=72$ solves. Tolerances remain bulk $10^{-9},10^{-10},10^{-11}$ and defect $10^{-11}$ plus the $10^{-8}$ 48-root algebraic sentinel.
+3. **Minimum mesh legality:** active source rejects nonfinite/out-of-range connectivity, nonpositive or duplicate triangles, missing required constraints, fitted-interface crossing/material mismatch, invalid reflection pairing/action, periodic coordinate/master mismatch, nonfinite assembly, and finest geometry failure. These are cheap A checks; the removed wide graph/row ledgers are not required.
+4. **Operators and spectra:** stiffness and weighted/full/restricted mass use the frozen $P_1$ forms. Raw normalized Hermitian defect is checked before one upper-triangle canonicalization. Reduced mass requires positive diagonal and successful `chol`; seam residual, complete finite positive roots, solver flag/count, residual, mass orthogonality, ordering, sentinel, and cluster multiplicity gates remain fail closed.
+5. **Branches and coverage:** all raw-gap clusters enter basis-invariant restricted Grams, endpoint parity, common-core normalization, mutual twist continuation, cross-configuration matching, all-object coverage, every-slice localization, tail/twist collapse, and ambiguity flags. No nearest-$k_h$ selector exists. Parity ambiguity is retained as an explicit empirical-set limitation, consistent with the frozen first-layer rule.
+6. **Four-axis resolution:** FEM, supercell, twist and algebraic envelope changes and their collapse/total gates are present; collection entries retain `EMPIRICAL_SENSITIVITY_ENVELOPE_NOT_AN_UPPER_BOUND`.
+7. **READY guard:** the main path requires `completed_solves == 119`, passing coverage, a nonempty qualified set, and passing four-axis resolution before `REFERENCE_COLLECTION_READY`.
+8. **B-path isolation:** executable source contains no representation/mesh-repair/mass-gate dispatch, OP2/DRV2 mirror, 10414-row/261-writer path, padding, checkpoint/rewrite forecast, preflight, 1/1.5-GiB screen, CV/spread/stall gate, Git/hash/provenance/history input, or effectivity path. Uses of the word “diagnostic” that remain are the direct reflection/seam/common-core mathematical quantities, not the deleted resource/representation system.
+9. **Local call graph:** source contains 67 unique `LOCAL_*` symbols and 67 local function definitions when the three continuation-line signatures are included; no unresolved local call was found. The earlier 67/67 Researcher mapping is consistent with direct inspection.
+
+### AU.6 Canonical-output audit
+
+The intended output split is otherwise coherent:
+
+- `scientific-result.mat` is atomically create-once and, on a normal READY path, contains spec, mesh descriptors, compact bulk/defect spectra, branch inventory/edges, coverage, resolution, collection and terminal boundary.
+- `fields.mat` contains reached anchor subspaces, simple representatives and the used meshes/material labels, with a noncanonical/no-effectivity label.
+- MATLAB writes only current-run `work/`, `run.log`, the canonical science/fields leaves, and one transient terminal draft.
+- The runner makes one draft read, one `resource.tsv` publication, and one `run-summary.csv` publication last; non-natural controller terminals cannot remain READY.
+
+The sole canonical-output blocker is the exception-boundary loss in AU.4(1). A repair must preserve the current single-authority architecture rather than restore old ledgers.
+
+### AU.7 Resource-controller audit
+
+The runner correctly has:
+
+- no arguments; literal `run-006`; exact batch call `run_i4_1a('run-006')`;
+- create-once output claim and no historical-output read;
+- one monotonic start and one absolute deadline;
+- recursive-descendant plus dedicated-PGID union with PID-key deduplication;
+- the only RSS predicate `aggregate >= 2147483648` bytes;
+- operational stop on process-table/RSS authority loss;
+- no lower wall/RSS threshold, reserve, grace, stall, CV, spread, forecast, or cadence pass/fail gate;
+- a one-second sleep used only for observation/enforcement, not as a scientific gate;
+- kill/reap and non-natural READY downgrade.
+
+`/usr/bin/perl -c test/i4/femref-a1/run_formal.pl` returned `syntax OK` with only the known host locale fallback warning. The unresolved whole-command publication gap is exactly AU.4(2); no broader controller expansion is requested.
+
+### AU.8 Repository and documentation checks
+
+- Branch is `codex/epost`.
+- `output/run-006/` is absent; existing history remains outside the current diff/status.
+- The former 003 watchdog source is deleted from the active source set, while historical 001--003 outputs are untouched.
+- `README.md` and `SYMBOLS.md` consistently state `IMPLEMENTED / NOT RUN / run-006 NOT AUTHORIZED`, the same 119-solve core, canonical leaves, no-effectivity boundary, and the exact prospective command.
+- `git diff --check` passed for the tracked diff. The untracked `run_formal.pl` passed Perl syntax checking.
+- No commit was made by this Skeptic.
+
+### AU.9 Minimal resolution and gate decision
+
+Return only the two bounded defects in AU.4 to the same Engineer:
+
+1. preserve reached scientific inventories across valid-negative stage exits without adding mirrors or old checkpoint machinery;
+2. keep the single absolute deadline fail-closed through the one resource publication and summary-last completion, without reserve, lower gate, repeated publication, or controller audit expansion.
+
+Then the same Researcher must append a bounded delta theory-to-code map, and the same Skeptic must perform a focused exact source re-review. Static syntax/call-graph checks remain allowed; no workload, benchmark, runner or MATLAB invocation is authorized during repair.
+
+**The exact command `/usr/bin/perl ./run_formal.pl` is NOT AUTHORIZED by this verdict.** `run-006` must remain absent. No retry identity, new attempt, effectivity comparison, result promotion or commit is authorized.
+
+### AU.10 Mandatory evidence for any later post-run review
+
+Only after a subsequent no-blocker pre-execution verdict may the single exact command be launched. Its post-run review must receive:
+
+1. exact cwd, exact command, launch count, shell exit, branch and no-commit evidence;
+2. create-once `run-006` tree, file inventory, no `.partial`, one draft read, one resource leaf and summary-last publication ordering;
+3. whole-command elapsed, controller terminal, MATLAB exit/signal, complete resource samples or minimal enforcement ledger, authoritative PID-deduplicated aggregate peak RSS, and proof that neither $2700$ s nor $2147483648$ bytes was silently exceeded;
+4. canonical MAT/fields schemas and identities, planned/completed solve counts, exact $72+47$ role inventory, mesh descriptors, bulk gap/sentinels, defect spectra, branch/coverage objects and claim boundary;
+5. if READY: all 119 solves, complete all-object coverage, mode/parity/common-core identity, localization/tail/twist collapse, four-axis values/gates, nonempty qualified collection and empirical-only uncertainty label;
+6. if scientific negative: the exact first preregistered failure plus every successfully reached spectrum/inventory object in the canonical artifact, sufficient to recompute or verify that failure;
+7. if operational/resource failure: exact first direct cause, preserved append-only evidence, attempt-consumption/retry classification and no scientific/reference promotion;
+8. unchanged historical 001--003 and `run-001`--`run-005`, no history/BIE-QZ/estimator read, no reference reveal/effectivity comparison, no new attempt and no hidden rerun.
+
+### AU.11 Open-problem handoff
+
+| Item | Stage | Category | Blocking scope | Cheapest next check | Suggested ledger status |
+|---|---|---|---|---|---|
+| Partial scientific state lost on stage exception | I4.1a pre-execution | `BLOCKER` | All valid scientific-negative terminals reached inside bulk/defect stages | Bounded return/state repair plus static negative-path trace | Open / execution blocked |
+| Deadline inactive during final publication | I4.1a pre-execution | `BLOCKER` | Exact $2700$ s whole-command enforcement and terminal truth | Bounded runner delta plus focused same-Skeptic source review | Open / execution blocked |
+| Full 119-solve time/RSS not measured | I4.1a post-run interpretation | `IMPORTANT CAVEAT` | No pre-run completion guarantee; does not block after source repair | Let the exact hard uppers decide in the single authorized run | Retain as conditional |
+
+**Final gate statement:** `REVISE / TWO BOUNDED IMPLEMENTATION BLOCKERS / RUN-006 EXECUTION NOT AUTHORIZED`.
+
+## AV. Focused source re-review of the §AU bounded repairs
+
+### AV.1 Audit frame
+
+- **Audit target:** only the two implementation blockers returned by §AU: preservation of reached scientific state across
+  bulk/defect scientific-negative exits, and enforcement of the unique $2700$ s whole-command deadline through final
+  publication and process exit.
+- **Current stage:** same M1 geometry-fitted conforming $P_1$ FEM method, implemented but not run. The continuous problem,
+  $72+47=119$ solve union, branch/coverage/mode rules, four-axis resolution and empirical claim boundary are not reopened.
+- **Success criterion:** a preregistered scientific failure must reach the top-level catch only after all successfully completed
+  spectra, entries and counts have been returned into the canonical state; READY must still require the complete union. The
+  runner must use the same single absolute deadline before, during and after MATLAB, keep its one-shot enforcement armed
+  through `resource.tsv`, summary-last and exit, and retain $2147483648$ bytes as the only RSS upper.
+- **Materials:** design §35, current `run_i4_1a.m`, `run_formal.pl`, `README.md`, `SYMBOLS.md`, and the prior §AU findings.
+  This review used static source/diff/path inspection only. It did not execute the runner, MATLAB, Octave, Python, a
+  benchmark, a diagnostic, or numerical work; it did not create `run-006` or modify any artifact/source/design file.
+
+### AV.2 Verdict
+
+**Pre-execution verdict: `PASS WITH CONDITIONS` (high confidence).** Both §AU blockers are closed by bounded source
+changes. Bulk and defect stages now return their current inventory, run state and a failure object before the top level raises
+the scientific terminal, so the single canonical negative save sees the reached state rather than the pre-call empty value.
+The formal runner now arms one high-resolution alarm from the same immutable `start + 2700` deadline before setup and never
+cancels, resets or rearms it; the handler remains active through both final publications and exit, kills the target, emits only
+the wall terminal to stderr and exits nonzero. It neither publishes nor rewrites an artifact. The only RSS crossing remains
+aggregate RSS $\ge2147483648$ bytes. No diagnostic/audit/mirror/checkpoint/history/forecast path has returned. The conditions
+below govern post-run interpretation and do not block the one formal launch.
+
+### AV.3 Strongest challenge
+
+The strongest remaining risk is no longer source correctness but empirical completion: the $1788$ s core planning point and
+prior RSS evidence do not contain a completed 119-solve run. This uncertainty cannot be resolved by another preflight without
+violating the frozen flow. It is adequately bounded for the current goal by the exact $2700$ s/$2$ GiB controller and the
+mandatory post-run review; it is not evidence that the implementation or method will fail.
+
+### AV.4 Classified findings
+
+1. **`IMPORTANT CAVEAT` -- full-run time and peak RSS remain unmeasured.**
+   - **Location:** design §31.4 and review §§AT/AU.
+   - **Evidence:** representation-gate-003 contained zero scientific eigensolves; the current $1788$ s core estimate remains
+     a planning point rather than an upper bound.
+   - **Consequence:** no completion promise may be made before execution. It does not prevent the launch because the user
+     explicitly authorized the exact hard uppers and the repaired controller enforces them.
+   - **Cheapest decisive check:** the one formal command followed by the required post-run artifact/resource audit; no new
+     benchmark, forecast gate or lower threshold.
+
+2. **`MINOR CAVEAT` -- an alarm during final publication intentionally favors fail-closed exit over a corrected summary.**
+   - **Location:** `run_formal.pl:19-25,123-131`.
+   - **Evidence:** the handler performs only group/root kill, a fixed stderr wall record and `_exit(2)`; it does not rewrite
+     `resource.tsv` or `run-summary.csv`. If the absolute deadline fires during a final open/write/rename boundary, a partial
+     leaf or a leaf completed immediately before the signal may remain.
+   - **Consequence:** no success is authorized in that case because the exact command exits nonzero with
+     `WALL_HARD_LIMIT_REACHED`; post-run review must treat that external terminal as controlling and must not promote any
+     orphaned or pre-signal READY-looking leaf. This is the deliberate single-publication/fail-closed tradeoff, not a hidden
+     grace or a reason to restore correction rewrites.
+   - **Cheapest decisive check:** inspect shell exit, stderr, `.partial` leaves and publication ordering in the mandatory
+     post-run review.
+
+There is **no unresolved `BLOCKER`** at the pre-execution gate.
+
+### AV.5 Scientific-negative repair audit
+
+1. `run_i4_1a.m:72-81` receives `bulk_inventory`/`defect_inventory`, updated `run_state` and `stage_failure` before the
+   top-level `LOCAL_raise`; `:112-124` therefore publishes the returned state for a recognized scientific terminal.
+2. Bulk main solves save the current-run spectrum before updating frequencies, residuals, path, `completed_phases` and the
+   solve count. A later scientific gate returns that state rather than throwing across the function boundary.
+3. Bulk count sentinels are saved, appended to `count_sentinels` and counted before the 48-versus-40 mismatch/extra-gap gate.
+   The four target gaps are computed under a bounded catch, and the triggering `target_gap` plus its refinement/safe flags are
+   installed before a refinement failure is returned.
+4. Each defect spectrum is saved and its summary/entry/count installed in `defect_inventory` before the raw-edge-buffer and
+   loose-count sentinel gates. Thus the exact edge-buffer or count-sentinel trigger survives in the returned current-run
+   state.
+5. Operational I/O, dependency and unknown-code failures remain operational: the stage may return their code, but the
+   top-level terminal classifier does not convert them into a scientific negative or publish a scientific conclusion.
+6. READY logic is unchanged: bulk still contains $17+17+33+5=72$ solves, defect still contains
+   $5+5+17+5+5+5+5=47$, and `REFERENCE_COLLECTION_READY` remains downstream of `completed_solves == 119`, passing
+   coverage, a nonempty qualified collection and passing resolution.
+
+This closes §AU.4(1) without adding a second scientific authority, a mirror ledger, a history read or a checkpoint/rewrite
+path.
+
+### AV.6 Deadline/RSS repair audit
+
+1. `run_formal.pl:16-17` forms the only absolute wall deadline as `start + 2700`; `:25` arms exactly once from the remaining
+   interval to that same deadline. There is no cancellation, rearm, reserve, grace or second wall threshold.
+2. The alarm is installed before directory claim/fork and remains armed through supervision, target reap, the one terminal-
+   draft read, the one `resource.tsv` publication, summary-last and the immediately following exit.
+3. The handler at `:19-24` only kills the dedicated target group/root, writes `WALL_HARD_LIMIT_REACHED` to stderr, and exits
+   nonzero via `_exit(2)`. It does not call a publication helper, mutate a terminal draft, or overwrite a completed leaf.
+4. The loop's ordinary fresh checks still compare the same absolute deadline. The alarm closes blocking/final-I/O windows;
+   it is enforcement of the same upper, not a new gate.
+5. The unique memory predicate remains `aggregate_rss_bytes >= 2147483648`. Process-table/RSS authority loss remains an
+   operational-integrity stop. The one-second sleep is observation/enforcement cadence only.
+6. Source-wide static inspection found no lower wall/RSS gate, stall/CV/spread/forecast predicate, representation dispatch,
+   OP2/DRV2 mirror, padding, probe, 10414-row/261-writer rewrite, checkpoint, preflight, provenance/hash, Git/history,
+   BIE/QZ or estimator input.
+
+This closes §AU.4(2) without restoring the 003 controller/audit system.
+
+### AV.7 What survived
+
+- The exact one-input scientific entry remains `run_i4_1a('run-006')`; the launcher accepts no arguments and contains no
+  alternate scientific parameter.
+- The continuous specification, nine meshes/tolerances, fitted-interface $P_1$ assembly, raw Hermitian-before-canonical gate,
+  mass SPD, seam/eigs residual/orthogonality gates, full branch/coverage/collapse/mode identity and all four resolution axes
+  remain as accepted in §AU.
+- Canonical READY and scientific-negative outputs remain empirical only, with no certified upper-bound, continuous existence
+  or effectivity claim.
+- `output/run-006/` was absent during this review, and no historical output was modified or read by active source.
+
+### AV.8 Execution authorization and post-run gate
+
+**Exactly one formal command is now authorized:** from
+`/Users/whc/Documents/Work/epost/test/i4/femref-a1`, execute
+
+```text
+/usr/bin/perl ./run_formal.pl
+```
+
+The runner internally fixes the identity to `run-006`. This authorization does not permit an alternate launcher, arguments,
+a reduced workload, benchmark, diagnostic, manual multistage command, new attempt, estimator reveal, effectivity comparison,
+or commit.
+
+A retry is not authorized merely because the method, a scientific gate, or either resource upper fails. Only a demonstrated
+dependency/path/source/controller/environment operational failure may enter the existing `test/AGENTS.md` same-attempt,
+append-only correction flow; it requires preserving the failed evidence and a new bounded review before any corrected
+execution.
+
+The post-run Skeptic review must audit the complete evidence list in §AU.10 and additionally treat
+`WALL_HARD_LIMIT_REACHED` plus nonzero handler exit as authoritative if the alarm interrupts final publication. No reference,
+status promotion or future effectivity step is allowed before that post-run verdict.
+
+### AV.9 Open-problem handoff
+
+| Item | Stage | Category | Blocking scope | Cheapest next check | Suggested ledger status |
+|---|---|---|---|---|---|
+| Full 119-solve wall/RSS behavior | I4.1a formal execution | `IMPORTANT CAVEAT` | No pre-run guarantee; does not block the authorized command | One exact command and post-run resource audit | Open / execution authorized once |
+| Alarm during final publication | I4.1a post-run terminal interpretation | `MINOR CAVEAT` | No success promotion if stderr/exit reports wall crossing | Inspect exit, stderr, partials and summary ordering | Monitor in post-run review |
+
+**Final gate statement:** `PRE-EXECUTION PASS WITH CONDITIONS / ONE EXACT RUN-006 COMMAND AUTHORIZED / POST-RUN REVIEW REQUIRED`.
+
+## AW. Independent post-run review of formal `run-006`
+
+### AW.1 Audit frame
+
+- **Audit target:** the create-once formal `run-006` artifact, including canonical/partial scientific state, resource budget,
+  attempt/retry classification, claim boundary and downstream authority.
+- **Exact execution:** from `test/i4/femref-a1`, `/usr/bin/perl ./run_formal.pl`; supplied outer shell exit was `0`.
+- **Question:** whether the observed `SCIENTIFIC_NEGATIVE / BULK_GAP_UNRESOLVED` terminal is an internally consistent,
+  preregistered scientific gate result rather than an implementation, environment or resource failure, and whether the
+  preserved 67-solve state is sufficient to audit that result without promoting a reference or effectivity conclusion.
+- **Success criterion:** create-once internally consistent leaves; all successfully completed spectra preserved; direct B1
+  gate reproducible from canonical arrays; no false READY/collection/field output; actual wall/RSS below the sole hard uppers;
+  and an honest consumed-attempt/no-retry decision.
+- **Checks:** read-only file/tree/schema/log inspection and read-only MATLAB loading of existing v7.3 MAT payloads. The MATLAB
+  checks only compared stored arrays and recomputed the frozen gap predicate; they did not build a mesh, call `eigs`, solve a
+  guided-mode problem, change an artifact or start a new experiment.
+
+### AW.2 Verdict
+
+**Post-run verdict: `PASS WITH CONDITIONS` (high confidence).** `run-006` completed naturally and truthfully stopped at the
+first frozen bulk prerequisite. The canonical result, transient terminal, runner summary, resource record and log agree on
+`SCIENTIFIC_NEGATIVE / BULK_GAP_UNRESOLVED`, 67 of 119 completed solves, zero collection, MATLAB elapsed
+4.391348458 s, whole-command elapsed 21.435584 s and aggregate peak RSS 812744704 bytes. The preserved B1/B2/B4 main
+inventories are complete, finite and exactly mirrored by 67 current-run caches. Re-evaluation of the registered B1 gap rule
+finds zero candidate satisfying both the full cue and guard predicates. This is a valid scientific method failure, not an
+operational/resource failure and not a reference result. The conditions are interpretive: no retry, no branch/location
+claim, no effectivity comparison, and no promotion beyond the empirical negative stated here.
+
+### AW.3 Strongest challenge
+
+The strongest risk is to treat the later B2/B3/B4 behavior or the short runtime as permission to ignore the failed B1 gate
+and continue to defect solves. The frozen method requires every bulk level to identify the target gap under the same cue and
+guard rule before count sentinels or the defect stage. B1 has a cue-spanning open gap, but its upper edge is about
+$2.45685255229$, outside the frozen guard upper $2.45$; therefore B1 has zero admissible candidates. Later levels cannot
+retroactively waive that prerequisite. Continuing, widening the guard or rerunning after any such change would be a different
+design/attempt, not a correction of this completed run.
+
+### AW.4 Classified findings
+
+1. **`IMPORTANT CAVEAT` -- the accepted result contains no independent reference eigenpair or branch collection.**
+   - **Location:** `scientific-result.mat`, `run-summary.csv`, and absent `fields.mat`.
+   - **Evidence:** terminal is `BULK_GAP_UNRESOLVED`; `collection_size=0`; defect, branch, coverage and resolution payloads
+     are empty; no fields artifact exists; only 67 bulk-main solves were reached.
+   - **Consequence:** no guided-mode location, field, refinement uncertainty, reference error or effectivity statement follows.
+     The result blocks downstream comparison under the current frozen path while remaining a valid post-run deliverable.
+   - **Cheapest decisive action:** stop. Any future reference-producing route requires new explicit authority and a new
+     Researcher--Engineer--Skeptic design/attempt flow; do not rerun `run-006`.
+
+2. **`MINOR CAVEAT` -- the direct failure string abbreviates the combined cue-and-guard predicate.**
+   - **Location:** canonical `first_failure` and `LOCAL_target_gap`.
+   - **Evidence:** the message says `B1 has 0 observed gaps containing the full cue interval.` Stored B1 arrays actually give
+     one open gap spanning the cue, approximately $[1.32174859199,2.45685255229]$, but its upper edge exceeds the guard upper
+     $2.45$, so the combined frozen candidate count is zero.
+   - **Consequence:** the string alone omits the guard-specific cause, but the canonical arrays make the gate fully
+     reproducible and the terminal remains correct. This does not justify source repair or rerun after consumption.
+   - **Cheapest decisive check:** retain the recomputed interval in this review/status note; do not alter the artifact.
+
+3. **`MINOR CAVEAT` -- MATLAB logged the same nonfatal `eigs` option warning for each solve.**
+   - **Location:** `run.log`.
+   - **Evidence:** 67 occurrences state that the `issym` option is ignored for a matrix input. All 67 solver flags are zero;
+     every cache has 40 frequencies/residuals/cluster IDs with multiplicities summing to 40; the largest stored residual is
+     approximately $1.13\times10^{-12}$, below the frozen $10^{-9}$ gate.
+   - **Consequence:** log noise only. Explicit raw Hermitian checks and the observed solver/residual gates remain decisive.
+   - **Cheapest decisive check:** none; preserve the log and disclose the warning.
+
+There is **no unresolved artifact or execution `BLOCKER`**. The scientific negative itself prevents downstream
+reference/effectivity work under this path, but it does not invalidate the run artifact.
+
+### AW.5 Artifact and internal-consistency audit
+
+1. The create-once root contains 81 files: four terminal/root leaves and 77 current-run work files. The work leaf consists of
+   67 bulk-main spectrum caches, nine mesh caches and one MATLAB terminal draft. No `.partial` remains.
+2. Root leaves are exactly `scientific-result.mat` (160096 bytes), `run.log`, `resource.tsv` and `run-summary.csv`.
+   `fields.mat` is correctly absent because no defect branch/anchor field was reached.
+3. External records agree exactly:
+   - `controller_terminal=NATURAL_EXIT`, MATLAB exit code/signal `0/0`;
+   - `SCIENTIFIC_NEGATIVE / BULK_GAP_UNRESOLVED`;
+   - completed/planned `67/119`, collection size `0`;
+   - first failure `B1 has 0 observed gaps containing the full cue interval.`;
+   - claim boundary `EMPIRICAL_REFERENCE_ONLY_NO_CERTIFIED_UPPER_BOUND_NO_EFFECTIVITY`.
+4. `run.log` contains exactly 67 ordered solve records: B1 phases 1--17, B2 phases 1--17 and B4 phases 1--33, followed
+   immediately by the same terminal/failure. It contains no defect-stage record, resource stop, exception or authority-loss
+   terminal.
+5. The canonical MAT is schema `i4a-core-v1`, run ID `run-006`, contains nine mesh descriptors, nonempty bulk inventory and
+   empty defect/branch/coverage/resolution objects. It has no target-gap object because the first B1 candidate gate failed.
+6. Canonical levels contain B1 $40\times17$, B2 $40\times17$, B4 $40\times33$, plus B3 as the registered 17-phase
+   nested view of B4 rather than an additional solve. All stored frequencies/residuals are finite; all frequencies are
+   positive. The 67 authoritative completed solves therefore agree with $17+17+33$, not with the B3 alias view.
+7. Every one of the 67 cache payloads has solver flag zero, 40 frequencies, 40 residuals, 40 cluster IDs and multiplicities
+   summing to 40. Mesh IDs/phases match the canonical level arrays, and cache-to-canonical frequency/residual differences are
+   exactly zero.
+8. Mesh descriptors match the frozen nine meshes; every stored cross-interface count is zero. Finest geometry has
+   Hausdorff defect about $4.28215\times10^{-4}<5\times10^{-4}$, and stored reflection defects remain below the frozen
+   tolerance.
+
+### AW.6 Frozen bulk-gate numerical result
+
+Read-only recomputation from the canonical frequency matrices gives:
+
+| Level | Admissible full-cue + inside-guard candidates | Cue-overlapping open gap near the target |
+|---|---:|---|
+| B1 | 0 | band-1 gap $[1.32174859199,2.45685255229]$; upper edge exceeds $2.45$ |
+| B2 | 1 | band-1 gap $[1.31543949403,2.42566749789]$ |
+| B3 | 1 | band-1 gap $[1.31311200754,2.41655432366]$ |
+| B4 | 1 | band-1 gap $[1.31311200754,2.41655432366]$ |
+
+The B1 result is evaluated first by the frozen gate. Its zero admissible-candidate count therefore legitimately returns
+`BULK_GAP_UNRESOLVED` before the five 48-root count sentinels and all 47 defect solves. Section 31.6 explicitly permits a
+valid scientific negative to stop at the first failed A-class prerequisite; the missing downstream solves are not a truncated
+execution or resource failure.
+
+### AW.7 Budget audit
+
+- Whole-command elapsed: 21.435584 s, about $0.794\%$ of the $2700$ s hard budget; headroom 2678.564416 s.
+- MATLAB elapsed: 4.391348458 s.
+- Aggregate peak RSS: 812744704 bytes, about 0.75693 GiB and $37.846\%$ of the 2 GiB upper; headroom
+  1334738944 bytes.
+- Neither resource predicate fired. No lower wall/RSS, forecast, stall, CV or cadence terminal appears.
+
+The short usage reflects early scientific termination and must not be extrapolated as the cost of a 119-solve READY path.
+
+### AW.8 Attempt and retry ledger
+
+- `run-006` was launched once under the exact authorized command and now has a complete create-once root.
+- The controller and MATLAB exited naturally; source, dependency, path, schema, environment and resource control did not
+  fail. All completed eigensolves passed their solver/residual/count-shape gates.
+- The first failure is a preregistered scientific bulk-gap gate. Under `test/AGENTS.md` and design §31.5, this consumes
+  `run-006` and the current `femref-a1` scientific method execution.
+- **No retry is permitted or needed.** Re-executing identical source would duplicate a consumed scientific result. Changing
+  B1, the guard/cue, mesh schedule, gate order or selection rule would be a substantive new design/attempt and requires new
+  explicit user authority; none is granted by this review.
+
+### AW.9 Claim boundary and allowed synchronization
+
+The only defensible scientific claim is:
+
+> Under the frozen I4.1a fitted-FEM protocol, the formal run reached all 67 preregistered bulk-main solves and then failed the
+> B1 combined cue/guard target-gap prerequisite; consequently no defect reference branch, field, empirical reference
+> collection or effectivity comparison was produced.
+
+Minimal synchronization is allowed only after this review is appended:
+
+1. project `STATUS.md`: record `run-006` consumed, valid `BULK_GAP_UNRESOLVED` scientific negative, `67/119`, actual
+   wall/RSS, no reference and no retry/effectivity authority;
+2. `implementation/i4/README.md`: change the I4.1a experiment state from prospective/running to accepted scientific negative,
+   without altering the method manuscript or claiming I4.1 completion;
+3. `test/i4/femref-a1/README.md` and `SYMBOLS.md`: replace not-run wording with the exact terminal/resource facts and consumed
+   attempt status.
+
+Do not modify source, design, artifacts, historical I1--I3/001--003 outputs, formulas, method/review conclusions or
+`DECISIONS.md`. Do not create another design/review/attempt, reveal the estimator, run effectivity comparison or commit.
+
+### AW.10 Open-problem handoff
+
+| Item | Stage | Category | Blocking scope | Cheapest next action | Suggested ledger status |
+|---|---|---|---|---|---|
+| No admissible B1 target gap under the frozen cue/guard rule | Any future I4.1 reference attempt | `IMPORTANT CAVEAT` | Blocks reference collection/effectivity under current `femref-a1`; not acceptance of this negative artifact | Stop; await explicit authority for a genuinely new design/attempt | Open / current attempt consumed |
+| Failure string omits the guard-specific cause | Historical run interpretation | `MINOR CAVEAT` | None after this review records the recomputed interval | Preserve artifact; cite §AW.6 | Documented / no repair |
+| Repeated ignored-`issym` warning | Historical log readability | `MINOR CAVEAT` | None | Preserve log; no rerun | Documented |
+
+**Final gate statement:** `POST-RUN PASS WITH CONDITIONS / RUN-006 CONSUMED AS A VALID SCIENTIFIC NEGATIVE / NO REFERENCE / NO RETRY / NO EFFECTIVITY`.
+
+## AX. Independent design review of the §36 diagnostic-ranking revision
+
+### AX.1 Audit frame
+
+- **Target:** `design-4-1a.md` §36 only, as a prospective revision for create-once `run-007`; historical §§1--35, `run-001`--`run-006` and their verdicts/artifacts are not reopened.
+- **Question:** whether the revised same-method fitted-$P_1$ FEM path must publish a deterministic top empirical FEM candidate whenever the user-authorized numerical allowlist permits one, while treating gap, coverage, localization, parity, collapse and refinement thresholds only as diagnostics.
+- **Current stage and output type:** pre-implementation design for a numerical independent-reference candidate, not a continuous existence theorem, certified reference, experiment result or effectivity comparison.
+- **Authority and success criterion:** the new user authorization, repository `AGENTS.md`, `research/AGENTS.md`, `test/AGENTS.md`, the passed I4.1 method gate and the immutable continuous model. Only a genuine numerical, implementation, resource or canonical-publication failure may prevent the top-candidate output; caveats cannot stop it.
+- **Materials examined:** §36 in full; the directly inherited branch/refinement definitions in §§5--7 and the core resource/output contract in §31; method claim boundary; current status; and the existing review through §AW. Review was static only. `output/run-007/` was absent. No runner, MATLAB, Octave, Python or numerical computation was executed.
+
+### AX.2 Verdict
+
+**Design verdict: `REVISE` (high confidence).** The continuous problem, fitted-$P_1$ weak form, physical parameters, $\beta=0.5$, $\lambda=k^2$, information isolation, finite four-window search, actual 48-to-conditional-60 spectrum expansion, threshold-free diagnostic treatment, empirical-only uncertainty and $2700$ s/$2147483648$ B resource contract all survive review. One bounded selection-domain defect remains: §§36.4 and 36.8(3) can still return no reference when a numerically valid field-bearing current-run eigenobject exists but lacks a cross-configuration continuation record. That is precisely a tracking/coverage diagnostic cancelling the only valid object, and it exceeds the stated no-reference allowlist. The defect is local and does not require changing the FEM method, schedules, physical model, budgets or claim boundary, but it must be corrected before implementation. No implementation or execution is authorized by this verdict.
+
+### AX.3 Strongest counterexample
+
+Consider a completed base/conditional schedule in which one legal configuration contains a finite positive, residual-valid, mass-normalized field-bearing eigenobject intersecting $W_3$, while every other configuration has no valid $W_3$ object. No mesh, matrix, eigensolver, field, resource or publication failure has occurred, and it is false that all refinements failed to form an eigenpair/field. Nevertheless §36.4 labels the surviving object `UNTRACKED_AUXILIARY_EIGENOBJECT` and excludes it from ranking, while §36.8(3) returns `NO_TRACKABLE_EIGENPAIR_FIELD_ACROSS_REFINEMENTS`. Thus absence of a continuation record becomes a global candidate-cancelling gate even though §36.2 says mode-ID/coverage/refinement diagnostics cannot stop ranking. This counterexample directly changes the primary deliverable and is therefore a blocker, not a robustness preference.
+
+### AX.4 Classified findings
+
+1. **`BLOCKER` -- the rankable domain and §36.8(3) exceed the user-authorized no-reference boundary.**
+   - **Location:** §§36.4, 36.8(3), 36.9 and theory-to-code item 5.
+   - **Evidence:** a valid singleton is retained in the inventory but barred from the lexicographic ordering; lack of cross-configuration continuation is then an explicit global no-reference terminal. Low overlap, births/deaths, changing multiplicity and mode-ID ambiguity have been downgraded elsewhere to diagnostics, so using the absence of their resulting edge to suppress publication reintroduces the old gate under a new name.
+   - **Consequence:** an implementation conforming to §36 could suppress a valid field-bearing FEM candidate even though none of the allowed numerical, resource, operational or publication failures occurred. That violates the current stage's primary success criterion.
+   - **Cheapest decisive repair:** make every numerically valid field-bearing $W_3$ eigenobject/component rankable. A singleton receives zero persistence counts, missing refinement components as `NaN`, `delta_ref_obs=NaN`, and explicit `UNTRACKED_SINGLE_CONFIGURATION / EMPIRICAL_RESOLUTION_PARTIAL` caveats. The existing first key then makes genuinely cross-refinement-persistent candidates outrank singletons without a cancellation threshold. Remove §36.8(3) as a separate no-reference state, or narrow it to the case where the completed finite schedule contains no numerically valid field-bearing $W_3$ object at any legal configuration. If the user instead intended cross-refinement continuation itself to remain mandatory, that requires new explicit authority; it cannot be inferred from §36.
+
+2. **`IMPORTANT CAVEAT` -- top-candidate scalar/field extraction needs one deterministic level rule.**
+   - **Location:** §36.5, phrase `richest available branch level` and `declared anchor-twist`.
+   - **Evidence:** the ranking key uniquely orders candidate IDs, but no exact ordering selects among two available branch levels with different twist coverage/configuration roles when neither is unambiguously “richest.” Their envelopes, multiplicities and anchor fields can differ.
+   - **Consequence:** two otherwise conforming implementations could publish different $\lambda_{\mathrm{ref}}^{\mathrm{FEM}}$, $k_{\mathrm{ref}}^{\mathrm{FEM}}$ or field for the same winning candidate. This must be frozen before source execution, but it does not require a new method or new numerical gate.
+   - **Cheapest decisive repair:** in the same bounded §36 clarification, define a total priority for the publication level/twist, for example by a stated tuple of valid twist count, configuration priority and fixed twist index, and define the finite-part sum/`NaN` handling of the ranking key. Preserve the existing no-nearest-current-root rule.
+
+3. **`IMPORTANT CAVEAT` -- the max-136 budget estimate is feasible evidence, not a completion bound.**
+   - **Location:** §36.10.
+   - **Evidence:** $2518$ s and about $1.7591$ GiB are extrapolated from the $1788$ s planning point/root-work ratio and prior memory evidence; no complete 119- or 136-solve path has been measured, and sparse eigensolve/field-tracking cost need not scale exactly with requested-root count.
+   - **Consequence:** completion cannot be promised. There is nevertheless no evidence that the declared schedule is expected to exceed $2700$ s or $2147483648$ B, and the sole hard controller limits remain enforceable. This caveat must not create a lower stop, pre-run benchmark or new forecast gate.
+   - **Cheapest decisive check:** after the bounded design repair and both code reviews, one exact formal execution under the existing hard controller, followed by post-run resource review.
+
+4. **`MINOR CAVEAT` -- `run-007` consumption wording should defer to same-attempt operational repair semantics.**
+   - **Location:** §§36.1 and 36.8.
+   - **Evidence:** §36.1 says every complete/incomplete confirmed launch consumes `run-007`, whereas §36.8 and `test/AGENTS.md` permit dependency/path/controller/environment failures to be repaired in the same attempt with preserved evidence.
+   - **Consequence:** an implementation could either forbid an authorized operational correction or overwrite a create-once leaf. This is a lifecycle wording ambiguity, not a scientific blocker.
+   - **Cheapest decisive clarification:** scientific/resource/canonical outcomes consume the scientific execution; a demonstrated operational failure preserves immutable failed evidence and reuses the same `femref-a1`/`run-007` identity only through an append-only execution label after bounded re-review. No new run ID and no overwrite.
+
+### AX.5 Implementation and resource audit
+
+No implementation exists for §36 and none was audited. At design level:
+
+- the continuous model, geometry/material data, quasiperiodic phase, $A=I$, $B=q$, fitted conforming $P_1$ weak form and mass normalization are unchanged;
+- $I_{\mathrm{cue}}$ is only a hint; $W_0$--$W_3$ are finite, pre-reveal and BIE-independent;
+- all 47 base defect spectra genuinely request 48 roots, and the only conditional rung requests 60 roots on all 17 fine twists, giving base 119 and maximum 136 solves;
+- failure of finite-spectrum coverage records `SPECTRUM_COVERAGE_PARTIAL` and does not remove already returned valid fields;
+- the lexicographic key has no nearest-$1.85$, nearest-$\widehat k_h$, BIE/QZ field or estimator input;
+- $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ is correctly degraded to `NaN / EMPIRICAL_RESOLUTION_PARTIAL` when an axis is missing and is never called a bound or confidence interval;
+- gap-edge, embedded, weak-localization, parity ambiguity and pre-asymptotic labels remain READY-capable with an empirical-candidate claim only;
+- the sole resource uppers remain inclusive $2700$ s and $2147483648$ B, with no lower gate.
+
+The canonical MAT/conditional fields/summary-last contract is sufficient to audit spectra, fields, tracks, rank keys, selected scalars, empirical resolution and a no-effectivity claim once finding 1 is repaired. `git diff --check` passed with no output; `output/run-007/` was absent during review.
+
+### AX.6 What survived
+
+1. The four-window search and all-slice 48-to-60 expansion are systematic, finite and independent of the current BIE/QZ chain.
+2. Threshold-free maximum-overlap assignment, explicit birth/death retention and the lexicographic persistence-first ordering are defensible; after singleton inclusion they naturally prefer cross-refinement evidence without turning it into a pass/fail threshold.
+3. Multiplicity-one fields and higher-multiplicity subspaces are distinguished correctly; no unique basis vector is fabricated for a cluster.
+4. Missing refinement axes truthfully yield partial empirical resolution rather than a false finite uncertainty.
+5. The claim boundary remains `EMPIRICAL_FEM_REFERENCE_CANDIDATE_NO_EFFECTIVITY`; neither guided-mode existence, certification nor effectivity is asserted.
+6. The declared resource plan has enough evidence to remain prospective; only the exact hard limits may stop the future command.
+
+### AX.7 Minimal resolution and next gate
+
+Researcher should append one bounded design clarification that:
+
+1. includes valid field-bearing singleton/untracked components in the same ranking with zero persistence and partial-resolution caveats;
+2. restricts no-reference to absence of every numerically valid field-bearing $W_3$ object after the complete finite schedule, plus the already authorized mesh/matrix/eigensolver, resource, publication and operational failures;
+3. freezes a total publication-level/anchor priority and explicit missing-value comparison semantics;
+4. clarifies append-only same-attempt handling of a genuine operational failure.
+
+The same Skeptic should then re-review only that delta. Until it passes, the Engineer is **not authorized** to implement §36 and `run-007` is **not authorized** to run. The continuous model, schedules, resource limits, windows, formulas, diagnostic labels, information isolation and no-effectivity boundary need not be reopened.
+
+### AX.8 Open-problem handoff
+
+| Item | Stage | Category | Blocking scope | Cheapest next check | Suggested ledger status |
+|---|---|---|---|---|---|
+| Valid singleton is excluded and continuation absence causes global no-reference | I4.1a §36 design | `BLOCKER` | Blocks implementation and top-candidate contract | One bounded §36 clarification plus same-Skeptic delta review | Open / design revision required |
+| Publication level/anchor is not totally ordered | I4.1a implementation mapping | `IMPORTANT CAVEAT` | Reproducibility of selected scalar/field | Freeze one deterministic tuple in the same clarification | Open / resolve before code review |
+| Max-136 wall/RSS extrapolation is not an upper bound | I4.1a formal run | `IMPORTANT CAVEAT` | No completion guarantee; does not block design | Exact future run under hard controller | Open / monitor only |
+| `run-007` consumption wording versus operational correction | I4.1a attempt lifecycle | `MINOR CAVEAT` | Append-only repair semantics | One implementation-level sentence and source audit | Open / clarify before launch |
+
+**Final gate statement:** `DESIGN REVISE / ONE CANDIDATE-DOMAIN BLOCKER / NO IMPLEMENTATION AUTHORIZATION / NO RUN-007`.
+
+## AY. Focused re-review of the §37 candidate-domain clarification
+
+### AY.1 Scope and verdict
+
+本复审只核对 §37 对 §AX 唯一 blocker及其直接实现语义的闭合；§36其余 continuous model、search schedule、resource budget和claim boundary不重开。
+
+**Verdict: `PASS` (high confidence).** 没有 unresolved blocker。
+
+### AY.2 Closure audit
+
+1. **Singleton ranking closed.** §37.1 明确把每个来自 legal configuration、数值有效、field-bearing 且与 $W_3$ 相交的 eigenobject/component 纳入同一 lexicographic ranking。无 continuation 的 singleton 获得永久 `candidate_id`、零 persistence counts、missing deltas与 `delta_ref_obs=NaN`；已有 persistence-first key自然优先跨 refinement evidence，但不再删除 singleton。
+2. **No-reference allowlist closed.** 旧 §36.8(3) 已被完全替换；只有完整有限 schedule 后所有 legal configurations 合计不存在任何数值有效、field-bearing、与 $W_3$ 相交的 object/component，才可给出 `NO_VALID_FIELD_BEARING_W3_EIGENOBJECT`。Tracking、overlap、parity、localization、coverage或resolution不足均不能产生 no-reference terminal，故 §AX 反例不再成立。
+3. **Publication and `NaN` semantics closed.** §37.2 用 $(-n_{\vartheta}^{\mathrm{valid}},p_{\mathrm{config}},i_{\vartheta}^{\min},i_{\mathrm{root}}^{\min},\mathrm{candidate\_id})$ 给出唯一 publication level/anchor；published envelopes、$\lambda_{\mathrm{ref}}^{\mathrm{FEM}}$、$k_{\mathrm{ref}}^{\mathrm{FEM}}$、field和multiplicity的来源确定。Raw missing values保留 `NaN`，rank projection与finite-part sum均显式定义，最终 `candidate_id` 保证 total order，不依赖 native `NaN` comparison。
+4. **Same-run operational lifecycle closed.** §37.3 固定唯一 scientific identity `run-007` 及 create-once `execution-001` leaf namespace。Scientific/resource/publication terminal消费该run；仅经审查确认的真实 operational failure可在保留旧 evidence、完成bounded修订和pre-run复审后，以同一 `run-007` 和下一个显式 execution label继续。不得auto-retry、覆盖、另建run ID或让MATLAB读取旧execution content。
+
+### AY.3 Gate
+
+§§36--37 现已足以进入 bounded implementation。**授权同一 Engineer 仅按 §36.11 在现有 `test/i4/femref-a1/` 范围内实现 §§36--37**，随后必须完成 Researcher theory-to-code audit 和 same-Skeptic exact spec-to-code/resource review。
+
+本 verdict **不授权执行 runner、MATLAB、Octave或 `run-007`**，也不授权 estimator reveal、effectivity comparison、修改历史 output或创建新 attempt。
+
+`git diff --check`通过；审查时 `output/run-007/` 不存在。未运行任何程序或数值计算。
+
+**Final gate statement:** `DESIGN PASS / SAME ENGINEER BOUNDED IMPLEMENTATION AUTHORIZED / RUN-007 EXECUTION NOT AUTHORIZED`.
+
+## AZ. Independent exact spec-to-code/resource pre-execution review
+
+### AZ.1 Audit frame and verdict
+
+本审查对照 design §§36--40 与 review §AY，静态核对当前 `run_i4_1a.m`、`run_formal.pl`、`README.md` 和 `SYMBOLS.md`。只允许 genuine numerical、implementation、resource 或 canonical-publication failure 阻止结果；diagnostic/caveat不得成为stop。
+
+**Verdict: `REVISE` (high confidence).** 119/136 solve graph、48-to-conditional-60 expansion、singleton ranking、threshold-free tracking、total rank/`NaN` projection、publication tuple、four-axis deltas、normal READY/no-reference schemas、information isolation及$2700$ s/$2147483648$ B controller均静态通过。唯一 unresolved blocker 是三处同一性质的异常分类泄漏：真实I/O或source/runtime failure可被吞成invalid numerical inventory，或canonical publication failure可被误标为可修复operational failure。当前不授权运行。
+
+### AZ.2 What passed
+
+1. Bulk为$17+17+33+5=72$，base defect为$5+5+17+5+5+5+5=47$且全部请求48 roots；若17个fine第48根未全部覆盖$W_3$上端加$0.10$，则全部17 slices追加60 roots，actual总数严格为119或136。
+2. 每个numerically valid、field-bearing、与$W_3$相交的cluster可形成object；derived localization/parity/common-core failure保留object。无edge singleton形成独立component并以零persistence、missing deltas及`NaN`进入同一total ordering。旧gap/count/coverage/localization/parity/collapse/refinement thresholds均未出现在reachable top-level early terminal/filter中。
+3. Maximum-overlap assignment、component construction、rank projection、finite-part sum、publication configuration/twist/root tuple、$\lambda_{\mathrm{ref}}^{\mathrm{FEM}}$、$k_{\mathrm{ref}}^{\mathrm{FEM}}$、multiplicity-one phase fixing及higher-multiplicity subspace路径均可静态执行；normal success leaves与runner draft/summary字段一致。
+4. Runner固定no-argument、`run-007/execution-001`、one absolute 2700 s deadline和PID-deduplicated aggregate RSS `>=2147483648` B stop；deadline贯穿target、resource与summary-last publication。没有lower wall/RSS、reserve、grace、forecast、stall、CV、spread、旧diagnostic/audit或history path。
+5. Active MATLAB source只读取source constants和current-execution mesh/spectrum caches；未发现Markdown、Git、historical run、BIE/QZ、estimator或effectivity input。
+
+### AZ.3 Classified finding
+
+**`BLOCKER` -- operational/source/publication exceptions do not obey the frozen terminal and retry allowlist.**
+
+- `LOCAL_mesh_registry` 的outer `catch`无条件把异常登记为mesh failure并继续。因此mesh build中的generic struct/dimension/runtime exception解码出的`EXECUTION_UNAVAILABLE`可被吞掉；后续all-spectrum mesh lookup失败最终可误报`NO_VALID_FIELD_BEARING_W3_EIGENOBJECT`。
+- `LOCAL_attempt_spectrum`只重抛`OUTPUT_*`，没有重抛`EXECUTION_UNAVAILABLE`。因此`LOCAL_low_spectrum`或其consumer中的真实MATLAB source/runtime/shape bug可被记为invalid solve；若影响全部可用objects，同样产生假的scientific no-reference terminal。
+- `LOCAL_publish_fields`正确把fields publication failure改为`CANONICAL_PUBLICATION_FAILURE`，但`LOCAL_publish_scientific`直接调用`LOCAL_atomic_save`。`scientific-result.mat` publication失败因而成为`OUTPUT_* / OPERATIONAL_FAILURE`，与§37.3“canonical publication failure consumes `run-007`”矛盾，并可能错误进入same-run operational retry流程。
+
+该故障会把implementation/I/O failure解释成科学负结果，或把消费性的publication failure解释成可重试operational failure；它直接破坏post-run claim和attempt ledger，故为真正blocker。
+
+### AZ.4 Minimal repair and next gate
+
+同一Engineer只需做异常路由修复，不改任何数学对象、schedule、rank、schema字段或controller：
+
+1. `LOCAL_mesh_registry`在记录合法mesh numerical-invalid原因前，必须重抛`EXECUTION_UNAVAILABLE`及`OUTPUT_*`；
+2. `LOCAL_attempt_spectrum`同样重抛`EXECUTION_UNAVAILABLE`及`OUTPUT_*`，只把明确的mesh/phase/eigensolver/numerical-object failure留作local invalid inventory；
+3. `scientific-result.mat`的create-once save failure必须冻结为`CANONICAL_PUBLICATION_FAILURE`，且top-level不得为记录该失败而再次尝试发布同一个canonical leaf；terminal draft/runner summary须保留该exact publication terminal，使`run-007`按§37.3消费而非进入operational retry。
+
+修复后由Researcher只做上述catch/terminal delta的theory-to-code audit，再交同一Skeptic focused re-review。其余已通过路径不重开。
+
+`/usr/bin/perl -c ./run_formal.pl`返回`syntax OK`（仅locale fallback warning）；`git diff --check`通过；`output/run-007/`不存在。未运行runner、MATLAB、Octave、Python或任何数值计算。
+
+**Final gate statement:** `PRE-EXECUTION REVISE / ONE EXCEPTION-CLASSIFICATION BLOCKER / RUN-007 NOT AUTHORIZED`.
+
+## BA. Focused re-review of the §AZ exception-routing repair
+
+### BA.1 Verdict
+
+**`PRE-EXECUTION PASS` (high confidence).** §AZ 的唯一 blocker 已关闭；没有 unresolved numerical、implementation、resource 或 publication blocker。§AZ 已通过的科学 call graph、ranking、schema、information-isolation及resource路径不重开。
+
+### BA.2 Exact closure
+
+1. `LOCAL_mesh_registry`现在只把显式`MESH_QUALITY_UNRESOLVED`/`QUASIPERIODIC_SEAM_UNRESOLVED`记录为单mesh numerical failure；generic `EXECUTION_UNAVAILABLE`、全部`OUTPUT_*`及未列明I4A code均重抛，故source/I/O failure不能再伪装成mesh invalid。
+2. `LOCAL_attempt_spectrum`的recordable allowlist精确为`MESH_QUALITY_UNRESOLVED`、`QUASIPERIODIC_SEAM_UNRESOLVED`、`SPECTRUM_INVENTORY_TRUNCATED`和`NUMERICAL_OBJECT_INVALID`。缺失的已知invalid mesh只使对应solve local-invalid并继续其他legal configurations；generic/source/output和任何未列明code均fail closed。
+3. `LOCAL_publish_scientific`把`scientific-result.mat` save failure映为`CANONICAL_PUBLICATION_FAILURE`。Top-level识别该消费性terminal并跳过第二次canonical publication；随后terminal draft正常记录exact code，runner在natural MATLAB return下以summary-last保留该terminal。`fields.mat`使用相同canonical code。因此publication failure消费`run-007`，不会误入operational retry。
+4. Catch delta没有改变119/136 schedule、candidate membership、ranking、`NaN`语义、continuous model或controller。Runner仍只有inclusive $2700$ s与$2147483648$ B两个hard uppers并贯穿publication；既有预算估计仍支持一次受控formal run。
+
+审查时`output/run-007/`不存在。未执行runner、MATLAB、Octave、Python、Perl检查或任何数值计算。
+
+### BA.3 Exact authorization
+
+现精确授权**一次且仅一次**formal command：在cwd
+`/Users/whc/Documents/Work/epost/test/i4/femref-a1`执行
+
+```text
+/usr/bin/perl ./run_formal.pl
+```
+
+该命令内部固定`run-007/execution-001`。不授权alternate command、参数、benchmark、retry、新run/execution ID、estimator reveal或effectivity comparison。完成后必须由同一Skeptic作post-run artifact/resource/claim review，review前不得同步reference结论。
+
+**Final gate statement:** `PRE-EXECUTION PASS / ONE EXACT RUN-007 COMMAND AUTHORIZED / POST-RUN REVIEW REQUIRED`.
+
+## BB. `run-007/execution-001` post-run artifact/resource/claim review
+
+### BB.1 Audit frame
+
+Audit target: the completed create-once formal FEM run `test/i4/femref-a1/output/run-007/execution-001/`.
+
+Success criterion: verify that the frozen independent FEM method produced an internally consistent, field-bearing empirical reference candidate within the $2700\,\mathrm{s}$/2 GiB budget, without promoting it to a certified bound, continuous-existence result, or effectivity comparison.
+
+This audit was read-only. It inspected the canonical artifacts, all 119 spectrum caches, nine mesh caches, log/resource/terminal records, candidate inventory, and the stored winning field. No mesh, eigensolve, guided-mode computation, or effectivity calculation was run.
+
+### BB.2 Artifact and execution integrity
+
+- The create-once namespace contains exactly 134 files: 119 spectrum caches, nine mesh caches, one MATLAB terminal record, and five root-level artifacts. No `.partial`, `.tmp`, second execution, retry, or fine-60 expansion artifact exists.
+- Root artifacts are:
+  - `scientific-result.mat`: 24,833,378 bytes;
+  - `fields.mat`: 351,709 bytes;
+  - `run.log`: 51,133 bytes;
+  - `run-summary.csv`: 496 bytes;
+  - `resource.tsv`: 148 bytes.
+- `run-summary.csv`, `resource.tsv`, and `matlab-terminal.tsv` agree on `run-007/execution-001`, `SCIENTIFIC_READY`, `FEM_REFERENCE_CANDIDATE_READY`, 119 attempted/completed/planned solves, collection size 16, and natural exit.
+- The solve topology is exactly 72 bulk solves plus 47 defect solves:
+  - 67 `bulk-main` and five `bulk-count`;
+  - 42 `tight` and five `loose-count`;
+  - 67 solves requested 40 roots and 52 requested 48 roots.
+- All 119 caches have zero solver flags, finite positive spectra and finite fields. The maximum stored residual is $2.9596950828977078\times10^{-11}$ and maximum orthogonality defect is $6.646890494085932\times10^{-15}$.
+- The 48-root fine spectra covered W3 on all 17 slices, with minimum W3 ceiling margin $1.1744558698561991$; therefore the conditional 60-root expansion was correctly not entered.
+- Bulk count sentinels are valid, with mismatches from $1.0658\times10^{-14}$ to $2.3093\times10^{-14}$ and matching cluster counts. All five defect count comparisons pass; their largest mismatch is $3.5527\times10^{-15}$.
+
+### BB.3 Candidate publication and field audit
+
+The ordered candidate IDs are
+
+`7, 6, 8, 15, 16, 9, 13, 4, 2, 10, 14, 5, 1, 11, 12, 3`.
+
+Candidate 7 is the deterministic first-ranked candidate:
+
+- 47 realizations, four represented refinement axes, six configurations, and 16 distinct twist values;
+- status `TRACKED_WITH_DIAGNOSTIC_EDGES`;
+- publication anchor: `fine`, mesh `defect-N5-s24-g48`, $\theta=0$, root 11, multiplicity one;
+- eigenvalue envelope: $[3.3697100442273502,\,3.3697321598980357]$;
+- wavenumber envelope: $[1.8356769988827963,\,1.8356830227188015]$;
+- scalar definition: $\lambda_{\mathrm{ref}}^{\mathrm{FEM}}$ is the midpoint of the eigenvalue envelope and $k_{\mathrm{ref}}^{\mathrm{FEM}}=\sqrt{\lambda_{\mathrm{ref}}^{\mathrm{FEM}}}$, giving
+
+$$
+\lambda_{\mathrm{ref}}^{\mathrm{FEM}}
+=3.3697211020626927,
+\qquad
+k_{\mathrm{ref}}^{\mathrm{FEM}}
+=1.8356800108032698.
+$$
+
+The four empirical changes are
+
+$$
+\delta_{\mathrm{FEM}}^{\mathrm{obs}}
+=0.0019799758723477723,
+$$
+
+$$
+\delta_{\mathrm{supercell}}^{\mathrm{obs}}
+=3.3059115711608911\times10^{-5},
+$$
+
+$$
+\delta_{\mathrm{twist}}^{\mathrm{obs}}
+=3.0119180025600656\times10^{-6},
+\qquad
+\delta_{\mathrm{alg}}^{\mathrm{obs}}=0,
+$$
+
+and hence
+
+$$
+\Delta_{\mathrm{ref}}^{\mathrm{obs}}
+=0.0020160469060619413.
+$$
+
+All four components are present, so the stored status `EMPIRICAL_RESOLUTION_COMPLETE` is internally correct.
+
+`fields.mat` is linked exactly to candidate 7 and contains a $7785\times1$ subspace/vector on a 7,785-node, 14,992-triangle mesh. Its mass-Gram defect is $2.2217488424916266\times10^{-16}$; the phase-fixed vector has mass-normalization defect $1.1323410689992802\times10^{-15}$ and a positive-real maximum pivot. The run/execution/candidate, eigenvalue, wavenumber, multiplicity, mesh, twist, basis-status, and claim-boundary fields agree with the canonical scientific result.
+
+### BB.4 Mode classification and claim boundary
+
+The winner is classified as:
+
+- `cue-member`;
+- `gap-edge-or-safe-buffer`;
+- `weakly-localized`;
+- `stable-parity-assignment`;
+- `empirical-resolution-complete`;
+- `spectrum-covered-through-W3`.
+
+Across its track, the conservative localization summaries are
+
+$$
+L_0=0.56822282309369454,
+\qquad
+L_{\mathrm{core}}=0.96349629586559093,
+\qquad
+T_{\mathrm{tail}}=0.036503704134409468.
+$$
+
+The anchor field is even, with anchor tail metric $2.547962370900575\times10^{-4}$. The bulk diagnostic nevertheless reports `BULK_GAP_UNRESOLVED_DIAGNOSTIC`: no refinement-qualified target bulk gap is available. Thus the artifact does not distinguish a continuous gap-guided mode from an edge, embedded, or near-continuum interpretation at stronger claim level.
+
+The active artifact and prior spec-to-code audit show no historical output, BIE/QZ vector, estimator, or effectivity input in the selection path. Candidate 7 was selected by the frozen lexicographic FEM ranking, not proximity to the current BIE root. The correct boundary remains:
+
+`EMPIRICAL_FEM_REFERENCE_CANDIDATE_NO_EFFECTIVITY`.
+
+This result is not a certified upper bound, confidence interval, proof of continuous eigenvalue existence, or effectivity validation.
+
+### BB.5 Resource and retry ledger
+
+- MATLAB elapsed: $120.186555458\,\mathrm{s}$.
+- Whole-command elapsed: $140.273679\,\mathrm{s}<2700\,\mathrm{s}$.
+- Authoritative aggregate peak RSS: $1{,}353{,}826{,}304$ bytes $<2{,}147{,}483{,}648$ bytes.
+- Controller terminal: `NATURAL_EXIT`; MATLAB exit code and signal are zero.
+
+This is a complete frozen-method run, not an operational, path, schema, or environment failure. `run-007/execution-001` is therefore consumed. There is no evidence-based basis for a retry under the same authorization.
+
+### BB.6 Findings
+
+1. **IMPORTANT CAVEAT -- unresolved bulk-gap interpretation.**
+   The candidate is field-bearing and reproducible, but the target bulk gap is not refinement-qualified. The strongest counterexample is that the observed localized FEM branch may remain an edge/embedded or near-continuum discrete branch rather than a continuous gap-guided mode. This limits interpretation but does not invalidate the frozen ranking or empirical reference artifact.
+2. **IMPORTANT CAVEAT -- empirical resolution is not certified or demonstrably asymptotic.**
+   `EMPIRICAL_RESOLUTION_COMPLETE` means all four prescribed sensitivity components were available. It does not establish asymptotic convergence, and $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ is not an upper bound for the unknown continuous error. The absence of an explicit pre-asymptotic label must not be interpreted as evidence that the ladder is asymptotic.
+3. **MINOR CAVEAT -- repeated MATLAB option warning.**
+   MATLAB reports that `issym` is ignored for matrix-form `eigs` calls. Zero flags, finite spectra, residuals, orthogonality, and the previously reviewed raw Hermitian checks show no current numerical consequence.
+
+No artifact, implementation, resource, or publication blocker was found.
+
+### BB.7 Verdict and allowed synchronization
+
+**POST-RUN VERDICT: PASS WITH CONDITIONS.**
+
+Confidence: high for artifact integrity and the empirical FEM candidate; deliberately limited for continuous guided-mode interpretation.
+
+A minimal synchronization may record in project `STATUS.md`, the I4 README, and existing test documentation that:
+
+- `run-007/execution-001` completed naturally within budget;
+- it produced the above empirical field-bearing FEM candidate;
+- the bulk-gap classification remains unresolved;
+- $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ is non-certified;
+- the attempt is consumed and no retry is authorized.
+
+This review does not authorize effectivity comparison, a new run/attempt, new method work, or any certified/existence claim. `git diff --check` passes.
