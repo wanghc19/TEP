@@ -1,15 +1,44 @@
 # I4.1b P2 FEM symbol ledger
 
-Authority: [[research/projects/eig-apost/implementation/i4/design-4-1b#20. Bounded Section M operational repair and preflight continuation|design §20]] and
-[[research/projects/eig-apost/implementation/i4/review-4-1b#M. Post-preflight review of resource-preflight-001/execution-001|review §M]].
-Formal `run-001/execution-001` remains prospective and blocked. Preflight
-`execution-001` and `execution-002` are both immutable consumed evidence; the
-latter ended at the 3 GiB hard RSS stop before any eigensolve.
+Current authority:
+[[research/projects/eig-apost/implementation/i4/design-4-1b|design-4-1b]] and
+[[research/projects/eig-apost/implementation/i4/review-4-1b#AE. Final post-run review of run-002/execution-002|review §AE]].
+Formal `run-002/execution-002` is the consumed final empirical P2 authority;
+its eight canonical leaves and `61/61` completed solves are immutable.
+Historical preflight/formal executions remain consumed evidence and are not
+active inputs.
+
+| Canonical code name | Kind / scope | Draft object and meaning | Type / shape / units | Defined / consumed |
+|---|---|---|---|---|
+| `run_i4_1b_core` | active MATLAB entry | §23 actual-only preflight or preliminary-first P2 formal path | function with two text inputs | new core/controllers |
+| `resource-preflight-002`, `run-002`, `execution-003`, `execution-002` | exact identities | consumed §31 preflight used `execution-003`; consumed final formal authority is `run-002/execution-002` | text scalars | immutable artifacts/controllers |
+| `DEADLINE_EPOCH` | controller constant | sole inclusive wall deadline `1788266751` | epoch seconds | both new controllers |
+| `RSS_LIMIT_BYTES` | controller constant | sole inclusive aggregate MATLAB-tree RSS limit | 3,221,225,472 bytes | both new controllers |
+| `pair.stiffness`, `pair.mass`, `pair.prolongation` | reduced P2 pair | only retained $K(\phi)$, $M(\phi)$, and $P_2(\phi)$ after immediate factor release | sparse matrices | reduction/spectrum |
+| `connectivity_authority`, `parity_authority` | representation authorities | untouched constrained-Delaunay triangles and empirical common-grid sample parity | text scalars | mesh/preflight evidence |
+| `boundary_edges`, `expected_boundary`, `incidence` | candidate legality | active incidence-one boundary, frozen segmented rectangle boundary, and active-edge incidence | integer edge tables/vector | connectivity validator |
+| `parity_values`, `parity_invariance_defect`, `parity_grid_status`, `parity_method`, `parity_reason` | endpoint field diagnostics | eigenvalues of $(A_R+A_R^*)/2$, weighted invariance defect $d_R$, pairing status and empirical claim boundary | real row/scalar/text | sampled objects/publication |
+| `finite_edges`, `LOCAL_has_perfect_matching`, `LOCAL_augment_finite_matching` | suffix feasibility | §36 all-components-finite Boolean graph and deterministic ascending augmenting-path perfect-matching predicate | logical matrix/helpers | assignment refinement/fixture |
+| `permutation`, `factor_nnz` | transient SPD evidence | `symamd(spones(M+M'))` permutation and `nnz(chol(M(p,p)))` | integer row/scalar | reduction/preflight only |
+| `entries`, `objects`, `tracking`, `selection` | preliminary authority | five anchor spectra, complete $W_3$ field clusters, dummy assignment graph, and pure-P2 winner | struct arrays | preliminary MAT files |
+| `roots_48_evidence`, `roots_60_evidence` | immutable compact evidence | separate 48/60 summaries with validity and failure status, excluding inactive full fields | scalar structs per primary slice | extension/preliminary result |
+| `agreement`, `spectrum_authority` | expansion audit | per-cluster boundaries, multiplicities, frequency defect, exact-mass principal overlaps, status, active authority and coverage | scalar/per-slice struct arrays | extension/preliminary result |
+| `active_authority`, `active_root_count`, `coverage_classification` | per-slice authority | sole `roots-48` or `roots-60` spectrum used by object inventory and explicit coverage status | text/integer/text | preliminary entries/table |
+| `preliminary-result.mat`, `preliminary-fields.mat` | immutable preliminary authority | final winner/scalar metadata and complete selected field spaces, published before refinement | MAT v7.3 | consumed execution-002/postreview |
+| `refinement-result.mat`, `refinement-fields.mat` | final refinement authority | five finite sensitivity axes, sampled bulk evidence and matched fields | MAT v7.3 | consumed execution-002/postreview |
+| `delta_h`, `delta_g`, `delta_N`, `delta_theta`, `delta_tol`, `Delta_ref_obs` | observed sensitivities | final non-certified finite-component values and sum from execution-002 | frequency scalars | refinement result |
+
+> **Superseded historical / inactive ledger.** The following former
+> `Canonical code name` table is retained only as lifecycle history. It is not
+> active execution or publication authority and does not override the
+> `Current authority` declaration or the Section 31/36 current-authority table
+> above; only those top entries govern `run-002/execution-002` and its final
+> 61-solve artifacts.
 
 | Canonical code name | Kind / scope | Draft object and meaning | Type / shape / units | Defined / consumed |
 |---|---|---|---|---|
 | `run_id`, `$RUN_ID` | fixed identity | formal `run-001` or exact alternate `resource-preflight-001` | text scalar | MATLAB/controllers |
-| `execution_id`, `$EXECUTION_ID` | fixed identity | formal `execution-001` or create-once preflight continuation `execution-002`; preflight `execution-001` is not an active input | text scalar | MATLAB/controllers |
+| `execution_id`, `$EXECUTION_ID` | fixed identity | consumed final formal `execution-002` or consumed preflight `execution-003`; historical executions are not active inputs | text scalar | immutable artifacts/controllers |
 | `output_dir`, `work_dir` | current-run paths | execution authority and current-run caches | paths | MATLAB/runner |
 | `spec` | immutable source struct | design §§1--8, 15 model, tolerances, grids and schedules | scalar struct | `LOCAL_spec`; science |
 | `period`, `radius`, `q_inside`, `q_outside`, `missing_column`, `beta` | spec fields | continuous geometry/material and fixed $\beta$ | real scalars | mesh/forms/phase |
@@ -21,7 +50,8 @@ latter ended at the 3 GiB hard RSS stop before any eigensolve.
 | `object_allocation_order`, `configuration_priority` | immutable orders | design §15.1 object-ID allocation versus independent canonical rank priority | two seven-name cell rows | inventory/rank |
 | `points`, `triangles`, `material_inside` | P1 geometry fields | fitted straight triangulation and triangle material | $V\times2$, $T\times3$, $T\times1$ | mesh/forms/fields |
 | `edges`, `triangle_p2`, `p2_points`, `edge_incidence` | P2 topology fields | sorted global edges, six-node connectivity, vertex/midpoint coordinates, incidences | integer/real arrays | topology/forms/fields |
-| `reflection_index`, `reflected_edges`, `reflected_edges_found`, `edge_reflection_index`, `edge_count`, `vertex_count`, `p2_reflection_index`, `reflected_p2_points`, `p2_reflection_defect` | reflection maps/check | design §20.1 vertex permutation, exact reflected-edge row permutation and existence flags, combined P2 permutation and independent reflected-coordinate defect | integer/logical columns, counts / real coordinates and scalar | mesh construction/reflection checks |
+| `geometry_reflection_index`, `geometry_reflection_defect`, `geometry_reflection_status`, `geometry_constraint_mismatch` | geometry-only diagnostic | §31 point/constraint reflection evidence; never a mesh-connectivity gate | integer column / scalar / text | mesh construction |
+| `parity_grid.reflection_index`, `coordinate_defect`, `weight_defect` | common-grid reflection | §31.2 coordinate-defined bijective/involutive sample-row permutation and weight check | integer column / real scalars | sampling/parity |
 | `p1_periodic`, `periodic` | phase maps | vertex and vertex-plus-midpoint master/slave maps | structs | prolongations |
 | `stiffness_full`, `mass_full` | P2 forms | full $K_2,M_2$ from seven-point degree-five quadrature | sparse Hermitian matrices | assembly/reduction |
 | `mass_center`, `mass_core`, `mass_tail` | P2 restricted forms | localization Grams on frozen regions | sparse Hermitian matrices | W3 diagnostics |
@@ -37,7 +67,7 @@ latter ended at the 3 GiB hard RSS stop before any eigensolve.
 | `agreement` | 48/60 authority | frequency, cluster and exact-mass field agreement | struct | design §15.4 |
 | `object_id`, `root_indices`, `subspace` | P2 object identity | immutable W3 cluster identity, complete roots and mass-normalized field space | integer/vector/complex matrix | graph/rank/fields |
 | `common_core_samples`, `common_core_weights` | cross-mesh representation | true P2 or separate P1 samples and positive $q$-weighted grid weights | complex matrix/real vector | principal overlaps |
-| `L0_min`, `Lcore_min`, `tail_max`, `parity_status`, `parity_label` | diagnostics | localization/tail and endpoint $R_2$ compression evidence | scalars/text | rank/classification |
+| `L0_min`, `Lcore_min`, `tail_max`, `parity_status`, `parity_label` | diagnostics | localization/tail and empirical endpoint common-grid compression evidence | scalars/text | rank/classification |
 | `tracking.edges`, `tracking.components` | pure-P2 graph | design §§15.1--15.2 directed dummy-augmented assignments and connected components | struct arrays | candidate construction |
 | `costs`, `assignment`, `cost_tuple`, `exact_tie` | assignment objects | seven-component summed lexicographic objective and binary64 final tie | numeric tensor/vector | tracking/fixtures |
 | `candidate_id`, `realization_ids`, `rank_key` | selection objects | immutable component order and pure-P2 total rank | integers/numeric row | canonical selection |

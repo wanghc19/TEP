@@ -645,3 +645,1221 @@ eigenpair or field, no eigensolve, no empirical P2 reference, no current-run P1-
 uncertainty estimate and no effectivity result. Project synchronization, if any, may state only this
 blocked resource outcome and claim boundary; it may not publish a reference scalar or scientific
 validation result.
+
+## Q. Design review of Section 23 independent repair lifecycle
+
+### Q.1 Audit frame and verdict
+
+The target is the separately authorized coarse-core P2 lifecycle in design Section 23, not a
+reinterpretation of the two consumed preflights. Success at this gate means that the design can
+produce a deterministic, reviewable preliminary empirical P2 reference candidate while preserving
+the continuous problem, and that neither its fixed schedule nor its controllers are already shown
+to violate the absolute five-hour/3 GiB limits.
+
+**Verdict: `PASS WITH CONDITIONS`. Confidence: medium-high.** No unresolved mathematical,
+implementation-feasibility, resource or publication `BLOCKER` prevents bounded implementation.
+The remaining conditions concern honest weak-identity and partial-uncertainty publication plus the
+mandatory measured preflight gate; they do not authorize execution.
+
+### Q.2 Mathematical and schedule audit
+
+- The continuous coefficient, fitted polygonal geometry, fixed $\beta=0.5$, quasiperiodic phase
+  constraints, six-node P2 basis, P2 weak forms and relation $\lambda=k^2$ are explicitly unchanged.
+  P1 survives only as the local nodal/bilinear embedding identity; no P1 eigensolver, historical
+  target or P1 field can enter selection.
+- The three-level axes are identifiable and non-confounded at their anchors:
+  $s=6,9,12$ at $(N,g)=(4,24)$; $g=16,24,32$ at $(N,s)=(4,9)$; and
+  $N=3,4,5$ at $(s,g)=(9,24)$. $\Theta_5\to\Theta_9$ adds four exact midpoint twists without
+  repeating the shared five, and $10^{-10}\to10^{-8}$ supplies an algebraic axis. These are
+  sufficient for preliminary empirical sensitivity; they are not an asymptotic or certified
+  error analysis.
+- The call count is correct:
+  $5+10+10+10+4+5+17=61$, with exactly five optional 60-root primary recomputations and hard cap
+  66. The extension rule is fixed by the 3.35 coverage sentinel or absence of a preliminary branch,
+  applies to all five primary slices, and retains 48-root authority on failed 48/60 agreement.
+  No refinement or bulk slice has a result-dependent extension.
+- A complete cluster intersecting $W_3$ must have finite positive eigenvalues, flag zero, bounded
+  residual/orthogonality and a finite full P2 subspace. Whole-cluster preservation, true quadratic
+  common-grid evaluation and the normalized principal-subspace overlap make the tracked objects
+  field-bearing and basis invariant. The assignment, graph directions, object/component IDs and
+  rank tuple are deterministic and use only current-run P2 information; frequency is a later
+  assignment tie-break, not a BIE-nearest-root selector.
+
+### Q.3 SPD, resource and lifecycle audit
+
+- For a permutation $p$, $M_\phi$ is positive definite if and only if
+  $M_\phi(p,p)$ is positive definite. `symamd` on the symmetrized sparsity pattern, an explicit
+  permutation check, sparse `chol`, and immediate factor discard therefore preserve the exact SPD
+  statement while removing the previously unused returned-factor lifetime. Recording factor
+  `nnz` before release does not make the factor a scientific object.
+- The preflight uses only four actual extrema that occur in the science graph; no science
+  configuration combines their independent maxima. Fine-grained build/reduce/SPD/release markers
+  and actual matrices directly address the unresolved Section O attribution. It performs no
+  capacity simulation, eigensolve, SVD, spectrum, field, branch or rank construction. Its four
+  authoritative leaves and summary-last boundary are sufficient for a post-preflight resource
+  decision.
+- The prospective 5,000--8,000 reduced-DOF and 2.4--2.8 GB figures are planning inferences, not
+  proof of fit. They are nevertheless materially smaller than the failed 10,336-DOF retained-factor
+  path, and the design streams configurations and retains only canonical branch fields. No present
+  evidence forces the new path over 3 GiB. Actual preflight success remains necessary but does not
+  itself authorize science.
+- Both controllers have only the absolute epoch predicate
+  $t_{\mathrm{UTC}}\ge1788266751$ and inclusive aggregate-tree predicate
+  $R_{\mathrm{tree}}\ge3221225472\ \mathrm{B}$. Implementation, reviews, preflight, science and
+  publication share that same non-pausing lifecycle. There is no lower resource gate, reserve,
+  forecast stop, stall rule or grace period.
+- The exact create-once identities are `resource-preflight-002/execution-001` and
+  `run-002/execution-001`. Active source must reject every old identity and read no historical
+  artifact, BIE/QZ datum, estimator, Markdown or Git state. The old sources, controllers and two
+  consumed trees remain immutable.
+
+### Q.4 Strongest challenge and findings
+
+The strongest scientific challenge is that the mandatory three-twist track can have weak overlap
+or weak localization and still be ranked. This can produce a deterministic P2 component without
+strong evidence that it is the intended localized guided mode. It does not invalidate the
+preliminary, non-certified candidate deliverable because the full subspaces, $O_{\min}$,
+localization, parity and classification are published and no threshold failure is allowed to be
+silently converted into a stronger identity claim.
+
+There is no unresolved `BLOCKER`.
+
+1. **`IMPORTANT CAVEAT` -- preliminary identity may be weak.** A weak-overlap, delocalized,
+   embedded or parity-unavailable winner remains a candidate, not a confirmed same guided mode.
+   The exact diagnostics and fields must remain visible in stage-one artifacts and the final label
+   must retain `NONCERTIFIED / NO CONTINUOUS EXISTENCE CLAIM / NO EFFECTIVITY`.
+2. **`IMPORTANT CAVEAT` -- science memory remains unmeasured.** The actual-only preflight measures
+   representation/factor feasibility, not eigensolver workspaces or field publication. Formal
+   launch therefore requires post-preflight review, exact theory-to-code/spec-to-code review and a
+   still-positive absolute-time margin; preflight success alone is insufficient.
+3. **`IMPORTANT CAVEAT` -- a partial observed sum can underestimate missing axes.** Every
+   unavailable component must remain `NaN` and the finite-component inventory must be published.
+   If no component is finite, `Delta_ref_obs` must not be exposed as numerical zero; this is a
+   bounded publication-semantic condition for pre-execution review, not a reason to suppress an
+   otherwise valid preliminary candidate.
+4. **`MINOR CAVEAT` -- the 900 s and 7,200 s allowances are estimates only.** They create no
+   controller threshold and shrink automatically as implementation/review consumes the fixed UTC
+   lifecycle.
+
+### Q.5 Authorization boundary
+
+The same Engineer is authorized only to implement the Section 23.8 bounded source/docs delta in
+the existing `test/i4/femref-a2/` directory: add `run_i4_1b_core.m`, fixed no-argument
+`run_preflight_002.pl` and `run_formal_002.pl`, and mechanically update README/SYMBOLS. The
+implementation must preserve the exact P2 mathematics, 61/66 graph, immediate factor release,
+pure-P2 rank, current-run-only information boundary, four-leaf preflight schema, create-once IDs
+and the two hard resource predicates.
+
+This verdict does **not** authorize either controller, MATLAB/Octave/Python, output creation,
+preflight, eigensolve or science. After implementation, the same Researcher must supply an exact
+theory-to-code audit and this same Skeptic must complete pre-execution spec/resource review before
+the single preflight command can be considered. Formal science remains separately blocked until
+successful preflight post-review.
+
+## R. Preflight spec-to-code review of Sections 23--25
+
+### R.1 Audit frame and verdict
+
+This review maps Sections 23--25 to `run_i4_1b_core.m`, both new controllers and the mechanical
+README/SYMBOLS delta. The immediate acceptance target is only the zero-eigensolve
+`resource-preflight-002/execution-001`; formal science remains outside authorization.
+
+**Verdict: `REVISE`. Confidence: high.** The mathematical core, preflight call graph, conditional
+60-root authority repair and information isolation pass static inspection. One publication/resource
+blocker remains in both controllers and is reachable in the preflight command.
+
+### R.2 What passed static inspection
+
+- The exact identities are `resource-preflight-002/execution-001` and
+  `run-002/execution-001`. The core rejects every other pair and constructs paths only below its own
+  experiment directory. Neither new namespace exists. No active read of historical output,
+  Markdown, Git, BIE/QZ data, density, estimator or prior reference was found.
+- `LOCAL_spec`, the named meshes, fitted P2 topology, seven-point degree-five assembly, reflection
+  map, quasiperiodic prolongation, finite/raw-Hermitian/canonical checks and $\lambda=k^2$ path
+  preserve the Section 23 mathematics. P1 eigensolvers and historical-target logic are absent.
+- `LOCAL_mass_spd` verifies the `symamd(spones(M+M'))` permutation, performs Cholesky on
+  $M(p,p)$, records factor `nnz` and clears the factor before returning. Retained pairs contain only
+  stiffness, mass and prolongation.
+- Preflight reaches exactly four actual named extrema and, for each, the ordered
+  `BUILD`, `REDUCE_K`, `REDUCE_M`, `SPD`, and `RELEASED` stages. It returns before every source
+  `eig`, `eigs`, `svd`, spectrum, field, object, assignment and rank path. Its authoritative schema
+  is exactly `representation.tsv`, `run.log`, `resource.tsv` and summary-last
+  `preflight-summary.tsv`.
+- The formal source counts five primary calls, optional five-call extension, 30 mesh-axis calls,
+  four added twists, five algebraic calls and 17 bulk calls: 61 or 66. `eigs` options, deterministic
+  start vector, full W3 clusters, true P2 common-grid samples, dummy-augmented lexicographic
+  assignment, graph/component IDs, preliminary rank and finite-component/`NaN` uncertainty
+  semantics match the design.
+- The Section 25 authority delta is auditable. Compact 48 and attempted 60 evidence are separate;
+  first-48 cluster boundaries and multiplicities must match; each corresponding cluster uses the
+  exact full-mass cross-Gram and minimum principal overlap. A pass gives sole 60-root object/field
+  authority. Invalid or inconsistent expansion retains valid 48-root authority and explicitly
+  publishes `SPECTRUM_EXPANSION_INCONSISTENT` plus `SPECTRUM_COVERAGE_PARTIAL`; invalid 48 has no
+  active authority. The per-slice table exposes the complete decision without duplicating inactive
+  fields.
+- Aggregate RSS is deduplicated over the root/recursive-descendant/dedicated-PGID union. The only
+  numerical resource predicates in source are inclusive UTC/monotonic arrival at epoch
+  `1788266751` and aggregate RSS at least 3,221,225,472 B. The 0.25 s polling interval is not a
+  lower gate.
+
+### R.3 Blocker: hard-deadline publication can commit a false terminal
+
+The alarm handler in `run_preflight_002.pl:26-30` only sets `wall_reached` and kills the MATLAB
+group; it does not terminate or latch the controller publication path. After MATLAB is reaped, the
+controller freezes `terminal` and `elapsed`, publishes `resource.tsv`, then publishes the atomic
+summary, with deadline checks only between/after those operations
+(`run_preflight_002.pl:129-143,233-260`). If the alarm fires during `write_resource` or
+`write_summary`, the write can finish and rename its `.partial`; in particular the authoritative
+summary can record the earlier `NATURAL_EXIT` after the hard epoch. The subsequent check may exit
+nonzero, but it cannot retract the already committed false summary or correct the frozen resource
+terminal. A smaller race remains between the last check and `alarm(0)`.
+
+The same defect exists in `run_formal_002.pl`, although formal is not presently authorized. It
+violates the Section 23 rule that publication shares the absolute epoch and that a hard stop cannot
+fabricate READY. This is a concrete publication/resource `BLOCKER`, not optional robustness.
+
+The smallest repair is to use one explicit publication-completion latch under the same absolute
+deadline: before summary commit, an alarm/deadline event must abort publication and make an
+authoritative wall terminal or leave only clearly non-authoritative partial evidence; no frozen
+natural/READY summary may be renamed. Summary rename may be the final completion point only after
+fresh UTC and monotonic checks, and the alarm handler must fail closed before that point. The same
+repair should be applied mechanically to both controllers without adding a reserve, grace period,
+earlier deadline, lower RSS threshold or new artifact.
+
+### R.4 Other findings and authorization boundary
+
+1. **`BLOCKER` -- deadline/publication state is not fail-closed.** Repair and focused static
+   Researcher/Skeptic re-review are required before any new controller runs.
+2. **`IMPORTANT CAVEAT` -- MATLAB parse/runtime remains unverified.** Static reading found no
+   specific parse defect. This absence of execution evidence is not itself a blocker; a correctly
+   published zero-eigensolve preflight is the bounded next check after the controller repair.
+3. **`IMPORTANT CAVEAT` -- formal memory/publication remains a later gate.** Preflight cannot
+   authorize eigensolver or field lifetimes, and the formal refinement loop's exact live-object
+   behavior must be reviewed before science even after a successful preflight.
+4. **`MINOR CAVEAT` -- README authorization wording is intentionally stale until this gate
+   passes.** Documentation does not control execution and should be synchronized only after the
+   blocker is repaired.
+
+Current authorization is **`NO PREFLIGHT / NO FORMAL / NO OUTPUT / NO EIGENSOLVE`**. In particular,
+`/usr/bin/perl ./run_preflight_002.pl` is not authorized by this verdict. The same Engineer may make
+only the bounded controller publication-latch repair above after the same Researcher freezes and
+audits it; no mathematical, schedule, authority, identity, artifact-schema or resource-limit change
+is warranted.
+
+## S. Focused controller re-review of Sections 26--27
+
+### S.1 Audit frame and verdict
+
+This delta review reopens only the Section R publication-latch blocker in
+`run_preflight_002.pl` and its mechanically parallel formal controller. It does not reopen the P2
+mathematics, configuration graph, conditional 60-root authority or information-isolation findings
+that already passed Section R. The immediate success criterion is that the zero-eigensolve
+preflight cannot publish a natural/complete summary after the absolute deadline; formal science
+remains outside this gate.
+
+**Verdict: `PASS`. Confidence: high.** Sections 26--27 and the current controllers close the sole
+Section R blocker. No new numerical, implementation, resource or publication blocker was found.
+
+### S.2 Decisive publication-state audit
+
+- Both controllers keep one alarm armed from the positive remainder to the immutable epoch
+  `1788266751`. The only RSS predicate remains aggregate target-tree RSS
+  `>=3221225472` B; no reserve, lower limit, grace period or second resource gate was introduced.
+- Before canonical publication, `resource.tsv` is opened create-once and receives synchronized,
+  monotonically indexed stage and `PUBLICATION_PENDING` events. Summary content is first written
+  and synchronized under the exact final name plus `.partial`; the whole-command terminal event is
+  then appended and synchronized.
+- Fresh UTC/monotonic inclusive checks occur after the pending ledger, after summary preparation,
+  and immediately before atomic rename. At any alarm before commit, the handler latches
+  `publication_aborted`, kills any still-live target, appends and synchronizes a
+  `WALL_HARD_LIMIT_REACHED` correction when the ledger descriptor exists, and exits nonzero. Thus a
+  previously observed `NATURAL_EXIT` or preliminary scientific terminal cannot be renamed as an
+  authoritative success after that event.
+- Atomic rename is the sole completion latch. During the narrow rename/latch interval, existence
+  of the exact final summary is the specified completion witness; otherwise
+  `summary_committed` is set only after successful rename, and only then is the alarm disarmed.
+  Write, sync, close or rename failure instead appends a publication-failure correction when
+  possible and leaves no authoritative final summary.
+- The repaired preflight identity is still exactly
+  `resource-preflight-002/execution-001`, and that namespace is absent. Its allowed leaves remain
+  `representation.tsv`, `run.log`, `resource.tsv` and summary-last `preflight-summary.tsv`.
+  `resource-preflight-001` executions remain untouched. The parallel formal controller retains
+  `run-002/execution-001`, but this review does not authorize it.
+
+### S.3 Findings, surviving claims and next gate
+
+There are no unresolved `BLOCKER` findings. MATLAB parse/runtime remains an **`IMPORTANT CAVEAT`**
+because it has not been exercised; the bounded zero-eigensolve preflight is precisely the next
+decisive check and must receive independent post-preflight artifact/resource review. Formal
+eigensolves, field publication and science-memory feasibility remain a later
+**`IMPORTANT CAVEAT`** and are not implied by preflight success.
+
+The controller repair is source-local and preserves the already-defensible continuous model, P2
+weak form, 61/66 schedule, spectrum-authority semantics, current-run-only information boundary,
+create-once artifact contract and two hard resource predicates.
+
+### S.4 Exact authorization boundary
+
+One and only one command is authorized, from
+`/Users/whc/Documents/Work/epost/test/i4/femref-a2`:
+
+`/usr/bin/perl ./run_preflight_002.pl`
+
+This authorization is only for the create-once zero-eigensolve
+`resource-preflight-002/execution-001`. It does not authorize `run_formal_002.pl`, any formal
+science, `eig`/`eigs`, retry, a new execution label, effectivity comparison or historical-output
+reuse. Post-preflight review is mandatory before any later execution decision.
+
+## T. Post-preflight review of `resource-preflight-002/execution-001`
+
+### T.1 Audit frame and verdict
+
+This review audits only the consumed zero-eigensolve preflight execution and the reached failure
+locator. Its success criterion was completion of all four actual representation/reduction/SPD
+objects under the continuing absolute lifecycle, with no `eig`, `eigs` or scientific claim.
+
+**Verdict: `REVISE`. Confidence: high.** The execution is internally consistent and fail-closed,
+but it did not complete the preflight. The reached failure is a concrete mesh-implementation
+`BLOCKER` for the next computation, not evidence that the frozen continuous model or P2 FEM method
+is intrinsically invalid or over budget.
+
+### T.2 Artifact and resource evidence
+
+- The create-once directory contains exactly the four Section 23 authoritative leaves:
+  `representation.tsv`, `run.log`, `resource.tsv` and summary-last `preflight-summary.tsv`. No
+  partial file is present. The four observed SHA-256 identities were recorded during this review;
+  the artifacts must now remain immutable.
+- `representation.tsv` contains its header and one truthful failure row for `bulk-s9-g24`, with no
+  fabricated mesh/operator counts. `run.log` records `BUILD_BEGIN`, then
+  `MESH_QUALITY_UNRESOLVED` with the exact locator `bulk-s9-g24 lost a required constraint.`, and
+  the same scientific terminal. There is no `BUILD_END`, reduction, SPD, release, eigensolve or
+  spectrum marker.
+- The resource ledger is ordered and summary-consistent: stage peak
+  `bulk-s9-g24/BUILD`, `PUBLICATION_PENDING`, then `PREFLIGHT_OUTPUT_INCOMPLETE`; the final elapsed
+  time is `14.131975` s and aggregate peak RSS is `843153408` B. The canonical summary repeats
+  controller `PREFLIGHT_OUTPUT_INCOMPLETE`, scientific `MESH_QUALITY_UNRESOLVED`, the same elapsed
+  time and the same RSS. This is well below `3221225472` B and occurred before the fixed epoch
+  `1788266751`; it is not a resource failure.
+- MATLAB returned without a signal after publishing its scientific-negative terminal, while the
+  controller correctly refused to classify that as `PREFLIGHT_COMPLETE`. Therefore the
+  publication latch passed its first live fail-closed test. The execution supplies no evidence for
+  the other three mesh representations or for formal eigensolver/field memory.
+
+### T.3 Strongest challenge and findings
+
+The strongest challenge is whether a reflection-closed triangulation can preserve every required
+outer, cell and material-interface constraint on the frozen mesh. The current source first asks
+`delaunayTriangulation(points,constraints)` for a constrained mesh, then
+`LOCAL_reflection_closed_triangles` replaces the unpaired-right connectivity by reflections of the
+unpaired-left connectivity. Only afterward does it compare the required constraints with the new
+active-edge graph. The first bulk object fails exactly that comparison. This establishes that the
+current connectivity-rewrite implementation does not preserve its own required-edge invariant; it
+does not establish that no valid fitted, reflection-compatible mesh exists.
+
+1. **`BLOCKER` -- required constraints are lost by the reached mesh implementation.** Location:
+   `LOCAL_build_mesh` after `LOCAL_reflection_closed_triangles` and before P2 topology. Consequence:
+   no frozen P2 representation can be assembled or reviewed, so formal science cannot start. The
+   cheapest decisive repair/check is to expose the exact missing-edge inventory in a bounded
+   mesh-only implementation diagnostic, make the reflection tie resolution preserve the fixed
+   constraint set, and require all four named preflight meshes to pass constraint, area,
+   reflection and material-interface checks. No continuous parameter, mesh schedule, P2 basis or
+   weak form needs to change.
+2. **`IMPORTANT CAVEAT` -- resource feasibility remains only partially observed.** The measured
+   first-build peak is favorable, but no complete mesh, reduction or Cholesky factor was reached.
+   It cannot support a formal-memory inference until a corrected preflight finishes.
+3. **`MINOR CAVEAT` -- controller/scientific terminal names differ by design.**
+   `PREFLIGHT_OUTPUT_INCOMPLETE` is the correct fail-closed controller classification of the more
+   specific MATLAB terminal `MESH_QUALITY_UNRESOLVED`; this is not contradictory evidence.
+
+### T.4 What survived and minimal next gate
+
+The continuous coefficients and geometry, six-node P2 weak form, quadrature, phase conventions,
+61/66 prospective schedule, current-run-only information boundary, zero-eigensolve dispatch,
+create-once publication and sole hard limits all survive this execution. No reference candidate,
+P1--P2 drift, field identity, convergence, effectivity or certified conclusion was produced.
+
+`execution-001` is consumed and immutable, but this bounded code/configuration failure does not
+consume the `femref-a2` method attempt. The same Researcher may freeze only a constraint-preserving
+mesh repair and the mechanical continuation identity. After design review, the same Engineer may
+repair the existing core and mechanically change the exact preflight pair to the smallest unused
+`resource-preflight-002/execution-002`, without reading, overwriting or reusing `execution-001`.
+The corrected source must then pass a fresh Researcher theory-to-code audit and same-Skeptic
+spec-to-code/resource review.
+
+This review does **not** authorize `execution-002` to run. A later PASS may authorize exactly one
+updated no-argument `/usr/bin/perl ./run_preflight_002.pl` invocation for that create-once ID. The
+new execution must remain under the same non-reset absolute epoch `1788266751` and the sole
+`3221225472` B RSS limit; the observed `14.131975` s execution remains in the lifecycle ledger.
+Formal science, `eig`/`eigs`, new attempt creation, historical-output reads and effectivity remain
+unauthorized.
+
+## U. Focused design review of Section 28
+
+### U.1 Audit frame and verdict
+
+This review reopens only the Section T constraint-loss blocker and the proposed create-once
+continuation. The acceptance criterion is a deterministic, reflection-closed connectivity choice
+that cannot drop a frozen constraint or alter the P2 problem, followed by an implementation-only
+handoff; no execution is in scope.
+
+**Verdict: `PASS`. Confidence: high.** Section 28 gives a bounded and falsifiable mesh repair. No
+unresolved mathematical, mesh-legality or resource blocker prevents implementation.
+
+### U.2 Strongest challenge and decisive checks
+
+The strongest counterexample is that choosing one side of a constrained-Delaunay reflection tie
+could close the triangle inventory while silently deleting a constraint, introducing a crossing or
+creating an overlap/gap. Section 28 now rejects exactly those outcomes rather than assuming that
+reflection closure implies a valid triangulation:
+
+- the two candidates are finite, deterministic and individually reflection-closed; fixed
+  left-then-right order is independent of eigenvalues, fields, BIE/QZ data, estimators, historical
+  output and resource observations;
+- positive area, unique triangles, exact reflected partners, incidence-one/two, planar-edge,
+  segmented-boundary, total-area and rectangle-containment checks jointly make coverage and
+  non-overlap testable;
+- every original outer, cell and polygonal-interface constraint must remain an exact active edge,
+  while fitted-interface crossing and reflected material-label agreement remain mandatory; and
+- periodic vertex/midpoint, P2 reflection, finite/Hermitian, SPD and seam checks remain downstream
+  gates. If neither candidate passes, the implementation fails closed with both reasons rather
+  than weakening a constraint.
+
+The implementation should interpret the planar-edge condition strictly: any two distinct edges
+may intersect only at a shared endpoint, and positive-length collinear overlap is invalid even when
+the edges share one endpoint. This is a **`MINOR CAVEAT`** suitable for exact spec-to-code review,
+not a design blocker, because Section 28 already forbids collinear interior overlap and shortened
+constraints.
+
+### U.3 Continuation and resource audit
+
+`resource-preflight-002/execution-002` is the exact smallest unused continuation and is presently
+absent. Section 28 keeps `execution-001` immutable and outside the active MATLAB input graph;
+preflight allowlist, controller constant, literal batch call, collision check and output directory
+must move together to `execution-002`. Any complete, scientific-negative, resource or publication
+terminal consumes that label.
+
+The fixed epoch remains `1788266751`; the previous `14.131975` s observation is not reset. The
+only memory upper remains aggregate process-tree RSS `3221225472` B. The repaired preflight still
+has zero `eig`/`eigs`/`svd` calls and exactly four canonical leaves. Hence the repair introduces no
+new scientific work or lower resource gate. Complete resource feasibility remains an
+**`IMPORTANT CAVEAT`** to be resolved only by a later reviewed preflight, not a reason to block
+this bounded implementation.
+
+### U.4 Authorization boundary
+
+The same Engineer is authorized only to implement the Section 28 connectivity candidate
+constructor/validator inside the existing mesh helper, mechanically switch the preflight identity
+and controller dispatch to `resource-preflight-002/execution-002`, and synchronize the minimal
+README/SYMBOLS text. The Engineer must not change points, constraints, $(N,s,g)$ values, P2 basis,
+quadrature, weak form, coefficient, phases, schedule, ranking, uncertainty or artifact names.
+
+This PASS does **not** authorize `/usr/bin/perl ./run_preflight_002.pl`, MATLAB, output creation,
+formal science, `eig`/`eigs`, retry, new attempt creation or effectivity. A Researcher
+theory-to-code audit and same-Skeptic exact spec-to-code/resource review remain mandatory before
+any `execution-002` launch.
+
+## V. Final preflight review of Sections 28--30
+
+### V.1 Audit frame and verdict
+
+This focused review maps the frozen Section 28 repair and Sections 29--30 delta to the current mesh
+helper, preflight controller and minimal documentation. The sole acceptance target is one
+create-once zero-eigensolve `resource-preflight-002/execution-002`; formal science is excluded.
+
+**Verdict: `PASS`. Confidence: high.** The constraint-loss and orphan-point failure mechanisms are
+closed in source. No unresolved mathematical, mesh, resource or publication blocker prevents the
+bounded preflight.
+
+### V.2 Exact mesh and identity audit
+
+- `LOCAL_reflection_closed_triangles` partitions the original constrained-Delaunay rows into
+  paired, unpaired-left, unpaired-right and forbidden zero-centroid inventories. It constructs
+  exactly the left-authority and right-authority candidates, tests them in that fixed order, and
+  selects no candidate from spectral, BIE/QZ, estimator, history or resource information.
+- Each candidate is positively oriented and canonically ordered before use. The validator rejects
+  nonfinite/duplicate/nonpositive triangles and now requires
+  `unique(triangles(:)) == (1:size(points,1))'`; thus the Section 29 orphan-point path cannot reach
+  P2 topology or SPD while suppressing consideration of the second authority.
+- Reflection partners are checked bijectively and involutively. Active-edge incidence, exact
+  segmented outer boundary, domain area, rectangle containment and the full frozen constraint set
+  are checked before material/P2 construction. The edge-pair predicate rejects proper/touching
+  nonvertex intersections and positive-length collinear overlap even for edges sharing an
+  endpoint. Fitted-interface crossings, reflected material labels and edge-derived P2 midpoint
+  reflection remain mandatory. Neither candidate can pass by deleting a point or constraint.
+- On success, the existing representation/log leaves expose the chosen authority and both bounded
+  candidate reasons. On failure, the preflight remains scientific-negative and fail-closed; it
+  does not fabricate representation counts or continue to reduction/eigensolve.
+- MATLAB accepts only exact preflight `resource-preflight-002/execution-002` or formal
+  `run-002/execution-001`. The no-argument preflight controller fixes the same new ID and literal
+  batch call, rejects collision, and the namespace is absent. It does not read
+  `execution-001`. The prior tree remains immutable.
+
+### V.3 Resource, publication and claim boundary
+
+The one armed controller deadline remains absolute epoch `1788266751`; the sole memory stop is
+inclusive aggregate target-tree RSS `3221225472` B. There is no lower gate or reset. The Section 27
+publication latch remains unchanged: append-only resource events, synchronized summary partial,
+fresh deadline checks and atomic summary-last rename. The preflight call graph still builds exactly
+four real representation/reduction/SPD objects and returns before every `eig`, `eigs`, `svd`,
+spectrum, field or reference path.
+
+Complete four-mesh runtime and factor memory remain an **`IMPORTANT CAVEAT`**, because the prior
+execution ended during the first build. That empirical uncertainty is the purpose of this
+preflight and does not block it. No additional caveat changes the authorization decision.
+
+### V.4 Exact authorization boundary
+
+One and only one command is authorized, from
+`/Users/whc/Documents/Work/epost/test/i4/femref-a2`:
+
+`/usr/bin/perl ./run_preflight_002.pl`
+
+It may create only `resource-preflight-002/execution-002` and must receive independent post-run
+artifact/resource review. This PASS does not authorize `run_formal_002.pl`, formal science,
+`eig`/`eigs`, retry, another execution label, a new attempt, historical-output reads, reference
+publication or effectivity comparison.
+
+## W. Post-preflight review of `resource-preflight-002/execution-002`
+
+### W.1 Audit frame and verdict
+
+This review audits the consumed second zero-eigensolve preflight and asks whether failure of both
+forced reflection-closed connectivity candidates invalidates the P2 FEM, exceeds the resource
+budget, or identifies a bounded representation implementation problem.
+
+**Verdict: `REVISE`. Confidence: high.** The current preflight remains blocked, but the evidence
+does not show a P2 mathematical or resource failure. It shows that exact reflection closure of the
+triangle connectivity is an overconstraining implementation path for the present constrained-
+Delaunay tie inventory. A bounded Researcher study of retaining the original conforming fitted
+connectivity and moving parity to common-grid field samples is authorized.
+
+### W.2 Artifact and resource audit
+
+- The create-once tree contains exactly `representation.tsv`, `run.log`, `resource.tsv` and
+  summary-last `preflight-summary.tsv`, with no partial. These leaves and their observed hashes are
+  now immutable.
+- `run.log` records only `bulk-s9-g24/BUILD_BEGIN`, followed by the exact bounded reasons
+  `left-authority: active-edge incidence is not one or two` and
+  `right-authority: active-edge incidence is not one or two`, then
+  `MESH_QUALITY_UNRESOLVED`. `representation.tsv` truthfully publishes one zero-count failure row.
+  No build completion, reduction, SPD check, eigensolve, spectrum, field or reference exists.
+- Resource and summary artifacts agree exactly: controller
+  `PREFLIGHT_OUTPUT_INCOMPLETE`, scientific terminal `MESH_QUALITY_UNRESOLVED`, wall
+  `13.620530` s and aggregate peak RSS `808861696` B. The ordered ledger ends with the same
+  terminal. This is neither the fixed wall deadline nor the `3221225472` B RSS stop.
+- Across the two consumed `resource-preflight-002` executions, the observed debugging wall is
+  `27.752505` s and observed maximum peak RSS is `843153408` B. These observations do not reset the
+  continuing epoch `1788266751`, and they still provide no complete four-mesh or formal-resource
+  evidence.
+
+### W.3 Strongest challenge and classified findings
+
+The strongest challenge is that abandoning mesh-level reflection closure could corrupt parity or
+mode identity. That would be a real issue only if exact reflection of the connectivity were part of
+the continuous problem or P2 weak form. It is not: the continuous geometry/coefficient are
+reflection symmetric, while a conforming fitted finite-element mesh may break that symmetry by
+Delaunay tie choice without changing the Galerkin space's mathematical validity. Parity can be
+evaluated after solving by reflecting physical sample locations and comparing the P2 fields or
+field subspaces on a fixed symmetric common grid.
+
+1. **`BLOCKER` -- forced connectivity reflection closure is not feasible for the reached mesh.**
+   Both deterministic authorities fail the same active-edge incidence invariant before any P2
+   object exists. This blocks the current implementation, but not the P2 formulation. The cheapest
+   resolution is to determine whether the untouched constrained-Delaunay connectivity passes the
+   standard conforming/fitted legality checks; if so, retain it instead of synthesizing a
+   reflection-closed triangle set.
+2. **`IMPORTANT CAVEAT` -- parity must remain an honest field diagnostic.** If mesh-level
+   reflection is removed, vertex/edge permutation parity cannot be silently retained. The
+   Researcher must specify P2 evaluation at paired common-grid points, weights, normalization and
+   scalar/subspace reflection comparison. Unavailable or weak parity remains a diagnostic caveat
+   and must not delete an otherwise valid field-bearing FEM candidate.
+3. **`IMPORTANT CAVEAT` -- the original connectivity has not yet passed the full frozen check
+   chain.** It must still use every frozen point and constraint, have positive unique triangles,
+   incidence one/two, no edge crossing/overlap, exact segmented outer boundary and domain cover,
+   zero fitted-interface crossing, correct material labels, valid periodic vertex/midpoint maps,
+   finite/Hermitian assembly and SPD mass. Evidence is presently unavailable, not presumed.
+4. **`MINOR CAVEAT` -- resource feasibility remains partial.** The low first-build wall/RSS is
+   encouraging but cannot predict four reductions/factors or formal eigensolver storage.
+
+### W.4 What survived and minimal next gate
+
+The continuous model, physical parameters, six-node P2 basis, quadrature, weak form,
+$\lambda=k^2$, quasiperiodic phases, spectrum schedule, ranking, uncertainty and information
+isolation survive. The execution produced no reference, P1--P2 drift, parity result, eigenpair,
+effectivity or existence claim. `execution-002` is consumed; the `femref-a2` method attempt is not.
+
+The same Researcher is authorized only to investigate and freeze the following bounded repair:
+
+1. retain the original constrained-Delaunay connectivity exactly when it passes the full
+   conforming/fitted/periodic/assembly legality chain, without deleting points or constraints;
+2. remove exact triangle/edge reflection closure as a mesh-acceptance requirement only if it is
+   replaced by a precisely defined reviewer-auditable P2 common-grid field/subspace reflection
+   diagnostic at the parity-eligible phases; and
+3. preserve parity as classification evidence rather than a filter, with no BIE/QZ, estimator,
+   historical output or current-root proximity involved.
+
+This is research/design authorization only. It does not authorize source edits, a new execution
+ID, MATLAB, preflight, formal science, `eig`/`eigs`, output creation or effectivity. Any frozen
+repair must return through design review, Engineer implementation, Researcher theory-to-code and
+same-Skeptic exact pre-execution review under the same absolute epoch and 3 GiB upper.
+
+## X. Focused design review of Sections 31 and 31.4
+
+### X.1 Audit frame and verdict
+
+This review asks whether the untouched constrained-Delaunay connectivity can support the same
+straight-sided fitted P2 Galerkin problem without exact mesh reflection, and whether the proposed
+sample-space parity diagnostic is mathematically and operationally determined. The next output is
+implementation only; no execution is in scope.
+
+**Verdict: `PASS`. Confidence: high.** The original-connectivity acceptance chain is sufficient
+for the declared straight-sided P2 discretization, conditional on all listed checks passing. The
+weighted projected-reflection diagnostic is well defined and truthfully downgraded from exact
+discrete symmetry to empirical common-grid parity. No unresolved mathematical, implementation,
+resource or publication blocker prevents bounded implementation.
+
+### X.2 Straight-sided P2 mathematical audit
+
+The retained object is exactly `delaunayTriangulation(points,constraints).ConnectivityList`, with
+orientation/order changes only. Finite positive unique triangles, complete frozen-point use,
+edge incidence, planar conformity, exact segmented outer boundary, total-area/containment,
+complete frozen constraints and zero interface crossing jointly ensure a conforming fitted
+triangulation of the frozen polygonal geometry. The centroid material rule then assigns one
+piecewise-constant coefficient per element.
+
+Unique global active edges provide one shared midpoint DOF per edge, so the six-node P2 traces
+agree on every interior edge. The retained element interpolation, partition/gradient, degree-five
+quadrature tests, P1 embedding/bilinear consistency, periodic vertex/midpoint and corner checks,
+finite/raw-Hermitian assembly, mass SPD and seam checks are sufficient to detect a wrong P2
+topology or phase reduction before eigensolve. This preserves the same weak form; it does not
+claim curved-circle geometry or erase the existing segmentation error.
+
+For exact implementation, the existing planar-edge validator must continue to reject a
+nonadjacent endpoint touching another edge interior, in addition to proper crossings and positive-
+length collinear overlap. This is a **`MINOR CAVEAT`** in the prose wording, not a blocker, because
+the current source already implements that stricter conforming test and Section 31 retains the
+existing checks.
+
+### X.3 Sample-space parity audit
+
+At $\vartheta=0,\pi$, paired removal of interface samples leaves a symmetric ordered grid with
+positive material-weighted trapezoidal weights. The coordinate rule uniquely determines a
+bijective involution $J$ and verifies weight pairing, so $J$ is unitary in the $W$ inner product.
+For a complete sampled cluster $S$, $H=S^*WS$ positive definite and
+$\widehat S=S\operatorname{chol}(H)^{-1}$ give $\widehat S^*W\widehat S=I$. Therefore
+
+$$
+A_R=\widehat S^*WJ\widehat S
+$$
+
+is the weighted compression of reflected samples, while
+
+$$
+d_R=\frac{\lVert J\widehat S-\widehat S A_R\rVert_W}
+{\lVert\widehat S\rVert_W}
+$$
+
+measures failure of the sampled subspace to be reflection invariant. Ordering the eigenvalues of
+$(A_R+A_R^*)/2$ makes the existing even/odd/mixed threshold rule deterministic for complex-valued
+fields and multi-dimensional clusters. The exact row convention for $J$ and the pair-preserving
+interface mask must be exposed in the theory-to-code map, but both are already uniquely specified
+by Section 31; this is not an unresolved ambiguity.
+
+The parity tuple position and penalties $0/1/2$ remain unchanged. Numerical labels may differ from
+the abandoned mesh-permutation diagnostic, as expected for the empirical replacement, but parity
+still cannot invalidate a field or reference candidate. Publishing $d_R$, pairing/normalization
+status and `EMPIRICAL_COMMON_GRID_PARITY` prevents an empirical compression from being mistaken
+for exact discrete or continuous symmetry. This is an **`IMPORTANT CAVEAT`** on interpretation,
+not a blocker.
+
+### X.4 Identity, isolation, resource and authorization
+
+The only next preflight identity is absent create-once
+`resource-preflight-002/execution-003`; executions 001--002 remain immutable and unread. The
+absolute epoch `1788266751`, inclusive aggregate RSS limit `3221225472` B, zero-eigensolve
+preflight schema and publication latch remain unchanged. There is no lower resource gate. The
+continuous model, weak form, information isolation, branch graph, lexicographic rank fields,
+uncertainty and claim boundary are not changed. Section 31 supersedes only mesh-reflection
+acceptance and parity evaluation; its legacy schedule wording cannot alter the exact Section 23
+61/66 call graph.
+
+The same Engineer is authorized only to modify the active `run_i4_1b_core.m` mesh/parity paths,
+mechanically switch `run_preflight_002.pl` to exact `execution-003`, and synchronize the minimal
+README/SYMBOLS mapping. Exact triangle/edge/P2 reflection fields that no longer exist must be
+removed or explicitly downgraded; the formal controller identity remains unchanged.
+
+This PASS does **not** authorize MATLAB, `/usr/bin/perl ./run_preflight_002.pl`, output creation,
+formal science, `eig`/`eigs`, another execution ID, a new attempt, historical-output reads,
+reference publication or effectivity. Researcher theory-to-code and same-Skeptic exact
+spec-to-code/resource review remain mandatory before any run.
+
+## Y. Preflight spec-to-code/resource review of Sections 31--33
+
+### Y.1 Audit frame and verdict
+
+This review maps the original-connectivity and sample-parity revision to the current active core,
+preflight controller and four-leaf publication contract. The only executable target considered is
+one zero-eigensolve `resource-preflight-002/execution-003`.
+
+**Verdict: `PASS`. Confidence: high.** The original mesh legality chain, parity error routing,
+exact identity, resource predicates and publication latch match Sections 31--33. No unresolved
+numerical, implementation, resource or publication blocker prevents the preflight.
+
+### Y.2 Mesh and parity implementation audit
+
+- `LOCAL_build_mesh` retains `dt.ConnectivityList` and passes it through
+  `LOCAL_validate_original_connectivity`; no authority-side triangle deletion, insertion or
+  reflection rewrite remains. The validator positively orients and deterministically orders the
+  rows, then checks finite/positive/unique triangles, every frozen point, incidence one/two,
+  crossings/touching/collinear overlap, exact segmented boundary, area/containment, every frozen
+  constraint, finite material coefficients and zero fitted-interface crossing.
+- The accepted triangles alone generate the shared-edge P2 topology. Nodal/partition/quadrature
+  checks, P1-in-P2 bilinear identities, finite/raw-Hermitian assembly, periodic vertex/midpoint and
+  corner maps, seam checks and fill-reduced mass SPD remain downstream hard checks. Mesh point and
+  constraint reflection is now explicitly diagnostic; absence of a triangle/edge reflection
+  permutation cannot cancel an otherwise legal P2 mesh.
+- `LOCAL_sample_subspace` constructs the frozen symmetric grid and positive trapezoidal/material
+  weights, performs pair-preserving interface removal and rebuilds the coordinate-defined
+  bijective/involutive reflection permutation. `LOCAL_common_grid_parity` checks the weighted Gram,
+  Hermitian defect, Cholesky normalization, reflected compression, Hermitian-compression values and
+  weighted invariance defect before publication.
+- The endpoint parity catch decodes the exception and downgrades only exact
+  `PARITY_DIAGNOSTIC_UNAVAILABLE`. Every other indexing, shape, helper, source, resource or
+  operational exception is rethrown through the outer fail-closed path. Available and unavailable
+  objects publish the method, grid status, values/defect and reason consistently; parity retains
+  its existing finite tuple penalty and never becomes a field-validity gate.
+
+### Y.3 Identity, reachability, resources and artifacts
+
+The MATLAB allowlist, no-argument controller constants and literal batch call agree exactly on
+`resource-preflight-002/execution-003`; that namespace is absent. Executions 001--002 are present
+only as immutable artifacts and are not read, loaded, hashed or copied by active MATLAB. No
+Markdown, Git, BIE/QZ, estimator, prior reference or historical output read was found.
+
+The preflight dispatch builds only the four named mesh/reduction/SPD representations and returns
+before every source `eig`, `eigs`, `svd`, spectrum, field, branch, rank or reference path. It may
+publish only `representation.tsv`, `run.log`, `resource.tsv` and summary-last
+`preflight-summary.tsv`.
+
+The controller arms one deadline from the remaining time to absolute epoch `1788266751`; aggregate
+target-tree RSS `>=3221225472` B is the sole memory stop. There is no lower limit or reset. The
+append-only resource ledger, abort latch, synchronized summary partial, fresh inclusive deadline
+checks and atomic summary-last rename are unchanged. Complete four-mesh time/factor memory remain
+an **`IMPORTANT CAVEAT`** to be measured by this preflight, not an execution blocker.
+
+### Y.4 Exact authorization boundary
+
+One and only one command is authorized, from
+`/Users/whc/Documents/Work/epost/test/i4/femref-a2`:
+
+`/usr/bin/perl ./run_preflight_002.pl`
+
+It may create only the create-once `resource-preflight-002/execution-003`. Independent post-run
+artifact/resource review is mandatory. This PASS does not authorize `run_formal_002.pl`, formal
+science, `eig`/`eigs`, retry, another execution label, a new attempt, reference publication,
+historical-output reads or effectivity comparison.
+
+## Z. Post-preflight review of `resource-preflight-002/execution-003`
+
+### Z.1 Audit frame and verdict
+
+This review audits the completed create-once original-connectivity preflight. Acceptance requires
+all four named P2 representations to pass mesh/reduction/SPD/release under the absolute resource
+contract, with internally consistent summary-last artifacts and zero eigensolve/reference work.
+
+**Verdict: `PASS WITH CONDITIONS`. Confidence: high.** The preflight completed its exact declared
+scope with no artifact, mesh, implementation, resource or publication blocker. It supports a
+formal pre-run theory-to-code/resource mapping, but it does not itself authorize or establish the
+resource feasibility of formal eigensolves and retained fields.
+
+### Z.2 Create-once artifacts and representation evidence
+
+The execution contains exactly four authoritative leaves and no partial:
+`representation.tsv`, `run.log`, `resource.tsv` and summary-last `preflight-summary.tsv`. Their
+observed hashes are fixed review evidence; `execution-003` is consumed and must remain immutable.
+
+`representation.tsv` records four successful
+`original-constrained-delaunay/sample-grid-parity` rows:
+
+| Mesh | $V$ | $T$ | $E$ | Full P2 DOF | Reduced DOF | $\operatorname{nnz}K$ | $\operatorname{nnz}M$ | Factor nnz |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `bulk-s9-g24` | 160 | 282 | 441 | 601 | 564 | 6,266 | 6,486 | 13,291 |
+| `defect-N4-s12-g24` | 1,929 | 3,616 | 5,544 | 7,473 | 7,232 | 79,754 | 83,168 | 230,867 |
+| `defect-N4-s9-g32` | 1,492 | 2,802 | 4,293 | 5,785 | 5,604 | 62,150 | 64,446 | 145,291 |
+| `defect-N5-s9-g24` | 1,600 | 2,982 | 4,581 | 6,181 | 5,964 | 65,972 | 68,586 | 160,544 |
+
+Every row has `permutation_valid=1`. `run.log` gives the ordered
+`BUILD`--`REDUCE_K`--`REDUCE_M`--`SPD`--`RELEASED` sequence for each mesh, reports
+`original-constrained-delaunay`, `sample-grid-parity` and
+`GEOMETRY_REFLECTION_AVAILABLE`, and ends `PREFLIGHT_COMPLETE`. No failure, eigensolve, spectrum,
+field, branch, reference or effectivity marker appears.
+
+### Z.3 Resource and publication audit
+
+The summary and last resource event agree exactly:
+
+- controller `NATURAL_EXIT` and scientific terminal `PREFLIGHT_COMPLETE`;
+- whole-command wall `15.572655` s;
+- aggregate peak RSS `916848640` B;
+- MATLAB exit code/signal `0/0`.
+
+The peak is `2304376832` B below the inclusive `3221225472` B upper, and publication completed
+before absolute epoch `1788266751`. The resource ledger is append-only, ordered through
+`PUBLICATION_PENDING` and `WHOLE_COMMAND_TERMINAL`, and the final summary was committed last. The
+three consumed `resource-preflight-002` runs total `43.325160` s of observed debugging/preflight
+wall with maximum observed peak `916848640` B; the absolute lifecycle is not reset.
+
+Several very short reduction/SPD stage rows have sampled peak `0`. This is an
+**`IMPORTANT CAVEAT`** about stage attribution, not contradictory resource evidence: the 0.25 s
+external monitor can miss a short stage, while the global aggregate peak and completed factor
+`nnz` rows remain authoritative. No stage-local zero may be used as a formal-memory estimate.
+
+### Z.4 Claim boundary and next gate
+
+The successful preflight establishes that the four actual conforming fitted P2
+representation/reduction/SPD objects fit the controller budget and that immediate factor release
+works on those objects. It does not establish eigensolver workspace, 48/60-root spectra, retained
+field/subspace memory, sample-parity values, a guided-mode reference, refinement, P1--P2 drift,
+effectivity, certification or continuous existence.
+
+No `BLOCKER` remains for the next static gate. The same Researcher is authorized to perform only a
+formal pre-run theory-to-code/resource mapping. That mapping must reconcile the exact Section 23
+61/66 schedule, actual DOF/nnz/factor evidence, live eigs/vector/field lifetimes, preliminary-first
+publication, sample-parity error routing, conditional 48/60 authority, remaining absolute-time
+margin, 3 GiB aggregate upper and create-once formal `run-002/execution-001` contract.
+
+This verdict does **not** authorize source changes, `/usr/bin/perl ./run_formal_002.pl`, MATLAB,
+formal `eig`/`eigs`, output creation, retry, another preflight ID, reference publication or
+effectivity. The Researcher mapping and a same-Skeptic exact formal spec-to-code/resource review
+must precede any formal-run decision.
+
+## AA. Final formal spec-to-code/resource review of Sections 34--35
+
+### AA.1 Audit frame and verdict
+
+This review audits the exact prospective `run-002/execution-001` formal command against the
+Section 34 theory-to-code/resource map and the Section 35 localization repair. Its success
+criterion is narrower than a scientific result: the frozen P2 computation must be executable
+once under its create-once and resource contract, preserve preliminary-first publication, and
+fail closed on implementation or operational errors. No numerical execution is part of this
+review.
+
+**Verdict: `PASS`. Confidence: high.** No unresolved mathematical, implementation, resource or
+publication blocker remains. The formal source implements the exact 61-call schedule with only
+the frozen five-call 60-root extension, the diagnostic catches now distinguish intended
+unavailability from source/shape/resource failures, and the controller enforces the only two
+resource uppers through summary-last publication.
+
+### AA.2 Scientific and error-routing audit
+
+- `LOCAL_formal` initializes `planned_solves=61` and `maximum_solves=66`. Its reachable graph is
+  the five anchor slices, six five-slice $h/g/N$ configurations, four added twists, five
+  loose-tolerance slices and seventeen bulk phases. Only initial 48-root coverage insufficiency or
+  absence of a preliminary branch launches the five frozen 60-root anchor solves.
+- The fixed generalized calls use `smallestabs`, root counts $40/48/60$, subspace dimensions
+  $80/96/100$, deterministic starts and the frozen tolerances. The 60-root result becomes active
+  only after the ordered frequency, cluster/multiplicity and exact-mass subspace agreement checks;
+  otherwise 48-root authority and partial coverage remain explicit.
+- The preliminary winner is selected only from P2 FEM spectra and common-grid fields. Its scalar,
+  complete selected subspaces, mesh and topology are atomically published before the refinement
+  schedule. The five empirical components may remain partial without replacing that winner, and
+  every published claim remains non-certified, without a continuous-existence or effectivity
+  assertion.
+- The repaired localization catch downgrades only exact
+  `LOCALIZATION_DIAGNOSTIC_UNAVAILABLE`; every other exception is rethrown. The endpoint parity
+  catch analogously downgrades only exact `PARITY_DIAGNOSTIC_UNAVAILABLE`. Neither code is in the
+  general scientific-failure allowlist. Thus an index, dimension, helper, memory, source or
+  operational failure cannot silently alter the localization/parity rank components.
+
+### AA.3 Preflight, resource and publication evidence
+
+The consumed `resource-preflight-002/execution-003` provides the required representation evidence:
+all four meshes passed original constrained-Delaunay legality, sample-grid parity preparation,
+quasiperiodic reduction and mass SPD. The largest observed object had 7,232 reduced DOFs,
+$\operatorname{nnz}M=83{,}168$ and factor nnz $230{,}867$; the authoritative aggregate peak was
+916,848,640 B. At the final static check, epoch `1788266751` retained 10,844 s, so even the 66-call
+cap retained about 164 s per call on average. Sparse `eigs` workspace and retained-field cost were
+not measured by the zero-eigensolve preflight, but the measured size and 2,304,376,832 B memory
+headroom provide reasonable prospective evidence; this is an **`IMPORTANT CAVEAT`**, not a
+demonstrated resource failure.
+
+The no-argument controller fixes the literal MATLAB call and absent namespace
+`run-002/execution-001`. It derives one monotonic deadline from the absolute epoch and uses only
+inclusive aggregate target-tree RSS `>=3221225472` B as the memory stop; no lower limit, reserve,
+forecast or stall gate is reachable. The alarm remains armed through resource-ledger and atomic
+summary-last publication. Hard-stop or publication failure cannot create a READY summary;
+previously committed preliminary leaves remain authoritative, while any `.partial` leaf remains
+non-authoritative and the create-once execution is consumed.
+
+### AA.4 Isolation, findings and authorization
+
+The active MATLAB path creates and reads only its current execution tree. The controller reads
+only the current `work/terminal.tsv`. No historical output, Markdown, Git, BIE/QZ field or density,
+estimator, P1 target, existing reference or effectivity datum is an active input. The exact formal
+namespace is absent, and `/usr/bin/perl -c run_formal_002.pl` passes.
+
+The strongest remaining challenge is an unexpectedly large sparse-eigensolver or retained-field
+working set. It is bounded operationally by the inclusive 3 GiB controller and does not make the
+present launch uninterpretable. No `BLOCKER` and no additional `MINOR CAVEAT` were found. The one
+`IMPORTANT CAVEAT` is the unmeasured formal `eigs`/field resource increment above the successful
+representation preflight; the cheapest decisive evidence is the authorized create-once formal
+run itself followed by independent artifact/resource review. No new open-problem entry is needed
+before that gate.
+
+One and only one command is authorized, from
+`/Users/whc/Documents/Work/epost/test/i4/femref-a2`:
+
+`/usr/bin/perl ./run_formal_002.pl`
+
+It may create only `run-002/execution-001`. A same-Skeptic post-run artifact, resource, numerical
+result and claim-boundary review is mandatory before any project-status synchronization. This
+PASS does not authorize retry, another execution ID, a new attempt, historical-output reads,
+reference promotion, P1 comparison or effectivity comparison.
+
+## AB. Immediate post-run review of consumed `run-002/execution-001`
+
+### AB.1 Audit frame and verdict
+
+This review determines whether the consumed formal execution failed because of the frozen P2
+method, resource budget or a bounded implementation defect, and whether its preliminary-first
+artifacts remain truthful. It does not interpret the preliminary eigenpair or promote it to an
+I4.1b reference.
+
+**Verdict: `REVISE / BOUNDED ASSIGNMENT IMPLEMENTATION FAILURE`. Confidence: high.** The formal
+execution is a consumed, immutable operational failure. It completed the preliminary five solves,
+published both preliminary MAT leaves, completed all six five-slice $h/g/N$ configurations and
+the four added-twist solves, then failed inside lexicographic assignment refinement. No evidence
+implicates the P2 weak form, mesh representation, eigensolver validity gates or the 3 GiB/absolute-
+deadline resource contract.
+
+### AB.2 Artifact and resource evidence
+
+The execution contains exactly six authoritative files and no `.partial` leaf:
+`preliminary-result.mat`, `preliminary-fields.mat`, `run.log`, `resource.tsv`, summary-last
+`run-summary.csv` and `work/terminal.tsv`. The log records `PRELIMINARY PUBLISHED` before the first
+`P2-H0` stage. The two committed MATLAB v7.3 files are 2,166,760 B and 1,385,455 B respectively;
+their observed hashes are fixed evidence for this consumed execution. Neither refinement MAT leaf
+exists.
+
+The log contains 39 completed solver dispatches in the frozen order: five preliminary solves,
+$6\times5=30$ $h/g/N$ solves and four added-twist solves. It then records
+`TRACKING_IMPLEMENTATION_FAILURE` at `LOCAL_twist_scalar`, before algebraic or bulk refinement.
+The controller and terminal agree on `MATLAB_EXIT_NONZERO`, MATLAB exit/signal `1/0`, scientific
+terminal `TRACKING_IMPLEMENTATION_FAILURE` and claim
+`OPERATIONAL_OR_RESOURCE_FAILURE`. Whole-command wall was 206.490910 s and authoritative aggregate
+peak RSS was 1,000,374,272 B, leaving 2,220,851,200 B below the inclusive 3,221,225,472 B upper.
+Neither resource predicate fired.
+
+The summary's `attempted_solves=5`, `completed_solves=5` is not the actual execution count. The
+exception exits `LOCAL_refinement_schedule` before its updated value-copy `state` returns to
+`LOCAL_formal`, so the outer terminal retains the preliminary 5/5 state. The stage-ordered log
+decisively establishes the later 34 solves. This undercount is an **`IMPORTANT CAVEAT`** on the
+failed-run ledger, but it does not make the failure cause ambiguous and must not be presented as a
+five-solve execution. Likewise summary `lambda_pre=NaN` and `k_pre=NaN` describe the operational
+terminal, not absence of the already committed preliminary winner.
+
+### AB.3 Failure mechanism and classification
+
+The full dummy-augmented assignment first obtains a finite optimum. During deterministic
+row-by-row tie refinement, `LOCAL_lexicographic_assignment` tries each finite current edge and
+calls `LOCAL_lexicographic_hungarian` on the remaining suffix. Some such trial edges need not admit
+a perfect suffix matching. The current code converts that local infeasibility into
+`TRACKING_IMPLEMENTATION_FAILURE` instead of rejecting only that trial and continuing to the next
+column. The observed stack is exactly this path: suffix Hungarian reports “no finite completion”
+from the candidate trial at source lines 2279/2374.
+
+This is a **`BLOCKER`** to completing the current formal result, because refinement and its
+terminal cannot be published. It is nevertheless a bounded assignment-controller defect: the
+birth/death dummy construction, objective tuple, pure-P2 branch definition and preliminary
+selection need not change. The decisive repair test is a frozen Hall-deficient suffix fixture in
+which one finite trial has no completion but a later trial preserves the known global optimum;
+the tie refinement must skip the former and reproduce the latter. Initial full-problem
+infeasibility and loss of the previously computed optimum must remain fail-closed.
+
+No P2 mathematical blocker and no resource blocker is established. The repeated MATLAB warning
+that `issym` is ignored for explicit matrices is a **`MINOR CAVEAT`** only: it did not stop a solve,
+and finite-spectrum, residual and mass-orthogonality checks remain the numerical authorities.
+
+### AB.4 What survived and minimal next gate
+
+The consumed execution demonstrates preliminary-first create-once publication and provides
+immutable field-bearing preliminary artifacts, but those artifacts have not undergone numerical
+post-review and are **not** a promoted reference, empirical resolution result, P1--P2 comparison
+or effectivity validation. The continuous model, P2 discretization, scientific schedule,
+information isolation, rank objective and claim boundary survive this failure.
+
+Under `test/AGENTS.md`, an assignment implementation failure does not consume the `femref-a2`
+scientific-method attempt, but `run-002/execution-001` itself is consumed and must never be
+overwritten or reused. The same Researcher is authorized only to freeze:
+
+1. the bounded suffix-infeasibility semantics and a decisive deterministic fixture, without
+   changing assignment costs, branch criteria, ranking or any FEM object;
+2. an exact unused create-once formal execution ID and the corresponding mechanical controller,
+   MATLAB allowlist and documentation mapping; and
+3. truthful treatment of the immutable 5/5 summary as a known failed-run undercount, without
+   rewriting its artifacts.
+
+The repair must return through same-Researcher theory-to-code and same-Skeptic exact pre-execution
+review. This section authorizes no source edit, MATLAB, rerun, new output, reference promotion,
+P1 comparison or effectivity comparison.
+
+## AC. Focused design review of Section 36
+
+### AC.1 Audit frame and verdict
+
+This review reopens only the consumed execution-001 assignment blocker: whether the proposed
+finite-edge perfect-matching precheck rejects exactly infeasible suffix trials while preserving
+the frozen summed seven-tuple optimum, deterministic tie policy, fail-closed boundaries and
+create-once resource lifecycle.
+
+**Verdict: `PASS`. Confidence: high.** No unresolved numerical, implementation, resource or
+publication blocker prevents bounded implementation. The Boolean precheck is a feasibility
+predicate only; every feasible suffix still uses the original tuple-valued Hungarian solver and
+the unchanged global-optimum equality test.
+
+### AC.2 Objective, tie and fixture audit
+
+For a fixed current row and column, a finite completion exists exactly when the suffix Boolean
+graph, whose edges are the tuples finite in every component, has a perfect matching. Skipping a
+trial that fails this test cannot remove a feasible assignment or change the minimum summed
+seven-tuple. Conversely, the precheck does not select among feasible completions: a feasible
+suffix is passed unchanged to `LOCAL_lexicographic_hungarian`, mapped back to the unchanged
+available-column order, and retained only if its full original tuple equals the already computed
+global optimum exactly.
+
+The final smallest-current-column rule and the existing `exact_tie` meaning are therefore
+preserved. Ascending row/column visitation makes the feasibility result reproducible but has no
+scientific selection authority. The helper cannot alter an overlap, distance, birth/death cost,
+object ID, branch, rank or field.
+
+The proposed $3\times3$ fixture is decisive. Trial $(1,1)$ leaves rows $2,3$ both dependent on
+column 3 and must be skipped; trial $(1,2)$ leaves the unique completion $(2,1),(3,3)$. Hence the
+only full assignment is $(2,1,3)^T$, with no exact tie. This fixture distinguishes the intended
+repair from both the observed false global failure and a greedy suffix choice, while the existing
+crossing, birth/death and all-zero-tie fixtures retain their prior coverage.
+
+### AC.3 Fail-closed, identity, resource and isolation audit
+
+The initial full Hungarian call remains authoritative and fail closed. A Hungarian failure after
+a proven finite perfect matching, loss of the frozen optimum, or absence of an optimum-preserving
+trial still raises `TRACKING_IMPLEMENTATION_FAILURE`. Only a Boolean-proven infeasible candidate
+trial is continued locally. These boundaries close the Section AB blocker without converting a
+source or optimizer defect into a caveat.
+
+The exact prospective identity `run-002/execution-002` is absent. Section 36 requires the MATLAB
+allowlist, controller ID, literal batch call, collision target and minimal docs to change
+together; consumed execution-001 remains immutable and is not read, copied, hashed or used as a
+seed. Execution-002 must independently rebuild and solve the five-slice preliminary stage.
+
+The absolute epoch remains `1788266751` and the only memory upper remains inclusive aggregate
+MATLAB-tree RSS `3221225472` B. There is no reset, lower gate, reserve, forecast or stall rule.
+The helper adds no eigensolve, artifact or retained FEM object; its finite matching work is bounded
+by the existing assignment sizes. The 206.490910 s and 1,000,374,272 B execution-001 observations
+remain historical evidence only.
+
+### AC.4 Authorization boundary
+
+No `BLOCKER`, `IMPORTANT CAVEAT` or new goal-relevant `MINOR CAVEAT` remains at this design gate.
+The same Engineer is authorized only to implement the Section 36 suffix-feasibility helper and
+fixture, mechanically switch the formal identity to exact `run-002/execution-002`, and synchronize
+the minimal README/SYMBOLS mapping. The assignment costs, objective, tie rule, FEM formulation,
+scientific schedule, publication schema and resource predicates must otherwise remain unchanged.
+
+Researcher theory-to-code and same-Skeptic exact spec-to-code/resource review remain mandatory.
+This PASS does not authorize `/usr/bin/perl ./run_formal_002.pl`, MATLAB, output creation, another
+execution ID, retry, reference promotion, P1 comparison or effectivity comparison.
+
+## AD. Exact pre-run review of the Section 36 implementation
+
+### AD.1 Audit frame and verdict
+
+This review maps Section 36 and the Researcher Section 37 audit to the active MATLAB core,
+no-argument formal controller and exact prospective `run-002/execution-002` namespace. Acceptance
+requires the bounded assignment repair to preserve the optimizer, all cross-file identities to
+agree, execution-001 to remain immutable and unread, and the original resource/publication
+contract to remain enforceable.
+
+**Verdict: `PASS / PRE-EXECUTION`. Confidence: high.** No unresolved mathematical,
+implementation, resource or publication blocker remains. The current source closes the observed
+suffix failure without changing any assignment tuple, scientific object or run schedule.
+
+### AD.2 Assignment implementation and fixture audit
+
+`LOCAL_lexicographic_assignment` retains the initial full tuple-valued Hungarian call and frozen
+global optimum. For each current edge it still requires all seven tuple components finite, forms
+the exact suffix tensor, and sets the Boolean graph with
+`all(isfinite(suffix_costs),3)`. A Hall-deficient graph skips only that trial. A graph with a
+perfect matching is passed unchanged to the original Hungarian solver, mapped through the
+unchanged available-column inventory and accepted only when the full original summed tuple equals
+the frozen optimum exactly.
+
+`LOCAL_has_perfect_matching` handles the empty graph as feasible, rejects nonsquare graphs, visits
+rows and columns in ascending order and gives each augmenting search a fresh visited-column set.
+`LOCAL_augment_finite_matching` changes an occupied-column assignment only after a successful
+reroute. The initial full-problem failure, a Hungarian failure after proven suffix feasibility and
+an empty optimum-preserving trial set all remain fail-closed as
+`TRACKING_IMPLEMENTATION_FAILURE`.
+
+The new $3\times3\times7$ fixture has finite all-zero tuples exactly at the five frozen edges and
+requires assignment $(2,1,3)^T$ with `exact_tie=false`. It directly exercises the observed
+infeasible-column-first path. Existing crossing, birth/death and all-zero exact-tie fixtures remain
+present. No reachable code changes the seven-tuple objective, smallest-column policy, overlap,
+branch identity, rank or FEM field.
+
+### AD.3 Identity, resource, publication and isolation audit
+
+The MATLAB allowlist, controller `EXECUTION_ID`, literal batch call and create-once collision leaf
+all agree on `run-002/execution-002`; that namespace is absent. The consumed
+`run-002/execution-001` tree remains present and immutable. Active MATLAB derives only its current
+execution directory and has no load/read/hash/copy path to execution-001 or any historical output,
+Markdown, Git, BIE/QZ datum, density, estimator or prior reference.
+
+The controller retains the single absolute epoch `1788266751` and sole inclusive aggregate
+MATLAB-tree RSS upper `3221225472` B. It has no lower limit, reserve, forecast or stall gate.
+Process-tree monitoring, kill behavior, append-only resource ledger, preliminary-first MATLAB
+publication, synchronized summary partial, repeated deadline checks and atomic summary-last rename
+are unchanged. At static review the deadline retained 9,829 s; execution-001's 206.490910 s wall
+and 1,000,374,272 B peak remain prospective evidence, not an input or reset. The matching helper
+adds no eigensolve or retained FEM object. `/usr/bin/perl -c run_formal_002.pl` passes, and the
+reviewed source/doc diff passes `git diff --check`.
+
+### AD.4 Findings and exact authorization
+
+No `BLOCKER` or new goal-relevant caveat was found. The known execution-001 5/5 terminal-state
+undercount remains confined to that immutable failed-run review and is not copied into the new
+execution. Any execution-002 scientific, resource, operational or publication terminal consumes
+that new identity and requires independent post-run interpretation.
+
+One and only one command is authorized, from
+`/Users/whc/Documents/Work/epost/test/i4/femref-a2`:
+
+`/usr/bin/perl ./run_formal_002.pl`
+
+It may create only `run-002/execution-002`. Same-Skeptic post-run artifact, resource, numerical
+result and claim-boundary review is mandatory. This PASS does not authorize automatic retry,
+another execution ID, a new attempt, execution-001 reads, reference promotion, P1 comparison or
+effectivity comparison.
+
+## AE. Final post-run review of `run-002/execution-002`
+
+### AE.1 Audit frame and verdict
+
+This review audits the consumed formal execution's canonical artifacts, numerical field identity,
+five-axis empirical resolution, bulk diagnostic, resources and claim boundary. Read-only MATLAB
+inspection loaded only the four current execution-002 MAT leaves; it performed no `eig`/`eigs`,
+wrote no experiment output and read no execution-001, BIE/QZ, density or estimator artifact.
+
+**Verdict: `PASS WITH CONDITIONS`. Confidence: high.** The frozen P2 formal run completed all
+61 planned solves, produced a coherent simple field track and all five finite empirical resolution
+components, and committed internally consistent preliminary/refinement artifacts under budget.
+It supports the declared **non-certified empirical P2 reference candidate**. It does not certify
+the reference error, a continuous bulk gap, guided-mode existence or effectivity.
+
+### AE.2 Canonical artifacts, terminal and resources
+
+The create-once execution contains exactly eight authoritative files and no `.partial` leaf:
+four MATLAB v7.3 result/field files, `run.log`, `resource.tsv`, summary-last `run-summary.csv` and
+`work/terminal.tsv`. The log records preliminary publication before every refinement stage, then
+all six $h/g/N$ configurations, four added twists, five loose-tolerance solves and seventeen bulk
+solves before the final scientific terminal. All eight files were hashed successfully before and
+after read-only inspection without displaying hash values in project documentation.
+
+Summary, terminal, log and final resource event agree on:
+
+- controller `NATURAL_EXIT`, MATLAB exit/signal `0/0`;
+- scientific terminal `P2_EMPIRICAL_REFERENCE_REFINEMENT_COMPLETE`;
+- attempted/completed/planned solves $61/61/61$ and no recorded failure;
+- $\lambda_{\mathrm{pre}}=3.3672400220423246$ and
+  $k_{\mathrm{pre}}=1.8350040931949783$;
+- whole-command wall 232.450046 s and aggregate peak RSS 1,055,391,744 B.
+
+The run stayed 2,165,833,728 B below the inclusive 3 GiB upper and well before the absolute
+deadline. Four successful reviewer-side read-only loads plus one sandbox-denied startup added
+46.36 s; their maximum RSS was 762,691,584 B. Even under the conservative shared accounting, the
+observed wall is 278.810046 s and the overall peak remains the formal run's 1,055,391,744 B. No
+resource, publication or artifact-integrity blocker is present. `run-002/execution-002` is consumed
+and no retry is justified by these artifacts.
+
+### AE.3 Anchor, spectrum authority and field identity
+
+The stored continuous/discrete parameters remain the frozen values: period $1$, radius $0.2$,
+material coefficients $17/1$, missing column $0$, $\beta=0.5$, $W_3=[0.45,3.25]$ and the
+five twists from $0$ to $\pi$. The anchor straight-sided fitted P2 mesh has
+$V/T/E=1300/2418/3717$, 5,017 full P2 DOFs and 4,836 quasiperiodically reduced DOFs. Its domain is
+$[-4.5,4.5]\times[-0.5,0.5]$. All five stored phase reductions have unit-modulus phases, valid SPD
+permutations, factor nnz 129,192 and seam residual at most $1.241\times10^{-16}$.
+
+The pure-P2 winner is the ordered object track
+`[8,32,55,78,101]`: simple cluster/root 9 at each of the five twists. Its frequency envelopes run
+from 1.8349700143886414 to 1.8350381713684318. The four consecutive common-grid overlaps are at
+least 0.99999991258811038; the selected-field file contains exactly those five IDs. Every selected
+subspace and common-grid sample matrix is finite, has one column, and the reviewed weighted sample
+Gram defect is at most $2.220\times10^{-16}$.
+
+Selected relative residuals are at most $1.1334890039602699\times10^{-16}$. Localization is
+available at all twists, with minimum core mass 0.9643879792938318 and maximum tail mass
+0.0030448880137896625. Endpoint parity is empirically even, with compression values approximately
+0.9999998701 and invariance defects at most $5.0971621916615919\times10^{-4}$; non-endpoint parity
+is explicitly unavailable by design rather than falsely inferred.
+
+Every anchor spectrum used `roots-48`, solver flag zero and coverage
+`SPECTRUM_COVERED_THROUGH_W3`; the 48th frequencies are about 4.582 and exceed the $W_3$ ceiling,
+so no conditional 60-root expansion was triggered. Spectrum residual maxima are below
+$9.04\times10^{-16}$ and mass-orthogonality defects below $5.46\times10^{-15}$. The result contains
+117 field objects, 24 tracking components and 187 assignment edges before the frozen rank selects
+the stated track. This is field-based identity evidence, not nearest-BIE-root selection.
+
+### AE.4 Refinement, empirical uncertainty and bulk evidence
+
+All eight matched field groups are present: six $h/g/N$ configurations, the four added twists and
+the loose-tolerance configuration. Their selected branches remain simple and residual-valid. The
+stored scalar ladder is:
+
+| Axis | Observed scalar values | Frozen component |
+|---|---|---:|
+| $h$ | 1.8350761183951534, 1.8350040931949783, 1.8349657172908562 | $7.2025200175129811\times10^{-5}$ |
+| geometry $g$ | 1.8377156248713638, 1.8350040931949783, 1.8340556021949563 | $2.7115316763854924\times10^{-3}$ |
+| supercell $N$ | 1.835003780801864, 1.8350040931949783, 1.8350040962481873 | $3.1239311426567440\times10^{-7}$ |
+| added twists | 1.8350040931949783 versus anchor | $0$ |
+| algebraic tolerance | 1.8350040931949783 versus anchor | $0$ |
+
+All five `finite_components` flags are true, and the stored sum is
+
+$$
+\Delta_{\mathrm{ref}}^{\mathrm{obs}}=0.0027838692696748879.
+$$
+
+The zero twist/tolerance components mean only that the frozen scalar did not change at binary64
+precision under those variations. The geometry component dominates and remains an empirical
+resolution limitation; “complete” means all five frozen components were observed, not that an
+asymptotic regime or upper bound was established.
+
+All seventeen bulk phases are valid with forty frequencies each and no failure code. At the
+sampled phases, the maximum lower bulk root is 1.3144106549969781 and the minimum upper root is
+2.4150743324660522, so the selected $k_{\mathrm{pre}}$ lies in the observed sampled interval at
+every phase. This supports the field classification, but finite phase sampling and discretization
+do not establish a certified continuous bulk gap.
+
+### AE.5 Findings, claim boundary and allowed handoff
+
+No `BLOCKER` was found.
+
+1. **`IMPORTANT CAVEAT` -- empirical, geometry-dominated resolution.**
+   $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ is a finite-component diagnostic dominated by $g$; it
+   is not a certified $\varepsilon_{\mathrm{ref}}$ and must accompany every downstream comparison.
+2. **`IMPORTANT CAVEAT` -- sampled bulk evidence only.** The seventeen-phase bracket and strong
+   localization do not prove a continuous gap or eigenvalue existence.
+3. **`MINOR CAVEAT` -- deterministic assignment ties.** The selected real edges carry the frozen
+   exact-tie flag, although the simple root-9 track has near-unit field overlaps. The object-ID
+   policy makes publication deterministic but does not assert uniqueness of the full
+   dummy-augmented assignment.
+4. **`MINOR CAVEAT` -- solver-option warning.** MATLAB ignored `issym` for explicit matrices on all
+   61 calls; zero flags and the independent residual, orthogonality, Hermitian and SPD checks are
+   the numerical authorities.
+
+The artifact claim strings correctly remain
+`NONCERTIFIED / NO CONTINUOUS EXISTENCE CLAIM / NO EFFECTIVITY`. Minimal status/I4/test-document
+synchronization may record the exact terminal, scalar, five components, bulk sampled evidence and
+these caveats. It may call the result an empirical P2 reference candidate with complete frozen
+resolution axes. It may not call $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ an error bound, claim
+certified existence/gap, perform or report effectivity, or overwrite either formal execution.

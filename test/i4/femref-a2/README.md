@@ -1,15 +1,101 @@
 # I4.1b quadratic fitted-FEM experiment
 
-This directory implements the prospective I4.1b method frozen in
-[[research/projects/eig-apost/implementation/i4/design-4-1b#15. Bounded deterministic-graph and spectrum-authority revision|design §15]]
-and authorized for implementation by
-[[research/projects/eig-apost/implementation/i4/review-4-1b#J. Focused delta re-review of design Section 15|review §J]].
+This directory contains the reviewed I4.1b method frozen in
+[[research/projects/eig-apost/implementation/i4/design-4-1b|design-4-1b]]
+and finally assessed in
+[[research/projects/eig-apost/implementation/i4/review-4-1b#AE. Final post-run review of run-002/execution-002|review §AE]].
 
-Status: **PREFLIGHT RESOURCE HARD STOP / FORMAL RUN BLOCKED / NO
-EIGENSOLVE**. Preflight `execution-001` is immutable and consumed by the
-reviewed midpoint-map implementation failure. Preflight `execution-002` is
-also immutable and consumed by the reviewed 3 GiB hard stop. Formal
-`output/run-001/execution-001/` has not been created and is not authorized.
+Status: **FORMAL COMPLETE / EMPIRICAL P2 REFERENCE CANDIDATE / POST-RUN
+PASS WITH CONDITIONS**. Create-once `run-002/execution-002` completed and is
+consumed; it must not be rerun. All earlier preflight/formal executions remain
+immutable historical evidence.
+
+## Final reviewed authority
+
+The eight canonical leaves are `preliminary-result.mat`,
+`preliminary-fields.mat`, `refinement-result.mat`, `refinement-fields.mat`,
+`run.log`, `resource.tsv`, summary-last `run-summary.csv`, and
+`work/terminal.tsv`. The formal run completed $61/61$ planned solves; all five anchor
+spectra used `roots-48` authority and no conditional 60-root extension was triggered. It returned
+
+$$
+\lambda_{\mathrm{pre}}=3.3672400220423246,
+\qquad
+k_{\mathrm{pre}}=1.8350040931949783.
+$$
+
+The selected simple root-9 field track is object IDs
+`[8,32,55,78,101]`; its four adjacent common-grid overlaps are at least
+$0.99999991258811038$, selected residuals are at most
+$1.1334890039602699\times10^{-16}$, localization is available at all twists,
+and endpoint parity is empirically even. The five observed components are
+
+$$
+(\delta_h,\delta_g,\delta_N,\delta_\vartheta,\delta_{\mathrm{tol}})
+=(7.2025200175129811\times10^{-5},
+2.7115316763854924\times10^{-3},
+3.1239311426567440\times10^{-7},0,0),
+$$
+
+with
+
+$$
+\Delta_{\mathrm{ref}}^{\mathrm{obs}}
+=0.0027838692696748879.
+$$
+
+Whole-command wall was $232.450046$ s and aggregate peak RSS was
+$1055391744$ B. Review §AE gives `PASS WITH CONDITIONS`: this is a
+field-bearing, non-certified empirical P2 reference candidate with complete
+frozen resolution axes. The geometry component dominates; the sampled bulk
+diagnostic, field localization and parity do not certify a continuous gap,
+guided-mode existence or reference-error upper bound. No estimator effectivity
+comparison was performed or authorized.
+
+Design §31 and review §X govern the consumed
+`resource-preflight-002/execution-003`; design §36 and review §§AC--AE govern
+the consumed formal continuation. Earlier executions remain immutable and
+unread.
+
+- `run_preflight_002.pl` performs four actual P2 mesh/phase reductions and
+  SPD factorizations, records the factor `nnz`, clears each factor immediately,
+  and returns before every `eig`, `eigs`, or `svd` path.
+- Each mesh retains its untouched constrained-Delaunay connectivity, with only
+  positive orientation and deterministic row ordering. The full conforming,
+  fitted, periodic, assembly, Hermitian and SPD acceptance chain remains hard.
+- Mesh-node reflection is not required. Endpoint parity is the empirical
+  weighted compression of actual complex P2 samples on the paired common grid;
+  pairing, normalization or compression failure is an unavailable caveat and
+  does not remove a valid field object.
+- Formal assignment refinement first rejects only suffixes whose all-finite
+  tuple graph has no deterministic perfect matching; every feasible suffix
+  still uses the unchanged tuple-valued Hungarian optimizer.
+- `run_formal_002.pl` computed five anchor slices and atomically published
+  immutable preliminary result/field MAT files. Only then did it attempt the
+  fixed 61-call refinement/bulk schedule, with five conditional 60-root anchor
+  calls for a maximum of 66.
+- Each conditional 60-root slice is checked cluster-by-cluster against its
+  immutable 48-root spectrum using ordered boundaries, multiplicities,
+  frequency defects, and exact-mass principal subspace overlaps. The
+  preliminary result publishes both compact evidences and an explicit
+  per-slice `roots-48`/`roots-60` authority and coverage table; only the active
+  authority supplies objects and fields.
+- Both fixed no-argument controllers use only the inclusive epoch deadline
+  `1788266751` and aggregate MATLAB-process-tree RSS limit 3,221,225,472 B.
+- The active core reads no historical output, Markdown, Git, BIE/QZ, density,
+  estimator, or reference artifact. Its result remains empirical,
+  non-certified, and cannot establish effectivity or continuous existence.
+
+The exact historical commands were:
+
+```sh
+/usr/bin/perl ./run_preflight_002.pl
+/usr/bin/perl ./run_formal_002.pl
+```
+
+Both `resource-preflight-002/execution-003` and
+`run-002/execution-002` are consumed. These commands are recorded only for
+reproducibility and are not authorized for rerun.
 
 ## Fixed interface and scope
 

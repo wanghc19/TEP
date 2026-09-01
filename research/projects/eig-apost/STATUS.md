@@ -4,6 +4,27 @@
 
 ## 当前状态
 
+- **2026-09-01 I4.1b quadratic fitted-P2 empirical reference candidate：**
+  [[research/projects/eig-apost/implementation/i4/design-4-1b|design-4-1b]] 冻结的
+  `femref-a2` formal `run-002/execution-002` 已自然完成 $61/61$ 次 solve并永久消费；
+  [[research/projects/eig-apost/implementation/i4/review-4-1b#AE. Final post-run review of run-002/execution-002|post-run review §AE]]
+  verdict为 `PASS WITH CONDITIONS`。Pure-P2 field identity为simple root-9 track
+  `[8,32,55,78,101]`，相邻common-grid overlaps至少为 $0.99999991258811038$；
+  selected residuals至多为 $1.1334890039602699\times10^{-16}$，全部twist均有localization，
+  endpoint parity为empirically even。最终标量为
+  $\lambda_{\mathrm{pre}}=3.3672400220423246$、
+  $k_{\mathrm{pre}}=1.8350040931949783$；五个observed components为
+  $\delta_h=7.2025200175129811\times10^{-5}$、
+  $\delta_g=2.7115316763854924\times10^{-3}$、
+  $\delta_N=3.1239311426567440\times10^{-7}$、
+  $\delta_\vartheta=0$、$\delta_{\mathrm{tol}}=0$，故
+  $\Delta_{\mathrm{ref}}^{\mathrm{obs}}=0.0027838692696748879$。Whole-command wall为
+  $232.450046$ s，authoritative aggregate peak RSS为 $1055391744$ B。全部17个bulk phase samples有效，
+  但该结果仅是geometry-dominated、non-certified empirical P2 reference candidate：
+  $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$不是certified upper bound，有限相位bulk evidence不证明continuous gap，
+  field/localization/parity证据不证明continuous guided-mode existence；没有进行或授权effectivity comparison。
+  [[test/i4/femref-a2/README|femref-a2 artifacts]] 为实现与结果入口，本次run不得重试。
+
 - **2026-09-01 I4.1a `run-008/execution-001` sample-out FEM/profile 完成：** fitted
   $(N,s,g)=(5,30,60)$ mesh 含 $11741$ nodes、$22760$ triangles 和 $11380$ reduced DOFs，五个
   twist solves 完成并消费。Pure-FEM canonical winner 仍是 candidate $3$，其

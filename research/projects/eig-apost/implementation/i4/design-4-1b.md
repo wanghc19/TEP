@@ -1569,3 +1569,1105 @@ execution identity or rerun is authorized. The weakest surviving step is the unm
 among factor fill, old/new pair overlap, assembly temporaries and allocator retention; only a future
 explicit lifecycle decision plus new Researcher--Engineer--Skeptic gates could test a bounded
 repair.
+
+## 23. Independent repair lifecycle: coarse-core P2 reference path
+
+Status: **`DRAFT FROZEN FOR SAME-SKEPTIC DESIGN REVIEW / NO IMPLEMENTATION OR EXECUTION`**.
+
+This section opens the separately authorized repair lifecycle and supersedes earlier prospective
+run/preflight schedules only for the new identities below. It does not erase or reinterpret
+`resource-preflight-001/execution-001`, `resource-preflight-001/execution-002`, or prospective
+historical `run-001/execution-001`; their source and artifacts remain immutable history.
+
+### 23.1 Absolute lifecycle and information boundary
+
+The lifecycle starts at Unix epoch `1788248751`
+(`2026-09-01T07:45:51Z`) and has one absolute five-hour deadline:
+
+$$
+t_{\mathrm{deadline}}=1788266751.
+$$
+
+The only resource predicates are
+
+$$
+t_{\mathrm{UTC}}\ge1788266751,
+\qquad
+R_{\mathrm{tree}}\ge3221225472\ \mathrm{B}.
+$$
+
+There is no lower wall/RSS gate, reserve, forecast stop, stall rule or grace period. Preflight,
+implementation checks, scientific execution and their subprocesses do not receive separate time
+budgets. At a confirmed launch, a controller converts the positive difference between the fixed
+UTC deadline and current UTC time into one monotonic alarm; it also compares fresh UTC time with
+the same epoch. At or after the deadline it kills the dedicated target process tree immediately.
+The memory authority is the deduplicated aggregate target-tree RSS, inclusive at 3 GiB.
+
+The exact new create-once identities are:
+
+- representation preflight: `resource-preflight-002/execution-001`;
+- science: `run-002/execution-001`.
+
+Active source rejects every historical identity. It never reads historical output, BIE/QZ data,
+density, estimator, Markdown or Git. The cue and search windows are literal source constants and
+cannot be shifted by an observed eigenvalue. No BIE proximity, P1 historical target or prior FEM
+root may select, rank or disambiguate a P2 object. The continuous coefficient, geometry,
+$\beta=0.5$, supercell boundary condition, fitted straight-interface variational problem, six-node
+P2 basis, phase constraints and $\lambda=k^2$ remain those of Sections 1--15.
+
+### 23.2 Exact reduced-pair and SPD lifetime
+
+For every full P2 pair, phase reduction still forms
+
+$$
+K_\phi=P_\phi^*K P_\phi,
+\qquad
+M_\phi=P_\phi^*M P_\phi,
+$$
+
+and applies the existing finite, raw-Hermitian, canonical-Hermitian and seam checks. Positive
+definiteness is checked by a deterministic fill-reducing permutation. Given canonical sparse
+$M_\phi$, form
+
+$$
+p=\operatorname{symamd}\!\left(\operatorname{spones}(M_\phi+M_\phi^*)\right),
+$$
+
+require $p$ to be a permutation of $1,\ldots,n$, and call sparse Cholesky on
+$M_\phi(p,p)$. A nonzero flag is `MASS_NOT_SPD`. A successful factor is discarded immediately
+after the flag and factor `nnz` diagnostic are recorded. The returned reduced pair contains only
+`stiffness`, `mass` and `prolongation`; it must not contain `mass_factor`.
+
+Small cluster-Gram factors that are directly used to normalize a field subspace remain local to
+that normalization and are released on return. They are not stored in a phase pair or cache. This
+revision changes memory lifetime, not the SPD statement, weak form or eigensolver matrices.
+
+### 23.3 Minimal P2 mesh and solve schedule
+
+The P2-specific mesh ladder is deliberately coarser than the blocked schedule. The seven defect
+configurations are:
+
+| Configuration | $N$ | $s$ | $g$ | Twist set | Eigensolver tolerance | Role |
+|---|---:|---:|---:|---|---:|---|
+| `p2-h0` | 4 | 6 | 24 | $\Theta_5$ | $10^{-10}$ | coarse $h$ |
+| `p2-anchor` | 4 | 9 | 24 | $\Theta_5$, then $\Theta_9$ additions | $10^{-10}$ | preliminary/canonical |
+| `p2-h2` | 4 | 12 | 24 | $\Theta_5$ | $10^{-10}$ | fine $h$ |
+| `p2-g0` | 4 | 9 | 16 | $\Theta_5$ | $10^{-10}$ | coarse geometry |
+| `p2-g2` | 4 | 9 | 32 | $\Theta_5$ | $10^{-10}$ | fine geometry |
+| `p2-N3` | 3 | 9 | 24 | $\Theta_5$ | $10^{-10}$ | short supercell |
+| `p2-N5` | 5 | 9 | 24 | $\Theta_5$ | $10^{-10}$ | long supercell |
+
+Here
+
+$$
+\Theta_5=\{0,\pi/4,\pi/2,3\pi/4,\pi\},
+$$
+
+and $\Theta_9=\{j\pi/8:j=0,\ldots,8\}$; the five old points are exact views, not repeated
+solves. The independent algebraic configuration is `p2-loose` on the anchor mesh and $\Theta_5$
+with tolerance $10^{-8}$. The independent bulk diagnostic uses `bulk-s9-g24`, the 17-point
+$\alpha$ grid on $[0,\pi]$, tolerance $10^{-9}$, 40 roots and $p=80$.
+
+Every tight defect slice uses the literal call
+
+```text
+eigs(K,M,48,'smallestabs',opts)
+```
+
+with `maxit=800`, $p=96$, `issym=true`, `isreal=false`, `disp=0` and the deterministic
+master-coordinate start vector from Section 15.3. There is no shift, random start, root-proximity
+retry or tolerance-dependent root choice.
+
+The science stages and counts are fixed:
+
+1. `PRELIMINARY`: five anchor $\Theta_5$ slices at 48 roots.
+2. `H_REFINEMENT`: `p2-h0` and `p2-h2`, five slices each.
+3. `GEOMETRY_REFINEMENT`: `p2-g0` and `p2-g2`, five slices each.
+4. `DOMAIN_REFINEMENT`: `p2-N3` and `p2-N5`, five slices each.
+5. `TWIST_REFINEMENT`: only the four new $\Theta_9\setminus\Theta_5$ anchor slices.
+6. `ALGEBRAIC_REFINEMENT`: five `p2-loose` slices.
+7. `BULK_DIAGNOSTIC`: 17 bulk slices.
+
+Thus the base contains
+
+$$
+5+10+10+10+4+5+17=61
+$$
+
+scientific eigensolver calls. After the initial five 48-root slices, exactly one conditional
+extension is allowed: if any primary 48th root has $k<3.35$, or if the initial inventory contains
+no preliminary branch defined below, all five primary slices are recomputed with 60 roots and
+$p=100$. The first 48 frequencies, clusters and mass subspaces must agree under Section 15.4. On
+agreement, 60 is the sole authority for that slice; on disagreement, 48 remains the sole authority
+and coverage is downgraded. The extension adds at most five calls, so the hard schedule cap is 66.
+No refinement or bulk configuration receives a result-dependent root extension.
+
+### 23.4 Actual-only resource preflight
+
+`resource-preflight-002/execution-001` performs no capacity simulation and contains no `eig`,
+`eigs`, `svd`, spectrum, field, branch or rank path. It builds only the four actual representation
+extrema
+
+```text
+bulk-s9-g24
+defect-N4-s12-g24
+defect-N4-s9-g32
+defect-N5-s9-g24
+```
+
+and for each performs one actual P2 phase reduction: $\alpha=\pi/2$ for bulk and
+$\vartheta=\pi/4$ for defects. Markers are fine-grained and paired:
+
+```text
+BUILD_BEGIN / BUILD_END
+REDUCE_K_BEGIN / REDUCE_K_END
+REDUCE_M_BEGIN / REDUCE_M_END
+SPD_BEGIN / SPD_END
+RELEASED
+```
+
+The factor is discarded before `SPD_END`; the reduced pair is released before `RELEASED`.
+`representation.tsv` records only actual $V,T,E$, full/reduced DOFs, `nnz(K)`, `nnz(M)`,
+permutation validity, factor `nnz` before release and check status. `resource.tsv` records one peak
+row per reached actual stage plus the whole-command terminal, not individual time samples or
+simulated capacities. The other leaves are concise `run.log` and atomically committed summary-last
+`preflight-summary.tsv`. These four names are the complete authoritative preflight schema.
+
+Preflight success establishes only representation feasibility under the live hard limits. It does
+not authorize science, certify a later field peak or create an eigenvalue. The same Skeptic must
+review its artifacts before `run-002/execution-001` can be considered, and the absolute epoch does
+not pause during that review.
+
+### 23.5 Objects, overlaps, branch and pure-P2 rank
+
+The search domain remains $W_3=[0.45,3.25]$; $I_{\mathrm{cue}}=[1.65,2.05]$ is a label only. A
+rankable slice object is a complete P2 eigenvalue cluster intersecting $W_3$ with finite positive
+eigenvalues, solver flag zero, maximum normalized residual at most $10^{-9}$, mass-orthogonality
+defect at most $10^{-7}$ and a finite full P2 field subspace. The cluster rule and whole-cluster
+preservation are exactly Section 15. No localization, parity, gap or coverage diagnostic can delete
+such an object.
+
+Every subspace is evaluated with the true quadratic basis on the fixed $161\times65$ common grid
+over $[-2.5,2.5]\times[-0.5,0.5]$ and normalized in the positive $q$-weighted Gram. For two
+dimensions $d_A,d_B$, define the principal overlap
+
+$$
+O(A,B)=\frac{1}{\min(d_A,d_B)}
+\sum_{j=1}^{\min(d_A,d_B)}\sigma_j^2,
+$$
+
+where $\sigma_j$ are the singular values of the weighted cross-Gram. Objects are assigned with the
+unchanged dummy-augmented, complete-assignment lexicographic rule of Section 15.2: summed overlap
+is optimized before unmatched count, frequency is only a later tie-break, and final ties use
+immutable object IDs. There is no frequency-nearness acceptance rule.
+
+Within each configuration, graph edges are only adjacent twists in the listed order. Cross-
+configuration edges exist only at identical $\Theta_5$ indices and point from each refinement
+configuration to `p2-anchor`. The four added anchor twists refine the same internal anchor graph;
+the shared five objects are not duplicated. Object IDs are allocated by stage order, then twist
+index, then root index. Component IDs are ordered by minimum object ID.
+
+A preliminary branch must contain valid anchor objects at at least three consecutive $\Theta_5$
+indices and therefore at least two adjacent assignment edges. Weak overlap, dimension change or a
+birth/death is recorded but is not an extra cutoff. Preliminary components are ranked
+lexicographically by
+
+$$
+(-n_\vartheta,-n_{\mathrm{edge}},-O_{\min},r_{\max},c_{\mathrm{miss}},
+-L_{\mathrm{core}},p_{\mathrm{parity}},w_\lambda,i_{\min}).
+$$
+
+Here $c_{\mathrm{miss}}$ is the number of primary slices whose numerical ceiling is below 3.35;
+missing localization is compared as $-L_{\mathrm{core}}=+\infty$; parity penalty is 0 for a stable
+endpoint label, 1 for mixed and 2 for unavailable; $w_\lambda$ is the component envelope width;
+and $i_{\min}$ is the immutable minimum object ID. The first component is canonical. Neither bulk
+gap status nor BIE information enters this tuple.
+
+Localization retains the existing center/core/tail quantities and thresholds; parity retains the
+P2 midpoint reflection compression at $\vartheta=0,\pi$. Both affect classification and later rank
+keys but never object validity. Bulk coverage and gap-edge status are post-selection diagnostics.
+
+### 23.6 Preliminary scalar and empirical refinement
+
+For the canonical preliminary component, let $[\lambda_-,\lambda_+]$ be the envelope over its valid
+anchor $\Theta_5$ objects. Freeze
+
+$$
+\lambda_{\mathrm{pre}}=\frac{\lambda_-+\lambda_+}{2},
+\qquad
+k_{\mathrm{pre}}=\sqrt{\lambda_{\mathrm{pre}}}.
+$$
+
+Immediately after this selection, MATLAB atomically publishes create-once
+`preliminary-result.mat` and `preliminary-fields.mat`. The first owns the frozen source spec,
+five-slice spectra summaries, full object inventory, assignments, rank, scalar, classifications and
+claim boundary. The second owns only the canonical branch's P2 connectivity, subspaces,
+common-grid samples and weights. Later stages never overwrite them.
+
+Each refinement configuration is matched to this frozen component by the same field assignment at
+identical twists; a nearest frequency cannot substitute for a field match. If a configuration has
+a matched branch, define its envelope-midpoint scalar $k_C$ by the same formula. The observed
+components are
+
+$$
+\delta_h=\max\{|k_{s9}-k_{s6}|,|k_{s12}-k_{s9}|\},
+$$
+
+$$
+\delta_g=\max\{|k_{g24}-k_{g16}|,|k_{g32}-k_{g24}|\},
+$$
+
+$$
+\delta_N=\max\{|k_{N4}-k_{N3}|,|k_{N5}-k_{N4}|\},
+$$
+
+$$
+\delta_\vartheta=|k_{\Theta_9}-k_{\Theta_5}|,
+\qquad
+\delta_{\mathrm{tol}}=|k_{10^{-10}}-k_{10^{-8}}|.
+$$
+
+Unavailable terms are `NaN`. `Delta_ref_obs` is the sum of finite terms and is labeled
+`EMPIRICAL_RESOLUTION_COMPLETE` only when all five exist; otherwise it is
+`EMPIRICAL_RESOLUTION_PARTIAL`. Neither the terms nor their sum are certified upper bounds.
+Refinement never changes the already frozen preliminary winner.
+
+### 23.7 Terminal, artifact and downgrade contract
+
+After preliminary publication, a failed mesh, eigensolve or common-grid match in a refinement or
+bulk diagnostic is local: preserve the failure, continue the remaining fixed schedule, and leave
+the corresponding empirical term `NaN`. Incomplete $h$, $g$, $N$, twist, algebraic, localization,
+parity, coverage or bulk-gap evidence cannot cancel a valid preliminary candidate.
+
+Before preliminary publication, legitimate scientific negatives are limited to: illegal mesh or
+phase constraints on every usable primary slice; nonfinite/non-Hermitian/non-SPD primary matrices;
+eigensolver/residual/field failure on every usable primary slice; or no component satisfying the
+three-consecutive-twist rule after the frozen 60-root extension. Hard epoch/RSS stops and canonical
+publication failure remain resource/operational terminals and cannot fabricate READY.
+
+The science leaves are:
+
+- immutable stage-one `preliminary-result.mat` and `preliminary-fields.mat`;
+- optional `refinement-result.mat` and `refinement-fields.mat`, containing only matched-axis
+  additions, empirical terms and diagnostic bulk evidence, not a mirror of preliminary authority;
+- concise append-only `run.log`;
+- `resource.tsv` with actual reached-stage peaks and final resource terminal; and
+- atomic summary-last `run-summary.csv`.
+
+`work/` contains current-run transient caches and is non-authoritative. The controller may read only
+a minimal current-run terminal handoff and artifact-presence flags. If the command is killed after
+preliminary publication, those two immutable files remain preliminary evidence but require
+post-run review; the controller reports the resource terminal, not READY.
+
+The exact scientific labels are:
+
+- `P2_PRELIMINARY_EMPIRICAL_REFERENCE_CANDIDATE` after stage-one reviewable publication;
+- `P2_EMPIRICAL_REFERENCE_REFINEMENT_COMPLETE` if all five empirical terms exist;
+- `P2_EMPIRICAL_REFERENCE_REFINEMENT_PARTIAL` otherwise.
+
+Every label includes `NONCERTIFIED / NO CONTINUOUS EXISTENCE CLAIM / NO EFFECTIVITY`. No estimator
+is evaluated in this lifecycle.
+
+### 23.8 Minimal implementation boundary, resource estimate and next gate
+
+Historical `run_i4_1b.m`, its two controllers and both consumed preflight trees remain unchanged.
+The bounded implementation may add only:
+
+- `run_i4_1b_core.m`, containing the validated mesh/P2 assembly/phase/eigensolver/object core but
+  excluding old 124/141 schedules, P1 companion eigensolves, capacity simulation, history reads,
+  provenance mirrors and wide ledgers;
+- fixed no-argument `run_preflight_002.pl` and `run_formal_002.pl`;
+- mechanical README/SYMBOLS updates.
+
+P1 code retained in the core is limited to the local nodal embedding/bilinear validation; no P1
+eigensolver, historical target or P1 field artifact is active. The theory-to-code audit must map:
+
+```text
+continuous/P2 forms -> mesh and assembly helpers
+phase/SPD contract -> reduction plus immediate-factor release
+61/66 schedule -> fixed stage table
+cluster/object/overlap -> P2 field inventory and Section 15 assignment
+preliminary rank -> immutable stage-one publication
+five axes -> refinement-only artifact and Delta_ref_obs
+absolute epoch/3 GiB -> both external controllers
+```
+
+The old failing defect mesh had 10,336 reduced P2 DOFs and reached 3.471 GB while retaining an
+unpermuted returned factor. Scaling the new $s\in\{6,9,12\}$, $g\in\{16,24,32\}$ and
+$N\in\{3,4,5\}$ extrema from the committed topology table gives a planning range of roughly
+5,000--8,000 reduced DOFs. With streaming one configuration at a time, no retained global mass
+factor, a fill-reduced transient factor, at most one current $p=100$ workspace and only canonical
+branch fields retained, the conservative prospective peak is 2.4--2.8 GB. This is an inference,
+not a resource gate; only measured aggregate RSS decides.
+
+The 61/66-call schedule is approximately half the old 124/141 call graph and uses markedly smaller
+spaces. A conservative execution allowance is 900 s for actual-only preflight and 7,200 s for
+science, leaving more than half of the five-hour lifecycle for implementation/review/publication if
+the gates proceed promptly. These estimates do not create a timeout before epoch `1788266751`.
+
+**Researcher decision: `GO TO THE SAME SKEPTIC FOR DESIGN REVIEW`.** No present design evidence
+forces either the 5-hour or 3 GiB hard upper to be exceeded. No Engineer implementation, preflight,
+science command, output namespace or eigensolve is authorized until the same Skeptic returns a
+design verdict without an unresolved blocker.
+
+## 24. Focused theory-to-code audit of the Section 23 implementation
+
+Status: **`REVISE / PRE-EXECUTION BLOCKED / STATIC AUDIT ONLY`**.
+
+This audit inspected the current `run_i4_1b_core.m`, `run_preflight_002.pl`,
+`run_formal_002.pl`, README and symbol-ledger delta without executing MATLAB, a controller or any
+numerical program. The new output namespaces remain absent.
+
+### 24.1 Mappings that pass static inspection
+
+- `LOCAL_spec`, `LOCAL_named_mesh`, `LOCAL_build_mesh`, `LOCAL_p2_topology`,
+  `LOCAL_validate_p2_element`, `LOCAL_assemble_p2` and `LOCAL_phase_prolongation` preserve the
+  Section 23 continuous constants, fitted six-node P2 weak form, degree-five quadrature, shared
+  midpoint topology and vertex/midpoint quasiperiodic phase reduction. The active source contains
+  no historical-output, BIE/QZ, estimator, Markdown or Git read.
+- `LOCAL_phase_reduce` returns only stiffness, mass and prolongation. `LOCAL_mass_spd` applies the
+  frozen `symamd(spones(M+M'))` permutation, checks that it is a permutation, records factor `nnz`
+  and clears the Cholesky factor before return; no pair or cache owns that factor.
+- Formal orchestration performs five 48-root anchor calls, conditionally five 60-root calls, then
+  the fixed $30+4+5+17$ refinement/bulk calls. The source counters are therefore exactly 61 or 66.
+  The preliminary scalar and `preliminary-fields.mat` are derived from the same selected object IDs
+  and are published before refinement.
+- `LOCAL_maximum_overlap_assignment` builds the full
+  $(n_{\mathrm{source}}+n_{\mathrm{target}})$ square real/birth/death/dummy cost tensor.
+  `LOCAL_lexicographic_hungarian` minimizes the componentwise-summed tuple and the subsequent exact-
+  tie refinement fixes the smallest available column. The crossing, two-to-one, one-to-two and
+  exact-tie fixtures exercise this complete assignment; this is not a greedy pair selection.
+- Complete W3 clusters carry full P2 subspaces and quadratic common-grid samples. Localization,
+  parity and weak overlap only affect rank/classification. Missing refinement values remain `NaN`;
+  `Delta_ref_obs` is the sum of finite components and is `NaN`, rather than zero, when none exists,
+  with the complete/partial label determined by the five-component finite inventory.
+- The preflight dispatch reaches only four actual mesh/reduction/SPD paths and returns before the
+  source's `eig`, `eigs` and `svd` functions. Its begin/end/release markers match Section 23.4, and
+  its four authoritative leaves are the only preflight publications. Both no-argument controllers
+  freeze the exact new identities, one absolute epoch `1788266751` and the sole inclusive aggregate
+  process-tree RSS limit `3221225472` B; neither implements a lower resource threshold.
+
+### 24.2 Blocker: conditional 60-root agreement and authority are not auditable
+
+`LOCAL_apply_extension` currently computes one SVD of the entire first-48 field span. Section 15.4,
+as inherited by Section 23.3, instead requires the mass principal overlap of every corresponding
+cluster subspace after identical ordered cluster boundaries and multiplicities are established.
+The whole-span test can conceal a rotation between distinct clusters and therefore does not
+implement the frozen correspondence check.
+
+The same helper replaces the only 48-root entry with the 60-root entry on a pass. It consequently
+does not retain immutable compact 48-root count/agreement evidence or publish an explicit per-slice
+active-authority table. If a 60-root solve is invalid it merely continues; on numerical
+disagreement it leaves a private reason string named
+`EXPANSION_DISAGREEMENT_48_RETAINED`. Neither path publishes the required
+`SPECTRUM_EXPANSION_INCONSISTENT`/`SPECTRUM_COVERAGE_PARTIAL` status and complete agreement evidence.
+The selected scalar and fields are mutually consistent after whichever entry survives, but a
+reviewer cannot verify why 48 or 60 was authoritative.
+
+The bounded repair is source-local: retain a compact immutable 48 summary; store the attempted 60
+summary; compare corresponding clusters with exact-mass cross-Grams and record the minimum
+principal overlap for every cluster; and publish a per-slice agreement record containing frequency
+defect, cluster boundaries/multiplicities, cluster-overlap values, active root count, active
+authority and coverage status. A pass makes 60 the sole object/field authority without duplicating
+48 objects. A failed or unavailable agreement retains a valid 48 authority and explicitly marks
+`SPECTRUM_EXPANSION_INCONSISTENT` and `SPECTRUM_COVERAGE_PARTIAL`; if 48 itself is invalid, the slice
+remains invalid. This repair changes no model, mesh, root schedule, rank, preliminary-first order,
+resource limit or claim boundary.
+
+**Researcher decision: `REVISE`.** The conditional-spectrum publication is a mathematical-
+interpretability blocker for preflight/spec-to-code approval. After the bounded repair, the same
+Researcher should perform a source-only delta audit and then hand the implementation to the same
+Skeptic. No preflight, formal controller, MATLAB invocation or output creation is authorized here.
+
+## 25. Focused theory-to-code delta audit of the Section 24 repair
+
+Status: **`PASS TO THE SAME SKEPTIC FOR PREFLIGHT SPEC-TO-CODE REVIEW / STATIC ONLY`**.
+
+The bounded source delta closes the sole Section 24 blocker. `LOCAL_prepare_primary_authority`
+captures a compact, field-free 48-root summary before any extension. For every attempted 60-root
+slice, `LOCAL_apply_extension` separately records compact 60-root evidence, the ordered cluster
+boundaries and multiplicities of both first-48 inventories, and their maximum ordered-frequency
+defect. Only if those partitions agree does it form, cluster by cluster, the exact-mass cross-Gram
+
+$$
+V_{48,C}^*M_{mathrm{full}}V_{60,C}
+$$
+
+and record the minimum singular value for each corresponding cluster and over all clusters. The
+frozen frequency and principal-overlap tolerances are applied without a new acceptance rule.
+
+On agreement, the 60-root spectrum is the only active spectrum used by object and field
+construction, while the compact 48 evidence remains in the entry. On an invalid 60 solve or any
+frequency/cluster/subspace disagreement, the valid 48-root spectrum remains the only active
+authority and both the entry and agreement table state `SPECTRUM_EXPANSION_INCONSISTENT` and
+`SPECTRUM_COVERAGE_PARTIAL`. An invalid 48-root primary has no active authority even if the 60-root
+attempt is valid, because correspondence cannot then be established. The published
+`spectrum_authority` table exposes validity, boundaries, multiplicities, overlap values, active
+root count and coverage for all five slices; object collection still reads only `entry.spectrum`,
+so no duplicate 48/60 objects are possible.
+
+The field lifetime is bounded consistently with the repair: compact evidence removes
+`vectors_full`; loop-local old/new aliases and singular values are cleared; the caller clears the
+five attempted 60 spectra after the authority decision. Passing slices retain only their active
+60 fields, failing slices only their active 48 fields. The preliminary scalar and field artifact
+therefore remain tied to the same active object IDs. No model, mesh, 61/66 schedule, rank,
+refinement, uncertainty, identity, artifact name or resource predicate changed. All other Section
+24.1 mappings remain in force.
+
+**Researcher decision: `PASS`.** This source delta is ready for the same Skeptic's preflight
+spec-to-code review. This Researcher decision does not authorize the preflight controller, MATLAB,
+formal science or any output creation.
+
+## 26. Bounded Section R controller publication-latch repair
+
+Status: **`REVISE / GO TO THE SAME ENGINEER FOR CONTROLLER-ONLY REPAIR / NO EXECUTION`**.
+
+This section supersedes Sections 23--25 only at the final-publication state machine of
+`run_preflight_002.pl` and `run_formal_002.pl`. The Engineer shall mechanically adapt the armed-
+alarm, append-only resource-event ledger, same-directory summary partial and atomic-rename
+completion latch already reviewed in Sections 18--19 from `run_preflight.pl` and `run_formal.pl`.
+The new controllers keep their existing exact identities, commands and absolute epoch
+`1788266751`; they must not replace it with a fresh per-command duration.
+
+Each controller shall introduce the same four publication-state objects:
+`resource_handle`, monotonically increasing `resource_event_index`, `publication_aborted` and
+`summary_committed`. The one alarm is armed from the positive current remainder to the fixed epoch
+and remains armed after the MATLAB target is dead and throughout resource and summary publication.
+Before summary commit, `resource.tsv` is opened create-once as the existing authoritative leaf and
+receives an append-only `PUBLICATION_PENDING` event. Every event carries a fresh elapsed/terminal
+observation; the last complete event row is authoritative. This changes the contents of the
+existing leaf, not the artifact allowlist.
+
+The controller then prepares the existing final summary name in a same-directory `.partial`,
+flushes/closes the required pre-summary evidence, obtains fresh UTC and monotonic decisions against
+the same absolute epoch, appends the whole-command terminal event, and performs one further fresh
+inclusive check immediately before atomic rename. Until the rename has succeeded, the alarm
+handler must:
+
+1. set `publication_aborted`, kill any still-live dedicated target tree, and append a fresh
+   `WALL_HARD_LIMIT_REACHED` correction through the already-open resource descriptor when
+   available;
+2. prevent every later terminal/summary publication step and exit nonzero, leaving any summary
+   partial non-authoritative; and
+3. never allow an earlier `NATURAL_EXIT`, preliminary candidate or READY-like draft to remain a
+   successful summary terminal after the epoch.
+
+The atomic rename to `preflight-summary.tsv` or `run-summary.csv`, respectively, is the sole
+completion point. Immediately after a successful rename the controller sets `summary_committed`;
+the handler may recognize the already-present exact final summary as that completed rename during
+the narrow rename/latch interval. Only then may it disarm the alarm. A write, flush, close or rename
+failure sets the abort latch, appends a canonical-publication failure event if the descriptor is
+usable, exits nonzero and leaves no authoritative final summary. It cannot be converted to
+`NATURAL_EXIT` or retried.
+
+This is a mechanical controller repair only. It adds no reserve, grace period, earlier deadline,
+lower RSS threshold, stall rule, artifact or wide sample ledger. The only resource predicates
+remain UTC/monotonic arrival at epoch `1788266751` and aggregate target-tree RSS
+`>=3221225472` B. The preflight leaves remain exactly `representation.tsv`, `run.log`,
+`resource.tsv`, and summary-last `preflight-summary.tsv`; the formal leaves and all Section 25
+science/authority semantics likewise remain unchanged.
+
+**Researcher decision: `REVISE / GO TO THE SAME ENGINEER FOR THIS BOUNDED CONTROLLER PATCH`.**
+After implementation, the same Researcher must perform a controller-only static delta audit and
+the same Skeptic must re-review it. No controller invocation, MATLAB, output creation, preflight or
+formal science is authorized by this revision.
+
+## 27. Focused theory-to-code delta audit of the Section 26 controller repair
+
+Status: **`PASS TO THE SAME SKEPTIC FOR PREFLIGHT SPEC-TO-CODE RE-REVIEW / STATIC ONLY`**.
+
+Both new controllers now mechanically implement the Sections 18--19 publication state machine.
+They keep one alarm armed from the positive remainder to the immutable epoch `1788266751`, create
+the existing `resource.tsv` as an append-only event ledger, synchronize a `PUBLICATION_PENDING`
+event, prepare and synchronize the existing summary name as a same-directory `.partial`, append
+and synchronize the whole-command event, make a fresh UTC/monotonic inclusive deadline decision,
+and atomically rename the summary last.
+
+Before that rename, the alarm handler kills a live target, latches `publication_aborted`, appends
+and synchronizes a `WALL_HARD_LIMIT_REACHED` correction whenever the ledger is available, and exits
+nonzero without a final summary. The explicit deadline and non-wall publication-failure paths use
+the same abort latch. During the narrow rename/latch interval the exact final-summary presence is
+the completion witness; after rename the controller sets `summary_committed` and only then disarms
+the alarm. Thus an earlier natural/scientific draft cannot remain an authoritative success if the
+deadline arrives before completion.
+
+The exact IDs remain `resource-preflight-002/execution-001` and
+`run-002/execution-001`; the MATLAB calls, absolute epoch, inclusive aggregate RSS limit
+`3221225472` B, process-tree accounting and output names are unchanged. No reserve, lower wall/RSS
+gate, retry, additional leaf or sampling ledger was introduced. The preflight still has exactly
+`representation.tsv`, `run.log`, `resource.tsv` and summary-last `preflight-summary.tsv`; formal
+science and the Section 25 authority logic are untouched.
+
+**Researcher decision: `PASS`.** The controller-only delta is ready for the same Skeptic's
+preflight spec-to-code re-review. No controller, MATLAB, preflight, formal science or output
+creation is authorized by this static audit.
+
+## 28. Bounded Section T constraint-preserving symmetric-connectivity repair
+
+Status: **`REVISE / FROZEN FOR SAME-SKEPTIC DESIGN REVIEW / NO IMPLEMENTATION OR EXECUTION`**.
+
+`resource-preflight-002/execution-001` is consumed and immutable. Its 14.131975 s wall observation
+and 843153408 B aggregate peak remain lifecycle evidence; the failure
+`bulk-s9-g24 lost a required constraint` is an implementation failure of the current reflection-
+tie rewrite, not a change to the continuous model, mesh parameters or fitted P2 method. Active code
+must not read, copy, hash or reuse that execution's artifacts.
+
+### 28.1 Exact two-candidate connectivity rule
+
+Keep the existing point set, required constrained-edge set, constrained Delaunay connectivity,
+reflection vertex permutation and all $(N,s,g)$ values unchanged. Partition the original triangle
+rows deterministically into reflection-paired rows, unpaired rows whose centroid has negative
+$x$, and unpaired rows whose centroid has positive $x$. A nonpaired row with centroid satisfying
+$|x|\le\texttt{coordinate_tolerance}$ is an immediate `MESH_QUALITY_UNRESOLVED` result. Construct
+exactly two candidates:
+
+```text
+left-authority  = paired originals + unpaired-left originals
+                  + reflections of the unpaired-left originals
+right-authority = paired originals + unpaired-right originals
+                  + reflections of the unpaired-right originals
+```
+
+For each candidate, sort triangle vertex IDs only for identity/deduplication and order rows
+lexicographically; orient the retained triangle rows to positive signed area before mathematical
+use. Test candidates in the fixed order `left-authority`, then `right-authority`. Select the first
+candidate satisfying every invariant below. The second is considered only if the first is invalid;
+no eigenvalue, field, BIE/QZ datum, estimator, historical output or resource observation may choose
+between them. If neither passes, raise `MESH_QUALITY_UNRESOLVED` with both bounded failure reasons.
+
+### 28.2 Mandatory candidate invariants
+
+A candidate is valid only if all of the following hold:
+
+1. every triangle has finite vertices and strictly positive area, canonical triangle rows are
+   unique, and every reflected canonical triangle has exactly one partner;
+2. all active edges have incidence one or two; distinct non-adjacent active edges have no proper
+   crossing or collinear interior overlap; and the incidence-one edge set is exactly the frozen
+   segmented outer rectangle boundary;
+3. total triangle area equals the rectangular supercell area within
+   `constraint_tolerance`, all triangle interiors lie in that rectangle, and item 2 supplies the
+   no-overlap condition, so the candidate is a complete cover rather than an area-cancelling
+   overlap/gap inventory;
+4. every original required outer, cell-boundary and polygonal material-interface constraint is an
+   active edge; none may be dropped, shortened, replaced by a nearby edge or converted to a
+   diagnostic;
+5. the existing fitted-interface crossing check is zero, and material labels recomputed from the
+   frozen polygon/centroid rule agree for every reflected triangle pair; and
+6. the reflection map is bijective/involutive on triangles and on the later edge-derived P2
+   midpoint topology. The existing periodic vertex/midpoint, corner, finite/Hermitian, SPD and seam
+   checks remain mandatory after selection.
+
+These tests are mesh legality checks, not new scientific gates. They do not alter the straight-
+circle segmentation geometry, required constraints, P2 basis, quadrature, coefficient, weak form,
+phase convention, spectrum schedule, rank or uncertainty rule. A failed candidate is not repaired
+by deleting a constraint or accepting an overlapping graph.
+
+### 28.3 Create-once continuation and bounded implementation
+
+The only continuation identity is
+`resource-preflight-002/execution-002`. Mechanically change the preflight allowlist, controller
+`EXECUTION_ID`, literal MATLAB batch call, collision check and publication directory to that exact
+pair; formal remains `run-002/execution-001`. The old `execution-001` directory and leaves remain
+immutable and are never an active input. Any complete, scientific-negative, resource or
+publication terminal consumes `execution-002`; there is no automatic retry or overwrite.
+
+The absolute lifecycle deadline remains epoch `1788266751`, so the 14.131975 s already spent is not
+reset or refunded. The sole memory upper remains inclusive aggregate process-tree RSS
+`3221225472` B. The repaired preflight still performs zero `eig`, `eigs` or `svd` calls, builds the
+same four representations, and writes exactly `representation.tsv`, `run.log`, `resource.tsv` and
+summary-last `preflight-summary.tsv` under the Section 27 latch. Formal science remains blocked.
+
+The Engineer delta is limited to the connectivity-candidate constructor/validator plus the
+mechanical preflight identity/docs update. It must expose the selected authority label and bounded
+candidate failure reasons in the existing `run.log`/representation status, without adding an
+artifact or a wide intersection ledger.
+
+**Researcher decision: `GO TO THE SAME SKEPTIC FOR BOUNDED DESIGN REVIEW`.** If that review has no
+blocker, the same Engineer may implement only Section 28 and return it for Researcher theory-to-
+code and same-Skeptic spec-to-code review. No preflight, MATLAB, formal science, output creation or
+effectivity work is authorized here.
+
+## 29. Focused theory-to-code audit of the Section 28 implementation
+
+Status: **`REVISE / ONE SOURCE-LOCAL MESH-VALIDITY BLOCKER / STATIC ONLY`**.
+
+The implementation correctly constructs exactly the two frozen candidates from the paired rows
+and the left or right unpaired authority, evaluates them left-first, orients and lexicographically
+orders their connectivity, and records bounded reasons for both failures. It verifies positive and
+unique triangles, reflection closure, edge incidence, nonadjacent crossing/collinear overlap,
+segmented outer boundary, total area, rectangle containment, every original constraint, fitted-
+interface separation, reflected material labels and edge-derived P2 reflection. The selected
+authority and candidate reasons enter the existing representation/log leaves. The preflight
+allowlist, controller, batch call and docs consistently use exact create-once
+`resource-preflight-002/execution-002`; formal remains `run-002/execution-001`, and no Section 25
+science or resource rule changed.
+
+One candidate-validity blocker remains. `LOCAL_validate_connectivity_candidate` checks only the
+points referenced by `triangles`, but does not require
+
+```text
+unique(triangles(:)) == (1:size(points,1))'
+```
+
+as a complete frozen-vertex inventory. A symmetric candidate can therefore pass every current
+connectivity check while leaving an unconstrained interior grid/ring point isolated. The later P2
+topology nevertheless retains every row of `points`, so that orphan becomes an unused full P2
+vertex with zero stiffness/mass row. The SPD gate will eventually reject it, but the fixed
+left-first selector will already have returned and will never consider a right-authority candidate
+that may use the full point set. This contradicts “first valid candidate” and can block the
+preflight for an avoidable connectivity-implementation reason.
+
+The bounded repair is one source-local invariant in the candidate validator: after canonical
+connectivity is formed, require the sorted unique vertex IDs to equal every frozen point ID; on
+failure return the bounded reason `candidate does not use every frozen mesh point` and continue to
+the next authority candidate. Do not delete the orphan point, renumber the point set, change a
+constraint, or defer this candidate-local decision to SPD. No other Section 28 path is reopened.
+
+**Researcher decision: `REVISE`.** After this one invariant is implemented, the same Researcher
+should perform a one-line delta audit and then hand the implementation to the same Skeptic. No
+preflight, MATLAB, formal science or output creation is authorized here.
+
+## 30. Focused delta audit of the Section 29 frozen-point invariant
+
+Status: **`PASS TO THE SAME SKEPTIC / STATIC ONLY`**.
+
+Immediately after positive-area/duplicate validation, the candidate validator now requires
+`unique(triangles(:))` to equal the complete ordered inventory
+`(1:size(points,1))'`. Failure returns the exact bounded reason
+`candidate does not use every frozen mesh point` to the existing left-first candidate loop, so a
+rejected left candidate does not prevent evaluation of right-authority. No point is deleted or
+renumbered, and no constraint, connectivity test, P2 object, identity or resource rule changed.
+
+**Researcher decision: `PASS`.** The Section 29 blocker is closed and the implementation is ready
+for the same Skeptic's focused preflight spec-to-code review. No execution or output creation is
+authorized by this audit.
+
+## 31. Bounded original-connectivity and sample-space parity revision
+
+Status: **`GO TO THE SAME SKEPTIC FOR BOUNDED DESIGN REVIEW / NO IMPLEMENTATION OR EXECUTION`**.
+
+The consumed `resource-preflight-002/execution-001` and `execution-002` trees, including their
+negative verdicts, remain immutable. Their common failure mechanism is the attempted replacement
+of the original constrained-Delaunay connectivity by one of two exactly reflection-closed
+connectivities. This is a representation-implementation blocker, not evidence against the
+continuous model or the fitted P2 weak form. This section prospectively supersedes Sections 28--30
+only where they require exact triangle, active-edge or P2-edge reflection closure.
+
+### 31.1 Original connectivity and mathematical acceptance
+
+Retain, without triangle deletion, insertion or authority-side replacement, the original
+`delaunayTriangulation(points,constraints).ConnectivityList`. Orient each row positively and use a
+canonical sorted copy only for identity and deterministic ordering. The original connectivity is
+accepted only if all of the following pre-eigensolve checks pass:
+
+1. all point and triangle entries are finite, every triangle has strictly positive area, canonical
+   triangle rows are unique, and the active vertex inventory is exactly every frozen point ID;
+2. every active edge has incidence one or two; distinct nonadjacent edges have neither a proper
+   intersection nor a positive-length collinear interior overlap; and incidence-one edges equal
+   exactly the frozen segmented outer rectangle boundary;
+3. every triangle lies in the rectangle and the sum of triangle areas equals its area within the
+   existing `constraint_tolerance`; every frozen outer, cell and polygonal material-interface
+   constraint is an active edge;
+4. no triangle crosses a frozen polygonal material interface, and the existing deterministic
+   centroid rule assigns one finite material coefficient to every triangle;
+5. unique active edges generate one globally shared midpoint DOF each, and the existing P2 nodal
+   interpolation, partition-of-unity/gradient, degree-$2$ stiffness and degree-$4$ weighted-mass
+   monomial quadrature, full P1-to-P2 embedding/bilinear-consistency, periodic vertex/midpoint,
+   corner, finite, raw Hermitian, mass-SPD and seam checks all pass.
+
+These conditions are sufficient for the frozen **straight-sided polygonal geometry**: item 2 gives
+a conforming planar triangulation, item 3 preserves the constrained fitted boundary, and item 4
+makes the coefficient constant on each triangle. Consequently the six-node P2 topology shares
+both vertex and edge-midpoint traces across every interior edge, while the degree-$4$ mass rule
+integrates the piecewise-constant-coefficient P2 products on that fitted geometry. This is
+**`CONDITIONAL`** on the untouched connectivity passing the listed checks; it does not remove the
+already frozen circle-segmentation geometry error or assert a curved-interface discretization.
+
+Exact reflection closure of triangle rows, active edges, midpoint IDs, stiffness or mass is no
+longer a mesh-acceptance condition. Point/constraint symmetry may still be recorded as a geometry
+diagnostic, but failure to construct a triangle/edge/P2 reflection permutation after items 1--5
+pass is `REFLECTION_CONNECTIVITY_UNAVAILABLE`, a caveat only. It must neither raise a numerical
+failure nor remove a finite residual-valid field-bearing object.
+
+### 31.2 Endpoint parity on the symmetric common grid
+
+At the parity-eligible phases $artheta=0,\pi$, compute parity from the already frozen real P2
+field/subspace samples, not from a mesh-node permutation. Let $G=G_x\times G_y$ be the existing
+common-core grid with $G_x=\operatorname{linspace}(-2.5,2.5,161)$ and
+$G_y=\operatorname{linspace}(-0.5,0.5,65)$. Remove interface points in reflection pairs, retaining
+the existing positive trapezoidal material weights $W=\operatorname{diag}(w_j)$. Allocate the
+unique permutation $J$ by the coordinate rule
+
+$$
+(x_{J(j)},y_{J(j)})=(-x_j,y_j),\qquad w_{J(j)}=w_j,
+$$
+
+with the existing coordinate tolerance; verify bijection and $J^2=I$. For the complete sampled
+cluster matrix $S$, form $H=S^*WS$. If $H$ is finite positive definite, set
+$\widehat S=S\operatorname{chol}(H)^{-1}$ and compute
+
+$$
+A_R=\widehat S^*WJ\widehat S,\qquad
+d_R=\frac{\|J\widehat S-\widehat S A_R\|_W}{\|\widehat S\|_W}.
+$$
+
+The empirical parity values are the ordered eigenvalues of the Hermitian compression
+$(A_R+A_R^*)/2$; the existing threshold labels them `even`, `odd` or `mixed/ambiguous`.
+Publication records the values, $d_R$, grid-pairing status and `EMPIRICAL_COMMON_GRID_PARITY`.
+Grid pairing, Gram normalization or compression failure yields `parity-unavailable` and the
+existing finite parity penalty. It is a classification/ranking caveat, never an overlap-acceptance
+gate, field-deletion rule, eigensolve failure or no-reference condition. This diagnostic is
+empirical and does not establish an exact discrete symmetry or a continuous parity theorem.
+
+### 31.3 Exact continuation, resource and implementation boundary
+
+The exact next create-once identity is
+`resource-preflight-002/execution-003`; it is currently absent. The preflight controller allowlist,
+literal MATLAB call, collision check and output leaf must change together to this pair. It may
+write only the existing `representation.tsv`, `run.log`, `resource.tsv` and summary-last
+`preflight-summary.tsv`, performs zero `eig`, `eigs` or `svd`, and must not read either consumed
+execution. Any terminal consumes `execution-003`; no overwrite or automatic retry is allowed.
+
+The same absolute epoch deadline `1788266751` and the sole inclusive aggregate process-tree RSS
+upper `3221225472` B remain unchanged. The two prior observations remain in the lifecycle record:
+total observed preflight wall $14.131975+13.620530=27.752505$ s and observed peak
+$843153408$ B. Fine-grained RSS stage markers, fill-reducing SPD permutation, immediate
+mass-factor disposal, publication latch and the fixed scientific schedule remain unchanged. No
+lower wall/RSS, forecast, stall, guard or reflection-resource gate is introduced.
+
+The Engineer change is limited to using and validating the untouched connectivity, deleting the
+active triangle/edge reflection hard path, implementing sample-space endpoint parity, mechanically
+advancing the preflight ID/docs, and removing fields that falsely claim an exact mesh reflection.
+The formal identity remains the unused `run-002/execution-001`, but formal science remains blocked
+until `execution-003` receives post-preflight resource/representation review, the implementation
+receives Researcher theory-to-code audit, and the same Skeptic gives a new exact formal gate. The
+72/47/conditional schedule, branch graph, pure-P2 rank, P1-companion isolation, uncertainty,
+continuous model, P2 formulas and claim boundary are not reopened.
+
+**Researcher decision: `GO`.** The original connectivity is mathematically adequate for the
+straight-sided conforming fitted P2 discretization exactly when items 1--5 pass. The smallest next
+gate is same-Skeptic review of this revision; no source change, preflight, formal run, output,
+reference publication or effectivity comparison is authorized here.
+
+### 31.4 Mechanical notation authority
+
+The opening phase condition in Section 31.2 is authoritatively
+$\vartheta=0,\pi$; the earlier control-character rendering is void. “Real P2 samples” there means
+actual samples of the generally complex-valued P2 fields, not real-valued samples. The unique
+weighted norm used in $d_R$ is
+$\|X\|_W^2=\operatorname{trace}(X^*WX)$. These are mechanical clarifications only and do not
+change the diagnostic, mesh rule, resource contract or decision.
+
+## 32. Focused theory-to-code audit of the Section 31 implementation
+
+Status: **REVISE / ONE BOUNDED PARITY ERROR-ROUTING BLOCKER / STATIC ONLY**.
+
+### 32.1 Mappings that pass
+
+- run_i4_1b_core.m lines 1537--1623 keep the untouched
+  delaunayTriangulation connectivity, while LOCAL_validate_original_connectivity at lines
+  1651--1733 positively orients and deterministically orders it and checks finite, unique and
+  positive triangles, the complete frozen point inventory, incidence one/two, crossing and
+  collinear overlap, exact segmented boundary, area and rectangle containment, every frozen
+  constraint, finite material assignment and no fitted-interface crossing. It no longer selects
+  or requires a reflection-closed triangle or active-edge graph.
+- The accepted connectivity still enters one shared-edge P2 midpoint topology
+  (LOCAL_p2_topology, lines 1867--1892), the nodal/partition/degree-five quadrature test
+  (1894--1954), literal P2 assembly and local P1-in-P2 bilinear identities (1975--2060), raw
+  finite/Hermitian checks, periodic vertex/midpoint and corner mapping (1593--1598), seam checks and
+  fill-reduced mass-SPD checks. Thus the Section 31 straight-sided conforming/fitted acceptance
+  chain is preserved.
+- LOCAL_sample_subspace at lines 2458--2512 evaluates the actual complex P2 field on the frozen
+  symmetric grid, removes interface points in reflected pairs, applies the existing positive
+  material/trapezoidal weights and constructs a coordinate-defined bijective involution.
+  LOCAL_common_grid_parity at lines 2552--2591 forms the weighted Gram, Cholesky normalization,
+  reflected compression, Hermitian-compression eigenvalues and the weighted invariance defect
+  exactly as frozen.
+- The caller's first sample normalization followed by the parity helper's second normalization is
+  mathematically harmless. If the raw samples are $S_0$, the two successful factors produce
+  $S_2=S_0R_0^{-1}R_1^{-1}$: the sampled subspace is unchanged and $S_2^*WS_2=I$. Any two such
+  weighted-orthonormal bases differ by a unitary matrix, so the Hermitian-compression eigenvalues
+  and weighted subspace-invariance defect are basis invariant. The second factor only corrects
+  accumulated roundoff; it adds no selection rule.
+- Lines 693--699 store the parity label/status, values, invariance defect, grid status, empirical
+  method and reason in every surviving object. LOCAL_empty_objects has the same fields, compact
+  result publication clears only field/sample arrays, and selected-field publication retains the
+  complete objects. parity-unavailable therefore remains an explicit finite rank penalty rather
+  than a field or candidate filter.
+- The MATLAB allowlist and no-argument preflight controller agree on exact create-once
+  resource-preflight-002/execution-003; run-002/execution-001, epoch 1788266751, inclusive
+  aggregate RSS 3221225472 B, publication state machine, four-leaf zero-eigensolve preflight and
+  formal schedule are unchanged. Both prospective namespaces are absent.
+
+### 32.2 One bounded blocker and exact repair
+
+The parity call at lines 659--668 catches **every** MATLAB exception and converts it to
+parity-unavailable. Section 31 authorizes only deliberate
+I4C:PARITY_DIAGNOSTIC_UNAVAILABLE outcomes from grid pairing, Gram normalization, compression or
+finite-norm validation to degrade. The current broad catch would also conceal an indexing or shape
+bug, undefined helper, resource error or other operational/source failure and publish a valid
+object with a misleading diagnostic caveat.
+
+The smallest repair is confined to that catch: decode the exception; retain the current
+parity_reason downgrade only when the decoded code is exactly PARITY_DIAGNOSTIC_UNAVAILABLE, and
+rethrow the caught exception otherwise. Do not add this diagnostic code to the general
+scientific-failure allowlist and do not change the parity formulas, rank, object schema, mesh
+checks, IDs or controller.
+
+**Researcher decision: REVISE.** All mathematical and publication mappings survive, including the
+harmless second normalization. After this one source-local routing repair, return to the same
+Researcher for a focused delta audit and then to the same Skeptic. No preflight, MATLAB, formal
+science or output creation is authorized by this audit.
+
+## 33. One-block delta audit of the Section 32 parity routing repair
+
+Status: **PASS TO THE SAME SKEPTIC / STATIC ONLY**. The endpoint parity catch now decodes the
+exception, degrades only exact PARITY_DIAGNOSTIC_UNAVAILABLE to the published unavailable reason,
+and rethrows every other source, shape, indexing, resource or operational exception. Available
+parity still publishes the same values, invariance defect, label and method; an intentional
+diagnostic failure still preserves the field object with its finite penalty. No formula, schema,
+rank, mesh path, identity, controller or resource predicate changed.
+
+**Researcher decision: PASS.** The sole Section 32 blocker is closed. The implementation may return
+to the same Skeptic for focused preflight spec-to-code review; this audit does not authorize
+execution-003, MATLAB, formal science or output creation.
+
+## 34. Final formal theory-to-code and resource mapping
+
+Status: **REVISE / ONE BOUNDED LOCALIZATION ERROR-ROUTING BLOCKER / STATIC ONLY**.
+
+### 34.1 Exact scientific call graph and authorities
+
+The formal entry fixes planned_solves=61 and maximum_solves=66. The unconditional count is
+
+$$
+5+6(5)+4+5+17=61:
+$$
+
+five anchor slices, five slices on each of the six h/g/N configurations, four added twists, five
+loose-tolerance slices and seventeen bulk phases. Only failure of the initial 48-root coverage or
+absence of a preliminary selection triggers five 60-root anchor slices, giving the exact cap 66.
+No result-dependent mesh, shift, root count or retry is reachable.
+
+The anchor is defect $(N,s,g)=(4,9,24)$. The fixed axes are
+$s=6,9,12$ at $g=24,N=4$; $g=16,24,32$ at $s=9,N=4$;
+$N=3,4,5$ at $s=9,g=24$; the four added points of $\Theta_9$; solver tolerances
+$10^{-10}$ and $10^{-8}$; and the independent bulk mesh $(s,g)=(9,24)$ on seventeen phases.
+LOCAL_named_mesh and LOCAL_refinement_schedule map these values literally.
+
+The first five valid 48-root spectra are converted to complete $W_3$ field clusters and linked by
+dummy-augmented maximum common-grid-subspace assignment. The preliminary total rank is purely FEM:
+twist persistence, real branch edges, principal overlap, residual, coverage penalty, localization,
+empirical parity, eigenvalue-envelope width and immutable object ID. It reads no P1 target,
+historical root, BIE/QZ datum, density or estimator. The winner's scalar and actual complex P2
+subspaces, mesh and topology are atomically published in preliminary-result.mat and
+preliminary-fields.mat before any refinement object is built. Refinement failure therefore cannot
+silently replace the preliminary winner.
+
+Every eigs call is the fixed generalized smallest-absolute 40/48/60-root call with the frozen
+deterministic start and subspace dimensions 80/96/100. Finite positive eigenvalues, solver flag,
+relative residuals, mass orthogonality, sorted order and complete cluster normalization are hard
+checks. A conditional 60-root slice becomes sole active authority only after its first 48 roots
+match the immutable 48-root slice in ordered cluster boundaries, multiplicities, frequency
+tolerance and exact-mass minimum principal overlap. Failure preserves 48-root authority and marks
+coverage partial; it does not silently substitute the expanded spectrum.
+
+LOCAL_sample_subspace evaluates the six-node P2 interpolant on the frozen common grid. Branch
+overlap, localization and Section 31 sample-space parity use those FEM fields; parity unavailability
+is a finite rank caveat and does not delete the object. The h, geometry, N, twist and algebraic
+components are computed from independently field-matched branches. Delta_ref_obs is the sum of its
+finite components, and completeness requires all five; both forms remain empirical and
+non-certified, with no effectivity or continuous-existence claim.
+
+### 34.2 Resource, lifecycle and isolation mapping
+
+Every phase reduction forms only reduced K, M and prolongation. The fill-reduced mass Cholesky
+factor is counted and immediately cleared before eigs; each cluster/sample factor is likewise
+cleared after normalization. The largest measured preflight representation has 7232 reduced DOFs,
+about 83,168 mass nonzeros and 230,867 mass-factor nonzeros. Formal additionally retains the anchor
+mesh, five anchor spectra/selected subspaces, at most one active refinement mesh and the bounded
+matched-field collection. With root subspace dimension at most 100, these sizes leave substantial
+margin above the measured 916,848,640 B preflight peak and below 3,221,225,472 B; sparse-eigs
+workspace remains an empirical resource caveat, not evidence of a prospective memory breach.
+
+At 2026-09-01T09:39:23Z the immutable deadline epoch 1788266751 retained 11,188 s. Even the full
+66-call cap would have to average about 169 s per solve before consuming that remainder, while the
+largest matrix dimension is only 7232; no present evidence makes a deadline overrun reasonably
+expected. This is a prospective estimate, not a lower timing gate, and the remaining absolute
+margin must be refreshed by the same Skeptic immediately before any authorization.
+
+The no-argument controller and MATLAB allowlist agree on the absent create-once
+run-002/execution-001 and literal run_i4_1b_core formal call. The controller has only the absolute
+epoch and inclusive aggregate MATLAB-tree RSS 3,221,225,472 B predicates; it has no forecast,
+stall, cadence or lower resource stop. Its append-only resource events, synchronized partial
+summary, fresh inclusive deadline checks, atomic summary-last rename and operational failure
+terminals preserve partial preliminary artifacts without fabricating READY. Active MATLAB creates
+only current-execution paths and reads no historical output, Markdown, Git, BIE/QZ, estimator or
+reference artifact.
+
+### 34.3 One bounded blocker
+
+The localization block at run_i4_1b_core.m lines 639--652 still uses a bare catch. It therefore
+converts every exception, including a source, indexing, shape, memory or operational error, into
+localization_status=UNAVAILABLE. Because the resulting core score is an explicit rank component,
+such a hidden implementation failure can change the canonical winner while appearing to be only a
+scientific caveat.
+
+The exact repair mirrors Section 33: catch the exception, decode it, retain the unavailable
+localization only when the code is exactly LOCALIZATION_DIAGNOSTIC_UNAVAILABLE, and rethrow every
+other code. Do not add that diagnostic code to the general scientific-failure allowlist, alter the
+three localization Grams, add an output field, or change any rank/schedule/resource behavior.
+
+**Researcher decision: REVISE.** The formal science, publication, isolation and resource mappings
+otherwise pass. After this one-block source repair, perform a Researcher delta audit and return to
+the same Skeptic for final formal spec-to-code/resource review. No formal command, MATLAB, output
+creation, reference claim or effectivity comparison is authorized here.
+
+## 35. One-block final delta audit of localization routing
+
+Status: **PASS TO THE SAME SKEPTIC FOR FINAL FORMAL SPEC-TO-CODE/RESOURCE REVIEW / STATIC ONLY**.
+The localization catch now decodes the exception, retains unavailable localization only for exact
+LOCALIZATION_DIAGNOSTIC_UNAVAILABLE, and rethrows every other source, index, shape, memory,
+resource or operational failure. Successful localization still publishes the same three extrema
+and AVAILABLE status; an intentional diagnostic failure keeps the same NaN values, UNAVAILABLE
+status and finite rank penalty. No Gram, eig call, field, rank, schema, schedule, identity,
+publication or resource predicate changed.
+
+**Researcher decision: PASS.** The sole Section 34 blocker is closed and the complete Section 34
+formal mapping survives. The implementation is ready for the same Skeptic's final formal
+spec-to-code/resource review. This audit does not authorize run-002/execution-001, MATLAB, output
+creation, a reference claim or effectivity comparison.
+
+## 36. Bounded suffix-feasibility repair after formal execution-001
+
+Status: **GO TO THE SAME SKEPTIC FOR BOUNDED DESIGN REVIEW / NO IMPLEMENTATION OR EXECUTION**.
+
+The complete run-002/execution-001 tree, its TRACKING_IMPLEMENTATION_FAILURE verdict, its committed
+preliminary result/field leaves and its known 5/5 summary undercount remain immutable. The ordered
+log's 39 completed solves remain the execution-count authority. This failure is an implementation
+error in deterministic tie refinement; it does not change the P2 FEM objects, full
+dummy-augmented assignment problem, summed seven-tuple objective, pure-P2 branch definition or
+preliminary winner.
+
+### 36.1 Exact suffix-feasibility rule
+
+Keep the initial full LOCAL_lexicographic_hungarian call and its fail-closed behavior unchanged.
+Inside LOCAL_lexicographic_assignment's row/column trial loop, retain the existing check that every
+component of the proposed current-edge tuple is finite. Before calling the original Hungarian
+solver on a nonempty suffix, form the Boolean bipartite graph
+
+$$
+B_{ij}=1
+\quad\Longleftrightarrow\quad
+\text{every component of the suffix cost tuple }C_{ij,:}\text{ is finite}.
+$$
+
+Run a deterministic perfect-matching feasibility check on $B$: visit suffix rows in ascending
+local order; for each row, run the standard augmenting-path search with columns visited in
+ascending local order and a fresh visited-column set. A $0\times0$ suffix is feasible. If any row
+cannot be augmented, that **current trial only** is infeasible: skip it and continue to the next
+available current column. Do not call Hungarian and do not raise a global failure for that trial.
+
+If the Boolean suffix has a perfect matching, call the existing
+LOCAL_lexicographic_hungarian on the unchanged suffix tuple tensor. Map its local columns back to
+the unchanged available-column inventory, compute the full candidate's original summed tuple, and
+retain the trial only when that tuple equals the already frozen global optimum exactly. The final
+choice remains the smallest current column among optimum-preserving completions; exact_tie retains
+its present meaning. Initial full-problem infeasibility, a Hungarian failure despite a proven
+finite perfect matching, or absence of any optimum-preserving trial after the loop remains
+TRACKING_IMPLEMENTATION_FAILURE. Thus the feasibility helper cannot select a branch, alter a
+cost, relax an overlap, or replace the original optimizer.
+
+### 36.2 Decisive deterministic fixture
+
+Add one direct three-row, three-column, seven-component fixture to
+LOCAL_validate_assignment_fixtures. Initialize every tuple to infinity and assign the all-zero
+finite tuple only on
+
+$$
+(1,1),\ (1,2),\ (2,1),\ (2,3),\ (3,3).
+$$
+
+At row 1, column 1 is finite, but its suffix on rows $\{2,3\}$ and columns $\{2,3\}$ has both rows
+dependent on column 3 and therefore has no perfect matching. The trial must be skipped without an
+exception. Column 2 leaves the finite completion $(2,1),(3,3)$, so the unique complete assignment
+is exactly
+
+$$
+(2,1,3)^T.
+$$
+
+The fixture must require that exact assignment and no exact-tie flag. The existing crossing,
+birth/death and all-zero exact-tie fixtures remain unchanged. This counterexample directly
+falsifies any implementation that treats a locally infeasible trial as global infeasibility or
+uses a greedy suffix.
+
+### 36.3 Create-once continuation and non-reset resources
+
+The exact next formal identity is run-002/execution-002 and is currently absent. Mechanically
+change together the MATLAB formal allowlist, run_formal_002.pl EXECUTION_ID, literal batch call,
+collision target and minimal README/SYMBOLS identity. The same no-argument command remains the
+only possible later entry. execution-001 artifacts may not be read, loaded, hashed, copied or used
+to seed the new selector: execution-002 must independently rebuild the anchor mesh, recompute the
+five preliminary spectra and freeze a new preliminary winner before refinement.
+
+The absolute epoch remains 1788266751 and the sole inclusive aggregate MATLAB-tree RSS upper
+remains 3221225472 B. There is no wall reset, memory reset, lower gate, forecast, stall rule or
+grace. At 2026-09-01T09:55:12Z the absolute deadline retained 10,239 s; the prior formal wall
+206.490910 s and peak 1,000,374,272 B remain historical resource evidence, not a credit or a new
+budget origin. The assignment helper adds no scientific solve, artifact or material memory
+lifetime. Preliminary-first publication, the fixed 61/66 schedule, partial-artifact semantics,
+summary-last controller and all Section 35 scientific/resource mappings remain unchanged.
+
+Any scientific, resource or canonical-publication terminal consumes execution-002. There is no
+automatic retry, overwrite, new method or use of execution-001's preliminary scalar/field.
+
+**Researcher decision: GO.** The perfect-matching precheck is the smallest repair that rejects only
+the observed infeasible suffix trial while preserving the original global objective and
+deterministic tie rule. The next gate is same-Skeptic design review, followed only if accepted by
+bounded Engineer implementation, Researcher theory-to-code audit and same-Skeptic exact pre-run
+review. No source edit, formal execution, output, reference promotion or effectivity comparison is
+authorized by this section.
+
+## 37. Focused theory-to-code audit of the Section 36 implementation
+
+Status: **PASS TO THE SAME SKEPTIC FOR EXACT PRE-RUN REVIEW / STATIC ONLY**.
+
+At run_i4_1b_core.m lines 2270--2287, each current edge still first requires all seven tuple
+components finite. A nonempty square suffix is reduced by
+all(isfinite(suffix_costs),3), which gives exactly the two-dimensional finite-edge graph frozen in
+Section 36. The last-row empty suffix bypasses both feasibility and Hungarian calls and completes
+directly; LOCAL_has_perfect_matching also independently defines the $0\times0$ graph as feasible.
+
+LOCAL_has_perfect_matching visits rows in ascending order with a fresh visited-column set, and
+LOCAL_augment_finite_matching visits columns in ascending order. Its recursive rerouting changes a
+column assignment only after finding an augmenting path, so a failed search leaves the prior
+matching intact. It returns true exactly after augmenting every row of the square Boolean graph.
+Thus a Hall-deficient trial is skipped locally, while a feasible suffix reaches the unchanged
+lexicographic Hungarian solver and unchanged exact comparison with the already computed global
+optimum.
+
+The initial full Hungarian call is untouched and remains fail-closed. A suffix-Hungarian failure
+after the Boolean graph proves a perfect matching still propagates
+TRACKING_IMPLEMENTATION_FAILURE, and an empty optimum-preserving trial set still raises the
+existing lost-optimum failure. The helper therefore changes neither the summed seven-tuple
+objective nor row-wise smallest-column tie resolution.
+
+The new $3\times3\times7$ fixture has finite zero tuples exactly at
+$(1,1),(1,2),(2,1),(2,3),(3,3)$. It requires assignment $(2,1,3)^T$ and exact_tie=false: trial
+$(1,1)$ leaves the two-row suffix dependent on column 3 and is skipped, whereas $(1,2)$ leaves the
+unique completion $(2,1),(3,3)$. Existing crossing, birth/death and exact-tie fixtures remain
+unchanged.
+
+The MATLAB allowlist, controller EXECUTION_ID, literal batch call and collision leaf agree on the
+absent create-once run-002/execution-002. The deadline remains absolute epoch 1788266751 and the
+only memory upper remains inclusive aggregate RSS 3221225472 B; the controller and Section 35
+publication state machine are otherwise unchanged. Active MATLAB has no load or read path to
+execution-001, historical output, Markdown, Git, BIE/QZ, density, estimator or a prior reference;
+the new execution will independently rebuild and republish its preliminary stage. The consumed
+execution-001 tree and verdict remain untouched.
+
+**Researcher decision: PASS.** Section 36 is implemented without a mathematical, identity,
+resource or isolation deviation. The next gate is the same Skeptic's exact pre-run
+spec-to-code/resource review. This audit does not authorize execution-002, MATLAB, output,
+reference promotion or effectivity comparison.

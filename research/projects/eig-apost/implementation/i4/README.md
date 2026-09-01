@@ -2,6 +2,34 @@
 
 ## 当前状态
 
+I4.1b quadratic fitted-P2 FEM 已按
+[[research/projects/eig-apost/implementation/i4/design-4-1b|design-4-1b]] 完成；
+[[research/projects/eig-apost/implementation/i4/review-4-1b#AE. Final post-run review of run-002/execution-002|review §AE]]
+给出最终 `PASS WITH CONDITIONS`。Create-once
+`run-002/execution-002` 已完成并消费，完成 $61/61$ 次 solve；field-based simple root-9
+track为 `[8,32,55,78,101]`，并给出
+
+$$
+\lambda_{\mathrm{pre}}=3.3672400220423246,
+\qquad
+k_{\mathrm{pre}}=1.8350040931949783,
+$$
+
+$$
+(\delta_h,\delta_g,\delta_N,\delta_\vartheta,\delta_{\mathrm{tol}})
+=(7.2025200175129811\times10^{-5},
+2.7115316763854924\times10^{-3},
+3.1239311426567440\times10^{-7},0,0),
+\qquad
+\Delta_{\mathrm{ref}}^{\mathrm{obs}}=0.0027838692696748879.
+$$
+
+Whole-command wall为 $232.450046$ s，aggregate peak RSS为 $1055391744$ B。权威实现与artifact入口为
+[[test/i4/femref-a2/README|femref-a2 attempt guide]]。该结果仅是geometry-dominated、
+non-certified empirical P2 reference candidate；field identity、localization、empirical parity与17相位
+bulk sampling不证明continuous guided-mode existence或certified bulk gap，
+$\Delta_{\mathrm{ref}}^{\mathrm{obs}}$也不是误差上界。尚未进行或授权estimator effectivity comparison。
+
 I4.1 literature/method research 已完成，独立
 [[research/projects/eig-apost/implementation/i4/method-review|method review]] 的最终 verdict 为
 `PASS WITH CONDITIONS`。随后 `femref-a1` attempt 按冻结的
@@ -100,6 +128,11 @@ I4.2 的 reliable enclosure、projected gap、存在性和可计算上界仍不�
 7. [[research/projects/eig-apost/implementation/i4/review-4-1a|I4.1a review ledger]]：本次 design、
    theory-to-code、spec-to-code、retry、artifact 和 post-run verdict 的最终审查权威入口；
 8. [[test/i4/femref-a1/README|femref-a1 attempt guide]]：实现与 append-only run artifact 入口。
+9. [[research/projects/eig-apost/implementation/i4/design-4-1b|frozen I4.1b P2 design]]：冻结
+   quadratic fitted-FEM、branch/refinement、信息隔离、预算和失败状态；
+10. [[research/projects/eig-apost/implementation/i4/review-4-1b|I4.1b review ledger]]：I4.1b
+    design、theory-to-code、spec-to-code、artifact、资源、数值结果和最终claim boundary的审查权威；
+11. [[test/i4/femref-a2/README|femref-a2 attempt guide]]：P2实现、create-once artifacts和已验证结果入口。
 
 项目级阶段和 unresolved concern 仍分别以
 [[research/projects/eig-apost/STATUS|project STATUS]]、
@@ -120,6 +153,8 @@ I4.2 的 reliable enclosure、projected gap、存在性和可计算上界仍不�
 I4.1a 的后续 Researcher--Engineer--Skeptic gate 及全部 bounded revision 已记录在
 `review-4-1a.md`。§BB的`run-007` gate与§BF/§BQ/§BT的`run-008`、identity及profile gates均已关闭；
 相应create-once identities已消费，不得重跑。任何新方法、attempt或effectivity comparison都需要新的明确授权和完整 gate。
+I4.1b 的 P2 gate 已在 [[research/projects/eig-apost/implementation/i4/review-4-1b|review-4-1b §AE]]
+关闭；`run-002/execution-002` 已消费且无重跑理由。
 
 ## Claim boundary
 
@@ -128,4 +163,6 @@ BIE density、QZ eigenvector或历史reference output。由于winner为`gap-edge
 仍 unresolved，该结果不能提升为continuous guided-mode/eigenvalue existence、唯一mode或certified reference；
 $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ 不是误差上界。Sample-out candidate-7 profile与late-BIE strict positional boolean也只
 增加empirical convergence/location evidence，不改变这一边界。当前estimator尚未与该reference比较，I4.1 effectivity
-validation未完成也未获授权；I3证书、公式和历史结论均不改变。
+validation未完成也未获授权。I4.1b P2结果增加了独立的field-bearing empirical candidate及五轴
+resolution evidence，但geometry component占主导且bulk证据仍是有限相位sample，因此同样不能提升为continuous existence、
+certified gap或reference-error bound；I3证书、公式和历史结论均不改变。
