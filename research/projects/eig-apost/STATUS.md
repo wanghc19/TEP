@@ -1,8 +1,26 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-08-31。
+更新日期：2026-09-01。
 
 ## 当前状态
+
+- **2026-09-01 I4.1a `run-008/execution-001` sample-out FEM/profile 完成：** fitted
+  $(N,s,g)=(5,30,60)$ mesh 含 $11741$ nodes、$22760$ triangles 和 $11380$ reduced DOFs，五个
+  twist solves 完成并消费。Pure-FEM canonical winner 仍是 candidate $3$，其
+  $(\lambda_{30},k_{30})=(0.61502508946098011,0.78423535336082628)$；独立 common-core field audit
+  将旧 candidate $7$ 唯一支持为新 candidate $9$，并给出 candidate-specific
+  $(\lambda_{30}^{(7)},k_{30}^{(7)})=(3.366203342658638,1.834721598133798)$，不得混称为 canonical
+  winner。[[research/projects/eig-apost/implementation/i4/review-4-1a|post-run review §BT]] verdict 为
+  `POST-RUN PASS WITH CONDITIONS`。四点 profile 的 signed drifts 为
+  $(-0.0052814302919568235,-0.001979901415371188,-0.0009584126670008075)$，contraction ratios 为
+  $(0.37487977799998845,0.4840709035106812)$，样本外 prediction residual 为
+  $4.794533798202494\times10^{-6}$。七起点拟合的 lexicographic winner 为 start $6$：
+  $p=1.8129679837413033$、$k_\infty=1.8327935034213265$、$C=0.9181205139250015$、
+  $\mathrm{SSE}=4.302174060684754\times10^{-12}$。Late positional comparison 给出
+  $|k_{30}^{(7)}-k_{\mathrm{BIE}}|=0.0019513090256411125<0.0029097217$，strict boolean 为true。
+  全流程累计 wall 为 $110.055849$ s，peak RSS 为 $1073594368$ B。`run-008`、`identity-003`与
+  `profile-001`均已消费且不得重跑；全部结果仍为`EMPIRICAL_NON_CERTIFIED`，
+  `effectivity_performed=false`，不证明continuous eigenpair existence、certified bound或effectivity validation。
 
 - **2026-08-31 I4.1a `run-007/execution-001` empirical FEM candidate：** create-once formal run 已
   自然完成并永久消费；[[research/projects/eig-apost/implementation/i4/review-4-1a|post-run review §BB]]

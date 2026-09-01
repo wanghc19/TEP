@@ -45,3 +45,66 @@ Only the minimal consumed `run-007/execution-001` interface is listed.
 | `$WALL_LIMIT_SECONDS`, `$RSS_LIMIT_BYTES` | hard uppers | 2700 s and 2147483648 bytes | integer scalars | runner |
 | `$start`, `$deadline`, `$peak_rss_bytes`, `$controller_terminal` | controller state | one absolute deadline, aggregate peak, terminal | seconds/bytes/text | runner |
 | `resource.tsv`, `run-summary.csv` | terminal artifacts | natural exit; 140.273679 s and 1353826304 bytes | TSV/CSV | runner/postreview |
+
+## Prospective run-008 additions
+
+These names are source-level interfaces from design §§43--44. They have not
+produced numerical values.
+
+| Canonical code name | Kind / scope | Source meaning | Type / shape / units | Defined / consumed |
+|---|---|---|---|---|
+| `run_i4_1a_refine`, `run_refine_formal.pl` | fixed entries | isolated `run-008` MATLAB entry and no-argument controller | source files | MATLAB/runner |
+| `run_id`, `execution_id` | fixed identities | `run-008`, first create-once `execution-001` | text scalars | MATLAB/runner |
+| `mesh_spec` | mesh definition | $(N,s,g)=(5,30,60)$, ID `defect-N5-s30-g60` | scalar struct | mesh builder |
+| `theta_5` / $\Theta_5$ | twist schedule | $(0,\pi/4,\pi/2,3\pi/4,\pi)$ in fixed order | $1\times5$, radians | spectrum schedule/tracking |
+| `requested_nev` | root count | exactly 48 generalized eigenpairs per twist | positive integer | eigensolver |
+| `solve_ledger` | current-run inventory | five solve identities, validity, ceiling, coverage, and compact spectra | $1\times5$ struct | science/fields/summary |
+| `raw_subspace`, `subspace` | W3 object fields | whole-cluster source field and full-mass-normalized field | complex matrices | object/fields |
+| `common_core_samples`, `common_core_weights` | W3 object fields | fixed-grid samples and positive quadrature weights | complex matrix / real vector | assignment/fields |
+| `n_twists`, `n_edges` | persistence fields | represented twists and adjacent continuation edges | nonnegative integers | rank key |
+| `missing_refinement_count`, `finite_drift_sum` | projected refinement fields | four absent cross-configuration changes give 4 and 0 | integer / frequency | rank key |
+| `covered_slices`, `ceiling_margin` | coverage diagnostics | component twists whose 48th root covers $W_3$ and their minimum margin | integer / frequency | rank/classification |
+| `rank_key` | total-order key | §43.2 pure-FEM lexicographic projection with explicit missing-value mapping | numeric row | candidate selection |
+| `publication.lambda_envelope` / $\Lambda_{30}$ | winning envelope | all valid eigenvalues in the first-ranked component | positive interval / set | canonical publication |
+| `lambda_30`, `k_30` | winning scalars | $(\min\Lambda_{30}+\max\Lambda_{30})/2$ and $\sqrt{\lambda_{30}}$ | positive scalars | canonical/fields/summary |
+| `scientific-result.mat` | canonical authority | frozen spec, solve ledger, compact W3 inventory, tracking, rank, winner | MAT v7.3 | MATLAB/postreview |
+| `fields.mat` | field authority | all retained W3 full subspaces and common-core data at the five twists | MAT v7.3 | MATLAB/identity review |
+| `$WALL_LIMIT_SECONDS`, `$RSS_LIMIT_BYTES` | hard uppers | 2700 s and 3221225472 bytes, inclusive | integer scalars | `run_refine_formal.pl` |
+
+## Prospective reviewer identity-audit additions
+
+These names follow design §§46--54 and review §BO. `identity-001` and
+`identity-002` are immutable consumed operational failures with no identity
+result; `identity-003` is prospective and has not been created or executed.
+
+| Canonical code name | Kind / scope | Source meaning | Type / shape / units | Defined / consumed |
+|---|---|---|---|---|
+| `OLD_SCHEMA`, `NEW_SCHEMA`, `NEW_FIELDS_SCHEMA`, `AUDIT_SCHEMA`, `AUDIT_ID` | schema identities | exact allowlisted MATLAB inputs, RFC 8259 output, and fixed prospective `identity-003` authority | text constants | `identity_audit.py` |
+| `TARGET_THETA_INDICES`, `TARGET_SOLVE_IDS`, `TARGET_PHASES` | candidate-7 selection | old fine indices $(1,5,9,13,17)$, exact caches, and phases $(0,\pi/4,\pi/2,3\pi/4,\pi)$ | five-element tuples | decoder/audit |
+| `interpolation`, `old_weights` | common-grid representation | deterministic $P_1$ barycentric map and positive $q$-weighted trapezoid rule on the retained $161\times65$ grid | row map / positive vector | old field reconstruction |
+| `gram`, `lower`, `normalized` | linear-algebra objects | $G=S^*WS$, its positive Cholesky factor, and right-normalized sample space | complex square matrices / sample matrix | overlap calculation |
+| `overlaps`, `singular_values`, `distances` | per-twist evidence | $O_{ij}=\min\sigma(\widehat S_i^*W\widehat S_j)$, full principal values, and frequency tie distances | real matrices / nested vectors | assignment/JSON |
+| `costs`, `assignment`, `total_cost` | matching objects | complete dummy-augmented six-component costs and lexicographically minimum componentwise sum | tuple matrix / permutation / six-vector | assignment/JSON |
+| `candidate7_identity_status`, `selection_relation` | audit decisions | exact §§46--47 identity and canonical-selection relation vocabularies | text | `identity-audit.json` |
+| `lambda30_candidate7`, `k30_candidate7` | conditional derived values | midpoint of the matched five-realization eigenvalue envelope and its positive square root | positive scalars or JSON `null` | `identity-audit.json` |
+| `$AUDIT_WALL_LIMIT_SECONDS`, `$RSS_LIMIT_BYTES` | only audit resource uppers | 2637.027949 s remaining and 3221225472 bytes aggregate process-tree RSS, inclusive | positive scalars | `run_identity_audit.pl` |
+| `$SCIENTIFIC_WALL_SECONDS`, `$REVIEW_WALL_SECONDS`, `$IDENTITY001_WALL_SECONDS`, `$IDENTITY002_WALL_SECONDS` | consumed wall charges | 35.917169 s, 25.000000 s, 0.001110 s, and 2.053772 s included before current `identity-003` wall | seconds | `resource.tsv` |
+| `$SCIENTIFIC_PEAK_RSS_BYTES`, `$REVIEW_PEAK_RSS_BYTES`, `$IDENTITY001_PEAK_RSS_BYTES`, `$IDENTITY002_PEAK_RSS_BYTES`, `$peak_rss_bytes` | five-stage peak accounting | scientific, review, consumed identity peaks 0 and 966656 bytes, and current `identity-003` peak combined by maximum | bytes | `resource.tsv` |
+
+## Prospective profile-001 additions
+
+These names implement design §56 and review §BR. `profile-001` has not been
+created or executed.
+
+| Canonical code name | Kind / scope | Source meaning | Type / shape / units | Defined / consumed |
+|---|---|---|---|---|
+| `s_values`, `k_values` | frozen inputs | $s=(12,18,24,30)$ and the four candidate-7 identity-component FEM scalars | $1\times4$ integer / frequency rows | `profile_postprocess.m` |
+| `k30_prediction`, `k_bie_late`, `old_distance` | frozen inputs | pre-registered prediction, late positional scalar, and old comparison distance | frequency scalars | direct diagnostics |
+| `signed_drifts`, `absolute_drifts` | direct diagnostics | finer-minus-coarser $d_{12\to18},d_{18\to24},d_{24\to30}$ and their magnitudes | $1\times3$ frequency rows | JSON |
+| `ratio_1`, `ratio_2` | direct diagnostics | successive absolute-drift ratios with explicit zero-denominator status | scalar structs | JSON |
+| `start_x_values`, `fit_ledger` | profile state | seven fixed $x_0$ values and economy-QR/fminsearch endpoints | $1\times7$ row / struct array | selection/JSON |
+| `design_matrix`, `Q`, `R`, `coefficients`, `SSE` | variable projection | $A=[\mathbf 1,s^{-p}]$, economy QR, $(k_\infty,C)$, and residual sum of squares | real matrices/vectors/scalar | `LOCAL_fit_at_x` |
+| `winner_start_index`, `winner`, `fit_status` | profile result | lexicographic minimum by $(\mathrm{SSE},p,\text{start index})$ and resolved/unresolved status | integer or null / struct / text | JSON |
+| `late_bie_distance` | positional diagnostic | $|k_{30}^{(7)}-k_{\mathrm{BIE}}|$ used only in the strict comparison with `old_distance` | frequency | JSON |
+| `$PROFILE_ID`, `$PRIOR_WALL_SECONDS`, `$PROFILE_WALL_LIMIT_SECONDS` | fixed lifecycle/wall state | `profile-001`, 92.655067 s prior charge, and 2607.344933 s remaining | text / seconds | MATLAB/runner/resource |
+| `$PRIOR_PEAK_RSS_BYTES`, `$RSS_LIMIT_BYTES`, `$peak_rss_bytes` | resource state | 1073594368-byte prior peak, 3221225472-byte hard upper, and current aggregate peak | bytes | runner/resource |

@@ -7,7 +7,7 @@ I4.1 literature/method research 已完成，独立
 `PASS WITH CONDITIONS`。随后 `femref-a1` attempt 按冻结的
 [[research/projects/eig-apost/implementation/i4/design-4-1a|design-4-1a]] 实施；同一 Skeptic 在
 [[research/projects/eig-apost/implementation/i4/review-4-1a|review-4-1a]] 完成 design、
-spec-to-code 和 post-run gates。当前权威终态为 review §BB 的
+spec-to-code 和 post-run gates。基础 empirical-candidate 终态为 review §BB 的
 `PASS WITH CONDITIONS / SCIENTIFIC_READY / FEM_REFERENCE_CANDIDATE_READY`：create-once
 `run-007/execution-001` 已自然完成并消费，完成 $119/119$ 次 solve、collection size $16$；48-root fine
 spectra 已覆盖 $W_3$，未进入 conditional 60-root rung。Lexicographic winner 为 candidate $7$，
@@ -36,6 +36,47 @@ RSS 为 $1353826304$ B，低于 $2700$ s/$2147483648$ B hard uppers。该artifac
 observed sensitivity sum，不是continuous error upper bound；结果不证明continuous eigenvalue/guided-mode
 existence，也未进行或授权effectivity validation。`run-007`已消费且不得重试。先前`run-006`的§AW合法科学负结果
 仍作为历史记录保留，不再是当前权威终态。
+
+随后sample-out `run-008/execution-001`在单一fitted $(N,s,g)=(5,30,60)$ mesh上完成五个twist solves；
+mesh 含 $11741$ nodes、$22760$ triangles和$11380$ reduced DOFs。Pure-FEM ranking的canonical winner仍为
+candidate $3$，$(\lambda_{30},k_{30})=(0.61502508946098011,0.78423535336082628)$。后续独立field audit以
+common-core mass-compatible overlap、continuation、localization和parity证据支持旧candidate $7$对应new candidate $9$，其
+candidate-specific值为
+
+$$
+\lambda_{30}^{(7)}=3.366203342658638,
+\qquad
+k_{30}^{(7)}=1.834721598133798.
+$$
+
+这不改写canonical candidate $3$。四点candidate-specific profile报告
+
+$$
+(d_{12\to18},d_{18\to24},d_{24\to30})
+=(-0.0052814302919568235,-0.001979901415371188,-0.0009584126670008075),
+$$
+
+$$
+(\rho_1,\rho_2)=(0.37487977799998845,0.4840709035106812),
+\qquad
+r_{\mathrm{pred}}=4.794533798202494\times10^{-6}.
+$$
+
+七起点QR variable-projection fit的lexicographic winner为start $6$，
+
+$$
+p=1.8129679837413033,
+\quad k_\infty=1.8327935034213265,
+\quad C=0.9181205139250015,
+\quad \mathrm{SSE}=4.302174060684754\times10^{-12}.
+$$
+
+Late positional comparison为
+$|k_{30}^{(7)}-k_{\mathrm{BIE}}|=0.0019513090256411125<0.0029097217$，故冻结strict boolean为true；
+它不参与mode selection。Review §BT给出`POST-RUN PASS WITH CONDITIONS`：全流程累计wall为
+$110.055849$ s，peak RSS为$1073594368$ B。`run-008`、`identity-003`和`profile-001`均已消费，不得重跑。
+Profile为`EMPIRICAL_NON_CERTIFIED`且`effectivity_performed=false`；该位置比较、drifts和fit均不是certified bound、
+continuous eigenpair existence证明或effectivity validation。
 
 I4.2 的 reliable enclosure、projected gap、存在性和可计算上界仍不在本次范围内。
 
@@ -77,13 +118,14 @@ I4.2 的 reliable enclosure、projected gap、存在性和可计算上界仍不�
    `PASS WITH CONDITIONS` 也不自动授权实验设计或运行。
 
 I4.1a 的后续 Researcher--Engineer--Skeptic gate 及全部 bounded revision 已记录在
-`review-4-1a.md`。§BB post-run gate 已关闭；`run-007/execution-001` 已作为完整 empirical-candidate run
-消费，不得重跑。任何新方法、attempt或effectivity comparison都需要新的明确授权和完整 gate。
+`review-4-1a.md`。§BB的`run-007` gate与§BF/§BQ/§BT的`run-008`、identity及profile gates均已关闭；
+相应create-once identities已消费，不得重跑。任何新方法、attempt或effectivity comparison都需要新的明确授权和完整 gate。
 
 ## Claim boundary
 
 I4.1a 已产生field-bearing empirical FEM candidate及完整四轴observed sensitivity，且selection path未使用I3 estimator、
 BIE density、QZ eigenvector或历史reference output。由于winner为`gap-edge-or-safe-buffer / weakly-localized`且bulk gap
 仍 unresolved，该结果不能提升为continuous guided-mode/eigenvalue existence、唯一mode或certified reference；
-$\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ 不是误差上界。当前estimator尚未与该reference比较，I4.1 effectivity validation
-未完成也未获授权；I3证书、公式和历史结论均不改变。
+$\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ 不是误差上界。Sample-out candidate-7 profile与late-BIE strict positional boolean也只
+增加empirical convergence/location evidence，不改变这一边界。当前estimator尚未与该reference比较，I4.1 effectivity
+validation未完成也未获授权；I3证书、公式和历史结论均不改变。

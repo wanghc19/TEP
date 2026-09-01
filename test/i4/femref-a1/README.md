@@ -142,3 +142,141 @@ The execution reached `FEM_REFERENCE_CANDIDATE_READY` with 119/119 completed
 solves, whole-command wall time $140.273679\,\mathrm{s}$, and authoritative
 aggregate peak RSS $1353826304$ bytes. It exited naturally within both hard
 limits. The execution is consumed and has no evidence-based retry basis.
+
+## Completed run-008 sample-out layer
+
+Status: **POST-RUN PASS WITH CONDITIONS / `run-008/execution-001` CONSUMED**
+under review §§BF, BQ, and BT. The independent entry `run_i4_1a_refine.m`
+accepted only `run-008`; the fixed no-argument controller was
+`run_refine_formal.pl`, and the create-once namespace is
+`output/run-008/execution-001/`. No retry is authorized.
+
+The completed call graph built only the fitted
+$(N,s,g)=(5,30,60)$ defect mesh and performed exactly five 48-root solves at
+
+$$
+\Theta_5=\left(0,\frac{\pi}{4},\frac{\pi}{2},
+\frac{3\pi}{4},\pi\right).
+$$
+
+The mesh contains 11,741 nodes, 22,760 triangles, and 11,380 reduced DOFs.
+The run retained every valid field-bearing whole cluster intersecting $W_3$,
+tracked adjacent twists by maximum-total common-core overlap, and ranked every
+component using only current-run FEM quantities. The canonical pure-FEM winner
+is candidate 3, with
+
+$$
+\lambda_{30}=0.61502508946098011,
+\qquad k_{30}=0.78423535336082628.
+$$
+
+The canonical schema consists of `scientific-result.mat`,
+`fields.mat`, `run.log`, `resource.tsv`, and summary-last `run-summary.csv`;
+`work/` contains one mesh cache, five spectrum caches, and the terminal draft.
+`fields.mat` owns every retained full subspace and its common-core samples and
+positive weights. The scientific command completed in $35.917169$ s with
+aggregate peak RSS $1073594368$ B, inside the hard limits below.
+
+The controller has only the inclusive hard limits
+
+$$
+T_{\mathrm{hard}}=2700\ \mathrm{s},
+\qquad
+R_{\mathrm{hard}}=3221225472\ \mathrm{bytes}.
+$$
+
+The exact completed command was
+
+```sh
+cd /Users/whc/Documents/Work/epost/test/i4/femref-a1
+/usr/bin/perl ./run_refine_formal.pl
+```
+
+The command completed naturally; the scientific execution is consumed.
+
+## Completed candidate-7 identity audit
+
+Status: **`identity-001` AND `identity-002` CONSUMED OPERATIONAL FAILURES /
+`identity-003` POST-AUDIT PASS WITH CONDITIONS / CONSUMED** under design
+§§46--54 and reviews §§BO--BQ. The immutable `identity-001` run stopped when
+the sandbox denied process-table access; it consumed $0.001110\,\mathrm{s}$,
+observed zero audit RSS before termination, and produced no identity result.
+The immutable `identity-002` run stopped before substantive decoding because
+the fixed dylib lacks `H5free_memory`; it consumed $2.053772\,\mathrm{s}$,
+observed $966656$ bytes peak audit RSS, and also produced no identity result.
+Neither is an identity-method failure, and neither may be read, copied, or
+retried.
+
+`identity_audit.py` and `run_identity_audit.pl` used the same fixed authority
+`identity-003`. Its consumed create-once target is
+`output/run-008/execution-001/review-audit/identity-003/`.
+
+The audit reconstructed old candidate 7 on the five prescribed fine-grid
+twists, compared complete old/new field-bearing inventories by weighted
+principal subspace overlap, and applied full dummy-augmented lexicographic
+assignment. All five matched pairs had overlap above $0.9999975688$, supported
+`SAME_MODE_SUPPORTED`, and uniquely mapped old candidate 7 to new candidate 9.
+The candidate-specific publication is
+
+$$
+\lambda_{30}^{(7)}=3.366203342658638,
+\qquad k_{30}^{(7)}=1.834721598133798.
+$$
+
+Canonical pure-FEM candidate 3 remains unchanged; candidate 9 is not the
+canonical winner.
+
+The successful command was:
+
+```sh
+cd /Users/whc/Documents/Work/epost/test/i4/femref-a1
+/usr/bin/perl ./run_identity_audit.pl
+```
+
+The successful identity audit consumed $29.683016$ s and peaked at
+$564379648$ B. The cumulative pre-profile account was $92.655067$ s with peak
+$1073594368$ B. No identity audit may be rerun.
+
+## Completed candidate-7 scalar profile
+
+Status: **POST-RUN PASS WITH CONDITIONS / `profile-001` CONSUMED** under
+design §56 and review §BT. The fixed create-once target is
+`output/run-008/execution-001/review-audit/profile-001/`.
+
+The postprocess used only source-frozen scalars for old candidate 7 and its
+reviewed new candidate 9 identity component. Canonical pure-FEM candidate 3
+remains unchanged. The signed drifts are
+
+$$
+(-0.0052814302919568235,-0.001979901415371188,-0.0009584126670008075),
+$$
+
+the contraction ratios are $(0.37487977799998845,0.4840709035106812)$, and
+the out-of-sample prediction residual is
+$4.794533798202494\times10^{-6}$. The seven-start QR variable-projection fit
+selected start 6 with
+
+$$
+p=1.8129679837413033,
+\quad k_\infty=1.8327935034213265,
+\quad C=0.9181205139250015,
+\quad \mathrm{SSE}=4.302174060684754\times10^{-12}.
+$$
+
+The fixed late positional comparison is
+$|k_{30}^{(7)}-k_{\mathrm{BIE}}|=0.0019513090256411125<0.0029097217$, so its
+strict boolean is true.
+
+The successful command was:
+
+```sh
+cd /Users/whc/Documents/Work/epost/test/i4/femref-a1
+/usr/bin/perl ./run_profile_postprocess.pl
+```
+
+`profile-001` completed naturally in $17.400782$ s. The final cumulative wall
+was $110.055849$ s and cumulative peak RSS was $1073594368$ B, below the
+$2700$ s and $3221225472$ B hard uppers. The result is
+`EMPIRICAL_NON_CERTIFIED`, `effectivity_performed=false`, and is not a
+continuous eigenpair proof, certified reference bound, or effectivity
+validation. It is consumed and must not be rerun.

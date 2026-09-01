@@ -5232,3 +5232,970 @@ local invalid并由现有schedule loop继续其他meshes/configurations，不再
 canonical/terminal routing及全部数学路径未改变。未发现剩余blocker。
 
 **Researcher decision: `PASS / GO TO THE SAME SKEPTIC FOR FOCUSED §AZ RE-REVIEW / RUN-007 NOT AUTHORIZED BY THIS AUDIT`.**
+
+## 43. 2026-09-01 `run-008` 样本外 $s=30$ 网格层冻结设计
+
+**Material Passport.** Origin: I4.1a Researcher prospective design；verification status: **未实现、未运行**；适用对象仅为
+`test/i4/femref-a1/output/run-008/execution-001`。本节不改写`run-001`--`run-007`的任何事实。
+
+### 43.1 目标、盲法与不变量
+
+本轮只检验现有FEM路线在一个预注册样本外网格层上的延续性。新网格为
+
+$$
+N=5,\qquad s=30,\qquad g=60,
+$$
+
+且只按以下顺序计算五个既有mesh-refinement twist：
+
+$$
+\Theta_5=\left(0,\frac{\pi}{4},\frac{\pi}{2},\frac{3\pi}{4},\pi\right).
+$$
+
+每个twist只作一次48-root FEM求解，故本轮恰有5个eigensolver calls；不重跑旧72+47 schedule，不作60-root
+扩展。48-root ceiling对$W_3$的覆盖、固定guard interval、safe-interior ratio、edge buffer、bulk-gap、localization和
+parity均只记录为diagnostic/caveat，不可取消一个数值有效、带field的对象或branch。
+
+连续问题、拟合界面P1弱形式、几何、材料、准周期相位、$lambda=k^2$、$W_1,W_2,W_3$、cluster和branch
+语义、残量/正交容差及information-isolation contract沿用已审查的`run-007`数学路径，不得改变。活动MATLAB
+entry point只接收自身冻结常数并写自身namespace；它不得读取任何历史output、BIE/QZ数据、density、estimator、
+Markdown或Git状态。旧FEM scalars、预测值和BIE scalar均不得进入mesh、spectrum、branch或selection的活动调用图。
+
+### 43.2 纯FEM对象、延续与候选冻结
+
+每个twist保存48个谱值及残量，并对所有与$W_3$相交的whole cluster保存完整subspace；不得把跨越$W_3$边界的
+cluster裁成单根。对每个field-bearing对象保存mesh索引、root/cluster identity、$lambda$与$k$ envelope、原始与
+规范化subspace、残量、$L_0,L_{\mathrm{core}},T_{\mathrm{tail}}$、endpoint parity以及既有fixed common-core
+grid上的样本与正权重。派生localization/parity计算失败时保留有效field并写`NaN`/明确status。
+
+相邻twist之间使用既有mass-compatible common-core principal overlap作一对一maximum-total-overlap assignment。
+每条edge的确定顺序为：较大overlap、较小$k$-envelope distance、较小target root、较小source object id、较小
+target object id；birth、death和singleton全部保留。对象id按$Theta_5$顺序、root、cluster id编号，component id按
+最小对象id编号，因此exact tie仍有唯一数值输出。
+
+所有component（包括singleton）进入与§§36--37相同的lexicographic ranking在单configuration上的投影：依次优先
+更多已覆盖的twist/continuation edges、较少missing refinement entries和较小finite-part drift sum、较小residual、
+较强$L_0$与$L_{\mathrm{core}}$、较小$T_{\mathrm{tail}}$、较稳定parity、较充分$W_3$ numerical coverage，最后按
+anchor twist、root、object id和candidate id破同分。四个不存在的跨configuration drift均以既有规则记为`NaN`，
+在该层对所有候选贡献相同的missing count；`NaN`不能暗中胜过finite值。这里不得加入与旧$k$值或BIE距离有关的
+排序键。只要至少一个数值有效、field-bearing的$W_3$对象存在，就必须冻结排名第一的component；未覆盖全部五个
+twist只降低persistence并产生`PARTIAL_TWIST_CONTINUATION` caveat，不取消它。
+
+设胜出component全部有效realizations中所有eigenvalues的集合为$\Lambda_{30}$，冻结
+
+$$
+\lambda_{30}=\frac{\min\Lambda_{30}+\max\Lambda_{30}}{2},\qquad
+k_{30}=\sqrt{\lambda_{30}}.
+$$
+
+这与`run-007`的publication scalar定义相同。活动run先永久写定candidate inventory、ranking、winner、
+$\lambda_{30}$与$k_{30}$，其后任何身份审查均不得重排、替换或回写这些canonical science字段。
+
+### 43.3 样本外同mode身份审查
+
+`run-007` candidate 7只能由同一Skeptic在`run-008`自然结束并完成上述纯FEM冻结后，用只读artifact audit揭示。
+该审查不是MATLAB selector的一部分，不由formal runner调用，也不得写入或改写`run-008` canonical science。若需机器
+计算overlap，只允许一个另经theory-to-code/spec-to-code核对的、reviewer-side只读审查路径；它不得调用
+MATLAB/Octave experiment entry point，不得读取BIE/estimator，并只能向create-once review-audit leaf追加审查证据。
+
+审查在每个$\vartheta\in\Theta_5$上读取`run-007` fine $(N,s,g)=(5,24,48)$ candidate 7的field subspace和
+`run-008`全部$W_3$ field objects。两侧subspace在同一fixed common-core grid与同一正quadrature weights下分别作
+Gram normalization，再以最小principal singular value给出mass-compatible overlap。每个twist在两侧完整对象
+inventory上作一对一maximum-total-overlap assignment；tie-break依次为较小$k$-envelope distance、较小`run-008`
+root、较小`run-007` root及两侧object id。exact equal row/column maximum虽有确定assignment，但身份标为ambiguous。
+
+只有同时满足以下条件才登记`SAME_MODE_SUPPORTED`：胜出新component及旧candidate 7均覆盖全部五个twist；新component
+的四条相邻twist continuation edges存在；每个跨网格pair是严格唯一mutual best；simple--simple pair的overlap不低于
+$0.90$，任一cluster pair的最小principal overlap不低于$0.80$；五个twist的localization metrics均可读并逐点报告
+原值、差值和classification；$artheta=0,\pi$的parity均可读且even/odd label一致。弱localization、bulk-gap unresolved、
+coverage不足或threshold边缘本身只产生caveat；它们不是run failure。multiplicity变化若通过cluster阈值可登记
+`SAME_MODE_SUPPORTED_WITH_MULTIPLICITY_CAVEAT`。
+
+若完整高overlap链唯一落在另一个`run-008` component，则登记
+`SELECTED_BRANCH_MISMATCH / ALTERNATE_MATCH_IDENTIFIED`；否则任何missing twist、非唯一match、低overlap、缺失所要求的
+localization/parity证据或endpoint parity冲突均登记`IDENTITY_AMBIGUOUS`。这两类均保留合法`run-008`候选，但禁止把
+$k_{30}$接入旧三点profile、禁止揭示BIE comparison，也不触发重跑或按BIE proximity换候选。
+
+上述review-audit若执行，必须与scientific command共用一次`run-008/execution-001`资源账本：总wall time为两阶段
+elapsed之和且必须小于2700 s，aggregate peak RSS取两阶段最大值且必须小于3,221,225,472 B；审查只能使用scientific
+command结束后的正剩余时间，不得重置预算。审查路径不可用或剩余预算不足时只登记
+`IDENTITY_AUDIT_UNAVAILABLE`，BIE继续sealed，不运行新的FEM solve。
+
+### 43.4 预注册profile、预测和sealed comparison
+
+以下旧FEM scalars只作为post-run read-only profile输入，绝不作为活动run的输入：
+
+$$
+k_{12}=1.842941342508127,\quad
+k_{18}=1.837659912216170,\quad
+k_{24}=1.835680010800799.
+$$
+
+三点预注册预测为$k_{30}^{\mathrm{pred}}=1.8347168036$。仅在`SAME_MODE_SUPPORTED`或带multiplicity caveat的同mode
+状态冻结后，按“finer minus coarser”方向报告
+
+$$
+d_{12\to18}=k_{18}-k_{12},\quad
+d_{18\to24}=k_{24}-k_{18},\quad
+d_{24\to30}=k_{30}-k_{24},
+$$
+
+及$D_{a\to b}=|d_{a\to b}|$和
+
+$$
+\rho_1=\frac{D_{18\to24}}{D_{12\to18}},\qquad
+\rho_2=\frac{D_{24\to30}}{D_{18\to24}}.
+$$
+
+零分母使对应ratio为`NaN / UNDEFINED`，不是失败。样本外预测残差固定为
+$r_{\mathrm{pred}}=k_{30}-k_{30}^{\mathrm{pred}}$并同时报告$|r_{\mathrm{pred}}|$。
+
+四点$s=(12,18,24,30)$的profile按$k(s)=k_\infty+C s^{-p}$、$p>0$作确定性variable-projection
+nonlinear least squares：令$p=\exp(x)$；对每个$x$以QR解$[\mathbf 1,s^{-p}](k_\infty,C)^T\approx k$；
+从$x=\log(1/8,1/4,1/2,1,2,4,8)$七个固定starts分别运行同一`fminsearch`，固定
+`TolX=1e-12`、`TolFun=1e-24`、`MaxIter=10000`、`MaxFunEvals=50000`。在所有finite endpoints中按
+$(\mathrm{SSE},p,\text{start-index})$ lexicographic最小者输出$p,k_\infty,C,\mathrm{SSE}$；同时原样报告所有exit flags。
+不存在拟合acceptance threshold；不收敛或rank-deficient只产生`FIT_NUMERICALLY_UNRESOLVED` caveat，不改变$k_{30}$。
+
+BIE+DtN scalar $k_{\mathrm{BIE}}=1.832770289108157$在同mode identity和以上FEM结果全部冻结前保持sealed。之后只作
+
+$$
+|k_{30}-k_{\mathrm{BIE}}|<0.0029097217
+$$
+
+的严格布尔检验（等号为false）。不得用它改候选、调参或声称effectivity。所有drift、ratio、fit、外推、prediction
+residual及BIE位置比较均为empirical、non-certified observation，不是$\varepsilon_{\mathrm{ref}}$、连续谱存在性证明或
+certified bound。
+
+### 43.5 工件、失败语义和预算
+
+create-once namespace严格为`run-008/execution-001`；任何已存在leaf均fail closed且不得覆盖。canonical最小集合为
+`scientific-result.mat`、`fields.mat`、`run.log`、`resource.tsv`、`run-summary.csv`，另在`work/`保存一个mesh cache和按
+上述顺序的五个spectrum caches。`scientific-result.mat`须包含冻结spec、solve ledger、完整$W_3$ inventory、tracking
+edges/components、rank keys、winner及$\lambda_{30},k_{30}$；`fields.mat`须包含五个twist上全部$W_3$ objects的full
+subspaces和common-core samples/weights，以使mutual-best审查可复现。summary必须最后发布；partial failure须保留此前
+完成的有效spectra/fields和明确terminal reason。
+
+唯一可阻止scientific publication的情形是：非法/不可构造的$(5,30,60)$ fitted mesh；nonfinite或raw non-Hermitian
+stiffness/mass、mass非SPD；eigensolver失败或无满足既有finite/positive/residual/orthogonality要求的eigenpair；所有五个
+twist均无有效field-bearing $W_3$对象；2700 s或3,221,225,472 B hard limit；以及create-once/canonical publication
+失败。单个twist失败须记录后继续其余twists；只要尚有有效field candidate就仍排名发布。source/path/dependency等真实
+operational failure保留immutable evidence，经有界复审后只能修复同一`run-008/execution-001` execution label，不能
+覆盖或换ID。localization、parity、coverage、guard、safe-interior、edge和gap只作diagnostic/caveat。
+
+资源只有用户授权的两个inclusive hard stops：whole-command elapsed达到2700 s或aggregate process-tree RSS达到
+3,221,225,472 B时立即停止，无grace。不得加入更低wall/RSS门、forecast、stall、cadence、guard或reserve gate。
+`run-007`的119 solves实测140.273679 s、1,353,826,304 B。启动前保守估计将每个新solve先按整个`run-007`命令成本
+计，再乘2吸收更细网格和后处理，得到约1402.74 s；memory以面积因子$(30/24)^2$再加20%余量估得
+2,538,424,320 B。两者均低于授权hard limits，因此资源层面没有prospective blocker；这些估计只用于GO判断，绝不成为
+新的运行停止门。
+
+### 43.6 最小实现边界与gate
+
+Engineer只能在`test/i4/femref-a1/`增加一个独立的`run-008` scientific entry、一个fixed no-argument resource
+controller及必要的README/SYMBOLS机械同步；不得修改package/main、历史runner/source或任何`run-001`--`run-007`
+artifact。实现必须复用已审查数学helpers的最小必要内容，不恢复diagnostic dispatch、benchmark/forecast、mirror/
+rewrite、history/hash/provenance ledgers或其他非数学审计。controller的唯一命令必须从该实验目录启动一次
+`run-008/execution-001`，并只执行本节五个48-root solves。
+
+正式运行前，Researcher须逐项完成theory-to-code mapping：exact spec、五次调用图、whole-cluster fields、assignment/
+ranking、canonical schema、partial preservation、信息隔离和两个hard stops；同一Skeptic随后完成独立spec-to-code review。
+二者通过前不得运行。post-run仍由同一Skeptic核验artifact/resource/result，并按§43.3决定是否允许只读identity audit与
+sealed comparison。任何阶段均不得读取estimator或开展effectivity comparison。
+
+**Researcher prospective decision: `GO TO THE SAME SKEPTIC FOR DESIGN REVIEW / RUN-008 NOT YET AUTHORIZED`.**
+
+## 44. 2026-09-01 `run-008` operational-recovery 与机械记号修订
+
+本节是对§BC唯一blocker的有界、前瞻性修订；与§43冲突之处以本节为准。scientific identity与attempt固定为
+`run-008`，第一次execution固定为create-once `execution-001`。以下任一terminal outcome均消费`run-008`，不得重跑：
+
+1. scientific/numerical terminal，包括合法negative result；
+2. 2700 s或3,221,225,472 B resource terminal；
+3. canonical-publication terminal，包括canonical leaf无法完整、唯一且按冻结顺序发布。
+
+只有在post-failure review明确核验为真实source、path、dependency、controller或environment operational failure时，
+该失败才不消费scientific `run-008`。此分类不得由runner自行作出，也不得把scientific、resource或canonical-publication
+failure改名为operational。确认后必须由同一Researcher限定修订、Engineer实施最小修复，并由同一Skeptic完成完整
+pre-run re-review；三道gate重新通过后，才可在同一`run-008`下使用最小未用的显式create-once execution label，第一次
+恢复为`execution-002`，此后依次为`execution-003`等。不存在auto-retry、覆盖、复用旧leaf或更换run ID。
+
+每个已启动execution及其leaf永久immutable。后续execution的active science不得读取、统计、复制、hash、比较或以其他
+方式使用任何旧execution artifact；旧leaf只可供post-failure审查追溯。恢复execution仍须从冻结输入独立完成同样五个
+48-root solves，并受同一个2700 s/3,221,225,472 B hard-budget contract约束。
+
+§43中出现或可能由渲染产生歧义的机械记号统一解释为以下规范拼写：`$\lambda=k^2$`、`$\lambda$ envelope`、
+`$\Theta_5$`以及`$\vartheta=0,\pi$`。这只修正LaTeX拼写，不改变任何数学对象。
+
+除上述lifecycle与机械记号外，continuous model、P1弱形式、五次求解、candidate ranking、same-mode identity、profile、
+sealed comparison、资源上限、failure allowlist及claim boundary均不重开。
+
+**Researcher delta decision: `GO TO THE SAME SKEPTIC FOR §44 DELTA REVIEW / RUN-008 NOT YET AUTHORIZED`.**
+
+## 45. 2026-09-01 `run-008` implementation theory-to-code audit
+
+### 45.1 Scope and decision
+
+本节只静态审查当前`test/i4/femref-a1/run_i4_1a_refine.m`、`run_refine_formal.pl`及其机械README/SYMBOLS
+同步相对§§43--44和review §BD的映射。未执行MATLAB、Octave、Python、runner或任何数值程序，未创建output。
+
+**Researcher audit decision: `PASS / GO TO THE SAME SKEPTIC FOR EXACT SPEC-TO-CODE AND RESOURCE REVIEW / RUN-008 NOT YET AUTHORIZED`.**
+
+未发现会破坏数学对象、五次调用图、资源上限或canonical publication contract的静态blocker。以下结论只覆盖source
+mapping和可构造的MATLAB shape；实际mesh、spectrum、RSS与wall time尚未验证。
+
+### 45.2 Continuous/discrete model and exact schedule
+
+- `run_i4_1a_refine.m:142--185`固定与`run-007`相同的period、radius、$q_{\mathrm{in}}=17$、
+  $q_{\mathrm{out}}=1$、missing column、$\beta=0.5$、windows、solver/residual/Hermitian/orthogonality tolerances、
+  common-core grid及random seed。`LOCAL_build_mesh`、`LOCAL_assemble_p1`、`LOCAL_periodic_maps`、
+  `LOCAL_phase_reduce`、`LOCAL_checked_hermitian`和`LOCAL_low_spectrum`保留已运行`run-007`的fitted conforming
+  $P_1$几何、material-weighted mass、stiffness、quasiperiodic reduction、raw-Hermitian-before-canonicalization和
+  generalized eigenproblem；差分只把triangulation/eigs异常显式路由为既有mesh/spectrum failure，并使$g=60$的
+  Hausdorff diagnostic实际求值，不改变弱形式。
+- 顶层`run_i4_1a_refine.m:26--102`只接受`run-008`/`execution-001`，只构造
+  `defect-N5-s30-g60`一个mesh。`spec.theta_5`严格为
+  $(0,\pi/4,\pi/2,3\pi/4,\pi)$；唯一spectrum loop迭代五次，每次把`requested_nev=48`传给唯一
+  `LOCAL_low_spectrum`调用。活动调用图中没有bulk、旧72+47 schedule、60-root expansion或第二mesh。
+- 每个solve先保留48-root eigenvalues、frequencies、residuals、cluster ids、full fields与phase diagnostic；有限性、
+  positivity、mass SPD、raw Hermitian、seam、residual、orthogonality及ordering仍是数值有效性检查。单twist合法数值失败
+  进入ledger并继续，全部五个twist均无field-bearing $W_3$对象时才到
+  `NO_VALID_FIELD_BEARING_W3_EIGENOBJECT`。
+
+### 45.3 Fields, tracking, ranking and MATLAB shapes
+
+- `LOCAL_w3_clusters`按48-root cluster inventory保留每个与$W_3=[0.45,3.25]$相交的whole cluster；
+  `raw_subspace`与full-mass-normalized `subspace`均保留。localization、endpoint parity和common-core sampling各自在
+  内层diagnostic catch中降级为明确status/`NaN`/empty，不会删除已经通过finite/mass/residual检查的field object。
+- object empty-schema的字段与所有producer/consumer一致；slice ids为column vectors，component member ids可直接索引同一
+  object array；cluster envelopes为$1\times2$，publication中的`vertcat`因此为$n\times2$；rank key的所有潜在
+  missing diagnostics在排序前由`LOCAL_nan_min`或`LOCAL_nan_negative`投影为`Inf`，没有native `NaN`进入
+  `sortrows`。静态LOCAL-symbol检查得到60个symbols；四个跨行signature中的helper
+  `LOCAL_assemble_p1`、`LOCAL_candidate_coverage`、`LOCAL_reflection_map`、
+  `LOCAL_triangle_reflection_diagnostics`亦均有定义，未见undefined `LOCAL_` call。
+- 相邻四对twist仅调用`LOCAL_assign_object_sets`；finite common-core principal overlaps进入带birth/death dummy的
+  lexicographic maximum-total assignment，tie keys依次落实overlap、envelope distance、target root和固定object ids。
+  union-find只合并已分配edges，未匹配objects自然保留为singleton component。
+- `LOCAL_candidate_record`的total rank依次落实$-n_{\mathrm{twist}}$、$-n_{\mathrm{edge}}$、四个缺失refinement
+  slots、finite drift sum、residual、localization、parity、coverage及anchor/object ties。不存在旧FEM scalar或BIE
+  proximity key。胜出component全部realizations的eigenvalue envelope给出
+  $\lambda_{30}=(\min\Lambda_{30}+\max\Lambda_{30})/2$与$k_{30}=\sqrt{\lambda_{30}}$。
+
+### 45.4 Information isolation, artifacts and controller
+
+- MATLAB中唯一`load`为`LOCAL_load_current(entry.path)`，其中`entry.path`只由本execution的`work/s30-pXX.mat`
+  构造；唯一输出根由自身source location和exact run/execution ids形成。活动source没有旧FEM values、candidate 7、
+  BIE/QZ、density、estimator、Markdown或Git读取。source header中的设计路径只是comment，不进入执行。
+- `scientific-result.mat`保存spec、mesh descriptor、五项compact ledger、完整compact object/candidate inventory、tracking、
+  total rank和winner；`fields.mat`另保存单mesh、五项ledger、全部$W_3$ objects的raw/normalized subspaces、
+  common-core samples/weights及$\lambda_{30},k_{30}$。负路径保留已完成solve ledger/current work caches；
+  scientific、operational与canonical-publication路由不会把缺失结果伪装成READY。MATLAB只写terminal draft，controller
+  依次发布`resource.tsv`和最后的`run-summary.csv`。
+- `run_refine_formal.pl:9--16`固定no-argument、`run-008/execution-001`和exact MATLAB call；create-once leaf先于
+  launch建立。唯一resource thresholds是absolute monotonic elapsed达到2700 s及deduplicated MATLAB process-tree RSS
+  达到3,221,225,472 B；没有更低wall/RSS、forecast、stall、CV、reserve或grace predicate。process-table/PGID/reap
+  失败保持operational fail-closed，不能产生READY。该controller除run/execution/scalar names和新RSS上限外，与已审查并
+  完成`run-007`的controller路径一致。
+
+### 45.5 Deferred identity audit and remaining gate
+
+reviewer-side candidate-7 identity audit尚未实现，**不阻止**本次scientific run先以完全current-run的FEM规则永久冻结
+$k_{30}$：§43明确把identity failure/unavailability降为post-run interpretation gate，且当前claim仅为
+`EMPIRICAL_OUT_OF_SAMPLE_FEM_CANDIDATE_NO_EFFECTIVITY`。这一缺口仍严格阻止四点same-mode convergence profile、
+sealed BIE reveal/comparison及任何reference/effectivity结论。
+
+若scientific run后要计算跨网格overlap，必须另行实现一个不被MATLAB/Octave experiment entry调用、不回写canonical
+science、只读`run-007` immutable caches与`run-008` fields的reviewer audit路径，并再次完成Researcher
+theory-to-code与同一Skeptic spec-to-code review。它只能使用`resource.tsv`所示scientific elapsed之后的
+$2700\ \mathrm{s}$正剩余量，且两阶段RSS峰值均不得越过3,221,225,472 B；否则诚实登记
+`IDENTITY_AUDIT_UNAVAILABLE`。本节不授权该路径、sealed comparison或effectivity。
+
+## 46. 2026-09-01 candidate-7 reviewer-side identity audit 冻结合同
+
+### 46.1 Scope, target consistency and authority
+
+review §BF已核验`run-008/execution-001`为合法、已消费的pure-FEM scientific run：5/5 solves，canonical winner为
+candidate 3，$k_{30}=0.78423535336082628$，whole-command wall为35.917169 s，aggregate peak RSS为
+1,073,594,368 B。本节不改写这些canonical事实，也不授权新的FEM solve、MATLAB/Octave entry、BIE读取、profile fit或
+effectivity comparison。
+
+§43.3原文字只允许canonical winner与旧candidate 7相同时继续profile；而用户的样本外问题是检验**旧candidate 7所代表
+的同一FEM mode**在$s=30$层的延续。由于threshold-free pure-FEM total rank可合法把另一个低频branch排第一，这两者并非
+同一个selection question。若坚持原限制，即使field identity把旧candidate 7唯一匹配到另一个新component，也会错误阻止
+用户预注册的same-mode refinement问题。因此本节作如下最小优先修订：
+
+1. canonical pure-FEM winner candidate 3及其$\lambda_{30},k_{30}$永久不变，review audit不得重排或回写它；
+2. audit若仅凭FEM field evidence把旧candidate 7唯一匹配到一个`run-008` component，则从该既有component按同一envelope
+   midpoint规则派生`lambda30_candidate7`与`k30_candidate7`；
+3. 若该component不是candidate 3，保留§43.3的selection事实
+   `SELECTED_BRANCH_MISMATCH / ALTERNATE_MATCH_IDENTIFIED`，但它不再禁止candidate-7 profile；经post-audit review确认
+   identity后，`k30_candidate7`而非canonical winner的$k_{30}$可接入旧三点FEM profile及随后late BIE位置比较；
+4. 该修订不允许用旧$k$值、frequency proximity或BIE选择component。identity不唯一时不产生`k30_candidate7`，profile与
+   BIE继续禁止。
+
+这是目标变量澄清，不是active selection变更。§§43--45中与第3点冲突的“alternate component一律禁止profile”文字以本节
+为准；continuous model、weak form、canonical ranking、资源和claim boundary均不重开。
+
+### 46.2 Exact read-only inputs and implementation boundary
+
+未来audit只允许读取以下immutable files，路径由audit source所在`test/i4/femref-a1/`相对解析，不搜索其他output：
+
+- `output/run-007/execution-001/scientific-result.mat`，schema必须为`i4a-diagnostic-ranking-v2`；
+- `output/run-007/execution-001/work/mesh-defect-N5-s24-g48.mat`；
+- `output/run-007/execution-001/work/fine-p01.mat`、`fine-p05.mat`、`fine-p09.mat`、`fine-p13.mat`、
+  `fine-p17.mat`，且五个phase必须依次为$0,\pi/4,\pi/2,3\pi/4,\pi$；
+- `output/run-008/execution-001/scientific-result.mat`，schema必须为`i4a-s30-refinement-v1`；
+- `output/run-008/execution-001/fields.mat`，schema必须为`i4a-s30-fields-v1`。
+
+audit实现限定为`identity_audit.py`及fixed no-argument `run_identity_audit.pl`，可对README/SYMBOLS作机械同步；不得修改
+MATLAB source、runner、canonical artifacts或历史output。Python须以`/usr/bin/python3 -I -S`运行，仅使用stdlib，
+通过`ctypes`直接调用
+`/Applications/MATLAB_R2023b.app/bin/maca64/libhdf5-1.8.8.dylib`读取MATLAB v7.3 HDF5；禁止`numpy`、`scipy`、
+`h5py`及任何下载依赖。decoder只实现本节allowlisted numeric/logical/char/struct/cell/reference/complex字段，必须遵守
+MATLAB column-major dimensions、`MATLAB_class`和`#refs#`引用；未知class、dangling ref、schema/id/shape不一致均使
+`audit_terminal=IDENTITY_AUDIT_UNAVAILABLE`，不得猜测或按频率补对象。
+
+唯一可写leaf为create-once
+`output/run-008/execution-001/review-audit/identity-001/`；terminal files只允许
+`identity-audit.json`与最小`resource.tsv`，不得回写`scientific-result.mat`、`fields.mat`、work caches或
+`run-summary.csv`。计算在memory中完成后才以exclusive create-once方式发布RFC 8259 JSON；missing值写`null`并配套
+status，禁止非标准`NaN`。任何已有`identity-001` leaf均fail closed，不得覆盖或auto-retry；真实operational failure的
+后续处置必须另经Researcher--Engineer--Skeptic授权，本节不预授权`identity-002`。
+
+### 46.3 Old candidate-7 reconstruction
+
+audit在旧scientific artifact中按字段`candidate_id==7`查找candidate，不得按array position猜测；取其
+`realization_ids`后，只保留对应object同时满足
+
+$$
+\texttt{configuration}=\texttt{fine},\qquad
+\texttt{theta\_index}\in(1,5,9,13,17).
+$$
+
+每个目标index必须恰有一个object，`solve_id`必须分别为`fine-p01,p05,p09,p13,p17`，其`mesh_id`必须为
+`defect-N5-s24-g48`。从object读取`root_indices`、dimension、$lambda/k$ envelopes、localization和parity；从对应
+spectrum cache读取同一`root_indices`的`vectors_full`列，并逐项核对cluster ids、frequencies/eigenvalues与compact
+object一致。旧tracking还必须证明candidate 7的`fine` objects在完整$	heta_{17}$ metadata中具有相邻continuation chain；
+这里不读取另外12个field caches。
+
+旧common-core representation严格重建既有MATLAB规则：在
+$[-2.5,2.5]\times[-0.5,0.5]$的$161\times65$ tensor grid上使用trapezoidal weights；移除到
+$x=-2,-1,1,2$四个radius-$0.2$ interfaces距离不超过$10^{-12}$的点；用$q=17$ inside、$q=1$ outside加权。
+对旧mesh作P1 barycentric interpolation；边界点在所有满足barycentric tolerance的triangles中先最大化最小
+barycentric coordinate，再取最小triangle index，连续P1 trace不允许随triangle choice改变结果。找不到covering triangle、
+nonfinite field或nonpositive weight均使audit unavailable。
+
+### 46.4 Per-twist overlap and deterministic assignment
+
+在每个目标twist上，不只重建candidate-7 object，还重建旧`fine` configuration中全部与$W_3$相交objects的subspaces；
+新侧使用`run-008/fields.mat`同twist的全部objects。两侧每个sample matrix $S$分别以同一positive weights形成
+$G=S^*WS$，要求Hermitian finite positive definite，再作right-Cholesky normalization。跨网格pair的matrix为
+
+$$
+A_{ij}=\widehat S_{7,i}^*W\widehat S_{8,j},
+$$
+
+并保存全部principal singular values及$O_{ij}=\min\sigma(A_{ij})$。小型Gram/SVD只可用确定性pure-Python
+Cholesky与cyclic Hermitian-Jacobi实现；固定double arithmetic、cyclic index order及终止标准，未收敛则audit unavailable，
+不得降低§43阈值。工具按twist stream input，不能同时materialize五个48-field caches。
+
+每个twist在完整old-fine/new-$s30$ object inventories上执行与scientific source相同的dummy-augmented
+maximum-total lexicographic assignment。真实pair tuple依次为
+
+$$
+(-O_{ij},0,d_k,\text{new root},\text{old object id},\text{new object id}),
+$$
+
+birth/death tuple的第二项为1；$d_k$只作既有tie-break，绝不作identity gate。对于candidate-7目标row，assigned pair还必须
+是strict mutual best：其overlap须严格大于同row和同column所有其他finite overlaps；exact tie为ambiguous。JSON须保存每个
+twist的old/new object ids、root indices、dimensions、full overlap与frequency-distance matrices、assignment pairs、目标pair的
+全部singular values、row/column runner-up与strict gaps、阈值和pass flags。
+
+### 46.5 Continuation, localization, parity and exact statuses
+
+五个candidate-7目标pairs只有同时满足下列条件才支持same-mode identity：
+
+1. 五个pair均为maximum assignment中的strict mutual best；simple--simple时$O\ge0.90$，任一cluster时
+   $O\ge0.80$；
+2. 五个matched new object ids属于同一个`run-008` component，且该component有连接五个twists的四条相邻edges；旧侧
+   candidate 7也通过§46.3的fine-chain metadata检查；
+3. 五对old/new localization triples均finite；JSON逐点保存old值、new值、signed difference及两侧classification。弱或跨
+   threshold变化只作caveat，不取消identity；
+4. $artheta=0,\pi$两端old/new parity均available且even/odd labels逐端一致；中间twists parity保持not applicable。
+
+若满足且所有对应dimensions相同，`candidate7_identity_status=SAME_MODE_SUPPORTED`；若仅有multiplicity变化但cluster
+principal-overlap条件通过，则为`SAME_MODE_SUPPORTED_WITH_MULTIPLICITY_CAVEAT`。任一required evidence缺失、非唯一、
+低overlap、continuation不闭合或endpoint parity冲突时为`IDENTITY_AMBIGUOUS`；输入/HDF5/linear-algebra不可执行时为
+`IDENTITY_AUDIT_UNAVAILABLE`。不得把位置差异单独解释为`DIFFERENT_MODE`。
+
+另保存`selection_relation`：identity component等于canonical winner时为
+`PURE_FEM_WINNER_IS_IDENTITY_COMPONENT`；不等时为
+`PURE_FEM_WINNER_DIFFERS_IDENTITY_COMPONENT`，并同时保存§43事实
+`SELECTED_BRANCH_MISMATCH / ALTERNATE_MATCH_IDENTIFIED`；无唯一identity component时为
+`NO_UNIQUE_IDENTITY_COMPONENT`。
+
+在两种`SAME_MODE_SUPPORTED*`状态下，audit从identity component全部五个realizations的eigenvalues重新形成
+$\Lambda_{30}^{(7)}$并定义
+
+$$
+\lambda_{30}^{(7)}=\frac{\min\Lambda_{30}^{(7)}+\max\Lambda_{30}^{(7)}}{2},\qquad
+k_{30}^{(7)}=\sqrt{\lambda_{30}^{(7)}}.
+$$
+
+JSON字段名固定为`lambda30_candidate7`和`k30_candidate7`，并与run-008 science中同一candidate的stored publication
+scalar交叉核对；其他status下两字段为`null`。`profile_gate`仅可为
+`ELIGIBLE_AFTER_POST_AUDIT_REVIEW`或`NOT_ELIGIBLE`。工具不得包含或读取旧三点scalar、prediction或BIE值，因而不能自行
+执行profile或sealed comparison。
+
+### 46.6 JSON evidence, resource budget and gates
+
+`identity-audit.json`至少包含：schema/version与exact input ids；candidate-7筛选表；五个old/new inventories；全部per-twist
+overlap/assignment evidence；old/new continuation edges；localization/parity tables；canonical pure winner的只读identity；
+matched component id；`candidate7_identity_status`、`selection_relation`、`lambda30_candidate7`、
+`k30_candidate7`、所有caveats和`profile_gate`。JSON不得包含BIE/estimator数据、effectivity或certified wording。
+
+统一预算以已消费scientific wall 35.917169 s和peak 1,073,594,368 B为起点。audit controller的唯一wall predicate为
+
+$$
+35.917169+T_{\mathrm{audit}}\ge2700,
+$$
+
+即从audit command启动起不可重置的剩余2664.082831 s；唯一memory predicate为audit process-tree RSS达到
+3,221,225,472 B，combined peak记录为旧peak与audit peak的最大值。不得添加更低门、forecast、stall、guard、reserve或
+grace。`resource.tsv`只记录prior/audit/combined wall、prior/audit/combined peak及terminal。§BF的read-only HDF5检查少于
+25 s、peak 171,982,848 B；即使对streamed full assignment保守预估600 s和1.5 GiB，combined约635.92 s、1.5 GiB，仍低于
+授权上限，因此没有prospective resource blocker，该估计不是停止门。
+
+同一Engineer只可在本节边界内实现上述两个reviewer-side files及机械文档同步。实现后必须先由Researcher完成
+theory-to-code audit，再由同一Skeptic完成spec-to-code/resource review；两者通过前不得执行identity audit。执行后仍须由
+同一Skeptic审查JSON与resource artifacts；只有该post-audit review接受`SAME_MODE_SUPPORTED*`，才可在下一道明确授权中
+使用`k30_candidate7`作四点profile和late BIE位置比较。任何阶段均不授权estimator/effectivity。
+
+**Researcher prospective decision: `GO TO THE SAME SKEPTIC FOR §46 DESIGN REVIEW / IDENTITY-AUDIT IMPLEMENTATION AND EXECUTION NOT YET AUTHORIZED`.**
+
+### 46.7 Deterministic floating-point completion
+
+为避免Engineer自行选择数值规则，取binary64 $\epsilon=2^{-52}$。barycentric admissibility固定为每个coordinate落在
+$[-64\epsilon,1+64\epsilon]$；多triangle命中时先最大化最小barycentric coordinate，再取最小triangle index。
+两侧weights数量必须相同且max absolute difference不超过$10^{-14}$。Gram Hermitian relative defect上限沿用
+$5\times10^{-13}$，Cholesky每个pivot必须finite且严格为正。对$A^*A$的complex Hermitian cyclic-Jacobi按
+$(p,q)$ lexicographic order逐sweep；当off-diagonal Frobenius norm不超过
+$64\epsilon\max(1,\|A^*A\|_F)$时停止，最多$100m^2$ sweeps，其中$m$为矩阵阶数。小于0但绝对值不超过同一
+$64\epsilon\max(1,\|A^*A\|_F)$尺度的最终eigenvalue截为0；更负或未收敛均登记
+`IDENTITY_AUDIT_UNAVAILABLE`。这些只决定审查数值可复现性，不新增identity acceptance或资源gate。
+
+## 47. 2026-09-01 §46 累计预算、assignment 与机械记号修订
+
+本节只修正§46的三个机械/执行歧义；与§46冲突处以本节为准，其余identity、输入、输出、claim与gate均不重开。
+
+1. §BF reviewer-side HDF5 inspection charge前瞻固定为25.000000 s。唯一cumulative wall hard predicate为
+
+   $$
+   35.917169+25.000000+T_{\mathrm{audit}}\ge2700,
+   $$
+
+   因而audit controller从自身启动起使用不可重置的absolute remaining deadline 2639.082831 s。不得把scientific或
+   reviewer charge省略、重置或另立较低wall predicate。`resource.tsv`分别记录
+   `scientific_wall_seconds=35.917169`、`review_wall_seconds=25.000000`、`audit_wall_seconds`和三者之和
+   `cumulative_wall_seconds`。
+2. Memory不作相加；`resource.tsv`分别记录scientific/review/audit peaks与
+   `cumulative_peak_rss_bytes=max(scientific,review,audit)`，唯一hard predicate仍为aggregate audit process-tree RSS或该
+   cumulative maximum达到3,221,225,472 B。不得新增较低RSS gate。
+3. 每个twist的Hungarian/assignment目标是：对一个完整assignment中所有matched/dummy pairs的tuple逐分量求和，再对该
+   summed tuple作lexicographic minimization。真实pair首项为$-O_{ij}$，故第一层目标严格等价于最大化所有真实matched
+   pairs的**total overlap**；其后才依次应用dummy、frequency-distance、root和object-id tie terms。不得逐pair贪心。
+
+§46中可能由控制字符导致歧义的两个记号权威解释为`$\Theta_{17}$`与`$\vartheta=0,\pi$`；这只修正Markdown/LaTeX
+拼写，不改变对象或阈值。
+
+**Researcher delta decision: `GO TO THE SAME SKEPTIC FOR §47 DELTA REVIEW / IDENTITY-AUDIT IMPLEMENTATION AND EXECUTION NOT YET AUTHORIZED`.**
+
+## 48. 2026-09-01 §§46--47 identity-audit theory-to-code review
+
+本节只记录对当前`identity_audit.py`、`run_identity_audit.pl`、`README.md`与`SYMBOLS.md`的静态映射；未读取任何
+scientific artifact、BIE/estimator数据，未执行Python、Perl、MATLAB、Octave或controller。该review不授权执行。
+
+### 48.1 已对齐的实现
+
+1. `identity_audit.py:24--57,784--917`固定exact schemas、`run-007/run-008`与`execution-001`，按字段
+   `candidate_id == 7`而非数组位置筛选旧candidate，并固定fine配置、twist indices $(1,5,9,13,17)$、exact solve ids、
+   phases与mesh identities。该工具只审计已发布FEM fields，不重求或改变continuous model、fitted-$P_1$ weak form、物理参数
+   或canonical pure-FEM selection；active source未发现BIE、estimator、Markdown或Git输入。
+2. `identity_audit.py:920--1217,1382--1594`从旧mesh作确定性common-grid $P_1$ barycentric interpolation，使用正的
+   $q$-weighted trapezoid weights，形成weighted Gram、lower Cholesky right normalization与全部principal overlaps；五个
+   twists均使用完整field-bearing old/new inventories。assignment是完整dummy-augmented全局lexicographic optimization，随后
+   检查strict mutual best、相邻continuation、localization与endpoint parity；diagnostic不被frequency proximity替代。
+3. `identity_audit.py:1630--1718`仅在`identity_supported`时重建identity component的
+   `lambda30_candidate7`/`k30_candidate7`并开放`profile_gate`；否则这些scalars保持`null`且profile不可进入。工具未包含旧三点
+   profile、BIE scalar或effectivity步骤。
+4. `run_identity_audit.pl:10--47,59--149,151--230`固定无参数命令、create-once
+   `run-008/execution-001/review-audit/identity-001`、absolute remaining deadline $2639.082831\,\mathrm{s}$、aggregate audit
+   process-tree RSS hard upper $3221225472$ bytes，以及scientific/review/audit/cumulative wall和peak-by-maximum记录；未发现较低
+   wall/RSS、forecast、stall或guard gate。`README.md:195--221`与`SYMBOLS.md:74--91`正确把该路径标为implemented but not run，
+   且明确不改写canonical science。
+
+### 48.2 必须有界修复的实现偏差
+
+1. **Assignment tie-break blocker.** §46.4冻结与scientific source相同的frequency-envelope distance；scientific helper
+   `run_i4_1a_refine.m:1839--1840`为`max(abs(first - second))`，但`identity_audit.py:1220--1225`对相交区间返回0并仅对
+   不相交区间取gap。这会在total-overlap与dummy层相同时改变确定性的assignment。最小修复是让audit helper使用同一endpoint
+   max-absolute-distance；它仍只作既有tie-break，不得成为identity gate或 proximity tuning。
+2. **Unsupported-identity publication blocker.** `identity_audit.py:1561--1594`可仅凭assigned ids得到
+   `matched_component`，而`identity_audit.py:1619--1628`在`identity_supported == false`时仍可能发布
+   `PURE_FEM_WINNER_*_IDENTITY_COMPONENT`及`ALTERNATE_MATCH_IDENTIFIED`。这与§46.5“无唯一受支持identity component时发布
+   `NO_UNIQUE_IDENTITY_COMPONENT`”冲突。最小修复是仅在`identity_supported`时发布identity component及selection relation；
+   否则public `matched_component_id`为`null`、`selection_relation=NO_UNIQUE_IDENTITY_COMPONENT`、`selection_fact=null`。
+   若需保存assignment-only线索，只能另列明确的provisional evidence字段，不得把它命名为identity或使profile gate可达。
+
+其余candidate-7字段选择、五twist field overlap、common-grid representation、Gram/principal-overlap、continuation/localization/parity、
+conditional $k_{30}^{(7)}$、create-once publication与累计资源合同在本次静态范围内为`ESTABLISHED`。上述两项会分别改变冻结
+assignment和在证据不足时的claim，因此不是style caveat。
+
+**Researcher theory-to-code decision: `REVISE`.** Engineer只需修复§48.2两个source-local点；之后由同一Researcher作delta
+mapping，再移交同一Skeptic完成spec-to-code/resource review。Skeptic明确授权前不得执行identity audit。
+
+## 49. 2026-09-01 §48.2 bounded delta review
+
+本节只复核§48.2的两个source-local修复；§48.1已通过部分不重开。未读取artifact、BIE或estimator，未执行audit或任何
+数值程序，本节不授权执行。
+
+1. `identity_audit.py:1220--1221`现计算
+   `max(abs(first[0] - second[0]), abs(first[1] - second[1]))`，与scientific helper
+   `run_i4_1a_refine.m:1839--1840`的`max(abs(first - second))`逐endpoint一致。该量仍只进入既有assignment tie-break，
+   没有新增proximity gate。
+2. `identity_audit.py:1587--1597,1615--1627`先形成`identity_supported`，随后仅在该值为true时公开identity component与
+   `PURE_FEM_WINNER_*` relation。unsupported路径固定
+   `matched_candidate_id=None`、`selection_relation=NO_UNIQUE_IDENTITY_COMPONENT`、`selection_fact=None`；
+   `identity_audit.py:1708--1717`把这些降级值写入public JSON，并继续保持conditional scalars为`null`及
+   `profile_gate=NOT_ELIGIBLE`。内部assignment-only component没有以identity字段对外发布。
+
+两项§48.2 blocker均已关闭，且差分没有改变连续模型、field identity阈值、assignment层级、资源合同或publication namespace。
+
+**Researcher delta decision: `PASS / GO TO THE SAME SKEPTIC FOR SPEC-TO-CODE AND RESOURCE REVIEW`.** 本节仅移交审查；
+identity audit仍须等待同一Skeptic的明确授权，不得由Researcher自行执行。
+
+## 50. 2026-09-01 §BI three-blocker bounded delta review
+
+本节只复核§BI.3的三项Engineer修复；§48--49已通过的identity数学与claim mapping不重开。未读取scientific artifact、
+BIE或estimator，未执行Python、Perl、audit或数值程序，本节不授权执行。
+
+1. **HDF5 1.8 reference binding closed.** `identity_audit.py:219--233`把library load与binding的`OSError`、
+   `AttributeError`或`TypeError`确定性路由为`AuditUnavailable`；`identity_audit.py:306--307`现绑定三参数
+   `H5Rdereference(hid_t, H5R_type_t, const void *)`并返回`hid_t`，`identity_audit.py:434--454`以dataset id、object
+   reference type 0及reference buffer调用，negative target仍降级为`HDF5_DANGLING_REFERENCE`。旧的
+   `H5Rdereference2`调用已从active source消失，不再存在uncaught missing-symbol路径。
+2. **Run-008 compact schema closed.** `identity_audit.py:97--104`从旧object schema明确删除仅run-007具有的
+   `configuration`，再只为`fields.mat`扩展common-core数组；`identity_audit.py:165--196`分别把
+   `NEW_COMPACT_OBJECT_SPEC`用于run-008 `scientific-result.mat`、把`NEW_OBJECT_SPEC`用于field authority。
+   `identity_audit.py:674`对compact record的缺省configuration只形成空诊断值，不把它重新设为required field；因此不会再把
+   合法run-008 compact inventory误报为schema unavailable。
+3. **Hard-wall terminal publication closed.** `run_identity_audit.pl:23--33`仍只从同一start形成absolute
+   $2639.082831\,\mathrm{s}$ remaining deadline；`SIGALRM`只置`wall_alarm_fired`并立即SIGKILL target，不再`_exit`。
+   `run_identity_audit.pl:65--125`在process-table、RSS与reap判断前后优先检查同一flag/deadline，
+   `run_identity_audit.pl:128--162`完成child reap/dead confirmation后再次优先冻结
+   `WALL_HARD_LIMIT_REACHED`，再由唯一`write_resource`发布terminal并nonzero退出。唯一resource uppers仍为累计2700 s与
+   3,221,225,472 B；1 s sampling只是观测cadence，不是lower wall/RSS、stall、forecast、reserve或grace gate。
+
+三项§BI blocker均由source-local差分关闭；未发现其改变candidate-7 identity规则、continuous model、publication namespace或
+累计资源语义。
+
+**Researcher delta decision: `PASS / GO TO THE SAME SKEPTIC FOR FOCUSED PRE-EXECUTION RE-REVIEW`.** 是否执行只能由同一
+Skeptic明确授权；本节自身不授权创建或运行`identity-001`。
+
+## 51. 2026-09-01 `identity-001` sandbox operational failure and bounded recovery
+
+本节只处理第一次获准audit command的host/sandbox执行失败，不重开§§46--50的FEM field-identity方法、阈值、assignment、
+claim boundary或3 GiB memory upper。
+
+### 51.1 Immutable failure classification
+
+`identity-001`已create once并永久消费。其唯一artifact `resource.tsv`记录
+`audit_wall_seconds=0.001110000`、`cumulative_wall_seconds=60.918279000`、
+`audit_peak_rss_bytes=0`、`cumulative_peak_rss_bytes=1073594368`、
+`controller_terminal=RSS_ENFORCEMENT_UNAVAILABLE`及`python_signal=9`；没有`identity-audit.json`。
+直接原因是sandbox拒绝controller所需的`/bin/ps`并返回`Operation not permitted`，controller遂按冻结合同fail closed并终止
+Python target。该结果权威分类为`HOST_SANDBOX_OPERATIONAL_FAILURE / PROCESS_TABLE_PERMISSION_DENIED`：它没有执行出FEM
+field comparison或identity verdict，不是FEM、candidate-7 identity method、same-mode证据或数值资源的失败；0-byte audit peak
+也不得解释为实际memory resolution证据。`identity-001`目录和leaf均保持immutable，不覆盖、不删除、不作为后续active science
+input。
+
+### 51.2 Exact bounded recovery identity and cumulative resources
+
+同一`femref-a1/run-008/execution-001` scientific identity保持不变；下一且仅下一create-once reviewer audit id冻结为
+`identity-002`，namespace为
+`output/run-008/execution-001/review-audit/identity-002/`。Engineer只可机械地把controller的fixed audit id改为
+`identity-002`，并把已消费`identity-001` wall charge纳入累计；`identity_audit.py`及其输入、schema、算法、status与输出合同
+不得改变，也不得读取或复制`identity-001`。
+
+唯一cumulative wall predicate前瞻修订为
+
+$$
+35.917169+25.000000+0.001110+T_{\mathrm{identity-002}}\ge2700,
+$$
+
+故`identity-002`从其command start起使用同一absolute、不可重置的remaining deadline
+$2639.081721\,\mathrm{s}$。其resource record须分别保存scientific wall、review wall、immutable
+`identity-001` operational wall、current `identity-002` wall及总和；不得把前次0.001110 s省略或重置。Memory仍按各阶段
+aggregate peak的maximum核算；前次audit peak为0，唯一inclusive hard upper保持3,221,225,472 B。不得新增较低wall/RSS、
+forecast、stall、reserve、guard或grace gate。
+
+### 51.3 Execution context and gate
+
+`identity-002`的exact runner command仍是在`test/i4/femref-a1`固定cwd执行
+`/usr/bin/perl ./run_identity_audit.pl`，但必须在明确的unsandboxed/escalated context启动，使`/bin/ps -axo ...`可读取
+完整process table并实施aggregate process-tree RSS authority。若该authority仍不可用，继续fail closed；不得绕过process-tree
+RSS、改用较低proxy、自动重试、覆盖leaf或换新scientific run id。Engineer完成上述两处机械controller差分后，先由同一
+Researcher作theory-to-code delta mapping，再由同一Skeptic作focused spec/resource review；只有Skeptic PASS可重新授权一次
+`identity-002`执行。
+
+**Researcher prospective decision: `GO TO THE SAME SKEPTIC FOR §51 DELTA REVIEW / IDENTITY-002 IMPLEMENTATION AND EXECUTION NOT YET AUTHORIZED`.**
+
+## 52. 2026-09-01 `identity-002` cross-file authority clarification
+
+本节只消除§51中“仅改controller id”与Python固定publication authority之间的矛盾；与§51冲突处以本节为准。科学输入、
+HDF5 decoder、field-identity算法、threshold、assignment、status vocabulary、JSON其余schema、claim boundary与资源hard uppers
+均不重开。
+
+1. `identity_audit.py`中的fixed `AUDIT_ID`须机械改为`identity-002`；由该常量产生的JSON `audit_id`和唯一fixed publication
+   path同时指向
+   `output/run-008/execution-001/review-audit/identity-002/identity-audit.json`。不得保留任何active
+   `identity-001` publication/collision target，也不得改变JSON的其他字段、含义或条件性scalar规则。
+2. `run_identity_audit.pl`中的fixed `AUDIT_ID`、collision check、create-once leaf及`resource.tsv` path须机械统一为
+   `identity-002`。Runner与Python必须在启动前静态同意同一namespace；不得由argument、environment或读取旧artifact动态选择
+   id。`identity-001`及其leaf永久immutable，不得读取、复制、rename、覆盖或作为active audit input。
+3. `README.md`与`SYMBOLS.md`只作机械同步：`identity-001`记录为已消费的sandbox operational failure，新的prospective
+   create-once authority为`identity-002`；不得写成identity method或same-mode verdict，也不得声称已实现、已通过pre-run gate
+   或已执行。
+4. `identity-002/resource.tsv`的wall分项固定为
+   `scientific_wall_seconds=35.917169`、`review_wall_seconds=25.000000`、
+   `identity001_wall_seconds=0.001110`、current `identity002_wall_seconds`及其`cumulative_wall_seconds`总和。唯一wall hard
+   predicate仍为
+
+   $$
+   35.917169+25.000000+0.001110+T_{\mathrm{identity-002}}\ge2700,
+   $$
+
+   current absolute remaining deadline为$2639.081721\,\mathrm{s}$。Peak分项同样记录scientific、review、
+   `identity001_peak_rss_bytes=0`与current identity-002 peak，`cumulative_peak_rss_bytes`取四者maximum；唯一inclusive memory
+   hard upper仍为3,221,225,472 B。不得省略前次charge、重置累计预算或新增较低resource gate。
+
+上述机械差分须先由同一Engineer实现，再经同一Researcher作cross-file theory-to-code delta mapping，并交同一Skeptic完成
+focused pre-execution review。实现和执行均不由本节授权。
+
+**Researcher prospective decision: `GO TO THE SAME SKEPTIC FOR §52 DELTA REVIEW / IMPLEMENTATION AND IDENTITY-002 EXECUTION NOT YET AUTHORIZED`.**
+
+## 53. 2026-09-01 §52 cross-file implementation delta review
+
+本节只复核§52授权的机械实现；不重开decoder、identity算法或已通过的resource-controller逻辑。未读取artifact、BIE或
+estimator，未执行Python、Perl、audit或数值程序，本节不授权执行。
+
+1. `identity_audit.py:33--40,1677--1685,1739--1747,1759--1768`把complete、unavailable与fixed publication path的
+   `AUDIT_ID`统一为`identity-002`；`run_identity_audit.pl:12--49`使用同一fixed id建立collision check与唯一create-once
+   leaf。两端权威path均为
+   `output/run-008/execution-001/review-audit/identity-002/`，未发现active `identity-001` publication target。
+2. `run_identity_audit.pl:15--26,152--165,228--249`固定四阶段nonreset accounting：scientific
+   35.917169 s、review 25.000000 s、immutable identity-001 0.001110 s与current identity-002 elapsed；absolute remaining
+   deadline为2639.081721 s，cumulative wall为四者之和。Peak同样取scientific、review、identity-001 zero-byte observation与
+   current identity-002 aggregate peak的maximum；唯一inclusive RSS hard upper仍为3,221,225,472 B。未新增较低resource gate。
+3. Active Python input仍只有冻结的run-007/run-008 FEM authorities；runner只把identity-001的已审查wall/peak常量用于预算账目，
+   不读取其目录或artifact。`identity_audit.py`相对§50审查快照除fixed `AUDIT_ID`外，decoder、schemas、field inventory、
+   interpolation、Gram/principal overlap、assignment、continuation/localization/parity、status与conditional publication均无变化。
+4. `README.md:195--228`与`SYMBOLS.md:74--92`一致记录identity-001为immutable sandbox operational failure、identity-002为
+   prospective/not executed，并同步exact namespace、remaining wall与四阶段资源字段；没有宣称same-mode result或pre-run PASS。
+
+§52的cross-file矛盾已关闭，且机械差分未改变scientific或identity claim。
+
+**Researcher theory-to-code decision: `PASS / GO TO THE SAME SKEPTIC FOR FOCUSED PRE-EXECUTION DELTA REVIEW`.** 本节不授权
+执行`identity-002`；只有同一Skeptic可给出一次性执行授权。
+
+## 54. 2026-09-01 HDF5 1.8.12 member-name ownership diagnostic and bounded recovery
+
+本节只处理§BN确认的operational HDF5 binding failure。检查为read-only/static：未加载scientific fields、BIE或estimator，
+未执行audit或数值程序，未修改source。FEM field-identity方法、输入、threshold、assignment、status、claim boundary与3 GiB
+hard upper均不重开。
+
+### 54.1 Exact-library evidence and ownership contract
+
+1. MATLAB app未随附可定位的`H5Tpublic.h`或`H5public.h`；因此不能把其他本机HDF5 header冒充bundle authority。Exact dylib
+   `/Applications/MATLAB_R2023b.app/bin/maca64/libhdf5-1.8.8.dylib`的embedded strings三次确认版本1.8.12，文件名不是版本
+   authority。
+2. Local `nm -gU`确认该dylib导出`H5Tget_member_name`、`H5Tget_member_index`、`H5Tget_member_offset`、
+   `H5Tget_member_type`、`H5MM_xstrdup`与`H5MM_xfree`，但不导出`H5free_memory`。Local
+   `otool -tvV -p _H5Tget_member_name`显示compound/enum路径tail-call`H5MM_xstrdup`；
+   `otool -tvV -p _H5MM_xstrdup`显示以libSystem `malloc`分配，`otool -tvV -p _H5MM_xfree`显示以libSystem `free`
+   释放。Dylib与`/usr/bin/python3`的`otool -L`均列出`/usr/lib/libSystem.B.dylib`。
+3. 精确1.8.12上游source/header合同与该binary行为一致：`H5Tget_member_name`返回新分配的name copy；
+   `H5free_memory`是在1.8.13才加入，用于避免不同runtime allocator问题。官方release-specific说明见
+   [HDF5 1.8 release information](https://support.hdfgroup.org/documentation/hdf5/latest/rel_spec_18.html)，精确tag source见
+   [HDF5 1.8.12 H5T.c](https://github.com/HDFGroup/hdf5/blob/hdf5-1_8_12/src/H5T.c)。因此对当前固定macOS bundle，
+   复制name后调用同一libSystem `free`或exact-dylib内部`H5MM_xfree`在ABI上均与实际allocator配对；但前者依赖共享
+   libSystem事实，后者依赖非public internal symbol。两者可解释ownership，却都不是最小风险实现。
+
+以上结论为`ESTABLISHED`的fixed-host ABI事实；不推广至Windows、不同HDF5 build或未来MATLAB版本。
+
+### 54.2 Frozen allocation-free source repair
+
+选定的最小修复是完全避免member-name allocation，而不是绑定任何deallocator：
+
+1. 在`Hdf5MatFile._bind()`中删除`H5Tget_member_name`与不存在的`H5free_memory` bindings；新增public
+   `H5Tget_member_index`，signature固定为`int H5Tget_member_index(hid_t, const char *)`。
+2. `_read_complex()`仍先要求exactly two compound members，但不再按index取得allocated name。它依次以固定bytes
+   `b"real"`、`b"imag"`调用`H5Tget_member_index`；两个返回index必须均nonnegative、互异且落在`[0,2)`，否则保持现有
+   `HDF5_COMPLEX_TYPE_UNSUPPORTED/UNAVAILABLE` fail-closed语义。随后按所得indices调用原有`H5Tget_member_type`、
+   `H5Tget_member_offset`、float-class与4/8-byte checks，其他read/decode逻辑不变。
+3. Exact dylib已静态确认导出`H5Tget_member_index`，其local disassembly按name作`strcmp`并返回existing index，不分配caller-owned
+   buffer。不得绑定internal `H5MM_xfree`、不得调用cross-version `H5free_memory`、不得泄漏`H5Tget_member_name`返回值，也不得
+   用字段顺序假设替代`real/imag` name validation。
+
+该修复只改变complex-member discovery的ownership实现，不改变decoder接受的数学对象、field values或identity算法。
+
+### 54.3 Prospective `identity-003` lifecycle and non-reset resources
+
+`identity-001`与`identity-002`均永久消费、immutable且不得作为active input。若本节经同一Skeptic设计审查通过，下一候选
+create-once audit id才可冻结为`identity-003`，namespace为
+`output/run-008/execution-001/review-audit/identity-003/`；Python、JSON `audit_id`、publication path、runner collision/leaf及
+README/SYMBOLS必须机械统一。实现仍须经过Researcher theory-to-code与同一Skeptic pre-execution review，且只能沿用§51的
+escalated context；本节不授权实现或执行。
+
+Prior consumed wall为
+
+$$
+35.917169+25.000000+0.001110+2.053772=62.972051\ \mathrm{s}.
+$$
+
+故`identity-003`的唯一cumulative wall predicate与absolute remaining deadline为
+
+$$
+62.972051+T_{\mathrm{identity-003}}\ge2700,
+\qquad
+T_{\mathrm{remaining}}=2637.027949\ \mathrm{s}.
+$$
+
+Future resource schema须分别记录scientific、review、identity-001、identity-002与current identity-003 wall/peak，再形成wall sum与
+peak maximum；identity-001/002的wall分别固定0.001110 s与2.053772 s，peaks分别0与966656 B。Prior cumulative peak仍为
+1,073,594,368 B，唯一inclusive memory hard upper仍为3,221,225,472 B。不得重置前次charge或新增较低wall/RSS、forecast、
+stall、reserve、guard或grace gate。
+
+**Researcher prospective decision: `GO TO THE SAME SKEPTIC FOR §54 DESIGN REVIEW / IDENTITY-003 IMPLEMENTATION AND EXECUTION NOT AUTHORIZED`.**
+
+## 55. 2026-09-01 §54/§BO bounded theory-to-code review
+
+本节只复核§BO授权的allocation-free与`identity-003`机械实现。未读取artifact、BIE或estimator，未执行Python、Perl、audit或
+数值程序；`identity-003` namespace仍不存在，本节不授权执行。
+
+1. `identity_audit.py:296--307`已完全移除`H5Tget_member_name`、`H5free_memory`与internal deallocator binding，改为
+   `H5Tget_member_index(hid_t, const char *) -> int`。`identity_audit.py:496--537`仍先要求exactly two members，分别按name
+   查询`real/imag`，要求indices nonnegative、in-range、distinct，再沿用原`H5Tget_member_type`、float-class、offset、4/8-byte
+   size与complex read checks；没有field-order假设、allocated name或ownership leak。
+2. `identity_audit.py:33--40,1671--1679,1733--1741,1753--1762`把complete、unavailable、JSON `audit_id`与fixed
+   publication path统一为`identity-003`；`run_identity_audit.pl:12--51`的fixed id、collision与create-once leaf一致指向
+   `output/run-008/execution-001/review-audit/identity-003/`。Identity-001/002没有active input或publication path。
+3. `run_identity_audit.pl:15--28,154--169,232--254`固定五阶段nonreset accounting：scientific 35.917169 s、review
+   25.000000 s、identity-001 0.001110 s、identity-002 2.053772 s与current identity-003 elapsed；remaining deadline精确为
+   2637.027949 s。五个RSS peaks分别记录并取maximum，prior peak仍1,073,594,368 B，唯一inclusive hard upper仍为
+   3,221,225,472 B；未新增较低gate。
+4. `README.md:195--232`与`SYMBOLS.md:74--92`正确区分两个immutable operational failures和prospective/not-executed
+   identity-003，并同步namespace、allocation-free binding与五阶段资源字段。相对§53审查快照，除§BO明确授权的complex-member
+   discovery、ID、resource字段与docs外，decoder其余schemas/paths、interpolation、Gram/principal overlap、assignment、
+   continuation/localization/parity、status、conditional scalar与claim boundary均无变化。
+
+§BO实现与§54完全映射，没有遗留implementation blocker。
+
+**Researcher theory-to-code decision: `PASS / GO TO THE SAME SKEPTIC FOR FOCUSED PRE-EXECUTION REVIEW`.** 本节不授权执行或
+创建`identity-003`；一次性execution authority只能由同一Skeptic给出。
+
+## 56. 2026-09-01 prospective `profile-001` scalar postprocess
+
+本节落实§BQ `PASS WITH CONDITIONS`后允许设计的candidate-specific scalar postprocess。它不是新FEM run，不读取或计算
+field/eigenpair，不读取estimator，也不进行effectivity。Canonical pure-FEM winner仍是candidate 3；本节的$s=30$值只属于
+经§BQ接受为旧candidate 7延续的candidate 9。所有输出均为empirical、non-certified observation。
+
+### 56.1 Fixed identity, files and information isolation
+
+唯一prospective create-once leaf固定为
+`test/i4/femref-a1/output/run-008/execution-001/review-audit/profile-001/`，成功时且仅时包含按顺序发布的
+`profile.json`与最后发布的`resource.tsv`。实现边界仅为两个新文件：
+
+- `test/i4/femref-a1/profile_postprocess.m`；
+- `test/i4/femref-a1/run_profile_postprocess.pl`。
+
+MATLAB entry不得接受argument、environment-selected scalar或path，不得调用`load`、`read*`、`fileread`、Git、Markdown、
+history或任何`output/`读取，也不得读取identity JSON。它只使用本节逐字冻结的literal scalars，在内存中计算后只写fresh leaf
+中的`profile.json`；runner独占create-once collision/lifecycle与`resource.tsv`。不得读BIE以选candidate或调fit：BIE scalar已在
+FEM identity和$k_{30}^{(7)}$冻结后才由§BQ接受进入本节，因此这里只作固定late positional comparison。
+
+### 56.2 Frozen scalar inputs and direct derived quantities
+
+MATLAB source固定
+
+$$
+s=(12,18,24,30),\qquad
+k=(1.842941342508127,\,1.837659912216170,\,1.835680010800799,\,1.834721598133798),
+$$
+
+以及
+
+$$
+k_{30}^{\mathrm{pred}}=1.8347168036,\qquad
+k_{\mathrm{BIE}}=1.832770289108157,\qquad
+D_{\mathrm{old}}=0.0029097217.
+$$
+
+按finer-minus-coarser方向逐字计算并输出
+
+$$
+d_{12\to18}=k_{18}-k_{12},\quad
+d_{18\to24}=k_{24}-k_{18},\quad
+d_{24\to30}=k_{30}-k_{24},
+$$
+
+$D_{a\to b}=|d_{a\to b}|$及
+
+$$
+\rho_1=\frac{D_{18\to24}}{D_{12\to18}},\qquad
+\rho_2=\frac{D_{24\to30}}{D_{18\to24}}.
+$$
+
+零分母只使对应ratio为JSON `null`并登记`UNDEFINED_ZERO_DENOMINATOR`，不是failure。样本外量固定为
+$r_{\mathrm{pred}}=k_{30}-k_{30}^{\mathrm{pred}}$及$|r_{\mathrm{pred}}|$。Late BIE只输出
+$D_{30,\mathrm{BIE}}=|k_{30}-k_{\mathrm{BIE}}|$和严格布尔
+`D_30_BIE < D_old`；等号必须为false。不得把该boolean解释为effectivity、误差界或mode-selection证据。
+
+### 56.3 Exact QR variable-projection fit
+
+Profile模型保持§43.4的
+
+$$
+k(s)=k_\infty+C s^{-p},\qquad p=\exp(x)>0.
+$$
+
+对每个$x$形成$A(x)=[\mathbf 1,s^{-p}]$，固定用economy QR
+`[Q,R]=qr(A,0)`和`[k_inf;C]=R\(Q'*k(:))`，再以
+`SSE=sum(abs(A*[k_inf;C]-k(:)).^2)`作为唯一objective。只有$x,p,A,R,k_\infty,C,SSE$全部finite且$R$的两个diagonal
+在binary64中均非零时，该endpoint为finite/full-rank；否则objective为`Inf`并按numeric-unresolved记录，不设置condition-number
+或fit-acceptance threshold。
+
+七个starts严格依序为
+
+$$
+x_0=\log(1/8,1/4,1/2,1,2,4,8).
+$$
+
+每个start独立运行同一`fminsearch`，options逐字为`TolX=1e-12`、`TolFun=1e-24`、`MaxIter=10000`、
+`MaxFunEvals=50000`，不增加bounds、weights或其他termination rule。JSON保存七个start indices、$x_0$、endpoint $x$、$p$、
+$k_\infty$、$C$、SSE和全部exit flags。Winner在所有finite/full-rank endpoints中按
+`(SSE,p,start_index)`作ascending lexicographic最小选择；exitflag不参与排序。若winner的exitflag非正或根本没有finite winner，
+`fit_status=FIT_NUMERICALLY_UNRESOLVED`；前一种仍报告finite winner scalars，后一种把winner index、$p,k_\infty,C,SSE$写为
+JSON `null`。否则`fit_status=FIT_RESOLVED`。不存在以fit quality取消$k_{30}$、drifts、prediction或BIE comparison的路径。
+
+### 56.4 Exact JSON and failure contract
+
+`profile.json`固定`schema_version=i4a-candidate7-profile-v1`、`profile_id=profile-001`、
+`terminal=PROFILE_POSTPROCESS_COMPLETE`，并至少包含：candidate context（old candidate 7/new candidate 9/canonical candidate 3）、
+全部literal inputs、三段signed/absolute drifts、两个ratios及statuses、prediction residual及absolute value、七-start fit ledger、
+winner与fit status、late-BIE absolute difference与strict boolean、`certification_status=EMPIRICAL_NON_CERTIFIED`、
+`effectivity_performed=false`。所有JSON numbers必须finite；任何nonfinite/unavailable numeric只能编码为RFC 8259 `null`，不得出现
+`NaN`或`Infinity` token。MATLAB须在全部计算和sanitization后一次写出该文件；不得写额外log、temporary、MAT或CSV artifact。
+
+Fit rank deficiency、nonpositive exitflag或无finite endpoint是合法complete postprocess中的caveat，不消费另一profile ID。只有
+source/dependency/MATLAB exception、nonfinite direct frozen arithmetic、2700 s/3 GiB hard stop、create-once collision或
+profile/resource publication failure是terminal failure；均fail closed且不得伪造complete JSON。Leaf一经创建即消费
+`profile-001`，成功或失败都不得覆盖、自动重跑或换ID；prelaunch collision不创建新leaf。
+
+### 56.5 Runner, non-reset resources and gates
+
+Runner固定无参数，在`test/i4/femref-a1`为cwd，以exact MATLAB_R2023b command
+`/Applications/MATLAB_R2023b.app/bin/matlab -batch "profile_postprocess"`启动一次dedicated process group。它复用已审查的
+absolute-deadline、recursive/PID-deduplicated aggregate process-tree RSS、fail-closed authority-loss、guarded kill/reap/dead与
+create-once resource publication语义；必须在允许`/bin/ps -axo ...`的escalated/unsandboxed context执行。
+
+Prior consumed wall和peak固定为
+
+$$
+T_{\mathrm{prior}}=92.655067\ \mathrm{s},\qquad
+R_{\mathrm{prior}}=1073594368\ \mathrm{B}.
+$$
+
+唯一wall predicate为
+
+$$
+92.655067+T_{\mathrm{profile-001}}\ge2700,
+\qquad
+T_{\mathrm{remaining}}=2607.344933\ \mathrm{s},
+$$
+
+唯一memory predicate为current MATLAB process-tree RSS或
+`max(1073594368,profile001_peak_rss_bytes)`达到3,221,225,472 B。`resource.tsv`最小字段固定为
+`prior_wall_seconds`、`profile001_wall_seconds`、`cumulative_wall_seconds`、`prior_peak_rss_bytes`、
+`profile001_peak_rss_bytes`、`cumulative_peak_rss_bytes`、controller terminal、MATLAB exit code与signal。不得重置prior charge，
+不得增加较低wall/RSS、forecast、stall、cadence、reserve、guard或grace gate。基于run-008/identity stages，保守启动估计为
+300 s与1.5 GiB，低于剩余预算；该估计仅支持prospective GO，不是stop或acceptance rule。
+
+Runner仅在MATLAB natural zero exit且`profile.json`已发布时把terminal记为`NATURAL_EXIT`，随后create-once发布
+`resource.tsv`；hard/operational/MATLAB/publication failure必须用明确non-success terminal并尽可能发布resource evidence。
+Post-run仍须由同一Skeptic核验两个artifacts、预算、fit ledger、late comparison与claim boundary；不得同步为certified reference，
+不得进入estimator/effectivity。
+
+### 56.6 Implementation and review gate
+
+同一Engineer只可在§56边界内新增上述两个文件；任何README/SYMBOLS状态同步须保持mechanical/prospective并由Skeptic明确纳入
+实现授权。实现后先由同一Researcher完成scalar/formula/options/schema/controller theory-to-code mapping，再由同一Skeptic完成
+focused spec-to-code/resource review。两道pre-run gate通过前不得创建或执行`profile-001`。
+
+**Researcher prospective decision: `GO TO THE SAME SKEPTIC FOR §56 DESIGN REVIEW / PROFILE-001 IMPLEMENTATION AND EXECUTION NOT AUTHORIZED`.**
+
+## 57. 2026-09-01 `profile-001` theory-to-code review
+
+本节只静态审计`profile_postprocess.m`与`run_profile_postprocess.pl`对§56及review §BR的映射。未运行MATLAB、
+Octave、Perl或postprocess，未创建或读取`profile-001` artifact，也未读取scientific output、BIE/estimator artifact、
+Markdown作为active input或Git metadata。
+
+1. **Frozen scalars and direct quantities map exactly.** `profile_postprocess.m:18--54`逐字固定
+   $s=(12,18,24,30)$、四个candidate-7 identity-component $k$值、预注册$k_{30}^{\mathrm{pred}}$、late
+   $k_{\mathrm{BIE}}$与$D_{\mathrm{old}}$。三段`diff(k_values)`方向为finer-minus-coarser，absolute drifts、两个
+   consecutive ratios、signed/absolute prediction residual、late absolute distance与严格`<` boolean均与§56.2一致；
+   zero denominator只产生`null`-eligible `NaN`和`UNDEFINED_ZERO_DENOMINATOR`，不形成新gate。
+2. **QR variable projection and total order map exactly.** `:56--90,149--187`使用七个固定
+   $x_0=\log(1/8,1/4,1/2,1,2,4,8)$、exact `fminsearch` options、$p=\exp(x)$、
+   `qr(A,0)`、`R\(Q'*k(:))`和唯一SSE objective。`x,p,A,R,k_\infty,C,\mathrm{SSE}`的finite检查及
+   exact nonzero diagonal-$R$检查实现§56.3的binary64 full-rank条件；`:73--89`仅在finite/full-rank endpoints中按
+   `(SSE,p,start_index)` ascending lexicographic排序，exitflag不参与排序且只决定resolved/unresolved status。
+3. **Schema, null downgrade and information isolation otherwise map.** `:92--125`保留old candidate 7/new candidate 9/
+   canonical candidate 3的不同身份，发布七-start ledger、direct quantities、fit status、late comparison、
+   `EMPIRICAL_NON_CERTIFIED`与`effectivity_performed=false`。`jsonencode(...,'ConvertInfAndNaN',true)`把unavailable
+   numerics降为RFC 8259 `null`，随后拒绝任何残留`NaN`/`Infinity` token。Source无argument、`load`、`read*`、
+   `fileread`、history/BIE artifact、estimator、Markdown或Git读取；late-BIE literal不进入fit、winner或candidate选择。
+4. **Runner identity and resource constants map, subject to the publication blocker below.**
+   `run_profile_postprocess.pl:10--22,33--46`固定no-argument MATLAB_R2023b command、exact
+   `run-008/execution-001/review-audit/profile-001` create-once leaf、92.655067 s prior charge、2607.344933 s remaining
+   absolute deadline、1,073,594,368-byte prior peak与3,221,225,472-byte sole RSS upper。`:64--162,164--240`使用
+   recursive PID-deduplicated process-tree RSS、fail-closed process-table handling、natural-zero/profile-present success及
+   create-once `resource.tsv`；没有lower wall/RSS、forecast、stall、cadence或fit gate。
+
+### 57.1 Publication blocker and bounded repair
+
+`profile_postprocess.m:129`调用`fopen(profile_path,'x','n','UTF-8')`。本仓库已有同一MATLAB API的直接运行反例：
+`research/projects/eig-apost/implementation/i3/review-3-2b.md:54--55`记录`fopen(path,'x')`返回
+`Invalid permission.`并使已完成计算后的report publication失败。因此当前source会在所有scalar计算完成后确定性地无法创建
+必需的`profile.json`；runner随后只能给出non-success terminal。该问题阻止§56的唯一主要交付物，分类为`blocker`，但它只是
+一行publication implementation defect，不涉及profile数学、BIE隔离、schema、预算或claim boundary。
+
+最小source-local修复是在`:129`使用MATLAB_R2023b支持的write permission，并继续由runner在启动前以原子`mkdir`独占全新的
+`profile-001` leaf；不得改变path、payload、fit、lifecycle或新增artifact。由于leaf collision已经是create-once authority，
+MATLAB只需在该fresh runner-owned leaf内创建`profile.json`，无需恢复历史output读取、临时文件或第二publication protocol。
+修复后应由同一Researcher只复核该publication delta，再交同一Skeptic作focused spec-to-code/resource review。
+
+**Researcher theory-to-code decision: `REVISE`.** 唯一确认的blocker是unsupported `fopen(...,'x',...)`；本节不授权执行、
+不授权创建`profile-001`，也不授权新FEM、estimator或effectivity工作。
+
+## 58. 2026-09-01 §57 publication delta review
+
+本节仅复核§57指定的单行修复，不重开§57已通过的scalar、fit、schema、information-isolation、runner或resource mapping。
+`profile_postprocess.m:126--142`保留exact `profile-001/profile.json` path、single write、byte-count与close checks，只把
+`:129`的unsupported `fopen(...,'x',...)`改为MATLAB_R2023b支持的`fopen(...,'w','n','UTF-8')`。该entry没有因修复
+增加任何output read或第二publication path；`run_profile_postprocess.pl:43--45`仍在fork前拒绝existing leaf并用一次原子
+`mkdir`独占fresh `profile-001` directory，故`'w'`只会在本次runner-owned新leaf内创建目标文件，不会覆盖既有run artifact。
+§57唯一blocker已经关闭，未发现该单行delta引入的新blocker。
+
+**Researcher delta decision: `PASS / GO TO THE SAME SKEPTIC FOR FOCUSED SPEC-TO-CODE REVIEW`.** 本节不授权执行、
+不授权创建`profile-001`，也不授权新FEM、estimator或effectivity工作。

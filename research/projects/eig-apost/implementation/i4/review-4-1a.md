@@ -5151,3 +5151,1175 @@ A minimal synchronization may record in project `STATUS.md`, the I4 README, and 
 - the attempt is consumed and no retry is authorized.
 
 This review does not authorize effectivity comparison, a new run/attempt, new method work, or any certified/existence claim. `git diff --check` passes.
+
+## BC. Independent design review of the §43 out-of-sample $s=30$ layer
+
+### BC.1 Audit frame
+
+审查对象为 design §43 的 prospective `run-008/execution-001`。当前阶段只判断该设计能否进入有界实现；成功标准是：活动科学运行只产生一个与旧结果隔离的纯 FEM $s=30$ 候选，post-run 身份审查不反向影响候选选择，并且完整流程可在 $2700$ s 和 $3{,}221{,}225{,}472$ B 两个 hard upper 内执行。
+
+审查依据包括根目录、`research/` 与 `test/` 的 `AGENTS.md`、design §43、既有 post-run review §BB，以及当前 create-once/attempt contract。未运行 MATLAB、Octave、Python 或任何数值程序，未创建 output。
+
+### BC.2 Verdict
+
+**Verdict: `REVISE` (high confidence).**
+
+科学设计、纯 FEM 选择、样本外身份规则、sealed comparison 和资源上限本身可辩护；但 §43.5 的 create-once 与 operational-repair 语义存在一个真实 implementation blocker。当前不授权 Engineer 实现，修复只需一处有界生命周期澄清。
+
+### BC.3 Strongest challenge
+
+若 `execution-001` 在写出首个 mesh/spectrum/cache leaf 后发生真实 source/path/dependency failure，§43 同时要求：
+
+1. 已有 leaf 永久 immutable、任何既有 leaf 均 fail closed；
+2. partial evidence 必须保留；
+3. 修复后仍只能使用同一个 `run-008/execution-001`，不得换 ID；
+4. MATLAB entry 不得读取 historical output。
+
+因此纠正运行既不能覆盖旧 leaf，也不能使用新的 create-once execution namespace，还不能把旧 cache 当作运行输入；冻结合同没有合法恢复路径。
+
+### BC.4 Classified findings
+
+1. **BLOCKER — operational correction lifecycle is internally impossible.**
+   Location: §43.5 create-once、partial preservation 与 operational failure 段。
+   Consequence: 一个非科学故障可永久阻止同一方法完成，并与 `test/AGENTS.md` 的 same-attempt bounded repair 规则冲突。
+   Minimal repair: 保持 attempt/scientific identity 为 `run-008`；`execution-001` 永久保留且不得覆盖。只有经审查确认的真实 operational failure 才可在有界修复和重新 pre-execution review 后使用下一个显式 create-once execution label，例如 `execution-002`。不得 auto-retry、复用旧 leaf 或更换 `run-008`。
+
+2. **IMPORTANT CAVEAT — reviewer-side historical-field path still requires an exact audited implementation.**
+   §43.3 的 identity rule 本身足够保守：五个 twist 上采用 common-core principal overlap、唯一 mutual-best、continuation、localization 与 endpoint parity，且不使用 BIE 解歧；失败只封锁 convergence/BIE comparison，不抹除合法的 $k_{30}$。
+   但 §BB 表明 `run-007/fields.mat` 只保存 candidate 7 的 publication anchor field，而不是五个 twist 的完整 subspaces。后续审查必须明确从 immutable `run-007` spectrum/mesh caches 重构所需五个 subspaces及 fixed common-core samples，或诚实登记 `IDENTITY_AUDIT_UNAVAILABLE`。该路径必须单独通过 theory-to-code/spec-to-code review，不能调用读取 historical output 的 MATLAB/Octave experiment entry，也不能读取 BIE/estimator。由于 unavailable 已有 fail-safe 语义，这不是 `run-008` 科学运行的 blocker。
+
+3. **MINOR CAVEAT — §43 存在 Markdown/LaTeX 拼写缺陷。**
+   应作机械修订：`$lambda=k^2$` 改为 `$\lambda=k^2$`；`$lambda$ envelope 改为 `$\lambda$ envelope；`$Theta_5$` 改为 `$\Theta_5$`；含控制字符的错误 `vartheta` 拼写改为 `$\vartheta=0,\pi$`。上下文语义仍清楚，故不构成 blocker。
+
+### BC.5 What survived
+
+- 活动 call graph 恰为一个 $(N,s,g)=(5,30,60)$ mesh、$\Theta_5$ 上五次 48-root solve；没有旧 72+47 schedule 或 60-root expansion。
+- 连续模型、拟合界面 $P_1$ 弱式、材料、几何、准周期相位及 $\lambda=k^2$ 均保持 run-007 的已审查定义。
+- 活动 selection 只使用新运行的 FEM objects；旧 FEM scalars、candidate 7、BIE/QZ、density 与 estimator 均不进入 mesh、spectrum、tracking 或 ranking。
+- Singleton、birth/death 与 partial continuation 均可排名；$k_{30}$ 在任何历史揭示前永久冻结，身份失败不撤销该结果。
+- Drift、ratio、预注册 $k_{30}^{\mathrm{pred}}$ residual、七起点 variable-projection fit 和严格 BIE boolean test 均确定；fit failure 只产生 caveat。所有结果保持 empirical、non-certified、no-effectivity 边界。
+- Reviewer audit 与 scientific command 共享 wall-time 总和和两阶段 RSS 最大值；设计只含 $2700$ s 与 $3{,}221{,}225{,}472$ B 两个 hard resource predicates，没有较低 gate。实现审查仍须确认 audit 使用剩余 wall budget且不重置计时。
+- 约 $1402.74$ s、$2{,}538{,}424{,}320$ B 的 prospective estimate 低于授权上限；它只是 GO 估计，不是运行停止门。
+
+### BC.6 Minimal resolution and gate
+
+Researcher只需修改 §43.5 的 operational lifecycle：允许在同一 `run-008` attempt 下，经审查后使用下一个 create-once execution label，同时永久保留失败 execution。其余模型、五次 solve、ranking、身份规则、profile、预算和 claim boundary 不重开。公式拼写可在同一 bounded delta 中机械修正。
+
+修订后由同一 Skeptic 只复审该生命周期 delta。通过前：
+
+**`RUN-008 IMPLEMENTATION NOT AUTHORIZED / RUN NOT AUTHORIZED`.**
+
+`git diff --check -- research/projects/eig-apost/implementation/i4/review-4-1a.md` 通过；分支为 `codex/epost`；`output/run-008/` 不存在。
+
+## BD. Focused re-review of the §44 operational-recovery closure
+
+### BD.1 Scope and verdict
+
+本复审只核对 §44 是否关闭 review §BC 的唯一 blocker；§43 的连续模型、五次求解、ranking、identity audit、profile 和资源设计均不重开。
+
+**Verdict: `PASS` (high confidence).** §BC blocker已关闭，没有 unresolved numerical、implementation、resource 或 publication blocker。
+
+### BD.2 Closure audit
+
+1. **Same-attempt semantics明确。** Scientific identity 与 attempt 保持 `run-008`；首次 execution 固定为 create-once `execution-001`，恢复不会更换 run ID。
+2. **失败 execution永久 immutable。** 已启动 execution 及其所有 leaf 不得覆盖、复用或作为恢复运行输入；只允许 post-failure review 追溯。
+3. **Operational recovery严格受控。** 只有同一 Skeptic 明确分类为 genuine source/path/dependency/controller/environment operational failure 后，经 Researcher bounded revision、Engineer最小修复和完整 pre-run re-review，才可使用最小未用的 create-once execution label。不存在 runner 自行分类、auto-retry或跳过 gate。
+4. **消费性终态完整。** Scientific/numerical、resource以及 canonical-publication terminal均消费 `run-008`；不能重命名为 operational failure以取得恢复资格。
+5. **Information isolation保持。** 后续 execution 的 active science不得读取、统计、复制、hash或比较任何旧 execution artifact，必须从冻结输入独立完成相同五次48-root solves。
+6. **公式规范已给出无歧义 authoritative override。** §44 明确将相关记号解释为 `$\lambda=k^2$`、`$\lambda$ envelope`、`$\Theta_5$`及`$\vartheta=0,\pi$`，不改变数学对象。§43 原位置仍可日后机械清理，但不影响本设计闭合。
+
+### BD.3 Gate
+
+授权同一 Engineer 仅在 `test/i4/femref-a1/` 内按 §43、并以 §44 为 lifecycle authority，实施独立 `run-008` scientific entry、fixed no-argument controller及必要 README/SYMBOLS 同步。
+
+实现后仍必须依次完成：
+
+1. Researcher theory-to-code mapping；
+2. 同一 Skeptic exact spec-to-code/resource review。
+
+二者通过前不得执行 `run-008`、MATLAB或任何身份审查。
+
+**Final gate statement: `DESIGN PASS / SAME ENGINEER BOUNDED IMPLEMENTATION AUTHORIZED / RUN-008 EXECUTION NOT AUTHORIZED`.**
+
+审查期间未运行数值程序；`output/run-008/`不存在。
+
+## BE. Exact spec-to-code/resource pre-execution review for `run-008`
+
+### BE.1 Audit frame and verdict
+
+本审查静态核对 `run_i4_1a_refine.m`、`run_refine_formal.pl`、README及SYMBOLS相对 design §§43–45、§44 lifecycle authority与review §BD的映射。未运行 MATLAB、Octave、Python、runner或任何数值程序，未创建 output。
+
+**Verdict: `PRE-EXECUTION PASS` (high confidence).** 未发现 unresolved numerical、implementation、resource 或 publication blocker。
+
+### BE.2 Exact scientific mapping
+
+1. **Call graph恰为五次。** 顶层只构造 `defect-N5-s30-g60`，`spec.theta_5`固定为
+   $$
+   \left(0,\frac{\pi}{4},\frac{\pi}{2},\frac{3\pi}{4},\pi\right),
+   $$
+   唯一 spectrum loop迭代五次，并且唯一 `LOCAL_low_spectrum`调用固定请求48 roots。没有bulk、旧72+47 schedule、第二mesh或60-root expansion路径。
+2. **模型与弱式未漂移。** Period、radius、$q_{\mathrm{in}}=17$、$q_{\mathrm{out}}=1$、missing column、$\beta=0.5$、拟合界面 $P_1$ stiffness/weighted-mass assembly、quasiperiodic phase reduction、raw-Hermitian gate、mass SPD、residual和orthogonality定义与已运行的 run-007 helper一致。
+3. **Whole-cluster fields完整。** 每个与 $W_3$ 相交的observed cluster整体形成object；保存raw/full-mass-normalized subspace、eigenvalue/$k$ envelopes、localization、endpoint parity和common-core representation。派生诊断失败只写 unavailable/`NaN`，不会删除已通过field-validity checks的object。
+4. **Tracking与ranking可执行。** 四对相邻twist使用maximum-total common-core-overlap assignment；birth、death和singleton均保留。Rank依次使用 $-n_{\mathrm{twist}}$、$-n_{\mathrm{edge}}$、四个共同missing refinement slots、finite drift sum、residual、localization、parity、coverage及确定anchor/object ties。所有可能的missing scalar均在 `sortrows` 前投影，native `NaN`不参与比较。
+5. **Publication scalar正确。** 胜出component全部realizations的eigenvalue envelope定义
+   $$
+   \lambda_{30}=\frac{\min\Lambda_{30}+\max\Lambda_{30}}{2},
+   \qquad
+   k_{30}=\sqrt{\lambda_{30}}.
+   $$
+   Multiplicity-one anchor作确定phase fixing；higher-multiplicity路径保留mass-normalized subspace。
+6. **Diagnostics不成为取消门。** Coverage、guard、localization、parity、edge straddle、weak overlap和partial continuation只改变classification/rank；只要存在一个numerically valid、field-bearing $W_3$ object，代码即排名并发布第一名。
+
+### BE.3 Exception, artifact and isolation audit
+
+- Single-twist mesh/seam/spectrum/object numerical failure进入ledger并继续；全部五个twist均无valid field-bearing $W_3$ object时才产生合法 `NO_VALID_FIELD_BEARING_W3_EIGENOBJECT`。
+- Generic source/runtime、dependency、path和output failure保持 operational fail-closed；`scientific-result.mat`或`fields.mat`发布失败被映射为 `CANONICAL_PUBLICATION_FAILURE`，不会伪装为READY或自动重试。
+- Success schema包含冻结spec、五项ledger、compact scientific inventory、tracking、total ranks、winner及 $\lambda_{30},k_{30}$；`fields.mat`保存全部retained objects的full subspaces和common-core data。
+- Runner先发布 `resource.tsv`，最后发布 `run-summary.csv`；每个MAT/root artifact使用create-once partial-to-final路径。
+- MATLAB唯一 `load` 是当前 `execution-001/work/s30-pXX.mat`。活动source没有旧 execution、run-007 FEM scalar/candidate、BIE/QZ、density、estimator、Markdown或Git读取。设计路径只存在于注释。
+- `run-008/execution-001` 当前不存在；旧output没有覆盖路径。
+
+### BE.4 Runner and resource audit
+
+`run_refine_formal.pl`为fixed no-argument controller，内部命令固定为 `run_i4_1a_refine('run-008')`。静态控制流只含两个inclusive resource predicates：
+
+$$
+T\ge2700\ \mathrm{s},
+\qquad
+R_{\mathrm{aggregate}}\ge3{,}221{,}225{,}472\ \mathrm{bytes}.
+$$
+
+Wall deadline自controller启动后不重置，并贯穿MATLAB、resource publication和summary-last；RSS对MATLAB root、递归descendants及dedicated PGID union去重求和。不存在较低wall/RSS门、reserve、forecast、stall、CV或grace predicate。
+
+约 $1402.74$ s和 $2{,}538{,}424{,}320$ B 的prospective estimate低于两个hard uppers；实际 $s=30$ mesh构造和峰值仍须由正式运行验证，但这不是pre-execution blocker。Perl文件已逐行静态检查，未执行 `perl -c` 或runner。
+
+### BE.5 Strongest counterexample and claim boundary
+
+最强反例是 $(5,30,60)$ fitted mesh不能合法构造，或五个twist全部不能形成valid field-bearing $W_3$ object。当前实现对此给出消费性的scientific negative及partial evidence，而不会发布伪READY；因此该反例检验方法，而不揭示implementation-routing缺陷。
+
+Reviewer-side candidate-7 identity audit、四点profile及sealed BIE comparison尚未实现也未获授权。它们不影响本次纯FEM运行冻结合法 $k_{30}$；当前claim严格限于：
+
+`EMPIRICAL_OUT_OF_SAMPLE_FEM_CANDIDATE_NO_EFFECTIVITY`.
+
+### BE.6 Exact authorization and post-run gate
+
+现授权一次且仅一次执行以下命令，cwd固定为
+`/Users/whc/Documents/Work/epost/test/i4/femref-a1`：
+
+```text
+/usr/bin/perl ./run_refine_formal.pl
+```
+
+该命令内部固定 `run-008/execution-001`。不授权alternate command、参数、retry、新execution、identity audit、profile、BIE reveal/comparison或effectivity。
+
+运行后必须由同一 Skeptic完成post-run artifact/resource/claim review，至少核验：
+
+- create-once文件树、无partial、五个solve/cache及summary-last；
+- mesh、solver flags、finite spectra、residual、orthogonality和全部field objects；
+- ordered candidate IDs、rank keys、winner、$\lambda_{30}$与$k_{30}$；
+- continuation、coverage、localization、parity及所有caveat；
+- whole-command wall与aggregate RSS；
+- attempt consumption、claim boundary及是否允许后续独立identity audit。
+
+**Final gate statement: `PRE-EXECUTION PASS / ONE EXACT RUN-008 COMMAND AUTHORIZED / POST-RUN REVIEW REQUIRED / IDENTITY-PROFILE-BIE-EFFECTIVITY NOT AUTHORIZED`.**
+
+## BF. `run-008/execution-001` first-stage post-run artifact/resource/claim review
+
+### Audit frame
+
+Target: the create-once artifacts under `test/i4/femref-a1/output/run-008/execution-001/`, reviewed against design §§43–45 and pre-execution review §BE. This is a first-stage pure-FEM artifact review, not the candidate-7 identity audit, BIE comparison, estimator comparison, or effectivity analysis.
+
+The review used only read-only shell inspection and direct HDF5 reads of the current `run-008` MAT files. It did not run MATLAB/Octave, create output, read BIE/estimator data, or execute the reviewer-side identity audit.
+
+### Verdict
+
+**PASS WITH CONDITIONS** — high confidence in artifact integrity and execution correctness; target-mode identity remains intentionally unresolved.
+
+No artifact, implementation, resource, or publication blocker was found. The run produced a complete, internally consistent pure-FEM candidate and the field-bearing artifacts needed to implement and statically review the separately gated §43.3 identity audit. The present result must not yet be treated as the same mode as the earlier candidate, as a converged reference, or as effectivity evidence.
+
+### Decisive evidence
+
+- Exact tree: 12 files, comprising five canonical root artifacts, one mesh cache, five spectrum caches, and `matlab-terminal.tsv`; no `.partial` or temporary file was present.
+- `run-summary.csv`, `resource.tsv`, `matlab-terminal.tsv`, `scientific-result.mat`, and the final log record agree on:
+  - `run-008` / `execution-001`;
+  - `OUT_OF_SAMPLE_FEM_CANDIDATE_READY`;
+  - `SCIENTIFIC_READY`;
+  - attempted/completed/planned solves `5/5/5`;
+  - collection size 29;
+  - controller `NATURAL_EXIT`;
+  - MATLAB elapsed `17.504931125` s;
+  - whole-command elapsed `35.917169000` s;
+  - aggregate peak RSS `1,073,594,368` bytes;
+  - claim boundary `EMPIRICAL_OUT_OF_SAMPLE_FEM_CANDIDATE_NO_EFFECTIVITY`.
+- The mesh cache is `defect-N5-s30-g60`: 11,741 nodes, 22,760 triangles, and 11,380 reduced DOFs. Coordinates are finite; connectivity is in range and nonduplicate; all triangle signed areas are positive, with minimum doubled area $5.607201769085146\times10^{-5}$; material labels cover all triangles; interface crossings are zero; periodic coordinate mismatch is zero.
+- Exactly five 48-root caches exist, at
+  $$
+  \theta\in\left\{0,\frac{\pi}{4},\frac{\pi}{2},\frac{3\pi}{4},\pi\right\}.
+  $$
+  Every solver flag is zero, every spectrum/vector entry is finite, and no 60-root expansion cache exists because all five 48-root spectra cover W3. The minimum coverage margin is `1.241736828331625`. Across the five solves, the largest stored residual is $3.252486857677656\times10^{-16}$, the largest orthogonality defect is $6.099699291667107\times10^{-15}$, and the largest seam residual is $1.2412670766236366\times10^{-16}$.
+- The candidate inventory contains 145 field-bearing objects: roots 3–31 on each of five twists, hence 29 objects per slice. Object IDs are contiguous. All 145 raw and normalized subspaces are nonempty finite arrays of shape `1 x 11741`; all common-core sample and weight arrays are nonempty finite arrays of shape `1 x 10465`, and all stored weights are positive.
+- Ordered candidate IDs are:
+  `3, 1, 7, 2, 5, 4, 9, 10, 12, 6, 11, 14, 13, 8, 16, 15, 26, 28, 17, 18, 25, 23, 20, 24, 22, 21, 19, 27, 29`.
+  The selected candidate is therefore candidate 3, with
+  $$
+  \lambda_{30}=0.61502508946098011,\qquad
+  k_{30}=0.78423535336082628.
+  $$
+  Its stored rank key is
+  `[-5,-4,4,0,8.531044331372605e-17,-0.0059703014666022,-0.26579510641258347,0.33967990013018884,1,-5,-1.241736828331625,1,5,3,3]`.
+- Candidate 3 uses realization IDs `3,32,61,90,119`, all root 5 and multiplicity one, across all five twists. Its frequency values are
+  `0.737788543799568, 0.7556543442844904, 0.7846972850313371, 0.8126651802711921, 0.8280810609838104`;
+  its stored envelope is
+  $$
+  k\in[0.737788543799568,\ 0.8280810609838104].
+  $$
+- The selected five normalized fields have mass-Gram errors between $1.7\times10^{-15}$ and $7.9\times10^{-15}$. Applying the frozen pivot phase convention leaves a positive real pivot with imaginary magnitude at most $1.2\times10^{-17}$. Thus the full subspaces and deterministic phase reconstruction required by the future identity audit are available.
+- Classification is exactly:
+  `expansion-shell-3`, `BULK_GAP_NOT_COMPUTED`,
+  `FULL_FIVE_TWIST_CONTINUATION`, `weakly-localized`,
+  `mixed/ambiguous`, `empirical-resolution-partial`,
+  `spectrum-covered-through-W3`.
+  The localization summaries are `localization_center=0.0059703014666022`, `localization_core=0.26579510641258347`, and `tail_max=0.33967990013018884`. Endpoint parity is even at $\theta=0$ and odd at $\theta=\pi$; intermediate-twist parity is correctly unavailable.
+
+### Findings
+
+1. **BLOCKER:** none.
+
+2. **IMPORTANT CAVEAT — identity is not yet established.**
+   The pure-FEM ranking validly selects candidate 3, but this stage has not tested its common-core field overlap or continuation against the earlier candidate-7 fields. Its numerical location must neither validate nor invalidate identity. Until the separately reviewed identity audit is completed, no cross-run convergence comparison or same-mode statement is admissible.
+
+3. **IMPORTANT CAVEAT — no empirical resolution number is available.**
+   `delta_fem`, `delta_supercell`, `delta_twist`, `delta_algebraic`, and `delta_ref_obs` are all `NaN`; `missing_refinement_count=4` and the status is `EMPIRICAL_RESOLUTION_PARTIAL`. The result is a field-bearing FEM candidate, not a resolved reference and not a certified upper bound.
+
+4. **IMPORTANT CAVEAT — physical classification remains weak.**
+   Bulk-gap status is not computed, localization is weak, and parity is mixed/ambiguous. These facts limit interpretation but do not invalidate the frozen threshold-free FEM ranking or its canonical publication.
+
+### Resource and lifecycle audit
+
+The scientific command used `35.917169` s and `1,073,594,368` bytes, well below the authorized `2700` s and `3,221,225,472` bytes. Reviewer-side HDF5 inspection peaked at `171,982,848` bytes; conservatively charging all setup and inspection commands adds less than 25 s. The shared total therefore remains below 61 s, and the shared peak remains `1,073,594,368` bytes.
+
+`run-008/execution-001` completed scientifically and is consumed. There is no operational failure supporting a retry or a new execution label.
+
+### Claim boundary and next gate
+
+What survives is the claim that `run-008` produced a reproducible, independently ranked, field-bearing pure-FEM candidate with complete five-twist W3 coverage. It does not establish continuous eigenpair existence, certified error, same-mode identity, reference convergence, BIE agreement, estimator validity, or effectivity.
+
+The artifacts are sufficient to authorize **only implementation and static review of the reviewer-side §43.3 identity-audit tool**. Execution of that audit remains unauthorized until its own review gate passes. No further FEM run, BIE comparison, estimator read, effectivity comparison, or retry is authorized by this verdict.
+
+## BG. Independent design review of §46 reviewer-side candidate-7 identity audit
+
+### BG.1 Audit frame
+
+Target: design §46, reviewed against §§43–45, review §BF, `test/AGENTS.md`, and the immutable `run-007`/`run-008` artifact schemas. This review did not implement or execute the audit, run MATLAB/Octave/Python numerical work, or read BIE/estimator data.
+
+Success criterion: determine whether the proposed reviewer-side audit can independently identify the continuation of old FEM candidate 7 without changing the canonical `run-008` winner, leaking frequency/BIE information into selection, exceeding the shared resource budget, or publishing an ambiguous derived scalar.
+
+### BG.2 Verdict
+
+**REVISE** — high confidence.
+
+The target-consistency revision is scientifically justified, the field-overlap method is implementable, and no selection leakage was found. One genuine resource blocker remains: §46.6 omits the already consumed §BF reviewer-inspection wall time from the controller’s hard-limit predicate. Consequently the proposed controller does not enforce the declared shared 2700 s budget. A small prospective amendment can close this without changing any scientific rule.
+
+### BG.3 Strongest challenge and blocker
+
+1. **BLOCKER — the executable wall predicate omits an already consumed required stage.**
+
+   Section 46.6 defines the stop condition as
+   $$
+   35.917169+T_{\mathrm{audit}}\ge2700,
+   $$
+   leaving `2664.082831` s for the audit. But §BF was a required post-run gate and explicitly charged its read-only inspection to the same scientific-result budget: its reviewer work consumed less than 25 s and peaked at 171,982,848 bytes. Section 46.6 acknowledges that work but excludes its elapsed time from the controller formula. Thus an audit allowed to use the stated remaining time could make cumulative required-stage wall time exceed 2700 s before termination.
+
+   **Smallest repair:** freeze a documented conservative §BF wall charge, for example exactly `25.000000` s, and define
+   $$
+   35.917169+25.000000+T_{\mathrm{audit}}\ge2700.
+   $$
+   The resulting executable remaining time is at most `2639.082831` s. Record scientific, §BF-review, audit, and cumulative wall values separately in `resource.tsv`. This is not a new lower gate; it is correct accounting for the sole 2700 s hard limit. Peak-memory accounting remains a maximum, so the existing 3,221,225,472-byte predicate is correct because the §BF peak is below the scientific peak.
+
+### BG.4 Caveats
+
+1. **IMPORTANT CAVEAT — assignment optimization direction should be stated explicitly.**
+
+   Section 46.4 calls the procedure “maximum-total lexicographic assignment” but defines real-pair costs beginning with `(-O_ij,0,...)`. The reviewed MATLAB source resolves this by **lexicographically minimizing the total cost tuple**, so the negative first component maximizes total overlap. The Python contract should state that minimization direction explicitly; maximizing the written tuple would choose smaller overlaps. Because the existing source is an unambiguous referenced implementation, this is a bounded specification clarification rather than a second blocker.
+
+2. **MINOR CAVEAT — two control-character LaTeX corruptions remain in §46.**
+
+   - §46.3 contains a literal tab in the theta expression; the intended set notation should be `$\Theta_{17}$`.
+   - §46.5 contains a vertical-tab corruption in the endpoint expression; it should be `$\vartheta=0,\pi$`.
+
+   These are mechanical Markdown repairs and do not alter the design. `git diff --check` nevertheless passes because it does not detect these control characters.
+
+### BG.5 What survived scrutiny
+
+- The target revision is valid: canonical pure-FEM winner candidate 3 and its stored $\lambda_{30},k_{30}$ remain immutable, while a field-unique alternate component may supply the separately named `lambda30_candidate7` and `k30_candidate7`. This answers continuation of the old FEM mode rather than silently changing the pure-FEM ranking question.
+- The alternate-component route preserves `SELECTED_BRANCH_MISMATCH / ALTERNATE_MATCH_IDENTIFIED`; it does not rewrite the canonical science artifact.
+- Candidate selection uses complete FEM field inventories, common-core overlaps, deterministic assignment, mutual-best uniqueness, continuation, localization, and endpoint parity. Frequency-envelope distance is only a deterministic tie-break after overlap, and no BIE value, previous scalar proximity, estimator, or effectivity input is permitted.
+- The old candidate-7 reconstruction is feasible from the allowlisted artifacts: the required five `fine-pXX.mat` caches and `mesh-defect-N5-s24-g48.mat` exist, and the old scientific schema contains the required configuration, realization, object, tracking, mesh, root, and solve identities.
+- The common-grid interpolation, weighted Gram normalization, principal-overlap calculation, full assignment evidence, ambiguity states, and multiplicity caveat provide a reproducible identity test. Failure of auxiliary localization or parity evidence correctly yields `IDENTITY_AMBIGUOUS`, not a frequency-based replacement.
+- The exact bundled HDF5 library path in §46.2 exists and exposes the required HDF5 1.8 APIs. A stdlib-only `/usr/bin/python3 -I -S` implementation using `ctypes`, streamed twist processing, RFC 8259 JSON, and explicit unknown-class failure is feasible within the prospective resource estimate.
+- The create-once review leaf, two-file terminal contract, `null` rather than nonstandard `NaN`, post-audit review gate, and prohibition on direct profile/BIE execution preserve artifact authority and claim boundaries.
+- The proposed status vocabulary does not call a location disagreement `DIFFERENT_MODE`, and derived candidate-7 scalars remain empirical and non-certified.
+
+### BG.6 Minimal resolution and authorization
+
+Researcher should append one bounded amendment that:
+
+1. includes a frozen §BF reviewer-wall charge in the sole 2700 s cumulative predicate and resource schema;
+2. states that assignment lexicographically minimizes the summed cost tuples;
+3. repairs the two §46 control-character spellings.
+
+Then return only that delta to the same Skeptic. Until it passes, **Engineer implementation is not authorized**. No audit execution, profile, BIE reveal, estimator read, effectivity comparison, new FEM solve, or new output leaf is authorized by this verdict.
+
+## BH. Focused re-review of §47 closure
+
+### BH.1 Scope
+
+This review reopens only the §BG blocker and its two bounded clarifications. It does not reconsider §46’s scientific identity method, implement or execute the audit, or read BIE/estimator data.
+
+### BH.2 Closure findings
+
+1. **Resource blocker closed.** Section 47 freezes the prior reviewer charge at exactly `25.000000` s and defines the sole cumulative wall predicate as
+   $$
+   35.917169+25.000000+T_{\mathrm{audit}}\ge2700.
+   $$
+   The controller’s non-resettable remaining deadline is therefore exactly `2639.082831` s. Separate scientific/review/audit fields and their cumulative sum make post-run accounting auditable. Peak memory is correctly combined by maximum rather than addition, with the sole limit remaining 3,221,225,472 bytes.
+
+2. **Assignment direction clarified.** Section 47 now explicitly requires componentwise summation of all matched/dummy cost tuples followed by lexicographic **minimization**. Because the real-pair first component is $-O_{ij}$, the first objective is unambiguously maximum total overlap. Pairwise greedy matching is explicitly excluded.
+
+3. **Notation ambiguity closed.** Section 47 authoritatively fixes the intended spellings as `$\Theta_{17}$` and `$\vartheta=0,\pi$`. The earlier control bytes remain historical text, but they no longer create a mathematical or implementation ambiguity; mechanical documentation synchronization must use the corrected forms.
+
+`git diff --check` passes.
+
+### BH.3 Verdict and authorization
+
+**PASS.** No unresolved blocker remains.
+
+The same Engineer is authorized to implement only:
+
+- `test/i4/femref-a1/identity_audit.py`;
+- `test/i4/femref-a1/run_identity_audit.pl`;
+- the necessary mechanical `README.md` and `SYMBOLS.md` synchronization.
+
+Implementation must follow §§46–47 exactly. Audit execution, creation of `identity-001`, profile fitting, BIE reveal/comparison, estimator access, effectivity work, new FEM solves, and canonical-artifact mutation remain unauthorized. After implementation, Researcher theory-to-code review and the same Skeptic’s exact spec-to-code/resource pre-execution review are still mandatory.
+## BI. Independent spec-to-code/resource pre-execution review of the candidate-7 identity audit
+
+### BI.1 Audit frame
+
+Target: current `identity_audit.py`, `run_identity_audit.pl`, `README.md`, and `SYMBOLS.md`, reviewed against design §§46–49 and review §§BG–BH.
+
+This was a static, read-only review. No audit, MATLAB, Octave, FEM solve, profile, BIE read, estimator read, or output publication was performed. Artifact access was limited to metadata needed to verify frozen schema compatibility. `identity-001` remains absent.
+
+### BI.2 Verdict
+
+**REVISE** — high confidence.
+
+Three concrete blockers would respectively prevent input decoding, force a false `IDENTITY_AUDIT_UNAVAILABLE`, or lose the mandatory resource terminal on the hard-wall path. Because launching now would permanently consume the create-once identity, the exact command is not authorized.
+
+### BI.3 Blockers
+
+1. **BLOCKER — the frozen HDF5 library does not export the bound reference API.**
+
+   `identity_audit.py:302–303,447` binds and calls `H5Rdereference2`, but the exact frozen library
+   `/Applications/MATLAB_R2023b.app/bin/maca64/libhdf5-1.8.8.dylib`
+   exports `H5Rdereference` and does not export `H5Rdereference2`. Static symbol inspection confirms only `_H5Rdereference`.
+
+   The first `Hdf5MatFile.__enter__()` therefore raises `AttributeError` during `_bind()`. That exception is not an `AuditUnavailable`, so Python exits nonzero without `identity-audit.json`; the runner would already have consumed `identity-001`.
+
+   **Minimal repair:** bind the HDF5 1.8 signature
+   `H5Rdereference(hid_t, H5R_type_t, const void *)` and use it for object references. Keep the frozen library path unchanged. Binding failure should be converted to `AuditUnavailable` or otherwise deterministically routed without an uncaught Python traceback.
+
+2. **BLOCKER — the new scientific-object allowlist requires a nonexistent `configuration` field.**
+
+   `NEW_SCIENCE_SPEC` at `identity_audit.py:164–186` assigns `OLD_OBJECT_SPEC` to the `run-008` compact object inventory. `OLD_OBJECT_SPEC` includes `configuration`, but metadata inspection confirms that `run-008/execution-001/scientific-result.mat` objects do not contain that field.
+
+   After the reference-API repair, `_decode_object()` would therefore raise `HDF5_REQUIRED_FIELD_MISSING`. The exception would be caught and published as `IDENTITY_AUDIT_UNAVAILABLE`, incorrectly turning an implementation/schema mismatch into an identity result and permanently consuming the audit ID.
+
+   **Minimal repair:** define a compact new-science object specification equal to `OLD_OBJECT_SPEC` minus `configuration`, without the full-field sample arrays, and use it only in `NEW_SCIENCE_SPEC`. Retain the existing `NEW_OBJECT_SPEC` with common-core fields for `fields.mat`.
+
+3. **BLOCKER — the SIGALRM hard-wall path exits before publishing `resource.tsv`.**
+
+   `run_identity_audit.pl:27–32` kills the target and immediately calls `POSIX::_exit(2)`. Consequently an alarm-triggered 2700 s hard stop bypasses child reap, elapsed/peak calculation, and `write_resource()` at lines 140–148. It cannot preserve the required resource terminal or distinguish the hard-wall outcome from an unexplained incomplete leaf.
+
+   **Minimal repair:** the signal handler must immediately kill the target and set a wall-limit flag, but must not `_exit` before cleanup. The main path must prioritize that flag over interrupted `ps`/wait results, reap or confirm the target dead, classify `WALL_HARD_LIMIT_REACHED`, and exclusively publish `resource.tsv` before returning nonzero. This must not add a second deadline, grace period, reserve, or lower stop.
+
+### BI.4 What survived scrutiny
+
+- File and run identities, five old target twists, exact cache names, candidate selection by `candidate_id == 7`, and old 17-slice continuation reconstruction match the frozen contract.
+- Apart from the new compact-schema error, the decoder’s reversed HDF5 dimensions, MATLAB column-major reconstruction, numeric/logical/char/compound handling, reference recursion, and allowlisted-field policy are structurally consistent.
+- The common-grid loop order matches MATLAB `meshgrid(...); (: )` ordering. The $P_1$ barycentric interpolation, positive $q$-weighted trapezoid weights, deterministic triangle choice, and weight cross-check match §§46–47.
+- Weighted Gram construction, right normalization through the lower Cholesky factor, complex Hermitian Jacobi iteration, and principal-overlap calculation implement the intended field comparison.
+- The assignment now uses the corrected endpoint-max frequency distance and a complete dummy-augmented lexicographic minimization; no greedy or BIE/frequency-gate selector is present.
+- Strict mutual-best checks, overlap thresholds, old/new continuation, localization, endpoint parity, multiplicity status, conditional candidate-7 scalar, and publication cross-check follow the frozen claim boundary.
+- Unsupported identity correctly publishes no identity component, no derived scalar, and `profile_gate=NOT_ELIGIBLE`.
+- Outside the alarm path, the runner has the correct no-argument command, create-once leaf, cumulative `35.917169 + 25.000000 + T_{\mathrm{audit}}` wall accounting, sole 3,221,225,472-byte RSS hard limit, process-tree aggregation, and no lower forecast/stall/reserve gate.
+- No active BIE, estimator, effectivity, Markdown, Git, or historical scalar input was found.
+- `git diff --check` passes.
+
+### BI.5 Minimal resolution and authorization
+
+Return only the three bounded repairs above to the same Engineer, update README/SYMBOLS so they do not claim a passed static implementation prematurely, then obtain a Researcher delta mapping and the same Skeptic’s focused pre-execution re-review.
+
+**Execution remains unauthorized.** In particular, do not run:
+
+```sh
+/usr/bin/perl ./run_identity_audit.pl
+```
+
+and do not create `identity-001`. After a future pre-execution PASS, that exact command may be authorized once from `test/i4/femref-a1`; its result will still require independent post-audit artifact/resource/claim review before any profile or late BIE comparison.
+## BJ. Focused pre-execution re-review of the §BI repairs
+
+### BJ.1 Scope
+
+This review reopens only the three §BI blockers and Researcher §50. The previously accepted identity mathematics, assignment hierarchy, claim boundary, and input allowlist were not re-audited. No audit, Python entry, Perl runner, MATLAB, Octave, BIE read, estimator read, profile, or output publication was performed.
+
+### BJ.2 Repair verification
+
+1. **HDF5 reference binding — closed.**
+
+   `identity_audit.py` now binds the three-argument HDF5 1.8 function
+   `H5Rdereference(hid_t, H5R_type_t, const void *)`; static library-symbol inspection confirms that the frozen `libhdf5-1.8.8.dylib` exports this exact symbol. The active source contains no `H5Rdereference2`. Library and binding failures are converted to `AuditUnavailable`, while negative dereferences remain `HDF5_DANGLING_REFERENCE`.
+
+2. **Run-008 compact schema — closed.**
+
+   `NEW_COMPACT_OBJECT_SPEC` is now the old object schema minus the run-007-only `configuration` field. `NEW_SCIENCE_SPEC` uses this compact schema, while `NEW_FIELDS_SPEC` uses the separate extended schema containing common-core samples, weights, and validity. This matches the frozen run-008 metadata and removes the false `HDF5_REQUIRED_FIELD_MISSING` route.
+
+3. **Hard-wall terminal publication — closed.**
+
+   The SIGALRM handler now sets one wall-limit flag and immediately kills the target without calling `_exit`. The controller checks the same flag/deadline before and after process-table, RSS, and reap operations; it then reaps the child, confirms the dedicated target group is dead, freezes `WALL_HARD_LIMIT_REACHED`, and reaches the unique create-once `resource.tsv` writer before returning nonzero.
+
+   The only resource uppers remain:
+
+   $$
+   35.917169+25.000000+T_{\mathrm{audit}}\ge2700
+   $$
+
+   and aggregate audit process-tree RSS at or above `3221225472` bytes. No lower wall/RSS gate, forecast, stall, reserve, grace period, or retry was introduced.
+
+### BJ.3 Residual checks
+
+- `identity-001` is absent.
+- The runner remains fixed, no-argument, and bound to `run-008/execution-001/review-audit/identity-001`.
+- Unsupported identity still publishes no matched identity component, no derived candidate-7 scalar, and `profile_gate=NOT_ELIGIBLE`.
+- The repaired source contains no BIE, estimator, effectivity, historical scalar, Markdown, or Git runtime input.
+- README/SYMBOLS remain prospective and do not claim that the audit has run.
+- `git diff --check` passes.
+
+No blocker, important caveat, or new claim-boundary defect was found in the bounded repair.
+
+### BJ.4 Verdict and exact authorization
+
+**PRE-EXECUTION PASS.**
+
+One and only one execution is authorized from:
+
+```text
+/Users/whc/Documents/Work/epost/test/i4/femref-a1
+```
+
+using exactly:
+
+```sh
+/usr/bin/perl ./run_identity_audit.pl
+```
+
+This authorization creates only `identity-001`; it does not authorize retry, `identity-002`, FEM recomputation, profile fitting, BIE reveal/comparison, estimator access, effectivity analysis, or canonical-artifact modification.
+
+After the command finishes, the same Skeptic must review `identity-audit.json`, `resource.tsv`, create-once integrity, overlap/assignment evidence, identity and selection statuses, conditional scalar publication, cumulative wall/RSS, and the claim boundary. Profile or late BIE comparison remains prohibited until that post-audit review explicitly accepts a `SAME_MODE_SUPPORTED*` result.
+## BK. Independent review of §51 operational recovery
+
+### BK.1 Scope and evidence
+
+This review is limited to the `identity-001` operational classification, the proposed `identity-002` recovery identity, non-reset resource accounting, and the required execution context. It does not reopen the identity method and did not read BIE/estimator data or execute any audit.
+
+The immutable `identity-001` leaf contains only `resource.tsv`. It records:
+
+- `audit_wall_seconds=0.001110000`;
+- `cumulative_wall_seconds=60.918279000`;
+- `audit_peak_rss_bytes=0`;
+- `cumulative_peak_rss_bytes=1073594368`;
+- `controller_terminal=RSS_ENFORCEMENT_UNAVAILABLE`;
+- `python_signal=9`.
+
+No `identity-audit.json` exists.
+
+### BK.2 Findings
+
+1. **Operational classification — accepted.**
+
+   The process-table authority failed before any review result was published, and the controller killed the Python target fail-closed. The artifact contains no field comparison or identity verdict. Classification as
+   `HOST_SANDBOX_OPERATIONAL_FAILURE / PROCESS_TABLE_PERMISSION_DENIED`
+   is consistent with the terminal evidence and observed `/bin/ps` permission denial. It is not a numerical, FEM-method, identity-method, or memory-capacity failure. `identity-001` is permanently consumed and must remain immutable.
+
+2. **BLOCKER — the recovery identity change is internally contradictory and incomplete.**
+
+   Section 51.2 permits changing only the controller’s fixed ID to `identity-002`, while also stating that `identity_audit.py` must not change. Current `identity_audit.py` still fixes
+
+   ```text
+   AUDIT_ID = "identity-001"
+   ```
+
+   and uses it both in JSON identity fields and in the publication path. If only the controller is changed, it will claim `identity-002`, but Python will try to publish into the already consumed `identity-001` leaf and fail its exclusive create. The new leaf would be consumed without an identity JSON.
+
+   **Smallest repair:** explicitly authorize only the mechanical identity change in both files:
+
+   - Python `AUDIT_ID`, JSON `audit_id`, and its fixed review-audit publication path become `identity-002`;
+   - Perl `$AUDIT_ID`, collision/error strings, and fixed leaf become `identity-002`;
+   - README/SYMBOLS are updated mechanically;
+   - Python inputs, decoder, schemas other than the audit ID value, numerical algorithm, statuses, and output-field contract remain unchanged;
+   - neither path may read or copy `identity-001`.
+
+3. **Non-reset wall accounting — accepted.**
+
+   The arithmetic is exact:
+
+   $$
+   2700-(35.917169+25.000000+0.001110)=2639.081721\ \mathrm{s}.
+   $$
+
+   The recovered controller must record the scientific, reviewer, immutable `identity-001` operational, and current `identity-002` wall charges separately and use their sum. The previous charge may not be reset or omitted.
+
+4. **Memory contract — accepted.**
+
+   Peak memory remains a maximum rather than a sum. The previous zero-byte observation is not evidence of memory resolution, but it does not increase the existing combined peak of `1073594368` bytes. The only inclusive hard upper remains `3221225472` bytes, with no lower proxy or gate.
+
+5. **Execution context — accepted.**
+
+   Requiring an explicitly escalated/unsandboxed launch is necessary and sufficient for the controller’s `/bin/ps -axo ...` process-tree authority. Continued inability to obtain that authority must again fail closed; it cannot justify bypass, automatic retry, or another ID.
+
+### BK.3 Verdict and handoff
+
+**REVISE.**
+
+The operational classification, cumulative resource rules, and escalated-context requirement are accepted. Only the cross-file `identity-002` identity authorization must be clarified before implementation.
+
+Engineer implementation and execution are not authorized by this verdict. After the bounded design clarification, return it to the same Skeptic. A subsequent PASS may authorize only the mechanical ID/resource/docs changes; Researcher theory-to-code and Skeptic spec-to-code review must still pass before any escalated execution.
+## BL. Focused delta review of §52 cross-file identity authority
+
+### BL.1 Scope
+
+This review reopens only the §BK cross-file `identity-002` blocker. The operational classification, identity method, decoder, numerical thresholds, assignment, claim boundary, and resource limits are not reconsidered. No implementation or execution was performed.
+
+### BL.2 Closure
+
+Section 52 closes the blocker unambiguously:
+
+- Python’s fixed `AUDIT_ID`, JSON `audit_id`, and publication path must all become `identity-002`.
+- Perl’s fixed ID, collision check, create-once directory, diagnostic strings, and `resource.tsv` path must use the same namespace.
+- Neither file may dynamically select an ID or read/reuse `identity-001`.
+- `identity-001` remains an immutable consumed operational-failure leaf.
+- The resource schema separately records scientific, reviewer, `identity-001`, and current `identity-002` wall/RSS fields.
+- The sole remaining wall allowance is exactly `2639.081721` s, and the sole memory upper remains `3221225472` bytes.
+- README/SYMBOLS must distinguish the consumed operational failure from the prospective `identity-002` audit and must not claim an identity result or execution.
+
+`git diff --check` passes. No unresolved blocker or caveat remains in this bounded design delta.
+
+### BL.3 Verdict and authorization
+
+**PASS.**
+
+The same Engineer is authorized to implement only:
+
+1. the mechanical cross-file switch from `identity-001` to `identity-002`;
+2. the four-part non-reset wall/RSS accounting and exact remaining deadline;
+3. the corresponding README/SYMBOLS status synchronization.
+
+The HDF5 decoder, field-identity algorithm, thresholds, assignment, JSON fields other than the audit ID, conditional scalar rules, and claim boundary must remain unchanged.
+
+This PASS does **not** authorize execution or creation of `identity-002`. After implementation, Researcher cross-file theory-to-code review and the same Skeptic’s focused pre-execution review remain mandatory. Any eventual execution must still use the explicitly escalated context required by §51.
+## BM. Final focused pre-execution review for `identity-002`
+
+### BM.1 Scope
+
+This review is limited to the §52 mechanical implementation and Researcher §53. The identity algorithm, HDF5 decoder, numerical thresholds, assignment, and claim boundary were not reopened. No audit, BIE/estimator access, or output creation was performed.
+
+### BM.2 Static verification
+
+- Python fixes `AUDIT_ID="identity-002"` and derives both JSON `audit_id` and the unique publication path from it.
+- Perl independently fixes `$AUDIT_ID='identity-002'`; collision check, create-once directory, error messages, and `resource.tsv` all target the same namespace.
+- No active `identity-001` publication or input path remains. Its values appear only as immutable resource charges.
+- The remaining absolute deadline is exactly `2639.081721` s.
+- Cumulative wall is the sum of `35.917169`, `25.000000`, `0.001110`, and current `identity-002` elapsed.
+- Scientific, reviewer, `identity-001`, and `identity-002` RSS peaks are recorded separately and combined by maximum.
+- The only inclusive memory upper is `3221225472` bytes; no lower resource gate was introduced.
+- README/SYMBOLS correctly distinguish the consumed `identity-001` sandbox failure from prospective, unexecuted `identity-002`.
+- `identity-002` is absent, and `git diff --check` passes.
+
+No unresolved blocker or caveat was found in this bounded implementation.
+
+### BM.3 Verdict and one-time authorization
+
+**PRE-EXECUTION PASS.**
+
+Exactly one execution is authorized from:
+
+```text
+/Users/whc/Documents/Work/epost/test/i4/femref-a1
+```
+
+using exactly:
+
+```sh
+/usr/bin/perl ./run_identity_audit.pl
+```
+
+The command **must** be launched through a `require_escalated`/unsandboxed execution context so `/bin/ps -axo ...` can provide authoritative aggregate process-tree RSS monitoring. Running it in the ordinary sandbox is not authorized.
+
+This authorization is one-time and applies only to `identity-002`. It does not authorize retry, another identity ID, profile fitting, BIE reveal/comparison, estimator access, effectivity analysis, FEM recomputation, or canonical-artifact modification.
+
+After completion, the same Skeptic must perform a post-audit review of the JSON, resource record, create-once integrity, identity/selection status, conditional scalar publication, cumulative wall/RSS, and claim boundary. Profile or late BIE comparison remains prohibited until that review explicitly accepts the result.
+## BN. `identity-002` post-audit artifact/resource/claim review
+
+### BN.1 Audit frame
+
+Target: the completed create-once leaf
+`output/run-008/execution-001/review-audit/identity-002/`.
+
+This review inspected only its two artifacts and performed a read-only symbol comparison against the exact bundled HDF5 dylib. It did not read BIE/estimator data, run a field comparison, create another audit ID, or perform profile/effectivity work.
+
+### BN.2 Artifact and resource integrity
+
+The leaf contains exactly:
+
+- `identity-audit.json` — 778 bytes;
+- `resource.tsv` — 409 bytes.
+
+No partial or temporary file is present. The JSON consistently records:
+
+- `audit_id=identity-002`;
+- `audit_terminal=IDENTITY_AUDIT_UNAVAILABLE`;
+- `candidate7_identity_status=IDENTITY_AUDIT_UNAVAILABLE`;
+- caveat `HDF5_BINDING_UNAVAILABLE`;
+- `matched_component_id=null`;
+- `lambda30_candidate7=null`;
+- `k30_candidate7=null`;
+- `selection_relation=NO_UNIQUE_IDENTITY_COMPONENT`;
+- `profile_gate=NOT_ELIGIBLE`.
+
+The resource artifact records:
+
+- `identity002_wall_seconds=2.053772000`;
+- `cumulative_wall_seconds=62.972051000`;
+- `identity002_peak_rss_bytes=966656`;
+- `cumulative_peak_rss_bytes=1073594368`;
+- controller `NATURAL_EXIT`;
+- Python exit `0`, signal `0`.
+
+The arithmetic is internally exact:
+
+$$
+35.917169+25.000000+0.001110+2.053772
+=62.972051\ \mathrm{s}.
+$$
+
+Both wall and peak RSS are below 2700 s and 3,221,225,472 bytes. The tiny current-audit RSS is only evidence that the program stopped before substantive decoding; it is not a memory-resolution result.
+
+### BN.3 Failure classification
+
+**This is an operational HDF5 binding failure, not an identity, FEM, same-mode, or resource-capacity failure.**
+
+`NATURAL_EXIT` means the Python program correctly caught the binding exception, published the fail-closed JSON, and returned normally. It does not mean the identity audit succeeded.
+
+The failure occurs during `_bind()` before `H5open`, input-file opening, field reconstruction, Gram/SVD computation, assignment, or identity classification. Therefore:
+
+- no FEM field comparison was performed;
+- no overlap or continuation evidence was produced;
+- no candidate was accepted or rejected;
+- no conclusion about whether candidate 7 persists at $s=30$ is supported.
+
+The claim downgrade is correct and prevents any profile or BIE continuation.
+
+### BN.4 Decisive static diagnosis
+
+The active decoder references 32 HDF5 symbols. Static comparison with the exact dylib finds 31 present and exactly one missing:
+
+```text
+H5free_memory
+```
+
+The dylib exports `H5Rdereference`, confirming the prior repair, but does not export `H5free_memory`. Its embedded version string identifies HDF5 1.8.12 despite the filename `libhdf5-1.8.8.dylib`. This precisely explains `HDF5_BINDING_UNAVAILABLE`.
+
+### BN.5 Findings and verdict
+
+1. **BLOCKER — exact-library deallocation API is unresolved.**
+
+   The current decoder cannot bind the exact library because it assumes `H5free_memory`. Until the ownership/deallocation contract for the pointer returned by `H5Tget_member_name` is verified for this bundled HDF5 1.8.12 library, the audit cannot safely decode compound complex fields.
+
+2. No other artifact, resource, claim-boundary, or lifecycle defect is demonstrated by this run.
+
+**Post-audit verdict: `BLOCKED — OPERATIONAL HDF5 BINDING FAILURE`.**
+
+`identity-002` is permanently consumed. This verdict is not `IDENTITY_AMBIGUOUS` and is not evidence against the FEM method or same-mode hypothesis.
+
+### BN.6 Minimal next diagnostic scope
+
+The next action should remain read-only and static:
+
+1. preserve the exact 32-symbol binding inventory and the finding that only `H5free_memory` is absent;
+2. inspect the exact bundled HDF5 1.8.12 API or authoritative headers/documentation for the allocation ownership of `H5Tget_member_name`;
+3. determine the correct available deallocator or a safe API-compatible way to avoid that allocation;
+4. statically verify the proposed function signature and library symbol before any source repair or execution request.
+
+A future source correction would still require bounded Researcher design, Engineer implementation, Researcher theory-to-code review, and Skeptic pre-execution review.
+
+No new audit ID, retry, profile, BIE reveal/comparison, estimator access, effectivity work, or FEM computation is authorized.
+## BO. Independent design review of §54 allocation-free recovery
+
+### BO.1 Scope
+
+This review is limited to the allocation-free HDF5 member lookup, the prospective `identity-003` lifecycle, and non-reset resource accounting. The FEM identity method, field values, thresholds, assignment, statuses, and claim boundary were not reopened. No audit or BIE/estimator access was performed.
+
+### BO.2 Exact-library review
+
+The fixed dylib identifies itself internally as HDF5 1.8.12 and exports:
+
+- `H5Tget_member_index`;
+- `H5Tget_member_name`;
+- `H5Tget_member_offset`;
+- `H5Tget_member_type`;
+- `H5Tget_nmembers`.
+
+It does not export `H5free_memory`.
+
+Local disassembly of `H5Tget_member_index` confirms the two incoming arguments are the datatype identifier and member-name pointer, that names are compared using `strcmp`, and that the function returns the existing member index without allocating a caller-owned name buffer. This supports the frozen signature:
+
+```c
+int H5Tget_member_index(hid_t type_id, const char *name);
+```
+
+The proposed repair is therefore allocation-free and avoids both unsafe alternatives: binding the unavailable cross-version `H5free_memory` or relying on an internal allocator/deallocator.
+
+Retaining the exact two-member check, querying both `"real"` and `"imag"`, requiring distinct in-range indices, and then applying the existing type/offset/size checks preserves name validation without assuming member order.
+
+### BO.3 Lifecycle and resource review
+
+The prospective identity is consistently frozen as `identity-003`; `identity-001` and `identity-002` remain immutable consumed operational failures and may not be active inputs.
+
+The prior wall calculation is exact:
+
+$$
+35.917169+25.000000+0.001110+2.053772
+=62.972051\ \mathrm{s},
+$$
+
+so the remaining allowance is exactly:
+
+$$
+2700-62.972051=2637.027949\ \mathrm{s}.
+$$
+
+The future resource record must preserve all five stage entries and combine RSS by maximum. Prior peak remains `1073594368` bytes, and the only inclusive memory upper remains `3221225472` bytes. No lower wall/RSS gate, reset, forecast, reserve, stall, guard, or grace period is introduced.
+
+`identity-003` is absent, and `git diff --check` passes.
+
+### BO.4 Verdict and implementation authorization
+
+**PASS.**
+
+The same Engineer is authorized only to:
+
+1. replace `H5Tget_member_name`/`H5free_memory` bindings and use with the public allocation-free `H5Tget_member_index` path specified in §54;
+2. mechanically synchronize Python, JSON, runner, collision messages, and publication paths to `identity-003`;
+3. add the immutable `identity-002` wall/RSS entries and exact `2637.027949` s remaining deadline;
+4. update README/SYMBOLS mechanically.
+
+No other decoder, numerical, identity, assignment, status, input, or claim behavior may change.
+
+This PASS does **not** authorize execution or creation of `identity-003`. After implementation, Researcher theory-to-code review and the same Skeptic’s focused pre-execution review remain mandatory. Any later execution must still use the explicitly escalated/unsandboxed context.
+## BP. identity-003 最终 focused pre-execution review
+
+### 审查范围
+
+仅复审 Researcher §55 对 §54/§BO 已通过设计的有界实现；未执行 audit，未读取 BIE、estimator 或历史数值以选根，也未创建任何新 artifact。
+
+### 静态核验
+
+- `identity_audit.py` 与 `run_identity_audit.pl` 均唯一固定为 `identity-003`；complete、unavailable、publication 和 resource 路径一致，现有 `identity-003` namespace 不存在。
+- HDF5 compound decoder 已移除 `H5Tget_member_name`、`H5free_memory` 及其他分配/释放路径。当前实现使用已由精确 MATLAB dylib 导出并核验签名的 `H5Tget_member_index(type_id, "real"/"imag")`。
+- 原有 member count、索引互异、member type、offset、float class 和 4/8-byte size 检查均保留；修复没有改变 candidate7 映射、插值、Gram/SVD、assignment、continuation、localization、parity 或 claim boundary。
+- runner 的固定命令仍为 `/usr/bin/python3 -I -S ./identity_audit.py`。剩余 wall budget 为 `2637.027949` s，唯一 RSS hard limit 为 `3221225472` bytes；identity-001/002 的 wall/RSS charge 均计入累计字段，没有预算重置或较低停止门。
+- create-once、partial publication、absolute deadline、target-tree RSS enforcement 和 resource summary 路径保持一致。README/SYMBOLS 已同步 identity-003 的 prospective 状态及五阶段资源 schema。
+- 静态检查未发现旧 ID、旧 deallocator binding、BIE/estimator 输入或 identity-001/002 读取回流；`git diff --check` 通过。
+
+### Findings
+
+- `BLOCKER`: 无。
+- `IMPORTANT CAVEAT`: 无新增。
+- `MINOR CAVEAT`: 无需在执行前处理。
+
+### Verdict
+
+**PRE-EXECUTION PASS**
+
+授权仅一次执行：
+
+- cwd：`/Users/whc/Documents/Work/epost/test/i4/femref-a1`
+- command：`/usr/bin/perl ./run_identity_audit.pl`
+
+该命令必须以 `require_escalated`／unsandboxed context 启动，以保证 runner 能读取完整进程表并执行既定 RSS 监管。除此之外不授权 retry、新 identity ID、profile、BIE、estimator 或 effectivity 操作。执行完成后，必须由同一 Skeptic 完成 post-audit artifact/resource/claim review，之后才能决定是否进入 profile/BIE。
+## BQ. `identity-003` post-audit artifact/resource/claim review
+
+### Audit frame
+
+本节只读核验：
+
+- `output/run-008/execution-001/review-audit/identity-003/identity-audit.json`
+- `output/run-008/execution-001/review-audit/identity-003/resource.tsv`
+
+未读取旧 profile、BIE 或 estimator，未执行新的 eigensolve、mesh、MATLAB、Octave 或数值实验。目标仅是判断冻结的 reviewer-side FEM field identity audit 是否完整、内部一致，并决定是否可进入另经审查的 postprocess。
+
+### Artifact 与输入完整性
+
+- leaf 中恰有两个 terminal files：`identity-audit.json`（767073 B）和 `resource.tsv`（481 B）；无 partial、temporary 或额外文件。
+- JSON 可按标准 JSON 完整解析，且给出：
+  - `schema_version=i4a-candidate7-identity-v1`
+  - `audit_id=identity-003`
+  - `audit_terminal=IDENTITY_AUDIT_COMPLETE`
+- 输入身份与冻结合同一致：
+  - old：`run-007/execution-001`，`i4a-diagnostic-ranking-v2`
+  - new：`run-008/execution-001`，science `i4a-s30-refinement-v1`，fields `i4a-s30-fields-v1`
+- old candidate 7 按字段身份恢复出 47 个互异 realizations；五个目标行分别是 old theta indices $1,5,9,13,17$、`fine-p01/p05/p09/p13/p17`、root 11、dimension 1。
+- common grid 保留 10465 点，weight sum 为 13.03125；未发现 unavailable 或非有限状态。
+
+### 五 twist identity evidence
+
+每个 twist 的 old/new field-bearing inventory 均为 29 个对象；overlap、frequency-distance 和 principal-singular-value 矩阵均为 $29\times29$。每个 global assignment 含 29 个互异 real pairs，完整 dummy-augmented ledger 含 58 项。
+
+冻结目标映射为：
+
+| phase | old object | new object | overlap |
+|---|---:|---:|---:|
+| $0$ | 9 | 9 | 0.9999975690137297 |
+| $\pi/4$ | 125 | 38 | 0.9999975689864963 |
+| $\pi/2$ | 241 | 67 | 0.9999975689207237 |
+| $3\pi/4$ | 357 | 96 | 0.9999975688549545 |
+| $\pi$ | 473 | 125 | 0.9999975688277154 |
+
+五对均：
+
+- 出现在完整 global assignment 中；
+- 为 strict mutual best；
+- 通过 simple–simple threshold $0.90$；
+- row strict gap 至少 0.9171526270，column strict gap 至少 0.9162254250；
+- dimension 均为 1，故无 multiplicity caveat。
+
+old 完整 $\Theta_{17}$ chain 的 16 条边全部存在；new 五 twist matched chain 的四条边全部存在。五个 localization rows 均 available，old/new 均分类为 `localized`；endpoint parity 在 $0,\pi$ 均为 available、even/even match。JSON `caveats=[]`。
+
+因此冻结判据下的
+
+`candidate7_identity_status=SAME_MODE_SUPPORTED`
+
+可接受。
+
+### Selection relation 与 conditional publication
+
+匹配的新 component 为 candidate 9，而 canonical pure-FEM winner 仍是 candidate 3：
+
+- canonical：$\lambda_{30}=0.6150250894609801$，$k_{30}=0.7842353533608263$；
+- identity component：`matched_component_id=9`；
+- `selection_relation=PURE_FEM_WINNER_DIFFERS_IDENTITY_COMPONENT`；
+- `selection_fact=SELECTED_BRANCH_MISMATCH / ALTERNATE_MATCH_IDENTIFIED`。
+
+identity component 的五个新 eigenvalues 给出
+
+$$
+\Lambda_{30}^{(7)}
+\subset
+[3.3661924255424971,\ 3.3662142597747793],
+$$
+
+并按冻结 midpoint 规则得到
+
+$$
+\lambda_{30}^{(7)}=3.366203342658638,\qquad
+k_{30}^{(7)}=1.834721598133798.
+$$
+
+重新计算所得 midpoint 与平方根分别和新 scientific artifact 中 candidate 9 的 stored publication scalars 一致，`lambda_matches=true`、`k_matches=true`。`profile_gate=ELIGIBLE_AFTER_POST_AUDIT_REVIEW` 与上述状态一致。
+
+### Resource 与 lifecycle audit
+
+五阶段账本为：
+
+| stage | wall (s) | peak RSS (B) |
+|---|---:|---:|
+| scientific | 35.917169 | 1,073,594,368 |
+| reviewer inspection | 25.000000 | 171,982,848 |
+| identity-001 | 0.001110 | 0 |
+| identity-002 | 2.053772 | 966,656 |
+| identity-003 | 29.683016 | 564,379,648 |
+
+累计 wall 为 92.655067 s，逐项求和与 ledger 完全一致；累计 peak 为五阶段最大值 1,073,594,368 B。二者分别低于 2700 s 和 3,221,225,472 B。controller 为 `NATURAL_EXIT`，Python exit 0、signal 0；无硬预算触发或 operational failure。
+
+### Findings
+
+1. **IMPORTANT CAVEAT — canonical selection 与 identity component 不同。**
+   最强反例是 threshold-free pure-FEM ranking 选择 candidate 3，而 field identity 唯一支持 candidate 9 作为旧 candidate 7 的延续。该差异已被 artifact 明确记录，不能在后续文档中把 $k_{30}^{(7)}$ 称为 canonical pure-FEM winner。它不推翻 field identity，也不阻止 candidate-specific convergence postprocess。
+
+2. **MINOR CAVEAT — claim strength。**
+   `SAME_MODE_SUPPORTED` 是基于冻结 FEM field overlap、continuation、localization 和 parity 的数值身份支持，不是 certified identity theorem、连续谱存在性证明或 reference upper bound。
+
+3. **BLOCKER：无。**
+
+### Verdict
+
+**PASS WITH CONDITIONS**
+
+接受冻结意义下的 `SAME_MODE_SUPPORTED`，并接受 $k_{30}^{(7)}=1.834721598133798$ 作为旧 candidate 7 的经审查、candidate-specific $s=30$ scalar；canonical candidate 3 的事实不得被覆盖。
+
+授权进入下一道独立设计与预执行审查后的 postprocess：
+
+- 使用预注册的 $k_{12},k_{18},k_{24}$ 与这里接受的 $k_{30}^{(7)}$ 完成冻结的四点 profile；
+- 对预注册 $k_{30}^{\mathrm{pred}}$ 报告样本外残差；
+- 仅在上述 FEM quantities 冻结后揭示并使用 late BIE scalar 作冻结的位置比较。
+
+该授权不允许用 BIE 重选 candidate，不授权 estimator、effectivity comparison、certified bound、连续特征值存在性结论或新的 FEM run。
+## BR. Independent design review of §56 `profile-001`
+
+### Audit frame
+
+审查目标是 prospective candidate-specific scalar postprocess，不是新 FEM run。成功标准是：只对 §BQ 已接受的 candidate 7 $\to$ new candidate 9 identity scalar作冻结四点 profile、样本外预测残差和 late-BIE 位置比较，同时保持 canonical candidate 3、资源账本及 non-certified claim boundary 不变。
+
+### Design audit
+
+1. **Frozen mathematical inputs are consistent.**
+   §56 使用预注册 $k_{12},k_{18},k_{24},k_{30}^{\mathrm{pred}}$、§BQ 接受的
+   $k_{30}^{(7)}=1.834721598133798$，并把 late-BIE scalar 限定为 identity 和 $k_{30}^{(7)}$ 冻结后的只读常数。signed drifts、absolute drifts、ratios、prediction residual 和 strict BIE boolean 均与 §43.4 一致；零分母只降级为 JSON `null`，不会取消有效 scalar。
+
+2. **Variable-projection fit is mathematically and operationally determinate.**
+   模型 $k(s)=k_\infty+C s^{-p}$、$p=\exp(x)>0$ 保持不变。每个 $x$ 的 economy-QR solve、SSE objective、七个固定 starts、`fminsearch` options 及 `(SSE,p,start_index)` lexicographic winner 均已逐字冻结。非有限、rank-deficient 或非正 exitflag 只产生 `FIT_NUMERICALLY_UNRESOLVED`，不会伪造 fit success，也不会撤销 $k_{30}$ 或其他直接量。
+
+3. **Sealed ordering and information isolation are adequate.**
+   MATLAB entry 无输入，不读取 identity JSON、history、既有 output、Markdown、Git、field、eigenpair 或 estimator。BIE scalar 作为 post-identity literal 只参与最终 absolute-distance/strict-boolean 计算，不进入 candidate selection、四点 fit 或任何调参。最强潜在反例——用 BIE proximity 改选 branch——已被 source contract 明确排除。
+
+4. **Publication and create-once contract are sufficient.**
+   fresh `profile-001` leaf 只允许 `profile.json` 和 summary-last `resource.tsv`。JSON schema、candidate context、七-start ledger、winner/status、empirical certification 和 `effectivity_performed=false` 均明确；非有限值不得以 `NaN`/`Infinity` 发布。成功、数值未决和 operational failure 的边界可区分，leaf 一经创建即消费且不得覆盖或自动换 ID。
+
+5. **Resource contract remains non-reset.**
+   prior charge 固定为 92.655067 s 和 1,073,594,368 B，故唯一 wall predicate 为
+   $92.655067+T_{\mathrm{profile-001}}\ge2700$，remaining 为 2607.344933 s；唯一 memory upper 为 3,221,225,472 B，cumulative RSS 按 maximum 而非求和。300 s/1.5 GiB 仅是 prospective estimate，不是较低停止门。fixed no-argument runner、dedicated process group、authority-loss handling 和 summary-last resource publication足以执行该硬预算。
+
+### Findings
+
+- `BLOCKER`: 无。
+- `IMPORTANT CAVEAT`: canonical pure-FEM winner 仍是 candidate 3；所有 profile/BIE 输出必须明确标为 candidate-7 identity component，即 new candidate 9，不能把 $k_{30}^{(7)}$ 改称 canonical winner。§56 已正确保留此边界。
+- `MINOR CAVEAT`: 四点拟合及外推即使 `FIT_RESOLVED` 也只是 empirical model fit，不证明渐近区间、连续谱存在性或 certified error。§56 已正确降级。
+- Mechanical check：`git diff --check` 当前仅报告既有 §BQ 两行 Markdown hard-break trailing spaces；不是 §56 设计缺陷，也不阻止实现。
+
+### Verdict
+
+**DESIGN PASS**
+
+授权同一 Engineer 仅：
+
+1. 新增 `test/i4/femref-a1/profile_postprocess.m`；
+2. 新增 `test/i4/femref-a1/run_profile_postprocess.pl`；
+3. 如需同步 README/SYMBOLS，只可机械登记 `profile-001` 为 implemented but not run，不得写入结果。
+
+本 PASS 不授权执行、不授权创建 `profile-001` leaf，也不授权 estimator、effectivity、新 FEM solve 或 certified-reference claim。实现后仍须先完成 Researcher theory-to-code mapping，再由同一 Skeptic 完成 exact spec-to-code/resource pre-execution review。
+## BS. Exact spec-to-code/resource pre-execution review of `profile-001`
+
+### Audit frame
+
+本节只静态核对 `profile_postprocess.m`、`run_profile_postprocess.pl` 与 §§56–58/§BR；未运行 MATLAB、Octave、Perl 或 postprocess，未创建或读取 `profile-001` artifact。当前 `profile-001` leaf 不存在。
+
+### MATLAB specification-to-code audit
+
+1. **Frozen inputs and direct quantities match exactly.**
+   - `s_values=[12,18,24,30]`；
+   - 四个 candidate-7 identity-component scalars、$k_{30}^{\mathrm{pred}}$、late $k_{\mathrm{BIE}}$ 与 $D_{\mathrm{old}}$ 均逐字匹配 §56；
+   - `diff(k_values)` 正确实现 finer-minus-coarser signed drifts；
+   - absolute drifts、两个 ratios、prediction residual、late-BIE absolute distance 和严格 `<` boolean 均无额外 threshold 或 branch-selection 路径；
+   - zero denominator 只发布 `null`-eligible `NaN` 和 `UNDEFINED_ZERO_DENOMINATOR`。
+
+2. **QR variable projection and seven-start search are exact.**
+   - 模型为 $k(s)=k_\infty+C s^{-p}$、$p=\exp(x)>0$；
+   - 每次调用使用 `qr(A,0)` 与 `R \ (Q' * k(:))`；
+   - objective 唯一为 residual SSE；
+   - 非有限 $x,p,A,R$、zero diagonal $R$ 或非有限 coefficients/SSE 均返回 `Inf` objective，不引入 condition-number gate；
+   - 七个 starts、`TolX`、`TolFun`、`MaxIter`、`MaxFunEvals` 与设计一致；
+   - winner 只在 finite/full-rank endpoints 中按 `(SSE,p,start_index)` ascending `sortrows` 选择，exitflag 不参与排名，只决定 resolved/unresolved status；
+   - 无 finite winner 与非正 winner exitflag 的 publication downgrade 均符合冻结语义。
+
+3. **JSON and claim boundary are consistent.**
+   - candidate context 明确区分 old candidate 7、new identity component candidate 9 与 canonical candidate 3；
+   - 七-start ledger、winner、fit status、direct quantities和 late comparison 均进入单一 payload；
+   - `jsonencode(...,'ConvertInfAndNaN',true)` 后再次拒绝 `NaN`/`Infinity` token；
+   - `certification_status=EMPIRICAL_NON_CERTIFIED` 且 `effectivity_performed=false`；
+   - source 无 argument、`load`、`read*`、`fileread`、identity/scientific artifact、Markdown、Git 或 estimator 读取。Late-BIE literal 不进入 fit、winner 或 candidate selection。
+
+4. **Publication repair closes §57 blocker.**
+   `fopen(...,'w','n','UTF-8')` 是 §58 限定修复。它只能由 exact runner 在原子声明的 fresh `profile-001` leaf 中调用；runner 在 fork 前拒绝 existing leaf，因此该 write mode 不会覆盖历史 artifact。byte-count 和 close checks 保留，未引入第二 publication path。
+
+### Runner/resource audit
+
+- runner 固定无参数，唯一 MATLAB command 为
+  `/Applications/MATLAB_R2023b.app/bin/matlab -batch "profile_postprocess"`；
+- exact create-once namespace 为 `run-008/execution-001/review-audit/profile-001`；
+- absolute deadline 从 runner 启动时建立，remaining 为 2607.344933 s；prior wall 92.655067 s 未重置；
+- aggregate target RSS 由 root descendants 与 dedicated-PGID union 去重求和；`/bin/ps` 不可用、PGID 不成立或 reap authority 丢失均 fail closed；
+- 唯一 resource upper predicates 为累计 wall 达到 2700 s 或 target-tree/cumulative peak 达到 3,221,225,472 B；未发现较低 RSS/wall、forecast、stall、reserve、grace 或 fit-quality stop；
+- 只有 MATLAB natural zero exit、dedicated group 已验证且 `profile.json` 存在时才发布 `NATURAL_EXIT`；`resource.tsv` 使用 `O_EXCL` 最后发布。
+
+最强实现反例是绕过 runner 直接调用 MATLAB，此时 `'w'` 不再拥有 runner 的 create-once 保护。因此唯一授权入口必须保持为 exact Perl runner；当前 source/runner 合同已经满足这一条件。
+
+### Findings
+
+- `BLOCKER`: 无。
+- `IMPORTANT CAVEAT`: canonical candidate 3 与 candidate-7 identity component candidate 9 的区别必须在 post-run interpretation 中继续保留；当前 schema 已保留。
+- `MINOR CAVEAT`: `FIT_RESOLVED` 只表示冻结数值优化成功，不验证幂律模型的渐近正确性；当前 claim boundary 已正确降级。
+- `git diff --check` 对本轮 source/design 范围通过。
+
+### Verdict
+
+**PRE-EXECUTION PASS**
+
+授权仅一次执行：
+
+- cwd：`/Users/whc/Documents/Work/epost/test/i4/femref-a1`
+- command：`/usr/bin/perl ./run_profile_postprocess.pl`
+
+该命令必须使用 `require_escalated`／unsandboxed context，以保证完整 `/bin/ps` process-table authority。不得直接运行 `profile_postprocess`，不得 retry、换 profile ID、新增 FEM solve 或执行 estimator/effectivity。
+
+运行后必须由同一 Skeptic 审查 `profile.json`、`resource.tsv`、七-start fit ledger、direct quantities、late-BIE boolean、预算和 claim boundary，审查通过前不得同步研究结论。
+## BT. `profile-001` post-run artifact/resource/claim review
+
+### Artifact integrity
+
+`profile-001` leaf 恰含两个 create-once terminal files：
+
+- `profile.json`：3070 B
+- `resource.tsv`：277 B
+
+无 partial、temporary 或附加工件。JSON 可完整解析并给出：
+
+- `schema_version=i4a-candidate7-profile-v1`
+- `profile_id=profile-001`
+- `terminal=PROFILE_POSTPROCESS_COMPLETE`
+
+Candidate labels 保持正确：
+
+- old identity target：candidate 7
+- new identity component：candidate 9
+- canonical pure-FEM winner：candidate 3
+
+因此本结果是 candidate-7-specific profile，未改写 canonical selection。
+
+### Direct quantities
+
+独立按冻结 literals 重算后与 artifact 完全一致：
+
+$$
+\begin{aligned}
+d_{12\to18}&=-0.0052814302919568235,\\
+d_{18\to24}&=-0.001979901415371188,\\
+d_{24\to30}&=-0.0009584126670008075,
+\end{aligned}
+$$
+
+$$
+\rho_1=0.37487977799998845,\qquad
+\rho_2=0.4840709035106812.
+$$
+
+预注册样本外预测残差为
+
+$$
+r_{\mathrm{pred}}
+=k_{30}^{(7)}-k_{30}^{\mathrm{pred}}
+=4.794533798202494\times10^{-6},
+$$
+
+其绝对值相同。上述量只能解释为 observed drift/prediction diagnostics，不能单独证明渐近收敛或形成 certified error bound。
+
+### Seven-start fit audit
+
+七个 endpoints 均为 finite/full-rank。Exit flags 为
+
+`[1, 1, 1, 0, 1, 1, 1]`。
+
+Start 4 的 warning/`exitflag=0` 已透明保留，但它不是 lexicographic winner。按冻结 `(SSE,p,start_index)` 顺序独立核验，winner 确为 start 6，且 `exitflag=1`：
+
+$$
+p=1.8129679837413033,
+$$
+
+$$
+k_\infty=1.8327935034213265,\qquad
+C=0.9181205139250015,
+$$
+
+$$
+\mathrm{SSE}=4.302174060684754\times10^{-12}.
+$$
+
+由每个 endpoint 的 $(p,k_\infty,C)$ 重新计算 SSE 均与 ledger 一致。七个 starts 的 parameter spread 很小：
+
+- $p\in[1.8129679692436007,1.8129680080939325]$；
+- $k_\infty\in[1.8327935033833178,1.832793503485172]$；
+- $C\in[0.9181204840353469,0.9181205641324178]$。
+
+因此 `fit_status=FIT_RESOLVED` 符合冻结规则。Start 4 的非正 exitflag 是已记录的非 winner caveat，不构成 retry 或 fit failure。
+
+### Late-BIE comparison and claim boundary
+
+冻结 positional comparison 给出
+
+$$
+|k_{30}^{(7)}-k_{\mathrm{BIE}}|
+=0.0019513090256411125
+<0.0029097217,
+$$
+
+故 `strictly_less_than_old_distance=true` 正确。
+
+Artifact 同时明确：
+
+- `certification_status=EMPIRICAL_NON_CERTIFIED`
+- `effectivity_performed=false`
+
+该 boolean 只表示冻结位置差严格小于预注册旧距离；不能解释为 BIE mode selection、reference error upper bound、continuous eigenvalue existence 或 effectivity validation。
+
+### Resource audit
+
+$$
+92.655067+17.400782=110.055849\ \mathrm{s},
+$$
+
+与 cumulative ledger 完全一致。Profile peak RSS 为 825,491,456 B，故累计 peak 为
+
+$$
+\max(1,073,594,368,\ 825,491,456)
+=1,073,594,368\ \mathrm{B}.
+$$
+
+累计 wall 和 peak 分别低于 2700 s 与 3,221,225,472 B。Controller 为 `NATURAL_EXIT`，MATLAB exit 0、signal 0；无 operational 或 resource failure。
+
+### Findings
+
+1. **IMPORTANT CAVEAT — candidate-specific interpretation.**
+   Profile 属于由 field identity 支持的 new candidate 9，而 canonical pure-FEM winner 仍为 candidate 3。同步时必须保留这一差别。
+
+2. **MINOR CAVEAT — one non-winning optimizer warning.**
+   Start 4 的 `exitflag=0` 不影响 start 6 的有效 lexicographic winner，但七-start ledger和该 warning 应保留，不得概括为“所有 starts 均正常收敛”。
+
+3. **MINOR CAVEAT — empirical fit only.**
+   很小的 SSE 和跨 start 稳定性支持数值拟合可复现，但不验证幂律模型在连续极限中的正确性。
+
+4. **BLOCKER：无。**
+
+### Verdict
+
+**POST-RUN PASS WITH CONDITIONS**
+
+`profile-001` 已成功完成并消费，不应重跑或创建新 profile ID。
+
+允许最小同步至 I4 README、项目 STATUS 和现有 test 文档：
+
+- `profile-001` natural completion 与实际 wall/RSS；
+- 三段 drifts、两个 ratios 和 prediction residual；
+- `FIT_RESOLVED` 及 winner 的 $p,k_\infty,C,\mathrm{SSE}$；
+- late-BIE strict positional boolean 为 true；
+- candidate 7 $\to$ candidate 9 identity context及 canonical candidate 3 caveat；
+- `EMPIRICAL_NON_CERTIFIED`、`effectivity_performed=false`。
+
+不得同步为 certified reference、$\varepsilon_{\mathrm{ref}}$、连续特征值存在性证明或 effectivity validation；本审查也不授权新的数值运行。
