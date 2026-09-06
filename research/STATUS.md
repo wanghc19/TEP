@@ -1,10 +1,18 @@
 # Research status
 
-更新日期：2026-08-25。
+更新日期：2026-09-02。
 
 状态词含义：`established in archived mainline` 仅表示冻结主线给出了论证，不等于已完成独立来源核验；`needs review` 表示已有陈述或证明草案但仍需严格审计；`tentative` 表示研究性判断；`unresolved` 表示尚未解决。
 
 ## 当前阶段
+
+2026-09-02，eig-apost 完成 guided-mode eigensolver validation 专题文献审计；见
+[[research/projects/eig-apost/implementation/i4/r-validation|r-validation]]。本次原文核验把
+continuous exact DtN/RtR reduction、solver refinement/cross-method consistency、estimator effectivity
+与 certified enclosure 分为四个不同主张层级。当前 BIE+DtN candidate 作为 empirical baseline、
+curved-$P_2$ FEM ladder 向它靠近的做法符合文献常见验证实践，但只支持 $10^{-4}$ 量级的位置一致性，
+不支持 true-error ranking、BIE-derived estimator effectivity 或 continuous enclosure。本次只进行文献
+检索、全文核验和 ref 索引维护；没有运行数值实验，也没有改写 I4.1c artifact 或历史 verdict。
 
 2026-08-24，eig-apost I3.1 的全边界胞元 BIE `fbie-a1` 已形成可计算 continuous-residual
 indicator candidate：普通双精度 $q=1.0318643108971929\times10^{-10}$，名义 $k$ 区间宽度

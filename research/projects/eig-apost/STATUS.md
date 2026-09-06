@@ -1,8 +1,22 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-09-01。
+更新日期：2026-09-02。
 
 ## 当前状态
+
+- **2026-09-02 guided-mode eigensolver validation 文献专题：**
+  [[research/projects/eig-apost/implementation/i4/r-validation|r-validation]] 已按 deep-research/
+  literature-review workflow 核验 22 篇公开全文，并对一篇只有权威 metadata/abstract 的新近来源
+  明确标 `UNVERIFIED`。结论区分三类标准：continuous exact DtN/RtR reduction 与 refinement/cross-method
+  evidence 可以支持 solver numerical consistency；a posteriori estimator 还需 independent 或
+  semi-analytic truth、multi-level effectivity 与 mode matching；certified solver 还需 computable constants、
+  spectral isolation/existence 和覆盖全部离散/截断/roundoff 的 outward enclosure。Fliss (2013) 的
+  “exact computation” 是 continuous transparent reduction，不是 final discrete eigenvalue certification。
+  当前 BIE+DtN baseline 与 curved-$P_2$ FEM ladder 的 $10^{-4}$-scale positional agreement符合领域惯例，
+  但只支持 empirical cross-method consistency，不支持 true-error ranking、estimator effectivity 或
+  continuous enclosure。本轮新增公开全文
+  [[ref/ref_data/Klindworth2014.pdf|Klindworth--Schmidt--Fliss (2014)]] 并同步
+  [[ref/README|ref index]]/`reference.bib`；未运行数值实验，未改动 I4.1c artifacts 或历史 verdict。
 
 - **2026-09-01 I4.1b quadratic fitted-P2 empirical reference candidate：**
   [[research/projects/eig-apost/implementation/i4/design-4-1b|design-4-1b]] 冻结的

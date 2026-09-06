@@ -116,7 +116,8 @@ I4.2 的 reliable enclosure、projected gap、存在性和可计算上界仍不�
 2. [[research/projects/eig-apost/implementation/i4/search-plan|frozen search plan]]、
    [[research/projects/eig-apost/implementation/i4/search-log|search log]] 和
    [[research/projects/eig-apost/implementation/i4/sources|source verification matrix]]：固定检索、
-   访问和原文核验链；
+   访问和原文核验链；[[research/projects/eig-apost/implementation/i4/r-validation|validation-practice
+   literature audit]] 专门区分 solver validation、estimator effectivity 与 certification；
 3. [[research/projects/eig-apost/implementation/i4/methods|candidate methods]]：保存候选、后备和
    排除路线的公平比较；
 4. [[research/projects/eig-apost/implementation/i4/method-4-1|I4.1 method manuscript]]：本轮方法主稿；
