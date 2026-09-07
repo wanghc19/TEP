@@ -905,3 +905,57 @@ in the $\Delta N$ term, and cotangent cancellation before absolute values.
 The only review note was to complete the run ledger; `run-06-log.txt` now has
 status `COMPLETE_RESIDUAL_NUMERATOR_ORDINARY` and records all resources,
 components, gates, prediction fields, and zero solve counts.
+
+## P32 shape-general target-strip audit
+
+This audit supersedes only the earlier run-06 claim that the local retained
+target rows passed.  It does not change the wall design or any frozen or
+persisted artifact.  No numerical program was run for this audit.
+
+Three actions must be distinguished.  $H_{\mathbb R}(t)$ is the exact local
+Müller/Maue boundary action on the real parameter axis, including the value or
+normal identity jump once.  $H_{\rm an}(z)$ is its unique target-variable
+holomorphic continuation.  The current code bounds a third object
+$\widetilde H(z)$, obtained at $z=x+\mathrm i y$ by shifting the source
+parameter from $u$ to $u+\mathrm i y$ at the same time and leaving the
+periodic logarithm at the real difference $x-u$.
+
+For a general analytic curve, equality $\widetilde H=H_{\rm an}$ requires the
+product-strip lemma stated before (P32) in `s-local-panel.md`.  In particular,
+the full source-contour sweep needs a nonzero holomorphic signed speed, a
+zero-free jointly holomorphic normalized chord with one periodic logarithm
+branch, no non-diagonal complex null chord, and jointly holomorphic
+cancellation-safe Müller/Maue remainders.  The current Boolean
+`simultaneous_shift_admissible` does not certify those facts.
+
+The previous shape-general logarithmic action bound also used the false
+implication
+
+$$
+\int|\lambda(x-u)|\,|v(u+\mathrm i y)|\,du
+\le4\log2\,L_a
+$$
+
+from a complex path-length bound $L_a\ge\int|v|$.  Since $|\lambda|$ is
+unbounded at the target, an $L^1$ speed bound does not control this weighted
+integral.  The evaluator source now uses the valid shape-general coarse bound
+$8\pi\log2\,V_a$, where $V_a$ bounds the pointwise complex signed speed; the
+smooth remainder continues to use $L_a$.  This edit has not been run.
+
+The old ordinary values
+$M_H^{\rm val}=192.54212145058278$ and
+$M_H^{\rm nor}=1295.8632330248495$ therefore are not accepted bounds for
+$H_{\rm an}$.  The existing `global_action_triangle_enclosure=false` is
+retained and is now included in `local_action.gate.pass`; it consequently
+blocks the overall acceptance gate.
+The material-normal and lifting results are downgraded to `CONDITIONAL GO`,
+and the earlier instance-level `PASS` is not operative for those two modules.
+
+The independent bounded re-review classifies the invalid weighted-log
+inequality as a blocker and the unfinished product-strip lemma as an important
+caveat.  Its verdict on the current shape-general P32 instantiation is
+`DISPROVED`.  The minimum remaining obligation is to construct and verify the
+listed product-strip certificate for a general analytic curve, then rerun the
+unchanged scientific attempt with the revised fail-closed source.  No claim
+may use constant speed, circular complex rotation, or circular Fourier/Bessel
+diagonalization to discharge that obligation.

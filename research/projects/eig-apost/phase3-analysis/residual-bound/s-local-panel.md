@@ -16,7 +16,10 @@ hypersingular principal cancellation, finite panel remainder, and complete
 omitted-mode bounds are explicit and do not use circular diagonalization.
 The remaining conditions are finite interval enclosures of curve divided
 differences, kernel-series coefficients, density norms, and retained panel
-rows.  None depends on an unknown exact solution.
+rows.  In addition, the current P32 shape-general strip instantiation is
+`DISPROVED`: its weighted-log/path-length inequality is false, and the
+replacement product-strip action certificate has not yet been supplied.
+None of these obligations depends on an unknown exact solution.
 
 ## Strong local defects and jump ownership
 
@@ -652,10 +655,11 @@ conditions.
 
 ## Direct Kress-product specialization for an analytic curve contract
 
-The following specialization closes the retained-row condition without
-replacing the shape-general kernel cancellation (P3)--(P10).  It is an
-alternative to evaluating the panelwise Taylor centers (P11)--(P14), not a
-claim that an ordinary Kress value is exact.
+The following specialization closes the fixed-target source-row condition
+without replacing the shape-general kernel cancellation (P3)--(P10).  It is
+an alternative to evaluating the panelwise Taylor centers (P11)--(P14), not a
+claim that an ordinary Kress value is exact.  The separate target-strip step
+(P32) remains subject to the audit below.
 
 Let $N=2m$ and let ${\cal K}_N=\{-m+1,\ldots,m\}$.  After the exterior and
 interior kernels have been combined and the periodic logarithm has been
@@ -745,8 +749,167 @@ algebraically before (P31N) is bounded.  Substitution of (P31N) into (P31)
 therefore encloses the same Maue--Kress center that is evaluated numerically;
 using $C_{\mathsf T}^\#,R_{\mathsf T}^\#$ in its place would not do so.
 
-Let $H(t)$ be the exact local action, including the appropriate identity
-density once, and let
+### P32 target-strip audit
+
+The target-strip argument requires three different objects.  They must not be
+identified by an appeal to analytic continuation alone.  For either the value
+or normal action, the real-axis objects are
+
+$$
+H_{\mathbb R}^{\rm val}(t)
+=\tau+(K_e-K_i)\tau+(S_e-S_i)\sigma,
+$$
+
+$$
+H_{\mathbb R}^{\rm nor}(t)
+=(T_i-T_e)\tau+\sigma+(K_i^*-K_e^*)\sigma.
+$$
+
+Bundle their signs, the signed source Jacobian, and the density into finitely
+many terms and write either real-axis action as
+
+$$
+H_{\mathbb R}(t)=J(t)+\sum_j\int_0^{2\pi}
+\{\lambda(t-u)F_j(t,u)+G_j(t,u)\}\,du,
+\tag{P32a}
+$$
+
+where $J=\tau$ for the value action and $J=\sigma$ for the normal
+action.  The functions $F_j$ contain $C_{\mathsf L}(t,u)$, the appropriate
+density, and the signed source speed.  The functions $G_j$ contain the
+corresponding regular factors.  Thus the source Jacobian is part of
+$F_j,G_j$ and may not be silently replaced by a Euclidean modulus after
+complexification.
+
+Let $H_{\rm an}$ denote the unique holomorphic continuation of
+$H_{\mathbb R}$, if it exists.  The expression currently bounded by the I5
+code is instead the simultaneous-shift expression, for $z=x+\mathrm i y$,
+
+$$
+\widetilde H(z)=J(z)+\sum_j\int_0^{2\pi}
+\{\lambda(x-u)F_j(z,u+\mathrm i y)
++G_j(z,u+\mathrm i y)\}\,du.
+\tag{P32b}
+$$
+
+Here the logarithm in (P32b) is the real periodic logarithm; it is not a
+chosen value of a complex logarithm at $z-(u+\mathrm i y)$.
+
+A shape-general proof of $\widetilde H=H_{\rm an}$ is available only under
+the following product-strip hypotheses.  On a neighbourhood of the closed
+polystrip $S_a\times S_a$, the parameter curve and finite densities must be
+periodic and holomorphic; ${\boldsymbol r}'(w)\mathbin\cdot
+{\boldsymbol r}'(w)$ must have a nonzero periodic holomorphic signed-square-
+root $v(w)$; and
+
+$$
+c(z,w)=\frac{({\boldsymbol r}(z)-{\boldsymbol r}(w))\mathbin\cdot
+({\boldsymbol r}(z)-{\boldsymbol r}(w))}
+{4\sin^2((z-w)/2)}
+\tag{P32c}
+$$
+
+must extend jointly holomorphically across the periodic diagonal, be
+zero-free on the whole polystrip, and possess one periodic holomorphic branch
+of $\log c$.  All cancellation-safe divided differences in (P10) and the
+Maue form must then extend jointly holomorphically there.  In particular,
+there may be no non-diagonal complex null chord in the source-contour sweep.
+
+Under those hypotheses the logarithmic part can be treated without moving a
+singular complex logarithm.  If
+
+$$
+F_j(z,w)=\sum_{p,q\in\mathbb Z}F_{j,pq}e^{\mathrm i pz+\mathrm i qw},
+$$
+
+then on every strict substrip absolute convergence and the Fourier series of
+$\lambda$ give
+
+$$
+\begin{split}
+\int_0^{2\pi}\lambda(x-u)F_j(z,u+\mathrm i y)\,du
+&=-2\pi\sum_{p\in\mathbb Z}\sum_{q\ne0}
+\frac{F_{j,pq}}{|q|}e^{\mathrm i(p+q)z}.
+\end{split}
+\tag{P32d}
+$$
+
+The right side is precisely the holomorphic continuation of the real-axis
+logarithmic convolution.  For the regular part, joint holomorphy across the
+diagonal permits deformation of the source contour from the real axis to
+$u+\mathrm i y$; periodicity cancels the two vertical sides.  The identity
+term is continued directly and is still counted once.  In the normal action,
+the Maue integration by parts is performed after the interior/exterior
+difference: the universal cotangent terms cancel before absolute values, the
+periodic endpoint terms cancel, and the punctured-diagonal term tends to zero
+because $\partial_h(G_{\kappa_e}-G_{\kappa_i})=O(h\log|h|)$.  These steps prove
+$\widetilde H=H_{\rm an}$ without any circular Fourier/Bessel
+diagonalization.  Bounds on the closed strip additionally require continuity
+there (or certification on a wider strip); otherwise (P32) must use a strict
+width $b<a$.
+
+The present I5 certificate does not establish these product-strip
+hypotheses.  Its Boolean `simultaneous_shift_admissible` does not exclude a
+complex null chord during the source-contour deformation and does not certify
+the signed-speed or divided-difference extensions.  Therefore (P32d) cannot
+currently be applied to the frozen-instance output.
+
+There is also a separate shape-general error in the stored action majorant.
+A bound on complex path length alone does not imply
+
+$$
+\int_0^{2\pi}|\lambda(x-u)|\,|v(u+\mathrm i y)|\,du
+\le4\log2\sup_{|y|\le a}\int_0^{2\pi}|v(u+\mathrm i y)|\,du.
+\tag{P32e}
+$$
+
+Indeed, $|\lambda|$ is unbounded at $u=x$, whereas an $L^1$ bound on the
+second factor does not prevent concentration there.  Explicitly, let
+
+$$
+W_n(u)=\frac12\left[1+\frac1n
+\left(\frac{\sin(nu/2)}{\sin(u/2)}\right)^2\right].
+$$
+
+These positive trigonometric polynomials all have integral $2\pi$.  On
+$|u|\le n^{-1}$ they are bounded below by a fixed positive multiple of $n$,
+while $|\lambda(u)|$ is bounded below by $2\log n-O(1)$.  Hence
+$\int|\lambda(u)|W_n(u)\,du\to\infty$, disproving (P32e) from its stated
+$L^1$ datum.  A valid general bound uses
+
+$$
+V_a\ge\sup_{w\in S_a}|v(w)|,
+\qquad
+L_a\ge\sup_{|y|\le a}\int_0^{2\pi}|v(u+\mathrm i y)|\,du,
+\qquad
+\int_0^{2\pi}|\lambda(x-u)|\,|v(u+\mathrm i y)|\,du
+\le8\pi\log2\,V_a.
+\tag{P32f}
+$$
+
+Consequently valid shape-general strip-action candidates are
+
+$$
+\begin{split}
+M_H^{\rm val}={}&A_{\tau,a}
++[8\pi\log2\,V_aC_{\mathsf K}^\#+L_aR_{\mathsf K}^\#]A_{\tau,a}\\
+&+[8\pi\log2\,V_aC_{\mathsf S}^\#+L_aR_{\mathsf S}^\#]A_{\sigma,a},\\
+M_H^{\rm nor}={}&A_{\sigma,a}
++[8\pi\log2\,V_aC_{\mathsf T}^\#+L_aR_{\mathsf T}^\#]A_{\tau,a}\\
+&+[8\pi\log2\,V_aC_{\mathsf K^*}^\#+L_aR_{\mathsf K^*}^\#]A_{\sigma,a}.
+\end{split}
+\tag{P32g}
+$$
+
+The previously displayed ordinary values
+$M_H^{\rm val}=192.54212145058278$ and
+$M_H^{\rm nor}=1295.8632330248495$ are not presently proved bounds for
+$H_{\rm an}$.  They must remain rejected by the theorem gate; no conclusion
+is drawn from their observed size.
+
+Now let $H=H_{\rm an}$ be an exact local action for which the hypotheses above
+and a genuine bound $\|H(z)\|_2\le M_H$ on the closed target strip have been
+certified, including the appropriate identity density once, and let
 
 $$
 d_\ell=P_\Lambda^{-1/2}\int_0^{2\pi}
@@ -790,10 +953,9 @@ The cutoff is therefore fixed by the explicit alias and high-mode tails.  The
 two Nyquist directions $\ell=\pm m$ are both assigned to the omitted tail;
 the single aliased Nyquist slot is never counted as two retained rows.
 
-This corollary remains shape-general: a noncircular curve must provide the
-same zero-free normalized-chord, analytic-log, speed, arclength, and split
-factor bounds.  For the current circle input those bounds can be generated
-exactly from $c(z,w)=R^2$, but the evaluator consumes the certificate fields
-rather than a Fourier/Bessel diagonalization.  Equations (P20) and (P29)
-remain independent identity-inclusive high-mode fallbacks.  No refinement
-difference appears in (P31)--(P34).
+Equations (P32)--(P34) are shape-general only after the product-strip
+hypotheses before (P32c), the corrected action bound (P32g), and a genuine
+closed-strip bound have all been certified.  They are not instantiated by
+the current I5 input.  Equations (P20) and (P29) remain independent
+identity-inclusive high-mode fallbacks.  No refinement difference appears in
+(P31)--(P34).

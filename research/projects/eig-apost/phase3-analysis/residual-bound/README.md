@@ -145,8 +145,8 @@ No cancellation between the three terms is used to reduce this majorant.
 | module | current status | precise boundary |
 |---|---|---|
 | artificial-interface normal defect $B_{\Gamma_\pm}$ | current circle instance `GO` within the roundoff-excluded scope | every analytic omission has an explicit formula; the persisted ordinary number excludes floating-point outward rounding |
-| material-interface normal defect $B_\Upsilon$ | current circle instance `GO` after `residual-numerator-a1` run-06 | exact-QP Ewald, Maue--Kress source/target quadrature, combined angular tail, and block-power omissions all pass; a different curve still needs its own shape-general geometry certificates |
-| value-defect correction $B_{\mathrm{lift}}$ | current circle instance `GO` after `residual-numerator-a1` run-06 | material and artificial-wall value lifts, identity-inclusive fallback, combined angular tail, and block-power omissions all pass; a different curve still needs its own certificates |
+| material-interface normal defect $B_\Upsilon$ | `CONDITIONAL GO`; P32 target-strip gate fails closed | the run-06 local normal target-row radius used an invalid shape-general weighted-log/path-length inequality, and the simultaneous-shift action still lacks a product-strip proof certificate |
+| value-defect correction $B_{\mathrm{lift}}$ | `CONDITIONAL GO`; P32 target-strip gate fails closed | the same local value target-row defect invalidates the run-06 instance-level pass; the identity-inclusive fallback remains valid but does not retroactively repair the retained rows |
 
 Read [[research/projects/eig-apost/phase3-analysis/residual-bound/s-wall-tail|the
 artificial-interface module]] first, then
@@ -161,7 +161,10 @@ local-panel theorem]].  The cross-stage context remains
 [[research/projects/eig-apost/phase3-analysis/s-dtn-chain]].
 
 The frozen-instance implementation, numerical decomposition, run provenance,
-diagnostic interval map, and final `PASS` review are recorded in
+diagnostic interval map, and the later P32 audit that supersedes the earlier
+instance-level `PASS` are recorded in
 [[research/projects/eig-apost/implementation/i5/design-5-1]].  Every displayed
-number remains `NON_CERTIFIED_ROUNDOFF_EXCLUDED`; instance-level `GO` here does
-not mean a certified eigenvalue enclosure.
+number remains `NON_CERTIFIED_ROUNDOFF_EXCLUDED`.  In addition, until the P32
+product-strip obligation is discharged and the revised gate is rerun, the
+persisted run-06 numbers are not accepted upper bounds for $B_\Upsilon$,
+$B_{\mathrm{lift}}$, or their assembled numerator.

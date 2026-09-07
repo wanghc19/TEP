@@ -319,7 +319,7 @@ It changes no frozen field name or schema; it only records local aliases.  The
 | `sigma_coeff_map` | coefficient map of $\sigma$ | negative of the stored second map because `zeta=-sigma` | sign changed exactly once |
 | `configuration.boundary_node_count` | evaluation size $N$ | generated input; final value 512 | proof-driven quadrature tier, not a density solve |
 | `configuration.retained_mode_cutoff` | finite cutoff $m-1$ | generated input; final value 255 | both $\ell=\pm256$ begin the tail |
-| `local_complex_strip_certificate` | analytic normalized-chord contract | current circle adapter | shape-general fields, not a Bessel diagonalization |
+| `local_complex_strip_certificate` | proposed analytic normalized-chord contract | current generated adapter | its present booleans do not yet certify the full product strip, signed-speed branch, or absence of non-diagonal complex null chords required before (P32) |
 | `local_factors` | real P3--P29 bounds | cancellation-safe certificate and series tails | P20/P29 fallback |
 | `complex_strip_factor_bounds` | strip $C^\#,R^\#$ bounds | complex chord certificate and series tails | Kress alias and target rows |
 | `maue_strip_factor_bounds.tau_prime_strip_upper` | $A'_{\tau,a}$ | weighted frozen density coefficients | derivative term in the actual normal center |
@@ -327,7 +327,10 @@ It changes no frozen field name or schema; it only records local aliases.  The
 | `tangent_derivative_log_upper`, `tangent_derivative_smooth_upper` | $C_{\partial F}^\#,R_{\partial F}^\#$ | target-tangent projection certificate | second Maue normal term after cotangent cancellation |
 | `local_panel.value_rows`, `normal_rows` | local modal centers | Müller-combined Kress action | identity included once |
 | `kress_log_alias_factor` | logarithmic factor in (P31) | $a,N$ | explicit remainder, not grid drift |
-| `retained_target_row_remainder` | (P32) value-row radius | strip speed/action/phase bounds | independent target integration remainder |
+| `periodic_log_weight_upper` | $8\pi\log2\,V_a$ | pointwise complex signed-speed bound $V_a$ | shape-general coarse bound for the weighted periodic logarithm; not a path-length bound |
+| `smooth_source_measure_upper` | $L_a\ge\sup_y\int_0^{2\pi}|v(u+\mathrm i y)|\,du$ | complex source-contour certificate | smooth-remainder source measure only |
+| `retained_target_row_remainder` | conditional (P32) value-row radius | strip speed/action/phase bounds | rejected until the shape-general product-strip action enclosure passes |
+| `global_action_triangle_enclosure` | shape-general $\widetilde H=H_{\rm an}$ and strip-majorant gate | product-strip and action-bound proof | fixed `false` in the present source and included in `local_action.gate.pass` |
 | `regular_image_certificate.coordinate_tail_upper` | six M-R/M-I/M-T/M-L tails | generated Ewald certificate | order $(00,10,01,20,11,02)$ |
 | `kernel_finite_upper`, `kernel_tail_upper` | four $K_{pq}$ contractions | coordinate and normal bounds | source, target, and mixed normals remain distinct |
 | `regular_image.value_rows`, `normal_rows` | finite $H_\beta$ centers | exact-QP Ewald finite representation | never an MFS proxy |
