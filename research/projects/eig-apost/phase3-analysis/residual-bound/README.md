@@ -29,7 +29,8 @@ it may not silently redefine the common symbols below.
 |---|---|
 | $B=\mathbb R\times(-d/2,d/2)$ | infinite strip with transverse quasiperiod $d$ |
 | $K$ | one material subregion used in broken integration by parts |
-| $\Gamma_-,\Gamma_+$ | center artificial interfaces; their $L$-translates give all artificial interfaces |
+| $d_x=X_R-X_L$ | longitudinal cell width; code artifact field `z.L` is unchanged |
+| $\Gamma_-,\Gamma_+$ | center artificial interfaces; their $d_x$-translates give all artificial interfaces |
 | $\Sigma$ | one generic artificial interface, counted once |
 | $\Upsilon$ | union of all material interfaces |
 | $\beta$ | fixed transverse Bloch parameter |
@@ -46,6 +47,21 @@ it may not silently redefine the common symbols below.
 | $\widehat u=u_{h,M}+e$ | continuous compatible reconstructed field |
 | $P_\varsigma,c_\varsigma$ | full propagation matrix and starting state, $\varsigma\in\{-,+\}$ |
 | $\eta=(\tau,-\sigma)^{\mathsf T}$ | double- and single-layer density coordinate |
+| $N_\eta$ | original node count used to represent the frozen density |
+| $M_\eta$ | largest absolute Fourier degree present in the frozen density |
+| $L$ | residual Fourier cutoff: retained rows satisfy $|\ell|<L$ |
+| $N$ | Kress and target-DFT evaluation node count, with $N>2\max\{L,M_\eta\}$ |
+| $g(t-u)=\log(4\sin^2((t-u)/2))$ | periodic Kress logarithm for a $2\pi$ parameter |
+| $K^\chi=K_1^\chi g+K_2^\chi$, $\chi\in\{\mathrm{val},\mathrm{nor}\}$ | complete density- and Jacobian-inclusive Kress integrand for the value or normal defect |
+| $S_{\kappa,j}$ | bare single-layer Kress factor, $j\in\{1,2\}$ |
+| $D_{\kappa,j}$, $D_{\kappa,j}^*$ | bare source-normal and target-normal Kress factors |
+| $C_{\kappa,j}^{\mathrm{tan}}$ | bare Maue tangential auxiliary Kress factor |
+| $K_j^{T_e-T_i}$ | complete Maue-regularized split of $T_e-T_i$; the normal residual uses $T_i-T_e=-(T_e-T_i)$ |
+
+The common cotangent term is cancelled in the exterior-minus-interior Maue
+split before absolute values are taken.  The symbols above name theory
+objects only; existing MATLAB function and field names are unchanged and are
+mapped in `implementation/i5/SYMBOL.md`.
 
 For $v\in V_\beta$, define
 
@@ -145,8 +161,8 @@ No cancellation between the three terms is used to reduce this majorant.
 | module | current status | precise boundary |
 |---|---|---|
 | artificial-interface normal defect $B_{\Gamma_\pm}$ | current circle instance `GO` within the roundoff-excluded scope | every analytic omission has an explicit formula; the persisted ordinary number excludes floating-point outward rounding |
-| material-interface normal defect $B_\Upsilon$ | `CONDITIONAL GO`; P32 target-strip gate fails closed | the run-06 local normal target-row radius used an invalid shape-general weighted-log/path-length inequality, and the simultaneous-shift action still lacks a product-strip proof certificate |
-| value-defect correction $B_{\mathrm{lift}}$ | `CONDITIONAL GO`; P32 target-strip gate fails closed | the same local value target-row defect invalidates the run-06 instance-level pass; the identity-inclusive fallback remains valid but does not retroactively repair the retained rows |
+| material-interface normal defect $B_\Upsilon$ | theorem-level `GO`; frozen instance `CONDITIONAL GO` | the failed P32 strip radius is replaced by the reviewed real-variable Kress source/target remainder and algebraic Fourier tail; its finite derivative enclosures and decoupled cutoffs are not yet instantiated |
+| value-defect correction $B_{\mathrm{lift}}$ | theorem-level `GO`; frozen instance `CONDITIONAL GO` | the same reviewed real-variable theorem supplies identity-inclusive retained radii and the local lifting tail; the current run is not retroactively qualified |
 
 Read [[research/projects/eig-apost/phase3-analysis/residual-bound/s-wall-tail|the
 artificial-interface module]] first, then
@@ -156,7 +172,11 @@ lifting module]], and
 material-normal module]].  The shared shape-general free-space self-action is
 proved separately in
 [[research/projects/eig-apost/phase3-analysis/residual-bound/s-local-panel|the
-local-panel theorem]].  The cross-stage context remains
+local-panel theorem]].  The accepted replacement for the failed P32
+target-strip step, together with
+the assembled conditional numerator theorem, is
+[[research/projects/eig-apost/phase3-analysis/residual-bound/s-kress-real|the
+real-variable Kress bound]].  The cross-stage context remains
 [[research/projects/eig-apost/phase3-analysis/s-estimator]] and
 [[research/projects/eig-apost/phase3-analysis/s-dtn-chain]].
 
@@ -164,7 +184,9 @@ The frozen-instance implementation, numerical decomposition, run provenance,
 diagnostic interval map, and the later P32 audit that supersedes the earlier
 instance-level `PASS` are recorded in
 [[research/projects/eig-apost/implementation/i5/design-5-1]].  Every displayed
-number remains `NON_CERTIFIED_ROUNDOFF_EXCLUDED`.  In addition, until the P32
-product-strip obligation is discharged and the revised gate is rerun, the
+number remains `NON_CERTIFIED_ROUNDOFF_EXCLUDED`.  The failed P32 product-strip
+route is not an obligation of the replacement theorem.  Until the real-axis
+derivative enclosures, independent $L/N$
+cutoffs, retained radii, and revised assembly gate are instantiated, the
 persisted run-06 numbers are not accepted upper bounds for $B_\Upsilon$,
 $B_{\mathrm{lift}}$, or their assembled numerator.

@@ -13,12 +13,14 @@ strip geometry constants $\vartheta_{\pm,a},X'_a,Y'_a,X_a,Y_a,
 \delta_{w,a},\sigma_a$, off-surface rows $q_{p,w,\ell}$ and bounds
 $A_{p,w},C_{p,w}$, and the explicit trace-weight lower bound
 $\underline\vartheta_\ell$,
-the retained angular cutoff $L$, the cell cutoff $J$, the finite part
+the residual Fourier cutoff $L$ retaining $|\ell|<L$, the cell cutoff $J$,
+the finite part
 $\overline F_{L,J}^\Upsilon$, the omission tail $T_{L,J}^\Upsilon$, and the
 regular-image mixed-normal strip constant $A_{\mathrm{reg}}^\nu(A,a)$.  The
 Ewald reduction additionally defines the split $a_E$, $h=a_E/d$, the
-dimensionless $\eta$, reciprocal/image/Taylor cutoffs $N_R,N_I,N$, coordinate
-remainders $T_{rs}$, and the local cancelled function ${\cal C}_\eta$.
+dimensionless Ewald parameter $\chi_E$, reciprocal/image/Taylor cutoffs
+$N_R,N_I,N_E$, coordinate remainders $T_{rs}$, and the local cancelled
+function ${\cal C}_{\chi_E}$.
 The proof also defines the finite wall amplitudes $h_m(A)$ and signs $s_m$,
 the off-surface constant $A_{\mathrm{off}}^\nu$, high-angular constants
 $\mathcal C_{\Upsilon,\varsigma},\mathcal C_{\Upsilon,0}$, Lyapunov matrices
@@ -36,8 +38,8 @@ diagonalization.  The finite wall action additionally requires the displayed
 curve-strip certificates.
 
 Throughout the Ewald construction, $\kappa_e>0$, $a_E>0$, and hence the
-dimensionless parameter $\eta=(\kappa_e d/(2a_E))^2$ is strictly positive;
-$\log\eta$ is the real logarithm.
+dimensionless parameter $\chi_E=(\kappa_e d/(2a_E))^2$ is strictly positive;
+$\log\chi_E$ is the real logarithm.
 
 ## Strong defect and its trace norm
 
@@ -181,21 +183,21 @@ $\|j_{\Lambda,\ell}\|_2\le\sqrt{P_\Lambda} A_*
 e^{-2\pi a_*|\ell|/P_\Lambda}$.  With
 
 $$
-N=L_{\rm cut}+1,
+L\ge1,
 \quad r_a=e^{-4\pi a_*/P_\Lambda},
 \quad
-D_N=\sum_q c_q^{\rm tr}
-\tanh\!\left(\frac{2\pi N}{P_\Lambda}d_q^{\rm tr}\right),
+D_L=\sum_q c_q^{\rm tr}
+\tanh\!\left(\frac{2\pi L}{P_\Lambda}d_q^{\rm tr}\right),
 $$
 
 (M-high-weight) yields the explicit tail
 
 $$
-\sum_{|\ell|>L_{\rm cut}}
+\sum_{|\ell|\ge L}
 \frac{\|j_{\Lambda,\ell}\|_2^2}{b_\ell^\Lambda}
 \le
-\frac{P_\Lambda^2A_*^2}{\pi D_N}
-\frac{r_a^N}{N(1-r_a)}.
+\frac{P_\Lambda^2A_*^2}{\pi D_L}
+\frac{r_a^L}{L(1-r_a)}.
 \tag{M-dual-tail}
 $$
 
@@ -312,7 +314,8 @@ $$
 
 Its $|\ell|$ growth must be retained in the finite rows.  Because the frozen
 $\tau,\sigma$ are finite trigonometric polynomials, this diagonal part has no
-omitted angular support once $L$ covers their support.
+omitted angular support once $L$ strictly exceeds their largest absolute
+Fourier degree.
 
 ### General local free-space panel gate
 
@@ -543,8 +546,8 @@ C_{p,w}=\frac{2\pi\vartheta_{+,a}}{\sqrt{P_\Lambda}}A_{p,w}.
 \tag{M-off-Fourier}
 $$
 
-For the normal contribution take $p=1$.  If $N=L+1$ is in the high-frequency
-range of (M-high-weight), put
+For the normal contribution take $p=1$.  If the first omitted order $L$ is in
+the high-frequency range of (M-high-weight), put
 
 $$
 r_a=e^{-4\pi\sigma_a/P_\Lambda}.
@@ -553,16 +556,16 @@ $$
 Then the complete omitted boundary-mode tail of this wall action obeys
 
 $$
-\sum_{|\ell|\ge N}
+\sum_{|\ell|\ge L}
 \frac{\|q_{1,w,\ell}(A)\|_2^2}{b_\ell^\Lambda}
 \le
-\frac{P_\Lambda C_{1,w}(A,a)^2}{\pi D_N}
-\frac{r_a^N}{N(1-r_a)}.
+\frac{P_\Lambda C_{1,w}(A,a)^2}{\pi D_L}
+\frac{r_a^L}{L(1-r_a)}.
 \tag{M-off-dual-tail}
 $$
 
-This follows from $b_\ell^\Lambda\ge(2\pi/P_\Lambda)D_N|\ell|$,
-$1/|\ell|\le1/N$, and the two-sided geometric sum.  It uses no observed
+This follows from $b_\ell^\Lambda\ge(2\pi/P_\Lambda)D_L|\ell|$,
+$1/|\ell|\le1/L$, and the two-sided geometric sum.  It uses no observed
 Fourier decay.
 
 Equations (M-off-quad) and (M-off-Fourier) enter the barred finite rows and
@@ -834,7 +837,9 @@ target/source tube.
 The project implementation does not fill that gap.  The production
 `+kernel/qpgreen_mfs_pairmat.m` is a finite free-kernel-plus-proxy/Rayleigh
 approximation.  The archived Linton evaluator truncates (2.65) at finite
-$(M_1,M_2,N)$ and checks changes under enlarged tuples; its derivative
+$(M_1,M_2,N)$ and checks changes under enlarged tuples; these are quoted
+historical implementation variable names, not current Kress factors or the
+governing evaluation count.  Its derivative
 extension differentiates the same truncated sums.  Neither path stores a
 spectral, spatial, Taylor, or special-function remainder.  The historical
 agreement and refinement changes are ordinary numerical evidence and are
@@ -862,7 +867,7 @@ positive Ewald split parameter by $a_E$ and put
 $$
 h=\frac{a_E}{d},
 \qquad
-\eta=\left(\frac{\kappa_e d}{2a_E}\right)^2,
+\chi_E=\left(\frac{\kappa_e d}{2a_E}\right)^2,
 \qquad b=\frac{2\pi}{d}.
 $$
 
@@ -966,17 +971,17 @@ $q$ or $q^2$ factor.  Define $A_{\sigma,n}^{(s)}$ by the summand in
 (M-R-tail-series), and put
 
 $$
-\rho_{\sigma,s}
+r_{\sigma,s}
 =\left(1+\frac b{t_{\sigma,N_R}}\right)^s
 \exp\left[-\frac{b(2t_{\sigma,N_R}+b)}{4h^2}+bI_Y\right].
 $$
 
-If $\rho_{\sigma,s}<1$, the successive ratio is no larger than
-$\rho_{\sigma,s}$, hence
+If $r_{\sigma,s}<1$, the successive ratio is no larger than
+$r_{\sigma,s}$, hence
 
 $$
 \sum_{n=N_R}^\infty A_{\sigma,n}^{(s)}
-\le\frac{A_{\sigma,N_R}^{(s)}}{1-\rho_{\sigma,s}}.
+\le\frac{A_{\sigma,N_R}^{(s)}}{1-r_{\sigma,s}}.
 \tag{M-R-tail}
 $$
 
@@ -985,21 +990,21 @@ $$
 Write the real-space inner sum as
 
 $$
-H_\eta(z)=\sum_{n=0}^\infty\frac{\eta^n}{n!}E_{n+1}(z)
-=\int_1^\infty e^{-zt+\eta/t}\frac{dt}{t},
+H_{\chi_E}(z)=\sum_{n=0}^\infty\frac{\chi_E^n}{n!}E_{n+1}(z)
+=\int_1^\infty e^{-zt+\chi_E/t}\frac{dt}{t},
 \qquad \operatorname{Re}z>0.
 $$
 
 Direct integration gives
 
 $$
-|H_\eta(z)|,|H_\eta'(z)|
-\le e^\eta\frac{e^{-\operatorname{Re}z}}{\operatorname{Re}z},
+|H_{\chi_E}(z)|,|H_{\chi_E}'(z)|
+\le e^{\chi_E}\frac{e^{-\operatorname{Re}z}}{\operatorname{Re}z},
 $$
 
 $$
-|H_\eta''(z)|
-\le e^\eta e^{-\operatorname{Re}z}
+|H_{\chi_E}''(z)|
+\le e^{\chi_E} e^{-\operatorname{Re}z}
 \left(\frac1{\operatorname{Re}z}
 +\frac1{(\operatorname{Re}z)^2}\right).
 \tag{M-E-bounds}
@@ -1024,7 +1029,7 @@ $$
 For $\alpha\in\{0,1,2\}$ put
 
 $$
-\rho_\alpha
+r_\alpha
 =\left(1+\frac d{L_{N_I}}\right)^\alpha
 \exp\{-h^2d[2(N_Id-U_Y)+d]\}<1,
 $$
@@ -1034,35 +1039,35 @@ and, for $q\in\{1,2\}$, define
 $$
 {\mathscr S}_{\alpha,q}
 =\frac{2L_{N_I}^\alpha e^{-u_{N_I}}u_{N_I}^{-q}}
-{1-\rho_\alpha}.
+{1-r_\alpha}.
 $$
 
 The factor two covers both image rays.  Equations (M-E-bounds),
 $z_X=2h^2X$, $z_Y=2h^2(Y-jd)$ and $z_{XX}=z_{YY}=2h^2$ give
 
 $$
-T_{00}^{\rm img}\le\frac{e^\eta}{4\pi}{\mathscr S}_{0,1},
+T_{00}^{\rm img}\le\frac{e^{\chi_E}}{4\pi}{\mathscr S}_{0,1},
 $$
 
 $$
-T_{10}^{\rm img}\le\frac{e^\eta}{4\pi}(2h^2R_X){\mathscr S}_{0,1},
+T_{10}^{\rm img}\le\frac{e^{\chi_E}}{4\pi}(2h^2R_X){\mathscr S}_{0,1},
 \qquad
-T_{01}^{\rm img}\le\frac{e^\eta}{4\pi}(2h^2){\mathscr S}_{1,1},
+T_{01}^{\rm img}\le\frac{e^{\chi_E}}{4\pi}(2h^2){\mathscr S}_{1,1},
 $$
 
 $$
-T_{20}^{\rm img}\le\frac{e^\eta}{4\pi}
+T_{20}^{\rm img}\le\frac{e^{\chi_E}}{4\pi}
 \left[(2h^2R_X)^2({\mathscr S}_{0,1}+{\mathscr S}_{0,2})
 +2h^2{\mathscr S}_{0,1}\right],
 $$
 
 $$
-T_{11}^{\rm img}\le\frac{e^\eta}{4\pi}
+T_{11}^{\rm img}\le\frac{e^{\chi_E}}{4\pi}
 (2h^2R_X)(2h^2)({\mathscr S}_{1,1}+{\mathscr S}_{1,2}),
 $$
 
 $$
-T_{02}^{\rm img}\le\frac{e^\eta}{4\pi}
+T_{02}^{\rm img}\le\frac{e^{\chi_E}}{4\pi}
 \left[(2h^2)^2({\mathscr S}_{2,1}+{\mathscr S}_{2,2})
 +2h^2{\mathscr S}_{0,1}\right].
 \tag{M-I-tail}
@@ -1073,10 +1078,11 @@ them is counted in the next tail.
 
 #### Taylor tail on retained nonzero images
 
-For $N\ge2$, let
+For $N_E\ge2$, let
 
 $$
-\Pi_N(\eta)=e^\eta-\sum_{n=0}^N\frac{\eta^n}{n!}.
+\Pi_{N_E}(\chi_E)=e^{\chi_E}
+-\sum_{n=0}^{N_E}\frac{\chi_E^n}{n!}.
 $$
 
 For each $0<|j|<N_I$, require
@@ -1095,10 +1101,11 @@ Z_{Y,j}=\sup_{\mathcal D}|2h^2(Y-jd)|,
 $$
 
 $$
-\Theta_j=\Pi_N(\eta)\frac{e^{-u_j}}{u_j}.
+\Theta_j=\Pi_{N_E}(\chi_E)\frac{e^{-u_j}}{u_j}.
 $$
 
-Because all omitted $E_p$ in $H_\eta,H_\eta',H_\eta''$ have $p\ge2$,
+Because all omitted $E_p$ in
+$H_{\chi_E},H_{\chi_E}',H_{\chi_E}''$ have $p\ge2$,
 
 $$
 T_{00,j}^{\rm tay}\le\frac{\Theta_j}{4\pi},
@@ -1168,22 +1175,22 @@ must be regularized before truncation is, up to the already fixed project
 sign,
 
 $$
-{\cal C}_\eta(z)
+{\cal C}_{\chi_E}(z)
 =-\frac1{4\pi}\sum_{n=0}^\infty
-\frac{\eta^n}{n!}E_{n+1}(z)
-+\frac{\mathrm i}{4}H_0^{(1)}(2\sqrt{\eta z}).
+\frac{\chi_E^n}{n!}E_{n+1}(z)
++\frac{\mathrm i}{4}H_0^{(1)}(2\sqrt{\chi_E z}).
 \tag{M-local-cancel}
 $$
 
 The first unproved inequality is to construct a branch-free finite
-${\cal C}_{\eta,N}^{\rm can}$ and prove
+${\cal C}_{\chi_E,N_E}^{\rm can}$ and prove
 
 $$
 \max_{r=0,1,2}\sup_{z\in Z_0}
 \left|\partial_z^r
-[\mathcal C_\eta(z)-\mathcal C_{\eta,N}^{\rm can}(z)]\right|
-\le{\mathscr T}_{r,N}^{\rm loc}(\eta,Z_0),
-\qquad {\mathscr T}_{r,N}^{\rm loc}\longrightarrow0.
+[\mathcal C_{\chi_E}(z)-\mathcal C_{\chi_E,N_E}^{\rm can}(z)]\right|
+\le{\mathscr T}_{r,N_E}^{\rm loc}(\chi_E,Z_0),
+\qquad {\mathscr T}_{r,N_E}^{\rm loc}\longrightarrow0.
 \tag{M-local-first-blocker}
 $$
 
@@ -1193,8 +1200,8 @@ cancel the complete Hankel logarithmic branch.  The shortest repair is to use
 the integer-order recurrence for $E_{n+1}$, extract the whole series
 
 $$
-\sum_{n=0}^\infty\frac{(-\eta z)^n}{(n!)^2}
-=J_0(2\sqrt{\eta z}),
+\sum_{n=0}^\infty\frac{(-\chi_E z)^n}{(n!)^2}
+=J_0(2\sqrt{\chi_E z}),
 $$
 
 cancel its $J_0\log z$ term analytically against the Hankel expansion, and
@@ -1223,18 +1230,18 @@ $$
 where the second sum is empty for $n=0$.  Define four entire series
 
 $$
-J_\eta(z)=\sum_{n=0}^\infty\frac{(-\eta z)^n}{(n!)^2},
+J_{\chi_E}(z)=\sum_{n=0}^\infty\frac{(-\chi_E z)^n}{(n!)^2},
 \qquad
 S(z)=\sum_{n=1}^\infty\frac{(-z)^n}{n\,n!},
 $$
 
 $$
-D_\eta(z)=\sum_{n=1}^\infty
-\frac{(-1)^nH_n(\eta z)^n}{(n!)^2},
+D_{\chi_E}(z)=\sum_{n=1}^\infty
+\frac{(-1)^nH_n(\chi_E z)^n}{(n!)^2},
 $$
 
 $$
-Q_\eta(z)=\sum_{n=1}^\infty\frac{\eta^n}{(n!)^2}
+Q_{\chi_E}(z)=\sum_{n=1}^\infty\frac{\chi_E^n}{(n!)^2}
 \sum_{j=0}^{n-1}(n-1-j)!(-z)^j,
 \tag{M-L2}
 $$
@@ -1242,7 +1249,7 @@ $$
 where $H_n=\sum_{j=1}^n1/j$.  Equation (M-L1) yields
 
 $$
-H_\eta(z)=J_\eta(z)E_1(z)+e^{-z}Q_\eta(z).
+H_{\chi_E}(z)=J_{\chi_E}(z)E_1(z)+e^{-z}Q_{\chi_E}(z).
 \tag{M-L3}
 $$
 
@@ -1280,17 +1287,17 @@ E_1(z)=-\gamma_E-\log z-S(z).
 \tag{M-L5}
 $$
 
-Set $w=2\sqrt{\eta z}$.  Substitution of (M-L3)--(M-L5) into
+Set $w=2\sqrt{\chi_E z}$.  Substitution of (M-L3)--(M-L5) into
 (M-local-cancel) cancels every $\log z$ term and yields the branch-free
 identity
 
 $$
 \boxed{
-{\cal C}_\eta(z)
-=\frac1{4\pi}J_\eta(z)
-[S(z)-\log\eta-\gamma_E+\mathrm i\pi]
--\frac{e^{-z}}{4\pi}Q_\eta(z)
-+\frac1{2\pi}D_\eta(z).
+{\cal C}_{\chi_E}(z)
+=\frac1{4\pi}J_{\chi_E}(z)
+[S(z)-\log\chi_E-\gamma_E+\mathrm i\pi]
+-\frac{e^{-z}}{4\pi}Q_{\chi_E}(z)
++\frac1{2\pi}D_{\chi_E}(z).
 }
 \tag{M-L6}
 $$
@@ -1300,16 +1307,17 @@ the unique continuation across $z=0$ and the complex null cone.  The project
 Green convention is the global negative of the Linton convention, which does
 not change any $K_{pq}$ bound and must be applied exactly once in code.
 
-Let $N\ge2$ and truncate each outer series in (M-L2) at $N$, giving
-$J_{\eta,N},S_N,D_{\eta,N},Q_{\eta,N}$.  The canonical finite local part is
+Let $N_E\ge2$ and truncate each outer series in (M-L2) at $N_E$, giving
+$J_{\chi_E,N_E},S_{N_E},D_{\chi_E,N_E},Q_{\chi_E,N_E}$.  The canonical
+finite local part is
 
 $$
 \boxed{
-{\cal C}_{\eta,N}^{\rm can}(z)
-=\frac1{4\pi}J_{\eta,N}(z)
-[S_N(z)-\log\eta-\gamma_E+\mathrm i\pi]
--\frac{e^{-z}}{4\pi}Q_{\eta,N}(z)
-+\frac1{2\pi}D_{\eta,N}(z).
+{\cal C}_{\chi_E,N_E}^{\rm can}(z)
+=\frac1{4\pi}J_{\chi_E,N_E}(z)
+[S_{N_E}(z)-\log\chi_E-\gamma_E+\mathrm i\pi]
+-\frac{e^{-z}}{4\pi}Q_{\chi_E,N_E}(z)
++\frac1{2\pi}D_{\chi_E,N_E}(z).
 }
 \tag{M-L7}
 $$
@@ -1320,47 +1328,47 @@ therefore directly evaluable at $z=0$.
 Suppose the local complex tube has $|z|\le R_0$ and choose any $B>R_0$.  Put
 
 $$
-x=\eta B,
-\qquad x_Q=\eta(1+B),
-\qquad c_\eta=\log\eta+\gamma_E-\mathrm i\pi.
+x=\chi_E B,
+\qquad x_Q=\chi_E(1+B),
+\qquad c_{\chi_E}=\log\chi_E+\gamma_E-\mathrm i\pi.
 $$
 
 Require the four finite ratio gates
 
 $$
-\rho_J=\frac{x}{(N+2)^2}<1,
+r_J=\frac{x}{(N_E+2)^2}<1,
 \qquad
-\rho_S=\frac{B(N+1)}{(N+2)^2}<1,
+r_S=\frac{B(N_E+1)}{(N_E+2)^2}<1,
 $$
 
 $$
-\rho_D=\frac{x}{(N+2)^2}
-\left(1+\frac1{N+2}\right)<1,
+r_D=\frac{x}{(N_E+2)^2}
+\left(1+\frac1{N_E+2}\right)<1,
 \qquad
-\rho_Q=\frac{x_Q(N+1)}{(N+2)^2}<1.
+r_Q=\frac{x_Q(N_E+1)}{(N_E+2)^2}<1.
 \tag{M-L8}
 $$
 
 Termwise ratios and $H_{n+1}/H_n\le1+1/(n+1)$ give
 
 $$
-\tau_J=\frac{x^{N+1}}{((N+1)!)^2(1-\rho_J)},
+\tau_J=\frac{x^{N_E+1}}{((N_E+1)!)^2(1-r_J)},
 $$
 
 $$
-\tau_S=\frac{B^{N+1}}
-{(N+1)(N+1)!(1-\rho_S)},
+\tau_S=\frac{B^{N_E+1}}
+{(N_E+1)(N_E+1)!(1-r_S)},
 $$
 
 $$
-\tau_D=\frac{H_{N+1}x^{N+1}}
-{((N+1)!)^2(1-\rho_D)},
+\tau_D=\frac{H_{N_E+1}x^{N_E+1}}
+{((N_E+1)!)^2(1-r_D)},
 $$
 
 $$
 \tau_Q=\frac1{1+B}
-\frac{x_Q^{N+1}}
-{(N+1)(N+1)!(1-\rho_Q)}.
+\frac{x_Q^{N_E+1}}
+{(N_E+1)(N_E+1)!(1-r_Q)}.
 \tag{M-L9}
 $$
 
@@ -1371,14 +1379,14 @@ $$
 \le(n-1)!(1+B)^{n-1}.
 $$
 
-Since $|J_\eta|\le e^{\eta B}$, $|S|\le e^B-1$, and
+Since $|J_{\chi_E}|\le e^{\chi_E B}$, $|S|\le e^B-1$, and
 $|e^{-z}|\le e^B$ on $|z|\le B$, the complete local function remainder is
 
 $$
 \boxed{
-\tau_C(N,B)=\frac1{4\pi}\left[
-\tau_J(e^B-1+|c_\eta|)
-+e^{\eta B}\tau_S+e^B\tau_Q
+\tau_C(N_E,B)=\frac1{4\pi}\left[
+\tau_J(e^B-1+|c_{\chi_E}|)
++e^{\chi_E B}\tau_S+e^B\tau_Q
 \right]+\frac{\tau_D}{2\pi}.
 }
 \tag{M-L10}
@@ -1389,8 +1397,8 @@ Cauchy's formula on the concentric disks gives, for $r=0,1,2$,
 $$
 \boxed{
 \sup_{|z|\le R_0}
-|\partial_z^r({\cal C}_\eta-{\cal C}_{\eta,N}^{\rm can})|
-\le\frac{r!}{(B-R_0)^r}\tau_C(N,B).
+|\partial_z^r({\cal C}_{\chi_E}-{\cal C}_{\chi_E,N_E}^{\rm can})|
+\le\frac{r!}{(B-R_0)^r}\tau_C(N_E,B).
 }
 \tag{M-L11}
 $$
@@ -1399,63 +1407,65 @@ This is the explicit quantity requested in (M-local-first-blocker), and it
 tends to zero factorially.  For a finite-part enclosure define
 
 $$
-J_N^\#(B)=\sum_{n=0}^N\frac{(\eta B)^n}{(n!)^2},
+J_{N_E}^\#(B)=\sum_{n=0}^{N_E}\frac{(\chi_E B)^n}{(n!)^2},
 \qquad
-S_N^\#(B)=\sum_{n=1}^N\frac{B^n}{n\,n!},
+S_{N_E}^\#(B)=\sum_{n=1}^{N_E}\frac{B^n}{n\,n!},
 $$
 
 $$
-D_N^\#(B)=\sum_{n=1}^N
-\frac{H_n(\eta B)^n}{(n!)^2},
+D_{N_E}^\#(B)=\sum_{n=1}^{N_E}
+\frac{H_n(\chi_E B)^n}{(n!)^2},
 $$
 
 $$
-Q_N^\#(B)=\sum_{n=1}^N\frac{\eta^n}{(n!)^2}
+Q_{N_E}^\#(B)=\sum_{n=1}^{N_E}\frac{\chi_E^n}{(n!)^2}
 \sum_{j=0}^{n-1}(n-1-j)!B^j.
 $$
 
 Then
 
 $$
-M_N(B)=\frac1{4\pi}J_N^\#(B)[S_N^\#(B)+|c_\eta|]
-+\frac{e^B}{4\pi}Q_N^\#(B)+\frac1{2\pi}D_N^\#(B)
+M_{N_E}(B)=\frac1{4\pi}J_{N_E}^\#(B)
+[S_{N_E}^\#(B)+|c_{\chi_E}|]
++\frac{e^B}{4\pi}Q_{N_E}^\#(B)+\frac1{2\pi}D_{N_E}^\#(B)
 \tag{M-L12}
 $$
 
-satisfies $\sup_{|z|\le B}|{\cal C}_{\eta,N}^{\rm can}(z)|\le M_N(B)$.
+satisfies
+$\sup_{|z|\le B}|{\cal C}_{\chi_E,N_E}^{\rm can}(z)|\le M_{N_E}(B)$.
 Thus
 
 $$
 \sup_{|z|\le R_0}
-|\partial_z^r{\cal C}_{\eta,N}^{\rm can}(z)|
-\le\frac{r!M_N(B)}{(B-R_0)^r},
+|\partial_z^r{\cal C}_{\chi_E,N_E}^{\rm can}(z)|
+\le\frac{r!M_{N_E}(B)}{(B-R_0)^r},
 \qquad r=0,1,2.
 \tag{M-L13}
 $$
 
-Finally let $L_r=r!\tau_C(N,B)/(B-R_0)^r$.  The local coordinate
+Finally let $E_r^{\rm loc}=r!\tau_C(N_E,B)/(B-R_0)^r$.  The local coordinate
 truncation remainders are
 
 $$
-T_{00}^{\rm loc}=L_0,
+T_{00}^{\rm loc}=E_0^{\rm loc},
 $$
 
 $$
-T_{10}^{\rm loc}\le2h^2R_XL_1,
+T_{10}^{\rm loc}\le2h^2R_XE_1^{\rm loc},
 \qquad
-T_{01}^{\rm loc}\le2h^2R_YL_1,
+T_{01}^{\rm loc}\le2h^2R_YE_1^{\rm loc},
 $$
 
 $$
-T_{20}^{\rm loc}\le4h^4R_X^2L_2+2h^2L_1,
+T_{20}^{\rm loc}\le4h^4R_X^2E_2^{\rm loc}+2h^2E_1^{\rm loc},
 $$
 
 $$
-T_{11}^{\rm loc}\le4h^4R_XR_YL_2,
+T_{11}^{\rm loc}\le4h^4R_XR_YE_2^{\rm loc},
 $$
 
 $$
-T_{02}^{\rm loc}\le4h^4R_Y^2L_2+2h^2L_1.
+T_{02}^{\rm loc}\le4h^4R_Y^2E_2^{\rm loc}+2h^2E_1^{\rm loc}.
 \tag{M-L14}
 $$
 
@@ -1529,11 +1539,11 @@ $$
 \le\sqrt{2\pi R}\,A_{\mathrm{tot}}^\nu(A,a)e^{-a|\ell|}.
 $$
 
-Set $r=e^{-2a}$, $N=L+1$, and take $L$ no smaller than the finite
-free-circle support.  The high-angular tail for one state map is
+Set $r=e^{-2a}$ and take the first omitted order $L$ strictly larger than the
+finite free-circle support.  The high-angular tail for one state map is
 
 $$
-\sum_{|\ell|>L}
+\sum_{|\ell|\ge L}
 \frac{\|j_{\Upsilon,\ell}(A)\|_2^2}
 {\underline\vartheta_\ell}
 \le\mathcal C_\Upsilon(A,a,L)^2,
@@ -1542,8 +1552,8 @@ $$
 $$
 \mathcal C_\Upsilon(A,a,L)^2
 =\frac{4\pi R^2A_{\mathrm{tot}}^\nu(A,a)^2}
-{\underline r_c\tanh(N\delta_c/R)}
-\frac{r^N}{N(1-r)}.
+{\underline r_c\tanh(L\delta_c/R)}
+\frac{r^L}{L(1-r)}.
 $$
 
 For each retained propagated row and the vector of fixed center-circle
@@ -1574,7 +1584,7 @@ once.  Define
 
 $$
 \overline\omega_{\varsigma,L}^\Upsilon
-=\sum_{|\ell|\le L}
+=\sum_{|\ell|<L}
 \frac{(\|\widetilde\ell_{\varsigma,\ell}^\Upsilon\|_2
 +\epsilon_{\varsigma,\ell}^\Upsilon)^2}
 {\underline\vartheta_\ell}.
@@ -1588,7 +1598,7 @@ finite part is
 
 $$
 \overline F_{L,J}^{\Upsilon\,2}
-=\sum_{|\ell|\le L}\frac1{\underline\vartheta_\ell}
+=\sum_{|\ell|<L}\frac1{\underline\vartheta_\ell}
 \left[
 (\|\widetilde j_{0,\ell}^{\Upsilon,\mathrm{sing}}\|_2
 +\epsilon_{0,\ell}^\Upsilon)^2

@@ -10,8 +10,9 @@ $\kappa_e=\widehat k\sqrt{\rho_e}$, the wall and material collar widths
 $\delta_w,\delta_c$, the general tubular constants
 $C_0^{\rm tub},C_1^{\rm tub},e_\ell^{\rm tub}$, the
 cubic profile $\chi$, the wall lifting weight $e_m^w$, the circle lifting
-weight $e_\ell^\Upsilon$, its upper-bound constants $C_0,C_2$, the retained
-cutoffs $M,L$, the finite energy part $F_{M,L}^{\mathrm{lift}}$, the omitted
+weight $e_\ell^\Upsilon$, its upper-bound constants $C_0,C_2$, the wall-mode
+cutoff $M$, the residual Fourier cutoff $L$ retaining $|\ell|<L$, the finite
+energy part $F_{M,L}^{\mathrm{lift}}$, the omitted
 energy tail $T_{M,L}^{\mathrm{lift}}$, the general off-surface rows
 $q_{0,w,\ell}$ and their bound $C_{0,w}$, and the regular-image strip constant
 $A_a$.  The omitted-mode sections use the finite wall support $\mathcal I_w$,
@@ -193,17 +194,17 @@ $$
 e^{-2\pi a_*|\ell|/P_\Lambda}.
 $$
 
-For $N=L_{\rm cut}+1$ and
+For the first omitted residual order $L$ and
 $r_a=e^{-4\pi a_*/P_\Lambda}$, put
 
 $$
-S_0(N,r_a)=\frac{r_a^N}{1-r_a},
+S_0(L,r_a)=\frac{r_a^L}{1-r_a},
 $$
 
 $$
-S_2(N,r_a)=r_a^N\left[
-\frac{N^2}{1-r_a}
-+\frac{2Nr_a}{(1-r_a)^2}
+S_2(L,r_a)=r_a^L\left[
+\frac{L^2}{1-r_a}
++\frac{2Lr_a}{(1-r_a)^2}
 +\frac{r_a(1+r_a)}{(1-r_a)^3}
 \right].
 $$
@@ -211,10 +212,10 @@ $$
 Then the omitted lifting energy satisfies
 
 $$
-\sum_{|\ell|>L_{\rm cut}}e_\ell^{\rm tub}|a_\ell|^2
+\sum_{|\ell|\ge L}e_\ell^{\rm tub}|a_\ell|^2
 \le2P_\Lambda A_*^2\left[
-C_0^{\rm tub}S_0(N,r_a)
-+C_1^{\rm tub}\left(\frac{2\pi}{P_\Lambda}\right)^2S_2(N,r_a)
+C_0^{\rm tub}S_0(L,r_a)
++C_1^{\rm tub}\left(\frac{2\pi}{P_\Lambda}\right)^2S_2(L,r_a)
 \right].
 \tag{T-tail}
 $$
@@ -339,7 +340,7 @@ $$
 $$
 |a_{\Upsilon,\ell}-\widetilde a_{\Upsilon,\ell}|
 \le\epsilon_{\Upsilon,\ell},
-\qquad |\ell|\le L.
+\qquad |\ell|<L.
 $$
 
 The finite computed upper part of the lifting energy is
@@ -349,7 +350,7 @@ F_{M,L}^{\mathrm{lift}\,2}
 =\sum_{\Sigma,r}\sum_{|m|\le M}
 e_m^w
 (|\widetilde a_{\Sigma,r,m}|+\epsilon_{\Sigma,r,m})^2
-+\sum_\Upsilon\sum_{|\ell|\le L}
++\sum_\Upsilon\sum_{|\ell|<L}
 e_\ell^\Upsilon
 (|\widetilde a_{\Upsilon,\ell}|+\epsilon_{\Upsilon,\ell})^2.
 $$
@@ -371,34 +372,35 @@ $$
 \left[(\kappa_m+|\beta_m|)A_\tau+A_\sigma\right].
 $$
 
-Let $N=M+1$, $q_0=2\pi/d$,
-$t_N=q_0N-|\beta|>\kappa_e$,
-$\kappa_N=\sqrt{t_N^2-\kappa_e^2}$, and $r=e^{-2\delta q_0}$.
+Let $M_+=M+1$, $q_0=2\pi/d$,
+$t_{M_+}=q_0M_+-|\beta|>\kappa_e$,
+$\kappa_{M_+}=\sqrt{t_{M_+}^2-\kappa_e^2}$, and
+$r=e^{-2\delta q_0}$.
 Then
 
 $$
-H_N=\left(1+\frac{t_N}{\kappa_N}\right)A_\tau
-+\frac{A_\sigma}{\kappa_N},
+H_{M_+}=\left(1+\frac{t_{M_+}}{\kappa_{M_+}}\right)A_\tau
++\frac{A_\sigma}{\kappa_{M_+}},
 $$
 
 and, with
 
 $$
-S_j(N,r)=\sum_{n=N}^\infty n^jr^n,
+S_j(M_+,r)=\sum_{n=M_+}^\infty n^jr^n,
 \qquad j=0,1,2,
 $$
 
 the explicit formulas are
 
 $$
-S_0=\frac{r^N}{1-r},
+S_0=\frac{r^{M_+}}{1-r},
 \quad
-S_1=r^N\left(\frac N{1-r}+\frac r{(1-r)^2}\right),
+S_1=r^{M_+}\left(\frac{M_+}{1-r}+\frac r{(1-r)^2}\right),
 $$
 
 $$
-S_2=r^N\left(
-\frac{N^2}{1-r}+\frac{2Nr}{(1-r)^2}
+S_2=r^{M_+}\left(
+\frac{M_+^2}{1-r}+\frac{2M_+r}{(1-r)^2}
 +\frac{r(1+r)}{(1-r)^3}
 \right).
 $$
@@ -414,7 +416,7 @@ gives the computable one-defect tail
 
 $$
 \sum_{|m|>M}e_m^w|a_m|^2
-\le\frac{e^{2\delta(\kappa_e+|\beta|)}H_N^2}{2d}
+\le\frac{e^{2\delta(\kappa_e+|\beta|)}H_{M_+}^2}{2d}
 \left[
 C_w^0S_0+C_w^2
 (q_0^2S_2+2q_0|\beta|S_1+\beta^2S_0)
@@ -441,16 +443,16 @@ $$
 \le C_{0,w}(A,a)e^{-|\xi_\ell|\sigma_a}.
 $$
 
-For $N=L_{\rm cut}+1$ and
+For the first omitted residual order $L$ and
 $r_a=e^{-4\pi\sigma_a/P_\Lambda}$, the complete high-boundary-mode lifting
 tail of this action is therefore
 
 $$
-\sum_{|\ell|\ge N}e_\ell^{\rm tub}
+\sum_{|\ell|\ge L}e_\ell^{\rm tub}
 \|q_{0,w,\ell}(A)\|_2^2
 \le2C_{0,w}(A,a)^2\left[
-C_0^{\rm tub}S_0(N,r_a)
-+C_1^{\rm tub}\left(\frac{2\pi}{P_\Lambda}\right)^2S_2(N,r_a)
+C_0^{\rm tub}S_0(L,r_a)
++C_1^{\rm tub}\left(\frac{2\pi}{P_\Lambda}\right)^2S_2(L,r_a)
 \right].
 \tag{T-off-tail}
 $$
@@ -469,7 +471,7 @@ For a general boundary the material part of the finite lifting energy uses
 
 $$
 \overline F_{L}^{\rm tub\,2}
-=\sum_{|\ell|\le L}e_\ell^{\rm tub}
+=\sum_{|\ell|<L}e_\ell^{\rm tub}
 (\|\widetilde a_{\Upsilon,\ell}\|_2
 +\epsilon_{\Upsilon,\ell})^2.
 \tag{T-general-finite}
@@ -592,7 +594,7 @@ makes all these amplitudes finite.  For $|\operatorname{Im}\theta|\le a$,
 define the branch-correct exponent
 
 $$
-\rho_m(a)=
+\chi_m(a)=
 \begin{cases}
 R(|\gamma_m|+|\beta_m|)\sinh a,
 &\gamma_m\in\mathbb R,\\
@@ -607,7 +609,7 @@ $$
 B_{\Upsilon,\mathrm{off}}(A,a)
 :=\sum_{m\in\mathcal I_w}
 \|h_{\Upsilon,m}(A)\|_2
-e^{\rho_m(a)}
+e^{\chi_m(a)}
 $$
 
 is therefore a computable bound for the strip supremum.  The evanescent case
@@ -663,17 +665,16 @@ $$
 \le\sqrt{2\pi R}\,A_a e^{-a|\ell|}
 $$
 
-for this regular-image component.  With
-$r_a=e^{-2a}$ and $N_L=L+1$, define
+for this regular-image component.  With $r_a=e^{-2a}$, define
 
 $$
-S_0^a=\frac{r_a^{N_L}}{1-r_a},
+S_0^a=\frac{r_a^L}{1-r_a},
 $$
 
 $$
-S_2^a=r_a^{N_L}\left[
-\frac{N_L^2}{1-r_a}
-+\frac{2N_Lr_a}{(1-r_a)^2}
+S_2^a=r_a^L\left[
+\frac{L^2}{1-r_a}
++\frac{2Lr_a}{(1-r_a)^2}
 +\frac{r_a(1+r_a)}{(1-r_a)^3}
 \right].
 $$
@@ -681,7 +682,7 @@ $$
 The omitted regular-image circle lifting energy would then satisfy
 
 $$
-\sum_{|\ell|>L}e_\ell^\Upsilon|a_{\Upsilon,\ell}|^2
+\sum_{|\ell|\ge L}e_\ell^\Upsilon|a_{\Upsilon,\ell}|^2
 \le4\pi R A_a^2(C_0S_0^a+C_2S_2^a).
 $$
 

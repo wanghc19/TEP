@@ -5,6 +5,7 @@ mathematical authorities are
 [[research/projects/eig-apost/phase3-analysis/residual-bound/s-wall-tail]],
 [[research/projects/eig-apost/phase3-analysis/residual-bound/s-material-tail]],
 [[research/projects/eig-apost/phase3-analysis/residual-bound/s-local-panel]],
+[[research/projects/eig-apost/phase3-analysis/residual-bound/s-kress-real]],
 and [[research/projects/eig-apost/phase3-analysis/residual-bound/s-lift-tail]].
 The earlier implemented entries describe the wall experiments.  The final
 section records the later `test/i5/residual-numerator-a1` implementation and
@@ -25,6 +26,39 @@ table says so.
   notation snapshot.  It is not linked and is neither an authority nor a
   runtime dependency.
 
+## Governing I5 notation
+
+| theory symbol | meaning | code or artifact boundary |
+|---|---|---|
+| $\eta=(\tau,-\sigma)^{\mathsf T}$ | frozen double- and single-layer density coordinate | artifact stem `eta`; a stored `zeta` means only the second coordinate $-\sigma$ |
+| $N_\eta$ | original parameter-node count of the frozen density | `source_node_count`; for `eta_unit_256`, $N_\eta=256$ |
+| $M_\eta$ | largest absolute Fourier degree present in $\eta$ | derived from `density.orders`; it is not an evaluation cutoff |
+| $L$ | residual Fourier cutoff, retaining $|\ell|<L$ | a zero-based code cutoff equals $L-1$ |
+| $N$ | even Kress and target-DFT evaluation node count | `configuration.boundary_node_count` |
+
+Every governing retained-row evaluation requires
+$N>2\max\{L,M_\eta\}$.  The symbols $N_{\mathrm{ser}},N_E,N_R,N_I$ denote
+explicitly subscripted kernel/Ewald cutoffs and never the evaluation node count $N$.
+The material coefficient alone is denoted by $\rho$; ratio-test constants use
+$r$ and the dimensionless Ewald parameter is $\chi_E$.
+
+The theoretical bare Kress factors and unchanged MATLAB outputs are mapped as
+follows.  This table changes no API, function signature, structure field, or
+historical code variable.
+
+| theoretical factor | role | unchanged MATLAB source/output |
+|---|---|---|
+| $S_{\kappa,1},S_{\kappa,2}$ | single-layer logarithmic and regular factors | `+kernel/kress_mn_splits.m`: `M1`, `M2` |
+| $D_{\kappa,1},D_{\kappa,2}$ | source-normal double-layer factors | `+kernel/kress_l_splits.m`: `L1`, `L2` |
+| $D_{\kappa,1}^*,D_{\kappa,2}^*$ | target-normal adjoint factors | `+kernel/kress_l_splits.m`: `Ls1`, `Ls2` |
+| $C_{\kappa,1}^{\mathrm{tan}},C_{\kappa,2}^{\mathrm{tan}}$ | Maue tangential auxiliary factors | `+kernel/kress_mn_splits.m`: `N1`, `N2` |
+| $K_j^{T_e-T_i}$ | complete Maue-regularized split of $T_e-T_i$ | local code variable `Tdiff`; the normal residual applies $T_i-T_e=-(T_e-T_i)$ |
+| $K_j^{\mathrm{val}},K_j^{\mathrm{nor}}$ | complete density- and Jacobian-inclusive defect integrands in $K=K_1g+K_2$ | assembled value and normal Kress rows; no API alias is introduced |
+
+The common cotangent term is cancelled algebraically between exterior and
+interior contributions while forming $K_j^{T_e-T_i}$, before either absolute
+values or the normal-residual minus sign are applied.
+
 ## Runtime interface and frozen fields
 
 | canonical code name | kind and scope | mathematical object and source | type, shape, units | defined / consumed | permitted alias |
@@ -42,10 +76,10 @@ table says so.
 | `circle_radius` | local scalar | $R$ | positive real scalar, length | `z.R` / density normalization and kernels | `R` in artifact |
 | `wall_left_x` | local scalar | $X_L$ | real scalar, length | `z.X_L` / left kernel | none |
 | `wall_right_x` | local scalar | $X_R$ | real scalar, length | `z.X_R` / right kernel | none |
-| `cell_width` | local scalar | $L=X_R-X_L$ | positive real scalar, length | `z.L` / center Rayleigh derivative | `L` in artifact |
+| `cell_width` | local scalar | $d_x=X_R-X_L$ | positive real scalar, length | `z.L` / center Rayleigh derivative | artifact field `L` only at the input boundary |
 | `circle_center_x` | fixed local scalar | $c_x=0$ in the frozen geometry | real scalar, length | configuration / distance and strip bound | none |
 | `circle_center_y` | fixed local scalar | $c_y=0$ in the frozen geometry | real scalar, length | configuration / kernel coordinates | none |
-| `eta_native` | frozen matrix | nodal map $q\mapsto(\tau,-\sigma)^T$ | complex $512\times194$ | `z.eta_unit_256` / density FFT | none |
+| `eta_native` | frozen matrix | nodal map $q\mapsto\eta=(\tau,-\sigma)^{\mathsf T}$ | complex $(2N_\eta)\times194$; here $N_\eta=256$ | `z.eta_unit_256` / density FFT | none |
 | `xi_left_coeff` | frozen matrix | left flat-wall single-layer density coefficients | complex $512\times194$ | `z.xi_left_unit_512` / flat-wall flux | none |
 | `xi_right_coeff` | frozen matrix | right flat-wall single-layer density coefficients | complex $512\times194$ | `z.xi_right_unit_512` / flat-wall flux | none |
 | `q_center` | frozen vector | center-cell Rayleigh state $q^{\rm cen}$ | complex $194\times1$ | `z.q_center` / singleton derivative | none |
@@ -221,23 +255,23 @@ future stopping decision.
 | `target_normal_component_upper`, `source_normal_component_upper` | future geometry fields | $(N_{t,x},N_{t,y})$ and $(N_{s,x},N_{s,y})$ in (M-K-tail) | nonnegative real $1\times2$ vectors | `self_tube_certificate` / coordinate-to-normal assembly | none |
 | `ewald_split` | future configuration scalar | Linton split $a_E>0$ | positive real scalar, dimensionless | fixed configuration / M-R--M-L | `a_E` only in equations |
 | `ewald_h` | future derived scalar | $h=a_E/d$ | positive real scalar, inverse length | `ewald_split`, `period_y` / all Ewald stages | none |
-| `ewald_eta` | future derived scalar | $\eta=(\kappa_e d/(2a_E))^2$, with $\kappa_e=k_{\rm outer}$ for the frozen exterior | nonnegative real scalar | physical inputs / M-I, M-T, M-L | none |
+| `ewald_eta` | future derived scalar | $\chi_E=(\kappa_e d/(2a_E))^2$, with $\kappa_e=k_{\rm outer}$ for the frozen exterior | nonnegative real scalar | physical inputs / M-I, M-T, M-L | code field name retained; never the density $\eta$ |
 | `reciprocal_spacing` | future derived scalar | $b=2\pi/d$ | positive real scalar, inverse length | `period_y` / M-R | none |
 | `reciprocal_cutoff` | future configuration scalar | $N_R$, retaining $\lvert m\rvert<N_R$ | positive integer scalar | fixed configuration / reciprocal finite part and tail | `N_R` only in equations |
 | `image_cutoff` | future configuration scalar | $N_I$, retaining $0<\lvert j\rvert<N_I$ | positive integer scalar | fixed configuration / real-image finite part and tail | `N_I` only in equations |
-| `taylor_cutoff` | future configuration scalar | $N$, retaining Ewald Taylor orders $0{:}N$ and local outer-series orders through $N$ | integer scalar at least $2$ | fixed configuration / M-T and M-L | `N` only in those equations |
+| `taylor_cutoff` | future configuration scalar | $N_E$, retaining Ewald Taylor orders $0{:}N_E$ and local outer-series orders through $N_E$ | integer scalar at least $2$ | fixed configuration / M-T and M-L | code field name retained |
 | `local_z_radius` | future geometry scalar | $R_0\ge\sup_{\mathcal D}\lvert h^2(X^2+Y^2)\rvert$ | nonnegative real scalar | `self_tube_certificate` / M-L | `R_0` only in equations |
 | `local_cauchy_radius` | future configuration scalar | $B>R_0$ in (M-L8)--(M-L13) | positive real scalar | fixed configuration / local factorial and derivative bounds | `B` only in M-L equations |
 | `finite_nonwood_ledger` | future gate structure | every retained $q_m=\sqrt{(\beta+2\pi m/d)^2-\kappa_e^2}$, branch choice, $1/q_m$, and a positive non-Wood separation | per-order outward interval structure | frozen modal inputs / reciprocal finite part | none |
 | `reciprocal_tail_gate` | future gate structure | both inequalities in (M-R-gate) on both tail rays | scalar logicals plus interval margins | M-R geometry and cutoff / tail authorization | none |
-| `reciprocal_tail_ratios` | future gate array | $\rho_{\sigma,s}<1$ for $\sigma\in\{-,+\}$ and $s=0,1,2$ in (M-R-tail) | nonnegative real $2\times3$ | first omitted reciprocal terms / reciprocal tail | none |
-| `image_tail_gate` | future gate structure | $N_Id>U_Y$, $u_{N_I}>0$, and $\rho_\alpha<1$ for $\alpha=0,1,2$ in (M-I-gate)--(M-I-tail) | scalar logicals and outward margins | geometry and `image_cutoff` / omitted-image tail | none |
+| `reciprocal_tail_ratios` | future gate array | $r_{\sigma,s}<1$ for $\sigma\in\{-,+\}$ and $s=0,1,2$ in (M-R-tail) | nonnegative real $2\times3$ | first omitted reciprocal terms / reciprocal tail | none |
+| `image_tail_gate` | future gate structure | $N_Id>U_Y$, $u_{N_I}>0$, and $r_\alpha<1$ for $\alpha=0,1,2$ in (M-I-gate)--(M-I-tail) | scalar logicals and outward margins | geometry and `image_cutoff` / omitted-image tail | none |
 | `retained_image_real_lower` | future gate vector | $u_j\le\inf_{\mathcal D}\operatorname{Re}z_j$ for every $0<\lvert j\rvert<N_I$ in (M-T-gate) | positive outward-lower vector | self-tube geometry / retained-image finite and Taylor terms | none |
-| `taylor_poisson_tail` | future tail scalar | $\Pi_N(\eta)=e^\eta-\sum_{n=0}^N\eta^n/n!$ | nonnegative outward-upper scalar | `ewald_eta`, `taylor_cutoff` / M-T tail | none |
-| `local_series_ratios` | future gate vector | $(\rho_J,\rho_S,\rho_D,\rho_Q)$ in (M-L8) | nonnegative real $1\times4$, each strictly below one | M-L parameters / local factorial tail | none |
+| `taylor_poisson_tail` | future tail scalar | $\Pi_{N_E}(\chi_E)=e^{\chi_E}-\sum_{n=0}^{N_E}\chi_E^n/n!$ | nonnegative outward-upper scalar | `ewald_eta`, `taylor_cutoff` / M-T tail | none |
+| `local_series_ratios` | future gate vector | $(r_J,r_S,r_D,r_Q)$ in (M-L8) | nonnegative real $1\times4$, each strictly below one | M-L parameters / local factorial tail | none |
 | `reciprocal_finite_enclosure` | future finite structure | retained reciprocal value and coordinate derivatives through total order two | outward complex interval arrays | finite complex `erfc`, exponential, branch, and denominator evaluation / coordinate finite part | none |
-| `nonzero_image_finite_enclosure` | future finite structure | retained $0<\lvert j\rvert<N_I$, $0\le n\le N$ real-image value and derivatives | outward complex interval arrays | finite $E_{n+1}$, exponential, and polynomial evaluation / coordinate finite part | none |
-| `local_canonical_finite_enclosure` | future finite structure | branch-free ${\cal C}_{\eta,N}^{\rm can}$ and derivative bounds from (M-L7), (M-L12), (M-L13) | outward real or complex interval structure | finite entire series / coordinate finite part | none |
+| `nonzero_image_finite_enclosure` | future finite structure | retained $0<\lvert j\rvert<N_I$, $0\le n\le N_E$ real-image value and derivatives | outward complex interval arrays | finite $E_{n+1}$, exponential, and polynomial evaluation / coordinate finite part | none |
+| `local_canonical_finite_enclosure` | future finite structure | branch-free ${\cal C}_{\chi_E,N_E}^{\rm can}$ and derivative bounds from (M-L7), (M-L12), (M-L13) | outward real or complex interval structure | finite entire series / coordinate finite part | none |
 | `finite_special_function_enclosure` | future audit structure | validation record for every finite complex `erfc`, $E_n$, exponential, logarithm, and constant enclosure | scalar structure with per-family gates | interval backend / all three finite structures | ordinary `Faddeeva_erfc` or `expint` values are not aliases |
 | `reciprocal_coordinate_tail` | future tail vector | $(T_{00}^{\rm rec},T_{10}^{\rm rec},T_{01}^{\rm rec},T_{20}^{\rm rec},T_{11}^{\rm rec},T_{02}^{\rm rec})$ from (M-R-tail) | nonnegative outward-upper $1\times6$ | M-R / total coordinate tail | none |
 | `omitted_image_coordinate_tail` | future tail vector | the six $T_{rs}^{\rm img}$ in (M-I-tail), already summing every Taylor order on omitted images | nonnegative outward-upper $1\times6$ | M-I / total coordinate tail | none |
@@ -275,11 +309,11 @@ inter-level drift are not bounds.
 | `local_regular_factor_upper` | future kernel structure | $(R_{\mathsf S}^\#,R_{\mathsf K}^\#,R_{\mathsf K^*}^\#,R_{\mathsf T}^\#)$ from (P8)--(P10) | nonnegative outward-upper $1\times4$ | cancellation-safe divided differences and kernel series / normal action | `R_hash` only in prose |
 | `local_second_log_factor_upper` | future kernel structure | $(C_{{\mathsf S},2}^\#,C_{{\mathsf K},2}^\#)$ in (P22), (P25) | nonnegative outward-upper $1\times2$ | differentiated cancellation-safe factors / lifting tail | none |
 | `local_second_regular_factor_upper` | future kernel structure | $(R_{{\mathsf S},2}^\#,R_{{\mathsf K},2}^\#)$ in (P22)--(P24) | nonnegative outward-upper $1\times2$ | differentiated divided differences / lifting tail | none |
-| `kernel_series_cutoff` | future configuration scalar | $N_E$ used to truncate each entire kernel series in (P14) | positive integer scalar | fixed configuration / kernel-series finite values and tails | not `taylor_cutoff` unless one shared value is explicitly frozen |
-| `kernel_series_tail` | future remainder structure | $T_{E,r,N_E}(Q)$ and decreasing-ratio gates in (P14) for every required series and derivative | nonnegative outward-upper array plus logical gates | coefficient formulas and a certified $Q$ / all factor enclosures | none |
+| `kernel_series_cutoff` | future configuration scalar | $N_{\mathrm{ser}}$ used to truncate each entire kernel series in (P14) | positive integer scalar | fixed configuration / kernel-series finite values and tails | not `taylor_cutoff` unless one shared value is explicitly frozen |
+| `kernel_series_tail` | future remainder structure | $T_{J,r,N_{\mathrm{ser}}}(Q)$, $T_{Y,r,N_{\mathrm{ser}}}(Q)$, and their decreasing-ratio gates in (P14) | nonnegative outward-upper array plus logical gates | coefficient formulas and a certified $Q$ / all factor enclosures | none |
 | `panel_half_width` | future configuration scalar | $\delta\le\min\{P_\Lambda/6,(2\kappa_*)^{-1},r_*/2\}$ | positive outward-upper scalar, length | geometry certificate / target-panel split | `delta` only in P11--P13 |
 | `panel_taylor_order` | future configuration scalar | retained panel Taylor degree $M$ in (P11)--(P13) | nonnegative integer scalar | fixed configuration / retained singular and regular panel rules | never `mode_cutoff` |
-| `periodic_log_moment_enclosure` | future finite vector | validated moments $\int_{-\delta}^{\delta}h^j\lambda(h)\,\mathrm dh$, $0\le j\le M$ | outward real interval vector | analytic recurrence or validated one-dimensional quadrature / (P11) | none |
+| `periodic_log_moment_enclosure` | future finite vector | validated moments $\int_{-\delta}^{\delta}h^jg(h)\,\mathrm dh$, $0\le j\le M$ | outward real interval vector | analytic recurrence or validated one-dimensional quadrature / (P11) | none |
 | `singular_panel_derivative_upper` | future finite bound | $G_{M+1}\ge\sup\lvert\partial_h^{M+1}g_s(h)\rvert$ | nonnegative outward-upper scalar or per-row vector | curve/density derivative enclosures / (P12) | none |
 | `singular_panel_remainder` | future remainder | right side of (P12), including $\mathfrak m_{M+1}$ | nonnegative outward-upper scalar or row vector | panel derivative bound / retained-row enclosure | none |
 | `regular_panel_remainder` | future remainder | right side of (P13) | nonnegative outward-upper scalar or row vector | regular-factor derivative bound / retained-row enclosure | none |
@@ -289,7 +323,7 @@ inter-level drift are not bounds.
 | `density_linf_tau`, `density_linf_sigma` | future density bounds | $A_\tau^\infty,A_\sigma^\infty$ from (P16) | nonnegative outward-upper scalars | finite coefficient-map spectral norms / (P17)--(P29) | none |
 | `identity_sigma_l2_upper` | future density bound | $A_{\sigma,0}^s$ in (P17) | nonnegative outward-upper scalar | `speed_upper`, `density_linf_sigma` / normal local tail | none |
 | `identity_tau_second_l2_upper` | future density bound | $A_{\tau,2}^s$ in (P26) | nonnegative outward-upper scalar | $v_-,v_+,v_1$ and weighted tau coefficients / value local tail | none |
-| `local_normal_action_upper` | future action bound | $M_N^{\rm act}$ in (P18) | nonnegative outward-upper scalar | $C_{\mathsf T}^\#,R_{\mathsf T}^\#,C_{\mathsf K^*}^\#,R_{\mathsf K^*}^\#$ and density bounds / (P19), (P20) | none |
+| `local_normal_action_upper` | future action bound | $M_{\mathrm{nor}}^{\rm act}$ in (P18) | nonnegative outward-upper scalar | $C_{\mathsf T}^\#,R_{\mathsf T}^\#,C_{\mathsf K^*}^\#,R_{\mathsf K^*}^\#$ and density bounds / (P19), (P20) | none |
 | `local_value_second_action_upper` | future action bound | $M_V^{(2)}$ in (P27) | nonnegative outward-upper scalar | second-factor and density bounds / (P28), (P29) | none |
 | `local_normal_tail_squared` | future tail result | complete local normal omitted-mode bound in (P20) | nonnegative outward-upper scalar | trace weights and normal action / $B_\Upsilon$ tail | none |
 | `local_value_tail_squared` | future tail result | complete local value omitted-mode bound in (P29) | nonnegative outward-upper scalar | tubular weights and second action / $B_{\mathrm{lift}}$ tail | none |
@@ -314,23 +348,23 @@ It changes no frozen field name or schema; it only records local aliases.  The
 | `mu_shift` | $\mu=\widehat k^2$ | `z.mu_h=z.gamma` | energy shift; never a Rayleigh wavenumber |
 | `beta_bloch` | $\beta$ | `z.beta` | Bloch parameter |
 | `rayleigh_wavenumber` | outgoing $\gamma_m$ | algebra from frozen $\widehat k,\beta,d$ | branch and finite $1/\gamma_m$ ledger; no solve |
-| `density.orders` | frozen density orders $-128{:}127$ | 256-node FFT convention | independent of evaluation grid |
+| `density.orders` | frozen density orders $-128{:}127$, hence $N_\eta=256$ and $M_\eta=128$ | frozen-density FFT convention | independent of evaluation grid |
 | `tau_coeff_map` | coefficient map of $\tau$ | `fftshift(fft(z.eta_unit_256(1:256,:)))/256` | no midpoint phase |
 | `sigma_coeff_map` | coefficient map of $\sigma$ | negative of the stored second map because `zeta=-sigma` | sign changed exactly once |
 | `configuration.boundary_node_count` | evaluation size $N$ | generated input; final value 512 | proof-driven quadrature tier, not a density solve |
-| `configuration.retained_mode_cutoff` | finite cutoff $m-1$ | generated input; final value 255 | both $\ell=\pm256$ begin the tail |
+| `configuration.retained_mode_cutoff` | zero-based finite cutoff $L-1$ | generated input; final value 255, so $L=256$ | retained rows are exactly $|\ell|<L$; the current $N=512$ does not satisfy the strict gate $N>2\max\{L,M_\eta\}$ |
 | `local_complex_strip_certificate` | proposed analytic normalized-chord contract | current generated adapter | its present booleans do not yet certify the full product strip, signed-speed branch, or absence of non-diagonal complex null chords required before (P32) |
 | `local_factors` | real P3--P29 bounds | cancellation-safe certificate and series tails | P20/P29 fallback |
 | `complex_strip_factor_bounds` | strip $C^\#,R^\#$ bounds | complex chord certificate and series tails | Kress alias and target rows |
 | `maue_strip_factor_bounds.tau_prime_strip_upper` | $A'_{\tau,a}$ | weighted frozen density coefficients | derivative term in the actual normal center |
-| `weighted_single_layer_log_upper`, `weighted_single_layer_smooth_upper` | $C_M,R_M$ in (P31M) | exterior/interior entire-series bounds | first Maue normal term |
-| `tangent_derivative_log_upper`, `tangent_derivative_smooth_upper` | $C_{\partial F}^\#,R_{\partial F}^\#$ | target-tangent projection certificate | second Maue normal term after cotangent cancellation |
+| `weighted_single_layer_log_upper`, `weighted_single_layer_smooth_upper` | $C_S^T,R_S^T$ in (P31M) | exterior/interior entire-series bounds | first Maue normal term |
+| `tangent_derivative_log_upper`, `tangent_derivative_smooth_upper` | $C_{\partial T}^\#,R_{\partial T}^\#$ | target-tangent projection certificate | second Maue normal term after cotangent cancellation |
 | `local_panel.value_rows`, `normal_rows` | local modal centers | Müller-combined Kress action | identity included once |
 | `kress_log_alias_factor` | logarithmic factor in (P31) | $a,N$ | explicit remainder, not grid drift |
 | `periodic_log_weight_upper` | $8\pi\log2\,V_a$ | pointwise complex signed-speed bound $V_a$ | shape-general coarse bound for the weighted periodic logarithm; not a path-length bound |
 | `smooth_source_measure_upper` | $L_a\ge\sup_y\int_0^{2\pi}|v(u+\mathrm i y)|\,du$ | complex source-contour certificate | smooth-remainder source measure only |
 | `retained_target_row_remainder` | conditional (P32) value-row radius | strip speed/action/phase bounds | rejected until the shape-general product-strip action enclosure passes |
-| `global_action_triangle_enclosure` | shape-general $\widetilde H=H_{\rm an}$ and strip-majorant gate | product-strip and action-bound proof | fixed `false` in the present source and included in `local_action.gate.pass` |
+| `global_action_triangle_enclosure` | shape-general $\widetilde H^\chi=H_{\rm an}^\chi$, $\chi\in\{\mathrm{val},\mathrm{nor}\}$, and strip-majorant gate | product-strip and action-bound proof | fixed `false` in the present source and included in `local_action.gate.pass` |
 | `regular_image_certificate.coordinate_tail_upper` | six M-R/M-I/M-T/M-L tails | generated Ewald certificate | order $(00,10,01,20,11,02)$ |
 | `kernel_finite_upper`, `kernel_tail_upper` | four $K_{pq}$ contractions | coordinate and normal bounds | source, target, and mixed normals remain distinct |
 | `regular_image.value_rows`, `normal_rows` | finite $H_\beta$ centers | exact-QP Ewald finite representation | never an MFS proxy |

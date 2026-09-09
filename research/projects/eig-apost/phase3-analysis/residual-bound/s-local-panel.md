@@ -6,7 +6,8 @@ This note treats only the local free-space self-action shared by the material
 normal defect $B_\Upsilon$ and the value-defect contribution
 $B_{\mathrm{lift}}$.  It uses the common symbols of this directory's
 `README.md`.  New local symbols are the material kernel difference $F$, its
-entire coefficients $A,B,a$, the periodic logarithm $\lambda$, the chord
+entire logarithmic and regular coefficients $\mathcal J_\Delta,
+\mathcal R_\Delta,\mathfrak j_\Delta$, the periodic logarithm $g$, the chord
 quotient $c$, the four difference kernels
 ${\mathsf S}_\Delta,{\mathsf K}_\Delta,{\mathsf K}_\Delta^*,
 {\mathsf T}_\Delta$, and the finite bounds introduced below.
@@ -58,7 +59,7 @@ $$
 J_\kappa(q)=\sum_{n=0}^\infty
 \frac{(-\kappa^2q/4)^n}{(n!)^2},
 \qquad
-D_\kappa(q)=\sum_{n=1}^\infty
+Y_\kappa^{\mathrm{reg}}(q)=\sum_{n=1}^\infty
 \frac{(-1)^nH_n(\kappa^2q/4)^n}{(n!)^2},
 $$
 
@@ -73,34 +74,37 @@ The defining series for $J_0$ and $Y_0$, derived in
 $$
 G_\kappa(q)
 =-\frac1{4\pi}J_\kappa(q)\log q
-+c_\kappa J_\kappa(q)+\frac1{2\pi}D_\kappa(q).
++c_\kappa J_\kappa(q)+\frac1{2\pi}Y_\kappa^{\mathrm{reg}}(q).
 \tag{P3}
 $$
 
 Define $F=G_{\kappa_e}-G_{\kappa_i}$ and
 
 $$
-A(q)=-\frac{J_{\kappa_e}(q)-J_{\kappa_i}(q)}{4\pi},
+\mathcal J_\Delta(q)
+=-\frac{J_{\kappa_e}(q)-J_{\kappa_i}(q)}{4\pi},
 $$
 
 $$
-B(q)=c_{\kappa_e}J_{\kappa_e}(q)
+\mathcal R_\Delta(q)=c_{\kappa_e}J_{\kappa_e}(q)
 -c_{\kappa_i}J_{\kappa_i}(q)
-+\frac{D_{\kappa_e}(q)-D_{\kappa_i}(q)}{2\pi}.
++\frac{Y_{\kappa_e}^{\mathrm{reg}}(q)
+-Y_{\kappa_i}^{\mathrm{reg}}(q)}{2\pi}.
 $$
 
 Then
 
 $$
-F(q)=A(q)\log q+B(q),
+F(q)=\mathcal J_\Delta(q)\log q+\mathcal R_\Delta(q),
 \qquad
-A(q)=q\,a(q),
+\mathcal J_\Delta(q)=q\,\mathfrak j_\Delta(q),
 \qquad
-a(0)=\frac{\kappa_e^2-\kappa_i^2}{16\pi},
+\mathfrak j_\Delta(0)=\frac{\kappa_e^2-\kappa_i^2}{16\pi},
 \tag{P4}
 $$
 
-where $a$ and $B$ are entire.  Thus the wavenumber-independent leading
+where $\mathfrak j_\Delta$ and $\mathcal R_\Delta$ are entire.  Thus the
+wavenumber-independent leading
 logarithm cancels before any absolute bound is taken.
 
 ## Four difference kernels and principal cancellation
@@ -162,7 +166,7 @@ not be estimated as the difference of two separate finite-part norms.
 Define
 
 $$
-\lambda(h)=\log\left(4\sin^2\frac{\pi h}{P_\Lambda}\right),
+g(h)=\log\left(4\sin^2\frac{\pi h}{P_\Lambda}\right),
 \qquad
 c(s,t)=\frac{q(s,t)}{4\sin^2(\pi(s-t)/P_\Lambda)}.
 \tag{P7}
@@ -170,20 +174,23 @@ $$
 
 Embeddedness makes $c$ positive off the diagonal, and arclength regularity
 gives a positive continuous diagonal extension.  Hence
-$\log q=\lambda+\log c$.  Put
+$\log q=g+\log c$.  Put
 
 $$
-U_1=A'(q)\log c+\frac{A(q)}q+B'(q),
+U_1=\mathcal J_\Delta'(q)\log c
++\frac{\mathcal J_\Delta(q)}q+\mathcal R_\Delta'(q),
 $$
 
 $$
-U_2=A''(q)\log c+\frac{2A'(q)}q-\frac{A(q)}{q^2}+B''(q).
+U_2=\mathcal J_\Delta''(q)\log c
++\frac{2\mathcal J_\Delta'(q)}q
+-\frac{\mathcal J_\Delta(q)}{q^2}+\mathcal R_\Delta''(q).
 $$
 
 Each kernel has the exact split
 
 $$
-{\mathsf L}(s,t)=C_{\mathsf L}(s,t)\lambda(s-t)
+{\mathsf L}(s,t)=C_{\mathsf L}(s,t)g(s-t)
 +R_{\mathsf L}(s,t),
 \tag{P8}
 $$
@@ -191,24 +198,24 @@ $$
 where
 
 $$
-C_{\mathsf S}=A,
-\qquad R_{\mathsf S}=A\log c+B,
+C_{\mathsf S}=\mathcal J_\Delta,
+\qquad R_{\mathsf S}=\mathcal J_\Delta\log c+\mathcal R_\Delta,
 $$
 
 $$
-C_{\mathsf K}=-2(r\mathbin\cdot n_t)A',
+C_{\mathsf K}=-2(r\mathbin\cdot n_t)\mathcal J_\Delta',
 \qquad R_{\mathsf K}=-2(r\mathbin\cdot n_t)U_1,
 $$
 
 $$
-C_{\mathsf K^*}=2(r\mathbin\cdot n_s)A',
+C_{\mathsf K^*}=2(r\mathbin\cdot n_s)\mathcal J_\Delta',
 \qquad R_{\mathsf K^*}=2(r\mathbin\cdot n_s)U_1,
 $$
 
 $$
 C_{\mathsf T}
-=-2(n_s\mathbin\cdot n_t)A'
--4(r\mathbin\cdot n_s)(r\mathbin\cdot n_t)A'',
+=-2(n_s\mathbin\cdot n_t)\mathcal J_\Delta'
+-4(r\mathbin\cdot n_s)(r\mathbin\cdot n_t)\mathcal J_\Delta'',
 $$
 
 $$
@@ -219,7 +226,7 @@ R_{\mathsf T}
 $$
 
 The apparently singular $U_2$ is never enclosed separately.  Write
-$A=qa$ and set
+$\mathcal J_\Delta=q\mathfrak j_\Delta$ and set
 
 $$
 \pi_s=r\mathbin\cdot n_s,\qquad
@@ -231,10 +238,13 @@ Then the cancellation-safe form is
 
 $$
 \begin{split}
-R_{\mathsf T}={}&-2m[(a+qa')\log c+a+B']\\
-&-4\pi_s\pi_t(2a'+qa'')\log c
--4\frac{\pi_s\pi_t}{q}a\\
-&-8\pi_s\pi_ta'-4\pi_s\pi_tB''.
+R_{\mathsf T}={}&-2m[(\mathfrak j_\Delta+q\mathfrak j_\Delta')\log c
++\mathfrak j_\Delta+\mathcal R_\Delta']\\
+&-4\pi_s\pi_t(2\mathfrak j_\Delta'
++q\mathfrak j_\Delta'')\log c
+-4\frac{\pi_s\pi_t}{q}\mathfrak j_\Delta\\
+&-8\pi_s\pi_t\mathfrak j_\Delta'
+-4\pi_s\pi_t\mathcal R_\Delta''.
 \end{split}
 \tag{P10}
 $$
@@ -269,7 +279,7 @@ through degree $M$.  The finite singular panel part is
 
 $$
 \sum_{j=0}^M\frac{\partial_h^jg_s(0)}{j!}
-\int_{-\delta}^{\delta}h^j\lambda(h)\,dh.
+\int_{-\delta}^{\delta}h^jg(h)\,dh.
 \tag{P11}
 $$
 
@@ -284,7 +294,7 @@ $$
 then
 
 $$
-\left|\int_{-\delta}^{\delta}\lambda(h)
+\left|\int_{-\delta}^{\delta}g(h)
 [g_s(h)-P_{M,s}(h)]\,dh\right|
 \le\frac{G_{M+1}}{(M+1)!}\mathfrak m_{M+1},
 $$
@@ -297,7 +307,7 @@ $$
 $$
 
 Indeed, $\delta\le P_\Lambda/6$ implies
-$|\lambda(h)|\le2\log(P_\Lambda/(4|h|))$.  The regular factor has the Taylor
+$|g(h)|\le2\log(P_\Lambda/(4|h|))$.  The regular factor has the Taylor
 remainder
 
 $$
@@ -313,43 +323,50 @@ same derivative rule without singular subtraction.  A degree-$M$ retained
 row enclosure may conservatively assume
 ${\boldsymbol r}\in C^{M+3}$ and the finite density basis in $C^{M+1}$.
 The entire series are truncated constituent by constituent, before the
-differences defining $A,a,B$ are formed.  Let $|q|\le Q$,
+differences defining $\mathcal J_\Delta,\mathfrak j_\Delta,
+\mathcal R_\Delta$ are formed.  Let $|q|\le Q$,
 $x_\kappa=\kappa^2Q/4$, and
-$(n)_r=n!/(n-r)!$.  For $0\le r\le N+1$ define
+$(n)_r=n!/(n-r)!$.  For $0\le r\le N_{\mathrm{ser}}+1$ define
 
 $$
-\rho_{J,r,N}(\kappa,Q)
-=\frac{x_\kappa}{(N+2)(N+2-r)}<1,
+r_{J,r,N_{\mathrm{ser}}}(\kappa,Q)
+=\frac{x_\kappa}{(N_{\mathrm{ser}}+2)(N_{\mathrm{ser}}+2-r)}<1,
 $$
 
 $$
-T_{J,r,N}(\kappa,Q)
-=\frac{(N+1)_r(\kappa^2/4)^{N+1}Q^{N+1-r}}
-{((N+1)!)^2[1-\rho_{J,r,N}(\kappa,Q)]}.
+T_{J,r,N_{\mathrm{ser}}}(\kappa,Q)
+=\frac{(N_{\mathrm{ser}}+1)_r(\kappa^2/4)^{N_{\mathrm{ser}}+1}
+Q^{N_{\mathrm{ser}}+1-r}}
+{((N_{\mathrm{ser}}+1)!)^2
+[1-r_{J,r,N_{\mathrm{ser}}}(\kappa,Q)]}.
 $$
 
 For the harmonic-number series put
 
 $$
-\rho_{D,r,N}(\kappa,Q)
-=\rho_{J,r,N}(\kappa,Q)
-\left(1+\frac1{N+2}\right)<1,
+r_{Y,r,N_{\mathrm{ser}}}(\kappa,Q)
+=r_{J,r,N_{\mathrm{ser}}}(\kappa,Q)
+\left(1+\frac1{N_{\mathrm{ser}}+2}\right)<1,
 $$
 
 $$
-T_{D,r,N}(\kappa,Q)
-=\frac{H_{N+1}(N+1)_r(\kappa^2/4)^{N+1}Q^{N+1-r}}
-{((N+1)!)^2[1-\rho_{D,r,N}(\kappa,Q)]}.
+T_{Y,r,N_{\mathrm{ser}}}(\kappa,Q)
+=\frac{H_{N_{\mathrm{ser}}+1}(N_{\mathrm{ser}}+1)_r
+(\kappa^2/4)^{N_{\mathrm{ser}}+1}Q^{N_{\mathrm{ser}}+1-r}}
+{((N_{\mathrm{ser}}+1)!)^2
+[1-r_{Y,r,N_{\mathrm{ser}}}(\kappa,Q)]}.
 \tag{P14}
 $$
 
 These formulas follow from the exact consecutive ratios
 $x_\kappa/[(n+1)(n+1-r)]$ and the bound
 $H_{n+1}/H_n\le1+1/(n+1)$.  Apply them separately to
-$J_{\kappa_e},J_{\kappa_i},D_{\kappa_e},D_{\kappa_i}$ and add by the triangle
-inequality.  The series for $a=A/q$ is the one-index shift of the two
-$J$ series.  The series for $B$ is bounded by the two $J$ tails multiplied
-by $|c_{\kappa_e}|,|c_{\kappa_i}|$ plus the two $D$ tails divided by
+$J_{\kappa_e},J_{\kappa_i},Y_{\kappa_e}^{\mathrm{reg}},
+Y_{\kappa_i}^{\mathrm{reg}}$ and add by the triangle
+inequality.  The series for $\mathfrak j_\Delta=\mathcal J_\Delta/q$ is the
+one-index shift of the two $J$ series.  The series for
+$\mathcal R_\Delta$ is bounded by the two $J$ tails multiplied by
+$|c_{\kappa_e}|,|c_{\kappa_i}|$ plus the two $Y^{\mathrm{reg}}$ tails divided by
 $2\pi$.  Thus no ratio of a possibly vanishing combined coefficient is used.
 Finite interval subdivision stops only when (P12)--(P14) and the interval
 widths meet assigned tolerances.
@@ -359,7 +376,7 @@ widths meet assigned tolerances.
 The elementary bound
 
 $$
-\int_0^{P_\Lambda}|\lambda(h)|\,dh\le4P_\Lambda\log2
+\int_0^{P_\Lambda}|g(h)|\,dh\le4P_\Lambda\log2
 \tag{P15}
 $$
 
@@ -398,7 +415,7 @@ the continuous factors in (P8)--(P10), and define
 
 $$
 \begin{split}
-M_N^{\rm act}:={}&
+M_{\mathrm{nor}}^{\rm act}:={}&
 [4P_\Lambda\log2\,C_{\mathsf T}^\#
 +P_\Lambda R_{\mathsf T}^\#]A_\tau^\infty\\
 &+[4P_\Lambda\log2\,C_{\mathsf K^*}^\#
@@ -411,27 +428,28 @@ Equations (P2), (P8), and (P15) give the operator-norm inequality
 
 $$
 \|j_\Upsilon^{\rm loc}(x)\|_{L^2(ds)}
-\le (A_{\sigma,0}^s+\sqrt{P_\Lambda}M_N^{\rm act})\|x\|_2.
+\le (A_{\sigma,0}^s
++\sqrt{P_\Lambda}M_{\mathrm{nor}}^{\rm act})\|x\|_2.
 \tag{P19}
 $$
 
-For $N=L+1$ put
+For the first omitted residual order $L$ put
 
 $$
-d_N=\sum_{q\in\{-,+\}}\theta_q\tanh(h_q|\xi_N|).
+d_L=\sum_{q\in\{-,+\}}\theta_q\tanh(h_q|\xi_L|).
 $$
 
 The general trace theorem in `s-material-tail.md` gives
-$b_\ell^\Lambda\ge d_N|\xi_\ell|$ for $|\ell|\ge N$.  For every finite state
+$b_\ell^\Lambda\ge d_L|\xi_\ell|$ for $|\ell|\ge L$.  For every finite state
 vector $x$, Parseval therefore proves
 
 $$
 \boxed{
-\sum_{|\ell|\ge N}
+\sum_{|\ell|\ge L}
 \frac{|j_{\Upsilon,\ell}^{\rm loc}(x)|^2}{b_\ell^\Lambda}
 \le
-\frac{(A_{\sigma,0}^s+\sqrt{P_\Lambda}M_N^{\rm act})^2}
-{d_N|\xi_N|}\|x\|_2^2.
+\frac{(A_{\sigma,0}^s+\sqrt{P_\Lambda}M_{\mathrm{nor}}^{\rm act})^2}
+{d_L|\xi_L|}\|x\|_2^2.
 }
 \tag{P20}
 $$
@@ -465,7 +483,7 @@ $q^{-2}$ powers.  Hence
 
 $$
 \partial_s^2{\mathsf L}
-=C_{{\mathsf L},2}\lambda+R_{{\mathsf L},2},
+=C_{{\mathsf L},2}g+R_{{\mathsf L},2},
 \qquad {\mathsf L}\in\{{\mathsf K}_\Delta,{\mathsf S}_\Delta\},
 \tag{P22}
 $$
@@ -474,14 +492,18 @@ with continuous divided-difference factors.  For the single layer, a
 cancellation-safe logarithmic coefficient and regular factor are
 
 $$
-C_{{\mathsf S},2}=q_s^2A''+q_{ss}A',
+C_{{\mathsf S},2}=q_s^2\mathcal J_\Delta''
++q_{ss}\mathcal J_\Delta',
 $$
 
 $$
 \begin{split}
-R_{{\mathsf S},2}={}&q_s^2(2a'+qa'')\log c
-+\frac{q_s^2}{q}a+2q_s^2a'+q_s^2B''\\
-&+q_{ss}[(a+qa')\log c+a+B'].
+R_{{\mathsf S},2}={}&q_s^2(2\mathfrak j_\Delta'
++q\mathfrak j_\Delta'')\log c
++\frac{q_s^2}{q}\mathfrak j_\Delta
++2q_s^2\mathfrak j_\Delta'+q_s^2\mathcal R_\Delta''\\
+&+q_{ss}[(\mathfrak j_\Delta+q\mathfrak j_\Delta')\log c
++\mathfrak j_\Delta+\mathcal R_\Delta'].
 \end{split}
 \tag{P23}
 $$
@@ -490,22 +512,30 @@ Here $q_s^2/q$ extends to $4$ on the diagonal.  For the double layer use
 
 $$
 \begin{split}
--\frac12R_{{\mathsf K},2}={}&p_{ss}[(a+qa')\log c+a+B']\\
-&+2p_sq_s(2a'+qa'')\log c
-+2\frac{p_sq_s}{q}a+4p_sq_sa'+2p_sq_sB''\\
-&+pq_{ss}(2a'+qa'')\log c
-+\frac{pq_{ss}}q a+2pq_{ss}a'+pq_{ss}B''\\
-&+pq_s^2(3a''+qa''')\log c
-+3\frac{pq_s^2}{q}a'+3pq_s^2a''\\
-&-\frac{pq_s^2}{q^2}a+pq_s^2B''',
+-\frac12R_{{\mathsf K},2}={}&p_{ss}
+[(\mathfrak j_\Delta+q\mathfrak j_\Delta')\log c
++\mathfrak j_\Delta+\mathcal R_\Delta']\\
+&+2p_sq_s(2\mathfrak j_\Delta'+q\mathfrak j_\Delta'')\log c
++2\frac{p_sq_s}{q}\mathfrak j_\Delta
++4p_sq_s\mathfrak j_\Delta'+2p_sq_s\mathcal R_\Delta''\\
+&+pq_{ss}(2\mathfrak j_\Delta'+q\mathfrak j_\Delta'')\log c
++\frac{pq_{ss}}q\mathfrak j_\Delta
++2pq_{ss}\mathfrak j_\Delta'+pq_{ss}\mathcal R_\Delta''\\
+&+pq_s^2(3\mathfrak j_\Delta''+q\mathfrak j_\Delta''')\log c
++3\frac{pq_s^2}{q}\mathfrak j_\Delta'
++3pq_s^2\mathfrak j_\Delta''\\
+&-\frac{pq_s^2}{q^2}\mathfrak j_\Delta
++pq_s^2\mathcal R_\Delta''',
 \end{split}
 \tag{P24}
 $$
 
 $$
 \begin{split}
-C_{{\mathsf K},2}=-2\{&p_{ss}A'
-+2p_sq_sA''+p[q_s^2A'''+q_{ss}A'']\}.
+C_{{\mathsf K},2}=-2\{&p_{ss}\mathcal J_\Delta'
++2p_sq_s\mathcal J_\Delta''
++p[q_s^2\mathcal J_\Delta'''
++q_{ss}\mathcal J_\Delta'']\}.
 \end{split}
 \tag{P25}
 $$
@@ -565,11 +595,11 @@ $e_\ell^{\rm tub}=C_0^{\rm tub}+C_1^{\rm tub}\xi_\ell^2$ from
 
 $$
 \boxed{
-\sum_{|\ell|\ge N}e_\ell^{\rm tub}
+\sum_{|\ell|\ge L}e_\ell^{\rm tub}
 |a_{\Upsilon,\ell}^{\rm loc}(x)|^2
 \le
-\left[\frac{C_0^{\rm tub}}{|\xi_N|^4}
-+\frac{C_1^{\rm tub}}{|\xi_N|^2}\right]
+\left[\frac{C_0^{\rm tub}}{|\xi_L|^4}
++\frac{C_1^{\rm tub}}{|\xi_L|^2}\right]
 (A_{\tau,2}^s+\sqrt{P_\Lambda}M_V^{(2)})^2\|x\|_2^2.
 }
 \tag{P29}
@@ -661,40 +691,43 @@ an alternative to evaluating the panelwise Taylor centers (P11)--(P14), not a
 claim that an ordinary Kress value is exact.  The separate target-strip step
 (P32) remains subject to the audit below.
 
-Let $N=2m$ and let ${\cal K}_N=\{-m+1,\ldots,m\}$.  After the exterior and
-interior kernels have been combined and the periodic logarithm has been
-subtracted, write either the value or the normal source action at a fixed
-target node as
+Let $N=2m$ and let ${\cal K}_N=\{-m+1,\ldots,m\}$.  For
+$\chi\in\{\mathrm{val},\mathrm{nor}\}$, after the exterior and interior
+kernels have been combined and the periodic logarithm has been subtracted,
+write the corresponding source action at a fixed target node as
 
 $$
-I_i=\int_0^{2\pi}
-\{\lambda(t_i-v)F_i(v)+G_i(v)\}\,dv,
+I_i^\chi=\int_0^{2\pi}
+\{K_{1,i}^\chi(v)g(t_i-v)+K_{2,i}^\chi(v)\}\,dv,
 \qquad
-\lambda(u)=-\sum_{n\ne0}\frac{e^{inu}}{|n|}.
+g(u)=-\sum_{n\ne0}\frac{e^{inu}}{|n|}.
 \tag{P30}
 $$
 
-For the normal row, $F_i,G_i$ in (P30) mean the already combined Maue--Kress
-integrands: the cotangent terms have cancelled before absolute values and the
-derivative of the finite trigonometric density is evaluated exactly.  Assume
+For the normal row, $K_{1,i}^{\mathrm{nor}},K_{2,i}^{\mathrm{nor}}$ in
+(P30) mean the already combined
+Maue--Kress integrands: the cotangent terms have cancelled in the explicit
+$T_e-T_i$ split before absolute values, the normal residual applies
+$T_i-T_e=-(T_e-T_i)$, and the derivative of the finite trigonometric density
+is evaluated exactly.  Assume
 that a normalized-chord certificate fixes a zero-free analytic branch of
 $\log c$ on $|\operatorname{Im}v|\le a$ and supplies
 
 $$
-\|F_i(v)\|_2\le M_{F,i},
+\|K_{1,i}^\chi(v)\|_2\le M_{K_1,i}^\chi,
 \qquad
-\|G_i(v)\|_2\le M_{G,i}.
+\|K_{2,i}^\chi(v)\|_2\le M_{K_2,i}^\chi.
 $$
 
-Then the Kress product-rule center $Q_i^K$ satisfies
+Then the Kress product-rule center $Q_i^{K,\chi}$ satisfies
 
 $$
 \boxed{
-\|I_i-Q_i^K\|_2
+\|I_i^\chi-Q_i^{K,\chi}\|_2
 \le
-4\pi M_{F,i}e^{-am}
+4\pi M_{K_1,i}^\chi e^{-am}
 \frac{1+e^{-a}}{1-e^{-a}}
-+\frac{4\pi M_{G,i}}{e^{aN}-1}.
++\frac{4\pi M_{K_2,i}^\chi}{e^{aN}-1}.
 }
 \tag{P31}
 $$
@@ -702,29 +735,32 @@ $$
 Indeed, the Kress weights retain the Fourier multipliers $-|n|^{-1}$ on
 ${\cal K}_N$.  Aliasing every omitted coefficient to its representative in
 ${\cal K}_N$, using the strip estimate
-$\|\widehat F_i(n)\|_2\le M_{F,i}e^{-a|n|}$, and summing the two geometric
+$\|\widehat K_{1,i}^\chi(n)\|_2\le
+M_{K_1,i}^\chi e^{-a|n|}$, and summing the two geometric
 tails gives the first term of (P31).  The standard periodic trapezoid alias
-sum for $G_i$ gives the second.  Thus (P31) includes the Nyquist convention
+sum for $K_{2,i}$ gives the second.  Thus (P31) includes the Nyquist convention
 of the implemented Kress weights.
 
 For the Maue normal center, the constants in (P31) must follow the actual
 Maue split rather than the direct ${\mathsf T}_\Delta$ split.  Let
-$J_e^\#,J_i^\#$ and $D_e^\#,D_i^\#$ bound the entire $J$ and $D$ series on
+$J_e^\#,J_i^\#$ and $Y_e^\#,Y_i^\#$ bound the entire $J$ and
+$Y^{\mathrm{reg}}$ series on
 the certified strip chord domain, let $L_c\ge|\log c|$, and write
 
 $$
 \begin{split}
-C_M={}&\frac{\kappa_e^2J_e^\#+\kappa_i^2J_i^\#}{4\pi},\\
-R_M={}&C_ML_c
-+\kappa_e^2\left(|c_{\kappa_e}|J_e^\#+\frac{D_e^\#}{2\pi}\right)
-+\kappa_i^2\left(|c_{\kappa_i}|J_i^\#+\frac{D_i^\#}{2\pi}\right).
+C_S^T={}&\frac{\kappa_e^2J_e^\#+\kappa_i^2J_i^\#}{4\pi},\\
+R_S^T={}&C_S^TL_c
++\kappa_e^2\left(|c_{\kappa_e}|J_e^\#+\frac{Y_e^\#}{2\pi}\right)
++\kappa_i^2\left(|c_{\kappa_i}|J_i^\#+\frac{Y_i^\#}{2\pi}\right).
 \end{split}
 \tag{P31M}
 $$
 
 If $V_a$ bounds the analytic speed, $T_a$ bounds the normalized target/source
-tangent dot product, and $C_{\partial F}^\#,R_{\partial F}^\#$ bound the
-target arclength derivative of $F$ with the target tangent projection, define
+tangent dot product, and $C_{\partial T}^\#,R_{\partial T}^\#$ bound the
+logarithmic and regular factors in the target arclength derivative with the
+target tangent projection, define
 
 $$
 A_{\tau,a}=\sum_n e^{a|n|}\|C_{\tau,n}\|_2,
@@ -736,15 +772,16 @@ Then the actual Maue source integrands are bounded by
 
 $$
 \begin{split}
-M_F^{\rm Maue}&=V_aT_aC_MA_{\tau,a}
- +C_{\partial F}^\#A'_{\tau,a},\\
-M_G^{\rm Maue}&=V_aT_aR_MA_{\tau,a}
- +R_{\partial F}^\#A'_{\tau,a}.
+M_{K_1}^{T_e-T_i}&=V_aT_aC_S^TA_{\tau,a}
+ +C_{\partial T}^\#A'_{\tau,a},\\
+M_{K_2}^{T_e-T_i}&=V_aT_aR_S^TA_{\tau,a}
+ +R_{\partial T}^\#A'_{\tau,a}.
 \end{split}
 \tag{P31N}
 $$
 
-Here the universal cotangent terms in $N_2^{(e)}-N_2^{(i)}$ cancel
+Here the universal cotangent terms in
+$C_{\kappa_e,2}^{\mathrm{tan}}-C_{\kappa_i,2}^{\mathrm{tan}}$ cancel
 algebraically before (P31N) is bounded.  Substitution of (P31N) into (P31)
 therefore encloses the same Maue--Kress center that is evaluated numerically;
 using $C_{\mathsf T}^\#,R_{\mathsf T}^\#$ in its place would not do so.
@@ -766,36 +803,39 @@ H_{\mathbb R}^{\rm nor}(t)
 $$
 
 Bundle their signs, the signed source Jacobian, and the density into finitely
-many terms and write either real-axis action as
+many terms.  For $\chi\in\{\mathrm{val},\mathrm{nor}\}$, write the
+corresponding real-axis action as
 
 $$
-H_{\mathbb R}(t)=J(t)+\sum_j\int_0^{2\pi}
-\{\lambda(t-u)F_j(t,u)+G_j(t,u)\}\,du,
+H_{\mathbb R}^\chi(t)=J^\chi(t)+\sum_j\int_0^{2\pi}
+\{K_{1,j}^\chi(t,u)g(t-u)+K_{2,j}^\chi(t,u)\}\,du,
 \tag{P32a}
 $$
 
-where $J=\tau$ for the value action and $J=\sigma$ for the normal
-action.  The functions $F_j$ contain $C_{\mathsf L}(t,u)$, the appropriate
-density, and the signed source speed.  The functions $G_j$ contain the
-corresponding regular factors.  Thus the source Jacobian is part of
-$F_j,G_j$ and may not be silently replaced by a Euclidean modulus after
+where $J^{\mathrm{val}}=\tau$ and $J^{\mathrm{nor}}=\sigma$.
+The complete factors $K_{1,j}^\chi$ contain $C_{\mathsf L}(t,u)$, the
+appropriate component of $\eta=(\tau,-\sigma)^{\mathsf T}$, and the signed
+source speed.  The complete factors $K_{2,j}^\chi$ contain the corresponding
+regular factors and the same required density and source terms.  Thus the
+source Jacobian is part of $K_{1,j}^\chi,K_{2,j}^\chi$ and may not be silently replaced
+by a Euclidean modulus after
 complexification.
 
-Let $H_{\rm an}$ denote the unique holomorphic continuation of
-$H_{\mathbb R}$, if it exists.  The expression currently bounded by the I5
+Let $H_{\rm an}^\chi$ denote the unique holomorphic continuation of
+$H_{\mathbb R}^\chi$, if it exists.  The expression currently bounded by the I5
 code is instead the simultaneous-shift expression, for $z=x+\mathrm i y$,
 
 $$
-\widetilde H(z)=J(z)+\sum_j\int_0^{2\pi}
-\{\lambda(x-u)F_j(z,u+\mathrm i y)
-+G_j(z,u+\mathrm i y)\}\,du.
+\widetilde H^\chi(z)=J^\chi(z)+\sum_j\int_0^{2\pi}
+\{K_{1,j}^\chi(z,u+\mathrm i y)g(x-u)
++K_{2,j}^\chi(z,u+\mathrm i y)\}\,du.
 \tag{P32b}
 $$
 
 Here the logarithm in (P32b) is the real periodic logarithm; it is not a
 chosen value of a complex logarithm at $z-(u+\mathrm i y)$.
 
-A shape-general proof of $\widetilde H=H_{\rm an}$ is available only under
+A shape-general proof of $\widetilde H^\chi=H_{\rm an}^\chi$ is available only under
 the following product-strip hypotheses.  On a neighbourhood of the closed
 polystrip $S_a\times S_a$, the parameter curve and finite densities must be
 periodic and holomorphic; ${\boldsymbol r}'(w)\mathbin\cdot
@@ -819,17 +859,18 @@ Under those hypotheses the logarithmic part can be treated without moving a
 singular complex logarithm.  If
 
 $$
-F_j(z,w)=\sum_{p,q\in\mathbb Z}F_{j,pq}e^{\mathrm i pz+\mathrm i qw},
+K_{1,j}^\chi(z,w)=\sum_{p,q\in\mathbb Z}
+K_{1,j;pq}^\chi e^{\mathrm i pz+\mathrm i qw},
 $$
 
 then on every strict substrip absolute convergence and the Fourier series of
-$\lambda$ give
+$g$ give
 
 $$
 \begin{split}
-\int_0^{2\pi}\lambda(x-u)F_j(z,u+\mathrm i y)\,du
+\int_0^{2\pi}g(x-u)K_{1,j}^\chi(z,u+\mathrm i y)\,du
 &=-2\pi\sum_{p\in\mathbb Z}\sum_{q\ne0}
-\frac{F_{j,pq}}{|q|}e^{\mathrm i(p+q)z}.
+\frac{K_{1,j;pq}^\chi}{|q|}e^{\mathrm i(p+q)z}.
 \end{split}
 \tag{P32d}
 $$
@@ -843,7 +884,7 @@ the Maue integration by parts is performed after the interior/exterior
 difference: the universal cotangent terms cancel before absolute values, the
 periodic endpoint terms cancel, and the punctured-diagonal term tends to zero
 because $\partial_h(G_{\kappa_e}-G_{\kappa_i})=O(h\log|h|)$.  These steps prove
-$\widetilde H=H_{\rm an}$ without any circular Fourier/Bessel
+$\widetilde H^\chi=H_{\rm an}^\chi$ without any circular Fourier/Bessel
 diagonalization.  Bounds on the closed strip additionally require continuity
 there (or certification on a wider strip); otherwise (P32) must use a strict
 width $b<a$.
@@ -858,12 +899,12 @@ There is also a separate shape-general error in the stored action majorant.
 A bound on complex path length alone does not imply
 
 $$
-\int_0^{2\pi}|\lambda(x-u)|\,|v(u+\mathrm i y)|\,du
+\int_0^{2\pi}|g(x-u)|\,|v(u+\mathrm i y)|\,du
 \le4\log2\sup_{|y|\le a}\int_0^{2\pi}|v(u+\mathrm i y)|\,du.
 \tag{P32e}
 $$
 
-Indeed, $|\lambda|$ is unbounded at $u=x$, whereas an $L^1$ bound on the
+Indeed, $|g|$ is unbounded at $u=x$, whereas an $L^1$ bound on the
 second factor does not prevent concentration there.  Explicitly, let
 
 $$
@@ -873,8 +914,8 @@ $$
 
 These positive trigonometric polynomials all have integral $2\pi$.  On
 $|u|\le n^{-1}$ they are bounded below by a fixed positive multiple of $n$,
-while $|\lambda(u)|$ is bounded below by $2\log n-O(1)$.  Hence
-$\int|\lambda(u)|W_n(u)\,du\to\infty$, disproving (P32e) from its stated
+while $|g(u)|$ is bounded below by $2\log n-O(1)$.  Hence
+$\int|g(u)|W_n(u)\,du\to\infty$, disproving (P32e) from its stated
 $L^1$ datum.  A valid general bound uses
 
 $$
@@ -882,7 +923,7 @@ V_a\ge\sup_{w\in S_a}|v(w)|,
 \qquad
 L_a\ge\sup_{|y|\le a}\int_0^{2\pi}|v(u+\mathrm i y)|\,du,
 \qquad
-\int_0^{2\pi}|\lambda(x-u)|\,|v(u+\mathrm i y)|\,du
+\int_0^{2\pi}|g(x-u)|\,|v(u+\mathrm i y)|\,du
 \le8\pi\log2\,V_a.
 \tag{P32f}
 $$
@@ -904,54 +945,60 @@ $$
 The previously displayed ordinary values
 $M_H^{\rm val}=192.54212145058278$ and
 $M_H^{\rm nor}=1295.8632330248495$ are not presently proved bounds for
-$H_{\rm an}$.  They must remain rejected by the theorem gate; no conclusion
+$H_{\rm an}^\chi$.  They must remain rejected by the theorem gate; no conclusion
 is drawn from their observed size.
 
-Now let $H=H_{\rm an}$ be an exact local action for which the hypotheses above
-and a genuine bound $\|H(z)\|_2\le M_H$ on the closed target strip have been
+Now let $H^\chi=H_{\rm an}^\chi$ be an exact local action for which the
+hypotheses above and a genuine bound
+$\|H^\chi(z)\|_2\le M_H^\chi$ on the closed target strip have been
 certified, including the appropriate identity density once, and let
 
 $$
-d_\ell=P_\Lambda^{-1/2}\int_0^{2\pi}
-v(t)H(t)e^{-i\xi_\ell s(t)}\,dt.
+d_\ell^\chi=P_\Lambda^{-1/2}\int_0^{2\pi}
+v(t)H^\chi(t)e^{-i\xi_\ell s(t)}\,dt.
 $$
 
 If on $|\operatorname{Im}t|\le a$ the curve certificate gives
 $|v(t)|\le V_a$, $|\operatorname{Im}s(t)|\le Y_a$, and
-$\|H(t)\|_2\le M_H$, the target trapezoid error is
+$\|H^\chi(t)\|_2\le M_H^\chi$, the target trapezoid error is
 
 $$
-\epsilon_{\ell}^{\rm tgt}
+\epsilon_{\ell}^{\mathrm{tgt},\chi}
 \le
-\frac{4\pi V_aM_H e^{|\xi_\ell|Y_a}}
+\frac{4\pi V_aM_H^\chi e^{|\xi_\ell|Y_a}}
 {\sqrt{P_\Lambda}(e^{aN}-1)}.
 \tag{P32}
 $$
 
-If $E_i^K$ denotes the right side of (P31), the propagated source radius is
+If $E_i^{K,\chi}$ denotes the right side of (P31), the propagated source
+radius is
 
 $$
-\epsilon_{\ell}^{\rm src}
+\epsilon_{\ell}^{\mathrm{src},\chi}
 \le
 \frac{2\pi}{N\sqrt{P_\Lambda}}
-\sum_{i=0}^{N-1}v(t_i)E_i^K.
+\sum_{i=0}^{N-1}v(t_i)E_i^{K,\chi}.
 \tag{P33}
 $$
 
-Consequently every non-Nyquist row $|\ell|\le m-1$ has the computable
+Consequently, after choosing $L$ from the omission tail and imposing
+$N>2\max\{L,M_\eta\}$, every retained row $|\ell|<L$ has the computable
 enclosure
 
 $$
 \boxed{
-\|d_\ell-\widetilde d_\ell^K\|_2
-\le \epsilon_{\ell}^{\rm src}+\epsilon_{\ell}^{\rm tgt}.
+\|d_\ell^\chi-\widetilde d_\ell^{K,\chi}\|_2
+\le \epsilon_{\ell}^{\mathrm{src},\chi}
++\epsilon_{\ell}^{\mathrm{tgt},\chi}.
 }
 \tag{P34}
 $$
 
-The cutoff is therefore fixed by the explicit alias and high-mode tails.  The
-two Nyquist directions $\ell=\pm m$ are both assigned to the omitted tail;
-the single aliased Nyquist slot is never counted as two retained rows.
+The cutoff is therefore fixed by the explicit omission tail before $N$ is
+increased to control source and target evaluation errors.  All
+$|\ell|\ge L$, including both Nyquist directions $\ell=\pm m$, are assigned
+to the omitted tail; the single aliased Nyquist slot is never counted as two
+retained rows.
 
 Equations (P32)--(P34) are shape-general only after the product-strip
 hypotheses before (P32c), the corrected action bound (P32g), and a genuine

@@ -250,7 +250,7 @@ cell.  Assume ${\boldsymbol r}_j\in C^2_{\rm per}$ and put
 $$
 v_j(t)=|{\boldsymbol r}_j'(t)|>0,
 \qquad
-L_j=\int_0^{2\pi}v_j(t)\,dt,
+\mathcal P_j=\int_0^{2\pi}v_j(t)\,dt,
 \qquad
 \nu_j(t)=\varepsilon_j
 \frac{(y_j'(t),-x_j'(t))}{v_j(t)},
@@ -296,7 +296,7 @@ In particular, both are in $L^1({\cal C}_j,ds)$, as required by the
 off-surface estimates below.  Define the exact mass matrix
 
 $$
-M_j=\int_0^{2\pi}{\boldsymbol\phi}_j(t)^*
+\mathsf G_j=\int_0^{2\pi}{\boldsymbol\phi}_j(t)^*
 {\boldsymbol\phi}_j(t)v_j(t)\,dt.
 $$
 
@@ -304,12 +304,12 @@ Then
 
 $$
 \|t_{\tau,j}(\cdot;x)\|_{L^1(ds)}
-\le \sqrt{L_j}\|M_j^{1/2}C_{\tau,j}\|_2\|x\|_2,
+\le \sqrt{\mathcal P_j}\|\mathsf G_j^{1/2}C_{\tau,j}\|_2\|x\|_2,
 $$
 
 and the same inequality holds for $\sigma$.  This is Cauchy--Schwarz in
 arclength followed by the exact mass-matrix identity.  It remains valid with
-a rigorous positive-semidefinite enclosure of $M_j$ that dominates the exact
+a rigorous positive-semidefinite enclosure of $\mathsf G_j$ that dominates the exact
 Gram matrix.  A nodal Euclidean norm without this mass conversion is not an
 admissible substitute.
 
@@ -359,8 +359,8 @@ postmap $A_r$.  Set
 $$
 A_{\tau,\varsigma}
 =\sum_{r\in{\cal R}_\varsigma}
-\sqrt{L_{j(r)}}
-\|M_{j(r)}^{1/2}C_{\tau,j(r)}A_r\|_2,
+\sqrt{\mathcal P_{j(r)}}
+\|\mathsf G_{j(r)}^{1/2}C_{\tau,j(r)}A_r\|_2,
 $$
 
 and define $A_{\sigma,\varsigma}$ analogously.  For a fixed center/first
@@ -538,16 +538,16 @@ and using the mass constants reduces (G-high) to exactly the scalar estimate
 used by the geometric tail.  Namely, put
 
 $$
-N=M+1,
-\quad a_0=q_0N-|\beta|,
+M_+=M+1,
+\quad a_0=q_0M_+-|\beta|,
 \quad r=e^{-2\delta q_0},
 \quad t_0=\tanh(h_{\rm tr}a_0),
 $$
 
 $$
-S_0=\frac{r^N}{1-r},
+S_0=\frac{r^{M_+}}{1-r},
 \qquad
-S_1=r^N\left(\frac{N}{1-r}+\frac{r}{(1-r)^2}\right),
+S_1=r^{M_+}\left(\frac{M_+}{1-r}+\frac{r}{(1-r)^2}\right),
 $$
 
 and, for nonnegative $A,B$, define
@@ -762,7 +762,7 @@ geometric sums, barred finite rows, singleton separation, full-$P$
 certificate, and four-part partition.  It replaces the circular
 parameterization, $2\pi R$ normalization, FFT density norm, circular strip
 width, and circle-specific strip envelope by
-${\boldsymbol r}_j,v_j,\nu_j,L_j,M_j$ and the general $C^1$ or holomorphic
+${\boldsymbol r}_j,v_j,\nu_j,\mathcal P_j,\mathsf G_j$ and the general $C^1$ or holomorphic
 bounds above.  It uses no circular Fourier, Bessel, or self-action identity.
 No external theorem is invoked: the mass estimate, periodic quadrature
 remainders, geometric tail, and matrix-power summation are all proved by the
@@ -869,23 +869,23 @@ the flat-wall support is $-256{:}255$ and the center Rayleigh support is
 $-48{:}48$.  Put
 
 $$
-N=M+1,
+M_+=M+1,
 \qquad
 q_0=\frac{2\pi}{d},
 \qquad
-a_0=q_0N-|\beta|>\kappa_e,
+a_0=q_0M_+-|\beta|>\kappa_e,
 $$
 
 $$
 r=e^{-2\delta q_0},
 \qquad
-S_0=\frac{r^N}{1-r},
+S_0=\frac{r^{M_+}}{1-r},
 $$
 
 $$
-S_1=r^N
+S_1=r^{M_+}
 \left(
-\frac{N}{1-r}+\frac{r}{(1-r)^2}
+\frac{M_+}{1-r}+\frac{r}{(1-r)^2}
 \right),
 \qquad
 t_0=\tanh(h_{\mathrm{tr}}a_0).
@@ -1081,7 +1081,7 @@ s_\varsigma=\nu_\varsigma\mathbin\cdot e_x\in\{-1,+1\},
 \qquad
 D=|x_w-c_x|,
 \qquad
-z=\theta+\mathrm i\eta.
+z\in\mathbb C,\quad |\operatorname{Im}z|\le a.
 $$
 
 The sign $s_\varsigma$ is kept distinct from the single-layer density
@@ -1113,7 +1113,7 @@ t_\tau(z;A)-t_\sigma(z;A)
 $$
 
 The minus sign on $t_\sigma$ is forced by the frozen artifact coordinate
-$\eta=(\tau,-\sigma)^T$; equivalently, code may insert its stored second
+$\eta=(\tau,-\sigma)^{\mathsf T}$; equivalently, code may insert its stored second
 block directly with a plus sign.  Define
 
 $$
@@ -1361,7 +1361,7 @@ The frozen artifact is
 | $\mu=\widehat k^2$ | frozen fields `mu_h = gamma = 3.3590469326375971` | legacy artifact names only; I5 aliases either to `mu_shift`, never to the Rayleigh $\gamma_m$ |
 | $\beta,d,R$ | `beta = 0.5`, `d = 1`, `R = 0.2` | read directly |
 | wall positions | `X_L = -0.5`, `X_R = 0.5` | the current circle center is implicitly the origin, so $\delta=0.3$; a generalized evaluator must store its center explicitly |
-| circle density map $\eta=(\tau,-\sigma)^T$ | `eta_unit_256`, size $512\times194$ | first and second 256 rows are the native nodal samples for $\tau,-\sigma$; convert once to the stated finite Fourier coordinates, orders $-128{:}127$ |
+| circle density map $\eta=(\tau,-\sigma)^{\mathsf T}$ | `eta_unit_256`, size $512\times194$ | first and second 256 rows are the native nodal samples for $\tau,-\sigma$; convert once to the stated finite Fourier coordinates, orders $-128{:}127$ |
 | flat-wall densities | `xi_left_unit_512`, `xi_right_unit_512`, each $512\times194$ | orders $-256{:}255$; `wall_input_unit_512` is not a density |
 | center state | `q_center`, size $194\times1$ | fixed singleton data |
 | stable/unstable coordinates | `Dplus`, `Dminus`, each $97\times97$ | read directly |
@@ -1446,14 +1446,14 @@ not use a circular parameterization, Bessel function, or circle self-action.
 The general density mass gate uses
 
 $$
-M^{\rm up}=2\pi v_{\max}I,
-\qquad L^{\rm up}=2\pi v_{\max},
+\mathsf G^{\rm up}=2\pi v_{\max}I,
+\qquad \mathcal P^{\rm up}=2\pi v_{\max},
 $$
 
 and hence
 
 $$
-\sqrt{L^{\rm up}}\|\sqrt{M^{\rm up}}C\|_F
+\sqrt{\mathcal P^{\rm up}}\|\sqrt{\mathsf G^{\rm up}}C\|_F
 =2\pi v_{\max}\|C\|_F.
 $$
 
