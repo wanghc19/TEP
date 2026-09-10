@@ -34,7 +34,7 @@ table says so.
 | $N_\eta$ | original parameter-node count of the frozen density | `source_node_count`; for `eta_unit_256`, $N_\eta=256$ |
 | $M_\eta$ | largest absolute Fourier degree present in $\eta$ | derived from `density.orders`; it is not an evaluation cutoff |
 | $L$ | residual Fourier cutoff, retaining $|\ell|<L$ | a zero-based code cutoff equals $L-1$ |
-| $N$ | even Kress and target-DFT evaluation node count | `configuration.boundary_node_count` |
+| $N$ | even Kress and target-DFT evaluation node count | `configuration.evaluation_node_count` in v1; legacy `configuration.boundary_node_count` only in the historical unversioned experiment |
 
 Every governing retained-row evaluation requires
 $N>2\max\{L,M_\eta\}$.  The symbols $N_{\mathrm{ser}},N_E,N_R,N_I$ denote
@@ -385,3 +385,38 @@ The provenance fields `mfs_proxy_used`,
 `circle_bessel_diagonalization_used`, and `sampling_drift_used` must all be
 false, and all four solve counts must be zero.  Every output remains labeled
 `NON_CERTIFIED_ROUNDOFF_EXCLUDED` with `reliability_certified=false`.
+
+## Implemented `residual-numerator-v1` overrides
+
+This is the local code ledger for `test/i5/residual-numerator-v1/`.  It does
+not alter the preceding historical `residual-numerator-a1` meanings or any
+I1--I4 field.  The v1 builder consumes explicit `artifact_path` and
+`curve_contract_path` arguments, explicit numeric `wall_finite_squared` and
+`wall_tail_squared`, and an optional non-authorizing `wall_provenance_label`.
+It writes only its explicit create-once `input_path`; the evaluator consumes
+that MAT file and writes only its explicit create-once `output_path`.  No v1
+executable reads a historical experiment output.
+
+| canonical code field or variable | kind and scope | governing object and source | type, shape, units | definition / consumer | permitted alias |
+|---|---|---|---|---|---|
+| `configuration.residual_mode_cutoff` | generated scalar | $L$, retaining $|\ell|<L$, (KR-2), (KR-24)--(KR-25) | positive integer | first finite tail pass in the declared schedule, or last schedule value for a failed-tolerance display / both entry points | none |
+| `configuration.evaluation_node_count` | generated scalar | $N>2\max\{L,M_\eta\}$, (KR-2) | positive even integer | $2\max\{L,M_\eta\}+2$ after $L$ is frozen / KR-16--KR-21 | never `source_node_count` |
+| `local_real_derivative_certificate.val`, `.nor` | generated structures | density-inclusive $S_{j,2}$, $C_{j,q}$, $\mathcal H_q$, and $Q_2$, (KR-15), (KR-18), (KR-22) | finite nonnegative arrays with the shapes in `design-5-1b.md` | circle $q$-series adapter / local radii and Fourier tails | none |
+| `delta_Ctan2_source_second_upper` | generated scalar | source-second derivative bound for $C_{\kappa_e,2}^{\mathrm{tan}}-C_{\kappa_i,2}^{\mathrm{tan}}=p_TW$ | nonnegative real | diagonal-safe $J/Y$ series / KR-15 normal bound audit | none |
+| `delta_Dstar2_source_second_upper` | generated scalar | source-second derivative bound for $D_{\kappa_e,2}^*-D_{\kappa_i,2}^*=p_nW$ | nonnegative real | diagonal-safe $J/Y$ series / KR-15 normal bound audit | none |
+| `local_rows.*.series_delta_log_upper`, `.series_delta_smooth_upper` | generated $N\times N$ arrays | $\Delta_{1,iq},\Delta_{2,iq}$ in (KR-21), here enclosing the whole discrete integral operator about zero | nonnegative real arrays | absolute complete $J/Y$ sums including factorial tails / `LOCAL_series_radius` | not a sampled error |
+| `regular_zero_center_certificate` | generated structure | exact regular-image action split into retained Ewald finite radius and M-R/M-I/M-L radii | nonnegative coordinate and `K00,K01-source,K10-target,K11` bounds | builder / retained and angular-tail assembly | no Faddeeva or `expint` center |
+| `off_surface_zero_center_certificate` | generated structure | exact frozen finite Rayleigh action about zero | outgoing per-order arrays plus value/normal radii | frozen `xi_left_unit_512`, `xi_right_unit_512` / retained and angular-tail assembly | none |
+| `propagation_minus`, `propagation_plus` | generated structures | block-power constants $K_-$ and $K_+$ | Frobenius-norm prefix, block contraction, nonnegative sum bound | frozen $P_-$, $P_+$ / cell and angular tails | no unqualified spectral-norm call |
+| `retained_assembly.material`, `.lifting` | generated structures | $\overline F_\Upsilon^2$ and $\overline F_{\mathrm{lift}}^2$, (KR-27), (KR-30) | expanded row centers, radii, weights, and state labels | identity, zero-center kernel radii, frozen singleton/cell states / evaluator | none |
+| `tail_assembly.*.low_cell` | generated structure array | retained-mode $n\ge J$ block-power remainder, (KR-28), (KR-31) | two side records with identity map, radius, weight, and state norm | builder / `LOCAL_low_cell_tail` | none |
+| `wall_value_lift_certificate` | generated structure | artificial-wall value-lift finite, high-mode, and $n\ge J$ terms | nonnegative finite/tail data | frozen wall rows plus positive-distance circle-to-wall radius / lifting assembly | distinct from `wall_module` |
+| `wall_finite_squared`, `wall_tail_squared` | builder input scalars | $\overline F_{\Gamma_\pm}^2$ and $T_{\Gamma_\pm}^2$, (KR-32) | finite nonnegative scalars | explicit caller values / `wall_module` and final numerator | no historical result path |
+| `wall_provenance_label` | optional builder input text | descriptive origin of the explicit wall scalars | character vector or scalar string, no mathematical authority | caller / input and enclosure provenance | defaults to `UNSPECIFIED_NONAUTHORIZING_PROVENANCE` |
+| `wall_module` | generated data-only structure | $\overline F_{\Gamma_\pm}^2+T_{\Gamma_\pm}^2$, (KR-32) | two nonnegative scalars, source kind, scope, and non-authorizing provenance | explicit builder arguments / final numerator | never the artificial-wall value lift |
+| `retained_radius_audit` | result structure | source, target, zero-center series, regular, off-surface, and wall retained radii | nonnegative maxima and one tolerance gate | evaluator / final scientific status | tolerance failure is not a structural pre-run failure |
+| `numerator_majorant` | result scalar | $\widehat B_{\Gamma_\pm}+\widehat B_\Upsilon+\widehat B_{\mathrm{lift}}$ | nonnegative real | final evaluator assembly | numerator only |
+
+The circle identities are an input adapter only; the governing theorem remains
+the shape-general real-variable Kress result.  All v1 solve-count fields are
+zero, and every numeric output remains `NON_CERTIFIED_ROUNDOFF_EXCLUDED`.
