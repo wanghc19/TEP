@@ -161,8 +161,8 @@ No cancellation between the three terms is used to reduce this majorant.
 | module | current status | precise boundary |
 |---|---|---|
 | artificial-interface normal defect $B_{\Gamma_\pm}$ | current circle instance `GO` within the roundoff-excluded scope | every analytic omission has an explicit formula; the persisted ordinary number excludes floating-point outward rounding |
-| material-interface normal defect $B_\Upsilon$ | theorem-level `GO`; frozen instance `CONDITIONAL GO` | the failed P32 strip radius is replaced by the reviewed real-variable Kress source/target remainder and algebraic Fourier tail; its finite derivative enclosures and decoupled cutoffs are not yet instantiated |
-| value-defect correction $B_{\mathrm{lift}}$ | theorem-level `GO`; frozen instance `CONDITIONAL GO` | the same reviewed real-variable theorem supplies identity-inclusive retained radii and the local lifting tail; the current run is not retroactively qualified |
+| material-interface normal defect $B_\Upsilon$ | theorem-level `GO`; frozen finite inequality instantiated conditionally | I5.1c supplies a signed nonzero local/off-surface center and disjoint explicit radii; the ordinary value $3006.7225021204808$ excludes roundoff, and its material-tail tightness allocation fails |
+| value-defect correction $B_{\mathrm{lift}}$ | theorem-level `GO`; frozen finite inequality instantiated conditionally | I5.1c uses the required multiplication by $e_{\ell,\mathrm{val}}$ and gives $748498.34329471563$; retained-radius and lifting-tail tightness allocations fail, so the instance is not `COMPLETE` |
 
 Read [[research/projects/eig-apost/phase3-analysis/residual-bound/s-wall-tail|the
 artificial-interface module]] first, then
@@ -185,8 +185,13 @@ diagnostic interval map, and the later P32 audit that supersedes the earlier
 instance-level `PASS` are recorded in
 [[research/projects/eig-apost/implementation/i5/design-5-1]].  Every displayed
 number remains `NON_CERTIFIED_ROUNDOFF_EXCLUDED`.  The failed P32 product-strip
-route is not an obligation of the replacement theorem.  Until the real-axis
-derivative enclosures, independent $L/N$
-cutoffs, retained radii, and revised assembly gate are instantiated, the
-persisted run-06 numbers are not accepted upper bounds for $B_\Upsilon$,
-$B_{\mathrm{lift}}$, or their assembled numerator.
+route is not an obligation of the replacement theorem.  The I5.1c
+nonzero-center theorem, implementation choices, and current frozen-instance
+numbers are recorded in
+[[research/projects/eig-apost/implementation/i5/design-5-1c|design-5-1c]],
+with the independent review in
+[[research/projects/eig-apost/implementation/i5/review-5-1c|review-5-1c]].
+Those results instantiate the finite inequality only under the documented
+real-arithmetic primitive-enclosure assumptions.  They are neither
+outward-rounded certificates nor evidence that the predeclared tightness
+allocations pass.

@@ -533,7 +533,49 @@ $$
 \tag{KR-19}
 $$
 
-while propagation of source radii gives
+There is a sharper real-variable alternative whenever the chosen parameter is
+constant speed.  Since
+$d_m=\sqrt P\,\widehat H_m$ and (KR-23) gives
+
+$$
+|d_m|\le
+\frac{Q_2P^{3/2}}{4\pi^2|m|^2},
+\qquad m\ne0,
+$$
+
+the exact DFT alias identity, valid for $|\ell|<N/2$, yields
+
+$$
+\epsilon_{\ell}^{\mathrm{tgt,alias}}
+\le
+\frac{Q_2P^{3/2}}{4\pi^2}
+\sum_{q\in\mathbb Z\setminus\{0\}}|\ell+qN|^{-2}.
+\tag{KR-19a}
+$$
+
+This is not a circle theorem: it requires only a constant-speed periodic
+parameterization and the certified $C^2$ bound in (KR-22).  For a finite
+evaluation, set $a=|\ell|$, choose an integer $Q_A\ge1$, and bound the series
+in (KR-19a) by
+
+$$
+\begin{split}
+A_{\ell,N,Q_A}:={}&
+\sum_{q=1}^{Q_A}\left[(qN-a)^{-2}+(qN+a)^{-2}\right]\\
+&+(q_0N-a)^{-2}+\frac1{N(q_0N-a)}\\
+&+(q_0N+a)^{-2}+\frac1{N(q_0N+a)},
+\qquad q_0=Q_A+1.
+\end{split}
+\tag{KR-19b}
+$$
+
+The last four terms are the first omitted term plus the monotone integral
+tail on each side.  Hence an implementation may use the smaller of (KR-19)
+and the right-hand side of (KR-19a) with the series replaced by (KR-19b).
+The two formulas enclose the same target DFT error and are alternatives, not
+two radii to be added.
+
+Propagation of source radii gives
 
 $$
 \epsilon_\ell^{\mathrm{src}}
@@ -565,6 +607,74 @@ uses the derivative bound for the complete $H=J+H^{\mathrm{op}}$.  The last
 term contains only the explicitly truncated Bessel/Green series.  Source
 error, target error, series error, and identity therefore concern successive
 or disjoint operations and are each added once.
+
+For clarity, this is a nonzero-center enclosure, not a triangle enclosure of
+the complete action about zero.  Let $K=(K_1,K_2)$ be the exact pair of
+complete integrands and $K_Q=(K_{1,Q},K_{2,Q})$ its signed finite-series pair.
+Let $\mathcal A K$ be the exact source integral and let
+
+$$
+(Q_NK)(t_i)
+=\sum_{j=0}^{N-1}R_{ij}K_1(t_i,u_j)
++h_N\sum_{j=0}^{N-1}K_2(t_i,u_j),
+\qquad h_N=\frac{2\pi}{N},
+$$
+
+be the Kress rule.  If $\mathcal D$ is the exact target Fourier functional
+and $\mathcal D_N$ its $N$-point trapezoidal rule, then
+
+$$
+\begin{split}
+d_\ell^{\mathrm{self}}
+-\widetilde d_\ell^{\mathrm{self}}
+={}&\bigl\{\mathcal D[J+\mathcal AK]
+-\mathcal D_N[J+\mathcal AK]\bigr\}\\
+&+\mathcal D_N[(\mathcal A-Q_N)K]
++\mathcal D_N[Q_N(K-K_Q)].
+\end{split}
+\tag{KR-21a}
+$$
+
+The three braces in (KR-21a) are bounded, in order, by
+$\epsilon_\ell^{\mathrm{tgt}}$,
+$\epsilon_\ell^{\mathrm{src}}$, and
+$\epsilon_\ell^{\mathrm{series}}$.  In particular,
+$\epsilon_\ell^{\mathrm{series}}$ encloses only the omitted terms of the
+signed kernel series.  It cannot be replaced by an unsigned enclosure of the
+whole finite operator, because doing so discards the cancellation retained in
+$\widetilde d_\ell^{\mathrm{self}}$.
+
+More explicitly, suppose the diagonal-safe series construction gives
+
+$$
+\delta_{r,ij}^\chi
+\ge
+\|K_r^\chi(t_i,u_j)-K_{r,Q}^\chi(t_i,u_j)\|_2,
+\qquad r\in\{1,2\},\quad
+\chi\in\{\mathrm{val},\mathrm{nor}\}.
+$$
+
+Define
+
+$$
+E_{\mathrm{ser},i}^\chi
+=\sum_{j=0}^{N-1}|R_{ij}|\delta_{1,ij}^\chi
++h_N\sum_{j=0}^{N-1}\delta_{2,ij}^\chi.
+$$
+
+Then the computable radius
+
+$$
+\epsilon_\ell^{\mathrm{series},\chi}
+:=\frac{h_N}{\sqrt P}
+\sum_{i=0}^{N-1}s(t_i)E_{\mathrm{ser},i}^\chi
+\tag{KR-21b}
+$$
+
+encloses $\mathcal D_N[Q_N(K-K_Q)]$ for every retained $\ell$.  The
+factorial tails of the circle instance, or a shape-general interval/Taylor
+covering, fill the $\delta_{r,ij}^\chi$ boxes.  Formula (KR-21b) contains no
+unsigned copy of the retained finite center.
 
 ## Local Fourier omission
 
@@ -631,36 +741,105 @@ target errors.
 
 ## Assembly of the three modules
 
-For every retained material row, first form the center and radius
+For every retained material row, first form the physical center and radius.
+If `raw` denotes the orientation used by the regular-image and off-surface
+auxiliary evaluators, then
 
 $$
-\widetilde j_\ell
-=\widetilde j_\ell^{\mathrm{self}}
-+\widetilde j_\ell^{\mathrm{reg}}
-+\widetilde j_\ell^{\mathrm{off}},
+\widetilde j_\ell^{\mathrm{val}}
+=\widetilde j_\ell^{\mathrm{self,val}}
++\widetilde j_\ell^{\mathrm{reg,raw,val}}
++\widetilde j_\ell^{\mathrm{off,raw,val}},
 $$
 
 $$
-\epsilon_\ell^\Upsilon
-=\epsilon_\ell^{\mathrm{self}}
-+\epsilon_\ell^{\mathrm{reg}}
-+\epsilon_\ell^{\mathrm{off}}.
+\widetilde j_\ell^{\mathrm{nor}}
+=\widetilde j_\ell^{\mathrm{self,nor}}
+-\widetilde j_\ell^{\mathrm{reg,raw,nor}}
+-\widetilde j_\ell^{\mathrm{off,raw,nor}},
+$$
+
+$$
+\epsilon_\ell^\chi
+=\epsilon_\ell^{\mathrm{self},\chi}
++\epsilon_\ell^{\mathrm{reg},\chi}
++\epsilon_\ell^{\mathrm{off},\chi},
+\qquad \chi\in\{\mathrm{val},\mathrm{nor}\}.
 \tag{KR-26}
 $$
 
 The self center already contains the identity exactly once; no separate
 identity row is added.  The identity has no source-action or series error,
 but it is included in the target-integration and Fourier-tail bounds.  The
-regular radius includes its finite Ewald evaluation and all retained Ewald
-remainders; the off-surface radius includes its own retained quadrature bound.
-They are added before the material trace weight is applied.
+regular-image part may use a zero center only when its radius encloses the
+complete exact regular-image action, including the retained Ewald finite sum
+and every unretained reciprocal, image, and branch-free local term.  A Taylor
+tail already absorbed by such a full-action radius is not added again.  This
+retained zero-center radius needs only the real-axis constants of (M-action):
+
+$$
+\epsilon_{\ell}^{\mathrm{reg,val}}
+\le\sqrt P\,[K_{01}(0)A_\tau+K_{00}(0)A_\sigma],
+\qquad |\ell|<L,
+$$
+
+$$
+\epsilon_{\ell}^{\mathrm{reg,nor}}
+\le\sqrt P\,[K_{11}(0)A_\tau+K_{10}(0)A_\sigma],
+\qquad |\ell|<L.
+\tag{KR-26b}
+$$
+
+The complete regular-image high target-Fourier tail instead uses the
+positive-width strip constants in (M-Fourier).  The real-axis retained rows
+$|\ell|<L$ and strip-bounded omitted rows $|\ell|\ge L$ are disjoint; their
+two bounds are not added to one another.  Each Ewald full-action certificate
+must separately pass its branch and truncation gates, with M-T absorbed or
+added exactly once in that index scope.  The
+off-surface center uses the complete frozen finite Rayleigh support.  Its
+retained radius contains only its target quadrature error; its
+$|\ell|\ge L$ tail controls omitted target-boundary Fourier rows, not omitted
+Rayleigh source modes.  All three centers are added before taking an absolute
+value, and all three radii are added before the material trace or lifting
+weight is applied.
+
+Let $\mathscr C_\ell^\chi$ be the resulting unit-density center row and
+$\delta_\ell^\chi$ its radius.  On side
+$\varsigma\in\{-,+\}$ define
+
+$$
+C_{\varsigma,\ell}^\chi
+=\mathscr C_\ell^\chi G_\varsigma,
+\qquad
+\epsilon_{\varsigma,\ell}^\chi
+=\delta_\ell^\chi\|G_\varsigma\|_2.
+$$
+
+For the center singleton, use
+$C_{0,\ell}^\chi=\mathscr C_\ell^\chi q_0$ and
+$\epsilon_{0,\ell}^\chi=\delta_\ell^\chi\|q_0\|_2$.  Thus, for every side
+state vector $x$,
+
+$$
+\|j_{\varsigma,\ell}^\chi(x)\|
+\le
+\|C_{\varsigma,\ell}^\chi x\|
++\epsilon_{\varsigma,\ell}^\chi\|x\|.
+\tag{KR-26a}
+$$
+
+The same $C_{\varsigma,\ell}$, containing the local and off-surface nonzero
+centers and any nonzero regular-image center and already composed with
+$G_\varsigma$, must be used both for retained cells and for the $n\ge J$
+block-power or Lyapunov tail.  An identity-only row map is not an upper bound
+for that tail, and $G_\varsigma$ must not be composed a second time.
 
 For each side $\varsigma\in\{-,+\}$, define
 
 $$
 \overline\omega_{\varsigma,L}^\Upsilon
 =\sum_{|\ell|<L}
-\frac{(\|\widetilde\ell_{\varsigma,\ell}^\Upsilon\|
+\frac{(\|C_{\varsigma,\ell}^\Upsilon\|
 +\epsilon_{\varsigma,\ell}^\Upsilon)^2}{b_\ell}.
 $$
 
@@ -674,7 +853,7 @@ $$
 (\|\widetilde j_{0,\ell}^\Upsilon\|
 +\epsilon_{0,\ell}^\Upsilon)^2\\
 &+\sum_{\varsigma\in\{-,+\}}\sum_{n=0}^{J-1}
-(\|\widetilde\ell_{\varsigma,\ell}^\Upsilon
+(\|C_{\varsigma,\ell}^\Upsilon
 P_\varsigma^nc_\varsigma\|
 +\epsilon_{\varsigma,\ell}^\Upsilon
 \|P_\varsigma^nc_\varsigma\|)^2
@@ -685,11 +864,13 @@ $$
 
 Let $\mathcal C_{\Upsilon,0}$ and
 $\mathcal C_{\Upsilon,\varsigma}$ be formed as follows.  Take the square root
-of each squared local bound (KR-24), regular-image Ewald tail, and off-surface
-tail; add these weighted sequence norms for the same physical defect; only
-then square the sum where it occurs below.  This is the triangle inequality,
-not an addition of already-squared nonorthogonal tails.  With Lyapunov
-certificates,
+of each squared local bound (KR-24), complete regular-image high-$|\ell|$
+Fourier tail built from its certified Ewald full-action bound, and
+off-surface target-Fourier tail; add these weighted sequence norms for the
+same physical defect; only then square the sum where it occurs below.  The
+internal M-R/M-I/M-T/M-L terms construct the regular-image full-action bound
+and are not added as a second error.  This is the triangle inequality, not an
+addition of already-squared nonorthogonal tails.  With Lyapunov certificates,
 
 $$
 \begin{split}
@@ -707,7 +888,16 @@ $$
 
 The block-power replacement is exactly the one displayed in
 `s-wall-tail.md`: replace each quadratic form $x^*Y_\varsigma x$ by
-$K_\varsigma\|x\|^2$.  Equations (KR-27)--(KR-28) give
+$K_\varsigma\|x\|^2$.  In particular, the retained-row low-cell part is
+
+$$
+\sum_{\varsigma\in\{-,+\}}
+\overline\omega_{\varsigma,L}^\Upsilon
+K_\varsigma\|P_\varsigma^Jc_\varsigma\|^2.
+\tag{KR-28a}
+$$
+
+Equations (KR-27)--(KR-28) give
 
 $$
 B_\Upsilon\le\sqrt{\overline F_\Upsilon^2+T_\Upsilon^2}.
@@ -745,6 +935,41 @@ $$
 B_{\mathrm{lift}}
 \le2\sqrt{\overline F_{\mathrm{lift}}^2+T_{\mathrm{lift}}^2}.
 \tag{KR-31}
+$$
+
+In particular, for one propagated material value defect the finite part and
+the low-cell envelope have the sign and weight pattern
+
+$$
+\sum_{|\ell|<L}e_{\ell,\mathrm{val}}
+\left[
+(|\widetilde d_{0,\ell}|+\epsilon_{0,\ell})^2
++\sum_{\varsigma\in\{-,+\}}\sum_{n=0}^{J-1}
+(\|C_{\varsigma,\ell}^{\mathrm{val}}P_\varsigma^nc_\varsigma\|
++\epsilon_{\varsigma,\ell}^{\mathrm{val}}
+\|P_\varsigma^nc_\varsigma\|)^2
+\right],
+\tag{KR-31a}
+$$
+
+$$
+\omega_{\varsigma,L}^{\mathrm{lift}}
+=\sum_{|\ell|<L}e_{\ell,\mathrm{val}}
+(\|C_{\varsigma,\ell}^{\mathrm{val}}\|
++\epsilon_{\varsigma,\ell}^{\mathrm{val}})^2.
+\tag{KR-31b}
+$$
+
+Thus the lifting energy multiplies by $e_{\ell,\mathrm{val}}$ in both the
+finite sum and the low-cell propagation tail.  Division by this weight is the
+material-normal trace rule and is inadmissible for lifting.
+The explicit retained-row low-cell lifting contribution is
+
+$$
+\sum_{\varsigma\in\{-,+\}}
+\omega_{\varsigma,L}^{\mathrm{lift}}
+K_\varsigma\|P_\varsigma^Jc_\varsigma\|^2.
+\tag{KR-31c}
 $$
 
 Finally, `s-wall-tail.md` already proves

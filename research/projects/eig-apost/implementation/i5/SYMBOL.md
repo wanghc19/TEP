@@ -420,3 +420,40 @@ executable reads a historical experiment output.
 The circle identities are an input adapter only; the governing theorem remains
 the shape-general real-variable Kress result.  All v1 solve-count fields are
 zero, and every numeric output remains `NON_CERTIFIED_ROUNDOFF_EXCLUDED`.
+
+## Implemented `residual-numerator-v2` overrides
+
+This local ledger applies only to `test/i5/residual-numerator-v2/`.  Fields not
+listed here retain their v1 mathematical meaning.  No override changes a
+frozen artifact field, schema, MATLAB package API, or I1--I4 meaning.
+
+| canonical code field or variable | governing object | source and role | non-overlap rule |
+|---|---|---|---|
+| `local_rows.*.finite_center` | $\widetilde d_\ell^{\mathrm{self}}=\mathcal D_N[J+Q_NK_Q]$ | signed finite Kress-series action followed by one target DFT | replaces the v1 identity-only center |
+| `local_rows.*.source_radius` | $\epsilon_\ell^{\mathrm{src}}$ | exact-integrand source product-rule error | excludes identity, target, and series errors |
+| `local_rows.*.target_radius` | $\epsilon_\ell^{\mathrm{tgt}}$ | minimum of the general KR-19 bound and the constant-speed alias bound (KR-19a)--(KR-19b) | two bounds for the same error are not added |
+| `local_rows.*.target_radius_KR19` | KR-19 target DFT radius | complete identity-plus-action derivative bound | retained for audit even when the alias radius is smaller |
+| `local_rows.*.target_radius_constant_speed_alias` | $Q_2P^{3/2}A_{\ell,N,64}/(4\pi^2)$ | exact DFT alias identity with 64 explicit two-sided aliases and monotone integral tails | requires constant speed and $|\ell|<N/2$ |
+| `local_rows.*.series_radius` | $\epsilon_\ell^{\mathrm{series}}$ | tail-only difference between the signed exact kernel and signed retained series | never an unsigned enclosure of the finite center |
+| `local_series_adapter` | signed $a_{\kappa,n}$, $y_{\kappa,n}$, $b_{\kappa,m}$, $r_{\kappa,m}$ coefficients | current-circle pointwise adapter for (I5.1c-5) | not a circle operator diagonalization |
+| `off_surface_rows.*.finite_center` | $\widetilde d_\ell^{\mathrm{off}}$ | signed frozen finite Rayleigh action | value adds raw action; normal subtracts raw action under $A_w^\nu=-\partial_\nu u_w$ |
+| `off_surface_rows.*.target_radius` | $\epsilon_\ell^{\mathrm{off}}$ | retained off-surface target quadrature error over the complete frozen finite Rayleigh support | omitted target-Fourier rows $|\ell|\ge L$ are owned only by the angular tail |
+| `regular_zero_center_certificate` | $\widetilde d_\ell^{\mathrm{reg}}=0$ and a complete exact-action radius | Ewald full-action enclosure | an absorbed M-T Taylor tail is recorded once in each index scope |
+| `regular_zero_center_certificate.coordinate_real_axis` | $K_{pq}(0)$ certificate | real-axis displacement, normal, and density $L^1(\mathrm ds)$ bounds | used only for retained $|\ell|<L$ radii |
+| `regular_zero_center_certificate.coordinate_high_target_strip` | $K_{pq}(a)$ certificate with $a=0.2$ | complex-strip Ewald full-action bound | used only for omitted target-Fourier rows $|\ell|\ge L$ |
+| `retained_high_target_index_disjoint` | $\{|\ell|<L\}\cap\{|\ell|\ge L\}=\varnothing$ | regular-image ownership gate | real-axis retained radius and strip high tail are never added to one coefficient |
+| `constant_speed_alias_enclosure` | constant-speed target DFT alias gate | finite two-sided sum through 64 plus first-term-and-integral tail from 65 | fail closed; no cosecant cancellation formula |
+| `combined_rows.*.center` | $C_\ell=\widetilde d_\ell^{\mathrm{self}}+\widetilde d_\ell^{\mathrm{off}}$ | signed center formed before absolute value and weighting | regular-image center is zero |
+| `combined_rows.*.radius` | $\epsilon_\ell^{\mathrm{src}}+\epsilon_\ell^{\mathrm{tgt}}+\epsilon_\ell^{\mathrm{series}}+\epsilon_\ell^{\mathrm{reg}}+\epsilon_\ell^{\mathrm{off}}$ | retained-row triangle radius | every radius owner occurs once |
+| `tail_assembly.*.low_cell.center_map` | $C_{\varsigma,\ell}$ in (KR-26a) | complete signed combined row map used for $n\ge J$ | replaces the v1 identity-only map |
+| `tail_assembly.material.low_cell.weight` | $1/b_\ell$ | material normal trace weight | never used for lifting |
+| `tail_assembly.lifting.low_cell.weight` | $e_{\ell,\mathrm{val}}$ | material value lifting energy weight | multiplies both finite and low-cell squares |
+| `series_tail_ownership` | finite-series factorial remainders | Boolean and label audit | `tail_only`; a whole-action series radius is rejected |
+| `off_surface_sign_audit` | physical sign of the off-surface center | Boolean audit for value plus and normal minus | failure is structural |
+| `low_cell_complete_map_audit` | equality of retained and low-cell combined row definitions | Boolean audit | identity-only low-cell maps are rejected |
+| `lifting_weight_direction_audit` | multiplication by $e_{\ell,\mathrm{val}}$ | Boolean audit of finite and low-cell formulas | division is rejected |
+
+The retained set remains exactly $|\ell|<L$, $N$ remains even with
+$N>2\max\{L,M_\eta\}$, and no Nyquist representative is retained.  Every v2
+solve count is zero.  All v2 numerical values remain
+`NON_CERTIFIED_ROUNDOFF_EXCLUDED`.
