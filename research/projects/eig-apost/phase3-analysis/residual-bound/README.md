@@ -160,9 +160,14 @@ No cancellation between the three terms is used to reduce this majorant.
 
 | module | current status | precise boundary |
 |---|---|---|
-| artificial-interface normal defect $B_{\Gamma_\pm}$ | current circle instance `GO` within the roundoff-excluded scope | every analytic omission has an explicit formula; the persisted ordinary number excludes floating-point outward rounding |
-| material-interface normal defect $B_\Upsilon$ | theorem-level `GO`; frozen finite inequality instantiated conditionally | I5.1c supplies a signed nonzero local/off-surface center and disjoint explicit radii; the ordinary value $3006.7225021204808$ excludes roundoff, and its material-tail tightness allocation fails |
-| value-defect correction $B_{\mathrm{lift}}$ | theorem-level `GO`; frozen finite inequality instantiated conditionally | I5.1c uses the required multiplication by $e_{\ell,\mathrm{val}}$ and gives $748498.34329471563$; retained-radius and lifting-tail tightness allocations fail, so the instance is not `COMPLETE` |
+| artificial-interface normal defect $B_{\Gamma_\pm}$ | frozen instance `GO` in the roundoff-excluded fallback | I5.1e attempt 7 rebuilds every wall row directly and gives $890.77255515519369$; historical evaluated wall residuals do not enter the bound |
+| material-interface normal defect $B_\Upsilon$ | frozen instance `GO`; tightness `PASS` in the roundoff-excluded fallback | the coefficientwise-density, mode-dependent zero-centre I5.1e bound is $28500.152577876961$; the smaller I5.1d signed-centre value remains conditional on unresolved (RNC-6) |
+| value-defect correction $B_{\mathrm{lift}}$ | frozen instance `GO`; tightness `PASS` in the roundoff-excluded fallback | I5.1e attempt 7 gives $58518.118987325186$ with the lifting weight multiplied and the global factor two applied once; the tighter I5.1c display remains conditional |
+
+The resulting smallest reviewed fallback is
+$\mathcal M=87909.044120357343$.  It is a theorem upper for the exact frozen
+inputs with ordinary arithmetic rounding excluded, not an outward-rounded
+certificate; its preallocated omission-tail tightness tolerance passes.
 
 Read [[research/projects/eig-apost/phase3-analysis/residual-bound/s-wall-tail|the
 artificial-interface module]] first, then
@@ -176,7 +181,17 @@ local-panel theorem]].  The accepted replacement for the failed P32
 target-strip step, together with
 the assembled conditional numerator theorem, is
 [[research/projects/eig-apost/phase3-analysis/residual-bound/s-kress-real|the
-real-variable Kress bound]].  The cross-stage context remains
+real-variable Kress bound]].  Its shape-general nonzero regular-image theorem
+is instantiated conditionally by
+[[research/projects/eig-apost/implementation/i5/design-5-1d|I5.1d]].  The
+library-independent zero-centre fallback, its mode-dependent refinement, the
+direct wall reconstruction, and the first complete roundoff-excluded reliable
+frozen-instance majorant are recorded in
+[[research/projects/eig-apost/implementation/i5/design-5-1e|I5.1e]], with
+the independent verdict in
+[[research/projects/eig-apost/implementation/i5/review-5-1e|review-5-1e]].
+The I5.1e tightness allocation fails, so that result is reliable but very
+wide.  The cross-stage context remains
 [[research/projects/eig-apost/phase3-analysis/s-estimator]] and
 [[research/projects/eig-apost/phase3-analysis/s-dtn-chain]].
 

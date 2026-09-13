@@ -457,3 +457,79 @@ The retained set remains exactly $|\ell|<L$, $N$ remains even with
 $N>2\max\{L,M_\eta\}$, and no Nyquist representative is retained.  Every v2
 solve count is zero.  All v2 numerical values remain
 `NON_CERTIFIED_ROUNDOFF_EXCLUDED`.
+
+## Implemented `residual-numerator-v3` overrides
+
+This ledger applies only to `test/i5/residual-numerator-v3/`.  Governing
+formulas are (RNC-1)--(RNC-9) in `s-kress-real.md` and the unchanged
+(KR-26)--(KR-32) retained/low-cell assembly.  Unlisted fields retain their v2
+meaning.  No v3 executable reads a historical output.
+
+| canonical code field or variable | governing object | type, shape, and role | definition / consumer |
+|---|---|---|---|
+| `v2_input_path` | explicit I5.1c data contract | path to a self-contained MAT input, never an output | both v3 entry points / contract revalidation |
+| `artifact_path` | frozen I3 certificate | explicit MAT path containing the fixed candidate, density, and state maps | builder / artifact audit |
+| `same_run_v2_output_path` | fresh I5.1c baseline side effect | create-once output path; never a historical input | evaluator / `residual_numerator_v2` in the same invocation |
+| `regular_taylor_cutoff` | retained Ewald order $N_E$ | nonnegative integer; Taylor orders $0{:}N_E$ are retained | v2 configuration / signed image and local sums |
+| `raw_normal_rows` | $d_{\ell,\mathrm{reg}}^{\mathrm{raw,nor}}$ retained center in (RNC-1) | complex $(2L-1)$-by-state row map | builder / physical-sign audit |
+| `physical_normal_rows` | negative raw regular row after (RNC-9) | `-raw_normal_rows`; regular action is subtracted once | builder / material delta |
+| `M_R_coordinate_tail` | reciprocal omission in (RNC-7) | nonnegative coordinate row ordered `00,10,01,20,11,02` | v2 certificate / normal contraction |
+| `M_I_coordinate_tail` | omitted-image remainder in (RNC-7) | nonnegative coordinate row | v2 certificate / normal contraction |
+| `M_T_coordinate_tail` | first omitted retained-image Taylor orders in (RNC-7) | nonnegative coordinate row | v3 builder / normal contraction |
+| `M_L_coordinate_tail` | branch-free local factorial remainder in (RNC-7) | nonnegative coordinate row | v2 certificate / normal contraction |
+| `source_quadrature_row_radius` | $\epsilon_{\ell,\mathrm{src}}^{\mathrm{nor}}$ in (RNC-4) | nonnegative scalar shared by retained rows | builder / `total_retained_row_radius` |
+| `target_quadrature_row_radius` | $\epsilon_{\ell,\mathrm{tgt}}^{\mathrm{nor}}$ in (RNC-5) | nonnegative $(2L-1)$-vector | builder / `total_retained_row_radius` |
+| `finite_special_function_eval_row_radius` | $\epsilon_{\ell,\mathrm{eval}}^{\mathrm{nor}}$ in (RNC-6) | zero only under `FINITE_SPECIAL_FUNCTION_EVAL_ASSUMED_EXACT` | builder / condition audit |
+| `total_retained_row_radius` | $\epsilon_{\ell,\mathrm{reg}}^{\mathrm{nor}}$ in (RNC-8) | source + target + M-R + M-I + M-T + M-L + finite-evaluation radii | builder / retained and low-cell material assembly |
+| `finite_physical_center` | state-scaled signed regular center | complex vector in the v2 retained-state order | builder / evaluator nonlinear recomputation |
+| `finite_regular_radius` | state-scaled `total_retained_row_radius` | nonnegative vector in the v2 retained-state order | builder / evaluator nonlinear recomputation |
+| `combined_center_row_map` | complete low-cell center map | local + physical regular + physical off-surface row map composed with one frozen side map | builder / $n\ge J$ block-power recomputation |
+| `FINITE_SPECIAL_FUNCTION_EVAL_ASSUMED_EXACT` | conditional RNC-6 assumption | true only as a diagnostic condition; never a reliability gate | builder, evaluator, and persisted result |
+| `reliable_eval_enclosure_pass` | finite-evaluation reliability gate | always false in I5.1d | builder and evaluator / claim boundary |
+| `total_reliable_pass` | complete reliability gate | always false in I5.1d | evaluator / claim boundary |
+| `conditional_diagnostic_pass` | finite structural diagnostic gate | true only when all non-RNC-6 structural gates and finite-value checks pass | builder and evaluator / status |
+
+The RNC telescope gives M-R/M-I/M-T/M-L, target quadrature, source
+quadrature, and finite evaluation exactly one owner.  The v3 high target-mode
+groups remain disjoint and unchanged.  Every v3 solve count is zero, and its
+numeric output remains `NON_CERTIFIED_ROUNDOFF_EXCLUDED`.
+
+## Implemented `residual-numerator-v4` overrides
+
+This ledger applies only to `test/i5/residual-numerator-v4/`.  It preserves
+the common residual notation and does not change a frozen artifact field,
+MATLAB package API, or I1--I4 meaning.
+
+| code field or variable | governing object | role and ownership |
+|---|---|---|
+| `configuration.cutoff_schedule` | material cutoff candidates $L$ | selects retained $|\ell|<L$ only from explicit omission tails; the reviewed attempts selected $L=65536$ |
+| `material.modewise_component_minima` | (ZF-16)--(ZF-18) | takes local, regular-image and off-surface minima separately for each mode, then adds the three radii before one trace/lift weight |
+| `direct_wall_certificate.orders` | frozen wall support $-256{:}255$ | distinct from material $L$; the curve-only $m=256$ term and high $|m|\ge257$ terms are stored in analytic tails |
+| `direct_wall_certificate.normal.Q_left_radius`, `.Q_right_radius` | $q_{L,m}$, $q_{R,m}$ | complete flat-half-jump plus curve-action zero-centre radii; no shared value trace enters the normal action |
+| `direct_wall_certificate.normal.plus_sequence_radius` | $q_{R,m}(G_+)+q_{L,m}(G_+P_+)$ | same-wall normal actions are added before squaring |
+| `direct_wall_certificate.normal.minus_sequence_radius` | $q_{L,m}(G_-)+q_{R,m}(G_-P_-)$ | same-wall normal actions are added before squaring |
+| `direct_wall_certificate.value.left_defect_radius`, `.right_defect_radius` | $v_{L,m}$, $v_{R,m}$ | shared trace, flat value action and curve value action are added within one collar before squaring |
+| `direct_wall_certificate.value.center_left_mismatch_radius`, `.center_right_mismatch_radius` | zero-centre bounds for (ZF-27) | rebuilt from frozen $D_\pm c_\pm$ and $q_{\rm center}$; stored mismatch rows are not read |
+| `wall.analytic_tail` | curve-only $m=256$ plus $|m|\ge257$ normal tail | disjoint from retained frozen wall rows |
+| `lifting.wall_value.analytic_tail` | curve-only $m=256$ plus $|m|\ge257$ value tail | direct finite wall-input support has no high contribution |
+| `G_block_layout_exact_pass` | diagnostic comparison with $[D_+;D_+P_+]$ and $[D_-P_-;D_-]$ | never authorizes the bound; stored $D_\pm$ and $G_\pm$ are used directly |
+| `wall_input_exact_map_pass` | exact shared-trace selector contract | literal `isequal`, not a floating tolerance |
+| `rho_exterior_one` | $\rho_e=1$ and $\mu_h=\widehat k^2\rho_e$ | required-true model gate |
+| `trace_half_width_pass` | $h_{\mathrm{tr}}=1/2$ | verifies the half-width against both the declared cell width and $X_R-X_L$ |
+| `stored_residuals_unused` | historical wall residual exclusion | `Jplus`, `Jminus`, stored jumps and stored mismatches never enter governing totals |
+| `configuration.global_lift_factor` | outer factor two in $B_{\mathrm{lift}}$ | fixed to two and applied only by the evaluator |
+| `certification_label` | numerical claim boundary | always `NON_CERTIFIED_ROUNDOFF_EXCLUDED`; no outward interval backend is used |
+| `local_certificate.*.Q4` | $Q_4$ in (ZF-31)--(ZF-34) | fourth-derivative local coefficient and omitted-tail alternative; minimized only against complete reliable alternatives |
+| `density.*_coefficient_ball` | $(\widetilde E_m,\delta_{m,k},b_m^E)$ in (ZF-39)--(ZF-40) | finite DFT-ball enclosure for $E=\tau$ or $E=\zeta=-\sigma$; an auxiliary density centre, never a residual-action centre |
+| `density.*_dft_derivative_upper` | $A_{E,q}$, $0\le q\le5$ | coefficientwise derivative upper from (ZF-41), before minimization with the uniform triangle upper |
+| `density.*_uniform_derivative_upper` | uniform finite-density triangle upper | independent reliable alternative for the same derivative quantity |
+| `density.*_derivative_upper` | selected density derivative upper | literal componentwise minimum of the two preceding reliable arrays |
+| `density.dft_ball_certificate.selected_minimum_pass` | selected-minimum ownership gate | requires exact `isequal(selected,min(raw_dft,uniform))`; routed through builder and evaluator fail-closed conjunctions |
+| `density.dft_ball_certificate.root_of_unity` | enclosure of $e^{-2\pi\mathrm i/256}$ and its powers | directed half-angle square-root rectangles and sharp-ball product recurrence; no library FFT or trigonometric call |
+| `configuration.density_root_newton_iterations` | finite square-root iteration count | fixed before each attempt; the final attempt uses 64 |
+| `configuration.density_root_bracket_padding` | positive dyadic analytic widening | final value $2^{-48}$; preserves noncollapse in the governing exact-arithmetic model but does not certify floating-point rounding |
+
+The v4 input and evaluator carry zero counts for eigenpair, BIE-density, QZ
+and propagation solves.  A failed `tail_tolerance_pass` is a tightness
+failure, while failure of any structural or required gate blocks the
+roundoff-excluded reliability claim.
