@@ -753,3 +753,531 @@ agreement, a Fourier plateau, FEM/BIE
 agreement, or ordinary numerical stability cannot replace (*).  Nothing in
 this note bounds $B_\Upsilon$, $B_{\Gamma_\pm}$, or the total
 $\|R\|_{\mu,*}$.
+
+## I5.1g superseding minimum-energy lifting theorem
+
+This section supersedes only the lifting constant and the arbitrary-profile
+collar weights used earlier in this file.  It does not change the strong
+residual decomposition, the frozen reconstruction, or any normal-defect
+module.  In particular, the factor $2$ in the earlier definition of
+$B_{\mathrm{lift}}$ is replaced by the sharp product-space
+Cauchy--Schwarz factor $1$ proved below.  The theorem is shape general; the
+current circle is only one admissible input geometry.
+
+### Simultaneous jump quotient and the factor one
+
+Let $\{\Omega_r\}_{r\in\mathcal R}$ be all material pieces and guide cells
+meeting a value-defect interface, and let
+
+$$
+V^{\mathrm{br}}
+=\bigoplus_{\mu,r\in\mathcal R}V_r
+:=\left\{e\in\prod_{r\in\mathcal R}V_r:
+|e|_{\mu,\mathrm{br}}<\infty\right\},
+$$
+
+where every $V_r$ is the closed $H^1(\Omega_r)$ subspace carrying the
+protected outer and quasiperiodic boundary conditions.  Put
+
+$$
+|e|_{\mu,\mathrm{br}}^2
+=\sum_{r\in\mathcal R}\int_{\Omega_r}
+\bigl(|\nabla e_r|^2+\mu\rho_r|e_r|^2\bigr)\,dx,
+\qquad
+0<\rho_{r,-}\le\rho_r\le\overline\rho_r,
+\quad \mu>0.
+\tag{ME-1}
+$$
+
+For the full collection $\mathfrak G$ of material and artificial interfaces,
+fix one orientation on each interface and define the *simultaneous* jump map
+
+$$
+J_{\mathrm{all}}e
+=\bigl(\operatorname{Tr}_{\Gamma,+}e_+
+-\operatorname{Tr}_{\Gamma,-}e_-\bigr)_{\Gamma\in\mathfrak G}.
+\tag{ME-2}
+$$
+
+If $a=(a_\Gamma)_{\Gamma\in\mathfrak G}$ is the raw reconstructed value jump,
+define
+
+$$
+q_{\mathrm{all}}(a)
+:=\inf\left\{|e|_{\mu,\mathrm{br}}:
+e\in V^{\mathrm{br}},\ J_{\mathrm{all}}e=-a\right\}.
+\tag{ME-3}
+$$
+
+The explicit zero-rim collars below make the constraint set nonempty.  The
+trace map is continuous, so the constraint set is closed.  Coercivity in
+(ME-1) and orthogonal projection onto $\ker J_{\mathrm{all}}$ therefore give
+a unique minimum-energy correction $e_{\min}$.  If a future domain does not
+supply these Hilbert-space hypotheses, (ME-3) remains an infimum and no
+attainment claim is made.
+
+For $v$ in the continuous test space, retain the lifting term in its weak
+form:
+
+$$
+R_{\mathrm{lift}}(v)
+=\sum_r\int_{\Omega_r}
+\bigl(\nabla e_{\min,r}\cdot\nabla\overline v_r
+-\mu\rho_r e_{\min,r}\overline v_r\bigr)\,dx.
+\tag{ME-4}
+$$
+
+Apply Cauchy--Schwarz once to the product vectors
+
+$$
+X_e=(\nabla e_r,\sqrt{\mu\rho_r}\,e_r)_r,
+\qquad
+Y_v=(\nabla v_r,-\sqrt{\mu\rho_r}\,v_r)_r.
+$$
+
+Both product norms are the corresponding energy norms.  Consequently
+
+$$
+|R_{\mathrm{lift}}(v)|
+\le q_{\mathrm{all}}(a)\,\|v\|_\mu,
+\qquad
+\boxed{B_{\mathrm{lift}}=q_{\mathrm{all}}(a)}.
+\tag{ME-5}
+$$
+
+There is no triangle inequality between the gradient and mass terms and no
+factor $2$.  Nor may (ME-3) be replaced by a sum of independently minimized
+full-domain interface quotients.  The computable bound below instead builds
+one simultaneous comparison correction with pairwise disjoint supports.
+
+### Shape-general two-sided comparison weight
+
+Let a material interface $\Lambda$ have a single closed, simple,
+$C_{\mathrm{per}}^{p+2}$ chart, $p\ge4$, and arclength parametrization
+$r:\mathbb R/P\mathbb Z\to\Lambda$.  Write
+
+$$
+\phi_\ell(s)=P^{-1/2}e^{\mathrm i\xi_\ell s},
+\qquad
+\xi_\ell=\frac{2\pi\ell}{P}.
+\tag{ME-6}
+$$
+
+Assume a certified reach, curvature bound, and two side clearances.  Choose
+$h_q>0$, $q\in\{+,-\}$, so that the maps
+
+$$
+F_q(s,t)=r(s)+q\,t\nu(s),
+\qquad 0\le t\le h_q,
+$$
+
+are injective, all selected collars for all interfaces are pairwise
+disjoint, and
+
+$$
+0<\theta_q:=1-h_q\kappa_*
+\le J_q(s,t)\le
+\Theta_q:=1+h_q\kappa_*.
+\tag{ME-7}
+$$
+
+For one Fourier mode define
+
+$$
+A_q=\Theta_q,
+\qquad
+B_{q,\ell}=\frac{\xi_\ell^2}{\theta_q}
++\mu\overline\rho_q\Theta_q,
+\tag{ME-8}
+$$
+
+and, with the continuous $B_{q,\ell}=0$ limit understood,
+
+$$
+\kappa_{q,\ell}
+=\sqrt{A_qB_{q,\ell}}\,
+\coth\!\left(h_q\sqrt{B_{q,\ell}/A_q}\right).
+\tag{ME-9}
+$$
+
+Indeed the zero-rim profile
+
+$$
+f_{q,\ell}(t)=
+\frac{\sinh(\alpha_{q,\ell}(h_q-t))}
+{\sinh(\alpha_{q,\ell}h_q)},
+\qquad
+\alpha_{q,\ell}=\sqrt{B_{q,\ell}/A_q},
+\tag{ME-10}
+$$
+
+has $f(0)=1$, $f(h_q)=0$ and minimizes
+$A_q\int|f'|^2+B_{q,\ell}\int|f|^2$, with cost
+$\kappa_{q,\ell}$.  The tubular metric bound (ME-7) shows that this
+one-dimensional cost is an upper bound for the physical collar energy.
+Extension by zero across $t=h_q$ is in $H^1$ because its trace vanishes;
+no condition on $f'(h_q)$ is needed, and no artificial normal residual is
+created because (ME-4) is not integrated by parts.
+
+For a jump coefficient $a_\ell$, minimize
+$\kappa_{+,\ell}|c_+a_\ell|^2+
+\kappa_{-,\ell}|c_-a_\ell|^2$ subject to $c_+-c_-=-1$.  The result is
+
+$$
+c_+=-\frac{\kappa_{-,\ell}}
+{\kappa_{+,\ell}+\kappa_{-,\ell}},
+\qquad
+c_-=\frac{\kappa_{+,\ell}}
+{\kappa_{+,\ell}+\kappa_{-,\ell}},
+$$
+
+$$
+\overline w_{\Lambda,\ell}
+=\frac{\kappa_{+,\ell}\kappa_{-,\ell}}
+{\kappa_{+,\ell}+\kappa_{-,\ell}}.
+\tag{ME-11}
+$$
+
+Thus the explicitly constructed simultaneous collar correction satisfies
+$J_{\mathrm{all}}\overline E=-I$ and
+
+$$
+q_{\mathrm{all}}(a)^2
+\le |\overline Ea|_{\mu,\mathrm{br}}^2
+\le\sum_{\Lambda\in\mathfrak G}
+\sum_{\ell\in\mathbb Z}
+\overline w_{\Lambda,\ell}|a_{\Lambda,\ell}|^2.
+\tag{ME-12}
+$$
+
+The first inequality has the displayed direction because $q_{\mathrm{all}}$
+is the minimum over all simultaneous corrections.  Formula (ME-11) is an
+optimized *comparison upper*, not a diagonalization of the true
+variable-curvature Dirichlet-to-Neumann map.
+
+For reference, $\coth x\le1+x^{-1}$ gives
+
+$$
+\overline w_{\Lambda,\ell}\le W_{0,\Lambda}
++W_{1,\Lambda}|\xi_\ell|,
+\tag{ME-13}
+$$
+
+where
+
+$$
+C_{0,q}=\frac{\Theta_q}{h_q}
++\Theta_q\sqrt{\mu\overline\rho_q},
+\qquad
+C_{1,q}=\sqrt{\frac{\Theta_q}{\theta_q}},
+$$
+
+$$
+W_{0,\Lambda}=\frac{C_{0,+}+C_{0,-}}4,
+\qquad
+W_{1,\Lambda}=\frac{C_{1,+}+C_{1,-}}4.
+\tag{ME-14}
+$$
+
+For a fixed, non-kernel shift $\vartheta_{\mathrm{tr}}>0$, define
+
+$$
+\|a\|_{H^{1/2}_{\vartheta_{\mathrm{tr}}}(\Lambda)}^2
+=\sum_\ell\sqrt{\vartheta_{\mathrm{tr}}^2+\xi_\ell^2}
+|a_\ell|^2,
+$$
+
+$$
+C_{\mathrm{lift},\Lambda}^2
+:=\sup_\ell
+\frac{\overline w_{\Lambda,\ell}}
+{\sqrt{\vartheta_{\mathrm{tr}}^2+\xi_\ell^2}}<\infty.
+\tag{ME-15}
+$$
+
+In particular, (ME-13) and the two-dimensional Cauchy--Schwarz inequality
+give the finite computable bound
+
+$$
+C_{\mathrm{lift},\Lambda}^2
+\le\sqrt{
+\left(\frac{W_{0,\Lambda}}{\vartheta_{\mathrm{tr}}}\right)^2
++W_{1,\Lambda}^2}.
+\tag{ME-15a}
+$$
+
+The governing evaluator should use the sharper per-mode weights in (ME-11),
+not the norm constant in (ME-15).
+
+### Fourth-order material tail
+
+For retained $|\ell|<L$, suppose
+$|a_{\Lambda,\ell}-\widetilde a_{\Lambda,\ell}|
+\le\epsilon_{\Lambda,\ell}$.  Define
+
+$$
+F_{\Lambda,L}^2
+=\sum_{|\ell|<L}\overline w_{\Lambda,\ell}
+(|\widetilde a_{\Lambda,\ell}|+\epsilon_{\Lambda,\ell})^2.
+\tag{ME-16}
+$$
+
+Let the local self-action component satisfy
+$Q_{\Lambda,4}^{\mathrm{loc}}
+\ge\int_0^P|\partial_s^4a_\Lambda^{\mathrm{loc}}(s)|\,ds$.
+Four integrations by parts give, for $\ell\ne0$,
+
+$$
+|a_{\Lambda,\ell}^{\mathrm{loc}}|
+\le\frac{Q_{\Lambda,4}^{\mathrm{loc}}}
+{\sqrt P\,|\xi_\ell|^4}.
+\tag{ME-17}
+$$
+
+Hence, for $L\ge1$,
+
+$$
+T_{\Lambda,4}^{\mathrm{loc}\,2}
+=\frac{2(Q_{\Lambda,4}^{\mathrm{loc}})^2}{P}
+\left\{
+W_{0,\Lambda}\left(\frac P{2\pi}\right)^8
+\left(L^{-8}+\frac{L^{-7}}7\right)
++W_{1,\Lambda}\left(\frac P{2\pi}\right)^7
+\left(L^{-7}+\frac{L^{-6}}6\right)
+\right\}
+\tag{ME-18}
+$$
+
+bounds the complete omitted set $|\ell|\ge L$.  For a non-arclength chart
+$z(t)$, a computable interface is
+
+$$
+q_0=a_\Lambda^{\mathrm{loc}},
+\qquad q_{j+1}=|z'|^{-1}\partial_tq_j,
+\qquad
+Q_{\Lambda,4}^{\mathrm{loc}}
+\ge\int_0^{2\pi}|q_4(t)|\,|z'(t)|\,dt.
+\tag{ME-19}
+$$
+
+Its enclosure requires the certified speed lower bound and geometry/density
+derivatives, not a sampled maximum.
+
+For the material jump, local, regular-image, and off-surface components are
+first combined as the one physical coefficient.  Retained centers and radii
+are added by the triangle inequality before applying (ME-16).  In the omitted
+set, (ME-18) owns only the local p4 component; the regular-image and
+off-surface bounds retain their own proven tails.  A safe aggregate is
+
+$$
+T_{\Lambda}^{\mathrm{mat}}
+\le T_{\Lambda,4}^{\mathrm{loc}}
++T_\Lambda^{\mathrm{reg}}+T_\Lambda^{\mathrm{off}},
+\tag{ME-20}
+$$
+
+followed by one square.  None of these three tails owns an artificial-wall
+mode or a propagation tail.
+
+### Artificial-wall quasiperiodic corollary
+
+On a vertical wall of period $d$, use the normalized quasiperiodic basis
+
+$$
+\psi_m(y)=d^{-1/2}e^{\mathrm i\beta_my},
+\qquad
+\beta_m=\beta+\frac{2\pi m}{d}.
+\tag{ME-21}
+$$
+
+For two flat collars of widths $h_\pm$, put
+
+$$
+\lambda_{q,m}=\sqrt{\beta_m^2+\mu\overline\rho_q},
+\qquad
+\kappa_{q,m}^w=\lambda_{q,m}\coth(h_q\lambda_{q,m}),
+$$
+
+$$
+\overline w_m^w
+=\frac{\kappa_{+,m}^w\kappa_{-,m}^w}
+{\kappa_{+,m}^w+\kappa_{-,m}^w}.
+\tag{ME-22}
+$$
+
+This is the flat-wall specialization of (ME-11).  It uses a Dirichlet
+zero-rim profile, not the free-end hyperbolic-cosine trace minimizer used for
+the wall-normal dual norm.  Moreover
+
+$$
+\overline w_m^w\le A_w+B_w|\beta_m|
+\le U_0+U_1|m|,
+\tag{ME-23}
+$$
+
+with
+
+$$
+A_w=\frac14\left(
+h_+^{-1}+h_-^{-1}
++\sqrt{\mu\overline\rho_+}
++\sqrt{\mu\overline\rho_-}\right),
+\quad B_w=\frac12,
+$$
+
+$$
+U_0=A_w+B_w|\beta|,
+\qquad U_1=B_w\frac{2\pi}{d}.
+\tag{ME-24}
+$$
+
+Here $k_e=\widehat k\sqrt{\rho_e}$ is the exterior wavenumber; it equals
+$\widehat k$ only when $\rho_e=1$.  Let $m_0=M_w+1=257$,
+$\Delta_\beta=2\pi/d$, and require
+
+$$
+b_0=\Delta_\beta m_0-|\beta|-k_e>0.
+\tag{ME-25}
+$$
+
+For each actual wall-jump row label $s$ and each sign
+$\epsilon\in\{+,-\}$, combine *all* physical curve actions in that jump
+before taking absolute values.  The existing positive-distance theorem gives
+a computable constant $D_{s,\epsilon}$, including the normalized Green
+factor $1/(2\sqrt d)$, every density $L^1(ds)$ bound, every
+$1/\gamma_m$ value factor through the lower bound $b_0$, and every frozen
+source/state contraction, such that
+
+$$
+|a_{s,\epsilon n}(x)|
+\le C_{s,\epsilon}e^{-\delta\Delta_\beta n}\|x\|_2,
+\qquad n\ge m_0,
+$$
+
+$$
+C_{s,\epsilon}
+=e^{\delta(k_e+|\beta|)}D_{s,\epsilon}.
+\tag{ME-26}
+$$
+
+This definition is fail closed unless $D_{s,\epsilon}$ is the bound for the
+complete actual jump, not for one curve action in isolation.  A direct
+construction sums, with the applicable state-map norm, the terms
+$[2R_\beta\|\tau\|_{L^1}+b_0^{-1}
+\|\sigma\|_{L^1}]/(2\sqrt d)$, where $R_\beta$ is a certified upper
+bound for $|\beta_m|/\kappa_m$ on $|m|\ge m_0$.
+
+Let $r_w=e^{-2\delta\Delta_\beta}$ and
+
+$$
+S_0^w=\frac{r_w^{m_0}}{1-r_w},
+\qquad
+S_1^w=r_w^{m_0}
+\left(\frac{m_0}{1-r_w}+\frac{r_w}{(1-r_w)^2}\right).
+\tag{ME-27}
+$$
+
+Then the complete omitted set $|m|\ge257$ obeys
+
+$$
+T_{s,w}^2
+\le\bigl(C_{s,+}^2+C_{s,-}^2\bigr)
+\bigl(U_0S_0^w+U_1S_1^w\bigr)\|x\|_2^2.
+\tag{ME-28}
+$$
+
+For a propagated sequence, the factor $\|x\|_2^2$ in (ME-28) is summed by
+the existing Lyapunov or block-power certificate exactly once.  A central
+singleton uses its own $D_{s,\epsilon}$ and no propagation factor.  The flat
+density support $-256{:}255$ is zero outside that set, while the curve row at
+$m=256$ remains retained; thus retained $|m|\le256$ and omitted
+$|m|\ge257$ are disjoint and exhaustive.
+
+Fix the wall orientation to point away from the central cell.  With
+$V_w=g_w-F_w-C_w$ as in (I5.1f-21), the two central/first jumps are exactly
+
+$$
+a_-^{\mathrm{cf}}
+=h_L^{\mathrm{cf}}-V_RG_-c_-,
+\qquad
+a_+^{\mathrm{cf}}
+=h_R^{\mathrm{cf}}-V_LG_+c_+,
+\tag{ME-29}
+$$
+
+where $h_L^{\mathrm{cf}}=D_-c_--(q_L+E q_R)$ and
+$h_R^{\mathrm{cf}}=D_+c_+-(E q_L+q_R)$.  On every internal wall the trace in
+the cell farther from the centre is minus the trace in the nearer cell, so
+
+$$
+a_{+,n}=(V_RG_+-V_LG_+P_+)P_+^nc_+,
+$$
+
+$$
+a_{-,n}=(V_LG_--V_RG_-P_-)P_-^nc_-,
+\qquad n\ge0.
+\tag{ME-30}
+$$
+
+Equations (ME-29)--(ME-30) replace, rather than supplement, the historical
+separate central mismatches, lead singletons, and four $V_{L/R}$ sequences.
+They count the physical wall jump once.  The shared selector may be cancelled
+only under an exact shared-trace identity gate; otherwise the two raw traces
+must be formed before subtraction.
+
+### Complete lifting upper and stopping gates
+
+Let $F_{\Lambda,L}$ contain retained actual-jump row centers and all analytic
+row radii for interface $\Lambda$.  Let $T_\Lambda$ contain the disjoint
+local, regular-image, off-surface, artificial-wall high-mode, and propagation
+owners described above.  Pairwise collar disjointness and (ME-12) give
+
+$$
+\boxed{
+B_{\mathrm{lift}}
+\le\left[
+\sum_{\Lambda\in\mathfrak G}
+\bigl(F_{\Lambda,L}^2+T_\Lambda^2\bigr)
+\right]^{1/2}.}
+\tag{ME-31}
+$$
+
+There is no outer factor $2$.  Within one physical jump, nonorthogonal
+local/regular/off or left/right curve actions are combined before applying
+the weight.  Different Fourier indices and pairwise disjoint collars are
+combined in squares.  Propagation is applied once after the actual jump row
+has been formed.
+
+The result is `ESTABLISHED` under the following fail-closed inputs:
+
+1. the global energy direct-sum and simultaneous jump convention
+   (ME-1)--(ME-3), with every physical interface present once;
+2. certified $C^{p+2}$ chart, perimeter, speed lower bound, reach, curvature,
+   side clearances, positive $\theta_q$, collar injectivity and pairwise
+   disjointness;
+3. positive $\mu$, material lower bounds for coercivity, and the stated
+   sidewise upper bounds $\overline\rho_q$;
+4. retained actual-jump coefficient balls, the arclength $Q_4$ enclosure,
+   and disjoint $|\ell|<L$ versus $|\ell|\ge L$ ownership;
+5. for walls, the normalized basis, non-Wood/branch and $b_0>0$ gates, the
+   complete constants $D_{s,\epsilon}$ with all $1/\gamma_m$ and
+   $1/(2\sqrt d)$ factors, the exact (ME-29)--(ME-30) sign/index ledger, and
+   retained $|m|\le256$ versus omitted $|m|\ge257$ ownership;
+6. a zero trace on every collar rim, exact shared-selector identity or direct
+   raw trace subtraction, and one Lyapunov/block-power owner per propagated
+   sequence.
+
+Select $L$ and the wall cutoff from (ME-18), the existing regular/off-surface
+tails, and (ME-28) until their preassigned budgets hold.  Only then choose
+the evaluation size with $N>2\max\{L,M_\eta\}$ and increase $N$ solely to
+meet a proved retained-row radius.  Inter-level drift, a plateau, or an
+empirical safety factor is not a stopping rule.
+
+The theorem is independent of circular Fourier/Bessel diagonalization and of
+an arbitrary fixed profile.  It does not enclose special-function or ordinary
+finite-arithmetic errors: the corresponding $\Delta_{\mathrm{sf}}$ and
+$\Delta_{\mathrm{fp}}$ remain unresolved.  The v6 frozen-instance evaluation
+of (ME-11)--(ME-31) passed its analytic and ownership gates and therefore has
+status `PASS WITH CONDITIONS / GO` only for the conditional ideal majorant.
+Any reliable, certified, or outward-rounded instance claim remains `STOP`
+until both unresolved error layers are enclosed.

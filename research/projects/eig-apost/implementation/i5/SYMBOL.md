@@ -601,3 +601,36 @@ regular-image composite in (I5.1f-57)--(I5.1f-68):
 | `selected_factor.c0/cR` | $u_0-1,u_R-1$ | canonical/high and retained-radius factors, evaluated with `expm1`/`log1p` to avoid small-cap cancellation |
 | `prospective_common_cap` | common dyadic $t$ for four contracts in (I5.1f-57) | absolute gamma-log/log errors and exact-relative immediate/outer-exp errors; not measured errors |
 | `delta_sf_rest3` | remaining primitive-family telescope | all unnamed paths still `UNRESOLVED`; the final special-function remainder is not numerically closed |
+
+## Implemented `residual-numerator-v6` conditional overrides
+
+This section applies only to the I5.1g implementation under
+`test/i5/residual-numerator-v6/`.  Its governing source is
+[design-5-1g.md](design-5-1g.md) and (ME-1)--(ME-31) in
+`phase3-analysis/residual-bound/s-lift-tail.md`.  Unlisted signed-centre,
+normal-defect, Ewald, Kress, and frozen-artifact names retain their v5
+meaning.  The v6 executable reads no v1--v5 output.
+
+| canonical code object | governing object | type, shape, and ownership |
+|---|---|---|
+| `configuration.minimum_energy_lifting_factor` | factor one in (I5.1g-1), (ME-5) | scalar exactly equal to one; applied only by `residual_numerator_v6` |
+| `geometry.material_lift_collars.plus/minus` | $(h_q,\overline\rho_q,\theta_q,\Theta_q)$ in (I5.1g-2) | separate scalar structures for the exterior and interior material collars; equality is never silently inferred |
+| `geometry.wall_lift_collars.plus/minus` | $(h_q^w,\overline\rho_q^w)$ in (I5.1g-11) | separate flat-collar structures for neighbour and central sides |
+| `geometry.lift_geometry_gates` | simultaneous comparison hypotheses in (ME-1)--(ME-12) | collar injectivity, mutual disjointness, zero rims, exhaustive interface labels, and $J_{\mathrm{all}}e=-a$ |
+| `geometry.lift_geometry_gates.material_transverse_periodic_copies_disjoint` | transverse-copy collar condition in (ME-7) | exact Boolean check $2(R+h)\le d$, distinct from the cell-height copy check |
+| `weights.minimum_energy.kappa_plus/minus` | $\kappa_{q,\ell}$ in (I5.1g-3) | positive real $(2L-1)$-vectors; one-dimensional zero-rim comparison costs |
+| `weights.minimum_energy.harmonic_weight` | $\overline w_{\Lambda,\ell}$ in (I5.1g-3) | positive real $(2L-1)$-vector; multiplies the complete material value-jump ball once |
+| `local.high_tail.val` | $T_{\Lambda,4}^{\mathrm{loc}\,2}$ in (I5.1g-9) | nonnegative scalar; owns only local $|\ell|\ge L$ modes under the affine harmonic-weight bound |
+| `wall.minimum_energy.weight_certificate.harmonic_weight` | $\overline w_m^w$ in (I5.1g-11) | positive real 513-vector for retained $|m|\le256$ |
+| `wall.minimum_energy.central_minus_center/central_plus_center` | $a_-^{\mathrm{cf}},a_+^{\mathrm{cf}}$ in (I5.1g-12) | complex 513-vectors; each physical central/first jump appears once |
+| `wall.minimum_energy.paired_plus_center/paired_minus_center` | $\widetilde W_+,\widetilde W_-$ in (I5.1g-13a) | complex $513\times97$ row maps formed before weighting |
+| `wall.minimum_energy.paired_plus_radius/paired_minus_radius` | $r_+,r_-$ in (I5.1g-13a) | nonnegative 513-vectors; left/right action radii are combined before one wall weight |
+| `wall.minimum_energy.high_tail_ledger` | (I5.1g-15)--(I5.1g-21) | map-specific complete paired-action constants, affine wall weights, two signs, and first omitted order 257 |
+| `material.cell_tail.lifting_squared` | paired material value-jump block tail | scalar using the same harmonic retained weight and one block-power certificate per side |
+| `material.gates.actual_jump_owner_complete`, `wall.gates.actual_jump_owner_complete` | finite/cell/high ownership of $J_{\rm all}$ | derived Booleans combined with the three-interface label audit in `gates.simultaneous_jump_list_complete` |
+| `B_lift_ideal` | $\widehat B_{\mathrm{lift}}^{\mathrm{ME}}$ in (I5.1g-22) | square root of the disjoint material/wall lifting energies; no outer factor two |
+
+The material retained/omitted split is exactly $|\ell|<L$ versus
+$|\ell|\ge L$, while the wall split is $|m|\le256$ versus $|m|\ge257$.
+The strings `delta_sf=UNRESOLVED` and `delta_fp=UNRESOLVED` remain governing
+claim qualifiers.  All v6 solve counts are zero.

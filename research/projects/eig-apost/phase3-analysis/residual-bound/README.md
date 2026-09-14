@@ -162,7 +162,7 @@ No cancellation between the three terms is used to reduce this majorant.
 |---|---|---|
 | artificial-interface normal defect $B_{\Gamma_\pm}$ | frozen instance `GO` in the roundoff-excluded fallback | I5.1e attempt 7 rebuilds every wall row directly and gives $890.77255515519369$; historical evaluated wall residuals do not enter the bound |
 | material-interface normal defect $B_\Upsilon$ | frozen instance `GO`; tightness `PASS` in the roundoff-excluded fallback | the coefficientwise-density, mode-dependent zero-centre I5.1e bound is $28500.152577876961$; the smaller I5.1d signed-centre value remains conditional on unresolved (RNC-6) |
-| value-defect correction $B_{\mathrm{lift}}$ | frozen instance `GO`; tightness `PASS` in the roundoff-excluded fallback | I5.1e attempt 7 gives $58518.118987325186$ with the lifting weight multiplied and the global factor two applied once; the tighter I5.1c display remains conditional |
+| value-defect correction $B_{\mathrm{lift}}$ | minimum-energy theorem `GO`; frozen signed-centre instance conditional | I5.1g proves the factor-one global minimum-energy comparison and gives the conditional ideal value $0.033621248621896728$; $\Delta_{\mathrm{sf}}$ and $\Delta_{\mathrm{fp}}$ remain unresolved, so the reliable roundoff-excluded fallback is still I5.1e at $58518.118987325186$ |
 
 The resulting smallest reviewed fallback is
 $\mathcal M=87909.044120357343$.  It is a theorem upper for the exact frozen
@@ -245,3 +245,38 @@ $0.06077107308056649+\Delta_{\mathrm{sf,rest3}}+\Delta_{\mathrm{fp}}$.
 No actual oracle-error contract or complete remaining-family enclosure has
 been supplied.  The final review therefore passes the partial results and
 explicitly stops any claim of a complete reliable numerator certificate.
+
+### I5.1g minimum-energy lifting continuation
+
+The shape-general minimum-energy lifting theorem is proved in
+[[research/projects/eig-apost/phase3-analysis/residual-bound/s-lift-tail|the
+lifting module]] and mapped to code in
+[[research/projects/eig-apost/implementation/i5/design-5-1g|I5.1g]].  It uses
+one simultaneous jump map, a single product-space Cauchy--Schwarz inequality,
+and two-sided harmonic comparison weights.  Thus the old outer factor two is
+replaced by one, while the estimator is independent of an arbitrarily fixed
+lifting profile.  The general-curve weight has linear high-mode growth and
+does not use circular Fourier--Bessel diagonalization.
+
+The v6 canonical run selected $L=256$, $N=1024$ solely from explicit
+remainder allocations and obtained
+
+$$
+\widehat B_{\Gamma_\pm}=1.8732119857082978\,10^{-10},\quad
+\widehat B_\Upsilon=1.5565169597620056\,10^{-4},\quad
+\widehat B_{\mathrm{lift}}^{\mathrm{ME}}=0.033621248621896728,
+$$
+
+and $\mathcal M_{\mathrm{ideal}}=0.033776900505194128$.  This is a
+`CONDITIONAL_IDEAL_MAJORANT_COMPLETE_SF_FP_UNRESOLVED` result:
+
+$$
+\|R\|_{\mu,*}\le
+\mathcal M_{\mathrm{ideal}}+\Delta_{\mathrm{sf}}+\Delta_{\mathrm{fp}}.
+$$
+
+Both deltas remain unresolved.  The independent
+[[research/projects/eig-apost/implementation/i5/review-5-1g|I5.1g review]]
+therefore returns `PASS WITH CONDITIONS / GO` for the conditional ideal
+result and `STOP` for a reliable or certified claim.  The complete persisted
+decomposition is in `test/i5/residual-numerator-v6/README.md`.
