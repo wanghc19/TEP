@@ -210,3 +210,38 @@ Those results instantiate the finite inequality only under the documented
 real-arithmetic primitive-enclosure assumptions.  They are neither
 outward-rounded certificates nor evidence that the predeclared tightness
 allocations pass.
+
+### I5.1f conditional signed-centre continuation
+
+The separately reviewed
+[[research/projects/eig-apost/implementation/i5/design-5-1f|I5.1f design]] and
+[[research/projects/eig-apost/implementation/i5/review-5-1f|independent review]]
+retain all analytic omissions while restoring signed physical centers.
+The v5 canonical run selects $L=512$, $N=2048$ from explicit remainders and
+gives the ordinary computed scalar $\mathcal M_{\mathrm{ideal}}
+=0.056448305344888337$.  This is
+`CONDITIONAL_ON_EXACT_SPECIAL_FUNCTION_EVALUATION`, not a replacement for
+the reliable fallback: the governing conclusion is only
+$\|R\|_{\mu,*}\le\mathcal M_{\mathrm{ideal}}
++\Delta_{\mathrm{sf}}+\Delta_{\mathrm{fp}}$, with both deltas `UNRESOLVED`.
+The independent post-run review passes the user's first phase-2 gate
+$\mathcal M_{\mathrm{ideal}}<1$.  No denominator or eigenvalue statement is
+made.  The failed P32 argument is not used.
+
+The subsequent restricted sensitivity replay bounds the final-functional
+increment from retained Faddeeva/$E_1$ errors by
+$A_F\varepsilon_F+A_E\varepsilon_E$, with ordinary gains
+$A_F=3.0944383348174293\,10^7$ and $A_E=2.4261737348658184\,10^5$.
+The review verdict is `PASS WITH CONDITIONS / PARTIAL FEASIBILITY GO`:
+actual oracle errors, the remaining primitive-family increment, and
+floating-point errors are still unresolved.  This partial replay does not
+upgrade the v5 conditional scalar to a reliable numerator bound.
+
+Two further independently reviewed replays isolate the local positive
+gamma-log/exponential certificate and the regular-image gamma-log composite,
+including its affected downstream logarithms and exponentials.  Their
+prospective contracts give the conditional subtotal
+$0.06077107308056649+\Delta_{\mathrm{sf,rest3}}+\Delta_{\mathrm{fp}}$.
+No actual oracle-error contract or complete remaining-family enclosure has
+been supplied.  The final review therefore passes the partial results and
+explicitly stops any claim of a complete reliable numerator certificate.

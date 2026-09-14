@@ -533,3 +533,71 @@ The v4 input and evaluator carry zero counts for eigenpair, BIE-density, QZ
 and propagation solves.  A failed `tail_tolerance_pass` is a tightness
 failure, while failure of any structural or required gate blocks the
 roundoff-excluded reliability claim.
+
+## Implemented `residual-numerator-v5` conditional overrides
+
+This section applies only to the I5.1f implementation.  It does not change
+the frozen schema, package APIs, or earlier I5 contracts.  The governing
+design is [design-5-1f.md](design-5-1f.md).
+
+| code object | governing object | normalization and ownership |
+|---|---|---|
+| `density.orders`, `maximum_order`, `source_node_count` | frozen orders, $M_\eta$, $N_\eta$ | orders $-128{:}127$; row-2 coefficient norms, not the v4 coordinatewise dual norm |
+| `configuration.residual_mode_cutoff`, `evaluation_node_count` | $L,N$ | retain $|\ell|<L$ and require even $N>2\max\{L,M_\eta\}$; tail selects $L$ before retained radius selects $N$ |
+| `local.center.val/nor` | signed complete Kress self row | one identity; density and source Jacobian included; cotangent difference canceled first |
+| `local.radius.*.source/target/series` | local analytic telescope | source product rule, target alias, and omitted kernel-series terms, each once |
+| `regular.raw_center.val/nor`, `off_surface.raw_center.val/nor` | raw Ewald and finite Rayleigh rows | physical value uses plus raw, physical normal uses minus raw, before absolute values |
+| `regular.radius.*.M_R/M_I/M_T/M_L` | four Ewald omission owners | retained $|\ell|<L$ only; high rows use the complete strip-action envelope |
+| `regular.radius.*.source/target` | separate one-variable trapezoid errors | source moves with grown finite density; target moves with real-source density mass; no product-strip assumption |
+| `material.finite`, `cell_tail`, `high_tail` | material retained, propagated, and omitted-mode squared bounds | normal divides by trace weight; value multiplies by lifting weight |
+| `wall.normal`, `wall.lifting` | signed artificial-wall modules | retained wall $|m|\le256$, high $|m|\ge257$; value has no global lifting factor yet |
+| `B_lift_ideal` | $2\sqrt{F_{\mathrm{lift},\Upsilon}^2+F_{\mathrm{lift},\Gamma}^2+T_{\mathrm{lift}}^2}$ | the global factor two is applied once, only by the final evaluator |
+| `delta_sf`, `delta_fp` | $\Delta_{\mathrm{sf}}$, $\Delta_{\mathrm{fp}}$ in (I5.1f-5) | unresolved final-functional error bounds; literal strings `UNRESOLVED`, never numerical zero |
+| `condition_label` | phase-1 claim | `CONDITIONAL_ON_EXACT_SPECIAL_FUNCTION_EVALUATION`; neither reliability nor certification |
+| `sf_ledger` | finite primitive inventory | invocation counts and parameter regions are diagnostics, not error bounds |
+
+The ideal majorant still includes all analytic omissions.  Every final
+reliability/outward-rounding gate remains false until both unresolved
+finite-evaluation obligations are closed.  The phase-2 decision uses only
+the two thresholds explicitly authorized by the user.
+
+### Restricted v5 finite-function sensitivity
+
+These aliases belong only to `special_function_sensitivity_v5.m` and do not
+change the canonical run-02 result or its unresolved claim labels.
+
+| code object | governing object | normalization and ownership |
+|---|---|---|
+| `matched_state_energy` | $S_J$ in (I5.1f-35) | explicit $n<J$ states plus the same block-power $n\ge J$ envelope as the computed majorant |
+| `unit_row_gain.Faddeeva.val/nor`, `.E1.val/nor` | $d_c^\chi$ in (I5.1f-34) | finite source/target contraction including actual library phase magnitudes, both Jacobians and density row norms |
+| `A_F`, `A_E` | $A_c$ in (I5.1f-36) | final numerator gain per unit uniform absolute family error; lifting weight multiplication and global factor two already included |
+| `required_uniform_absolute_error` | $\tau_c/A_c$ | sufficient oracle error target, not an observed or proved library error |
+| `exact_function_magnitude_upper` | $U_F,U_E$ in (I5.1f-37a)--(I5.1f-37b) | ordinary evaluations of analytic magnitude bounds; reliable use still requires outward argument/gain enclosure |
+| `required_uniform_exact_relative_error` | $\tau_c/(A_cU_c)$ | relative to the exact function magnitude, not to a cancelled action or a library return |
+| `delta_sf_rest` | $\Delta_{\mathrm{sf,rest}}$ | all remaining primitive and argument-change paths in the mixed telescope; `UNRESOLVED`, separate from floating-point summation error |
+| `status` | restricted sensitivity scope | `PARTIAL_FADDEEVA_E1_SENSITIVITY_ONLY`, not a complete special-function or residual certificate |
+
+The separate `local_certificate_sensitivity_v5.m` further isolates only the
+local positive `gammaln`-to-immediate-`exp` certificate chain:
+
+| code object | governing object | normalization and ownership |
+|---|---|---|
+| `whole_state_energy` | $S_\infty$ in (I5.1f-50) | whole-state high-mode factor; distinct from matched retained/cell $S_J$ |
+| `D_val`, `D_nor`, `D_local` | (I5.1f-51) | local retained-radius and high-amplitude sensitivity; `D_local=D_nor+2*D_val` |
+| `prospective_error_cap.epsilon_logGamma` | $\varepsilon_\Gamma$ in (I5.1f-47) | absolute error in $\log\Gamma(n)$, $n=1{:}34$; not error in $\Gamma(n)$ |
+| `prospective_error_cap.eta_exp` | $\eta_e$ in (I5.1f-47) | exact-relative error only for the immediate positive coefficient exponentials |
+| `bilateral_factor` | (I5.1f-48)--(I5.1f-49) | common lower/upper factors preserve each p2/p4 alternative and its selected minimum at amplitude level |
+| `delta_sf_rest2` | (I5.1f-53) | all remaining primitive paths, including regular-image gamma-log calls; `UNRESOLVED`, not silently included in floating-point error |
+
+The final `regular_gamma_sensitivity_v5.m` isolates the additional named
+regular-image composite in (I5.1f-57)--(I5.1f-68):
+
+| code object | governing object | normalization and ownership |
+|---|---|---|
+| `positive_coefficient` | $P^\#,Q^\#$ in (I5.1f-60)--(I5.1f-61) | triangle before coefficient cancellation; $1/(4\pi)$ occurs once |
+| `fixed_library_data_gain.E_sharp` | $E^\#$ in (I5.1f-62) | maximum over the complete finite canonical call set, not a continuum sampled maximum |
+| `fixed_library_data_gain.D_tau/D_zeta`, `.target_row_scale` | $D_\tau,D_\zeta,q_\ell$ | actual library source density phases and target quadrature magnitudes, without a unit-phase shortcut |
+| `Dcenter`, `Dradius` | separated sensitivity feature norms for (I5.1f-67) | the former includes the regular high-mode owner; normal and value are kept separate |
+| `selected_factor.c0/cR` | $u_0-1,u_R-1$ | canonical/high and retained-radius factors, evaluated with `expm1`/`log1p` to avoid small-cap cancellation |
+| `prospective_common_cap` | common dyadic $t$ for four contracts in (I5.1f-57) | absolute gamma-log/log errors and exact-relative immediate/outer-exp errors; not measured errors |
+| `delta_sf_rest3` | remaining primitive-family telescope | all unnamed paths still `UNRESOLVED`; the final special-function remainder is not numerically closed |
