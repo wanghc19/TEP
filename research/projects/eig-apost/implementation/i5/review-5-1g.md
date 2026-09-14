@@ -71,9 +71,9 @@ the governing theorem.
 
 ## Canonical run-01 post-run review
 
-The canonical persisted artifacts had SHA-256 prefixes `45f1b490` for the
-input and `f4f662f9` for the result.  Analytic selection chose $L=256$ and
-$N=1024$.  These were the first candidates below their respective $0.1$
+The canonical persisted input and result were inspected independently.
+Analytic selection chose $L=256$ and $N=1024$.  These were the first
+candidates below their respective $0.1$
 allocations: the selected high-mode contribution was
 $0.03377389007214928$, and the selected retained-local contribution was
 $0.022275416281249936$.
@@ -121,3 +121,46 @@ $\Delta_{\mathrm{fp}}=\mathrm{UNRESOLVED}$ remain governing, the reliable
 majorant is unresolved, and the total-reliability and outward-rounding gates
 remain false.  The conditional value must not be promoted to a certified
 residual or eigenvalue enclosure without resolving both error terms.
+
+## Attempt-2 value-convolution post-run review
+
+The active branch was `current-circle-value-convolution`, limited to the
+value-$Q_4$ replacement (I5.1g-36a)--(I5.1g-36d).  Independent pre-run review
+first required the analytic-allocation fallback to force the v7 route.  After
+that bounded repair, pre-run review returned **PASS / GO**.
+
+The persisted selector ledger contained 20 analytic panel/$L$ candidates and
+four strict $N$ candidates; all passed their analytic gates.  It selected
+$L=256$, panel pair $(16,32)$, and $N=2048$.  The selected high value-tail
+norm was $5.5630101040626736\mathbin{\cdot}10^{-4}$ and the selected retained
+value-radius norm was $1.4145708728398299\mathbin{\cdot}10^{-3}$, each below
+its preregistered half-target.  The certificate gave
+$Q_4^{\rm val,conv}=65041.687340212338$ with
+$\Phi_\tau=1.1180249400402444$, $\Phi_\zeta=0.51646395751653551$,
+$\mathcal L_{\tau,4}=34.218913351116527$, and
+$\mathcal L_{\zeta,4}=867.16019637947136$.
+
+The conditional ideal results were
+
+| quantity | value |
+|---|---:|
+| $B_{\Gamma_\pm}$ | $1.8732085926745556\mathbin{\cdot}10^{-10}$ |
+| $B_\Upsilon$ | $1.5471045812179808\mathbin{\cdot}10^{-4}$ |
+| $B_{\rm lift}^{\rm ME}$ | $5.5685129828202118\mathbin{\cdot}10^{-4}$ |
+| $\mathcal M_{\rm ideal}$ | $7.1156194372467858\mathbin{\cdot}10^{-4}$ |
+
+All 38 required-true gates, all four required-false gates, the structural and
+finite/nonnegative audits, and all zero-solve checks passed.  Both performance
+allocations passed.  Nevertheless, the mandatory route gate advances to v7:
+the material high-tail fraction was $0.99901178667006518$, above $1/2$.
+This does not invalidate the finite conditional majorant.
+
+Run 01 completed in 39.80 seconds with `/usr/bin/time` maximum RSS
+1,197,457,408 bytes.  The tree watchdog measured 1,269,456 KiB over 41
+seconds.  The numerically zero wall high-mode tail is attributable to ordinary
+floating-point underflow and is not an established analytic zero.
+
+The post-run verdict is **PASS WITH CONDITIONS / GO** for the conditional
+ideal result and **STOP** for a certified or numerically reliable claim.
+$\Delta_{\rm sf}$ and $\Delta_{\rm fp}$ remain `UNRESOLVED`; the
+total-reliable and outward-rounding gates remain false.

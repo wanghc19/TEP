@@ -98,17 +98,6 @@ zsh test/i5/residual-numerator-v6/run_residual_numerator_v6.sh \
   /Users/whc/Documents/Work/epost/test/i5/residual-numerator-v6/output/attempt-1/audit-run-01.txt
 ```
 
-The SHA-256 values recorded by the final read-only audit are
-`bb502ed97bfda5d60bd653fcb9e75f67fe15e86e053e160750ed5a735280e1b3`
-for the frozen certificate,
-`1d4ecd0aa9e84fc37fb45ea7580b7e72a07afc7fd0d336faf772666e67807073`
-for the curve contract,
-`45f1b4900a84aa1df59215375907b43938ac362833dfce3c2d6fb434fb94c684`
-for the generated v6 input, and
-`f4f662f9fb43c30b9bdf9690181fcfd11d6912079fbabc6eb8fce3730ebe2825`
-for the persisted result.  These hashes are an external provenance audit;
-they are not an analytic error enclosure.
-
 The analytic selection chose $L=256$ and $N=1024$.  Its high-mode and
 retained-local contributions were respectively
 $3.3773890072149280\mathbin{\cdot}10^{-2}$ and
@@ -190,3 +179,87 @@ evaluator.  It used `/usr/bin/time -l` with MATLAB `-batch` to load the two
 explicit files above and print the stored weight, tail, cancellation, and gate
 fields; it took 12.51 s with 734,986,240 bytes maximum RSS and changed no
 artifact.
+
+## Attempt-2 preregistration: current-circle value convolution
+
+Attempt 2 activates only the value-$Q_4$ shortcut (I5.1g-36a)--(I5.1g-36d).
+Signed exterior-minus-interior finite factors are enclosed on relative panels
+by midpoint polynomial balls plus the existing explicit series tails.  The
+logarithmic moments use the analytic sine lower bound for
+$|h|\le\pi/3$ and the coarse length-times-$\log4$ upper bound outside.
+Mandatory relative breakpoints are $0$, $\pm\pi/3$, and $\pm\pi$, with one
+symmetric diagonal panel.  The finite density certificate is
+$\mathcal L_{r,4}=2\pi(\sum_m|m|^8\|\widehat E_{r,m}\|_{\mathrm F}^2)^{1/2}$,
+and the value identity appears once in (I5.1g-36d).
+
+The registered panel pairs are `(16,32)`, `(32,64)`, `(64,128)`, and
+`(128,256)`; the first coordinate is inactive evidence under this shortcut.
+The registered cutoff lists are $L\in\{64,128,256,512,1024\}$ and
+$N\in\{514,1024,2048,4096\}$, filtered by
+$N>2\max\{L,M_\eta\}$.  The first analytic panel/$L$ candidate below half
+the preregistered target is frozen.  With that choice fixed, the first
+admissible $N$ whose propagated retained value source/target/series radius is
+below the other half is frozen.  Neither selector uses a center or inter-level
+drift.  An allocation failure retains the largest analytic candidate for
+finite reporting and forces the v7 route gate; failure of every analytic
+candidate stops without a majorant.
+
+Attempt-2 input and outputs are create-once files under `output/attempt-2/`;
+attempt 1 and its input remain immutable.  The planned complete run is at most
+30 minutes and 2 GiB, with hard launcher limits of 45 minutes and 3 GiB.  The
+new runner is `run_residual_numerator_v6_attempt2.sh`.  No attempt-2 MATLAB run
+has been made at this preregistration stage.  Finite special-function and
+floating-point errors remain `UNRESOLVED`.
+
+## Attempt-2 canonical run-01
+
+The independent pre-run review returned `GO`, and the canonical run completed
+with exit status zero.  All 20 preregistered panel/$L$ candidates and all four
+strictly admissible $N$ candidates passed their analytic gates.  The first
+high-tail target pass was $L=256$ with panel pair `(16,32)`:
+$H_{\rm mat}=5.5630101040626736\mathbin{\cdot}10^{-4}$, below the
+$1.6810624310948364\mathbin{\cdot}10^{-3}$ half-target.  With this choice
+fixed, the first retained-value-radius pass was $N=2048$, with propagated
+radius $1.4145708728398299\mathbin{\cdot}10^{-3}$ below the same half-target.
+The selectors did not evaluate inter-level center drift.
+
+The active panel certificate produced
+$Q_4^{\rm val,conv}=65041.687340212338$, compared with the preserved global
+certificate value $3930692.9467671327$.  Its finite constants were
+$\Phi_\tau=1.1180249400402444$, $\Phi_\zeta=0.51646395751653551$,
+$\mathcal L_{\tau,4}=34.218913351116527$, and
+$\mathcal L_{\zeta,4}=867.16019637947136$.
+
+| conditional ideal quantity | attempt-2 value |
+|---|---:|
+| $B_{\Gamma_\pm}$ | $1.8732085926745556\mathbin{\cdot}10^{-10}$ |
+| $B_\Upsilon$ | $1.5471045812179808\mathbin{\cdot}10^{-4}$ |
+| $B_{\rm lift}^{\rm ME}$ | $5.5685129828202118\mathbin{\cdot}10^{-4}$ |
+| $\mathcal M_{\rm ideal}$ | $7.1156194372467858\mathbin{\cdot}10^{-4}$ |
+
+The material squared decomposition is: finite normal
+$1.3738472185630782\mathbin{\cdot}10^{-12}$, finite lifting
+$6.1255421933847006\mathbin{\cdot}10^{-10}$, cell normal
+$2.8860729637826713\mathbin{\cdot}10^{-26}$, cell lifting
+$1.2868071421319849\mathbin{\cdot}10^{-23}$, high normal
+$2.3933952005038075\mathbin{\cdot}10^{-8}$, and high lifting
+$3.0947081417903398\mathbin{\cdot}10^{-7}$.  The wall normal and lifting
+squares are $3.5089104316697890\mathbin{\cdot}10^{-20}$ and
+$2.2777685844191787\mathbin{\cdot}10^{-29}$.
+
+The structural and result audits passed: 38/38 required-true gates, 4/4
+required-false gates, strict indexing, final finite/nonnegative assembly, and
+all zero-solve checks.  Both selector allocations passed, but the mandatory
+v7 route gate is true because the material high-tail fraction is
+$0.99901178667006518\ge1/2$.  This route decision is a tightness decision,
+not a reliability failure.
+
+The run took 39.80 s.  `/usr/bin/time -l` recorded 1,197,457,408 bytes maximum
+RSS; the process-tree watchdog recorded 1,269,456 KiB over 41 s.  Files are
+`output/attempt-2/input-run-01.mat`, `result-run-01.mat`, `run-01-log.txt`,
+`resource-run-01.txt`, and `audit-run-01.txt`.  The numerically zero wall
+high-tail component is an ordinary-floating-point underflow, not an analytic
+zero.  The post-run Skeptic verdict is `PASS WITH CONDITIONS / GO` for this
+conditional ideal result and `STOP` for any certified claim.  In particular,
+`delta_sf` and `delta_fp` remain `UNRESOLVED`, and the total-reliable gate is
+false.

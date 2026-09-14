@@ -799,6 +799,53 @@ J_{\mathrm{all}}e
 \tag{ME-2}
 $$
 
+[Proof Addition P1 Start]
+
+**Trace-product value space and boundedness.**  For a material interface let
+$Y_\Gamma=H^{1/2}(\Gamma)$ with its arclength trace norm, and for an
+artificial wall let $Y_\Gamma=H^{1/2}_\beta(0,d)$ with the normalized
+quasiperiodic Fourier norm.  Give the countable product the Hilbert topology
+
+$$
+Y_{\mathrm{all}}
+:=\bigoplus_{\Gamma\in\mathfrak G}Y_\Gamma
+=\left\{g=(g_\Gamma):
+\sum_{\Gamma\in\mathfrak G}\|g_\Gamma\|_{Y_\Gamma}^2<\infty\right\}.
+\tag{ME-P1.1}
+$$
+
+The theorem uses the following explicit uniform trace-incidence hypothesis.
+There are constants $C_{\mathrm{tr},r}$ such that the sum of the squared
+trace norms over all selected faces incident on $\Omega_r$ is at most
+$C_{\mathrm{tr},r}^2\|u_r\|_{H^1(\Omega_r)}^2$, and
+
+$$
+C_J^2
+:=2\sup_{r\in\mathcal R}
+\left[C_{\mathrm{tr},r}^2
+\max\left\{1,(\mu\rho_{r,-})^{-1}\right\}\right]<\infty.
+\tag{ME-P1.2}
+$$
+
+For a finite family, the supremum in (ME-P1.2) is just a finite maximum.
+For the periodic half guides it follows from one cell trace constant and the
+uniformly finite number of incident selected faces.  The inequality
+$\|x-y\|^2\le2(\|x\|^2+\|y\|^2)$, the trace bounds, and (ME-1) then give
+
+$$
+\|J_{\mathrm{all}}e\|_{Y_{\mathrm{all}}}^2
+\le C_J^2|e|_{\mu,\mathrm{br}}^2.
+\tag{ME-P1.3}
+$$
+
+Thus (ME-2) means the bounded operator
+$J_{\mathrm{all}}:V^{\mathrm{br}}\to Y_{\mathrm{all}}$; it is not a map
+into an untopologized Cartesian product.  The raw jump datum in (ME-3) is
+required to belong to $Y_{\mathrm{all}}$.  No closed-range assumption is
+used below.
+
+[Proof Addition P1 End]
+
 If $a=(a_\Gamma)_{\Gamma\in\mathfrak G}$ is the raw reconstructed value jump,
 define
 
@@ -815,6 +862,33 @@ trace map is continuous, so the constraint set is closed.  Coercivity in
 a unique minimum-energy correction $e_{\min}$.  If a future domain does not
 supply these Hilbert-space hypotheses, (ME-3) remains an infimum and no
 attainment claim is made.
+
+[Proof Addition P2 Start]
+
+**Closed fibre and attainment on the countable direct sum.**  Each $V_r$ is
+complete in its energy norm because $\mu\rho_{r,-}>0$ makes that norm
+equivalent to the $H^1(\Omega_r)$ norm.  The square-summable direct sum in
+(ME-1) is therefore a Hilbert space with the energy inner product.  By
+(ME-P1.3), $K:=\ker J_{\mathrm{all}}$ is a closed subspace.
+
+Whenever one correction $e_0$ with $J_{\mathrm{all}}e_0=-a$ exists, the
+complete fibre is exactly $e_0+K$, hence is nonempty and closed.  Let $P_K$
+be the Hilbert orthogonal projection onto $K$ and put
+$e_{\min}=e_0-P_Ke_0$.  Then $J_{\mathrm{all}}e_{\min}=-a$ and, for every
+$k\in K$,
+
+$$
+|e_{\min}+k|_{\mu,\mathrm{br}}^2
+=|e_{\min}|_{\mu,\mathrm{br}}^2+|k|_{\mu,\mathrm{br}}^2.
+\tag{ME-P2.1}
+$$
+
+This proves existence and uniqueness of the minimizer and shows that its
+norm equals (ME-3).  The construction is independent of the chosen $e_0$.
+If the fibre is empty, the infimum is $+\infty$; the comparison right inverse
+in Proof Addition P3 is the theorem's fail-closed nonemptiness gate.
+
+[Proof Addition P2 End]
 
 For $v$ in the continuous test space, retain the lifting term in its weak
 form:
@@ -949,6 +1023,54 @@ q_{\mathrm{all}}(a)^2
 \overline w_{\Lambda,\ell}|a_{\Lambda,\ell}|^2.
 \tag{ME-12}
 $$
+
+[Proof Addition P3 Start]
+
+**Countable comparison right inverse.**  Let
+
+$$
+Y_{\mathrm{cmp}}
+:=\left\{a\in Y_{\mathrm{all}}:
+\sum_{\Lambda\in\mathfrak G}\sum_{\ell\in\mathbb Z}
+\overline w_{\Lambda,\ell}|a_{\Lambda,\ell}|^2<\infty\right\}.
+\tag{ME-P3.1}
+$$
+
+For a finite set of interfaces and Fourier modes, construct
+$\overline E_Fa$ with (ME-10)--(ME-11), choosing the two traces so that
+$c_+-c_-=-1$.  Its zero-rim trace and the fixed orientation give
+$J_{\mathrm{all}}\overline E_Fa=-a_F$.  The uniform metric bounds replace
+the physical collar energy by the constant-coefficient surrogate before
+Fourier modes are summed; Fourier orthogonality then gives the corresponding
+finite version of the second inequality in (ME-12).  Pairwise collar
+disjointness makes the energies of different physical interfaces add.
+For a material interface this statement uses the arclength-normalized basis
+and weights (ME-6)--(ME-11); for an artificial wall it uses the distinct
+normalized quasiperiodic basis and flat-collar weights (ME-21)--(ME-22).
+No common arclength basis is imposed on the two interface types.
+
+For $a\in Y_{\mathrm{cmp}}$, the same estimate applied to differences of
+two finite truncations shows that $\overline E_Fa$ is Cauchy in
+$V^{\mathrm{br}}$.  Let its limit be $\overline Ea$.  Boundedness of
+$J_{\mathrm{all}}$ and convergence of the Fourier truncations in the trace
+product imply
+
+$$
+J_{\mathrm{all}}\overline Ea=-a,
+\qquad
+|\overline Ea|_{\mu,\mathrm{br}}^2
+\le\sum_{\Lambda,\ell}
+\overline w_{\Lambda,\ell}|a_{\Lambda,\ell}|^2.
+\tag{ME-P3.2}
+$$
+
+Thus $Y_{\mathrm{cmp}}\subset\operatorname{Ran}J_{\mathrm{all}}$, the fibre
+in (ME-3) is nonempty for every datum used by the theorem, and (ME-12)
+follows from the minimizing property proved in P2.  This is one simultaneous
+global construction; it is not a sum of independently minimized full-domain
+quotients.
+
+[Proof Addition P3 End]
 
 The first inequality has the displayed direction because $q_{\mathrm{all}}$
 is the minimum over all simultaneous corrections.  Formula (ME-11) is an
@@ -1281,3 +1403,415 @@ of (ME-11)--(ME-31) passed its analytic and ownership gates and therefore has
 status `PASS WITH CONDITIONS / GO` only for the conditional ideal majorant.
 Any reliable, certified, or outward-rounded instance claim remains `STOP`
 until both unresolved error layers are enclosed.
+
+[Proof Addition P4 Start]
+
+## I5.1h full signed physical-jump $p=6,8$ certificate
+
+This addition replaces only the three separately bounded material
+value-jump high-mode owners in (ME-20).  It leaves every retained coefficient
+ball, artificial-wall jump, propagation tail, normal residual, and the
+minimum-energy weights unchanged.  The purpose is to form the exact physical
+jump before taking a derivative norm.
+
+Let $X$ be the finite frozen state space with its Euclidean norm.  For one
+material interface write the exact row-valued value jump, with all source
+maps already composed into $X^*$, as
+
+$$
+\mathscr A(t)=J(t)+\int_{-\pi}^{\pi}
+\left\{K_1^{\mathrm{self}}(t,t-h)g(h)
++[K_2^{\mathrm{self}}+K^{\mathrm{reg}}](t,t-h)\right\}\,\mathrm dh
++\mathscr A^{\mathrm{off}}(t),
+\tag{ME-P4.1}
+$$
+
+where $g(h)=\log(4\sin^2(h/2))$.  Equation (ME-P4.1) is an equality with the
+physical signs: the value identity is in $J$ once, the regular image is added
+to the smooth local split before enclosure, and the off-surface action is
+added as a row in the same state space.  No separately absolutized
+self/regular/off action is a governing high-mode object below.
+
+Let $p\in\{6,8\}$ and assume a single regular
+$C_{\mathrm{per}}^{p+2}$ chart with certified speed lower bound, chord--arc
+bound, and derivatives through order $p+2$.  On a finite target/relative
+product covering $I_a\times H_b$, require row balls
+$\mathbb B(c,r)=\{c+e\in X^*: \|e\|_2\le r\}$ such that, for
+$0\le q\le p$,
+
+$$
+(\partial_t+\partial_u)^qK_1^{\mathrm{self}}(t,u)
+\in\mathbb B(c_{1,q;ab},r_{1,q;ab}),
+\tag{ME-P4.2}
+$$
+
+$$
+(\partial_t+\partial_u)^q
+[K_2^{\mathrm{self}}+K^{\mathrm{reg}}](t,u)
+\in\mathbb B(c_{2,q;ab},r_{2,q;ab}),
+\tag{ME-P4.3}
+$$
+
+and
+
+$$
+J^{(q)}(t)+(\mathscr A^{\mathrm{off}})^{(q)}(t)
+\in\mathbb B(c_{0,q;a},r_{0,q;a}).
+\tag{ME-P4.4}
+$$
+
+The regular kernel, source density, Jacobian, and physical sign are combined
+inside (ME-P4.3), not after its radius is formed.  If a source representation
+uses a different finite state map, that map must first be composed into
+$X^*$.  Diagonal panels in (ME-P4.2)--(ME-P4.3) use the cancellation-safe
+Kress divided differences; no naked singular quotient is interval-evaluated.
+
+Let the signed logarithmic moment be enclosed by
+
+$$
+\int_{H_b}g(h)\,\mathrm dh
+\in[\widetilde m_b-\delta_b,\widetilde m_b+\delta_b],
+\qquad
+\Lambda_b\ge\int_{H_b}|g(h)|\,\mathrm dh.
+\tag{ME-P4.5}
+$$
+
+Here $\delta_b\ge0$ and $\Lambda_b$ are finite certified scalar bounds.
+Define
+
+$$
+C_{q,a}=c_{0,q;a}+
+\sum_b\left(\widetilde m_bc_{1,q;ab}+|H_b|c_{2,q;ab}\right),
+$$
+
+$$
+R_{q,a}=r_{0,q;a}+
+\sum_b\left(\Lambda_br_{1,q;ab}
++\delta_b\|c_{1,q;ab}\|_2+|H_b|r_{2,q;ab}\right),
+\qquad
+H_{q,a}^{\mathrm{full}}=\|C_{q,a}\|_2+R_{q,a}.
+\tag{ME-P4.6}
+$$
+
+Changing variables to $u=t-h$ before differentiation keeps $g(h)$ fixed.
+Integration of the row balls and the triangle inequality only for their
+radii show
+
+$$
+\sup_{t\in I_a}\|\partial_t^q\mathscr A(t)\|_2
+\le H_{q,a}^{\mathrm{full}}.
+\tag{ME-P4.7}
+$$
+
+Thus the signed centers in (ME-P4.6) retain every cancellation that the
+finite row-ball arithmetic proves.  An unsigned component norm may enlarge a
+radius, but it may not replace the signed center.
+
+Put $s=|z'|$ and $w=s^{-1}$.  Define scalar coefficient functions recursively
+by
+
+$$
+a_{1,1}=w,
+\qquad
+a_{n+1,q}=w(a_{n,q}'+a_{n,q-1}),
+\qquad
+a_{n,0}=a_{n,n+1}=0.
+\tag{ME-P4.8}
+$$
+
+Induction gives the exact real-variable chain rule
+
+$$
+\partial_s^p\mathscr A
+=\sum_{q=1}^p a_{p,q}(t)\partial_t^q\mathscr A.
+\tag{ME-P4.9}
+$$
+
+Certified interval automatic differentiation of (ME-P4.8), using only the
+declared speed jets, supplies
+$A_{p,q;a}\ge\sup_{I_a}|a_{p,q}|$.  Therefore
+
+$$
+Q_{\Gamma,p}^{\mathrm{full}}
+:=\sum_a|I_a|s_a^+
+\left(\sum_{q=1}^pA_{p,q;a}H_{q,a}^{\mathrm{full}}\right)
+\ge\int_\Gamma
+\|\partial_s^p\mathscr A(s)\|_2\,\mathrm ds.
+\tag{ME-P4.10}
+$$
+
+This is a real-variable certificate.  It does not assume a complex strip for
+the local action and does not use circle Fourier/Bessel diagonalization.
+
+Let
+
+$$
+\mathscr A_\ell=P^{-1/2}\int_0^P
+\mathscr A(s)e^{-\mathrm i\xi_\ell s}\,\mathrm ds,
+\qquad \xi_\ell=2\pi\ell/P.
+$$
+
+For $\ell\ne0$, $p$ integrations by parts in the periodic real variable give
+
+$$
+\|\mathscr A_\ell\|_2
+\le\frac{Q_{\Gamma,p}^{\mathrm{full}}}
+{\sqrt P\,|\xi_\ell|^p}.
+\tag{ME-P4.11}
+$$
+
+Using the harmonic comparison weight
+$\overline w_{\Lambda,\ell}\le W_{0,\Lambda}
++W_{1,\Lambda}|\xi_\ell|$, the complete omitted set $|\ell|\ge L$ satisfies
+
+$$
+\begin{aligned}
+(T_{\Gamma,p}^{\mathrm{full}}(L))^2
+:=\frac{2(Q_{\Gamma,p}^{\mathrm{full}})^2}{P}
+\bigg[&W_{0,\Lambda}\left(\frac P{2\pi}\right)^{2p}
+\left(L^{-2p}+\frac{L^{1-2p}}{2p-1}\right)\\
+&+W_{1,\Lambda}\left(\frac P{2\pi}\right)^{2p-1}
+\left(L^{1-2p}+\frac{L^{2-2p}}{2p-2}\right)\bigg].
+\end{aligned}
+\tag{ME-P4.12}
+$$
+
+The right side is an upper bound, despite the definition used to name it,
+because
+$\sum_{n=L}^\infty n^{-r}\le L^{-r}+L^{1-r}/(r-1)$.
+For $p=6$ its two sums have orders $L^{-11}$ and $L^{-10}$; for $p=8$
+they have orders $L^{-15}$ and $L^{-14}$.  If both complete certificates
+pass, use
+
+$$
+T_\Gamma^{\mathrm{full}}(L)
+=\min\{T_{\Gamma,6}^{\mathrm{full}}(L),
+T_{\Gamma,8}^{\mathrm{full}}(L)\}.
+\tag{ME-P4.13}
+$$
+
+This minimum is valid because both operands bound the same complete omitted
+set.  A failed $p=8$ gate removes that operand; it does not invalidate a
+passed $p=6$ certificate.
+
+For retained $|\ell|<L$, first form one sampled signed physical row
+
+$$
+\widetilde{\mathscr A}(t_i)
+=\widetilde{\mathscr A}^{\mathrm{self}}(t_i)
++\widetilde{\mathscr A}^{\mathrm{reg}}(t_i)
++\widetilde{\mathscr A}^{\mathrm{off}}(t_i),
+$$
+
+and apply the target DFT once to obtain
+$\widetilde{\mathscr A}_{\ell,N}$.  The value identity is already in the
+self row.  A retained ball has the form
+
+$$
+\|\mathscr A_\ell-\widetilde{\mathscr A}_{\ell,N}\|_2
+\le\epsilon_{\ell}^{\mathrm{src}}
++\epsilon_{\ell}^{\mathrm{tgt}}
++\epsilon_{\ell}^{\mathrm{series}}
++\epsilon_{\ell}^{\mathrm{Ewald}}
++\epsilon_{\ell}^{\mathrm{off}}.
+\tag{ME-P4.14}
+$$
+
+The five terms are successive edges of one evaluation graph: source Kress
+quadrature, local kernel series, regular-image analytic Ewald
+truncation/quadrature, off-surface analytic source/node evaluation, and the
+single target DFT of the combined physical row.  A radius may be zero only
+after its exact edge is absent.  Ewald or series tails used inside
+(ME-P4.2)--(ME-P4.4) are magnitude certificates for the exact derivative and
+are not re-added to the high-mode sum.
+
+More explicitly, introduce only for this ownership check the six rows
+$\mathscr A_\ell^{[0]},\ldots,\mathscr A_\ell^{[5]}$: the first is the exact
+coefficient and each following row replaces exactly one of, in order, the
+source Kress integral, local kernel series, regular Ewald evaluation,
+off-surface evaluation, and target Fourier integral by its retained finite
+rule.  The last row is $\widetilde{\mathscr A}_{\ell,N}$.  The five radii in
+(ME-P4.14) enclose respectively
+$\|\mathscr A_\ell^{[r-1]}-\mathscr A_\ell^{[r]}\|_2$, with the target term
+assigned to $r=5$ and the other labels assigned to their named replacements.
+Thus
+
+$$
+\mathscr A_\ell-\widetilde{\mathscr A}_{\ell,N}
+=\sum_{r=1}^5
+(\mathscr A_\ell^{[r-1]}-\mathscr A_\ell^{[r]})
+$$
+
+is a telescope.  Every exact-to-retained replacement occurs once, so the
+five owners are mutually exclusive even though their row errors need not be
+orthogonal.  Reordering independent replacements changes neither this
+ownership nor the triangle bound.
+
+For a constant-arclength target grid, define
+
+$$
+A_{\ell,N,Q}^{(p)}
+=\sum_{q=1}^Q[(qN-|\ell|)^{-p}+(qN+|\ell|)^{-p}]
++\mathcal R_{\ell,N,Q}^{(p)},
+\tag{ME-P4.15}
+$$
+
+where, with $q_0=Q+1$,
+
+$$
+\begin{aligned}
+\mathcal R_{\ell,N,Q}^{(p)}={}&
+(q_0N-|\ell|)^{-p}
++\frac{(q_0N-|\ell|)^{1-p}}{N(p-1)}\\
+&+(q_0N+|\ell|)^{-p}
++\frac{(q_0N+|\ell|)^{1-p}}{N(p-1)}.
+\end{aligned}
+$$
+
+Then the target owner in (ME-P4.14) may use the explicit alternative
+
+$$
+\epsilon_{\ell}^{\mathrm{tgt},p}
+\le\frac{Q_{\Gamma,p}^{\mathrm{full}}P^{p-1/2}}{(2\pi)^p}
+A_{\ell,N,Q}^{(p)},
+\qquad |\ell|<N/2.
+\tag{ME-P4.16}
+$$
+
+For a nonconstant-speed chart, the evaluator must instead certify the
+phase-weighted parameter-rule derivative or a validated constant-arclength
+reparametrization.  Formula (ME-P4.16) may not be used merely because the
+target nodes look nearly equispaced.
+
+The full signed high tail (ME-P4.13) *replaces* all three material local,
+regular-image, and off-surface high tails in (ME-20); those old tails are not
+added.  Retained balls (ME-P4.14) own $|\ell|<L$, (ME-P4.13) owns
+$|\ell|\ge L$, the material block-power certificate owns cell propagation
+once, and (ME-28) owns only artificial-wall high modes.  These sets and
+operations are disjoint.  The lifting bound remains (ME-31), with the new
+material high owner substituted.
+
+The implication (ME-P4.1)--(ME-P4.16) is `ESTABLISHED`.  A frozen-instance
+use becomes `CONDITIONAL GO` only after all finite row balls
+(ME-P4.2)--(ME-P4.4) pass.  The current full-p6 frozen instance is `BLOCKED`:
+the first present implementation blocker is a complete real-variable
+$q=6$ enclosure for the regular-image part of (ME-P4.3), including all
+retained Ewald terms and reciprocal/image/local truncation tails after six
+target/source chain derivatives.  Existing material-tail certificates stop
+at coordinate order two.  A conditional implementation may generate these
+balls by finite interval jet arithmetic and bound every infinite
+differentiated term family by its first omitted term divided by a proved
+ratio below one.  For $p=8$, the same obligation extends to order eight and
+requires a $C^{10}$ geometry certificate.
+
+Finite special-function evaluation and ordinary arithmetic are not enclosed
+by this theorem.  Their contributions remain
+$\Delta_{\mathrm{sf}}=\mathrm{UNRESOLVED}$ and
+$\Delta_{\mathrm{fp}}=\mathrm{UNRESOLVED}$.
+
+### Fail-safe two-band signed recapture
+
+If the order-six regular-image derivative gate does not close, the existing
+retained-row and p4 component theorems still give a finite, nonempirical
+fallback.  Freeze a core cutoff $L_0$ and choose $L_1>L_0$.  Compute one
+complete signed physical coefficient ball (ME-P4.14) for every mode in
+
+$$
+\mathcal I_{\mathrm{band}}
+=\{\ell:L_0\le|\ell|<L_1\}.
+\tag{ME-P4.17}
+$$
+
+With the exact harmonic weights, define its propagated comparison
+contribution by
+
+$$
+F_{\mathrm{band}}^2
+:= S_{\mathrm{state}}
+\sum_{L_0\le|\ell|<L_1}
+\overline w_{\Lambda,\ell}
+(\|\widetilde{\mathscr A}_{\ell,N}\|_2+\epsilon_\ell)^2.
+\tag{ME-P4.18}
+$$
+
+Here $S_{\mathrm{state}}$ is the already proved singleton-plus-block-power
+state-energy envelope and is applied once.  For $|\ell|\ge L_1$, use the
+existing established p4 component tails at the new cutoff,
+
+$$
+T_{\mathrm{far}}(L_1)
+:= T_{4}^{\mathrm{self}}(L_1)
++T^{\mathrm{reg}}(L_1)+T^{\mathrm{off}}(L_1),
+\tag{ME-P4.19}
+$$
+
+The three component bounds in (ME-P4.19) are first added by the triangle
+inequality and that one sum is then squared.  Because the middle and far
+bands are orthogonal Fourier index sets, their complete propagated high
+contribution obeys the sharper square sum
+
+$$
+H_{\Gamma,\mathrm{high}}^2(L_0,L_1,N)
+\le F_{\mathrm{band}}^2
++S_{\mathrm{state}}T_{\mathrm{far}}(L_1)^2.
+\tag{ME-P4.20}
+$$
+
+Formula (ME-P4.19) is not a full signed p6 claim: it deliberately retains
+the proved component triangle only on the far band.  The core
+$|\ell|<L_0$, signed recapture band (ME-P4.17), and far tail
+$|\ell|\ge L_1$ are pairwise disjoint and exhaustive.  Old component tails
+starting at $L_0$ are replaced by (ME-P4.18)--(ME-P4.20), not added to them.
+Writing $F_{\Lambda,L_0}$ and $T_{\Lambda,\mathrm{cell}}(L_0)$ for the
+existing core finite-cell and block-power contributions restricted to
+$|\ell|<L_0$, the complete two-band substitution in (ME-31) is
+
+$$
+\begin{aligned}
+B_{\mathrm{lift}}^2\le{}&
+\sum_{\Lambda\in\mathfrak G_{\mathrm{mat}}}
+\left[F_{\Lambda,L_0}^2
++T_{\Lambda,\mathrm{cell}}(L_0)^2
++F_{\Lambda,\mathrm{band}}^2
++S_{\mathrm{state},\Lambda}T_{\Lambda,\mathrm{far}}(L_1)^2\right]\\
+&+\sum_{\Lambda\in\mathfrak G_{\mathrm{wall}}}
+\left(F_{\Lambda}^2+T_{\Lambda}^2\right).
+\end{aligned}
+\tag{ME-P4.21}
+$$
+
+Here $F_{\Lambda,\mathrm{band}}$ and the far term already use the complete
+state envelope, so no second band/far cell term is added.  The last sum is
+exactly the unchanged artificial-wall finite/high/propagation owner from
+(ME-31); it contains no material coefficient.
+
+Choose $L_1$ and then $N>2\max\{L_1,M_\eta\}$ solely from two predeclared
+budgets.  First freeze the first analytically admissible $L_1$ for which
+$\sqrt{S_{\mathrm{state}}}T_{\mathrm{far}}(L_1)$ meets the high-tail
+budget.  With that $L_1$ fixed, freeze the first strict admissible $N$ for
+which
+$[S_{\mathrm{state}}\sum_{L_0\le|\ell|<L_1}
+\overline w_{\Lambda,\ell}\epsilon_\ell(N)^2]^{1/2}$ meets the retained
+radius budget.  For accounting, their orthogonal square sum is
+
+$$
+H_{\mathrm{band,rad}}^2(L_1,N)
+:=S_{\mathrm{state}}
+\left[
+\sum_{L_0\le|\ell|<L_1}
+\overline w_{\Lambda,\ell}\epsilon_\ell(N)^2
++T_{\mathrm{far}}(L_1)^2
+\right].
+\tag{ME-P4.22}
+$$
+
+No band center is evaluated until one pair is frozen.  If no $L_1$ meets the
+high-tail budget but an analytic $L_1$ exists, freeze the largest analytic
+$L_1$ and force the next route upgrade.  For that fixed $L_1$, if no $N$
+meets the radius budget but an analytic strict $N$ exists, freeze the largest
+such $N$ and retain the forced upgrade.  Evaluate only this frozen pair and
+report its conditional finite majorant.  If either stage has no analytic
+candidate, stop with no majorant.  No inter-level center drift enters this
+rule.
+
+[Proof Addition P4 End]

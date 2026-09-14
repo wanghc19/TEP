@@ -161,8 +161,8 @@ No cancellation between the three terms is used to reduce this majorant.
 | module | current status | precise boundary |
 |---|---|---|
 | artificial-interface normal defect $B_{\Gamma_\pm}$ | frozen instance `GO` in the roundoff-excluded fallback | I5.1e attempt 7 rebuilds every wall row directly and gives $890.77255515519369$; historical evaluated wall residuals do not enter the bound |
-| material-interface normal defect $B_\Upsilon$ | frozen instance `GO`; tightness `PASS` in the roundoff-excluded fallback | the coefficientwise-density, mode-dependent zero-centre I5.1e bound is $28500.152577876961$; the smaller I5.1d signed-centre value remains conditional on unresolved (RNC-6) |
-| value-defect correction $B_{\mathrm{lift}}$ | minimum-energy theorem `GO`; frozen signed-centre instance conditional | I5.1g proves the factor-one global minimum-energy comparison and gives the conditional ideal value $0.033621248621896728$; $\Delta_{\mathrm{sf}}$ and $\Delta_{\mathrm{fp}}$ remain unresolved, so the reliable roundoff-excluded fallback is still I5.1e at $58518.118987325186$ |
+| material-interface normal defect $B_\Upsilon$ | frozen instance `GO`; tightness `PASS` in the roundoff-excluded fallback; smaller signed-centre value conditional | the coefficientwise-density, mode-dependent zero-centre I5.1e bound is $28500.152577876961$; streamed I5.1h gives the conditional ideal value $5.9741385647183627\,10^{-7}$ |
+| value-defect correction $B_{\mathrm{lift}}$ | minimum-energy theorem `GO`; two-band fallback `GO`; frozen signed-centre instance conditional | I5.1g proves the factor-one comparison; I5.1h gives the conditional ideal value $8.7769248875529515\,10^{-6}$, while $\Delta_{\mathrm{sf}}$ and $\Delta_{\mathrm{fp}}$ remain unresolved and the reliable roundoff-excluded fallback remains I5.1e at $58518.118987325186$ |
 
 The resulting smallest reviewed fallback is
 $\mathcal M=87909.044120357343$.  It is a theorem upper for the exact frozen
@@ -280,3 +280,36 @@ Both deltas remain unresolved.  The independent
 therefore returns `PASS WITH CONDITIONS / GO` for the conditional ideal
 result and `STOP` for a reliable or certified claim.  The complete persisted
 decomposition is in `test/i5/residual-numerator-v6/README.md`.
+
+### I5.1h signed-band recapture continuation
+
+The full signed-jump $p=6/8$ theorem and the fail-safe two-band $p=4$
+substitution are proved in
+[[research/projects/eig-apost/phase3-analysis/residual-bound/s-lift-tail|the
+lifting module]] and implemented by
+[[research/projects/eig-apost/implementation/i5/design-5-1h|I5.1h]].  The
+current full-$p=6$ instance remains blocked at the first missing order-six
+regular-image Ewald derivative/tail certificate.  The two-band fallback does
+not use that missing certificate: it retains $|\ell|<256$, computes the
+signed band $256\le|\ell|<L_1$, and applies the existing componentwise $p=4$
+tail only to $|\ell|\ge L_1$.
+
+The streamed v7 attempt 3 selects $(L_1,N)=(1024,16384)$ solely from explicit
+far-tail and retained-radius allocations and obtains
+
+$$
+(\widehat B_{\Gamma_\pm},\widehat B_\Upsilon,
+\widehat B_{\mathrm{lift}},\mathcal M_{\mathrm{ideal}})
+=(1.8732040521480924\,10^{-10},
+5.9741385647183627\,10^{-7},
+8.7769248875529515\,10^{-6},
+9.3745260644300025\,10^{-6}).
+$$
+
+The independent
+[[research/projects/eig-apost/implementation/i5/review-5-1h|I5.1h review]]
+returns `PASS` for the theorem and implementation, `PASS WITH CONDITIONS / GO`
+for this conditional ideal instance, and `STOP` for a reliable or certified
+claim.  The governing statement remains
+$\|R\|_{\mu,*}\le\mathcal M_{\mathrm{ideal}}
++\Delta_{\mathrm{sf}}+\Delta_{\mathrm{fp}}$, with both deltas unresolved.

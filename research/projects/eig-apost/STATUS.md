@@ -835,6 +835,22 @@ denominator 或 independent reference 中哪些是必需输入；不得为了复
 既有 Fliss FD candidate 和 SLP/DLP/$M_{\mathrm{trace}}$ 数值证据继续保留，但不缩短上述
 理论—离散桥接链。仍不创建 `research/mainline/`，也不使用绝对优先权表述。
 
+### I5.1h conditional residual-numerator update
+
+The shape-general minimum-energy lifting theorem now has a reviewed two-band
+$p=4$ fallback.  The streamed v7 attempt 3 selected
+$(L_0,L_1,N)=(256,1024,16384)$ solely from explicit far-tail and retained-row
+radius gates and obtained
+$\mathcal M_{\mathrm{ideal}}=9.3745260644300025\,10^{-6}$, with
+$B_{\Gamma_\pm}=1.8732040521480924\,10^{-10}$,
+$B_\Upsilon=5.9741385647183627\,10^{-7}$, and
+$B_{\mathrm{lift}}=8.7769248875529515\,10^{-6}$.  This is only
+`CONDITIONAL_TWO_BAND_P4_MAJORANT_SF_FP_UNRESOLVED`: both
+$\Delta_{\mathrm{sf}}$ and $\Delta_{\mathrm{fp}}$ remain unresolved.  The
+full signed-jump $p=6$ instance is separately blocked at the missing
+order-six regular-image Ewald row-ball and omitted-tail certificate.  See
+[[research/projects/eig-apost/implementation/i5/review-5-1h|I5.1h review]].
+
 ## 新 session handoff
 
 - 唯一允许写入的 worktree 是 `/Users/whc/Documents/Work/epost`，当前分支为

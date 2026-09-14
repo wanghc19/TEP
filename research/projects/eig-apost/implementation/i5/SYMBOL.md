@@ -634,3 +634,40 @@ The material retained/omitted split is exactly $|\ell|<L$ versus
 $|\ell|\ge L$, while the wall split is $|m|\le256$ versus $|m|\ge257$.
 The strings `delta_sf=UNRESOLVED` and `delta_fp=UNRESOLVED` remain governing
 claim qualifiers.  All v6 solve counts are zero.
+
+## Implemented `residual-numerator-v7` two-band overrides
+
+This section applies only under `test/i5/residual-numerator-v7/`.  Names not
+listed here retain the v6 mapping above.
+
+| canonical code object | kind and scope | governing object and source | type, shape, units, and consumers |
+|---|---|---|---|
+| `configuration.core_mode_cutoff` | input scalar | $L_0=256$, (I5.1h-8) | positive integer Fourier cutoff; builder and evaluator |
+| `configuration.L1_schedule` | input row vector | $L_1\in\{512,1024\}$, (I5.1h-8) | two positive integer candidates; `LOCAL_select_L` |
+| `configuration.N_schedule` | input row vector | $N\in\{4096,8192\}$, (I5.1h-8) | even node counts filtered by (I5.1h-7); `LOCAL_select_N` |
+| `configuration.two_band_high_allocation` | input scalar | $\tau_{\mathrm{high}}$, (I5.1h-12) | numerator-norm budget; first-stage selector |
+| `configuration.two_band_retained_allocation` | input scalar | $\tau_{\mathrm{ret}}$, (I5.1h-12) | numerator-norm budget; second-stage selector |
+| `cutoff_selection.far_norm` | derived candidate vector | $T_{\mathrm{far}}(L_1)$, (I5.1h-10) | one nonnegative value per $L_1$; local, regular, and off p4 norms added before propagation |
+| `cutoff_selection.far_contribution` | derived candidate vector | $\sqrt{S_{\mathrm{state}}}T_{\mathrm{far}}(L_1)$ | numerator-norm candidates; selects $L_1$ |
+| `evaluation_selection.band_radius_squared` | derived candidate vector | radius-only term in (I5.1h-11) | squared numerator units; excludes all center values |
+| `evaluation_selection.band_radius_contribution` | derived candidate vector | square root of the preceding field | numerator-norm candidates; selects $N$ |
+| `material.two_band.radius_edges.source/target/series/Ewald/off_analytic` | retained row-radius vectors | five telescope edges in (I5.1h-6) | nonnegative $(2L_1-1)$-vectors in normalized row units; builder and audit |
+| `material.two_band.core_mask` | logical retained-mode vector | $|\ell|<L_0$ | length $2L_1-1$; finite and cell owners |
+| `material.two_band.band_mask` | logical retained-mode vector | $L_0\le|\ell|<L_1$ | length $2L_1-1$; signed recapture owner |
+| `material.two_band.state_energy` | derived scalar | $S_{\mathrm{state}}$ in (ME-P4.18) | nonnegative whole-state envelope applied once to band/far terms |
+| `material.high_tail.band_lifting_squared` | output scalar | $F_{\mathrm{band}}^2$, (I5.1h-11a) | squared lifting numerator contribution |
+| `material.high_tail.far_lifting_squared` | output scalar | $S_{\mathrm{state}}T_{\mathrm{far}}(L_1)^2$, (I5.1h-11b) | squared lifting numerator contribution |
+| `material.two_band.band_cell_squared` | structural zero | absence of a second band cell owner, (ME-P4.21) | exact scalar zero; fail-closed ownership gate |
+| `route_gate.route_upgrade_required` | diagnostic Boolean | selector fallback rule after (I5.1h-12) | true iff either performance allocation fails; never invalidates a finite analytic majorant |
+| `configuration.attempt_identifier` | provenance label | v7 attempt lifecycle | `attempt-2`; separates the tightened allocation from immutable attempt-1 artifacts |
+| `configuration.allocation_reference_lifting_bound` | frozen scalar input | attempt-1 conditional ideal $\widehat B_{\mathrm{lift}}$ | numerator-norm value used only to define the attempt-2 allocations; no historical output is read at runtime |
+| `configuration.expected_selected_L1` | instance assertion | far-only selector prediction for the tightened $\tau_{\mathrm{high}}$ | integer $1024$; builder and evaluator fail closed if the analytic selector chooses another cutoff |
+| `cutoff_selection.selection_owner` | ownership label | $L_1$ selection in (I5.1h-12) | exact text declaring that only the far p4 value-tail contribution selects $L_1$ |
+| `evaluation_selection.selection_owner` | ownership label | $N$ selection in (I5.1h-12) | exact text declaring that only the middle-band analytic radius selects $N$ |
+| `route_gate.far_lifting_square_fraction` | post-selection diagnostic scalar | far p4 lifting square divided by the complete lifting-bound square | finite value in $[0,1]$; never feeds back into $L_1$ or $N$ |
+| `route_gate.next_method_required` | post-selection diagnostic Boolean | attempt-2 method route | selector fallback or `far_lifting_square_fraction >= 0.5`; does not invalidate the finite conditional majorant |
+| `configuration.expected_selected_N` | attempt-3 instance assertion | strict radius-only selector output | integer $16384$; builder/evaluator fail closed on a different selected $N$ |
+| `configuration.planned_peak_memory_gib` | attempt-3 resource input | streamed-memory pre-run plan | scalar $2.5$ GiB; checked by the input gate and distinct from the 3-GiB watchdog limit |
+| `regular.gates.target_dft_streamed` | implementation gate | blockwise retained target transform | true only for the 16-row target transform used by `signed_regular_image_v7.m`; formulas and radii are unchanged |
+| `off_surface.gates.source_target_transforms_streamed` | implementation gate | blockwise frozen-Rayleigh source accumulation and retained target transform | true only for the 16-mode/row streaming path in `signed_off_surface_v7.m`; no source or target owner changes |
+| `gates.streamed_memory_plan` | derived attempt-3 Boolean | resource-safe implementation contract | conjoins both streaming gates, block size 16, and the 2.5-GiB plan |
