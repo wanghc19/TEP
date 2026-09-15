@@ -644,7 +644,7 @@ listed here retain the v6 mapping above.
 |---|---|---|---|
 | `configuration.core_mode_cutoff` | input scalar | $L_0=256$, (I5.1h-8) | positive integer Fourier cutoff; builder and evaluator |
 | `configuration.L1_schedule` | input row vector | $L_1\in\{512,1024\}$, (I5.1h-8) | two positive integer candidates; `LOCAL_select_L` |
-| `configuration.N_schedule` | input row vector | $N\in\{4096,8192\}$, (I5.1h-8) | even node counts filtered by (I5.1h-7); `LOCAL_select_N` |
+| `configuration.N_schedule` | input row vector | $N\in\{4096,8192\}$ in attempts 1--2 and $N\in\{8192,16384\}$ in attempts 3--7, (I5.1h-8) | even node counts filtered by (I5.1h-7); `LOCAL_select_N`; each attempt recomputes every candidate radius |
 | `configuration.two_band_high_allocation` | input scalar | $\tau_{\mathrm{high}}$, (I5.1h-12) | numerator-norm budget; first-stage selector |
 | `configuration.two_band_retained_allocation` | input scalar | $\tau_{\mathrm{ret}}$, (I5.1h-12) | numerator-norm budget; second-stage selector |
 | `cutoff_selection.far_norm` | derived candidate vector | $T_{\mathrm{far}}(L_1)$, (I5.1h-10) | one nonnegative value per $L_1$; local, regular, and off p4 norms added before propagation |
@@ -659,15 +659,29 @@ listed here retain the v6 mapping above.
 | `material.high_tail.far_lifting_squared` | output scalar | $S_{\mathrm{state}}T_{\mathrm{far}}(L_1)^2$, (I5.1h-11b) | squared lifting numerator contribution |
 | `material.two_band.band_cell_squared` | structural zero | absence of a second band cell owner, (ME-P4.21) | exact scalar zero; fail-closed ownership gate |
 | `route_gate.route_upgrade_required` | diagnostic Boolean | selector fallback rule after (I5.1h-12) | true iff either performance allocation fails; never invalidates a finite analytic majorant |
-| `configuration.attempt_identifier` | provenance label | v7 attempt lifecycle | `attempt-2`; separates the tightened allocation from immutable attempt-1 artifacts |
+| `configuration.attempt_identifier` | provenance label | v7 attempt lifecycle | current source uses `attempt-7`; immutable outputs preserve earlier attempts |
 | `configuration.allocation_reference_lifting_bound` | frozen scalar input | attempt-1 conditional ideal $\widehat B_{\mathrm{lift}}$ | numerator-norm value used only to define the attempt-2 allocations; no historical output is read at runtime |
 | `configuration.expected_selected_L1` | instance assertion | far-only selector prediction for the tightened $\tau_{\mathrm{high}}$ | integer $1024$; builder and evaluator fail closed if the analytic selector chooses another cutoff |
 | `cutoff_selection.selection_owner` | ownership label | $L_1$ selection in (I5.1h-12) | exact text declaring that only the far p4 value-tail contribution selects $L_1$ |
 | `evaluation_selection.selection_owner` | ownership label | $N$ selection in (I5.1h-12) | exact text declaring that only the middle-band analytic radius selects $N$ |
 | `route_gate.far_lifting_square_fraction` | post-selection diagnostic scalar | far p4 lifting square divided by the complete lifting-bound square | finite value in $[0,1]$; never feeds back into $L_1$ or $N$ |
 | `route_gate.next_method_required` | post-selection diagnostic Boolean | attempt-2 method route | selector fallback or `far_lifting_square_fraction >= 0.5`; does not invalidate the finite conditional majorant |
-| `configuration.expected_selected_N` | attempt-3 instance assertion | strict radius-only selector output | integer $16384$; builder/evaluator fail closed on a different selected $N$ |
-| `configuration.planned_peak_memory_gib` | attempt-3 resource input | streamed-memory pre-run plan | scalar $2.5$ GiB; checked by the input gate and distinct from the 3-GiB watchdog limit |
-| `regular.gates.target_dft_streamed` | implementation gate | blockwise retained target transform | true only for the 16-row target transform used by `signed_regular_image_v7.m`; formulas and radii are unchanged |
-| `off_surface.gates.source_target_transforms_streamed` | implementation gate | blockwise frozen-Rayleigh source accumulation and retained target transform | true only for the 16-mode/row streaming path in `signed_off_surface_v7.m`; no source or target owner changes |
-| `gates.streamed_memory_plan` | derived attempt-3 Boolean | resource-safe implementation contract | conjoins both streaming gates, block size 16, and the 2.5-GiB plan |
+| `configuration.expected_selected_N` | attempts 3--7 instance assertion | strict radius-only selector output | integer $16384$; builder/evaluator fail closed on a different selected $N$ |
+| `configuration.planned_peak_memory_gib` | attempt-5 resource input | sequential-FFT pre-run plan | scalar $2.0$ GiB; checked by the input gate and distinct from the 3-GiB watchdog limit |
+| `regular.gates.pairwise_source_accumulation_streamed` | implementation gate | retained regular-image pairwise accumulation | current attempt-7 source requires target blocks of size 4; immutable earlier outputs retain their own block contract |
+| `off_surface.gates.source_mode_accumulation_streamed` | implementation gate | frozen-Rayleigh source-mode accumulation | current attempt-7 source requires source-mode blocks of size 4; target speed is applied once to each new block contribution |
+| `gates.streamed_memory_plan` | derived resource Boolean | implementation resource contract | conjoins the active source/pairwise block gates and the attempt-specific planned-memory input; it is not a measured RSS certificate |
+| `geometry.arclength_origin`, `geometry.arclength_step`, `geometry.arclength_nodes` | constant-arclength FFT input | $s_0$, $P/N$, and $s_j=s_0+jP/N$ in I5.1i | scalar, scalar, and real $N$-vector; all three signed-centre helpers |
+| `geometry.constant_speed_certificate_pass` | instance-adapter gate | certified constant speed $s(t)=P/(2\pi)$ | Boolean supplied by the current circle adapter; never inferred from sampled `speed_nodes` equality |
+| `geometry.constant_arclength_fft_pass` | instance-adapter gate | uniform arclength-node contract in I5.1i | Boolean; required by each batched target FFT |
+| `local.series_certificate.series_factorization_pass` | exact finite-algebra gate | $\sqrt P/N[(\sum|r|)(\sum\delta_1)+2\pi\sum\delta_2]$ | Boolean conjunction of complete circulant residues, target-independent nonnegative tails, and constant arclength |
+| `local.series_certificate.circulant_complete_residues` | exact index gate | `mod(-(0:N-1),N)+1` is a permutation of all residues | Boolean; prevents a missing or repeated Kress offset |
+| `local.series_certificate.tail_scalar_target_independent` | analytic ownership gate | $\delta_1,\delta_2$ do not depend on the target index | Boolean; required before factoring the target sum |
+| `local.series_certificate.source_delta_nonnegative_finite` | exact finite-data gate | the four value/normal source vectors $\delta_1,\delta_2$ are real, finite, nonnegative, and length $N$ | Boolean; conjoined with target independence before circulant factorization |
+| `local/regular/off_surface.sf_ledger.expected_fft_calls`, `.total_fft_calls` | finite-call ledger | attempt-7 column-block target FFTs | dynamically equal to $\lceil2s/32\rceil$ per final helper and zero when centre evaluation is disabled; current instance gives 13 per helper |
+| `local/regular/off_surface.sf_ledger.target_phase_exp_scalar_count` | finite-call ledger | removed dense target-phase exponentials | exact integer 0 under the I5.1i transform |
+| `gates.column_block_target_ffts`, `gates.instance_39_target_ffts` | derived attempt-7 gates | exact I5.1i transform count | dynamic per-helper count and current-instance total 39; neither is an RSS certificate |
+| `gates.preselection_zero_target_transforms` | derived attempt-5 gate | centre-free selector contract | true iff cutoff preselection and both $N$ candidates report zero FFT, zero target-phase exponential, and zero $s_0$-phase calls for local, regular, and off helpers |
+| `fft_reordering_diagnostic` | non-governing result diagnostic | attempt-5 $M_{\mathrm{ideal}}$ versus immutable attempt-3 scalar | absolute difference and one-sided `value_nonincrease_gate`, both with tolerance $10^{-12}$; neither enters selector nor reliability |
+| `configuration.pairwork_baseline_elements/current_elements` | attempt-5 resource ledger | conservative simultaneous versus sequential pair-work counts | exact scalars 872,415,232 and 536,870,912; resource planning only |
+| `gates.pairwork_reduction` | derived attempt-5 gate | strict reduction in the preceding pair-work element counts | Boolean; proves only the stored element-count inequality, not an RSS bound; RSS remains a post-run measurement |

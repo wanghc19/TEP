@@ -430,3 +430,80 @@ Updated scale comparison:
 The post-run extraction loaded only the two persisted MAT files and printed
 scalars.  It invoked no builder/evaluator and modified no artifact; it took
 8.49 s with 809,172,992 bytes maximum RSS.
+
+## Attempt-4 pre-run plan
+
+Attempt 4 keeps the attempt-3 theorem, selectors, analytic radii, physical
+signs, and energy assembly unchanged.  It uses the current geometry adapter's
+certified constant-speed and uniform-arclength contract to replace each dense
+target-phase transform by one concatenated value/normal FFT.  The local Kress
+series radius is evaluated by the exact circulant factorization
+
+$$
+\epsilon_{\mathrm{series}}^\chi
+=\frac{\sqrt P}{N}
+\left[(\sum|r|)(\sum\delta_1^\chi)
++2\pi\sum\delta_2^\chi\right].
+$$
+
+The final local, regular, and off-surface helpers must report exactly three
+batched FFT calls in total and zero dense target-phase exponential calls.  The
+pairwise/source block size remains 16.  The pre-registered schedules remain
+$L_1\in\{512,1024\}$ and $N\in\{8192,16384\}$, with expected selection
+$(1024,16384)$.  No candidate centre is evaluated.
+
+The create-once attempt targets will be placed under `output/attempt-4/` by
+`run_residual_numerator_v7_attempt4.sh` as `input-run-01.mat`,
+`result-run-01.mat`, `run-01-log.txt`, `resource-run-01.txt`, and
+`audit-run-01.txt`.  Planned resource use is at most 20
+minutes and 2.25 GiB; the runner enforces 2695 seconds and 3 GiB.  No canonical
+MATLAB run has yet been started.  The attempt-3 versus attempt-4 ideal-majorant
+difference uses a pre-registered $10^{-12}$ diagnostic tolerance but enters
+neither selection nor reliability.  Both `delta_sf` and `delta_fp` remain
+`UNRESOLVED`.
+
+## Attempt-5 pre-run plan
+
+Attempt 5 preserves the attempt-4 theorem, series factorization, selectors,
+radii, and owners.  Each local/regular/off helper performs a value FFT and a
+normal FFT sequentially, for six final action FFT calls and zero FFT calls in
+all preselection ledgers.  Regular and off-surface target samples recover the
+attempt-3 finite graph: multiply once by `speed_nodes`, then scale selected FFT
+rows by $2\pi/(N\sqrt P)$ and the nonzero-$s_0$ phase.  Local retains
+$\sqrt P/N$.
+
+The pair-work ledger records 872,415,232 baseline elements and 536,870,912
+sequential elements.  Planned resources are 20 minutes and 2.0 GiB; the new
+`run_residual_numerator_v7_attempt5.sh` keeps the 2695-second and 3-GiB hard
+limits.  Create-once run-01 targets belong under `output/attempt-5/`.  No
+attempt-5 MATLAB run has started.  The one-sided `value_nonincrease_gate` and
+the absolute attempt-3 difference are diagnostics only; `delta_sf` and
+`delta_fp` remain `UNRESOLVED`.  The active `pairwork_reduction` gate proves
+only the strict decrease in stored pair-work element counts; RSS is measured
+only after a run and is not authorized by that gate.
+
+## Attempts 4--7 cost result
+
+All completed attempts retained $(L_0,L_1,N)=(256,1024,16384)$ and unchanged
+analytic radii, selectors, and ownership.
+
+| attempt | status | $\mathcal M_{\mathrm{ideal}}$ | wall | max RSS |
+|---|---|---:|---:|---:|
+| 3 baseline | completed | $9.3745260644300025\times10^{-6}$ | 618.57 s | 1,503,281,152 B |
+| 4 paired | completed | $9.3744411412603962\times10^{-6}$ | 581.75 s | 1,573,568,512 B |
+| 5 sequential | completed | $9.3744411377992197\times10^{-6}$ | 550.09 s | 1,922,875,392 B |
+| 6 fused | completed | $9.3744411376363267\times10^{-6}$ | 567.47 s | 1,579,646,976 B |
+| 7 column-block | fail closed | not produced | 1011.48 s | 1,309,573,120 B |
+
+Attempt 6 is the last accepted conditional instance.  Its lifting-square
+owners are core $7.8278508067465598\times10^{-17}$, cell
+$1.6444080037364376\times10^{-30}$, middle band
+$3.8454549226292470\times10^{-12}$, and far tail
+$7.3187386495648263\times10^{-11}$; its normal material square is
+$3.5690331590423174\times10^{-13}$.
+
+Attempt 7 run 01 failed on an undefined centre-free `state_count`.  Run 02
+persisted `PRE_RUN_CERTIFICATE_STOP` because numeric FFT-ledger fields entered
+an all-Boolean reduction.  The bounded source repair was not rerun, so its RSS
+is diagnostic only.  No attempt met the requested cost alternatives.
+Special-function and floating-point errors remain unresolved.
