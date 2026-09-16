@@ -313,3 +313,24 @@ for this conditional ideal instance, and `STOP` for a reliable or certified
 claim.  The governing statement remains
 $\|R\|_{\mu,*}\le\mathcal M_{\mathrm{ideal}}
 +\Delta_{\mathrm{sf}}+\Delta_{\mathrm{fp}}$, with both deltas unresolved.
+
+### I5.1j real-variable lifting continuation
+
+The independently reviewed
+[[research/projects/eig-apost/phase3-analysis/residual-bound/s-lift-real-interpolation|real-variable interpolation theorem]]
+replaces only the material value-jump Fourier evaluation by a shape-general
+piecewise-linear $H^1$ comparison bound.  Its implementation contract is
+[[research/projects/eig-apost/implementation/i5/design-5-1j|I5.1j]].  No
+material value-jump Fourier coefficient, material cutoff, material Fourier
+tail, target DFT, or target FFT occurs in the new evaluator; the artificial-
+wall Rayleigh representation is unchanged.  The theorem is `GO` under exact
+signed endpoint and first-derivative panel row balls.  The reviewed run 04
+selects $N=514$ and gives
+$B_{\mathrm{lift}}^{\mathrm{RI}}=1268.5132354323696$ and
+$\mathcal M_{\mathrm{RI,ideal}}=1268.5132360299708$.  This is a
+`PASS WITH CONDITIONS` conditional ideal majorant and a tightness `STOP`, not
+a fully reliable bound: $\Delta_{\mathrm{sf}}$ and
+$\Delta_{\mathrm{fp}}$ remain unresolved.  The dominant term is the
+$d_j=0$ global first-derivative radius, so increasing $N$ is not recommended;
+the shortest next step is a nonzero signed derivative center with complete
+panel balls.
