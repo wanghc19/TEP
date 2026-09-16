@@ -1,0 +1,103 @@
+\clearpage
+\appendix
+
+\section{中心胞元表示定理的证明}
+\label{app:center-cell-representation}
+
+\begin{proof}[定理~\ref{thm:center-cell-representation} 的证明]
+  在每个 $\partial\Omega_{0,\ell}$ 上，以下用上标 $+$ 表示从介质柱外部取得的迹，
+  用上标 $-$ 表示从介质柱内部取得的迹；这两个上标与左右人工边界
+  $\Gamma_-$、$\Gamma_+$ 无关。法向 $\nu$ 始终由介质柱内部指向外部。
+
+  先确定均匀背景场。由于介质柱与 $\Gamma_\pm$ 严格分离，$u$ 在两个人工边界的
+  邻域内满足波数为 $\kappa_{\mathrm e}$ 的均匀 Helmholtz 方程。将 $u$ 及
+  $\partial_xu$ 的迹投影到 $\psi_m$ 后，每个 Fourier 分量的两个 Rayleigh 系数由
+  \begin{equation*}
+    \begin{bmatrix}
+      1&1\\ \ii\gamma_m&-\ii\gamma_m
+    \end{bmatrix}
+  \end{equation*}
+  所给出的二元关系确定。因为 $\gamma_m\neq0$，该矩阵可逆，所以锚定在
+  $\Gamma_-$ 的右行系数 $a_{0,m}^-$ 与锚定在 $\Gamma_+$ 的左行系数
+  $b_{0,m}^+$ 均由 $u$ 唯一确定。用这些系数构造正文中的
+  $u_{\mathrm{hom}}$，并在中心胞元的背景区域令
+  \begin{equation*}
+    w^+:=u-u_{\mathrm{hom}}.
+  \end{equation*}
+  按构造，$w^+$ 在左端没有右行入射分量，在右端没有左行入射分量，因而在两个端口都满足
+  outgoing Rayleigh 条件。对第 $\ell$ 根介质柱，再令 $w_\ell^-:=u|_{\Omega_{0,\ell}}$。
+
+  接着构造层势密度。对每个 $\ell$，考虑交换内外波数的辅助问题：在
+  $\Omega_{0,\ell}$ 内使用 $\kappa_{\mathrm e}$，在
+  $\RR^2\setminus\overline{\Omega_{0,\ell}}$ 内使用
+  $\kappa_{\mathrm i,\ell}$，并要求外部场满足 outgoing Sommerfeld 条件。其界面跳跃取为
+  \begin{align*}
+    v_\ell^+-v_\ell^-
+    &=-w^+-w_\ell^-,\\
+    \partial_\nu v_\ell^+-\partial_\nu v_\ell^-
+    &=-\partial_\nu w^+-\partial_\nu w_\ell^-.
+  \end{align*}
+  定理的非例外性假设保证该问题具有唯一解 $v_\ell$。定义
+  \begin{align*}
+    \tau_\ell
+    &:=w^+-v_\ell^-
+      =-w_\ell^--v_\ell^+,\\
+    \sigma_\ell
+    &:=-\partial_\nu w^++\partial_\nu v_\ell^-
+      =\partial_\nu w_\ell^-+\partial_\nu v_\ell^+.
+  \end{align*}
+  两组等式分别由辅助问题的两个跳跃条件得到。
+
+  现在验证这些密度给出所需场。自由空间 Green 表示公式及其消去公式表明，对
+  $\mathbf z\in\Omega_{0,\ell}$，
+  \begin{equation*}
+    \left(
+      \mathcal S_\ell^{(\kappa_{\mathrm i,\ell})}[\sigma_\ell]
+      +\mathcal D_\ell^{(\kappa_{\mathrm i,\ell})}[\tau_\ell]
+    \right)(\mathbf z)
+    =w_\ell^-(\mathbf z).
+  \end{equation*}
+  事实上，代入 $\tau_\ell$、$\sigma_\ell$ 的第二组表达式后，来自
+  $w_\ell^-$ 的两项由内部 Green 公式重构 $w_\ell^-$，来自外部场
+  $v_\ell^+$ 的两项则在介质柱内部相消。
+
+  对背景区域，在
+  $\mathcal C_0\setminus\overline{\Omega_0}$ 上对 $w^+$ 与
+  $G_{\mathrm{QP}}^{(\kappa_{\mathrm e})}$ 使用 Green 第二恒等式。顶、底边界积分因
+  $\beta$-准周期相位互相抵消；两个竖直端口上的积分在逐项代入 outgoing Rayleigh 展开后
+  也为零。这里每个 Fourier 分量的消去因子是同一个 $\gamma_m$，而
+  $\gamma_m\neq0$ 保证系数分解没有退化。因此
+  \begin{equation*}
+    \sum_{\ell=1}^{N_0}\left(
+      -\mathcal S_{\mathrm{QP},\ell}^{(\kappa_{\mathrm e})}
+        [\partial_\nu w^+]
+      +\mathcal D_{\mathrm{QP},\ell}^{(\kappa_{\mathrm e})}[w^+]
+    \right)
+    =w^+.
+  \end{equation*}
+  对 $v_\ell^-$ 使用内部 Green 公式及其在介质柱外部的消去公式，则有
+  \begin{equation*}
+    \mathcal S_{\mathrm{QP},\ell}^{(\kappa_{\mathrm e})}
+      [\partial_\nu v_\ell^-]
+    -\mathcal D_{\mathrm{QP},\ell}^{(\kappa_{\mathrm e})}[v_\ell^-]
+    =0
+    \qquad\text{在 }\mathcal C_0\setminus\overline{\Omega_0}.
+  \end{equation*}
+  将 $\tau_\ell$、$\sigma_\ell$ 的第一组表达式代入并对 $\ell$ 求和，便得到
+  \begin{equation*}
+    \sum_{\ell=1}^{N_0}\left(
+      \mathcal S_{\mathrm{QP},\ell}^{(\kappa_{\mathrm e})}[\sigma_\ell]
+      +\mathcal D_{\mathrm{QP},\ell}^{(\kappa_{\mathrm e})}[\tau_\ell]
+    \right)
+    =w^+.
+  \end{equation*}
+  再加回 $u_{\mathrm{hom}}$，即得定理所述的外部表示；结合前面的内部表示，存在性得证。
+
+  最后讨论唯一性。两组表示之差仍具有定理中的形式，并表示零场。前述端口系数提取关系立即
+  给出所有 $a_{0,m}^-$、$b_{0,m}^+$ 均为零，所以 Rayleigh 系数列无条件唯一。若再满足定理
+  末尾的互补系统零核条件，则只剩的层势部分在交换适用区域并改变内部层势符号后，由层势
+  跳跃关系给出该齐次互补系统的一个解；它在每个界面上的共同 Dirichlet 和 Neumann 迹分别
+  为 $-\tau_\ell$ 和 $\sigma_\ell$。零核条件迫使互补场恒为零，再次使用层势跳跃关系便有
+  $\tau_\ell=0$、$\sigma_\ell=0$，$1\leq\ell\leq N_0$。因此在这一附加条件下，全部层势
+  密度也唯一。
+\end{proof}

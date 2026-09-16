@@ -1,0 +1,55 @@
+% !TeX program = xelatex
+\documentclass[UTF8,11pt,fleqn,fontset=none]{ctexart}
+
+\setCJKmainfont{Songti SC}
+\setCJKsansfont{PingFang SC}
+\setCJKmonofont{PingFang SC}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\renewcommand{\Im}{\mathrm{Im}}
+\renewcommand{\Re}{\mathrm{Re}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+
+\theoremstyle{definition}
+\newtheorem{conjecture}{猜想}[section]
+\newtheorem{assumption}[conjecture]{假设}
+\newtheorem{proposition}[conjecture]{命题}
+\newtheorem{theorem}[conjecture]{定理}
+
+\title{周期线缺陷波导特征值的边界积分计算与后验误差估计}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\input{s-introduction}
+
+\input{s-modelproblem.tex}
+
+\input{s-dtn}
+
+\input{s-numerics}
+
+\input{s-error}
+
+\input{a-cellrep}
+
+\clearpage
+\bibliographystyle{unsrt}
+\bibliography{../reference}
+
+\end{document}

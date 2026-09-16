@@ -1,0 +1,250 @@
+\section{模型问题}
+\label{sec:modelproblem}
+
+首先在整个平面 $\RR^2$ 上定义物理问题。设 $\rho_{\mathrm p}$ 描述未引入缺陷时的
+二维光子晶体。本文假定 $\rho_{\mathrm p}$ 为正的分片常数函数，并且分别以
+$L>0$ 和 $d>0$ 为 $x$、$y$ 两个坐标方向的周期，即存在常数
+$0<\rho_-\leq\rho_+<\infty$，使得
+\begin{align}
+  \rho_-&\leq \rho_{\mathrm p}(x,y)\leq \rho_+,
+  &
+  \rho_{\mathrm p}(x+jL,y+md)
+  &=\rho_{\mathrm p}(x,y)
+  \label{eq:periodic-background}
+\end{align}
+对几乎处处的 $(x,y)\in\RR^2$ 以及所有 $j,m\in\mathbb Z$ 成立。沿 $y$ 方向引入一条
+无限长线缺陷。按照左侧背景、中心缺陷和右侧背景的宏观分区，记
+\begin{align}
+  \mathcal{W}_-&=(-\infty,-a)\times\RR,
+  &\mathcal{W}_0&=(-a,a)\times\RR,
+  &\mathcal{W}_+&=(a,\infty)\times\RR,
+  \qquad a>0.
+  \label{eq:defect-region}
+\end{align}
+其中 $\mathcal{W}_0$ 是整个线缺陷区域。缺陷区中的材料系数 $\rho_0$ 同样取为正的
+分片常数函数，并保留 $y$ 方向的周期性：
+\begin{align}
+  \rho_-&\leq \rho_0(x,y)\leq\rho_+,
+  &
+  \rho_0(x,y+md)&=\rho_0(x,y),
+  \qquad (x,y)\in\mathcal{W}_0,\quad m\in\mathbb Z.
+  \label{eq:periodic-defect}
+\end{align}
+若背景与缺陷原先具有可公度的纵向周期，则将 $d$ 取为它们的一个公共周期。整个二维
+缺陷晶体由
+\begin{align}
+  \rho(x,y)&=
+  \begin{cases}
+    \rho_{\mathrm p}(x,y), & (x,y)\in\RR^2\setminus\mathcal{W}_0,\\
+    \rho_0(x,y), & (x,y)\in\mathcal{W}_0
+  \end{cases}
+  \label{eq:full-plane-coefficient}
+\end{align}
+描述。这个构造与 Fliss 对二维周期介质中线缺陷的几何描述相同
+\cite[第~2~节]{Fliss2013}；区别在于本文把材料明确建模为分片常数，因此必须保留尖锐界面
+及其传输条件。
+
+记 $\Upsilon$ 为各介质柱截面边界以及这些边界按相应背景或缺陷周期平移后产生的全部材料
+界面的并集；若一个胞元含有多根介质柱，则其每个截面边界都计入 $\Upsilon$。给定波数
+$k>0$，全平面上的标量场 $w$ 在每个均匀材料子区域内满足
+\begin{align}
+  -\Delta w&=k^2\rho w,
+  \qquad \text{在 }\RR^2\setminus\Upsilon.
+  \label{eq:full-plane-wave-equation}
+\end{align}
+在 $\Upsilon$ 的任一界面上固定同一个单位法向量 $\nu$，并以 $w^+$、$w^-$ 表示界面两侧的
+迹，则要求
+\begin{align}
+  w^+&=w^-,
+  &
+  \partial_\nu w^+&=\partial_\nu w^-.
+  \label{eq:transmission-conditions}
+\end{align}
+第一条等式表示场连续，第二条等式表示按同一法向取值的法向导数连续。
+
+令
+$B=\RR\times(-d/2,d/2)$，并取
+$\beta\in[-\pi/d,\pi/d)$。按照 Fliss 的式~(2.2)，波数 $k>0$ 处的一个\emph{导模}
+是全平面问题~\eqref{eq:full-plane-wave-equation}--\eqref{eq:transmission-conditions} 的非零解
+$w$，它可以写成
+\begin{align}
+  w(x,y)&=v(x,y)\ee^{\ii\beta y}.
+  \label{eq:guided-mode-definition}
+\end{align}
+这里 $v$ 沿 $y$ 方向以 $d$ 为周期，并且 $v|_B\in H^1(B)$
+\cite[(2.2)]{Fliss2013}。条件 $v|_B\in H^1(B)$ 已经包含无界 $x$ 方向上的平方可积性，
+因而表达了导模的横向局域性。
+
+记条带的上、下边界分别为
+$\Sigma=\RR\times\{d/2\}$ 和 $\widetilde\Sigma=\RR\times\{-d/2\}$，并定义
+\begin{align}
+  H^1_\beta(B)
+  :=\left\{u\in H^1(B):
+  u|_\Sigma=\ee^{\ii\beta d}u|_{\widetilde\Sigma}
+  \text{，按迹意义}\right\}.
+  \label{eq:quasiperiodic-space}
+\end{align}
+令 $u=w|_B$。与 Fliss 的式~(2.4) 相同，求导模等价于求
+$k>0$、$\beta\in[-\pi/d,\pi/d)$ 以及
+$u\in H^1_\beta(B)\setminus\{0\}$，使得
+\begin{equation}
+  \left\{
+  \begin{aligned}
+    -\Delta u&=k^2\rho u
+    &&\text{在 }B\setminus\Upsilon,\\
+    u^+&=u^-,
+    &\partial_\nu u^+&=\partial_\nu u^-
+    &&\text{在 }\Upsilon\cap B,\\
+    \partial_yu|_\Sigma
+    &=\ee^{\ii\beta d}\partial_yu|_{\widetilde\Sigma}.
+  \end{aligned}
+  \right.
+  \label{eq:guided-mode-strip-problem}
+\end{equation}
+其中第一行在各均匀材料子区域内成立，第二行使用与
+式~\eqref{eq:transmission-conditions} 相同的法向约定；最后一行给出法向导数的准周期条件，
+而函数值的准周期条件已经包含在
+$u\in H^1_\beta(B)$ 中。这就是本文要求求解的导模问题
+\cite[(2.4)]{Fliss2013}。所谓 $\beta$-表述，是先固定实准周期参数 $\beta$，再求
+特征值 $k^2$ 及相应的非零场 $u$。
+
+为把这一问题写成算子特征值问题，取加权 Hilbert 空间
+\begin{align}
+  \mathcal H&=L^2(B,\rho\,\dd x\,\dd y),
+  \label{eq:weighted-hilbert-space}
+\end{align}
+并记
+\begin{align}
+  H^1(\Delta,B)
+  :=\left\{u\in H^1(B):\Delta u\in L^2(B)\right\}.
+  \label{eq:H1-Delta}
+\end{align}
+依照 Fliss 第~3~节开头的定义，令
+\begin{equation}
+  \begin{aligned}
+    A(\beta)&:D(A(\beta))\subset\mathcal H\longrightarrow\mathcal H,
+    &
+    A(\beta)u&=-\rho^{-1}\Delta u,\\
+    D(A(\beta))
+    &=\left\{u\in H^1(\Delta,B):
+    \begin{array}{l}
+      u|_\Sigma=\ee^{\ii\beta d}u|_{\widetilde\Sigma},\\[-1mm]
+      \partial_yu|_\Sigma
+      =\ee^{\ii\beta d}\partial_yu|_{\widetilde\Sigma}
+    \end{array}\right\}.
+  \end{aligned}
+  \label{eq:fixed-beta-operator}
+\end{equation}
+这里的 $\Delta u$ 按分布意义理解。由于 $u\in H^1(B)$ 且 $\rho$ 为分片常数，
+$\Delta u\in L^2(B)$ 排除了材料界面上的分布源；对于分片光滑的场，这恰好给出
+$u^+=u^-$ 和 $\partial_\nu u^+=\partial_\nu u^-$。因此传输条件已经包含在
+$D(A(\beta))$ 中。Fliss 证明 $A(\beta)$ 在 $\mathcal H$ 中非负且自伴
+\cite[第~3~节及命题~3.1]{Fliss2013}。
+
+于是固定 $\beta$ 的导模问题准确地写成
+\begin{align}
+  \text{求 }k^2>0\text{ 及 }u\in D(A(\beta))\setminus\{0\},
+  \qquad A(\beta)u=k^2u.
+  \label{eq:beta-formulation}
+\end{align}
+
+为刻画 $A(\beta)$ 的本质谱，先去掉线缺陷，并以周期背景系数
+$\rho_{\mathrm p}$ 定义
+\begin{align}
+  \mathcal H_{\mathrm p}
+  &=L^2(B,\rho_{\mathrm p}\,\dd x\,\dd y),
+  &
+  A_{\mathrm p}(\beta)u
+  &=-\rho_{\mathrm p}^{-1}\Delta u,
+  &
+  D(A_{\mathrm p}(\beta))&=D(A(\beta)).
+  \label{eq:periodic-background-operator}
+\end{align}
+这里最后一个等号指两个定义域由同一组 $y$ 方向准周期条件给出；由于
+$\rho$ 与 $\rho_{\mathrm p}$ 均一致正且有界，相应的加权 $L^2$ 范数与通常的
+$L^2$ 范数等价。再令
+\begin{align}
+  C&=(-L/2,L/2)\times(-d/2,d/2)
+  \label{eq:periodic-cell}
+\end{align}
+为周期背景的一个胞元。对
+$\theta\in[-\pi/L,\pi/L)$，在
+$L^2(C,\rho_{\mathrm p}\,\dd x\,\dd y)$ 中定义胞元 Bloch 算子
+\begin{equation}
+  \begin{aligned}
+    A_{\mathrm p}(\beta,\theta)u
+    &=-\rho_{\mathrm p}^{-1}\Delta u,\\
+    D(A_{\mathrm p}(\beta,\theta))
+    =\left\{u\in H^1(\Delta,C):{}
+    \begin{aligned}
+      u|_{x=L/2}
+      &=\ee^{\ii\theta L}u|_{x=-L/2},\\
+      \partial_xu|_{x=L/2}
+      &=\ee^{\ii\theta L}\partial_xu|_{x=-L/2},\\
+      u|_{y=d/2}
+      &=\ee^{\ii\beta d}u|_{y=-d/2},\\
+      \partial_yu|_{y=d/2}
+      &=\ee^{\ii\beta d}\partial_yu|_{y=-d/2}
+    \end{aligned}\right\}.
+  \end{aligned}
+  \label{eq:background-bloch-fiber}
+\end{equation}
+这里 $H^1(\Delta,C)=\{u\in H^1(C):\Delta u\in L^2(C)\}$，上述边界等式均按迹意义理解；分布条件
+$\Delta u\in L^2(C)$ 仍然包含周期背景内部各材料界面上的传输条件。
+
+\begin{conjecture}[分片常数线缺陷算子的本质谱]
+  \label{conj:essential-spectrum}
+  对每个固定的 $\beta\in[-\pi/d,\pi/d)$，算子 $A(\beta)$ 的本质谱满足
+  \begin{align}
+    \sigma_{\mathrm{ess}}(A(\beta))
+    &=\sigma(A_{\mathrm p}(\beta))
+      =\bigcup_{\theta\in[-\pi/L,\pi/L)}
+        \sigma(A_{\mathrm p}(\beta,\theta))
+      \notag\\
+    &=[0,+\infty)\setminus
+      \bigcup_{n=1}^{N(\beta)}(a_n(\beta),b_n(\beta)),
+    \qquad
+    0\leq N(\beta)\leq+\infty,
+    \label{eq:conjectured-essential-spectrum}
+  \end{align}
+  其中各 $(a_n(\beta),b_n(\beta))$ 是两两不交的开区间，并且
+  $0\leq a_n(\beta)<b_n(\beta)$。
+\end{conjecture}
+
+猜想~\ref{conj:essential-spectrum} 模仿 Fliss 的命题~3.1
+\cite[命题~3.1]{Fliss2013}，但不把原命题直接作为本文模型的已证结论。本文的
+$\rho$ 和 $\rho_{\mathrm p}$ 具有尖锐材料界面，算子定义域以分布 Laplacian 和传输条件实现；
+因此仍需针对这一分片常数实现核验缺陷扰动的预解式紧性，以及周期背景算子的
+Floquet--Bloch 纤维分解。上述适配尚未在本文中完成，所以本质谱等式在此保留为猜想。
+
+\begin{assumption}[存在选定的投影谱隙]
+  \label{ass:projected-gap}
+  固定 $\beta\in[-\pi/d,\pi/d)$，假设猜想~\ref{conj:essential-spectrum} 成立且
+  $N(\beta)\geq1$。选择其中一个严格位于正半轴的非空谱隙，并记为
+  \begin{align}
+    G_\beta&=(g_-,g_+),
+    &0<g_-<g_+<+\infty,
+    &\qquad G_\beta\cap\sigma_{\mathrm{ess}}(A(\beta))=\varnothing.
+    \label{eq:selected-projected-gap}
+  \end{align}
+\end{assumption}
+
+以下采用 Weyl--Fredholm 本质谱约定。
+\begin{proposition}[谱隙内的离散谱]
+  \label{prop:discrete-spectrum-in-gap}
+  在假设~\ref{ass:projected-gap} 下，
+  $\sigma(A(\beta))\cap G_\beta$ 只由有限重的孤立特征值组成；这些特征值只能在
+  $g_-$ 或 $g_+$ 处聚集，在 $G_\beta$ 内部没有聚集点。
+\end{proposition}
+
+命题~\ref{prop:discrete-spectrum-in-gap} 是 Fliss 命题~3.3 在当前条件性框架中的对应表述
+\cite[命题~3.3]{Fliss2013}。它并不保证
+$\sigma(A(\beta))\cap G_\beta$ 非空，只刻画该交集一旦非空时的谱类型。
+除非另有说明，后文始终固定满足假设~\ref{ass:projected-gap} 的 $\beta$ 和
+$G_\beta$，所有特征值定位、离散化与后验误差估计都只考虑
+\begin{align}
+  \text{求 }k^2\in G_\beta\text{ 及 }u\in D(A(\beta))\setminus\{0\},
+  \qquad A(\beta)u=k^2u,
+  \label{eq:gap-restricted-beta-formulation}
+\end{align}
+亦即只搜索 $k\in(\sqrt{g_-},\sqrt{g_+})$；谱隙外的谱点不属于本文后续的搜索对象。

@@ -1,0 +1,236 @@
+\section{中心胞元约化与连续 DtN 算子}
+\label{sec:dtn}
+
+以下固定第~\ref{sec:modelproblem}~节中的 $\beta$ 以及选定谱隙
+$G_\beta=(g_-,g_+)$。沿 $y$ 方向施加 $\beta$-准周期条件以后，条带
+$B=\RR\times(-d/2,d/2)$ 在 $x$ 方向仍然无界。记
+$I_d=(-d/2,d/2)$。由式~\eqref{eq:defect-region} 的全平面宏观分区定义
+\begin{align*}
+  B_\varsigma&=\mathcal{W}_\varsigma\cap B,
+  \qquad \varsigma\in\{-,0,+\},\\
+  B_-&=(-\infty,-a)\times I_d,
+  &B_0&=(-a,a)\times I_d,
+  &B_+&=(a,\infty)\times I_d.
+\end{align*}
+中心缺陷胞元及紧邻它的左右周期胞元分别定义为
+\begin{align}
+  \mathcal{C}_0&=B_0=(-a,a)\times I_d,
+  &\mathcal{C}_-&=(-a-L,-a)\times I_d,
+  &\mathcal{C}_+&=(a,a+L)\times I_d.
+  \label{eq:center-and-lead-cells}
+\end{align}
+这里 $\mathcal{C}_0$ 是宽度为 $2a$ 的功能性缺陷胞元，其宽度不要求等于 $L$；
+$\mathcal{C}_-$ 和 $\mathcal{C}_+$ 才是 $x$ 方向周期为 $L$ 的一个基本背景胞元，而不是
+半无限区域。记 $e_x=(1,0)$ 为 $x$ 方向的单位向量。左右半条带可以由这些周期胞元表示为
+\begin{align}
+  B_-
+  &=\operatorname{int}\!\left(
+    \bigcup_{j=0}^{\infty}
+    (\overline{\mathcal{C}_-}-jL e_x)\right),
+  &
+  B_+
+  &=\operatorname{int}\!\left(
+    \bigcup_{j=0}^{\infty}
+    (\overline{\mathcal{C}_+}+jL e_x)\right).
+  \label{eq:half-guides}
+\end{align}
+对 $\varsigma\in\{-,0,+\}$，以
+$\Omega_\varsigma\subset\mathcal{C}_\varsigma$ 表示相应胞元中全部介质柱截面区域的并集。
+其中 $\Omega_0$ 是中心缺陷胞元中的介质柱区域，$\Omega_-$ 和 $\Omega_+$ 分别是左右基本
+周期胞元中的介质柱区域。当前只有一列缺陷介质柱，并且这些缺陷柱全部包含在
+$\mathcal{C}_0=B_0$ 中；$B_-$ 和 $B_+$ 内的介质柱区域则分别由
+$\Omega_-$ 的平移 $\Omega_--jLe_x$ 和 $\Omega_+$ 的平移 $\Omega_++jLe_x$，
+$j\geq0$，生成。因此 $B_\pm$ 中的系数均为周期背景系数 $\rho_{\mathrm p}$，
+$\mathcal{C}_0$ 中则保留第~\ref{sec:modelproblem}~节定义的缺陷系数 $\rho$ 及
+$\Upsilon$ 所表示的全部尖锐材料界面。人工界面和法向约定为
+\begin{align}
+  \Gamma_\pm
+  &=\partial\mathcal{C}_0\cap\partial B_\pm,
+  &\Gamma_-&=\{-a\}\times I_d,
+  &\Gamma_+&=\{a\}\times I_d,
+  \notag\\
+  \nu_-&=-e_x,
+  &\nu_+&=e_x.
+  \label{eq:artificial-interfaces}
+\end{align}
+两个法向都从 $\mathcal{C}_0$ 指向相应半条带 $B_\pm$。特别地，它们是中心区域的外法向，
+却与 $B_\pm$ 在 $\Gamma_\pm$ 上的外法向相反；下文的 $\partial_{\nu_\pm}$ 始终采用
+式~\eqref{eq:artificial-interfaces} 的定向。
+
+对 $U\in\{\mathcal{C}_0,B_-,B_+\}$，只引入后文所需的准周期能量空间
+\begin{align}
+  H^1_\beta(U)
+  :=\left\{z\in H^1(U):
+  z|_{y=d/2}=\ee^{\ii\beta d}z|_{y=-d/2}
+  \text{，按迹意义}\right\}.
+  \label{eq:local-quasiperiodic-space}
+\end{align}
+令 $\gamma_\pm$ 表示 $\Gamma_\pm$ 上的 Dirichlet 迹，并以迹像及其商范数定义
+\begin{align}
+  H^{1/2}_\beta(\Gamma_\pm)
+  &:=\gamma_\pm H^1_\beta(\mathcal{C}_0)
+    =\gamma_\pm H^1_\beta(B_\pm),
+  &
+  H^{-1/2}_\beta(\Gamma_\pm)
+  &:=H^{1/2}_\beta(\Gamma_\pm)^*.
+  \label{eq:interface-trace-spaces}
+\end{align}
+这样，$y$ 方向的 $\beta$-准周期兼容性已经编码在迹空间中，无须借助临界
+$H^{1/2}$ 函数的端点点值。记
+$\langle\cdot,\cdot\rangle_{\Gamma_\pm}$ 为
+$H^{-1/2}_\beta(\Gamma_\pm)$ 与 $H^{1/2}_\beta(\Gamma_\pm)$ 之间的对偶配对。
+
+在每条材料界面上任意固定一个两侧共用的单位法向 $\nu$。现在固定 $k>0$ 且
+$k^2\in G_\beta$。给定任一方向和界面数据
+$\varphi\in H^{1/2}_\beta(\Gamma_\pm)$，相应的连续半波导 Dirichlet 问题是求
+$u_\pm=u_\pm(\varphi;k)\in H^1_\beta(B_\pm)$，使
+\begin{equation}
+  \left\{
+  \begin{aligned}
+    -\Delta u_\pm&=k^2\rho_{\mathrm p}u_\pm
+    &&\text{在 }B_\pm\setminus\Upsilon\text{ 的各均匀材料子区域内},\\
+    u_\pm^+&=u_\pm^- ,
+    &\partial_\nu u_\pm^+&=\partial_\nu u_\pm^-
+    &&\text{在 }\Upsilon\cap B_\pm,\\
+    u_\pm|_{y=d/2}
+    &=\ee^{\ii\beta d}u_\pm|_{y=-d/2},
+    &\partial_yu_\pm|_{y=d/2}
+    &=\ee^{\ii\beta d}\partial_yu_\pm|_{y=-d/2},\\
+    u_\pm|_{\Gamma_\pm}&=\varphi.&&
+  \end{aligned}
+  \right.
+  \label{eq:half-guide-dirichlet-problem}
+\end{equation}
+第二行正是当前分片常数模型的传输条件。解还必须属于谱隙中向相应无穷远衰减的分支。
+具体而言，存在与 $k$ 有关的
+$c_{\mathrm{dec},\pm},\alpha_\pm>0$，使对 $j\geq0$ 有
+\begin{align}
+  \|u_-\|_{H^1(\mathcal{C}_--jLe_x)}
+  &\leq c_{\mathrm{dec},-}\ee^{-\alpha_-j}
+    \|\varphi\|_{H^{1/2}_\beta(\Gamma_-)},
+  &
+  \|u_+\|_{H^1(\mathcal{C}_++jLe_x)}
+  &\leq c_{\mathrm{dec},+}\ee^{-\alpha_+j}
+    \|\varphi\|_{H^{1/2}_\beta(\Gamma_+)}.
+  \label{eq:half-guide-decay}
+\end{align}
+这个条件比含糊的辐射条件更强，并与导模在 $B$ 中的有限能量以及所选投影谱隙一致。
+
+谱隙条件本身并不保证问题~\eqref{eq:half-guide-dirichlet-problem} 唯一可解。记
+$\Sigma_{D,\pm}(\beta)\subset G_\beta$ 为在 $\Gamma_\pm$ 施加齐次 Dirichlet 条件后，
+相应半条带 $B_\pm$ 上仍存在非零衰减解的例外谱。Fliss 的连续模型在本质谱外除一个可数例外集外给出
+半波导问题的适定性\cite[定理~4.1]{Fliss2013}；在当前分片常数模型中，这一例外集必须针对
+包含传输条件的半波导算子定义，不能从连续折射率模型直接照搬。下文只考虑
+\begin{align}
+  k^2\in G_\beta\setminus
+  \bigl(\Sigma_{D,-}(\beta)\cup\Sigma_{D,+}(\beta)\bigr),
+  \label{eq:dtn-admissible-parameters}
+\end{align}
+并要求问题~\eqref{eq:half-guide-dirichlet-problem} 对每个 $\varphi$ 唯一可解。
+
+在参数条件~\eqref{eq:dtn-admissible-parameters} 下，定义连续 DtN 算子
+\begin{align}
+  \Lambda_\pm(k):H^{1/2}_\beta(\Gamma_\pm)
+  &\longrightarrow H^{-1/2}_\beta(\Gamma_\pm),
+  &
+  \Lambda_\pm(k)\varphi
+  &:=\left.\partial_{\nu_\pm}u_\pm(\varphi;k)
+    \right|_{\Gamma_\pm}.
+  \label{eq:continuous-dtn}
+\end{align}
+其中法向导数按弱共法向迹理解。由于 $\nu_\pm$ 从中心指向 $B_\pm$，半条带自身外法向下的
+导数等于 $-\Lambda_\pm(k)\varphi$。在 Dirichlet 例外参数处，单值算子
+\eqref{eq:continuous-dtn} 可能失效；更稳健的连续对象是所有衰减半波导解的 Dirichlet--Neumann
+Cauchy 数据所组成的线性关系。只有该关系到 Dirichlet 分量的投影可逆时，它才是
+$\Lambda_\pm(k)$ 的图。本节始终处在式~\eqref{eq:dtn-admissible-parameters} 的单值情形。
+
+利用这两个算子，可以把无界问题限制到 $\mathcal{C}_0$。中心场
+$u_0\in H^1_\beta(\mathcal{C}_0)\setminus\{0\}$ 应满足
+\begin{equation}
+  \left\{
+  \begin{aligned}
+    -\Delta u_0&=k^2\rho u_0
+    &&\text{在 }\mathcal{C}_0\setminus\Upsilon\text{ 的各均匀材料子区域内},\\
+    u_0^+&=u_0^- ,
+    &\partial_\nu u_0^+&=\partial_\nu u_0^-
+    &&\text{在 }\Upsilon\cap\mathcal{C}_0,\\
+    u_0|_{y=d/2}
+    &=\ee^{\ii\beta d}u_0|_{y=-d/2},
+    &\partial_yu_0|_{y=d/2}
+    &=\ee^{\ii\beta d}\partial_yu_0|_{y=-d/2},\\
+    \partial_{\nu_\pm}u_0
+    &=\Lambda_\pm(k)\gamma_\pm u_0
+    &&\text{在 }\Gamma_\pm.
+  \end{aligned}
+  \right.
+  \label{eq:center-dtn-problem}
+\end{equation}
+最后一行是精确透明边界条件。对任意 $v\in H^1_\beta(\mathcal{C}_0)$ 分部积分时，顶、底
+边界项因准周期条件相消，而 $\Gamma_\pm$ 的中心外法向恰为 $\nu_\pm$。代入
+式~\eqref{eq:center-dtn-problem} 的最后一行，得到弱形式
+\begin{align}
+  \int_{\mathcal{C}_0}\nabla u_0\mathbin{\cdot}\nabla\overline v
+  -k^2\int_{\mathcal{C}_0}\rho u_0\overline v
+  -\sum_{\varsigma\in\{-,+\}}
+   \left\langle
+   \Lambda_\varsigma(k)\gamma_\varsigma u_0,
+   \gamma_\varsigma v
+   \right\rangle_{\Gamma_\varsigma}
+  &=0.
+  \label{eq:center-dtn-weak-form}
+\end{align}
+两个 DtN 项的负号都来自中心区域的分部积分与
+式~\eqref{eq:artificial-interfaces} 的法向约定。由此定义连续非线性算子函数
+\begin{align}
+  F_\beta(k):H^1_\beta(\mathcal{C}_0)
+  &\longrightarrow H^1_\beta(\mathcal{C}_0)^*,
+  \notag\\
+  \langle F_\beta(k)u,v\rangle
+  &:=\int_{\mathcal{C}_0}\nabla u\mathbin{\cdot}\nabla\overline v
+  -k^2\int_{\mathcal{C}_0}\rho u\overline v
+  -\sum_{\varsigma\in\{-,+\}}
+   \left\langle
+   \Lambda_\varsigma(k)\gamma_\varsigma u,
+   \gamma_\varsigma v
+   \right\rangle_{\Gamma_\varsigma}.
+  \label{eq:continuous-center-operator-function}
+\end{align}
+它关于 $k$ 非线性，因为 $\Lambda_\pm(k)$ 本身依赖于 $k$。
+
+\begin{proposition}[无界导模问题与中心 DtN 问题的等价性]
+  \label{prop:continuous-dtn-equivalence}
+  固定满足假设~\ref{ass:projected-gap} 的 $\beta$，并令 $k>0$ 满足
+  式~\eqref{eq:dtn-admissible-parameters}，且两个半波导 Dirichlet 问题均唯一可解。
+  则 $k^2$ 是原无界 $\beta$-表述~\eqref{eq:gap-restricted-beta-formulation} 的导模特征值，
+  当且仅当
+  \begin{align}
+    \ker F_\beta(k)&\ne\{0\}.
+    \label{eq:dtn-kernel-criterion}
+  \end{align}
+  此外，全局导模到 $\mathcal{C}_0$ 的限制给出两个解空间之间的线性双射。
+\end{proposition}
+
+\begin{proof}
+  设 $u$ 是原无界问题的非零导模。它在 $B_\pm$ 上的限制满足
+  问题~\eqref{eq:half-guide-dirichlet-problem}，其 Dirichlet 数据为
+  $\varphi_\pm=\gamma_\pm(u|_{\mathcal{C}_0})$。由半波导问题的唯一性，这两个限制正是定义
+  $\Lambda_\pm(k)$ 的衰减解，故沿同一法向 $\nu_\pm$ 的法向导数与中心限制相等，并满足
+  式~\eqref{eq:center-dtn-problem} 的透明边界条件。分部积分于是给出
+  $F_\beta(k)(u|_{\mathcal{C}_0})=0$。若中心限制为零，则其界面迹为零，半波导唯一性又迫使
+  两侧限制均为零，这与 $u\ne0$ 矛盾；故 $\ker F_\beta(k)\ne\{0\}$。
+
+  反之，取 $u_0\in\ker F_\beta(k)\setminus\{0\}$。以
+  $\varphi_\pm=\gamma_\pm u_0$ 分别求解两个唯一的衰减半波导 Dirichlet 问题，并得到
+  $u_-$、$u_+$。弱式~\eqref{eq:continuous-center-operator-function} 先由内部试验函数给出中心区域内的
+  分片 Helmholtz 方程和传输条件，再由界面迹的任意性给出
+  $\partial_{\nu_\pm}u_0=\Lambda_\pm(k)\gamma_\pm u_0$。因此三部分在
+  $\Gamma_\pm$ 上具有相同的 Dirichlet 迹和按同一法向计算的法向导数。将
+  $u_-$、$u_0$、$u_+$ 依次拼接，便得到 $B$ 上满足全部内部传输条件和 $y$ 方向
+  $\beta$-准周期条件的弱解。式~\eqref{eq:half-guide-decay} 保证拼接后的场属于
+  $H^1_\beta(B)$，所以它是原问题的导模；其中心部分非零，故全局场非零。两种构造互为逆，
+  从而还得到所述线性双射。
+\end{proof}
+
+命题~\ref{prop:continuous-dtn-equivalence} 是针对当前分片常数折射率与传输条件写出的连续
+版本；其限制与延拓结构对应于 Fliss 的有界域 DtN 等价定理\cite[定理~4.5]{Fliss2013}。
+下一节将构造连续 DtN 算子的数值近似，并据此形成离散非线性特征值问题。

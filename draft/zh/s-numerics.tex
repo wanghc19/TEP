@@ -1,0 +1,519 @@
+\section{导模与特征值的数值计算}
+\label{sec:numerics}
+
+第~\ref{sec:dtn}~节中的 $\Lambda_\pm(k)$ 由半无限偏微分方程定义，是连续迹空间之间的
+精确算子。本节依次离散周期胞元、界面迹和中心胞元，所得 Cauchy 数据空间、离散 DtN
+以及最终有限矩阵都只是这一连续约化的数值实现，不能反过来定义 $\Lambda_\pm(k)$ 或
+$F_\beta(k)$。以下仍固定 $\beta$，并只考虑
+$k\in(\sqrt{g_-},\sqrt{g_+})$；材料系数继续采用分片常数模型，边界积分方程在每条
+材料界面上同时施加场和法向导数的传输条件。
+
+首先截断人工界面上的 Fourier 展开。令
+\begin{align}
+  \beta_m&=\beta+\frac{2\pi m}{d},
+  &\psi_m(y)&=d^{-1/2}\ee^{\ii\beta_m y},
+  &m&=-M,\ldots,M,
+  &K&=2M+1.
+  \label{eq:port-fourier-basis}
+\end{align}
+这些基函数自动满足 $y$ 方向的 $\beta$-准周期条件。固定截断阶数 $M$，并将截断系数列
+$c$ 按零延拓理解，即 $|m|>M$ 时 $c_m=0$。
+Dirichlet 与 Neumann 系数分别用 $H^{1/2}$ 和 $H^{-1/2}$ 的自然权重衡量：
+\begin{align}
+  \lVert c\rVert_{s,\beta}
+  &:=\left\lVert
+    \sum_{m\in\mathbb Z}c_m\psi_m
+  \right\rVert_{H^s_\beta(\Gamma_\pm)}
+  :=\left(
+    \sum_{m\in\mathbb Z}
+    (1+|\beta_m|^2)^s|c_m|^2
+  \right)^{1/2},
+  \qquad s\in\left\{\frac12,-\frac12\right\}.
+  \label{eq:port-fourier-norms}
+\end{align}
+因此 Dirichlet 系数 $d$ 使用 $\lVert d\rVert_{1/2,\beta}$，Neumann 系数 $n$
+使用 $\lVert n\rVert_{-1/2,\beta}$；$\beta=0$ 时可简写为 $\lVert\cdot\rVert_s$。两类系数的底层
+空间均为 $\CC^K$，但分别带有上述 $s=1/2$ 与 $s=-1/2$ 范数，对偶配对取为
+$d^*n$。改变 $M$ 时，Dirichlet 系数的零填充与 Neumann 系数的对偶限制必须配套。
+
+对左右基本周期胞元 $\mathcal C_-$ 和 $\mathcal C_+$，在
+$\partial\Omega_-$、$\partial\Omega_+$ 上以层势表示各均匀材料子区域内的场，并用边界
+积分方程施加 transmission conditions；胞元顶、底边界保持 $\beta$-准周期匹配，两个竖直端口
+则以式~\eqref{eq:port-fourier-basis} 的入射和出射振幅作为数据。采用步长统记为 $h$ 的
+高阶 Nystr\"om 离散后，可逐列求解得到一个周期胞元的反射与透射块
+\cite{LuLu2014}：
+\begin{align}
+  \begin{bmatrix}b_{\mathrm L}\\ a_{\mathrm R}\end{bmatrix}
+  &=
+  \begin{bmatrix}
+    R_{\mathrm L}&T_{\mathrm{RL}}\\
+    T_{\mathrm{LR}}&R_{\mathrm R}
+  \end{bmatrix}
+  \begin{bmatrix}a_{\mathrm L}\\ b_{\mathrm R}\end{bmatrix},
+  \qquad
+  R_{\mathrm L},T_{\mathrm{RL}},T_{\mathrm{LR}},R_{\mathrm R}
+  \in\CC^{K\times K}.
+  \label{eq:one-cell-scattering}
+\end{align}
+这里 $\mathrm L$、$\mathrm R$ 标记同一周期胞元的左、右端口；它们不表示半无限条带
+$B_-$、$B_+$。
+式~\eqref{eq:one-cell-scattering} 是胞元边界积分离散与端口截断共同产生的有限维传播关系。
+从此处起固定离散层 $(h,M)$。除了由第~\ref{sec:dtn}~节继承的连续对象
+$\Lambda_\pm(k)$ 和 $F_\beta(k)$ 外，后文的 $J(k)$、$\mathsf F_\pm(k)$、
+$\Pi_{\mathrm D,\pm}(k)$、$\Pi_{\mathrm N,\pm}(k)$、$\mathsf V_\pm(k)$、$A(k)$
+与 $A_{\mathrm{aug}}(k)$ 都表示固定 $(h,M)$ 后的有限矩阵或有限维对象，不再逐项重复
+标记 $(h,M)$。只有确实比较不同离散层时才使用完整上标 ${}^{(h,M)}$。
+
+记 $z_{\mathrm L}=(a_{\mathrm L},b_{\mathrm L})^{\mathsf T}$、
+$z_{\mathrm R}=(a_{\mathrm R},b_{\mathrm R})^{\mathsf T}$。将
+式~\eqref{eq:one-cell-scattering} 改写为
+\begin{align}
+  A_{\mathrm{sc}}z_{\mathrm L}&=B_{\mathrm{sc}}z_{\mathrm R},
+  &
+  A_{\mathrm{sc}}&=
+  \begin{bmatrix}
+    -R_{\mathrm L}&I\\ T_{\mathrm{LR}}&0
+  \end{bmatrix},
+  &
+  B_{\mathrm{sc}}&=
+  \begin{bmatrix}
+    0&T_{\mathrm{RL}}\\ I&-R_{\mathrm R}
+  \end{bmatrix}.
+  \label{eq:one-cell-matrix-pair}
+\end{align}
+相邻胞元状态满足 $z_{\mathrm R}=\lambda z_{\mathrm L}$，故胞元传播由广义特征值问题
+\begin{align}
+  A_{\mathrm{sc}}z&=\lambda B_{\mathrm{sc}}z
+  \label{eq:one-cell-generalized-eigenproblem}
+\end{align}
+决定。$\lambda$ 是沿 $x$ 方向平移一个周期 $L$ 的 Floquet 乘子，不是本文要求的特征值
+$k^2$。数值上对矩阵对 $(A_{\mathrm{sc}},B_{\mathrm{sc}})$ 作有序 QZ 分解：原问题选取
+朝 $x\to+\infty$ 衰减的挠曲子空间，反向关系
+$B_{\mathrm{sc}}z_{\mathrm R}=\mu A_{\mathrm{sc}}z_{\mathrm R}$ 则独立选取朝
+$x\to-\infty$ 衰减的子空间。
+在实谱隙中的参考点，所选两簇各应有 $K$ 维，并分别由 $|\lambda|<1$ 和
+$|\mu|<1$ 识别。若矩阵对不正则、出现无法分离的单位圆谱簇，或衰减子空间的维数与参考点
+不一致，则该参数处的半波导离散不可用，不应通过逐点改选特征向量掩盖这一失效。
+
+令 $Z_+(k)\in\CC^{2K\times K}$ 为正向问题
+$A_{\mathrm{sc}}z=\lambda B_{\mathrm{sc}}z$ 中向 $x\to+\infty$ 衰减的广义 Schur 子空间的一组基，
+$Z_-(k)\in\CC^{2K\times K}$ 为反向问题
+$B_{\mathrm{sc}}z=\mu A_{\mathrm{sc}}z$ 中向 $x\to-\infty$ 衰减的广义 Schur 子空间的一组基。
+记材料界面外与端口所在的均匀背景系数为 $\rho_{\mathrm e}>0$。沿用 Rayleigh 通道的分支，令
+\begin{align}
+  \gamma_m(k)^2&=k^2\rho_{\mathrm e}-\beta_m^2,
+  &\Im\gamma_m(k)&\geq0,
+  &\gamma_m(k)&\geq0\quad\text{当 $\gamma_m(k)$ 为实数时},
+  \notag\\
+  \boldsymbol{\gamma}(k)
+  &:=\operatorname{diag}\bigl(
+    \gamma_{-M}(k),\ldots,\gamma_M(k)
+  \bigr).
+  \label{eq:rayleigh-gamma-matrix}
+\end{align}
+按照 $\nu_-=-e_x$、$\nu_+=e_x$ 将这两组振幅基转换为人工边界上的离散 Cauchy 数据基：
+\begin{align}
+  \mathsf V_-(k)
+  &:={}
+  \begin{bmatrix}
+    I&I\\
+    -\ii\boldsymbol{\gamma}(k)&\ii\boldsymbol{\gamma}(k)
+  \end{bmatrix}Z_-(k),
+  &
+  \mathsf V_+(k)
+  &:={}
+  \begin{bmatrix}
+    I&I\\
+    \ii\boldsymbol{\gamma}(k)&-\ii\boldsymbol{\gamma}(k)
+  \end{bmatrix}Z_+(k).
+  \label{eq:qz-to-cauchy-basis}
+\end{align}
+再按行分块
+\begin{align}
+  \mathsf V_\pm(k)
+  &:={}
+  \begin{bmatrix}
+    \mathsf V_{\mathrm D,\pm}(k)\\
+    \mathsf V_{\mathrm N,\pm}(k)
+  \end{bmatrix},
+  &
+  \mathsf V_{\mathrm D,\pm}(k),
+  \mathsf V_{\mathrm N,\pm}(k)
+  &\in\CC^{K\times K},
+  \notag\\
+  \mathcal G_\pm(k)
+  &:=\operatorname{range}\mathsf V_\pm(k)
+  \subset\CC^K\times\CC^K.
+  \label{eq:discrete-cauchy-space}
+\end{align}
+$\mathsf V_\pm(k)$ 的每一列是一个衰减半波导解在 $\Gamma_\pm$ 上的离散 Cauchy
+数据对，其列构成 $\mathcal G_\pm(k)$ 的一组基。上、下两个 $\CC^K$ 分别带有
+$\lVert\cdot\rVert_{1/2,\beta}$ 和 $\lVert\cdot\rVert_{-1/2,\beta}$ 范数。任意允许的 Cauchy 数据可写为
+\begin{align}
+  d_\pm&=\mathsf V_{\mathrm D,\pm}(k)c_\pm,
+  &n_\pm&=\mathsf V_{\mathrm N,\pm}(k)c_\pm,
+  &c_\pm&\in\CC^K.
+  \label{eq:discrete-cauchy-relation}
+\end{align}
+更换有序 QZ 基只会使 $\mathsf V_\pm(k)$ 右乘一个可逆矩阵，因而不改变其列空间，也不改变
+下述坐标安全时形成的离散 DtN。
+
+只有当 $\mathsf V_{\mathrm D,\pm}(k)$ 在式~\eqref{eq:port-fourier-norms} 的加权坐标中可安全求解，
+且 Dirichlet 投影与 $\mathcal G_\pm(k)$ 安全横截时，才定义离散 DtN 矩阵
+\begin{align}
+  \widetilde{\Lambda}_\pm(k)
+  &:=\mathsf V_{\mathrm N,\pm}(k)
+    \mathsf V_{\mathrm D,\pm}(k)^{-1}:
+  \CC^K\longrightarrow\CC^K.
+  \label{eq:discrete-dtn-matrix}
+\end{align}
+定义域与值域上的 $\CC^K$ 分别带有 $s=1/2$ 与 $s=-1/2$ 范数。实现中用右线性
+求解计算式~\eqref{eq:discrete-dtn-matrix}，不显式求逆。除矩阵条件数外，还需检查 Dirichlet 投影
+相对于整个 Cauchy 数据空间的绝对横截余量；一个条件数不大的 $\mathsf V_{\mathrm D,\pm}(k)$
+仍可能对应近乎竖直的 Cauchy 数据空间。若任一 Dirichlet 坐标不安全，则保留
+式~\eqref{eq:discrete-cauchy-relation} 中的完整 Cauchy 关系，而不强行形成 $\widetilde{\Lambda}_\pm(k)$。
+这一区分也覆盖连续 Dirichlet 例外谱附近的数值情形；波浪号在此仅表示它是连续
+$\Lambda_\pm(k)$ 的数值近似，不是所有离散矩阵的通用标记。
+
+中心胞元 $\mathcal C_0$ 使用相同的分片 Helmholtz 层势和 transmission conditions 离散。
+为说明离散未知量的来源，先给出相应的连续表示。若
+$\Omega_0=\bigcup_{\ell=1}^{N_0}\Omega_{0,\ell}$，在每个 $\partial\Omega_{0,\ell}$ 上以 $\nu$ 表示由介质柱
+内部指向外部的单位法向。对
+$\mathbf z\notin\partial\Omega_{0,\ell}$ 定义
+\begin{align*}
+  \mathcal S_{\mathrm{QP},\ell}^{(\kappa)}[\sigma](\mathbf z)
+  &:=\int_{\partial\Omega_{0,\ell}}
+    G_{\mathrm{QP}}^{(\kappa)}(\mathbf z,\mathbf z')
+    \sigma(\mathbf z')\,\dd s(\mathbf z'),\\
+  \mathcal D_{\mathrm{QP},\ell}^{(\kappa)}[\tau](\mathbf z)
+  &:=\int_{\partial\Omega_{0,\ell}}
+    \partial_{\nu(\mathbf z')}G_{\mathrm{QP}}^{(\kappa)}(\mathbf z,\mathbf z')
+    \tau(\mathbf z')\,\dd s(\mathbf z').
+\end{align*}
+这里 $G_{\mathrm{QP}}^{(\kappa)}$ 是沿 $y$ 方向具有相位
+$\ee^{\ii\beta d}$ 的准周期 Green 函数；以自由空间 Green 函数
+$G^{(\kappa)}$ 替换 $G_{\mathrm{QP}}^{(\kappa)}$，得到
+$\mathcal S_{\ell}^{(\kappa)}$ 和 $\mathcal D_{\ell}^{(\kappa)}$。
+
+\begin{theorem}[中心胞元的层势与均匀背景场表示]
+  \label{thm:center-cell-representation}
+  假设各 $\partial\Omega_{0,\ell}$ 两两分离、具有 $C^2$ 正则性并严格包含在
+  $\mathcal C_0$ 内，$\mathcal C_0\setminus\overline{\Omega_0}$ 中的系数为
+  $\rho_{\mathrm e}$，而 $\Omega_{0,\ell}$ 中的系数为正的常数
+  $\rho_{\mathrm i,\ell}$。令
+  $\kappa_{\mathrm e}=k\sqrt{\rho_{\mathrm e}}$、
+  $\kappa_{\mathrm i,\ell}=k\sqrt{\rho_{\mathrm i,\ell}}$，并假设
+  式~\eqref{eq:rayleigh-gamma-matrix} 的既定分支满足
+  $\gamma_m(k)\neq0$，$m\in\mathbb Z$。再假设对每个材料界面，交换内、外波数后所得的
+  全平面 outgoing transmission problem 对任意界面跳跃数据唯一可解。
+
+  若 $u\in H^1_\beta(\mathcal C_0)$ 在各均匀材料子区域内属于 $H^2$，逐片满足
+  Helmholtz 方程并在 $\partial\Omega_0$ 上满足 transmission conditions，而在
+  $\Gamma_-$、$\Gamma_+$ 上不预先施加边界条件，则存在密度
+  $\tau_\ell\in H^{1/2}(\partial\Omega_{0,\ell})$、
+  $\sigma_\ell\in H^{-1/2}(\partial\Omega_{0,\ell})$ 以及唯一的 Rayleigh 系数列
+  $(a_{0,m}^-)_{m\in\mathbb Z}$、$(b_{0,m}^+)_{m\in\mathbb Z}$，使得
+  \begin{equation*}
+    u(\mathbf z)=
+    \begin{cases}
+      \displaystyle
+      \sum_{\ell=1}^{N_0}\left(
+        \mathcal S_{\mathrm{QP},\ell}^{(\kappa_{\mathrm e})}[\sigma_\ell]
+        +\mathcal D_{\mathrm{QP},\ell}^{(\kappa_{\mathrm e})}[\tau_\ell]
+      \right)(\mathbf z)
+      +u_{\mathrm{hom}}(\mathbf z),
+      &\mathbf z\in\mathcal C_0\setminus\overline{\Omega_0},\\[2mm]
+      \displaystyle
+      \left(
+        \mathcal S_{\ell}^{(\kappa_{\mathrm i,\ell})}[\sigma_\ell]
+        +\mathcal D_{\ell}^{(\kappa_{\mathrm i,\ell})}[\tau_\ell]
+      \right)(\mathbf z),
+      &\mathbf z\in\Omega_{0,\ell},
+      \quad 1\leq\ell\leq N_0,
+    \end{cases}
+  \end{equation*}
+  其中均匀背景场为
+  \begin{equation*}
+    u_{\mathrm{hom}}(x,y)
+    =\sum_{m\in\mathbb Z}a_{0,m}^-
+      \ee^{\ii\gamma_m(k)(x+a)}\psi_m(y)
+     +\sum_{m\in\mathbb Z}b_{0,m}^+
+      \ee^{-\ii\gamma_m(k)(x-a)}\psi_m(y),
+  \end{equation*}
+  两个级数按 $H^1(\mathcal C_0)$ 意义收敛。换言之，中心胞元外部场由准周期层势贡献与
+  homogeneous background field 之和表示，内部场则由相应介质柱边界上的自由空间层势表示。
+  若将外部准周期层势与内部自由空间层势交换适用区域后形成的齐次互补层势系统只有零解，
+  则上述层势密度也唯一。
+\end{theorem}
+
+定理~\ref{thm:center-cell-representation} 的证明见
+附录~\ref{app:center-cell-representation}。它也说明准周期层势本身不能表示全部中心胞元场：
+即使 $\Omega_0=\varnothing$，层势贡献消失，$u_{\mathrm{hom}}$ 仍可能非零。
+对定理中的密度作 Nystr\"om 离散并将两组 Rayleigh 级数截断到 $-M\leq m\leq M$ 后，
+仍以 $\tau$、$\sigma$ 表示密度系数，并令 $n$ 为材料界面
+密度未知量的总数；再令 $a_0^-,b_0^+\in\CC^K$ 分别表示锚定在
+$\Gamma_-$、$\Gamma_+$ 的 homogeneous Rayleigh 振幅，并置
+\begin{align}
+  \eta&=
+  \begin{bmatrix}\tau\\-\sigma\end{bmatrix}\in\CC^n,
+  &\xi&=
+  \begin{bmatrix}\eta\\a_0^-\\b_0^+\end{bmatrix}
+  \in\CC^{n+2K}.
+  \label{eq:center-discrete-unknown}
+\end{align}
+这里 $\eta$ 只收集 $\partial\Omega_0$ 上的层势密度系数，而 $\xi$ 是中心胞元离散系统的完整
+系数向量。因而 $a_0^-$ 和 $b_0^+$ 必须保留；当中心胞元没有材料界面时 $n=0$，
+只有密度及相应的材料界面方程消失。固定 $h$ 和 $M$ 后始终使用 $\xi$；只有比较不同离散层时
+才写作 $\xi^{(h,M)}$。
+
+以一个背景材料与介质柱的界面为例，记界面外、内两侧的分片常数系数分别为
+$\rho_{\mathrm e}$、$\rho_{\mathrm i}$，并令
+\begin{align}
+  \kappa_{\mathrm e}&=k\sqrt{\rho_{\mathrm e}},
+  &\kappa_{\mathrm i}&=k\sqrt{\rho_{\mathrm i}}.
+  \label{eq:center-material-wavenumbers}
+\end{align}
+以下 $S,D,D^*,T$ 均表示当前 $h$ 网格上的 Nystr\"om 矩阵；带 $\mathrm{QP}$ 下标的版本
+使用 $y$ 方向准周期 Green 函数，不带该下标的版本使用自由空间 Green 函数，$T$ 是
+hypersingular operator。令 $Q_{\mathrm D,-},Q_{\mathrm N,-},Q_{\mathrm D,+},Q_{\mathrm N,+}$
+表示两组 homogeneous Rayleigh 场在材料界面上的 Dirichlet 和 Neumann 迹矩阵，其条目将在
+式~\eqref{eq:center-homogeneous-rayleigh-traces} 中给出。于是作用于完整向量 $\xi$ 的材料界面
+jump/mismatch 矩阵为
+\begin{align}
+  J(k)
+  &=
+  \begin{bmatrix}
+    I+D_{\mathrm{QP}}^{(\kappa_{\mathrm e})}
+      -D^{(\kappa_{\mathrm i})}
+    &-S_{\mathrm{QP}}^{(\kappa_{\mathrm e})}
+      +S^{(\kappa_{\mathrm i})}
+    &Q_{\mathrm D,-}&Q_{\mathrm D,+}\\
+    T_{\mathrm{QP}}^{(\kappa_{\mathrm e})}
+      -T^{(\kappa_{\mathrm i})}
+    &I-D_{\mathrm{QP}}^{(\kappa_{\mathrm e})*}
+      +D^{(\kappa_{\mathrm i})*}
+    &Q_{\mathrm N,-}&Q_{\mathrm N,+}
+  \end{bmatrix}
+  \in\CC^{n\times(n+2K)}.
+  \label{eq:center-interface-jump-matrix}
+\end{align}
+若 $\Omega_0$ 含有多根介质柱，则这些块在全部材料界面上整体组装：对角块包含 jump terms，
+非对角块表示不同界面之间的层势相互作用。因此 $J(k)\xi=0$ 同时施加函数值 jump 和
+法向导数 jump 为零。
+
+为明确 homogeneous Rayleigh 场在材料界面上的两组列，取 Nystr\"om 节点与介质柱外法向
+\begin{align*}
+  z_j&=(x_j,y_j)\in\partial\Omega_0,
+  &\nu_j&=(\nu_{x,j},\nu_{y,j}),
+\end{align*}
+并沿用式~\eqref{eq:rayleigh-gamma-matrix} 的 $\gamma_m(k)$ 分支。于是对 $-M\leq m\leq M$，
+\begin{align}
+  (Q_{\mathrm D,-})_{jm}
+  &=\ee^{\ii\gamma_m(k)(x_j+a)}\psi_m(y_j),
+  &
+  (Q_{\mathrm N,-})_{jm}
+  &=\ii(\gamma_m(k)\nu_{x,j}+\beta_m\nu_{y,j})
+    \ee^{\ii\gamma_m(k)(x_j+a)}\psi_m(y_j),
+  \notag\\
+  (Q_{\mathrm D,+})_{jm}
+  &=\ee^{-\ii\gamma_m(k)(x_j-a)}\psi_m(y_j),
+  &
+  (Q_{\mathrm N,+})_{jm}
+  &=\ii(-\gamma_m(k)\nu_{x,j}+\beta_m\nu_{y,j})
+    \ee^{-\ii\gamma_m(k)(x_j-a)}\psi_m(y_j).
+  \label{eq:center-homogeneous-rayleigh-traces}
+\end{align}
+
+下面直接由准周期 Green 函数的 Rayleigh 谱展开提取中心层势在人工边界上的
+outgoing Dirichlet 系数。以上述 Nystr\"om 节点 $z_j=(x_j,y_j)$、源法向
+$\nu_j=(\nu_{x,j},\nu_{y,j})$ 和求积权重 $w_j$ 为例，对 $-M\leq m\leq M$ 令
+\begin{align}
+  g_-(m,j)
+  &:=\frac{\ii}{2\sqrt{d}\,\gamma_m(k)}
+  \exp\!\left(
+    -\ii\beta_m y_j+\ii\gamma_m(k)(x_j+a)
+  \right),
+  \notag\\
+  g_+(m,j)
+  &:=\frac{\ii}{2\sqrt{d}\,\gamma_m(k)}
+  \exp\!\left(
+    -\ii\beta_m y_j-\ii\gamma_m(k)(x_j-a)
+  \right),
+  \label{eq:center-farfield-kernels}\\
+  \partial_{\nu_j}g_-(m,j)
+  &=\ii\bigl(\gamma_m(k)\nu_{x,j}-\beta_m\nu_{y,j}\bigr)g_-(m,j),
+  \notag\\
+  \partial_{\nu_j}g_+(m,j)
+  &=-\ii\bigl(\gamma_m(k)\nu_{x,j}+\beta_m\nu_{y,j}\bigr)g_+(m,j).
+  \label{eq:center-farfield-normal-factors}
+\end{align}
+按 $\eta=[\tau;-\sigma]^{\mathsf T}$ 的列顺序，以模态 $m$ 为行、边界节点 $j$ 为列组装
+\begin{align}
+  \mathsf F_-(k)
+  &:={}
+  \left[
+    \bigl(w_j\partial_{\nu_j}g_-(m,j)\bigr)_{m,j}
+    \quad
+    \bigl(-w_jg_-(m,j)\bigr)_{m,j}
+  \right],
+  \notag\\
+  \mathsf F_+(k)
+  &:={}
+  \left[
+    \bigl(w_j\partial_{\nu_j}g_+(m,j)\bigr)_{m,j}
+    \quad
+    \bigl(-w_jg_+(m,j)\bigr)_{m,j}
+  \right],
+  \notag\\
+  \mathsf F_-(k),\mathsf F_+(k)
+  &\in\CC^{K\times n}.
+  \label{eq:center-farfield-extractors}
+\end{align}
+因而 $\mathsf F_\pm(k)\eta$ 是中心材料界面层势在 $\Gamma_\pm$ 上的 outgoing Rayleigh
+Dirichlet 系数，其 Neumann 系数由逐模法向导数乘子得到。$\mathsf F_\pm(k)$ 是根据谱展开与
+Nystr\"om 求积直接组装的，不是先在人工边界上采样再作 FFT 或 DFT。若有多根介质柱，
+则上述节点、权重与密度块在全部材料界面上整体组装。这一有限矩阵与连续非线性算子函数
+$F_\beta(k)$ 的字体和定义均不同。
+
+两组 homogeneous Rayleigh 振幅分别锚定在
+$\Gamma_- = \{-a\}\times I_d$ 和 $\Gamma_+ = \{a\}\times I_d$。定义中心胞元传播矩阵
+\begin{align}
+  E_0(k)
+  &:=\operatorname{diag}\left(
+    \ee^{2a\ii\gamma_{-M}(k)},\ldots,
+    \ee^{2a\ii\gamma_M(k)}
+  \right).
+  \label{eq:center-cell-propagation-matrix}
+\end{align}
+这里的传播长度是中心胞元宽度 $2a$，不是左右周期胞元的周期 $L$。于是中心场在
+$\Gamma_\pm$ 上的 Dirichlet 与从 $\mathcal C_0$ 指向 $B_\pm$ 的 Neumann 系数由
+\begin{align}
+  \Pi_{\mathrm D,-}(k)
+  &:={}
+  \begin{bmatrix}
+    \mathsf F_-(k)&I&E_0(k)
+  \end{bmatrix},
+  &
+  \Pi_{\mathrm N,-}(k)
+  &:={}
+  \begin{bmatrix}
+    \ii\boldsymbol{\gamma}(k)\mathsf F_-(k)
+    &-\ii\boldsymbol{\gamma}(k)
+    &\ii\boldsymbol{\gamma}(k)E_0(k)
+  \end{bmatrix},
+  \notag\\
+  \Pi_{\mathrm D,+}(k)
+  &:={}
+  \begin{bmatrix}
+    \mathsf F_+(k)&E_0(k)&I
+  \end{bmatrix},
+  &
+  \Pi_{\mathrm N,+}(k)
+  &:={}
+  \begin{bmatrix}
+    \ii\boldsymbol{\gamma}(k)\mathsf F_+(k)
+    &\ii\boldsymbol{\gamma}(k)E_0(k)
+    &-\ii\boldsymbol{\gamma}(k)
+  \end{bmatrix},
+  \label{eq:center-trace-extraction-matrices}\\
+  \Pi_{\mathrm D,\pm}(k),
+  \Pi_{\mathrm N,\pm}(k)
+  &\in\CC^{K\times(n+2K)}.
+  \notag
+\end{align}
+每个矩阵的第一列块来自中心材料界面的层势密度，第二、三列块分别来自锚定在
+$\Gamma_-$、$\Gamma_+$ 的 $a_0^-$、$b_0^+$。Neumann 行块的符号由
+$\nu_-=-e_x$、$\nu_+=e_x$ 直接推出。当中心胞元为空、$n=0$ 时，第一列块消失，上式退化为
+$I$、$E_0(k)$ 与 $\boldsymbol{\gamma}(k)$ 的组装。
+
+在两个 Dirichlet 坐标都安全时，中心离散非线性特征值问题写成矩阵函数方程
+\begin{align}
+  A(k)\xi
+  &:={}
+  \begin{bmatrix}
+    J(k)\xi\\
+    \Pi_{\mathrm N,-}(k)\xi
+      -\widetilde{\Lambda}_-(k)\Pi_{\mathrm D,-}(k)\xi\\
+    \Pi_{\mathrm N,+}(k)\xi
+      -\widetilde{\Lambda}_+(k)\Pi_{\mathrm D,+}(k)\xi
+  \end{bmatrix}
+  =0.
+  \label{eq:discrete-center-dtn-matrix}
+\end{align}
+其中 $A(k)\in\CC^{(n+2K)\times(n+2K)}$。第一块施加中心材料界面的
+transmission conditions，后两块分别是左右人工边界上的离散 Neumann--DtN mismatch。
+式~\eqref{eq:discrete-center-dtn-matrix} 中的两个负号离散了
+式~\eqref{eq:center-dtn-weak-form} 的透明边界项；法向仍从 $\mathcal C_0$ 指向 $B_\pm$。
+$A(k)$ 是由中心胞元边界积分表示和离散透明边界条件直接组装的有限矩阵函数，并非连续弱
+算子 $F_\beta(k)$ 的直接矩阵离散；借助连续中心 DtN 问题与无界问题的等价性，它的零空间
+近似 $\ker F_\beta(k)$。
+
+若 Dirichlet 坐标失效，则用更原始的 Cauchy 数据关系组装
+\begin{align}
+  A_{\mathrm{aug}}(k)
+  \begin{bmatrix}\xi\\c_-\\c_+\end{bmatrix}
+  &:={}
+  \begin{bmatrix}
+    J(k)\xi\\
+    \Pi_{\mathrm D,-}(k)\xi
+      -\mathsf V_{\mathrm D,-}(k)c_-\\
+    \Pi_{\mathrm N,-}(k)\xi
+      -\mathsf V_{\mathrm N,-}(k)c_-\\
+    \Pi_{\mathrm D,+}(k)\xi
+      -\mathsf V_{\mathrm D,+}(k)c_+\\
+    \Pi_{\mathrm N,+}(k)\xi
+      -\mathsf V_{\mathrm N,+}(k)c_+
+  \end{bmatrix}
+  =0,
+  &
+  A_{\mathrm{aug}}(k)
+  &\in\CC^{(n+4K)\times(n+4K)}.
+  \label{eq:discrete-center-graph-matrix}
+\end{align}
+这是保留完整 Cauchy 数据坐标的增广匹配矩阵。当
+$\mathsf V_{\mathrm D,-}(k)$、$\mathsf V_{\mathrm D,+}(k)$ 均可安全求解时，从
+式~\eqref{eq:discrete-center-graph-matrix} 消去 $c_-$、$c_+$，恰好得到
+式~\eqref{eq:discrete-center-dtn-matrix}。因此两式描述同一个离散匹配条件；前者保留完整
+Cauchy 数据关系，后者只是它在安全 Dirichlet 坐标下的降维形式。若无特别说明，
+$A(k)$ 始终指式~\eqref{eq:discrete-center-dtn-matrix} 的默认离散 DtN 形式；只有
+Dirichlet 坐标不安全时才改用 $A_{\mathrm{aug}}(k)$，不再强行形成离散 DtN。
+
+候选定位只在所选实谱隙内进行。在默认离散 DtN 形式中，以固定的可逆行列权重
+$W_r(k)$、$W_c(k)$ 平衡 Dirichlet、Neumann 与边界积分未知量的自然尺度，可采用
+\begin{align}
+  s(k)
+  &:=\frac{\sigma_{\min}\!\left(
+    W_r(k)A(k)W_c(k)\right)}
+  {\sigma_{\max}\!\left(
+    W_r(k)A(k)W_c(k)\right)}
+  \label{eq:discrete-candidate-score}
+\end{align}
+作为无量纲定位量，先作实轴粗扫，再在孤立低谷附近使用固定规则逐层加密。若采用完整
+Cauchy 数据关系，则在同一定义中把 $A(k)$ 换成 $A_{\mathrm{aug}}(k)$，并选取尺寸
+相容的行列权重。权重不改变矩阵
+的精确核，但会改变奇异值的尺度，因此候选必须同时通过原始矩阵残量、胞元边界积分残量、
+QZ 子空间分离、Cauchy 数据匹配以及相邻离散层模式一致性检查。评分低谷只能产生离散特征值
+候选；在尚未给出连续逼近与误差控制以前，不能把它直接称为原算子 $A(\beta)$ 的特征值。
+
+在候选 $\widehat k$ 处，取相应矩阵函数的最小右奇异方向。其中心分量 $\xi$ 给出边界密度和
+端口振幅，从而通过中心胞元层势重构 $u_{0,h,M}$。在 Cauchy 数据形式中，$c_-$、$c_+$
+已经随核向量得到；在安全 DtN 形式中，则由
+$\mathsf V_{\mathrm D,\pm}(k)c_\pm
+=\Pi_{\mathrm D,\pm}(k)\xi$ 求得半波导坐标，并且相应的 Neumann 数据满足
+$\mathsf V_{\mathrm N,\pm}(k)c_\pm
+=\Pi_{\mathrm N,\pm}(k)\xi$。随后利用所选 QZ
+挠曲子空间和单胞传播关系，在
+$\mathcal C_--jLe_x$ 与 $\mathcal C_++jLe_x$，$j\geq0$，逐胞元重构向左右无穷远衰减的场。
+三部分在 $\Gamma_\pm$ 上按 Dirichlet 和中心外法向 Neumann 数据拼接；各材料界面仍由原边界
+积分表示满足 transmission conditions。最后按
+\begin{align}
+  w_{h,M}(x,y+jd)
+  &=\ee^{\ii\beta jd}u_{h,M}(x,y),
+  \qquad y\in I_d,\qquad j\in\mathbb Z,
+  \label{eq:numerical-guided-mode-extension}
+\end{align}
+恢复全平面上的准周期导模，并以固定范数归一化。重构结果还应检查端口匹配残量、材料界面
+传输残量和向两侧逐胞元衰减；这些检查用于判别数值伪影，不在本节给出未经计算的数值结论。
+
+下一节将以这一离散候选和重构场为输入，讨论后验误差估计及其可靠性条件；本节不预先给出
+误差上界。

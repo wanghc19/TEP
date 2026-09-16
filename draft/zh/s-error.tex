@@ -1,0 +1,489 @@
+\section{特征值后验误差估计}
+\label{sec:error}
+
+第~\ref{sec:numerics}~节的有限矩阵函数只能定位候选波数并给出逐胞元数值场。要衡量候选
+$\widehat k>0$ 到连续谱的距离，必须由同一批冻结算法数据确定一个全条带上的连续相容场，
+再评价它对未离散化特征值方程的残量。本节仍固定第~\ref{sec:modelproblem}~节中的
+$\beta$；所有严格结论均针对同一个连续算子 $A(\beta)$。
+
+\subsection{数值导模场的确定性重构}
+
+记
+\begin{align}
+  V_\beta&:=H^1_\beta(B),
+  &a(u,v)&:=\int_B\nabla u\mathbin{\cdot}\nabla\overline v,
+  &b(u,v)&:=\int_B\rho u\overline v.
+  \label{eq:error-forms}
+\end{align}
+其中 $b(u,v)=(u,v)_{\mathcal H}$，$\mathcal H$ 是
+式~\eqref{eq:weighted-hilbert-space} 的加权质量空间。积分逐片跨越全部分片常数材料区域；
+$V_\beta$ 中的函数在材料界面上具有单值迹，而法向导数的 transmission mismatch 由后面的
+弱残量检验。
+
+在候选 $\widehat k$ 处，先冻结第~\ref{sec:numerics}~节实际交付的全部有限数据。它至少包括
+默认矩阵 $A(\widehat k)$ 或增广矩阵 $A_{\mathrm{aug}}(\widehat k)$ 的相应近核向量、中心
+系数 $\xi$、左右衰减 Cauchy 坐标 $c_-$、$c_+$、左右单胞传播关系，以及中心和周期胞元
+边界积分表示所需的有限密度、端口迹和离散参数 $(h,M)$。在默认 DtN 坐标下，$c_\pm$
+由式~\eqref{eq:discrete-cauchy-relation} 和中心迹匹配确定；在增广形式中它们已经是近核
+向量的分量。以下重构只评价这些冻结数据，不重新搜索 $\widehat k$，也不重新计算 QZ
+子空间、传播关系或边界密度。
+
+中心胞元 $\mathcal C_0$ 内的场按定理~\ref{thm:center-cell-representation} 重构：背景材料中的
+场是材料界面 layer-potential contribution 与分别锚定在 $\Gamma_-$、$\Gamma_+$ 的两组
+homogeneous Rayleigh fields 之和，介质柱内部则使用相应自由空间层势。因而中心场不能只写成
+材料界面层势；即使 $\Omega_0=\varnothing$，两组 homogeneous Rayleigh 振幅仍可非零。
+
+令 $P_\pm\in\CC^{K\times K}$ 表示由第~\ref{sec:numerics}~节同一有序 QZ 衰减子空间和单胞
+传播关系得到的、朝相应无穷方向平移一个周期 $L$ 的完整传播矩阵。左右第 $j$ 个周期胞元的
+状态分别为
+\begin{align*}
+  P_-^j c_-,\qquad P_+^j c_+,
+  \qquad j=0,1,\ldots.
+\end{align*}
+对每个状态使用同一个周期胞元 BIE 场映射，在
+$\mathcal C_--jLe_x$ 与 $\mathcal C_++jLe_x$ 中恢复逐片 Helmholtz 场。这里始终保留完整
+$P_\pm$；不假设传播矩阵正规、半单或可分解为相互正交的标量模态，也不丢弃 Jordan 与
+非正规耦合。
+
+将中心胞元与两个半波导中由上述规则得到的逐片场统记为 $u_{h,M}$。它由有限密度的固定
+三角插值和固定核评价规则确定，在每个均匀材料子区域内满足相应的 Helmholtz 方程，但有限
+边界积分求解和迹评价可能使相邻胞元的人工界面或材料界面留下小的 Dirichlet value mismatch。
+因此 $u_{h,M}$ 一般只是 broken 场，尚不能直接视为 $V_\beta$ 中的函数。
+
+对 $\Gamma_-$、$\Gamma_+$ 以及它们沿左右半波导的 $L$-平移界面，使用由冻结传播数据给出的
+同一个共享 Dirichlet 迹 $g_\Sigma$。若 $u_{h,M}^{(1)}$、$u_{h,M}^{(2)}$ 是一条共享人工
+界面 $\Sigma$ 两侧的 raw fields，则以
+\begin{align*}
+  a_{\Sigma,r}
+  :=u_{h,M}^{(r)}|_\Sigma-g_\Sigma,
+  \qquad r\in\{1,2\},
+\end{align*}
+作为两侧分别需要修正的 value defects；这些缺陷的全体简记为 $a_{\Gamma_\pm}$。在材料界面
+$\Upsilon$ 上则沿前文的固定两侧约定定义
+\begin{align*}
+  a_\Upsilon:=u_{h,M}^+|_\Upsilon-u_{h,M}^-|_\Upsilon.
+\end{align*}
+对 $a_{\Gamma_\pm}$ 和 $a_\Upsilon$ 分别施加预先固定的迹右逆，并固定每条界面的归属，
+使修正后的两侧迹都等于同一个共享迹。由此得到
+\begin{align}
+  \widehat u&\in V_\beta\setminus\{0\}.
+  \label{eq:conforming-trial}
+\end{align}
+$\widehat u$ 称为连续相容重构场或重构近似导模。它由上述固定数据和固定提升规则确定，
+而不是定理中任意挑选的 trial field；只是在后验定理中，它作为连续变分空间中的试验函数
+使用。若修正后得到零场，则该候选不能进入后续残量比。
+
+逐胞元准周期拼接保证 $y$ 方向的 $\beta$-准周期条件。完整传播矩阵的衰减以及
+$\sum_{j\geq0}\lVert P_\pm^j c_\pm\rVert^2<\infty$，连同固定单胞场映射和迹右逆的有界性，
+保证各胞元的 $H^1$ 能量可和，从而 $\widehat u$ 是条带 $B$ 上的有限能量场。近核向量只确定
+到非零复常数倍；本文固定使用第~\ref{sec:numerics}~节的列权重归一化，再把绝对值最大的
+分量旋转为正实数，并在并列时取最小索引，以确定尺度和相位。全平面物理场可由
+式~\eqref{eq:numerical-guided-mode-extension} 的准周期延拓恢复，但 $\widehat u$ 在本节始终只
+表示条带中的 $\beta$-准周期代表。
+
+需要区分三层对象：$u_{h,M}$ 是逐均匀子区域满足 Helmholtz 方程的 raw field；
+$\widehat u$ 是消除全部 value defects 后的全局 $H^1$ 场；相容提升一般会对连续弱方程
+增加残量，其贡献由 $B_{\mathrm{lift}}$ 控制。
+
+\subsection{残量分解与三类可计算控制量}
+
+令
+\begin{align}
+  \mu&:=\widehat k^2,
+  &\lVert v\rVert_{\mu}^2
+  &:=a(v,v)+\mu b(v,v),
+  \qquad v\in V_\beta.
+  \label{eq:shifted-energy-norm}
+\end{align}
+这里 $\mu$ 由 $\widehat k^2$ 唯一确定，并在本节所有移位范数和函数演算中一致使用。
+式~\eqref{eq:shifted-energy-norm} 在反对偶空间
+$V_\beta^*$ 上诱导范数 $\lVert\cdot\rVert_{\mu,*}$。连续弱残量和残量比分别为
+\begin{align}
+  R(v)&:=a(\widehat u,v)-\mu b(\widehat u,v),
+  \qquad v\in V_\beta,
+  &q&:=\frac{\lVert R\rVert_{\mu,*}}
+  {\lVert\widehat u\rVert_{\mu}}.
+  \label{eq:continuous-residual-ratio}
+\end{align}
+因此 $R\in V_\beta^*$，而 $q$ 不随冻结数据和 $\widehat u$ 的同一非零常数倍缩放而改变。
+这个残量作用于 $A(\beta)$ 的连续闭形式，不是中心矩阵残量或数值 DtN 残量。
+
+记 $e:=\widehat u-u_{h,M}$ 为由全部固定迹右逆组成的相容修正。对每个均匀材料子区域分部
+积分时，$u_{h,M}$ 的体内 Helmholtz 项相消。若一条共享人工界面两侧的外法向分别为
+$\nu_1$、$\nu_2$，则 raw Neumann jump 为
+\begin{align}
+  j_\Sigma&=\partial_{\nu_1}u_{h,M}^{(1)}|_\Sigma
+    +\partial_{\nu_2}u_{h,M}^{(2)}|_\Sigma.
+  \label{eq:flux-jump}
+\end{align}
+在材料界面上继续使用式~\eqref{eq:transmission-conditions} 的同一个固定法向 $\nu$，并令
+\begin{align*}
+  j_\Upsilon
+  :=\partial_\nu u_{h,M}^+|_\Upsilon
+   -\partial_\nu u_{h,M}^-|_\Upsilon.
+\end{align*}
+这些符号分别保留人工界面的“两侧外法向之和”和材料界面的“同一固定法向之差”，没有改变
+前文的 transmission conditions 或 $\nu_-=-e_x$、$\nu_+=e_x$。于是 $R$ 由三类泛函组成：
+$\Gamma_\pm$ 及其周期平移上的 Neumann jumps、$\Upsilon$ 上的 transmission derivative
+mismatches，以及
+\begin{align*}
+  R_{\mathrm{lift}}(v):=a(e,v)-\mu b(e,v)
+\end{align*}
+给出的相容提升贡献。
+
+人工直界面上的 Neumann defect 按移位对偶迹范数衡量。若
+$r=\sum_{m\in\mathbb Z}r_m\psi_m$，则
+\begin{align*}
+  \lVert r\rVert_{H^{-1/2}_{\beta,\mu}(\Gamma_\pm)}^2
+  :=\sum_{m\in\mathbb Z}
+  (\mu+|\beta_m|^2)^{-1/2}|r_m|^2.
+\end{align*}
+材料界面上的 $H^{-1/2}$ 范数取下述局部 shifted-energy 迹范数的对偶范数。由这些范数得到
+$B_{\Gamma_\pm}$ 和 $B_\Upsilon$，其中 $B_{\Gamma_\pm}$ 汇总中心人工界面
+$\Gamma_-$、$\Gamma_+$ 及其沿左右半波导的全部 $L$-平移界面，而 $B_\Upsilon$ 汇总所有
+材料界面上的法向 transmission mismatch。
+
+上述无限和必须保留完整传播矩阵。对
+$X\in\{\Gamma_\pm,\Upsilon\}$，令
+$\mathsf G_{X,\varsigma}\succeq0$ 是由一个周期胞元中相应 Neumann-defect boundary action
+与移位对偶迹权重形成的 Gram 矩阵，$\varsigma\in\{-,+\}$；令
+$B_{X,\mathrm{sing}}$ 收集不能由统一半波导平移生成的中心/第一胞元贡献。于是具有统一结构
+\begin{align*}
+  B_X^2
+  =B_{X,\mathrm{sing}}^2
+  +\sum_{\varsigma\in\{-,+\}}
+   \sum_{j=0}^{\infty}
+   (P_\varsigma^j c_\varsigma)^*
+   \mathsf G_{X,\varsigma}
+   (P_\varsigma^j c_\varsigma).
+\end{align*}
+这里矩阵上标 $*$ 表示共轭转置。对 $X=\Gamma_\pm$，singleton 是中心胞元与左右第一个
+周期胞元之间的两条界面；半波导内部界面只在 full-$P$ 和中出现一次。对 $X=\Upsilon$，
+中心胞元中的材料界面单独计算，左右周期胞元中的材料界面由 $j\geq0$ 的和覆盖。这个记账
+同时防止漏掉中心/第一胞元贡献和重复计算同一共享界面。
+
+相容提升由 Dirichlet value defects 的 shifted $H^{1/2}$ 迹范数控制。对人工界面
+$a=\sum_{m\in\mathbb Z}a_m\psi_m$ 定义
+\begin{align*}
+  \lVert a\rVert_{H^{1/2}_{\beta,\mu}(\Gamma_\pm)}^2
+  :=\sum_{m\in\mathbb Z}
+  (\mu+|\beta_m|^2)^{1/2}|a_m|^2.
+\end{align*}
+这里 $\beta_m$ 已在式~\eqref{eq:port-fourier-basis} 中定义。对一般材料界面
+$\Sigma\subset\Upsilon$，在其预先固定的局部邻域 $U$ 上取
+\begin{align*}
+  \lVert z\rVert_{\mu,U}^2
+  &:=\int_U\bigl(|\nabla z|^2+\mu\rho|z|^2\bigr)\,\dd x\,\dd y,
+  &\lVert a\rVert_{H^{1/2}_\mu(\Sigma)}
+  &:=\inf_{\substack{z\in H^1(U)\\z|_\Sigma=a}}
+    \lVert z\rVert_{\mu,U},
+\end{align*}
+并使用由这一局部 shifted-energy trace 定理诱导的迹范数。固定迹右逆及其常数
+$C_{E,\Gamma_\pm}$、$C_{E,\Upsilon}$，使相应提升的 $\mu$-能量分别不超过缺陷迹范数的
+$C_{E,\Gamma_\pm}$、$C_{E,\Upsilon}$ 倍。该定义只要求一般分片常数材料和适当的局部迹
+邻域，不假设介质柱为圆形。
+
+令 $L$ 表示全部固定提升的全局能量控制量。与两个 Neumann 分量相同，它包含
+$\Gamma_-$、$\Gamma_+$ 及其所有周期平移上的 value defects、全部材料界面的 value defect，
+以及中心/第一胞元的 singleton corrections。把迹权重与右逆常数吸收到正半定矩阵
+$\mathsf G_{\mathrm{lift},\varsigma}$ 中，可写成
+\begin{align*}
+  L^2
+  =L_{\mathrm{sing}}^2
+  +\sum_{\varsigma\in\{-,+\}}
+   \sum_{j=0}^{\infty}
+   (P_\varsigma^j c_\varsigma)^*
+   \mathsf G_{\mathrm{lift},\varsigma}
+   (P_\varsigma^j c_\varsigma).
+\end{align*}
+其中 $L_{\mathrm{sing}}$ 包含两条中心相邻人工界面两侧的修正及中心材料界面的修正；其余
+修正按 full-$P$ 传播覆盖整个半波导。由 Cauchy--Schwarz 不等式，提升泛函满足
+\begin{align*}
+  \lVert R_{\mathrm{lift}}\rVert_{\mu,*}
+  \leq B_{\mathrm{lift}}
+  \leq 2L.
+\end{align*}
+直接计算时可取 $B_{\mathrm{lift}}=2L$；若以后得到更紧且经过证明的提升界，可相应缩小
+这一常数。
+
+% Optional removable note; deleting this box does not affect the argument.
+\begin{center}
+\fbox{%
+\parbox{0.88\linewidth}{%
+\textbf{待核验注记。}
+当前常数 $2$ 来自分别估计刚度项和质量项后的三角不等式。
+若以后证明 $L$ 直接控制总相容修正 $e$ 的完整 $\mu$-能量，
+则可能通过乘积空间中的直接 Cauchy--Schwarz 估计进一步改善该常数。
+本注记不参与后续定义、定理或证明；若不再继续这一改进，
+可以直接删除整个方框而不影响正文逻辑。
+}%
+}
+\end{center}
+
+最终三项按三角不等式相加：
+\begin{align}
+  \lVert R\rVert_{\mu,*}
+  &\leq \mathcal M
+  :=B_{\Gamma_\pm}+B_\Upsilon+B_{\mathrm{lift}}.
+  \label{eq:residual-majorant-components}
+\end{align}
+三类缺陷必须先分别取范数，不得借助未经证明的跨类别数值抵消。
+
+早期实现预先选择 cubic profile，将 boundary mismatch 延拓为显式体函数，再估计其
+strong-source residual。该量依赖任意 profile、二阶导数和高频权重，数值表现不稳健。后续
+方法并未取消相容提升，而是使用固定迹右逆和 shifted $H^{1/2}$ value-defect norm 控制提升
+所需的能量，从而降低对具体 lifting profile 的依赖。若材料界面恰为圆形，可以逐角模用
+annular extension 估计相应有限模常数；这只是特殊几何下的经验实现，并非一般模型的必要
+条件，也不包围未计算的无限角向尾。
+
+经验评价始终固定同一个 $\widehat u$，只提高 boundary action 和 trace norm 的数值分辨率，
+不在各层重新求解 $\widehat k$、QZ 子空间、$P_\pm$ 或 BIE density。对事先给定的嵌套层
+$N_i$，分别形成
+\begin{align*}
+  B_{\Gamma_\pm}(N_i),\qquad
+  B_\Upsilon(N_i),\qquad
+  B_{\mathrm{lift}}(N_i),\qquad
+  \mathcal M(N_i).
+\end{align*}
+对可能趋于非零极限的序列使用
+\begin{align*}
+  B_X(N)=B_{X,\infty}+C_XN^{-p_X},
+  \qquad p_X>0,
+\end{align*}
+并同时检查全层拟合与 leave-one-out fits。若一列已经落入预先规定的 numerical floor，则按
+plateau 处理，不强行解释收敛阶。经验余量分别覆盖拟合、准周期 Green 函数评价、full-$P$
+尾和浮点误差；每个误差来源只有一个 ownership，component cap 与 total cap 不重复相加。
+因此直接拟合 $\mathcal M(N_i)$ 时，其 fit 余量不再重复加入各分量的 fit 余量，而各分量的
+Green 函数、full-$P$ 与舍入余量仍按唯一归属汇总。例如令
+$X\in\{\Gamma_\pm,\Upsilon,\mathrm{lift}\}$，则总经验余量采用
+\begin{align*}
+  \epsilon_{\mathcal M}^{\mathrm{emp}}
+  =\epsilon_{\mathcal M,\mathrm{fit}}^{\mathrm{emp}}
+  +\sum_X\left(
+    \epsilon_{X,\mathrm{GQP}}^{\mathrm{emp}}
+    +\epsilon_{X,P}^{\mathrm{emp}}
+  \right)
+  +\epsilon_{\mathcal M,\mathrm{round}}^{\mathrm{emp}},
+\end{align*}
+其中 component fit 只作各分量诊断，不再进入这一 total cap；总舍入项只覆盖尚未归属给
+各分量的标量加法。
+
+由最细层的 $\mathcal M(N_i)$、上述经验余量和同一个 $\widehat u$ 的经验场范数下界可形成
+$q^{\mathrm{emp}}$。具体地，若 $\underline u^{\mathrm{emp}}>0$ 是对同一个 $\widehat u$ 形成的
+经验场范数下界候选，则
+\begin{align*}
+  q^{\mathrm{emp}}
+  :=\frac{
+    \mathcal M(N_{\max})+\epsilon_{\mathcal M}^{\mathrm{emp}}
+  }{\underline u^{\mathrm{emp}}}.
+\end{align*}
+这些有限层拟合、plateau 规则和 finite-mode 迹右逆只产生经验、未认证的
+估计；它们既不是式~\eqref{eq:residual-majorant-components} 的 outward enclosure，也不能证明
+后面的严格单侧界。相应 $q^{\mathrm{emp}}$ 和 $I_{\mathrm{emp}}^k$ 只能称为名义或经验预测区间。
+
+\subsection{条件性谱包含与预测区间}
+
+实际计算首先产生普通浮点量 $\widetilde M$ 和 $\widetilde N$，分别近似残量控制量和
+$\lVert\widehat u\rVert_{\mu}^2$；它们本身没有单侧含义。严格结论要求另外给出
+$\epsilon_M,\epsilon_N\geq0$，并证明
+\begin{align}
+  \lVert R\rVert_{\mu,*}
+  &\leq\widetilde M+\epsilon_M=: \overline\rho,
+  &\lVert\widehat u\rVert_{\mu}^2
+  &\geq\widetilde N-\epsilon_N>0,
+  \notag\\
+  \underline u&:=\sqrt{\widetilde N-\epsilon_N},
+  &\overline q&:=\frac{\overline\rho}{\underline u}.
+  \label{eq:strict-residual-and-field-bounds}
+\end{align}
+残量上界须覆盖层势评价与求积、未计 Fourier 分量、迹右逆、准周期拼接、半波导无限尾和
+浮点运算等全部遗漏；场范数下界也须覆盖同一个 $\widehat u$ 的求积、重构和无限尾误差。
+定理只要求严格评价冻结算法数据所确定的 $\widehat u$，并不预先假设生成这些数据的 BIE
+密度或 QZ 子空间已经接近真实特征函数。重构场本身可以很差，此时其连续残量会相应变大。
+
+\begin{theorem}[条件性谱包含与预测区间]
+  \label{thm:conditional-prediction-interval}
+  设 $A(\beta)$ 是第~\ref{sec:modelproblem}~节定义的非负自伴算子，
+  $\widehat u\in V_\beta\setminus\{0\}$ 满足
+  式~\eqref{eq:conforming-trial}，并且
+  式~\eqref{eq:strict-residual-and-field-bounds} 的单侧界已经得到证明。若
+  $\overline q<1$，则
+  \begin{align}
+    I^\lambda
+    &:={}
+    \left[
+      \mu\frac{1-\overline q}{1+\overline q},
+      \mu\frac{1+\overline q}{1-\overline q}
+    \right]
+    \label{eq:conditional-lambda-interval}
+  \end{align}
+  与 $\sigma(A(\beta))$ 相交。若假设~\ref{ass:projected-gap} 对同一个算子
+  $A(\beta)$ 成立，并且 $I^\lambda\subset G_\beta$，则
+  $I^\lambda$ 中至少存在一个孤立、有限重的导模特征值。该结论不保证区间中只有一个
+  特征值，也不指定它对应哪一个数值分支。
+\end{theorem}
+
+\begin{proof}
+  对 $\lambda\geq0$ 定义
+  \begin{align*}
+    t(\lambda)&:=\frac{\lambda-\mu}{\lambda+\mu},
+    &S&:=t(A(\beta))=I-2\mu\bigl(A(\beta)+\mu I\bigr)^{-1}.
+  \end{align*}
+  由有界函数演算，$S$ 是 $\mathcal H$ 上的有界自伴算子。映射
+  \begin{align*}
+    U:V_\beta&\longrightarrow\mathcal H,
+    &Uv&=(A(\beta)+\mu I)^{1/2}v
+  \end{align*}
+  的定义域确实是整个 $V_\beta$。这是因为 $a+\mu b$ 是以 $V_\beta$ 为定义域的
+  稠密定义、闭、对称且非负的形式，
+  其对应算子为 $A(\beta)+\mu I$，Kato 的第二表示定理
+  \cite[第~VI~章定理~2.23，1995~年重印本第~331~页]{Kato1995} 给出
+  \begin{align*}
+    D\bigl((A(\beta)+\mu I)^{1/2}\bigr)=V_\beta.
+  \end{align*}
+  因此上述映射
+  是满的等距同构，其中 $V_\beta$ 使用
+  式~\eqref{eq:shifted-energy-norm} 的范数。闭形式的函数演算恒等式给出
+  \begin{align*}
+    (SUu,Uv)_{\mathcal H}
+    &=a(u,v)-\mu b(u,v),
+    \qquad u,v\in V_\beta.
+  \end{align*}
+  % [Proof Addition P1 Start]
+  由于 $U$ 是满射，$SU\widehat u\in\mathcal H$ 在 $V_\beta$ 中有唯一的原像。令
+  \begin{align*}
+    r_R:=U^{-1}SU\widehat u\in V_\beta.
+  \end{align*}
+  对任意 $v\in V_\beta$，有
+  \begin{align*}
+    (r_R,v)_\mu
+    &=(Ur_R,Uv)_{\mathcal H}
+      =(SU\widehat u,Uv)_{\mathcal H}
+      =R(v).
+  \end{align*}
+  因此 $r_R=U^{-1}SU\widehat u$ 正是 $R$ 关于移位能量内积的 Riesz 表示向量，并且
+  \begin{align*}
+    \lVert R\rVert_{\mu,*}
+    &=\lVert U^{-1}SU\widehat u\rVert_\mu
+      &&\text{（Riesz 表示定理）}
+      \\
+    &=\lVert UU^{-1}SU\widehat u\rVert_{\mathcal H}
+      &&\text{（$U$ 是等距同构）}
+      \\
+    &=\lVert SU\widehat u\rVert_{\mathcal H}.
+  \end{align*}
+  % [Proof Addition P1 End]
+  因而
+  \begin{align}
+    \frac{\lVert SU\widehat u\rVert_{\mathcal H}}
+    {\lVert U\widehat u\rVert_{\mathcal H}} = \frac{\lVert R\rVert_{\mu,*}}
+    {\lVert\widehat u\rVert_{\mu}}
+    &=q\leq\overline q.
+    \label{eq:transformed-residual-bound}
+  \end{align}
+  % [Proof Addition P2 Start]
+  下面的谱结论分为两个步骤。首先令 $x:=U\widehat u$。由于
+  $\widehat u\neq0$ 且 $U$ 是单射，有 $x\neq0$。有界自伴算子 $S$ 的谱定理给出
+  支撑在 $\sigma(S)$ 上的投影值测度 $E_S$，使
+  \begin{align*}
+    S&=\int_{\sigma(S)}s\,\dd E_S(s),
+    &I&=\int_{\sigma(S)}1\,\dd E_S(s).
+  \end{align*}
+  因此
+  \begin{align*}
+    \lVert Sx\rVert_{\mathcal H}^2
+    &=\int_{\sigma(S)}s^2\,
+      \dd\bigl(E_S(s)x,x\bigr)_{\mathcal H},
+    &\lVert x\rVert_{\mathcal H}^2
+    &=\int_{\sigma(S)}1\,
+      \dd\bigl(E_S(s)x,x\bigr)_{\mathcal H}.
+  \end{align*}
+  对每个 $s\in\sigma(S)$，均有
+  $s^2\geq\operatorname{dist}(0,\sigma(S))^2$。对上式积分并使用
+  式~\eqref{eq:transformed-residual-bound}，得到
+  \begin{align*}
+    \operatorname{dist}(0,\sigma(S))
+    &\leq\frac{\lVert Sx\rVert_{\mathcal H}}
+      {\lVert x\rVert_{\mathcal H}}
+      =q\leq\overline q.
+  \end{align*}
+  其次，$t$ 是 $\sigma(A(\beta))\subset[0,+\infty)$ 上的有界连续实函数，且
+  $S=t(A(\beta))$；连续函数演算的谱映射定理给出
+  \begin{align*}
+    \sigma(S)=\overline{t(\sigma(A(\beta)))}.
+  \end{align*}
+  % [Proof Addition P2 End]
+  自伴算子的谱定理于是得到
+  \begin{align*}
+    \operatorname{dist}(0,\sigma(S))
+    &\leq\overline q,
+    &\sigma(S)&=\overline{t(\sigma(A(\beta)))}.
+  \end{align*}
+  $\sigma(S)$ 是非空紧集，故到零的距离可以取到。闭包中由
+  $\lambda\to+\infty$ 产生的唯一附加极限点是 $1$；由于 $\overline q<1$，取得上述距离的
+  谱点不可能是 $1$。因此存在有限的 $\lambda\in\sigma(A(\beta))$，使
+  \begin{align}
+    \frac{|\lambda-\mu|}{\lambda+\mu}
+    &\leq\overline q.
+    \label{eq:relative-spectral-distance}
+  \end{align}
+  分别在 $\lambda\leq\mu$ 和 $\lambda\geq\mu$ 时解
+  式~\eqref{eq:relative-spectral-distance}，即得
+  $\lambda\in I^\lambda$。若 $I^\lambda\subset G_\beta$，该谱点不属于
+  $\sigma_{\mathrm{ess}}(A(\beta))$；命题~\ref{prop:discrete-spectrum-in-gap} 说明它是孤立、
+  有限重的离散特征值。由式~\eqref{eq:beta-formulation}，它正是导模特征值。
+\end{proof}
+
+将式~\eqref{eq:conditional-lambda-interval} 开平方，得到相应的正波数区间
+\begin{align}
+  I^k
+  &:={}
+  \left[
+    \widehat k\sqrt{\frac{1-\overline q}{1+\overline q}},
+    \widehat k\sqrt{\frac{1+\overline q}{1-\overline q}}
+  \right].
+  \label{eq:conditional-k-interval}
+\end{align}
+在 $I^\lambda\subset G_\beta$ 的条件下，至少存在一个离散特征频率
+$k_*\in I^k$，从而
+\begin{align}
+  \operatorname{dist}\!\left(
+    \widehat k,
+    \left\{\sqrt{\lambda}:\lambda\in
+    \sigma_{\mathrm{disc}}(A(\beta))\cap G_\beta\right\}
+  \right)
+  &\leq
+  \widehat k\left(
+    \sqrt{\frac{1+\overline q}{1-\overline q}}-1
+  \right).
+  \label{eq:conditional-k-error-bound}
+\end{align}
+式~\eqref{eq:conditional-k-error-bound} 控制的是候选到谱隙内离散特征频率集合的距离。
+只有再独立证明 $I^\lambda$ 中恰有一个谱值 $\lambda_*$，才能把它写成指定目标
+$k_*=\sqrt{\lambda_*}$ 的误差界；谱值唯一也不自动等价于代数重数为一。
+
+定理~\ref{thm:conditional-prediction-interval} 区分三种不同强度的输出。直接由普通浮点
+$\widetilde M$、$\widetilde N$ 形成的比值只是数值指标。若严格单侧界没有建立，而
+$\epsilon_M$、$\epsilon_N$ 仅由固定同一个 $\widehat u$ 的有限层差、全层拟合、
+leave-one-out fits 和经验余量得到，则相应比值只能记为 $q^{\mathrm{emp}}$。把
+式~\eqref{eq:conditional-k-interval} 中的 $\overline q$ 替换为 $q^{\mathrm{emp}}$，得到名义
+预测区间
+\begin{align}
+  I_{\mathrm{emp}}^k
+  &:={}
+  \left[
+    \widehat k\sqrt{\frac{1-q^{\mathrm{emp}}}{1+q^{\mathrm{emp}}}},
+    \widehat k\sqrt{\frac{1+q^{\mathrm{emp}}}{1-q^{\mathrm{emp}}}}
+  \right],
+  \qquad q^{\mathrm{emp}}<1.
+  \label{eq:empirical-prediction-interval}
+\end{align}
+有限层稳定性不能证明经验余量覆盖其后的全部离散误差，所以
+$I_{\mathrm{emp}}^k$ 不是可靠区间。只有式~\eqref{eq:strict-residual-and-field-bounds} 的两条
+单侧不等式、向外舍入的区间端点和同一算子的谱隙包含关系均已核验，定理的可靠解释才被
+触发。
+
+独立参考解的作用也与上述单侧证明不同。由拟合有限元、其他离散方法或更高分辨率计算得到
+的参考值，可以检验候选、模式身份以及经验估计量是否追踪实际离散漂移，但不能仅凭与
+$\widehat k$ 接近就把 $I_{\mathrm{emp}}^k$ 升级为严格上界。具体数值、加密层级和 effectivity
+比较将在数值实验部分另行报告；本节不加入任何未经认证的数值结果。
