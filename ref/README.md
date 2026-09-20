@@ -59,6 +59,7 @@
 
 | 路径 | 题目 | 作者 | 年份 | 主题 | 与本项目的关系 | BibTeX key |
 | --- | --- | --- | ---: | --- | --- | --- |
+| `ref_data/Barnett2018.pdf` | *Comparable Upper and Lower Bounds for Boundary Values of Neumann Eigenfunctions and Tight Inclusion of Eigenvalues* | Alex H. Barnett; Andrew Hassell; Melissa Tacy | 2018 | Neumann Laplacian、MPS、谱包含、加权边界 tension | 给出到最近 Neumann 谱点的边界残量型包含界；可启发周期情形的通道加权，但其定理本身不识别唯一目标特征值 | `BarnettHassellTacy2018` |
 | `ref_data/Bindel2013.pdf` | *Localization Theorems for Nonlinear Eigenvalue Problems* | David Bindel; Amanda Hood | 2013 | 非线性特征值、谱定位 | 为参数依赖算子特征值的包围和数值验证提供工具 | `BindelHood2013` |
 | `ref_data/Guettel2017.pdf` | *The Nonlinear Eigenvalue Problem* | Stefan Güttel; Françoise Tisseur | 2017 | 非线性矩阵特征值、数值算法综述 | 为项目频率依赖算子和数值特征值算法提供统一框架 | `GuettelTisseur2017` |
 | `ref_data/unsorted/Transmission Eigenvalues for Helmholtz Equation Perturbation Problems of Isotropic Media With Voids.pdf` | 《含空隙的各向同性介质 Helmholtz 方程扰动问题的传输特征值》 | 李诗璇；刘立汉 | 2023 | 传输特征值、折射率扰动、Neumann–Dirichlet 算子 | 与项目传输特征值的扰动理论和算子表述相关 | `LiLiu2023` |
