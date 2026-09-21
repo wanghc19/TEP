@@ -1,0 +1,15 @@
+{
+  "schema": "EPOST_I6_RESOLVENT_NONFOURIER_V1_INPUT_PROVENANCE",
+  "runtime_dependency": false,
+  "frozen_candidate": {
+    "local_file": "input/frozen-candidate.mat",
+    "copied_from": "test/i3/e-cap/input/fbie-a1-certificate.mat",
+    "byte_comparison_2026_09_20": "identical"
+  },
+  "circle_contract": {
+    "local_file": "input/circle-contract-a1.mat",
+    "copied_from": "test/i5/wall-curve-a1/input/circle-contract-a1.mat",
+    "byte_comparison_2026_09_20": "identical"
+  },
+  "runtime_note": "The MATLAB entry reads only the two explicit local MAT inputs; it does not parse this JSON, Markdown, Git, hashes, or historical results."
+}
