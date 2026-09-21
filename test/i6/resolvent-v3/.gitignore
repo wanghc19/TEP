@@ -1,0 +1,9 @@
+# Runtime-only caches and MATLAB preferences; retain scientific evidence.
+__pycache__/
+*.pyc
+tmp/
+output/**/prefs/
+output/**/tmp/
+
+# Locally installed third-party dependencies
+/vendor/
