@@ -66,3 +66,6 @@ ref/**
 !ref/README.md
 !ref/reference.bib
 !ref/AGENTS.md
+
+# Temporary experiment history
+/test/**/tmp/
