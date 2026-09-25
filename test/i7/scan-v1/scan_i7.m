@@ -17,7 +17,7 @@ function out = scan_i7(output)
 %   draft/examples/projgap.m and draft/examples/betagmode.m on main.
 % Main changes:
 %   Replace the empty center transfer by the scattering matrix of one
-%   epsrel=17 ellipse with semi-axes 0.25 and 0.16, and use a bounded
+%   epsrel=2 ellipse with semi-axes 0.25 and 0.16, and use a bounded
 %   gap-aware adaptive scan. Bound the public direct-kernel allocation by
 %   passing a target-batched evaluator to the proxy-source term.
 % Numerical goal:
@@ -37,7 +37,9 @@ function out = scan_i7(output)
 
   tstart = tic;
   beta = 0.5;
+  % Keep the circular leads at epsrel=17; vary only the center material.
   model = struct('beta',beta,'d',1,'R',0.2,'epsrel',17, ...
+    'epsrel_center',2, ...
     'XL',-0.5,'XR',0.5,'H',1.1,'pdist',0.2, ...
     'flag_geom','ellipse','ellipse_axes',[0.25,0.16]);
   coarse = struct('name','coarse','ntot',160,'nside',120,'ntop',120, ...
@@ -544,7 +546,7 @@ function defect = LOCAL_empty_center_regression()
 end
 
 function cellmap = LOCAL_center(k,M,model,cfg)
-%LOCAL_CENTER Construct the epsrel=17 elliptical center scattering matrix.
+%LOCAL_CENTER Construct the epsrel=2 elliptical center scattering matrix.
 
   pars = struct('k',k,'beta',model.beta,'d',model.d, ...
     'periodic_axis','y','h2d_evaluator',@LOCAL_h2d_chunked_public);
@@ -556,7 +558,7 @@ function cellmap = LOCAL_center(k,M,model,cfg)
     'N_side',cfg.nside,'N_top',cfg.ntop, ...
     'N_proxy_edge',cfg.nproxy,'M_pw',cfg.mpw);
   proxy = kernel.precomp_proxy(pars,mfscfg);
-  kint = sqrt(model.epsrel)*k;
+  kint = sqrt(model.epsrel_center)*k;
   cellmap = bloch.construct_S(C,k,kint,pars,proxy,curvelen,chans, ...
     model.XL,model.XR);
 end

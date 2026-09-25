@@ -13,7 +13,8 @@ temporaries, and one-use formatting values are omitted.
 | `model.d`, `model.XL`, `model.XR` | model fields | period $d=1$ and walls $X_L=-0.5$, $X_R=0.5$ | real scalars, length | `scan_i7` / channels and scattering |
 | `model.R`, `flag_geom` | lead geometry | circular lead radius $0.2$ and selector `circle` | real length, char | `scan_i7`, `LOCAL_cellsub` |
 | `model.flag_geom`, `model.ellipse_axes` | center geometry | selector `ellipse` and semi-axes $(0.25,0.16)$ | char, real $1\times2$ length | `scan_i7` / `LOCAL_center` |
-| `model.epsrel`, `kint` | material/derived scalar | relative permittivity $17$ and $k_{\mathrm{int}}=\sqrt{17}k$ | real scalars | model / both cell constructors |
+| `model.epsrel`, `kint` | lead material/derived scalar | circular-lead relative permittivity $17$ and $k_{\mathrm{int}}=\sqrt{17}k$ | real scalars | model / `LOCAL_cellsub` |
+| `model.epsrel_center`, `kint` | center material/derived scalar | attempt 2 overrides the center permittivity to $2$, with $k_{\mathrm{int}}=\sqrt{2}k$ | real scalars | model / `LOCAL_center` |
 | `model.H`, `model.pdist`, `mfscfg`, `proxy` | proxy data | frozen proxy box parameters and public precomputation | scalars/structs | model/config / `construct_S` |
 | `coarse`, `final`, `cfg` | spatial configuration | coarse $(160,120,120,64,24)$ and final $(256,160,160,80,32)$ | scalar structs | entry / point constructors |
 | `M`, `K` | channel orders | Rayleigh half-order and $K=2M+1$ | integers | scan layers / channels and QZ |
@@ -45,3 +46,21 @@ temporaries, and one-use formatting values are omitted.
 
 `asig`, `arat`, `psig`, and `prat` are permitted short local aliases for the
 fully named `out` and history fields; they do not denote different objects.
+
+
+## Local uniform locator
+
+`locate_i7` uses the same model, final spatial configuration, matrix formulas,
+and public target-batched kernel as `scan_i7`. Its local names are:
+
+| Code name | Meaning | Type and scope |
+|---|---|---|
+| `kmin`, `dk`, `nk` | First node, positive grid spacing, number of points | Scalar inputs to `locate_i7` |
+| `cfg`, `M` | Fixed final tuple $(256,160,160,80,32)$ and $M=48$ | Local constants |
+| `k` | Uniform nodes `kmin+(0:nk-1)'*dk` | `nk`-by-1 column |
+| `scan` | This call's `k`, `adef_sigma`, `adef_ratio`, `aphys_sigma`, `aphys_ratio` | Five-column table; distinct from the metadata struct in `scan_i7` |
+| `out` | Same seven scalar fields; metrics at this call's minimum `aphys_ratio` | Scalar struct; `runtime` measures this call |
+
+For a strict interior minimum, the nominal full interval between its two
+neighbors is `2*dk`; reported widths use the stored endpoint difference. This
+sampling scale is not an eigenvalue or minimizer error bound.

@@ -160,3 +160,171 @@ advisories remain in `scan_i7.m`: two intentional lifetime-only `onCleanup`
 assignments and four bounded append operations for history/cache/trace. The
 modified public package file has no advisory. The corrected audit found no
 code-check error and all numerical gates passed.
+
+
+## Attempt 2: lower center refractive index (2026-09-25)
+
+This run follows `design-7-1a.md` for the numerical method but overrides only
+the ellipse material to `model.epsrel_center=2` (index $\sqrt{2}$). Circular
+leads retain `model.epsrel=17`; all geometry, grids, discretizations, algorithms,
+and stopping rules are unchanged. See [`SYMBOLS.md`](SYMBOLS.md). Preceding
+results retain their original center material.
+
+The [actual command](output/attempt-2/run-02/command.txt) includes post-run
+checks. To repeat the scan, choose an unused directory (for example `run-03`):
+
+```sh
+cd /Users/whc/Documents/Work/epost
+run_dir="$PWD/test/i7/scan-v1/output/attempt-2/run-03"
+MATLAB_BIN=/Applications/MATLAB_R2023b.app/bin/matlab bash test/i7/run_matlab_monitored.sh "$run_dir" "cd(tempdir); addpath('/Users/whc/Documents/Work/epost'); addpath('/Users/whc/Documents/Work/epost/test/i7/scan-v1'); out=scan_i7('$run_dir'); disp(out);"
+```
+
+| Field | Original center `epsrel=17` | Attempt 2 center `epsrel=2` |
+|---|---:|---:|
+| `beta` | 0.5 | 0.5 |
+| `k` | 1.45 | 1.7544921875000001 |
+| `adef_sigma` | 3.6371178757473972 | 0.0017605539256743739 |
+| `adef_ratio` | 0.0060199359811023666 | 2.9139772056421109e-06 |
+| `aphys_sigma` | 1.3746238403333091 | 0.00087138658623769319 |
+| `aphys_ratio` | 0.31371305311538561 | 0.00030462845109826403 |
+| `runtime` | 182.50832770833333 | 307.36577391666668 |
+
+The original column is from `attempt-1/kernel-revision/scheme-2-run-01`.
+Its best was the left boundary $k=1.45$. The new best is an interior dip:
+final-config `aphys_ratio` is $0.04421804$ at $k=1.725$, $0.03038474$ at
+$k=1.775$, and $0.0003046284511$ at $k=1.7544921875$. It is not a confirmed
+eigenvalue; no I7.2 work was performed.
+
+All 17 gap and 33 screening points on $[1.45,2.25]$ were valid. One candidate
+was refined over levels 0--7 on $[1.725,1.775]$: 20 distinct final points,
+including the $k=1.85$ pilot, 21 cache hits, and one winner repeat. The last
+interval was $[1.754296875,1.7546875]$; the original maximum-level rule stopped
+refinement. There were zero invalid points and zero repeat difference. Checks
+passed for the center-only change, unchanged settings/gap classification, the
+seven finite scalar fields, public kernel, and valid-final argmin; new/old
+scores were not required to agree.
+
+MATLAB R2023b exited 0 in 320 s monitored wall time, with process-tree peak RSS
+1,123,532,800 bytes (0.25 s sampling; limits 1800 s and 3,000,000,000 bytes).
+`run-01` failed before scanning because of a leading-newline batch expression
+(12 s, exit 1, peak 808,435,712 bytes); its evidence remains intact. `run-02`
+used a single-line command. Total monitored time was 332 s. No unresolved
+numerical failure was observed; interpretation remains limited by the finite
+grid and fixed spatial configuration.
+
+Outputs: [out.mat](output/attempt-2/run-02/out.mat),
+[history.csv](output/attempt-2/run-02/history.csv),
+[scan.mat](output/attempt-2/run-02/scan.mat),
+[comparison.json](output/attempt-2/run-02/comparison.json), and
+[resource status](output/attempt-2/run-02/monitor-status.txt).
+
+
+## Attempt 3: local uniform localization (2026-09-25)
+
+[`locate_i7.m`](locate_i7.m) provides `[out,scan] = locate_i7(kmin,dk,nk)`.
+One call evaluates exactly `kmin+(0:nk-1)*dk`; `scan` is a five-column table
+of `k` and the four metrics. Selection uses `aphys_ratio`, and all four `out`
+metrics come from that row. `out.runtime` measures this call, not the combined
+sequence. There is no cache, automatic refinement, or historical-file input.
+
+The model follows attempt 2: $\beta=0.5$, circular leads of radius $0.2$ with
+`epsrel=17`, and the center ellipse $(0.25,0.16)$ with `epsrel_center=2`.
+Only the final spatial tuple `(ntot,nside,ntop,nproxy,mpw)=(256,160,160,80,32)`
+and `M=48` are used. The six numerical helpers are copied unchanged from the
+current `scan_i7`; the warning guard, QZ gates, finite checks, and public
+512-target batching are retained. `scan_i7.m` and prior results were untouched
+by this localization task.
+
+To repeat a local grid, choose an unused output directory. For example:
+
+```sh
+cd /Users/whc/Documents/Work/epost
+run_dir="$PWD/test/i7/scan-v1/output/attempt-3/run-13"
+MATLAB_BIN=/Applications/MATLAB_R2023b.app/bin/matlab bash test/i7/run_matlab_monitored.sh "$run_dir" "cd(tempdir); addpath('/Users/whc/Documents/Work/epost'); addpath('/Users/whc/Documents/Work/epost/test/i7/scan-v1'); [out,scan]=locate_i7(1.7545053299500002,1e-11,11); save(fullfile('$run_dir','result.mat'),'out','scan'); disp(out);"
+```
+
+The actual [final command](output/attempt-3/run-12/command.txt) additionally
+checks the public kernel path, absence of `tmp` from the path, the exact-point
+repeat, and code diagnostics, and produces the plots. No `genpath` is used.
+
+Run 01 reevaluated the requested old point $k=1.7544921875$. Absolute changes
+from the saved attempt-2 metrics were respectively
+$3.17\times10^{-15}$, $5.24\times10^{-18}$, $2.14\times10^{-15}$, and
+$7.47\times10^{-16}$; the saved and requested `k` differ by one ULP.
+Each next grid below was chosen explicitly after inspecting the previous
+result. Every grid argmin was interior, so no endpoint expansion was needed.
+
+| Run | First sampled k | Last sampled k | dk | Ratio-best k | Full neighbor width | Entry seconds |
+|---|---:|---:|---:|---:|---:|---:|
+| run-02 | 1.75439453125 | 1.75458984375 | 1.953125e-05 | 1.7545117187499999 | 3.90625e-05 | 101.891 |
+| run-03 | 1.7544921874999999 | 1.7545312499999999 | 3.90625e-06 | 1.7545039062499999 | 7.8125e-06 | 97.977 |
+| run-04 | 1.7544999999999999 | 1.7545078125 | 7.8125e-07 | 1.7545054687499999 | 1.5625e-06 | 97.908 |
+| run-05 | 1.7545046875000001 | 1.7545062500000002 | 1.5625e-07 | 1.7545053125000001 | 3.125e-07 | 99.437 |
+| run-06 | 1.75450515625 | 1.7545054687500001 | 3.125e-08 | 1.75450534375 | 6.24999998e-08 | 109.055 |
+| run-07 | 1.7545053125000001 | 1.7545053750000001 | 6.25e-09 | 1.7545053312500001 | 1.25000001e-08 | 107.123 |
+| run-08 | 1.754505325 | 1.7545053374999999 | 1.25e-09 | 1.75450533 | 2.49999998e-09 | 103.252 |
+| run-09 | 1.7545053287500001 | 1.7545053312500001 | 2.5e-10 | 1.7545053300000002 | 4.99999819e-10 | 98.217 |
+| run-10 | 1.7545053297500002 | 1.7545053302500002 | 5e-11 | 1.7545053300000002 | 1.00000008e-10 | 100.578 |
+| run-11 | 1.7545053299500002 | 1.7545053300500002 | 1e-11 | 1.7545053299700002 | 2.00000017e-11 | 101.645 |
+
+The [complete summary](output/attempt-3/summary.csv) records each interval's
+actual width, all four metrics at its best point, relative improvements,
+neighbor score differences, entry/wall times, and peak RSS. Full-precision
+[JSON](output/attempt-3/summary.json), per-run MAT files, and full-precision
+scan JSON preserve the last digits; CSV display rounding is not used to
+identify exact repeated `k` values.
+
+Run 06 first reached full neighbor width $6.249999984220267\times10^{-8}$
+with `dk=3.125e-8` (whole scan width $3.125000000991918\times10^{-7}$).
+Run 11 first reached $2.000000165480742\times10^{-11}$ with `dk=1e-11`
+(whole scan width $1.000000082740371\times10^{-10}$). Run 10's neighbor width
+was slightly greater than $10^{-10}$ in stored double precision, so it was
+not counted as satisfying that threshold. These are sampling scales, not
+position-error bounds.
+
+Value flattening appeared by run 08; the first irregular near-platform
+samples appeared in run 09 (`dk=2.5e-10`, full neighbor width approximately
+$5\times10^{-10}$), supported by runs 10--11. Their successive best-ratio
+improvements were $9.94\times10^{-17}$, zero, and $7.32\times10^{-16}$.
+Run 11 has competing low samples at $1.7545053299700002$ and
+$1.7545053300200002$, only $1.12\times10^{-16}$ apart in ratio. Thus its
+mechanical argmin does not establish ten-digit position accuracy. The
+sampled near-platform range in run 10 was
+$[1.7545053297500002,1.7545053302500002]$ (width about $5\times10^{-10}$),
+with ratio spread $3.43\times10^{-15}$. This observed range is not a
+certified enclosure of a continuous minimum. The coarser run-08 neighbor
+range $[1.75450532875,1.75450533125]$ still showed a resolved sampled dip;
+no finer *reliable* position enclosure is established here.
+
+At the selected ratio minima, `aphys_sigma` settles near
+$8.69578027\times10^{-4}$. Within the finest windows it still decreases with
+`k`; its separate minimizer is not the ratio minimizer. No metrics from
+separate minima are mixed. Platform causes remain unassigned.
+
+The final [out.json](output/attempt-3/run-12/out.json) and
+[out.mat](output/attempt-3/run-12/out.mat) come from the one-point call at
+$k=1.7545053299700002$; all four metrics exactly repeat run 11.
+Across the 21 exact-double repeated-point comparisons, all four differences
+were zero. This establishes reproducibility of these evaluations, not their
+accuracy relative to an undiscretized operator. Refinement stopped after both
+sampling-scale targets and persistent platform evidence, followed by that
+repeat. No continuous-operator eigenvalue is confirmed.
+
+The 12 monitored MATLAB calls evaluated 112 points in 1189 s wall time
+(including startup, checks, and plotting); summed entry time was
+1036.234010917 s. Peak process-tree RSS was 1,268,891,648 bytes, sampled every
+0.25 s, within the combined 1800 s and 3,000,000,000-byte limits. All calls
+exited 0; there were no failed numerical evaluations in this attempt.
+See [resource records](output/attempt-3/run-12/resources.csv), per-run
+`resources.csv`/`monitor-status.txt`, and the summary for the complete record.
+The sampling curves are available as
+[PNG](output/attempt-3/run-12/localization.png) and
+[PDF](output/attempt-3/run-12/localization.pdf); display offsets do not change
+saved metrics or matrix normalization.
+
+Independent Skeptic review: **PASS WITH CONDITIONS**. Frozen model/config,
+core-helper reuse, public-kernel resolution, scalar-output provenance,
+actual interval widths, exact-point repeat, and resource bounds passed.
+The remaining limitation is unresolved fine-grid position accuracy and
+platform origin. MATLAB `checkcode` reported only one intentional `NASGU`
+advisory for the lifetime-only `onCleanup` warning guard; no blocker was found.
