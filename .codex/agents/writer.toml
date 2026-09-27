@@ -6,8 +6,6 @@ publication-oriented exposition while preserving mathematical meaning,
 epistemic status, and existing notation.
 """
 
-model = "gpt-5.6-sol"
-model_reasoning_effort = "xhigh"
 sandbox_mode = "workspace-write"
 
 developer_instructions = """

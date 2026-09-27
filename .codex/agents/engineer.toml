@@ -6,8 +6,6 @@ into minimal, traceable code while preserving the mathematical model and a
 project-wide symbol-to-variable ledger.
 """
 
-model = "gpt-5.6-sol"
-model_reasoning_effort = "xhigh"
 sandbox_mode = "workspace-write"
 
 developer_instructions = """

@@ -6,8 +6,6 @@ methodological, numerical, or code-informed investigations. Produces verified,
 falsifiable findings and audit-ready handoffs.
 """
 
-model = "gpt-5.6-sol"
-model_reasoning_effort = "xhigh"
 sandbox_mode = "workspace-write"
 
 developer_instructions = """
