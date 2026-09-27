@@ -17,16 +17,17 @@ pair-matrix evaluator hook；不修改公共核公式。
 - 数值 projected gap 由 main `projgap.m` 的圆形周期介质计算。I7.1 只在该范围内作有限层、
   有预算的局部扫描；结果不称全局搜索或连续谱认证。
 
-## 两阶段里程碑
+## 三阶段里程碑
 
 | Milestone | 任务 | 状态 | 交付 |
 |---|---|---|---|
 | I7.1 | 中心 `epsrel=2` 时观察到潜在内点 dip，完成固定 final 配置下的局部定位；细网格出现平台迹象 | `PASS WITH CONDITIONS / LOCAL DIP CANDIDATE` | [[research/projects/eig-apost/implementation/i7/design-7-1a|设计]]、[[test/i7/scan-v1/README|实验入口]]、[[research/projects/eig-apost/implementation/i7/review-7-1a|独立审查]] |
 | I7.2 | 在固定肩点 $1.753125,1.75625$ 构造物理迹矩阵，执行 Hermitian-part 惯性型端点诊断 | `COMPLETE / JUMP; delta_negative=+1` | [[research/projects/eig-apost/implementation/i7/design-7-2a|设计]]、[[test/i7/inertia-v1/check_i7_inertia|入口]]、[[research/projects/eig-apost/implementation/i7/review-7-2a|独立审查]] |
+| I7.3 | 分开加密 Rayleigh 阶数与 inclusion 边界，检查同一物理墙面迹及共同局部网格位置 | `COMPLETE / STABLE_SAME_MODE; PASS WITH CONDITIONS` | [[research/projects/eig-apost/implementation/i7/design-7-3a|设计与符号映射]]、[[test/i7/refine-v1/check_i7_refinement|入口]]、[[research/projects/eig-apost/implementation/i7/review-7-3a|独立审查]] |
 
 I7.2 的 sign count 只作 numerical corroboration，不解释为 raw non-Hermitian matrix 的严格
-inertia。原计划的跨离散阶数稳定性和同模态比较保留为**后续未执行事项**，不计入本轮 I7.2
-完成状态。后续比较须区分边界离散轴与 trace cutoff 轴，并报告同一 mode；零 observed
+inertia。跨离散阶数稳定性和同模态比较现独立列为 I7.3，不追溯改变 I7.2 的完成范围。
+I7.3 区分 inclusion 边界离散轴、Rayleigh cutoff 轴和固定的 proxy 拟合配置；零 observed
 candidate drift 也不构成 root、minimizer 或连续特征值收敛证明。
 
 ## 当前 I7.1：中心 `epsrel=2`
@@ -89,6 +90,186 @@ MATLAB_BIN=/Applications/MATLAB_R2023b.app/bin/matlab bash test/i7/run_matlab_mo
 [[test/i7/inertia-v1/output/attempt-1/run-01/resources.csv|RSS 记录]]、
 [[research/projects/eig-apost/implementation/i7/review-7-2a|独立审查]]。
 关键数值已在本节和设计/审查文档中保存，不依赖被忽略的 output 目录才能了解结论。
+
+## I7.3：离散加密与同模态检查
+
+2026-09-26 开始，冻结 $k_L=1.753125$、$k_0=1.7545053299700002$、
+$k_R=1.75625$，模型保持中心 `epsrel_center=2`、两侧 `epsrel=17`。
+六个必做配置为 `(ntot,M)=(256,48),(256,56),(256,64),(384,48),(512,48),(512,64)`；
+其余 tuple 固定为 `(nside,ntop,nproxy,mpw)=(160,160,80,32)`。
+`M` 是 Rayleigh 端口阶数，`nside/ntop` 是 proxy 拟合采样，`nproxy` 是 proxy 节点参数，
+`mpw` 是该表示的 plane-wave 阶数，不能把它们混称为同一离散轴。
+
+同模态比较使用物理墙面 Dirichlet trace。$H_{\mathrm{sym}}$ 特征向量已处于该坐标；
+$A_{\mathrm{phys}}$ 右奇异向量按 $v\mapsto D_cv\mapsto TD_cv$ 转换。
+左右墙分别按真实模态编号 $m$ 对齐后零填充，报告相位/尺度不变 overlap、次近模态、
+新增高模能量和近简并子空间。完整判据及符号映射见
+[[research/projects/eig-apost/implementation/i7/design-7-3a|设计]]；独立审查见
+[[research/projects/eig-apost/implementation/i7/review-7-3a|审查]]。
+
+资源监控仅在新实验目录适配，保留旧 monitor。为落实本轮 3,000,000,000-byte 上限，
+提前终止线设为 2,300,000,000 bytes，同时监测本任务进程树及全部 MATLAB 进程树并集，
+每 0.1 s 采样；启动前拒绝已有 MATLAB，运行中遇到外部 MATLAB 则只停止本任务。
+同一 attempt 的非阻塞锁防止重复启动。内存早停、信号清理、锁拒绝和真实外部任务拦截
+已经实际测试，证据保存在 `refine-v1/output/attempt-1/run-02/monitor-selftest/`。
+`run-01` 是约 0.9 s 的启动失败预检，未进行科学评价，RSS 未采样；按 1 s 计入预算。
+用户报告的 17 GB 事件来源未知，本轮没有将它归因于某项任务。
+
+**实际结果：`COMPLETE / STABLE_SAME_MODE; PASS WITH CONDITIONS`。**
+
+`attempt-1/run-04` 的 18 个点全部有效；六配置都在相同两个肩点保持负计数 $0\to1$。
+$c=50,100,200$ 三带计数完全一致，全部端点 unresolved 为零。下表计数顺序为
+`(positive,negative,unresolved)`，余量定义为 $\min|\lambda|-\eta_{100}$，
+它不是严格误差界。正计数随矩阵维数增长，不作跨 $M$ 的逐项恒等要求。
+
+| 配置 | `(ntot,M)` | L 计数 | R 计数 | $d_H(L)/d_H(R)$ | 余量 L / R |
+|---|---|---|---|---|---|
+| B | (256,48) | (194,0,0) | (193,1,0) | 0.0069403631806 / 0.0069760925283 | 0.003303724159 / 0.00597864968 |
+| M56 | (256,56) | (226,0,0) | (225,1,0) | 0.0069403631806 / 0.0069760925283 | 0.003303723225 / 0.005978648746 |
+| M64 | (256,64) | (258,0,0) | (257,1,0) | 0.0069403631806 / 0.0069760925283 | 0.003303722148 / 0.00597864767 |
+| N384 | (384,48) | (194,0,0) | (193,1,0) | 0.0069403631806 / 0.0069760925283 | 0.003303724159 / 0.00597864968 |
+| N512 | (512,48) | (194,0,0) | (193,1,0) | 0.0069403631806 / 0.0069760925283 | 0.003303724159 / 0.00597864968 |
+| J | (512,64) | (258,0,0) | (257,1,0) | 0.0069403631806 / 0.0069760925283 | 0.003303722148 / 0.00597864767 |
+
+各配置最近零特征值均约为左端 $+0.010244089942$、右端 $-0.012954744811$；
+同一端点跨配置变化分别不超过 $2.7\times10^{-13}$、$2.8\times10^{-13}$。
+全部点的 `rcond(T)` 最小为 0.517637176836，组装/右求解误差最大分别为
+$7.93923\times10^{-19}$、$5.55667\times10^{-19}$。
+QZ 两方向均为 $K$ stable、$K$ unstable、0 neutral、0 indeterminate；无求解警告。
+候选点 $k_0$ 的 Hsym 均有一个 band-unresolved 特征值，约 $-1.32\times10^{-6}$；
+这不改变预先固定的肩点判号规则，也不构成候选点的严格判零。
+
+固定 $k_0=1.7545053299700002$ 的四指标为：
+
+| 配置 | adef_sigma | adef_ratio | aphys_sigma | aphys_ratio |
+|---|---:|---:|---:|---:|
+| B | 0.00175690973544 | 2.90794553241e-06 | 0.000869578027222 | 0.000303999932758 |
+| M56 | 0.00175690973544 | 2.4931030871e-06 | 0.000869578027224 | 0.000303999932758 |
+| M64 | 0.00175690973544 | 2.18184587776e-06 | 0.000869578027222 | 0.000303999932758 |
+| N384 | 0.00175690973544 | 2.90794553241e-06 | 0.00086957802722 | 0.000303999932757 |
+| N512 | 0.00175690973544 | 2.90794553242e-06 | 0.000869578027224 | 0.000303999932758 |
+| J | 0.00175690973546 | 2.18184587778e-06 | 0.000869578027225 | 0.000303999932759 |
+
+跨六配置的 `aphys_sigma`、`aphys_ratio` 全范围分别仅为
+$5.1424\times10^{-15}$、$1.7981\times10^{-15}$；$d_H$ 也未随两轴加密下降。
+这说明本次 $M$ 和 inclusion 边界加密范围内出现平台。`adef_ratio` 随 $M$ 下降约 25%，
+来自 $\sigma_{\max}(A_{\mathrm{def}})$ 从约 604.176 增到 805.240，而最小奇异值基本不变；
+不能把这一分母变化解释为 dip 加深。其他拟合参数固定，平台来源尚未识别。
+
+六条配置边、三类同 $k$ 对象的 18 次比较均为 simple mode，并通过冻结规则：
+最小物理迹 overlap 为 `0.9999999999999998`，最大双向 primary/competitor cross-overlap
+为 $4.50\times10^{-14}$；$|m|>48$ 的最大能量占比为 $7.44\times10^{-31}$。
+模态 gap 相对 machine-scale cluster band 的比至少为 $8.31\times10^7$（Hsym）和
+$8.32\times10^9$（Aphys）。这提供同模态的离散证据，不由不同矩阵的谱值相近推断身份。
+
+基线与 I7.2 的计数、构造、条件数、$d_H$ 和 $\eta$ 复算一致；最近零特征值差
+不超过 $9.3\times10^{-13}$。候选点四指标与 I7.1 保存结果差不超过 $1.1\times10^{-18}$。
+独立保存矩阵 audit 复核 18 点、18 次比较，最大组装/求解残差为
+$7.26\times10^{-18}$，最大 overlap 差为 $2.23\times10^{-16}$，全部通过。
+
+固定点阶段按用户当时选择在 `run-04` 交付，未执行局部位置扫描或 AUX。
+随后单独授权的位置检查见下方续轮；`AUX` 仍未执行，平台来源不作归因。
+两阶段的数值证据均不确认 raw $H$ 的严格惯性、实根存在/唯一性或连续算子的特征值。
+
+入口为 `[result,evidence] = check_i7_refinement(checkpoint_dir)`；省略参数也能运行，
+显式目录仅用于逐点保存，不是模型输入。目录必须预先存在且 checkpoint 不可覆盖。
+固定点阶段入口保持不变；本续轮使用下方新增的 `local` 模式。
+实际完整命令另见 [[test/i7/refine-v1/output/attempt-1/run-04/command.txt|command.txt]]。
+[[test/i7/refine-v1/output/attempt-1/run-04/result.json|结果]]、
+[[test/i7/refine-v1/output/attempt-1/run-04/scientific.mat|矩阵及模态]]、
+[[test/i7/refine-v1/output/attempt-1/run-04/audit.json|独立数值 audit]]、
+[[test/i7/refine-v1/output/attempt-1/run-04/resources.csv|资源时间序列]]、
+[[test/i7/refine-v1/output/attempt-1/run-04/refinement-summary.png|两轴数值图]]。
+图中下排纵轴自动放大了约 $10^{-15}$ 量级的差异，只能解释为所测平台中的微小变化。
+run-04 入口耗时 340.255368 s，完整受监测调用 365.178545 s，exit 0，
+进程树和全部 MATLAB 树并集峰值均为 **1,943,863,296 bytes**，低于 2.3 GB 提前线。
+run-03 仅因 helper 形参误用保留字 `otherwise` 而解析失败，12.888699 s、886,259,712 bytes；
+已改名 `fallback`，未改变数学方法。连同未采 RSS 的 run-01 预检，本轮 MATLAB 已使用
+保守累计 380 s。无 MATLAB 科学点因资源超限或数值错误而失败。
+本轮自 08:10:04 UTC 首次行动至 09:18:31 UTC 交付检查共 4107 s，包含用户明确暂停的 104 s；
+用户在 08:57:59 UTC 恢复并另给 90 分钟后，已用 1232 s。
+完整记录见 [[test/i7/refine-v1/output/attempt-1/run-04/task-time.json|task time]]。
+
+
+
+### I7.3 续轮：共同局部网格的位置比较
+
+用户随后单独授权的局部检查已完成。`attempt-1/run-06` 对六配置各作 11 点 fresh evaluations，
+66/66 点有效且数值诊断通过。模型、辅助 tuple 以及既有 29 个 `LOCAL_` 数值 helper 的执行代码
+保持不变；没有重跑旧肩点、执行 `AUX` 或改动其他辅助离散参数。
+
+六配置共用实际区间 `[1.7544553299700001,1.7545553299700003]`，
+完整宽度约 $1.00000000000211\times10^{-4}$，名义 $d_k=10^{-5}$。
+均按 `aphys_ratio` 选点；`aphys_sigma` 自身的采样最小点也全为第 6 点 $k_0$。
+四指标对应同一个最佳点和同一配置：
+
+| 配置 `(ntot,M)` | 最佳 $k$ | 相对 B 的采样漂移 | adef_sigma | adef_ratio | aphys_sigma | aphys_ratio | 对 B 的同模态 overlap |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| B (256,48) | 1.7545053299700002 | 0 | 0.0017569097354397 | 2.90794553241222e-06 | 0.00086957802722225 | 0.000303999932757942 | 1 |
+| M56 (256,56) | 1.7545053299700002 | 0 | 0.00175690973544234 | 2.49310308709946e-06 | 0.000869578027223564 | 0.000303999932758402 | 1 |
+| M64 (256,64) | 1.7545053299700002 | 0 | 0.00175690973543933 | 2.181845877763e-06 | 0.000869578027222249 | 0.000303999932757942 | 1 |
+| N384 (384,48) | 1.7545053299700002 | 0 | 0.00175690973543591 | 2.90794553240595e-06 | 0.000869578027220243 | 0.00030399993275724 | 0.99999999999999989 |
+| N512 (512,48) | 1.7545053299700002 | 0 | 0.00175690973544301 | 2.90794553241771e-06 | 0.000869578027223789 | 0.000303999932758481 | 1 |
+| J (512,64) | 1.7545053299700002 | 0 | 0.00175690973545679 | 2.18184587778467e-06 | 0.000869578027225385 | 0.000303999932759038 | 1 |
+
+全部为严格内点，左右相邻点区间统一为
+`[1.7544953299700001,1.7545153299700003]`，
+完整邻点间距 $2.0000000000131024\times10^{-5}$。以下差值均为邻点 score 减最佳点 score：
+
+| 配置 | 11 点耗时 / s | 左邻点 ratio 差 | 右邻点 ratio 差 | 内点 / sigma 自身最小点 |
+|---|---:|---:|---:|---|
+| B | 97.047647 | 3.64044484536e-07 | 3.64025397405e-07 | 是 / $k_0$ |
+| M56 | 97.053702 | 3.64044484499e-07 | 3.6402539716e-07 | 是 / $k_0$ |
+| M64 | 98.443681 | 3.64044485192e-07 | 3.64025396745e-07 | 是 / $k_0$ |
+| N384 | 210.485433 | 3.64044485975e-07 | 3.64025398151e-07 | 是 / $k_0$ |
+| N512 | 366.440533 | 3.64044483622e-07 | 3.6402539627e-07 | 是 / $k_0$ |
+| J | 366.659183 | 3.64044483238e-07 | 3.64025396136e-07 | 是 / $k_0$ |
+
+66 次相同 $k$ 的配置边 physical-wall-trace 比较全部通过；最小 overlap 为
+`0.9999999999999996`，最大双向 primary/competitor cross-overlap 为
+$4.095494860270543\times10^{-14}$，$|m|>48$ 最大能量占比
+$9.012495903032183\times10^{-32}$。没有近简并或强行配对。
+独立保存向量中，各配置网格点对该配置 $k_0$ 的 overlap 最小为
+`0.9999999999947863`；该跨 $k$ 量仅描述模态连续性，不替代相同 $k$ 的比较门。
+
+**结论：步长 $10^{-5}$ 的共同网格上未分辨出漂移。**
+状态为 `LOCAL_GRID_COMPLETED / NO_DRIFT_RESOLVED_AT_SPACING_1E-5`。
+因全部最佳点已有有效邻点夹住，按冻结规则停止，没有拟合、插值或进一步加密。
+采样漂移为零不是实际极小点误差为零；邻点区间不是认证包围区间。
+本轮没有可靠分辨网格以下的位置差异，不宣称位置已经收敛或连续特征值存在。
+
+`run-07` 的 MATLAB 保存数据 audit 复核六个 winner 的权重、SVD、物理迹和 QZ 分类，
+及全部 66 个同 $k$ edge，均通过；四指标最大绝对复算差
+$7.047314121155779\times10^{-18}$，overlap 最大复算差
+$3.3306690738754696\times10^{-16}$。本轮最佳点四指标逐项等于 `run-04` 的 $k_0$ 结果。
+独立审查为 `PASS WITH CONDITIONS`；限制是有限网格与固定辅助参数，
+不是追加 `AUX` 或理论认证的完成要求。详见
+[[research/projects/eig-apost/implementation/i7/review-7-3a|审查记录]]。
+
+| 本续轮记录 | 用途 | 受监测 wall time / s | 进程树及 MATLAB 并集峰值 RSS / bytes | 退出状态 |
+|---|---|---:|---:|---|
+| run-05 | 5 点后停止，修正 invalid/platform 状态门；保留 checkpoint | 56.714003 | 1,298,055,168 | 143，显式 SIGTERM |
+| run-06 | 完整 66 点局部扫描 | 1250.057854 | 1,606,238,208 | 0 |
+| run-07 | 保存数据 audit、绘图、checkcode | 13.889967 | 1,238,335,488 | 0 |
+
+`run-06` 入口耗时 1236.527470 s；本续轮 MATLAB 含停止记录和审计共 1320.661824 s。
+连同先前固定点阶段与失败预检，I7.3 累计 1699.729068 s（约 28 分 20 秒），小于 2700 s 预算。
+三个新运行以 0.1 s 采样，无外部 MATLAB 并发，未触及 2,300,000,000-byte 提前线或
+3,000,000,000-byte 上限。先前固定点阶段已监测峰值 1,943,863,296 bytes 仍高于本续轮峰值。
+本次局部续轮从 09:31:46 UTC 至 10:08:44 UTC 交付检查约 36 分 58 秒；
+从用户 08:57:59 UTC 恢复并另给 90 分钟起计约 70 分 45 秒。
+计时记录见 [[test/i7/refine-v1/output/attempt-1/run-07/task-time.json|续轮 task time]]。
+`checkcode` 仅有已解释的 suppression/cleanup advisories，没有语法错误。
+
+入口为 `[result,evidence] = check_i7_refinement(checkpoint_dir,'local')`。
+完整受监测复现命令见 [[test/i7/refine-v1/README|实验 README]]，使用新运行目录并扣减已耗预算。
+保存证据：
+[[test/i7/refine-v1/output/attempt-1/run-06/command.txt|实测命令]]、
+[[test/i7/refine-v1/output/attempt-1/run-06/result.json|完整结果]]、
+[[test/i7/refine-v1/output/attempt-1/run-06/scientific.mat|winner 矩阵和逐点模态]]、
+[[test/i7/refine-v1/output/attempt-1/run-06/resources.csv|RSS 时间序列]]、
+[[test/i7/refine-v1/output/attempt-1/run-07/audit.json|独立数值复核]]、
+[[test/i7/refine-v1/output/attempt-1/run-07/local-scan.png|六配置曲线]]。
 
 ## 历史 I7.1 数值结果
 
@@ -193,7 +374,10 @@ audit wall time 为 17 s，peak process-tree RSS 为 851,787,776 bytes。第一�
 2. [[test/i7/scan-v1/README|scan-v1 experiment index]] 与其 `output/attempt-1/` 运行记录；
 3. [[research/projects/eig-apost/implementation/i7/review-7-1a|I7.1 initial independent review]]；
 4. [[research/projects/eig-apost/implementation/i7/design-7-2a|I7.2 endpoint design]] 与
-   [[research/projects/eig-apost/implementation/i7/review-7-2a|I7.2 independent review]]。
+   [[research/projects/eig-apost/implementation/i7/review-7-2a|I7.2 independent review]]；
+5. [[research/projects/eig-apost/implementation/i7/design-7-3a|I7.3 discretization design]]、
+   [[test/i7/refine-v1/check_i7_refinement|refinement entry]] 与
+   [[research/projects/eig-apost/implementation/i7/review-7-3a|I7.3 independent review]]。
 
 ## I7 待办与问题
 
@@ -201,6 +385,7 @@ audit wall time 为 17 s，peak process-tree RSS 为 851,787,776 bytes。第一�
 
 | ID | 类别 | 当前问题 | 最小下一检查 | 状态 |
 |---|---|---|---|---|
-| I7-Q1 | important caveat | 本轮候选来自有限 projected-gap 窗口和有限层网格；浅 dip 或边界最小不能升级为已确认特征值 | I7.2 仅完成本轮端点诊断；跨离散阶数与同模态比较另行设计，尚未执行 | open |
+| I7-Q1 | important caveat | 本轮候选来自有限 projected-gap 窗口和有限层网格；浅 dip 或边界最小不能升级为已确认特征值 | I7.3 已完成共同局部扫描；步长 $10^{-5}$ 下未分辨出漂移，仍不据此声称候选位置收敛 | open |
 | I7-Q2 | blocker | 公共原版在首个 final pilot 达到 3,105,751,040 bytes，实测超过 3 GB；现行方案 2 只让 proxy-source term 使用 target-batched 公共核 evaluator | `scheme-2-run-01` 及 `audit-run-02` 已保存零差异、公共 `which` 路径、exit 0、1,071,398,912-byte formal peak 与完整一致性检查 | closed for current I7.1 implementation |
-| I7-Q3 | important caveat | I7.2 的 raw $H$ 非 Hermitian；$\eta$ 是诊断带而非离散误差界，端点符号跳跃不推出 raw 实根或连续特征值 | 后续独立设计跨离散阶数和同模态检查；本轮不追加计算 | open; endpoint diagnostic complete |
+| I7-Q3 | important caveat | I7.2 的 raw $H$ 非 Hermitian；$\eta$ 是诊断带而非离散误差界，端点符号跳跃不推出 raw 实根或连续特征值 | I7.3 两轴及联合配置均保持 jump 和同模态；非零缺陷仍需保留，不能以该稳定性替代连续误差控制 | open; I7.2 and I7.3 numerical checks complete |
+| I7-Q4 | important caveat | I7.3 的 $d_H$ 与 Aphys 指标在 $M$/`ntot` 轴呈平台，但其他拟合参数未变化，来源未识别 | 如需归因平台，另行批准明确的拟合参数敏感性检查；本轮 AUX 未执行 | open; fixed axes checked |
