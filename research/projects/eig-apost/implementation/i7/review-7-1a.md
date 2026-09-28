@@ -1,5 +1,127 @@
 # I7.1 独立审查：椭圆中心缺陷自适应扫描
 
+## 密度坐标修订与 I7.1 复验（2026-09-27）
+
+### A. 审查框架
+
+- 审查对象：公共调用链 `op.construct_A_QP`、`bloch.incident_rhs`、
+  `bloch.construct_S`、`bloch.farfield_extractors` 的密度坐标，以及
+  `test/i7/scan-v1/check_density_scaling.m`、修正前 `run-13`、修正后 `run-14` 和
+  corrected I7.1 `run-15`、局部定位 `run-16`--`run-24` 和 standalone `run-25`。
+- 当前阶段与成功条件：工程数值修复。必须在不改物理模型、扫描规则、final tuple 或输出接口的
+  前提下，使缩放矩阵、入射右端、物理密度和场提取坐标一致；圆形控制不变，椭圆公共路径与一个
+  独立原始密度坐标参考解一致；随后以修正后的公共路径重跑宽扫描并交付真实 final-config `out`。
+- 排除项：本轮不自动重验 I7.2/I7.3，不把 sampled dip 升级为连续特征值，不把坐标修复断言为
+  旧平台现象的唯一来源，也不改 QZ、DtN、matching 权重、材料或几何。
+- 审查独立性：审查者未启动 MATLAB；只读取源码、命令、JSON/CSV/MATLAB 日志、资源时间序列和
+  Engineer 的串行保存数据复核。
+
+### B. Verdict
+
+`PASS WITH CONDITIONS`，置信度高。
+
+公共缩放错误已经由独立公式链、修正前可见缺陷、修正后逐项相等和 corrected wide/local scan
+共同排除。`run-15` 在 $[1.45,2.25]$ 得到有效内点 sampled dip；93 个后续局部点全部有效，最后
+5 点给出 $k=1.755995740875$ 的严格内点 sampled best。无历史输出依赖的 `run-25` 从头组装三个
+冻结点和最终点，所有坐标门通过并精确重复最终四指标。没有 unresolved 数值或程序 failure。
+条件是最终位置只能按实际 $2.5000002068509275\times10^{-10}$ 邻点完整宽度和预算停止解释；本轮
+未观察到平台，也没有连续根、位置误差界或谱认证。I7.2/I7.3 仍是修正前历史结果，不能由本次
+I7.1 复验自动恢复物理解释。
+
+### C. 最强挑战
+
+最能推翻修复方向的机制是把平方根求积缩放误当成矩阵预条件：若只缩放矩阵而不同时缩放右端，或
+求解后不逆变换密度，线性残差仍可很小，但 `F_L/F_R` 接收到错误坐标的密度。等角圆的权重缩放是
+常数倍，会掩盖该错误；中心椭圆的参数速度非常数，因此必须用椭圆物理输出和独立原始坐标求解检出。
+`run-13` 与 `run-14` 正好覆盖了这一反例。
+
+### D. Findings
+
+1. **已修复的 `BLOCKER` — 公共散射求解混用了缩放矩阵和原始右端/密度。**
+   `op.construct_A_QP` 返回 $A_s=D A_{\mathrm{raw}}D^{-1}$，其中
+   $D=\operatorname{diag}(\sqrt{[w;w]})$；入射右端和 far-field extractor 使用原始物理迹/密度坐标。
+   修正前 `construct_S` 直接解 $A_s H=-B$。现行实现改为
+   $A_s\Xi=-DB$、$H=D^{-1}\Xi$，并保持公开 `H_L/H_R` 为物理密度、`F_L/F_R` 作用于 $H$。
+   这是同一离散方程的坐标一致化，不是物理模型变化。
+
+2. **`IMPORTANT CAVEAT` — 修正前的 I7.2/I7.3 不能由本轮自动重验。** 三阶段共享旧中心椭圆
+   `construct_S` 路径。I7.1 的三点对照足以证明错误对 matching 对象有实质影响，却不能替代
+   I7.2 endpoint count 或 I7.3 六配置同模态的修正后复算。两者应保留为历史有限矩阵快照并单独
+   标记 pending；这不阻止交付本次 corrected I7.1。
+
+3. **`IMPORTANT CAVEAT` — 当前位置仍是有限采样结果。** corrected wide scan 的 screen 最低点为
+   $k=1.75$，其粗相邻 bracket 为 $[1.725,1.775]$；final 自适应到达最大预定层数后停止；后续局部等距
+   网格只用于报告实际分辨尺度。最后一层仍使 `aphys_ratio` 比上一层下降约 $89.6\%$，故没有
+   观察到数值平台。即使指标很小，也不能据此声明连续根、唯一性、误差界或谱认证。
+
+### E. Implementation audit
+
+- **公式与接口。** 公共改动只在 `bloch.construct_S`：从 `far_aux.weights` 形成严格正的
+  `density_scale`，对 RHS 左乘该列缩放，解实际缩放系统，再逐行逆缩放。矩阵、入射和 extractor
+  接口未改，公开 scattering blocks 与 `H_L/H_R` 的物理密度语义保持不变；残差字段改为实际所解
+  缩放系统的残差。新增尺寸、有限值和正性 fail-closed gate。
+- **范围与代码规模。** 公共 diff 只涉及上述坐标映射、残差和对应说明，没有新增公共 helper、
+  fallback 或物理公式副本。I7-local `check_density_scaling` 只承担圆/椭圆两条路径、原始密度坐标
+  参考解、matching 指标和保存证据；可选 `k_values` 缺省仍是冻结三点，最终四点复验未改变入口的
+  默认行为。`scan_i7.m`、`locate_i7.m` 及六个核心数值 helper 均未修改。
+- **修正前控制。** `run-13` exit code 0。圆形 public/correct 最大 normalized defect 为
+  $2.596\times10^{-15}$；独立原始密度坐标参考解最大 defect 为 $2.618\times10^{-15}$；坐标残差与
+  round-trip 最大为 $4.259\times10^{-15}$。椭圆三点的 scattering defect 为
+  $0.003910$--$0.003915$，密度 defect 约 $0.01449$，故不是舍入差。
+  原始密度坐标参考解由同一已组装算子变换为 $A_{\mathrm{raw}}=D^{-1}A_sD$ 后独立求解，并与物理
+  scattering/墙输出比较；它决定性检查本轮坐标修复，但不独立验证整个 BIE 组装或连续算子。
+- **三点影响。** 在 $k=1.753125,1.7545053299700002,1.75625$，旧 $d_H$ 为
+  $0.006940$--$0.006976$，正确路径为 $1.91\times10^{-13}$--$2.18\times10^{-13}$；四个 matching
+  指标也发生实质变化。该证据说明坐标错误是这三点非 Hermitian 缺陷的主要来源之一，但未识别
+  旧平台现象的唯一原因。
+- **修正后对照。** `run-14` exit code 0；public/correct 在散射、两侧墙输出、密度、四指标和
+  $d_H$ 上 defect 均为 0，独立参考解/残差门保持在 $4.259\times10^{-15}$ 以下，且同修正前保存的
+  correct 对象逐项差为 0。其 MATLAB launcher 末尾读取 `run-13` 做补充 cross-phase 比较，因而整条
+  命令不满足 test portability；数值入口本身先独立完成并保存。最终以不读历史输出的 standalone
+  after 运行作为正式 portability gate，`run-14` 只作补充证据。
+- **corrected wide scan。** `run-15` 的 17 个 gap、33 个 screen 和 20 个 unique final 点全部
+  有效，无 invalid。独立从 `history.csv` 重算所有有效 final 点的全局 argmin 得到
+  $k=1.75595703125$，`aphys_ratio=5.75627328243594e-5`；repeat 与 `out` 一致。停止原因为达到有限
+  refinement 层数，而非边界或失败。入口 340.553 s、wall 352.590 s、peak tree RSS
+  996,442,112 bytes。
+- **局部定位。** `run-16`--`run-23` 各评价 11 个显式均匀节点，`run-24` 评价最后 5 点，共
+  93/93 点有效；没有自动调度或不同阶数排序。最终 `out` 为
+  $k=1.755995740875$、`adef_sigma=1.0113801620671042e-10`、
+  `adef_ratio=1.6739838415360645e-13`、`aphys_sigma=5.0025687287374247e-11`、
+  `aphys_ratio=1.7513129037661019e-11`，入口 runtime 49.4949590417 s。左右邻点为
+  $1.75599574075$ 和 $1.755995741$，实际完整宽度
+  $2.5000002068509275\times10^{-10}$；两侧 ratio 均严格更高。
+- **standalone 复验。** `run-25` 不读取历史 output，重新评价三个冻结点与最终 winner；circle、
+  独立物理坐标、坐标残差和 public/correct 门全部通过。四指标 exact-repeat defect 为 0，最终
+  $d_H=1.871889938530571\times10^{-13}$。全部四点 public/correct defect 为 0；独立参考解最大 defect
+  为 $2.621685745180568\times10^{-15}$，坐标残差最大为
+  $4.288123065331613\times10^{-15}$。
+- **资源与路径。** `run-13`--`run-25` 受同一 0.1 s monitor、2.3 GB 提前线和外部 MATLAB 拒绝门
+  约束；累计 wall 1691.861073 s，入口 runtime 合计 1514.196885 s，峰值 tree/all-MATLAB RSS
+  1,177,403,392 bytes，无外部 MATLAB。正式命令断言公共 `construct_S`、公共 kernel 且 `tmp/`
+  不在 path；均低于 1800 s 和 3,000,000,000-byte 限额。
+
+### F. What survived
+
+- lead 圆、中心椭圆、`epsrel=17/2`、$\beta=0.5$、墙位置、final tuple
+  `(256,160,160,80,32)`、$M=48$、QZ/DtN、matching 公式与四指标定义均未改变。
+- 圆形控制解释了旧测试为何可能漏检错误；椭圆原始密度坐标参考解直接验证了现行公共坐标链。
+- corrected wide scan 的内点 basin 在 screen 和 final 两层都可见，不依赖修正前保存的候选位置。
+- standalone 四点重复排除了最终极小指标由历史输出、不同 $k$ 或旧 package shadow 拼接而来的解释。
+
+### G. Minimal resolution
+
+当前 I7.1 无需再修改代码或追加计算即可按有限网格结果交付。最小后续不是继续无界加密位置，而是
+在另行授权的 I7.2/I7.3 任务中用现行公共路径独立重跑相应 endpoint/count 与跨离散同模态对象；
+只有新的目标要求连续位置证据时，才应设计误差/收敛检查。
+
+### H. Open-problem handoff
+
+仅链接 [[research/projects/eig-apost/implementation/i7/README|I7 README]] 的唯一问题表：I7-Q1
+记录有限扫描/连续位置边界，I7-Q3 记录 Hermitian-part 诊断的 claim boundary，I7-Q5 记录本次密度
+坐标修复及受影响历史。`run-25` 已关闭 I7-Q5 对 I7.1 的阻断范围；I7.2/I7.3 的独立复验仍保持
+open，I7-Q1 继续限制本次有限采样位置的解释。
+
 ## 核调用修订审查（2026-09-22）
 
 ### A. 审查框架

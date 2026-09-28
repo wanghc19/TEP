@@ -1,5 +1,10 @@
 # I7.2 Hermitian-part 端点符号计数独立审查
 
+> **2026-09-27 上游修订状态。** 本文审查的端点数值使用了修正前的中心椭圆
+> `bloch.construct_S` 密度坐标链。公共源现已统一缩放矩阵、右端、物理密度和场提取坐标，但本轮
+> 只复验 I7.1；因此下面的 `JUMP / SINGLE_JUMP` 保留为修正前历史有限矩阵事实，尚不能作为当前
+> 物理模型的端点证据。I7.2 须以修正后的公共路径独立重跑后再更新 verdict。
+
 ## A. 审查框架
 
 - 审查对象：[[research/projects/eig-apost/implementation/i7/design-7-2a|I7.2 设计]]、

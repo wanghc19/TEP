@@ -64,3 +64,22 @@ and public target-batched kernel as `scan_i7`. Its local names are:
 For a strict interior minimum, the nominal full interval between its two
 neighbors is `2*dk`; reported widths use the stored endpoint difference. This
 sampling scale is not an eigenvalue or minimizer error bound.
+
+## Density-coordinate correction
+
+The corrected cell solve follows `review-7-3a.md` section D.6. Here `A_raw`
+means the unscaled BIE matrix and is distinct from the I7 matching matrix
+`Aphys` above.
+
+| Code name | Meaning | Type and scope |
+|---|---|---|
+| `far_aux.weights` | Physical trapezoid weights $w_j=h|z'(t_j)|$ | Positive real `ntot` column from `farfield_extractors` |
+| `density_scale` | Diagonal of $D=\operatorname{diag}(\sqrt{[w;w]})$ | Positive real `2*ntot` column in `construct_S` and the diagnostic |
+| `rhs_all`, `rhs_scaled` | Physical incident data $B$ and scaled data $DB$ | Complex `2*ntot`-by-`2*K` matrices |
+| `H_scaled`, `H_all` | Scaled solution $\xi$ and physical density $\eta=D^{-1}\xi$ | Complex `2*ntot`-by-`2*K`; `H_L/H_R` remain physical |
+| `A_raw` | Independent diagnostic reconstruction $D^{-1}A_sD$ | Complex `2*ntot` square matrix in `check_density_scaling` only |
+| `density_independent` | Independent physical solve $-A_{\rm raw}^{-1}B$ | Complex `2*ntot`-by-`2*K` diagnostic matrix |
+| `public_left`, `public_right` | Scattered outgoing Rayleigh coefficients $F_L\eta$ and $F_R\eta$ on the two walls | Complex `K`-by-`2*K` diagnostic matrices; direct phase is excluded |
+| `Hmatch`, `Hsym`, `dH` | $A_{\rm def}T^{-1}$, its Hermitian part, and $\|H_{\rm match}-H_{\rm sym}\|_2$ | Complex `2*K` matrices and real diagnostic scalar |
+| `validation_tolerance` | Frozen coordinate-comparison threshold $10^{-11}$ | Positive real scalar used by the before/after gates |
+| `result.points` | Per-$k$ public/correct four metrics, $d_H$, sign-count diagnostic, coordinate defects, and timing | Struct array returned by `check_density_scaling` |

@@ -29,18 +29,22 @@ function S_cell = construct_S(geom, kext, kint, pars1, proxy, curvelen, rayleigh
 %     [ b^L ]   [ R_L   T_RL ] [ a^L ]
 %     [ a^R ] = [ T_LR  R_R  ] [ b^R ].
 %
-%   The BIE systems are
+%   op.construct_A_QP returns the square-root quadrature coordinate form
+%   A_s = D*A_raw*D^(-1), where D = diag(sqrt([w;w])) and w contains the
+%   physical trapezoid weights.  Therefore the BIE systems are solved as
 %
-%     A_QP * H_L = -B_L,
-%     A_QP * H_R = -B_R,
+%     A_s * Xi_L = -D*B_L,
+%     A_s * Xi_R = -D*B_R,
 %
-%   solved together as
+%   followed by the inverse coordinate map
 %
-%     H_all = -(A_QP \ [B_L, B_R]).
+%     H_L = D\Xi_L,
+%     H_R = D\Xi_R.
 %
-%   The far-field extractors map eta = [tau; -sigma] to scattered outgoing
-%   coefficients only.  Therefore the direct one-cell phase contribution is
-%   added only to the transmission blocks:
+%   Thus H_L and H_R remain samples of the physical density
+%   eta = [tau; -sigma].  The far-field extractors map this physical density
+%   to scattered outgoing coefficients only.  Therefore the direct one-cell
+%   phase contribution is added only to the transmission blocks:
 %
 %     R_L  = F_L * H_L,
 %     T_LR = E + F_R * H_L,
@@ -126,14 +130,24 @@ function S_cell = construct_S(geom, kext, kint, pars1, proxy, curvelen, rayleigh
   end
 
   rhs_all = [B_L, B_R];
-  H_all = -(A_QP \ rhs_all);
+  density_scale = sqrt(repmat(far_aux.weights(:),2,1));
+  if length(density_scale) ~= size(A_QP,1) || ...
+      any(~isfinite(density_scale)) || any(density_scale <= 0)
+    error('construct_S:InvalidDensityScale', ...
+      'Square-root quadrature density scales must be finite and positive.');
+  end
+  rhs_scaled = density_scale.*rhs_all;
+  H_scaled = -(A_QP \ rhs_scaled);
+  H_all = H_scaled./density_scale;
   H_all = full(complex(H_all));
   H_L = H_all(:, 1:K);
   H_R = H_all(:, K + 1:2 * K);
 
-  res = A_QP * H_all + rhs_all;
+  % Report the residual of the system actually solved in scaled coordinates.
+  res = A_QP * H_scaled + rhs_scaled;
   solve_residual_norm = norm(res, 'fro');
-  solve_relative_residual_norm = solve_residual_norm / max(1, norm(rhs_all, 'fro'));
+  solve_relative_residual_norm = solve_residual_norm / ...
+    max(1, norm(rhs_scaled, 'fro'));
   if ~isfinite(solve_residual_norm) || ~isfinite(solve_relative_residual_norm)
     error('construct_S:InvalidResidual', ...
       'The BIE solve residual is NaN or Inf.');
