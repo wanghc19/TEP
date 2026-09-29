@@ -3,7 +3,7 @@
 ## 1. 目标与冻结范围
 
 - Design ID: `I7.2-HSYM-ENDPOINT-V1`
-- Status: `RUN COMPLETE; PASS WITH CONDITIONS`
+- Status: `CORRECTED-DENSITY RERUN COMPLETE; PASS WITH CONDITIONS`
 - Independent review: [[research/projects/eig-apost/implementation/i7/review-7-2a|I7.2 review]]
 - 目标：在两个既定端点计算 raw $H$ 的 Hermitian part 符号计数，为 I7.1 dip 提供一项低成本
   numerical corroboration。
@@ -185,7 +185,12 @@ I7.1 dip 提供数值佐证。即使得到 `JUMP`，也不能声称 raw $H$ 有�
 eigenvalue，或已经得到 posterior error estimate。未决解释只在
 [[research/projects/eig-apost/implementation/i7/README#I7 待办与问题|I7 唯一问题表]]跟踪。
 
-## 6. 实际端点结果
+## 6. 修正前历史端点结果
+
+> **2026-09-29 状态。** 下列 `attempt-1/run-01` 数值使用修正前的
+> `bloch.construct_S` 密度坐标链，仅保留为历史有限矩阵快照。现行公共函数已修正平方根求积密度
+> 坐标；使用相同入口、模型、配置和端点的独立复验正在
+> [[test/i7/inertia-v1/README#Corrected-density rerun|实验 README]] 跟踪。
 
 `attempt-1/run-01` 在冻结端点和配置上完成，`execution_pass=true`，两端的坐标/求解诊断门均通过。
 下表的 counts 按 $(n_+,n_-,n_{\mathrm{unresolved}})$ 排列；三个 band 的 triple 在每个端点完全
@@ -206,3 +211,20 @@ $1{,}107{,}099{,}648$ bytes，没有失败运行。实际命令与完整保存�
 [[test/i7/inertia-v1/output/attempt-1/run-01/command.txt|command]]、
 [[test/i7/inertia-v1/output/attempt-1/run-01/result.json|result]] 和
 [[test/i7/inertia-v1/output/attempt-1/run-01/audit.json|matrix/count audit]]。
+
+## 7. 2026-09-29 修正密度坐标复验
+
+`attempt-1/run-02` 用未修改的 `check_i7_inertia()` 入口、冻结模型、配置、端点和三组 band，
+但两类 cell 均经过已修正的公共 `bloch.construct_S`。运行不读取 run-01，所有对象门、谱门、
+partition 和同进程矩阵复算均通过。
+
+| endpoint | `rcond(T)` | $d_H$ | $\eta_{100}$ | min abs eig | counts $c=50/100/200$ |
+|---|---:|---:|---:|---:|---|
+| $k_L=1.753125$ | $0.51702058265282613$ | $2.053125626861299\times10^{-13}$ | $2.6027916682723556\times10^{-9}$ | $0.021226887784655889$ | $(194,0,0)$ / $(194,0,0)$ / $(194,0,0)$ |
+| $k_R=1.75625$ | $0.5169934488000496$ | $2.1757952844695718\times10^{-13}$ | $2.6028037788554658\times10^{-9}$ | $0.001880568371886166$ | $(193,1,0)$ / $(193,1,0)$ / $(193,1,0)$ |
+
+因此修正后仍为 $\Delta_-=+1$、$\Delta_+=-1$ 和 `JUMP / SINGLE_JUMP`。这只更新冻结
+fine/$M=48$ 的 Hermitian-part 数值佐证；修正后的 I7.3 跨离散同模态证据仍待独立复验。入口
+runtime 为 $17.265248375$ s，受监测 wall time 为 $28.184776$ s，process-tree peak RSS 为
+$1{,}140{,}686{,}848$ bytes。完整当前结果、复现命令和历史边界见
+[[test/i7/inertia-v1/README#Corrected-density rerun|I7.2 实验 README]]。

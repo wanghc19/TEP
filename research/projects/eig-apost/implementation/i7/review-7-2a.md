@@ -1,5 +1,102 @@
 # I7.2 Hermitian-part 端点符号计数独立审查
 
+## 2026-09-29 修正公共密度坐标后的独立复验审查
+
+本节为 Skeptic 对 `inertia-v1/output/attempt-1/run-02` 的独立只读报告，由主代理原位记录。
+Researcher 独立核对冻结坐标和判号规则，Engineer 运行 MATLAB；Skeptic 未修改数值代码、
+未另开 MATLAB。下方 2026-09-25 的原 A--H 审查及上游修订通知保留为修正前历史。
+
+### A. 当前审查框架
+
+对象为原 `check_i7_inertia.m`、公共 `bloch.construct_S`、既有设计和 run-02 的
+`result.json`、`endpoints.csv`、`audit.json`、`command.txt`、源码快照及资源日志。
+目标是冻结 fine/$M=48$ 有限矩阵 $H_{\mathrm{sym}}=(H+H^*)/2$ 的两端符号计数；
+不把 I7.3、raw-$H$ inertia、连续特征值或误差认证列为本轮完成条件。
+
+### B. 当前 verdict
+
+**PASS WITH CONDITIONS（高置信度）。** 新矩阵的全部坐标/求解门通过，
+$c=50,100,200$ 三带均为左端 $(194,0,0)$、右端 $(193,1,0)$，无 unresolved，
+$\Delta_-=+1$、$\Delta_+=-1$，结果为 `JUMP / SINGLE_JUMP`。没有未关闭 blocker。
+该结论完全由修正后 run-02 建立，不依赖旧 run-01 矩阵。
+
+### C. 最强挑战
+
+当前证据只覆盖一个空间离散和两个固定端点。修正后的 I7.3 跨离散与同模态比较尚未复验，
+因此不能从本次 jump 推断 raw $H$ 的严格实根、唯一性、连续特征值或误差界。
+机器量级的非 Hermitian 缺陷也不是严格 Hermitian 证明。
+
+### D. Findings
+
+1. **IMPORTANT CAVEAT — 修正后的跨离散稳定性仍未验证。** 当前最小绝对特征值在两端均远离
+   三个判号带；最弱的右端分离仍为 $\eta_{200}$ 的约 $3.61\times10^5$ 倍。这支持本轮有限矩阵
+   分类，但不替代修正后的 I7.3；后者不阻止本阶段交付，也没有在本轮自动执行。
+2. **MINOR CAVEAT — warning 表述需限定。** 两端没有数值或线性求解 warning；
+   日志保留两条 `package sun.awt.X11 not in java.desktop` JVM 启动提示，不应称为“没有任何 warning”。
+
+### E. 当前实现与证据审查
+
+- 冻结模型仍为 $\beta=0.5$、半径 $0.2$ 的圆形 leads `epsrel=17`、单个中心椭圆
+  $(0.25,0.16)$ 且 `epsrel_center=2`；tuple 为 $(256,160,160,80,32)$、$M=48$。
+  两端固定为 $1.753125,1.75625$，没有扫描、定位或追加配置。
+- center 与 half-guide 均直接调用公共 `bloch.construct_S`。公共函数以缩放右端求解并逆变换为
+  物理密度；实验入口没有重复缩放。运行命令断言公共路径，排除旧 `scan-v1/tmp`，没有读取历史结果。
+- $q=[a^L;b^R]$、trace 顺序 `[left;right]`、中心外法向 $[-\partial_x;+\partial_x]$ 不变。
+  独立四块 $A_{\mathrm{def}}$ 经 $A_{\mathrm{def}}=N_0-LT$ 核验后，实际计算 $H=A_{\mathrm{def}}/T$；
+  没有用 $A_{\mathrm{def}}$ 的 Hermitian part 替代，没有 `inv`、`pinv` 或修改矩阵制造 Hermitian 性。
+- QZ 分类、finite、warning、imaginary leakage、partition、`rcond(T)`、组装/右解门和三带规则均未改变。
+  $n=194$，残差门 $1000n\epsilon_{\mathrm{mach}}=4.3076653355456074\times10^{-11}$；
+  判号带由各端点的新 $s,d_H$ 重新计算，未使用历史阈值。
+
+| 量 | $k_L=1.753125$ | $k_R=1.75625$ |
+|---|---:|---:|
+| `rcond(T)` | 0.51702058265282613 | 0.5169934488000496 |
+| 组装误差 | 5.4553954713536217e-19 | 5.7764643426271877e-19 |
+| 右解误差 | 3.7747494080452222e-19 | 2.8012171613030743e-19 |
+| $s$ | 604.17561555534041 | 604.17557925199787 |
+| $d_H$ | 2.053125626861299e-13 | 2.1757952844695718e-13 |
+| $\eta_{50}$ | 1.3014984904175209e-9 | 1.3015106791919563e-9 |
+| $\eta_{100}$ | 2.6027916682723556e-9 | 2.6028037788554658e-9 |
+| $\eta_{200}$ | 5.2053780239820255e-9 | 5.2053899781824847e-9 |
+| 最近零的有符号特征值 | +0.021226887784655889 | -0.001880568371886166 |
+| 最小绝对特征值 | 0.021226887784655889 | 0.001880568371886166 |
+| 主带余量 | 0.021226885181864219 | 0.001880565769082387 |
+| 三带各自的 $(n_+,n_-,n_{\mathrm{unresolved}})$ | (194, 0, 0) | (193, 1, 0) |
+| sensitivity / diagnostic | STABLE / PASS | STABLE / PASS |
+
+两端 imaginary leakage 均为零。同一 MATLAB 进程对 freshly returned matrices 重新计算
+$H_{\mathrm{sym}}$、eigenvalues、三带 counts、partition 和恒等式，全部通过，Hermitian-part 与
+eigenvalue defect 为零。Skeptic 独立核对 JSON/CSV、该审计的实际命令与资源记录，源码快照与
+当前入口、`construct_S`、`qpgreen_mfs_pairmat` 逐一一致。该 audit 复核有限矩阵结果，不是独立物理解法。
+
+入口耗时 $17.265248375$ s，完整受监测 wall time $28.184776$ s，exit 0。
+282 个资源采样的进程树及全部 MATLAB 树并集峰值均为 **1,140,686,848 bytes**，
+低于 2.3 GB 提前线及 3 GB 用户上限；每 0.1 s 监测，正式运行无外部 MATLAB 并发。
+本轮只有这一项 MATLAB 计算，未发生科学点程序错误或资源超限。
+外部 JSON/CSV 交付核对曾因 Python 浮点乘法分组的严格相等测试而停止；沿用 MATLAB 的
+运算顺序后 $\eta$ 复核差为零。初次记录单独保留，没有改变科学数据或追加 MATLAB。
+
+### F. 经受住审查的部分
+
+旧 run-01 与新 run-02 的 count triples 一致，但新旧矩阵不能互换。$d_H$ 从约
+$6.94\times10^{-3}/6.98\times10^{-3}$ 降到约 $2\times10^{-13}$；最近零谱值也从
+$+0.0102440899424641/-0.0129547448103775$ 改为上表值。
+当前 jump 是重新组装、重新求解与重新判号的结果，未由历史结果自动继承。
+
+### G. 当前处置
+
+接受 corrected-density I7.2 run-02；原入口和公共数值代码本轮无需修改。
+新矩阵、完整命令、日志和资源证据保留在
+[[test/i7/inertia-v1/output/attempt-1/run-02/result.json|run-02]]，复现见
+[[test/i7/inertia-v1/README|实验 README]]。不追加超出本轮目标的探索。
+
+### H. Open-problem handoff
+
+I7.3 仍待修正后复验；本轮不为其提供新完成声明。问题状态只由
+[[research/projects/eig-apost/implementation/i7/README#I7 待办与问题|I7 唯一问题表]]维护。
+
+## 2026-09-25 修正前历史审查（保留原 A--H）
+
 > **2026-09-27 上游修订状态。** 本文审查的端点数值使用了修正前的中心椭圆
 > `bloch.construct_S` 密度坐标链。公共源现已统一缩放矩阵、右端、物理密度和场提取坐标，但本轮
 > 只复验 I7.1；因此下面的 `JUMP / SINGLE_JUMP` 保留为修正前历史有限矩阵事实，尚不能作为当前

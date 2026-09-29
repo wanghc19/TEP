@@ -9,11 +9,12 @@ pair-matrix evaluator hook；不修改公共核公式。2026-09-27 另按用户�
 在公共 `bloch.construct_S` 中最小修复密度坐标不一致，详见本页修正复验节。
 
 
-> 2026-09-27 状态：已独立确认公共 `bloch.construct_S` 的密度坐标不一致，详见
+> 当前状态（2026-09-29）：已独立确认并修正公共 `bloch.construct_S` 的密度坐标不一致，详见
 > [[research/projects/eig-apost/implementation/i7/review-7-3a#D. Findings|审查 D.6]]。
 > 最小修复及 I7.1 复验已完成，独立审查为 `PASS WITH CONDITIONS`：修正后观察到内点采样 dip，
 > 预算停止前未观察到稳定平台。下面旧 I7.1/I7.2/I7.3 的日志与有限矩阵数值保留为
-> **修正前历史**，不能沿用其物理候选可信度。I7.2/I7.3 受影响且待修正后单独复验。
+> **修正前历史**，不能沿用其物理候选可信度。I7.2 已用修正后公共调用链在原端点单独复验，
+> 得到 `JUMP`、负计数差 $+1$；I7.3 仍受影响且待复验。当前结果均不构成连续特征值认证。
 
 ## 模型和边界
 
@@ -30,7 +31,7 @@ pair-matrix evaluator hook；不修改公共核公式。2026-09-27 另按用户�
 | Milestone | 任务 | 状态 | 交付 |
 |---|---|---|---|
 | I7.1 | 密度坐标修正后，中心 `epsrel=2` 的宽扫描与固定 final 配置局部定位完成；预算停止前未见稳定平台 | `PASS WITH CONDITIONS；内点采样 dip` | [[research/projects/eig-apost/implementation/i7/design-7-1a|设计]]、[[test/i7/scan-v1/README|实验入口]]、[[research/projects/eig-apost/implementation/i7/review-7-1a|独立审查]] |
-| I7.2 | 在固定肩点 $1.753125,1.75625$ 构造物理迹矩阵，执行 Hermitian-part 惯性型端点诊断 | `历史 JUMP；受影响，待复验` | [[research/projects/eig-apost/implementation/i7/design-7-2a|设计]]、[[test/i7/inertia-v1/check_i7_inertia|入口]]、[[research/projects/eig-apost/implementation/i7/review-7-2a|独立审查]] |
+| I7.2 | 用修正后公共密度坐标调用链，在原固定肩点 $1.753125,1.75625$ 重新构造物理迹矩阵并判号 | `复验完成；JUMP；PASS WITH CONDITIONS` | [[research/projects/eig-apost/implementation/i7/design-7-2a|设计]]、[[test/i7/inertia-v1/README|复验结果与入口]]、[[research/projects/eig-apost/implementation/i7/review-7-2a|独立审查]] |
 | I7.3 | 分开加密 Rayleigh 阶数与 inclusion 边界，检查同一物理墙面迹及共同局部网格位置 | `历史 STABLE_SAME_MODE；受影响，待复验` | [[research/projects/eig-apost/implementation/i7/design-7-3a|设计与符号映射]]、[[test/i7/refine-v1/check_i7_refinement|入口]]、[[research/projects/eig-apost/implementation/i7/review-7-3a|独立审查]] |
 
 I7.2 的 sign count 只作 numerical corroboration，不解释为 raw non-Hermitian matrix 的严格
@@ -134,7 +135,8 @@ $2.2169529646617566\times10^{-3}$。最终局部最低 ratio 仍比上一轮下�
 [[test/i7/scan-v1/output/attempt-3/run-24/scan.json|五点完整四指标]]、
 [[test/i7/scan-v1/output/attempt-3/run-24/local-scan.png|最终采样曲线]]。
 全 `epsrel=17` 的历史扫描本轮没有追加复验，物理结论仍待修正后重新计算。
-I7.2/I7.3 也未重跑，不能由当前内点 dip 和小 $d_H$ 自动宣布通过。
+2026-09-27 该次 I7.1 修正任务没有重跑 I7.2/I7.3，不能由内点 dip 和小 $d_H$ 自动宣布通过；
+I7.2 后续的独立端点复验另见下节，I7.3 仍待复验。
 
 ### 独立复算、资源与审查结论
 
@@ -165,7 +167,8 @@ $d_H=1.871889938530571\times10^{-13}$；三个固定点与修改前保存的正�
 
 Researcher、Engineer、Skeptic 均实际参与。独立审查为 **PASS WITH CONDITIONS**，
 当前密度坐标修复和 I7.1 数值交付无未关闭的阻断项；有限采样、未知的更细平台行为、
-全 `epsrel=17` 历史模型及 I7.2/I7.3 待复验的限制仍保留。
+该次交付时全 `epsrel=17` 历史模型及 I7.2/I7.3 待复验的限制仍保留；
+2026-09-29 仅完成下面的 I7.2 复验，其余两项仍未复验。
 
 完整现行复现命令、逐层定位及资源表见
 [[test/i7/scan-v1/README#density-coordinate-correction-2026-09-27|实验 README]]，
@@ -184,7 +187,71 @@ $k=1.7545053299700002$，`aphys_ratio` 为 $3.0399993275794239\times10^{-4}$，
 全 `epsrel=17` 的初始模型在已覆盖范围内未观察到显著内点 dip，最佳点位于左边界；该历史
 数值记录保留，但修正后的物理结论也须复验；它不描述当前中心 `epsrel=2` 的实验。
 
-## I7.2：固定端点 Hermitian-part 诊断（修正前；待复验）
+## I7.2：修正密度坐标后的端点复验（2026-09-29）
+
+`inertia-v1/output/attempt-1/run-02` 已从当前公共 `bloch.construct_S` 重新组装两个端点。
+原 `check_i7_inertia.m` 无需修改：中心椭圆与圆形 half-guide 均直接调用公共函数，实验入口
+没有重复密度缩放。模型、$(256,160,160,80,32)$、$M=48$、端点、QZ、DtN 和判号规则全部不变；
+没有重跑 I7.1 扫描或 I7.3。数值代码不读取历史矩阵、Git 或文档。
+
+独立组装 $A_{\mathrm{def}}$ 后核验 $A_{\mathrm{def}}=N_0-LT$，右解
+$H=A_{\mathrm{def}}/T$，仅对 $H_{\mathrm{sym}}=(H+H^*)/2$ 判号。
+程序执行成功，科学结果为 **JUMP / SINGLE_JUMP**，$\Delta_-=+1$、$\Delta_+=-1$。
+以下误差仍为设计第 3 节的 normalized Frobenius residual；$n=194$，
+残差门 $4.3076653355456074\times10^{-11}$，`rcond(T)` 门 $10^{-8}$。
+
+| 诊断量 | 左端 $k_L=1.753125$ | 右端 $k_R=1.75625$ |
+|---|---:|---:|
+| `rcond(T)` | 0.517020582652826 | 0.516993448800050 |
+| 组装误差 | 5.45539547135e-19 | 5.77646434263e-19 |
+| 右解误差 | 3.77474940805e-19 | 2.80121716130e-19 |
+| $s=\|H_{\mathrm{sym}}\|_2$ | 604.175615555340 | 604.175579251998 |
+| $d_H=\|H-H_{\mathrm{sym}}\|_2$ | 2.05312562686e-13 | 2.17579528447e-13 |
+| $\eta_{50}$ | 1.30149849042e-9 | 1.30151067919e-9 |
+| $\eta_{100}$ | 2.60279166827e-9 | 2.60280377886e-9 |
+| $\eta_{200}$ | 5.20537802398e-9 | 5.20538997818e-9 |
+| 最小绝对特征值 | 0.0212268877846559 | 0.00188056837188617 |
+| 最近零的有符号特征值 | +0.0212268877846559 | -0.00188056837188617 |
+| 主带余量 $\min|\lambda|-\eta_{100}$ | 0.0212268851818642 | 0.00188056576908239 |
+| $(n_+,n_-,n_{\mathrm{unresolved}})$，三档各自相同 | (194, 0, 0) | (193, 1, 0) |
+| 敏感性 / 坐标与求解门 | STABLE / PASS | STABLE / PASS |
+
+三档 $\eta_c=d_H+cn\epsilon_{\mathrm{mach}}\max(1,s)$ 都由本次矩阵重新计算。
+两端 imaginary leakage 为零，没有数值求解警告；日志保留两条 JVM 启动提示。
+同一 MATLAB 进程对刚返回的 $A_{\mathrm{def}},T,N_0,L,H,H_{\mathrm{sym}}$ 和 eigenvalues
+再核验恒等式、Hermitian part、eig 与全部 count partitions，全部通过，后两项复算差为零。
+运行时公共包路径断言通过，旧 `scan-v1/tmp` 未进入 path；源快照和完整矩阵均已保存。
+
+相对修正前 `run-01`，端点计数仍为 $0\to1$，但 $d_H$ 从
+$0.00694036318057/0.00697609252827$ 降到上表约 $2\times10^{-13}$。
+最近零的有符号特征值从 $+0.0102440899424641/-0.0129547448103775$ 改为
+$+0.0212268877846559/-0.00188056837188617$；右端距离零更近，仍远离当前判号带。
+这是修正后有限矩阵的端点符号计数证据，不是 raw-$H$ 严格惯性、实根存在/唯一性或连续特征值认证；
+机器量级的 $d_H$ 也不替代严格 Hermitian 证明。I7.3 的旧离散稳定性和同模态结论仍待复验。
+
+本轮从 2026-09-29 00:44:57 UTC 首次行动至 01:01:31 UTC 最终审查核对，
+总任务耗时 **994.4 s（约 16.6 分钟）**，低于 90 分钟；
+[[test/i7/inertia-v1/output/attempt-1/run-02/task-time.json|任务计时]]。
+
+本轮唯一 MATLAB 调用 exit 0：入口耗时 **17.265248375 s**，含启动和同次 audit 的完整受监测
+wall time **28.184776 s**，282 个资源采样中进程树及全部 MATLAB 树并集峰值均为
+**1,140,686,848 bytes**。复用 `refine-v1/run_matlab_monitored.sh`，每 0.1 s 采样，
+2,300,000,000-byte 提前终止、300 s 本次 wall cap，低于用户 3 GB / 1800 s 限额。
+启动前检测到的 VS Code MATLAB 语言服务在用户授权停止后、发出信号前已自行退出；
+正式计算无 MATLAB 并发、无程序或资源失败。外部 JSON/CSV 交付核对初次因等价浮点乘法
+分组下的严格相等检查而停止，按原运算顺序核对后通过；记录保留，没有改科学数据或重跑 MATLAB。
+
+Researcher 核对冻结约定，Engineer 完成受监测计算，Skeptic 独立审查源码、矩阵审计和解释；
+结论为 **PASS WITH CONDITIONS**，无本轮未关闭的阻断项。复现命令及完整端点表见
+[[test/i7/inertia-v1/README|实验 README]]；
+[[test/i7/inertia-v1/output/attempt-1/run-02/result.json|新结果]]、
+[[test/i7/inertia-v1/output/attempt-1/run-02/endpoint-matrices.mat|新组装矩阵]]、
+[[test/i7/inertia-v1/output/attempt-1/run-02/audit.json|同次矩阵 audit]]、
+[[test/i7/inertia-v1/output/attempt-1/run-02/delivery-audit.json|外部交付核对]]、
+[[test/i7/inertia-v1/output/attempt-1/run-02/resources.csv|资源记录]]、
+[[research/projects/eig-apost/implementation/i7/review-7-2a|独立审查]]。
+
+## I7.2：固定端点 Hermitian-part 诊断（修正前历史）
 
 2026-09-25 的 `inertia-v1/output/attempt-1/run-01` 已完成。中心 `epsrel=2`、两侧
 `epsrel=17`，空间配置保持 $(256,160,160,80,32)$、$M=48$。从当前中心 scattering blocks
@@ -217,13 +284,8 @@ MATLAB R2023b 正式命令包含端点计算及原矩阵的 eig/count 复核，e
 1,107,099,648 bytes（每 $0.25$ s 采样），低于本轮累计 1800 s / 3,000,000,000-byte 限额。
 没有失败运行；没有宽扫描、继续定位、绕数、跨离散阶数或同模态实验。
 
-复现入口为 `[result,evidence] = check_i7_inertia()`；例如选择未使用的 `run-02`：
-
-```sh
-cd /Users/whc/Documents/Work/epost
-run_dir="$PWD/test/i7/inertia-v1/output/attempt-1/run-02"
-MATLAB_BIN=/Applications/MATLAB_R2023b.app/bin/matlab bash test/i7/run_matlab_monitored.sh "$run_dir" "cd(tempdir); addpath('/Users/whc/Documents/Work/epost'); addpath('/Users/whc/Documents/Work/epost/test/i7/inertia-v1'); [result,evidence]=check_i7_inertia(); save(fullfile('$run_dir','result.mat'),'result','evidence'); disp(result);"
-```
+历史实际命令保留在下面的 `run-01/command.txt`，不再作为当前调用方式。
+当前复现入口仍为 `[result,evidence] = check_i7_inertia()`；修正后的命令、监控和新结果见上一节。
 
 [[test/i7/inertia-v1/output/attempt-1/run-01/command.txt|实际完整命令]]、
 [[test/i7/inertia-v1/output/attempt-1/run-01/result.json|端点原始结果]]、
@@ -531,6 +593,6 @@ audit wall time 为 17 s，peak process-tree RSS 为 851,787,776 bytes。第一�
 |---|---|---|---|---|
 | I7-Q1 | important caveat | 修正后内点 dip 来自有限 projected-gap 窗口和有限局部网格；邻点宽度不是位置误差界，预算内未见稳定平台 | 仅按实际已采样范围解释 I7.1；若以后需要离散稳定性证据，须另用修正后路径复验 I7.3 | open |
 | I7-Q2 | blocker | 公共原版在首个 final pilot 达到 3,105,751,040 bytes，实测超过 3 GB；现行方案 2 只让 proxy-source term 使用 target-batched 公共核 evaluator | `scheme-2-run-01` 及 `audit-run-02` 已保存零差异、公共 `which` 路径、exit 0、1,071,398,912-byte formal peak 与完整一致性检查 | closed for current I7.1 implementation |
-| I7-Q3 | important caveat | I7.2 的 raw $H$ 非 Hermitian；$\eta$ 是诊断带而非离散误差界，端点符号跳跃不推出 raw 实根或连续特征值 | 修正前 I7.3 两轴及联合配置曾保持 jump 和同模态；该上游受影响证据待复验，不能替代连续误差控制 | open; historical checks affected, corrected-chain reruns pending |
+| I7-Q3 | important caveat | 修正后 I7.2 的 $d_H$ 降到机器量级，但未证明严格 Hermitian；$\eta$ 仍是诊断带而非离散误差界 | inertia-v1 run-02 在原端点重新得到三档稳定 JUMP；仅作有限矩阵佐证，不能替代连续误差控制 | open caveat; corrected I7.2 rerun complete |
 | I7-Q4 | important caveat | 旧 I7.3 的平台受共同密度坐标错误影响；本轮仅证实三点 $d_H$ 大幅下降与 I7.1 dip 改变，未识别全部平台来源 | 先以修正后调用链复验原两轴与同模态，再判断是否有必要另查固定拟合参数；本轮 AUX 未执行 | open; corrected I7.3 rerun pending |
-| I7-Q5 | blocker | 公共 BIE 的平方根求积密度坐标曾与原始右端/场提取混用；现已最小修复 construct_S | run-13 圆/椭圆坐标控制、run-15 宽扫、run-16--24 局部定位及无历史依赖的 run-25 四点复核通过；旧 I7.2/I7.3 仍待复验 | closed for corrected I7.1; historical I7.2/I7.3 validation pending |
+| I7-Q5 | blocker | 公共 BIE 的平方根求积密度坐标曾与原始右端/场提取混用；现已最小修复 construct_S | scan-v1 run-13--25 已完成 I7.1 坐标控制、宽扫及定位；inertia-v1 run-02 新组装通过原端点 I7.2 复验；I7.3 仍待复验 | closed for corrected I7.1/I7.2; historical I7.3 validation pending |
