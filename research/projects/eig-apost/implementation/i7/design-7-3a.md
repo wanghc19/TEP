@@ -3,7 +3,7 @@
 ## 1. 状态、问题与结论边界
 
 - Design ID: `I7.3-DISCRETIZATION-STABILITY-V1`
-- Status: `MANDATORY COMPLETE: STABLE_SAME_MODE; LOCAL GRID COMPLETE: NO_DRIFT_RESOLVED_AT_SPACING_1E-5; AUX NOT RUN; INDEPENDENT REVIEW PASS WITH CONDITIONS`
+- Status: `CORRECTED-DENSITY A+B COMPLETE; STABLE_SAME_MODE; NO_DRIFT_RESOLVED_AT_SPACING_1E-5; INDEPENDENT REVIEW PASS WITH CONDITIONS`
 - Independent review: [[research/projects/eig-apost/implementation/i7/review-7-3a|review-7-3a]]
 - Claim boundary: `CONDITIONAL FINITE-DIMENSIONAL NUMERICAL STABILITY`
 
@@ -12,6 +12,19 @@ Hermitian-part endpoint jump 与中心低奇异模态在两条分开的离散轴
 physical Dirichlet trace 坐标中的 mode identity。它不证明 raw $H$ inertia、连续特征值、连续
 最小点、收敛阶或误差界。相似度、稳定计数与可选局部网格漂移都只是数值证据；零网格漂移也不称
 收敛。
+
+### 2026-09-29 修正密度坐标后的复验
+
+本轮按修正后的公共 `bloch.construct_S` 从零重算本设计的两个既有阶段，不读取 2026-09-26 的
+MAT 文件或数值结果。阶段 A 先完成六配置的 $k_L,k_0,k_R$ 共 18 点；阶段 B 再完成六配置共享的
+11 点局部网格，共 66 点。当前中心点改为修正后 I7.1 的
+$k_0=1.755995740875$。除这个中心点替换及其传参外，物理模型、六配置、六条比较边、坐标映射、
+判据和结果语义均不变。第 12、13 节的旧数值明确是密度坐标修正前的历史证据，不作为本轮输入或
+当前结论。
+
+本轮 MATLAB、debug 与 audit 共享 1800 s 计算预算，process-tree RSS 用户硬上限为 3 GB；正式
+launcher 仍采用 2,300,000,000-byte 提前终止线、0.1 s 采样和无并发 MATLAB 门。顺序固定为
+A 及其 audit 后清理大矩阵，再运行 B 及其 audit；任何阶段失败都保留 checkpoint，不以旧结果补足。
 
 运行时只依赖新实验 MATLAB 入口及其实际数值依赖，不读取本设计、README、Git 或旧输出。
 I7.2 的结果只给出比较对象和边界，不作为运行输入。关联的既有方法与 caveat 见
@@ -28,7 +41,7 @@ $X_L=-0.5,X_R=0.5$。三个固定点是
 $$
 k_L=1.753125,\qquad
 k_R=1.75625,\qquad
-k_0=1.7545053299700002.
+k_0=1.755995740875.
 $$
 
 proxy 配置固定为
@@ -207,14 +220,16 @@ cn\epsilon_{\mathrm{mach}}\max(1,\|H_{\mathrm{sym}}\|_2),
 \qquad c\in\{50,100,200\},
 $$
 
-完成 full triples。I7.3 stability gate 要求六配置三带都稳定、无 unresolved；左端
-$n_-=0$、右端 $n_-=1$，所以每个配置都有 $\Delta n_-=+1$。不同 $M$ 的 $n_+$ 随 matrix
-order 变化，不把它误作 drift。全部 hard identity edges 还须通过第 5 节 simple-mode 或
-subspace gate。
+完成 full triples。I7.3 stability gate 只把六配置的左右 endpoints 纳入符号计数验收：左右两端
+三带都须稳定且无 unresolved；左端 $n_-=0$、右端 $n_-=1$，所以每个配置都有
+$\Delta n_-=+1$。不同 $M$ 的 $n_+$ 随 matrix order 变化，不把它误作 drift。中心 $k_0$ 的主验收
+对象是 $A_{\mathrm{phys}}$；中心若顺带形成 $H_{\mathrm{sym}}$，其 band-unresolved 只作诊断，不触发
+endpoint count failure。全部 hard identity edges 还须通过第 5 节 simple-mode 或 subspace gate。
 
 结果分层为：
 
-- `STABLE_SAME_MODE`：18 点 object/sign gates 与全部 hard identity edges 通过；
+- `STABLE_SAME_MODE`：18 点各自适用的 object gates、12 个 endpoint sign gates 与全部 hard
+  identity edges 通过；
 - `NUMERICAL_STABILITY_UNRESOLVED`：evaluation完成，但 count、condition、residual、warning、
   identity、cluster rank 或 competition gate 未通过；
 - `EXECUTION_FAILED`：QZ/solve/eig/SVD 无法完成、对象非有限或资源硬门触发。
@@ -230,17 +245,18 @@ monitor hard-kill 时，最后一个 checkpoint 与 monitor/log 是可交付失�
 
 ## 8. 统一局部网格、位置漂移口径与资源门
 
-用户最新授权只执行六配置的 local position-drift 检查；所有物理量和 auxiliary/proxy 参数保持
-第 2 节取值，不执行 `AUX`，也不重算 $k_L,k_R$ 两个旧肩点。入口可以保留每个 local point 原有的
-$H_{\mathrm{sym}}$ 等 incidental diagnostics 以避免重写核心路径，但不报告新的 endpoint 结果。
+本轮先 fresh 重算第 7 节 A 阶段的 18 点，再执行六配置的 local position-drift B 阶段；所有物理量
+和 auxiliary/proxy 参数保持第 2 节取值，不执行 `AUX`。B 阶段不重复 $k_L,k_R$ 两个肩点。入口
+可以保留每个 local point 原有的 $H_{\mathrm{sym}}$ 等 incidental diagnostics 以避免重写核心路径，
+但不报告新的 endpoint 结果。
 初始且当前唯一承诺的网格为
 
 $$
 k_j=k_0+(j-6)10^{-5},\qquad j=1,\ldots,11,
 $$
 
-实际 double endpoints 为 `[1.7544553299700001,1.7545553299700003]`，nominal spacing
-$d_k=10^{-5}$。六配置使用完全相同的
+nominal interval 为 `[1.755945740875,1.756045740875]`，实际 double endpoints 必须从本轮
+MATLAB 产物记录，不能手抄预测；nominal spacing $d_k=10^{-5}$。六配置使用完全相同的
 11 点和同一 `aphys_ratio`，包括 fresh $k_0$，共 66 evaluations；不读取旧矩阵、不 cache 旧点、
 不拟合、不扩窗，也不实现自动细化。每个配置按有效点中的 `aphys_ratio` argmin 选择 sampled-grid
 winner，同时报告同一点的 `aphys_sigma`、相对 `B` 的直接 winner drift、本轮 score improvement 和
@@ -261,31 +277,24 @@ $10^{-5}$ 的已完成网格未分辨出位置漂移”；这不是 zero error�
 convergence。还必须报告完整 sampled curves 和 neighbor differences；数值平台或近并列会进一步
 限制位置可辨性，不能由 array argmin 的次序给出更强结论。
 
-若六配置各自的 winner 都有左右两个有效邻点夹住，则本轮在共同 11 点网格后终止：winner 相同就
-报告 spacing $10^{-5}$ 下未分辨出漂移，winner 不同就只报告实际 sampled-grid drift；两种情况都
-不再为追求更多位数做 fitting、extrapolation 或更细网格。本轮不预先承诺第二轮。只有首轮出现
-boundary/invalid 等使位置问题仍无法按上述规则回答，且剩余预算允许时，主代理才可显式调用同一
-入口，给六配置共同的 5 个均匀点；该运行允许重复已有点以保持简单和可复现。它仍不是自动细化或
-新的完成门，也不以 $10^{-10}$ 定位为目标。
+本轮固定在共同 11 点网格后终止：winner 相同就报告 spacing $10^{-5}$ 下未分辨出漂移，winner
+不同就只报告实际 sampled-grid drift；若出现 boundary/invalid，也照实报告有限覆盖及失败原因。
+不因结果形态触发扩区、额外 5 点、fitting、extrapolation 或更细网格。
 
-本轮全部 MATLAB、debug 与 audit 累计不超过 2700 s，用户给定的 process-tree RSS 硬上限仍为
+本轮全部 MATLAB、debug 与 audit 累计不超过 1800 s，用户给定的 process-tree RSS 硬上限仍为
 3,000,000,000 bytes，且不得并发。正式执行采用更保守的 2,300,000,000-byte 提前终止线：启动前
 确认没有其他 MATLAB/Octave；运行中每 0.1 s 同时采样本任务完整进程树 RSS 与系统中全部
 MATLAB 进程 RSS，任一达到提前终止线或发现并发 MATLAB，就停止本任务进程、保留 checkpoint 与
-monitor/log，不操作来源不明的其他进程。基于 I7.2 baseline，mandatory 18 点预估 600--1000 s；高
-`ntot` 的真实成本以本轮监测为准。mandatory 完成后，用每配置三个点的最大实测耗时
-$\tau_r$ 保守估计 local 成本 $11\sum_r\tau_r$。只有同时满足
+monitor/log，不操作来源不明的其他进程。历史实测中 A、B 与 audit 分别约为 $365.18$ s、
+$1250.06$ s 和 $13.89$ s，合计约 $1629.13$ s；因此当前 A 后 B 的完整复验在 1800 s 内只有约
+$171$ s 余量。实际成本以本轮监测为准，不增加第二轮、`AUX` 或探索性计算。A 完成并保存/audit
+后释放大矩阵，再串行进入 B；若实测剩余预算不足以安全完成 B 与最终 audit，必须保留 A 证据并
+停止，不能删减科学门或借用旧结果。
+阶段 A 成功才关闭 fixed-point stability；阶段 B 只增加有限网格的位置漂移证据，不改变其完成门或
+科学判据。任何时刻达到 1800 s 或 2,300,000,000 bytes 提前终止线，立即停止本任务并保存现有证据。
 
-$$
-t_{\mathrm{used}}+11\sum_r\tau_r\le2400\ \mathrm{s}
-$$
-
-且 mandatory 的 peak tree RSS 与 peak all-MATLAB RSS 都低于 2.3 GB，主代理才可启动 local scan；
-300 s 留给保存与审计。任何可能的显式第二轮须在首轮实际用时返回后重新通过同一预算与资源门。
-mandatory 已关闭 fixed-point stability；local 只增加有限网格的位置漂移证据，不改变其完成门或
-科学判据。任何时刻达到 2700 s 或 2,300,000,000 bytes 提前终止线，立即停止本任务并保存现有证据。
-
-Operational preflight 曾误启动一次 MATLAB `checkcode` 命令；进程在约 0.9 s 内以 exit 137
+以下两段只记录 2026-09-26 的资源事件，不描述本轮运行。Operational preflight 曾误启动一次
+MATLAB `checkcode` 命令；进程在约 0.9 s 内以 exit 137
 终止，未进入静态检查或任何 scientific point evaluation，未生成 artifact，RSS 未采样。该失败
 只记入同一 run 的 operational log 和保守累计 wall time，不改变任何科学配置或 attempt。
 
@@ -293,9 +302,9 @@ Operational preflight 曾误启动一次 MATLAB `checkcode` 命令；进程在�
 归因于 I7.3；重启后主代理确认没有 MATLAB 进程，Engineer 也确认尚未启动 scientific run。
 该事件只触发上述资源监测修订，不改变模型、六配置、比较图或结果语义。
 
-## 9. 条件性 `AUX` 联合辅助拟合加密（本轮未执行）
+## 9. 历史预注册的 `AUX` 联合辅助拟合加密（本轮不执行）
 
-用户最新授权明确只执行 local scan，不执行 `AUX`；以下内容只保留预注册配置和解释边界。
+本轮明确不执行 `AUX`，且它不是完成条件；以下内容只保留 2026-09-26 的预注册配置和解释边界。
 
 为区分“只在 `ntot`/$M$ 轴上观察到平台”与“proxy fit 也已受检”，预注册一个非 mandatory
 辅助配置：保持 `ntot=512`、$M=64$ 及全部物理量不变，只把
@@ -338,7 +347,93 @@ optional scan 也将执行，两项 projection 必须一起计入同一个 2400 
 不反向改写六配置结果。若不执行，则本轮只能报告 `ntot`/$M$ 平台，proxy 拟合离散的影响仍未测，
 不能归因平台来源。
 
-## 10. Mandatory run-04 实际结果
+## 10. 2026-09-29 修正密度坐标后阶段 A 结果
+
+当前 fixed-point 结果保存在
+`test/i7/refine-v1/output/attempt-1/run-08/fixed/result.json`，同目录 `audit.json` 通过。
+18/18 点有效，六配置的三个 $c$ 带在左右端点分别给出 $n_-=0$ 与 $n_-=1$、unresolved 为零，
+所以每个配置都有 $\Delta n_-=+1$。六个中心点都出现一个 $H_{\mathrm{sym}}$ band-unresolved
+eigenvalue；按第 7 节冻结规则，它只作诊断，中心 $A_{\mathrm{phys}}$ object gate 全部通过。
+
+| Config | $d_H(k_L)$ | $d_H(k_R)$ | endpoint $n_-$ |
+|---|---:|---:|---|
+| `B` | $2.053125626861299\times10^{-13}$ | $2.1757952844695718\times10^{-13}$ | $0\to1$ |
+| `M56` | $1.7896837769818797\times10^{-13}$ | $1.9315029336600774\times10^{-13}$ | $0\to1$ |
+| `M64` | $2.3525238369337333\times10^{-13}$ | $2.3575573002234417\times10^{-13}$ | $0\to1$ |
+| `N384` | $1.4283760109372483\times10^{-13}$ | $1.9819400640600291\times10^{-13}$ | $0\to1$ |
+| `N512` | $1.9066299996174268\times10^{-13}$ | $1.6814498580484897\times10^{-13}$ | $0\to1$ |
+| `J` | $2.6280010581193412\times10^{-13}$ | $2.0255191613586635\times10^{-13}$ | $0\to1$ |
+
+完整 point gates 与 diagnostics 见当前产物 `fixed/points.csv`；上表只摘录进入 endpoint 结论的量。
+
+| Config | `adef_sigma` | `adef_ratio` | `aphys_sigma` | `aphys_ratio` |
+|---|---:|---:|---:|---:|
+| `B` | $1.0113801620671046\times10^{-10}$ | $1.6739838415360665\times10^{-13}$ | $5.0025687287374273\times10^{-11}$ | $1.7513129037661042\times10^{-11}$ |
+| `M56` | $1.0113337297569616\times10^{-10}$ | $1.4351103224081291\times10^{-13}$ | $5.0023479271823017\times10^{-11}$ | $1.7512356049555016\times10^{-11}$ |
+| `M64` | $1.0113895968614702\times10^{-10}$ | $1.2560100350202761\times10^{-13}$ | $5.0026179341700115\times10^{-11}$ | $1.7513301297381378\times10^{-11}$ |
+| `N384` | $1.0113517695200213\times10^{-10}$ | $1.6739368476688536\times10^{-13}$ | $5.0024383566187489\times10^{-11}$ | $1.7512672627392381\times10^{-11}$ |
+| `N512` | $1.0113424612739088\times10^{-10}$ | $1.6739214411440174\times10^{-13}$ | $5.0023755495118554\times10^{-11}$ | $1.7512452750559667\times10^{-11}$ |
+| `J` | $1.0113861394426398\times10^{-10}$ | $1.2560057413704718\times10^{-13}$ | $5.0026350871172081\times10^{-11}$ | $1.7513361346886731\times10^{-11}$ |
+
+18 条 hard-edge/object comparisons 全部为 `SIMPLE_VECTOR / SAME_MODE` 并通过；最小 primary
+overlap 为 $0.9999999999999994$，最大 cross-overlap 为
+$5.1934739087163063\times10^{-14}$，最大 $|m|>48$ total squared tail 为
+$1.1929356645472612\times10^{-30}$。六配置 `aphys_ratio` 的绝对 span 为
+$1.0052973317143901\times10^{-15}$，`aphys_sigma` span 为
+$2.8715993490638703\times10^{-15}$。图中自动纵轴会放大这些差异；它们不能解释为显著 dip 加深或
+离散收敛率。
+
+阶段 A 结论为 `STABLE_SAME_MODE`，限于六个修正密度坐标后的 finite-dimensional fixed-point
+objects。baseline 左右端点的 counts 与修正后 I7.2 相同，$d_H$ 也分别为
+$2.053125626861299\times10^{-13}$ 与 $2.1757952844695718\times10^{-13}$；独立 eigensolver 路径
+可带来约 $10^{-12}$ 的 nearest-eigenvalue 舍入差，不能声称两份 spectrum 逐位相同。入口 runtime
+为 $350.80521704166665$ s，阶段 wall 为 $358.846955$ s；完整资源与总预算见第 11 节。
+fixed audit 复核 18 points 和 18 comparisons，四指标最大绝对差为
+$4.5047767089100715\times10^{-18}$，overlap 最大绝对差为
+$4.440892098500626\times10^{-16}$。
+
+与第 12 节修正前结果比较时，左右 endpoints 的 $k_L,k_R$ 相同，因而 $d_H$ 可直接比较：六配置
+均从约 $6.94\times10^{-3}$/$6.98\times10^{-3}$ 降到当前约
+$1.43\times10^{-13}$--$2.63\times10^{-13}$，而 endpoint count jump 保持 $0\to1$。中心四指标
+则不是 same-$k$ 回归：旧表在 $k_0=1.7545053299700002$，当前表在
+$k_0=1.755995740875$，绝对位置差为 $1.4904109049997949\times10^{-3}$。当前指标比旧表小约
+$5.75\times10^{-8}$ 倍只能描述各自采样点的 before/after 结果，不能把全部变化归因于密度修正，
+也不能混同为本轮六配置相对 `B` 的离散漂移。
+
+## 11. 2026-09-29 修正密度坐标后阶段 B 结果
+
+当前 local 结果保存在
+`test/i7/refine-v1/output/attempt-1/run-08/local/result.json`，同目录 `audit.json` 通过。实际 double
+interval 为 `[1.7559457408749999,1.7560457408750001]`，nominal spacing 为 $10^{-5}$。66/66 点
+有效且 point diagnostics 全部通过；六配置的 `aphys_ratio` sampled winner 与 `aphys_sigma` 自身
+sampled argmin 都是 index 6，即 $k_0=1.755995740875$。
+
+| Config | winner $k$ | bracket | full neighbor spacing | left ratio gap | right ratio gap |
+|---|---:|---|---:|---:|---:|
+| `B` | $1.755995740875$ | $[1.755985740875,1.756005740875]$ | $2.0000000000131024\times10^{-5}$ | $1.4870276308128473\times10^{-5}$ | $1.4870251468814921\times10^{-5}$ |
+| `M56` | $1.755995740875$ | $[1.755985740875,1.756005740875]$ | $2.0000000000131024\times10^{-5}$ | $1.4870276308333567\times10^{-5}$ | $1.4870251470121332\times10^{-5}$ |
+| `M64` | $1.755995740875$ | $[1.755985740875,1.756005740875]$ | $2.0000000000131024\times10^{-5}$ | $1.4870276307434020\times10^{-5}$ | $1.4870251469271948\times10^{-5}$ |
+| `N384` | $1.755995740875$ | $[1.755985740875,1.756005740875]$ | $2.0000000000131024\times10^{-5}$ | $1.4870276307207669\times10^{-5}$ | $1.4870251468980830\times10^{-5}$ |
+| `N512` | $1.755995740875$ | $[1.755985740875,1.756005740875]$ | $2.0000000000131024\times10^{-5}$ | $1.4870276308077021\times10^{-5}$ | $1.4870251469884793\times10^{-5}$ |
+| `J` | $1.755995740875$ | $[1.755985740875,1.756005740875]$ | $2.0000000000131024\times10^{-5}$ | $1.4870276307492001\times10^{-5}$ | $1.4870251468153824\times10^{-5}$ |
+
+阶段 B 在相同 $k_0$ 复算的每配置四指标与第 10 节 fixed 结果逐项 double-exact 相同，最大绝对差
+为 0。66 条 same-$k$ hard-edge comparisons 全部为 `SIMPLE_VECTOR / SAME_MODE` 并通过；最小
+primary overlap 为 $0.9999999999999994$，最大 cross-overlap 为
+$3.6251735206506948\times10^{-14}$，最大 $|m|>48$ total squared tail 为
+$8.5821055331273043\times10^{-32}$。local audit 的四指标最大绝对误差为
+$4.5047767089100715\times10^{-18}$，trace relative error 为
+$1.2208197869149605\times10^{-16}$，comparison 最大绝对误差为
+$3.3306690738754696\times10^{-16}$。
+
+因此结果为 `NO_DRIFT_RESOLVED_AT_SPACING_1E-5`：在这个共同的 11 点有限网格上，六配置没有分辨出
+sampled winner 的位置漂移。它不证明 sub-grid minimum、位置误差界、连续最小点或收敛。B entry
+runtime 为 $1255.9446958333333$ s，stage wall 为 $1259.272412$ s。A+B、保存、绘图与两个 audit
+处于同一 monitored MATLAB process；总 wall 为 $1630.584183$ s，peak task-tree 与 all-MATLAB
+RSS 均为 $1,505,230,848$ bytes，exit code 0，未发现 external MATLAB root，低于 1800 s 与
+2,300,000,000-byte 提前终止线。本轮没有执行 `AUX` 或额外细化。
+
+## 12. 修正前历史：Mandatory run-04 实际结果
 
 正式结果保存在
 `test/i7/refine-v1/output/attempt-1/run-04/result.json`，独立产物一致性检查保存在同目录
@@ -379,11 +474,11 @@ tree 与 all-MATLAB RSS 均为 $1,943,863,296$ bytes，未发现 external MATLAB
 $7.047314121155779\times10^{-18}$，overlap 最大绝对差为
 $2.220446049250313\times10^{-16}$。由实测得到 optional local-grid projection
 $11\sum_r\tau_r=1268.4317245416667$ s，`AUX` projection
-$9\tau_J=300.8579025$ s。用户最新授权的 local 66 点结果见第 11 节，但 fresh `J--AUX` 六点仍
+$9\tau_J=300.8579025$ s。该轮 local 66 点历史结果见第 13 节，但 fresh `J--AUX` 六点仍
 明确不执行。因此 proxy tuple 敏感性仍未检验，现有平台不能归因于某一固定 auxiliary 参数已经
 收敛。
 
-## 11. Local run-06 实际结果
+## 13. 修正前历史：Local run-06 实际结果
 
 正式 local 结果保存在
 `test/i7/refine-v1/output/attempt-1/run-06/result.json` 和同目录 `scientific.mat`。六配置在 actual

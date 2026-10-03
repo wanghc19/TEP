@@ -58,12 +58,13 @@ function [result,evidence] = check_i7_refinement(checkpoint_dir,mode)
     'epsrel_center',2,'XL',-0.5,'XR',0.5,'H',1.1,'pdist',0.2, ...
     'flag_geom','ellipse','ellipse_axes',[0.25,0.16]);
   configs = LOCAL_configs();
+  k0 = 1.755995740875;
   if strcmp(mode,'local')
     [result,evidence] = LOCAL_local_scan( ...
-      timer,beta,model,configs,checkpoint_dir);
+      timer,beta,model,configs,checkpoint_dir,k0);
     return;
   end
-  kvals = [1.753125,1.7545053299700002,1.75625];
+  kvals = [1.753125,k0,1.75625];
   labels = {'L','C','R'};
   point_rows = repmat(LOCAL_empty_point(),numel(configs),numel(kvals));
   config_rows = repmat(LOCAL_empty_config_result(),numel(configs),1);
@@ -173,10 +174,9 @@ end
 % This mode retains compact traces per point and full evidence only at winners.
 
 function [result,evidence] = LOCAL_local_scan( ...
-    timer,beta,model,configs,checkpoint_dir)
+    timer,beta,model,configs,checkpoint_dir,k0)
 %LOCAL_LOCAL_SCAN Evaluate the authorized six-configuration 11-point grid.
 
-  k0 = 1.7545053299700002;
   spacing = 1e-5;
   kvals = k0+(-5:5)*spacing;
   rows = repmat(LOCAL_empty_local_point(),numel(configs),numel(kvals));
