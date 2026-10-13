@@ -7,7 +7,8 @@ function out = betagmode()
 %            (i*Gamma-Lambda_+)*E, -(i*Gamma+Lambda_+)]
 %
 % and its physically weighted form A_phys = D_r*A_def*D_c. The reported k
-% minimizes sigma_min(A_phys)/sigma_max(A_phys) on the fine discretization.
+% minimizes sigma_min(A_phys)/sigma_max(A_phys) over this sampled grid on
+% the fine discretization. Proxy kernels are evaluated in target batches.
 %
 % INPUT:
 %   None.
@@ -35,9 +36,9 @@ function out = betagmode()
 
   % Fixed Rayleigh order and uniform local scan.
   M = 48;
-  kmin = 1.8327690124511717;
-  dk = 1.9073486328125e-7;
-  kvals = kmin+(0:10)*dk;
+  kmin = 1.8327702889218924;
+  dk = 9.3132279666008344e-11;
+  kvals = kmin+(0:4)*dk;
 
   nk = numel(kvals);
   asig = zeros(nk,2);
@@ -105,12 +106,12 @@ function [Zp,Zm,bm,gamma,phase] = LOCAL_cellsub(k,M,model,cfg)
     'N_proxy_edge',cfg.nproxy,'M_pw',cfg.mpw);
   proxy = kernel.precomp_proxy(pars,mfscfg);
   kint = sqrt(model.epsrel)*k;
-  cellmap = bloch.construct_S(C,k,kint,pars,proxy,curvelen,chans, ...
-    model.XL,model.XR);
+  [RL,TLR,TRL,RR] = LOCAL_construct_S(C,k,kint,proxy, ...
+    curvelen,chans,model.XL,model.XR);
 
   K = chans.K;
-  A = [-cellmap.R_L,eye(K);cellmap.T_LR,zeros(K)];
-  B = [zeros(K),cellmap.T_RL;eye(K),-cellmap.R_R];
+  A = [-RL,eye(K);TLR,zeros(K)];
+  B = [zeros(K),TRL;eye(K),-RR];
   Zp = LOCAL_qzsub(A,B,K);
   Zm = LOCAL_qzsub(B,A,K);
   bm = chans.beta_m(:);
@@ -118,9 +119,9 @@ function [Zp,Zm,bm,gamma,phase] = LOCAL_cellsub(k,M,model,cfg)
   phase = chans.phase(:);
 end
 
-function Zs = LOCAL_qzsub(A,B,K)
+function [Zs,P] = LOCAL_qzsub(A,B,K)
 %LOCAL_QZSUB Local generalized-Schur subspace extraction.
-% Order projective QZ pairs strictly inside the unit circle.
+% Order decaying QZ pairs and optionally return their full propagation matrix.
 
   rho = hypot(norm(A,'fro'),norm(B,'fro'));
   A = A/rho;
@@ -140,8 +141,11 @@ function Zs = LOCAL_qzsub(A,B,K)
   neutral = ~indet & ~infinite & abs(an-tn) <= tol;
   stable = ~indet & ~infinite & ~neutral & an < tn-tol;
 
-  [~,~,~,Zo] = ordqz(S,T,Q,Z,stable);
+  [So,To,~,Zo] = ordqz(S,T,Q,Z,stable);
   Zs = Zo(:,1:K); % TODO: check if #stable == K?
+  if nargout > 1
+    P = To(1:K,1:K)\So(1:K,1:K);
+  end
 end
 
 function [Lp,Lm] = LOCAL_dtn(Zp,Zm,gamma)
@@ -160,4 +164,101 @@ function [Lp,Lm] = LOCAL_dtn(Zp,Zm,gamma)
   Nm = -1i*G*(Am-Bm);
   Lp = (Dp.'\Np.').';
   Lm = (Dm.'\Nm.').';
+end
+
+%% ==================== Circle cell ====================
+% These helpers construct cell scattering blocks with bounded proxy batches.
+
+function [RL,TLR,TRL,RR,HL,HR] = LOCAL_construct_S( ...
+    C,kout,kin,proxy,curvelen,chans,XL,XR)
+%LOCAL_CONSTRUCT_S Local cell scattering matrix construction.
+% Script-local counterpart of bloch.construct_S; return four scattering blocks
+% and, when requested, the two density maps needed for field reconstruction.
+
+  Aq = LOCAL_construct_A_QP(C,kout,kin,proxy,curvelen);
+  [BL,BR] = bloch.incident_rhs(C,chans,XL,XR);
+  [FL,FR] = bloch.farfield_extractors(C,chans,XL,XR,curvelen);
+  Hall = -(Aq\[BL,BR]);
+  K = chans.K;
+  HL = Hall(:,1:K);
+  HR = Hall(:,K+1:end);
+  E = diag(chans.phase(:));
+  RL = FL*HL;
+  TLR = E+FR*HL;
+  TRL = E+FL*HR;
+  RR = FR*HR;
+end
+
+function Aq = LOCAL_construct_A_QP(C,kout,kin,proxy,curvelen)
+%LOCAL_CONSTRUCT_A_QP Local quasi-periodic Muller matrix construction.
+% Script-local counterpart of op.construct_A_QP, valid only for this example's
+% fixed geometry and parameters. Combine Kress differences with proxy kernels.
+
+  N = size(C,2);
+  hq = curvelen/N;
+  x = C(1,:);
+  y = C(4,:);
+  xt = C(2,:);
+  yt = C(5,:);
+  speed = sqrt(xt.^2+yt.^2).';
+  nx = (yt./speed.').';
+  ny = (-xt./speed.').';
+  gd = struct('z',[x.',y.'],'zp',[xt.',yt.'], ...
+    'zpp',[C(3,:).',C(6,:).'],'speed',speed);
+  [t,D] = utils.triginterp(N);
+  rvec = quad.quad_kress_rvec(N);
+  ridx = mod((0:N-1)-(0:N-1).',N)+1;
+  Rk = rvec(ridx);
+
+  % Here 2*R = 0.4 < d/2 = 0.5 and H = 1.1, so every displacement
+  % lies in the central proxy strip without periodic folding or phase.
+  dx = x.'-x;
+  dy = y.'-y;
+  [pot,gc,hc] = LOCAL_h2d_directch(kout,proxy.Z,proxy.q,[dy(:).';dx(:).']);
+  gx = reshape(gc(2,:),N,N);
+  gy = reshape(gc(1,:),N,N);
+  hxx = reshape(hc(3,:),N,N);
+  hxy = reshape(hc(2,:),N,N);
+  hyy = reshape(hc(1,:),N,N);
+  wt = hq*speed.';
+  P11 = -(gx.*nx.'+gy.*ny.').*wt;
+  P22 = -(gx.*nx+gy.*ny).*wt;
+  P12 = -reshape(pot,N,N).*wt;
+  P21 = -(hxx.*(nx*nx.')+hxy.*(nx*ny.'+ny*nx.')+ ...
+    hyy.*(ny*ny.')).*wt;
+
+  [Li1,Li2,Lsi1,Lsi2] = kernel.kress_l_splits(kin,t,gd);
+  [Lo1,Lo2,Lso1,Lso2] = kernel.kress_l_splits(kout,t,gd);
+  A11 = Rk.*(Lo1-Li1)+hq*(Lo2-Li2)+P11;
+  A22 = Rk.*(Lsi1-Lso1)+hq*(Lsi2-Lso2)+P22;
+  clear Li1 Li2 Lsi1 Lsi2 Lo1 Lo2 Lso1 Lso2 P11 P22
+
+  [Mi1,Mi2,Ni1,Ni2] = kernel.kress_mn_splits(kin,t,gd);
+  [Mo1,Mo2,No1,No2] = kernel.kress_mn_splits(kout,t,gd);
+  A12 = Rk.*(Mi1-Mo1)+hq*(Mi2-Mo2)+P12;
+  tang = (gd.zp*gd.zp.')./(speed*speed.');
+  T0 = (Rk.*(kout^2*Mo1-kin^2*Mi1)+ ...
+    hq*(kout^2*Mo2-kin^2*Mi2)).*tang;
+  Tb = Rk.*(No1-Ni1)+hq*(No2-Ni2);
+  A21 = T0+bsxfun(@rdivide,Tb,speed)*D+P21;
+  Aq = [eye(N)+A11,A12;A21,eye(N)+A22];
+  sr = sqrt(hq*[speed;speed]);
+  sc = sqrt((1/hq)./[speed;speed]);
+  Aq = sr.*Aq.*sc.';
+end
+
+function [pot,grad,hess] = LOCAL_h2d_directch(wavek,sources,charge,targ)
+%LOCAL_H2D_DIRECTCH Local two-dimensional Helmholtz direct charge evaluation.
+% Batch target points while retaining the public kernel's full source sum.
+
+  nt = size(targ,2);
+  pot = complex(zeros(1,nt));
+  grad = complex(zeros(2,nt));
+  hess = complex(zeros(3,nt));
+  batch = 512;
+  for first = 1:batch:nt
+    ids = first:min(first+batch-1,nt);
+    [pot(:,ids),grad(:,ids),hess(:,ids)] = ...
+      kernel.h2d_directch(wavek,sources,charge,targ(:,ids));
+  end
 end
