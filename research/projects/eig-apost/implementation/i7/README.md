@@ -9,13 +9,15 @@ pair-matrix evaluator hook；不修改公共核公式。2026-09-27 另按用户�
 在公共 `bloch.construct_S` 中最小修复密度坐标不一致，详见本页修正复验节。
 
 
-> 当前状态（2026-09-29）：已独立确认并修正公共 `bloch.construct_S` 的密度坐标不一致，详见
+> 当前状态（2026-10-06）：已独立确认并修正公共 `bloch.construct_S` 的密度坐标不一致，详见
 > [[research/projects/eig-apost/implementation/i7/review-7-3a#D. Findings|审查 D.6]]。
 > 最小修复及 I7.1 复验已完成，独立审查为 `PASS WITH CONDITIONS`：修正后观察到内点采样 dip，
 > 预算停止前未观察到稳定平台。下面旧 I7.1/I7.2/I7.3 的日志与有限矩阵数值保留为
 > **修正前历史**，不能沿用其物理候选可信度。I7.2 已用修正后公共调用链在原端点单独复验，
 > 得到 `JUMP`、负计数差 $+1$；I7.3 也已完成修正后的六配置固定点和局部网格复验，
 > 保持端点 jump 与同模态，在 $10^{-5}$ 网格上未分辨出漂移。当前结果均不构成连续特征值认证。
+> I7.4 已实际评价冻结 raw 场的预解式距离公式，并完成几何、传播、高墙模态尾及质量下界的部分认证；
+> 总跳跃量尚无完整单侧上界，因此谱距离结果仍标为未认证，不能由其数值大小宣称达成认证目标。
 
 ## 模型和边界
 
@@ -27,13 +29,14 @@ pair-matrix evaluator hook；不修改公共核公式。2026-09-27 另按用户�
 - 数值 projected gap 由 main `projgap.m` 的圆形周期介质计算。I7.1 只在该范围内作有限层、
   有预算的局部扫描；结果不称全局搜索或连续谱认证。
 
-## 三阶段里程碑
+## 四阶段里程碑
 
 | Milestone | 任务 | 状态 | 交付 |
 |---|---|---|---|
 | I7.1 | 密度坐标修正后，中心 `epsrel=2` 的宽扫描与固定 final 配置局部定位完成；预算停止前未见稳定平台 | `PASS WITH CONDITIONS；内点采样 dip` | [[research/projects/eig-apost/implementation/i7/design-7-1a|设计]]、[[test/i7/scan-v1/README|实验入口]]、[[research/projects/eig-apost/implementation/i7/review-7-1a|独立审查]] |
 | I7.2 | 用修正后公共密度坐标调用链，在原固定肩点 $1.753125,1.75625$ 重新构造物理迹矩阵并判号 | `复验完成；JUMP；PASS WITH CONDITIONS` | [[research/projects/eig-apost/implementation/i7/design-7-2a|设计]]、[[test/i7/inertia-v1/README|复验结果与入口]]、[[research/projects/eig-apost/implementation/i7/review-7-2a|独立审查]] |
 | I7.3 | 修正公共密度坐标后，六配置重新执行 18 固定点及 66 局部点，检查物理墙面迹与采样位置 | `STABLE_SAME_MODE；1e-5 网格未分辨漂移；PASS WITH CONDITIONS` | [[research/projects/eig-apost/implementation/i7/design-7-3a|设计与符号映射]]、[[test/i7/refine-v1/README|新结果与入口]]、[[research/projects/eig-apost/implementation/i7/review-7-3a|独立审查]] |
+| I7.4 | 冻结修正后候选与完整 raw 场，以非 Fourier 界面跳跃和预解式公式评价到连续算子全谱的距离 | `数值评价及部分认证完成；完整谱距离未认证` | [[research/projects/eig-apost/implementation/i7/design-7-4a|设计]]、[[test/i7/resolvent-v1/README|实验与结果]]、[[research/projects/eig-apost/implementation/i7/review-7-4a|独立审查]] |
 
 I7.2 的 sign count 只作 numerical corroboration，不解释为 raw non-Hermitian matrix 的严格
 inertia。跨离散阶数稳定性和同模态比较现独立列为 I7.3，不追溯改变 I7.2 的完成范围。
@@ -705,6 +708,54 @@ audit wall time 为 17 s，peak process-tree RSS 为 851,787,776 bytes。第一�
 [[test/i7/scan-v1/output/kernel-revision/task-time.json|本轮任务计时]]。
 
 
+## I7.4：冻结 raw 场的谱距离评价（2026-10-06）
+
+使用修正公共密度坐标链，在固定 $k_0=1.755995740875$、原 baseline 配置上重新构造候选，
+没有扫描或改变物理模型。谱参数是其存储 binary64 的精确实平方
+$\mu=3.083521041971140105498728774232\ldots$。中心冻结的是实际保存的 physical density
+向量；它的连续三角插值与原始端口、两侧完整传播矩阵共同定义 raw 场。
+普通 BIE/墙评价中的 `Hmap*q` 舍入差是尚未包围的评价误差，不另当成一个精确场恒等式。
+
+当前标量组合为
+
+$$
+R_{\mathrm{num}}=
+\frac{2\mu\overline C\,\varepsilon_{\mathrm{num}}}
+{\underline U-\overline C\,\varepsilon_{\mathrm{num}}}.
+$$
+
+| 量 | 数值（显示值） | 状态 |
+|---|---:|---|
+| $\overline C$ | $2.863846920155989$ | 新椭圆/圆/墙 collar 几何与 Arb 上界 |
+| $\varepsilon_{\mathrm{num}}$ | $1.0116161391167468\times10^{-10}$ | 连续总跳跃的数值评价，**不是已认证上界** |
+| $\underline U$ | $0.08973136188400639$ | 同一冻结场的安全盘质量下界，Arb |
+| $\overline C\varepsilon_{\mathrm{num}}$ | $2.897113764389588\times10^{-10}$ | 条件标量组合 |
+| 分母 | $0.08973136159429502$ | 对上述数值输入为正；不是完整误差证书 |
+| $R_{\mathrm{num}}$ | $1.991123525767936\times10^{-8}$ | **未认证**的 F14 数值评价 |
+
+相应未认证参考区间约为
+$[3.0835210220599048,\,3.0835210618823754]$，不能声称其中已认证包含连续谱点。
+材料曲线按物理弧长直接评价，没有采用材料 Fourier 高模尾。数值主导项是墙面普通法向跳跃平方和
+$1.0233668117077186\times10^{-20}$；中心和全部 lead 材料法向项分别约为
+$1.1002890647906295\times10^{-28}$ 和 $1.4932982947408970\times10^{-28}$。
+近机器量级的材料节点值不构成连续曲线范数的认证。
+
+另行通过的单侧部分包括：两侧完整传播矩阵的 Frobenius 范数均小于 $0.305443594497$；
+所有墙 $|m|>48$ 的值/法向尾平方和分别小于
+$6.612899834\times10^{-66}$、$6.300147540\times10^{-61}$；
+安全盘上 $|u(3/8,0)|$ 下界约 $1.04770791346249$、完整梯度上界约 $3.80319869411715$。
+尾项未重复加到直接采样完整墙函数的普通范数中。质量认证使用同一 frozen density 的精确 QP
+Rayleigh 表示、Arb 源求积余项和点/梯度模态尾，不使用空中心质量公式或 sampled gradient 上界。
+
+`run-01` 的离面材料外推未收敛，已保留并排除；同 attempt 改为公共 BIE 的正确边界极限作用，
+保持同一 256 点密度，只加密评价求积。运行、完整分解和独立审查见
+[[test/i7/resolvent-v1/README|resolvent-v1 结果与复现]]、
+[[research/projects/eig-apost/implementation/i7/review-7-4a|I7.4 审查]]。
+严格认证的剩余门登记在 I7-Q6；不重新解释 I7.1--I7.3 的有限矩阵结论。
+正式新组装结果为 `resolvent-v1/output/attempt-1/run-05`，`run-06` 仅导出完整分项。
+全部六次串行受监测调用累计 $628.251433$ s，进程树峰值 RSS 为
+$1{,}209{,}221{,}120$ bytes；失败与主动中断的记录均保留。
+
 ## 阅读和复现入口
 
 1. [[research/projects/eig-apost/implementation/i7/design-7-1a|I7.1 frozen design]]；
@@ -714,7 +765,10 @@ audit wall time 为 17 s，peak process-tree RSS 为 851,787,776 bytes。第一�
    [[research/projects/eig-apost/implementation/i7/review-7-2a|I7.2 independent review]]；
 5. [[research/projects/eig-apost/implementation/i7/design-7-3a|I7.3 discretization design]]、
    [[test/i7/refine-v1/check_i7_refinement|refinement entry]] 与
-   [[research/projects/eig-apost/implementation/i7/review-7-3a|I7.3 independent review]]。
+   [[research/projects/eig-apost/implementation/i7/review-7-3a|I7.3 independent review]]；
+6. [[research/projects/eig-apost/implementation/i7/design-7-4a|I7.4 raw-field design]]、
+   [[test/i7/resolvent-v1/README|resolvent-v1 result and reproduction]] 与
+   [[research/projects/eig-apost/implementation/i7/review-7-4a|I7.4 independent review]]。
 
 ## I7 待办与问题
 
@@ -727,3 +781,4 @@ audit wall time 为 17 s，peak process-tree RSS 为 851,787,776 bytes。第一�
 | I7-Q3 | important caveat | 修正后 I7.2 的 $d_H$ 降到机器量级，但未证明严格 Hermitian；$\eta$ 仍是诊断带而非离散误差界 | inertia-v1 run-02 在原端点重新得到三档稳定 JUMP；仅作有限矩阵佐证，不能替代连续误差控制 | open caveat; corrected I7.2 rerun complete |
 | I7-Q4 | important caveat | 修正后 I7.3 两轴及联合配置保持 jump、同模态和很小的四指标变化，但辅助 tuple 固定，不能归因或认证总体离散误差 | refine-v1 run-08 完成 18 固定点和 66 局部点；本轮不需要且未执行 AUX，未来只在目标另有要求时扩展 | open caveat; corrected I7.3 rerun complete |
 | I7-Q5 | blocker | 公共 BIE 的平方根求积密度坐标曾与原始右端/场提取混用；现已最小修复 construct_S | scan-v1 run-13--25、inertia-v1 run-02、refine-v1 run-08 已分别完成修正后的 I7.1/I7.2/I7.3 复验；旧结果保留为修正前历史 | closed for corrected I7.1/I7.2/I7.3 |
+| I7-Q6 | blocker | I7.4 已关闭精确谱参数、椭圆几何/迹常数、完整传播收缩、全墙高模态尾与同场质量门；尚缺中心椭圆连续奇异核/源与目标求积余项、保留墙模态评价误差、完整胞元 action 尾及 stored density 与 Hmap*q 的舍入包围 | 移植并审查 general-ellipse Arb Kress/log-g 双参数因子、对角极限和连续 strip 余项，再合并全部单侧跳跃界；节点残差或 P 收缩单独不足以完成这一步 | open; numerical estimate and partial certificates delivered, full spectral bound uncertified |
