@@ -2,11 +2,13 @@
 
 ## Scope
 
-This ledger applies to `test/i8/flow-v1/`, `test/i8/locate-v1/`,
+This ledger applies to `test/i8/flow-v1/`, `test/i8/locate-v1/`, `test/i8/check-v1/`,
 [[research/projects/eig-apost/implementation/i8/design-8-1a|I8.1]], and
-[[research/projects/eig-apost/implementation/i8/design-8-1b|I8.1 local location]]. It maps the equal-area star
-flow and its independent local locator and does not change the historical I6/I7 meanings. All `*_num` quantities
-are ordinary numerical values unless an individual field explicitly says otherwise.
+[[research/projects/eig-apost/implementation/i8/design-8-1b|I8.1 local location]], and
+[[research/projects/eig-apost/implementation/i8/design-8-2a|I8.2 fixed-point checks]]. It maps the equal-area
+star flow, its independent local locator, and the five-configuration fixed-point checks without changing the
+historical I6/I7 meanings. All `*_num` quantities are ordinary numerical values unless an individual field
+explicitly says otherwise.
 
 | Code name | Mathematical object | Meaning and shape | Defined / consumed |
 |---|---|---|---|
@@ -18,6 +20,9 @@ are ordinary numerical values unless an individual field explicitly says otherwi
 | derived `neighbor_width` | $w=k_{j+1}-k_{j-1}$ | actual full neighbor width at an interior winner | location ledger / next interval |
 | `selected.k` | $k_0$ | final valid baseline `aphys_ratio` argmin | scan / checks and raw field |
 | `shoulders(1:2)` | $k_L,k_R$ | last valid neighbors of $k_0$ | scan / inertia |
+| `halfwidth` | $h_k$ | I8.2 stage-local wavenumber halfwidth; initially $10^{-5}$, distinct from the I8.1 collar $h$ | fixed-point check input |
+| `configs.id` = `B,N384,N512` | $B,N_{384},N_{512}$ | baseline and boundary-order ladder at $M=48$ | I8.2 points / comparisons |
+| `configs.id` = `M56,M64` | $M_{56},M_{64}$ | Rayleigh-order ladder at `ntot=256` | I8.2 points / comparisons |
 | `mu` | $\mu=k_0^2$ | spectral parameter used in numerical T9/F14 formulas | final candidate / raw stage |
 | `rho_center` | $\rho_c=2$ | center-star relative material coefficient | model / center cell |
 | `rho_lead` | $\rho_\ell=17$ | lead-circle relative material coefficient | model / half-guides |
@@ -51,6 +56,8 @@ are ordinary numerical values unless an individual field explicitly says otherwi
 | `H`, `Hsym` | $H,H_{\rm sym}$ | physical-trace right solve and Hermitian part | inertia count |
 | `inertia.*.dH`, `inertia.*.scale` | $d_H,s_H$ | anti-Hermitian defect and Hermitian-part scale | inertia bands |
 | `inertia.*.eta` | $\eta_c$ | count exclusion band; not a layer density | inertia count only |
+| `comparisons.gap_a`, `comparisons.gap_b` | $g_H$ or $g_A$ | same-object nearest-$|\lambda|$ or smallest-singular-value competition gaps | I8.2 mode identity |
+| `comparisons.delta_a`, `comparisons.delta_b` | $\delta_H$ or $\delta_A$ | same-object machine-scale near-degeneracy thresholds | I8.2 simple/cluster switch |
 | `center_density` | $\eta_{256}=[\tau;\zeta]$ | frozen 256-node center physical density at final `B` candidate | raw stage |
 | `Gplus`, `Gminus` | $G_\pm$ | lead incoming-state maps | propagation / material and walls |
 | `Pplus`, `Pminus` | $P_\pm$ | full lead propagation matrices | propagation / finite cells |
