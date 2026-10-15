@@ -2,15 +2,20 @@
 
 ## Scope
 
-This ledger applies only to `test/i8/flow-v1/` and
-[[research/projects/eig-apost/implementation/i8/design-8-1a|I8.1]]. It maps the equal-area star flow and
-does not change the historical I6/I7 meanings. All `*_num` quantities are ordinary numerical values unless an
-individual field explicitly says otherwise.
+This ledger applies to `test/i8/flow-v1/`, `test/i8/locate-v1/`,
+[[research/projects/eig-apost/implementation/i8/design-8-1a|I8.1]], and
+[[research/projects/eig-apost/implementation/i8/design-8-1b|I8.1 local location]]. It maps the equal-area star
+flow and its independent local locator and does not change the historical I6/I7 meanings. All `*_num` quantities
+are ordinary numerical values unless an individual field explicitly says otherwise.
 
 | Code name | Mathematical object | Meaning and shape | Defined / consumed |
 |---|---|---|---|
 | `beta` | $\beta$ | fixed quasiperiodic parameter $0.5$ | model / every stage |
 | `k` | $k$ | current real scan or evaluation point | scan / point evaluator |
+| `kmin`, `dk`, `nk` | $k_{\min},\Delta k,n_k$ | explicit first node, requested spacing and node count for one locator call | `locate_i8` input |
+| `scan.k` | $(k_j)_{j=0}^{n_k-1}$ | actual binary64 grid; authoritative for span and spacing | locator output / manual next round |
+| derived `full_span` | $W=k_{n_k-1}-k_0$ | actual completed-round width; a grid scale, not a position error | location ledger |
+| derived `neighbor_width` | $w=k_{j+1}-k_{j-1}$ | actual full neighbor width at an interior winner | location ledger / next interval |
 | `selected.k` | $k_0$ | final valid baseline `aphys_ratio` argmin | scan / checks and raw field |
 | `shoulders(1:2)` | $k_L,k_R$ | last valid neighbors of $k_0$ | scan / inertia |
 | `mu` | $\mu=k_0^2$ | spectral parameter used in numerical T9/F14 formulas | final candidate / raw stage |
