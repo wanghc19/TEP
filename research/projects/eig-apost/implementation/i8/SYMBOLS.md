@@ -1,0 +1,66 @@
+# I8 symbol and variable ledger
+
+## Scope
+
+This ledger applies only to `test/i8/flow-v1/` and
+[[research/projects/eig-apost/implementation/i8/design-8-1a|I8.1]]. It maps the equal-area star flow and
+does not change the historical I6/I7 meanings. All `*_num` quantities are ordinary numerical values unless an
+individual field explicitly says otherwise.
+
+| Code name | Mathematical object | Meaning and shape | Defined / consumed |
+|---|---|---|---|
+| `beta` | $\beta$ | fixed quasiperiodic parameter $0.5$ | model / every stage |
+| `k` | $k$ | current real scan or evaluation point | scan / point evaluator |
+| `selected.k` | $k_0$ | final valid baseline `aphys_ratio` argmin | scan / checks and raw field |
+| `shoulders(1:2)` | $k_L,k_R$ | last valid neighbors of $k_0$ | scan / inertia |
+| `mu` | $\mu=k_0^2$ | spectral parameter used in numerical T9/F14 formulas | final candidate / raw stage |
+| `rho_center` | $\rho_c=2$ | center-star relative material coefficient | model / center cell |
+| `rho_lead` | $\rho_\ell=17$ | lead-circle relative material coefficient | model / half-guides |
+| `star_scale` | $s_*$ | $\sqrt{0.04/0.0618}$ applied to all six contour rows | geometry / center constructor |
+| `C` | $C_*$ | equal-area star positions and first/second derivatives | center constructor / all actions |
+| `curvelen` | $2\pi$ | contour-parameter interval length; not the geometric perimeter | boundary quadrature spacing |
+| `speed` | $v$ | star parameter speed | geometry / weights and normal |
+| `nx`, `ny` | $\nu$ | outward normal $(y',-x')/v$ | geometry / layer actions |
+| `curvature` | $\kappa$ | signed star curvature | geometry diagnostic |
+| `geometry.curvature_max` | $K_*$ | sampled $\max|\kappa|$ | geometry / `geometry.theta` |
+| `collar_h` | $h$ | numerical collar half-width $0.004$ | geometry / `C_num` |
+| `arc_band` | $b_{\rm arc}$ | numerical T12 diagonal-band arclength $0.01$ | geometry diagnostic |
+| `geometry.theta` | $1-hK_*$ | sampled positive Jacobian margin | geometry / `Cnum` |
+| `Nover` in `LOCAL_Cnum` | $N_{\rm ov}$ | sampled collar overlap count, fixed to one after geometry gates | geometry / `Cnum` |
+| `cfg` | configuration | `ntot,nside,ntop,nproxy,mpw,M` | all matrix evaluations |
+| `cfgB`, `cfgN`, `cfgM` | $B,N,M_{\rm cfg}$ | baseline, boundary-axis and Rayleigh-axis configurations | stability stage |
+| `K` | $2M+1$ | Rayleigh channel count per wall | config / matrices |
+| `cellmap` | $R_L,T_{RL},T_{LR},R_R$ | center scattering blocks | center solve / matching |
+| `H_L`, `H_R` | density maps | physical $[\tau;\zeta]$ maps, $\zeta=-\sigma$ | corrected `construct_S` / raw field |
+| `q` | $[a^L;b^R]$ | incoming center amplitudes after column-weight recovery | SVD / traces and raw field |
+| `T` | $T$ | amplitude-to-physical-Dirichlet-trace map | matching / inertia and mode checks |
+| `trace` | $d=Tq$ | physical left/right wall Fourier trace | mode identity |
+| `Adef` | $A_{\rm def}$ | unweighted center/half-guide matching matrix | point evaluator |
+| `rowwt`, `colwt` | $D_r,D_c$ | I7 physical matching weights | point evaluator |
+| `Aphys` | $A_{\rm phys}$ | $D_rA_{\rm def}D_c$ | candidate score and mode |
+| `adef_sigma` | $\sigma_{\min}(A_{\rm def})$ | unweighted smallest singular value | scan result |
+| `adef_ratio` | singular-value ratio | $\sigma_{\min}/\sigma_{\max}$ of `Adef` | scan result |
+| `aphys_sigma` | $\sigma_{\min}(A_{\rm phys})$ | weighted smallest singular value | scan result |
+| `aphys_ratio` | singular-value ratio | $\sigma_{\min}/\sigma_{\max}$ of `Aphys`; selection score | scan result |
+| `N0`, `L` | $N_0,L$ | independent center normal map and block DtN | inertia assembly |
+| `H`, `Hsym` | $H,H_{\rm sym}$ | physical-trace right solve and Hermitian part | inertia count |
+| `inertia.*.dH`, `inertia.*.scale` | $d_H,s_H$ | anti-Hermitian defect and Hermitian-part scale | inertia bands |
+| `inertia.*.eta` | $\eta_c$ | count exclusion band; not a layer density | inertia count only |
+| `center_density` | $\eta_{256}=[\tau;\zeta]$ | frozen 256-node center physical density at final `B` candidate | raw stage |
+| `Gplus`, `Gminus` | $G_\pm$ | lead incoming-state maps | propagation / material and walls |
+| `Pplus`, `Pminus` | $P_\pm$ | full lead propagation matrices | propagation / finite cells |
+| `cplus`, `cminus` | $c_\pm$ | near-center lead stable coefficients | propagation / finite cells |
+| `tail_*_candidate` | observed tail | finite geometric continuation from cell 41; not a bound | raw diagnostic |
+| `components.value_squared`, `components.normal_squared` | $E_v,E_n$ | ordinary total value/normal jump squares | raw components / `epsilon_num` |
+| `epsilon_num` | $\varepsilon_{\rm num}$ | ordinary boundary-defect formula value | raw components / final scalar |
+| `mass.center`, `mass.radius` | $(0.375,0),0.0625$ | safe-disk geometry in center background | mass quadrature |
+| `U_num` | $U_{\rm num}$ | fine same-field disk-mass quadrature square root | mass / final scalar |
+| `Cnum` | $C_{\rm num}$ | T9 formula with sampled star geometry | geometry / final scalar |
+| `Cnum*epsilon_num` | $Q_{\rm num}$ | $C_{\rm num}\varepsilon_{\rm num}$ | final scalar; left expanded in code |
+| `denominator` | $D_{\rm num}$ | $U_{\rm num}-Q_{\rm num}$ | finite-formula gate |
+| `Rnum` | $R_{\rm num}$ | conditional F14 numerical value | final output; never certified |
+
+The symbol $\eta$ without a suffix is reserved for physical layer density. `inertia.*.eta` is confined to the inertia
+record and is never passed to a boundary operator. `cfgM` names the Rayleigh-axis configuration so that its `M`
+field remains the cutoff. `Cnum`, `U_num`, `epsilon_num`, and `Rnum` must not be aliased to certified
+overbar/underbar quantities.
