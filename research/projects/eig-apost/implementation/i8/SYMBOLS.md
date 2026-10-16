@@ -3,12 +3,14 @@
 ## Scope
 
 This ledger applies to `test/i8/flow-v1/`, `test/i8/locate-v1/`, `test/i8/check-v1/`,
+`test/i8/estimate-v1/`,
 [[research/projects/eig-apost/implementation/i8/design-8-1a|I8.1]], and
 [[research/projects/eig-apost/implementation/i8/design-8-1b|I8.1 local location]], and
-[[research/projects/eig-apost/implementation/i8/design-8-2a|I8.2 fixed-point checks]]. It maps the equal-area
-star flow, its independent local locator, and the five-configuration fixed-point checks without changing the
-historical I6/I7 meanings. All `*_num` quantities are ordinary numerical values unless an individual field
-explicitly says otherwise.
+[[research/projects/eig-apost/implementation/i8/design-8-2a|I8.2 fixed-point checks]], and
+[[research/projects/eig-apost/implementation/i8/design-8-3a|I8.3 frozen-field estimate]]. It maps the equal-area
+star flow, its independent local locator, the five-configuration fixed-point checks, and the fresh frozen-field
+estimate without changing the historical I6/I7 meanings. All `*_num` quantities are ordinary numerical values
+unless an individual field explicitly says otherwise.
 
 | Code name | Mathematical object | Meaning and shape | Defined / consumed |
 |---|---|---|---|
@@ -23,7 +25,9 @@ explicitly says otherwise.
 | `halfwidth` | $h_k$ | I8.2 stage-local wavenumber halfwidth; initially $10^{-5}$, distinct from the I8.1 collar $h$ | fixed-point check input |
 | `configs.id` = `B,N384,N512` | $B,N_{384},N_{512}$ | baseline and boundary-order ladder at $M=48$ | I8.2 points / comparisons |
 | `configs.id` = `M56,M64` | $M_{56},M_{64}$ | Rayleigh-order ladder at `ntot=256` | I8.2 points / comparisons |
-| `mu` | $\mu=k_0^2$ | spectral parameter used in numerical T9/F14 formulas | final candidate / raw stage |
+| exact binary64 input `k0` | $\widehat k_0$ | exact dyadic real represented by the frozen input double | I8.3 model convention |
+| documented exact-real square | $\mu=\widehat k_0^2$ | mathematical spectral parameter; not a separately rounded code input | I8.3 interpretation |
+| `mu_num` (`flow-v1`: `mu`) | $\mu_{\rm num}=\operatorname{fl}(k_0k_0)$ | ordinary-double scalar used in numerical T9/F14 formulas | raw result / `Cnum`, `Rnum` |
 | `rho_center` | $\rho_c=2$ | center-star relative material coefficient | model / center cell |
 | `rho_lead` | $\rho_\ell=17$ | lead-circle relative material coefficient | model / half-guides |
 | `star_scale` | $s_*$ | $\sqrt{0.04/0.0618}$ applied to all six contour rows | geometry / center constructor |
@@ -42,7 +46,7 @@ explicitly says otherwise.
 | `K` | $2M+1$ | Rayleigh channel count per wall | config / matrices |
 | `cellmap` | $R_L,T_{RL},T_{LR},R_R$ | center scattering blocks | center solve / matching |
 | `H_L`, `H_R` | density maps | physical $[\tau;\zeta]$ maps, $\zeta=-\sigma$ | corrected `construct_S` / raw field |
-| `q` | $[a^L;b^R]$ | incoming center amplitudes after column-weight recovery | SVD / traces and raw field |
+| `q` | $[a^L;b^R]$ | incoming center amplitudes after column-weight recovery, then one common unit-norm/phase convention per frozen field | SVD / traces and raw field |
 | `T` | $T$ | amplitude-to-physical-Dirichlet-trace map | matching / inertia and mode checks |
 | `trace` | $d=Tq$ | physical left/right wall Fourier trace | mode identity |
 | `Adef` | $A_{\rm def}$ | unweighted center/half-guide matching matrix | point evaluator |
@@ -58,7 +62,9 @@ explicitly says otherwise.
 | `inertia.*.eta` | $\eta_c$ | count exclusion band; not a layer density | inertia count only |
 | `comparisons.gap_a`, `comparisons.gap_b` | $g_H$ or $g_A$ | same-object nearest-$|\lambda|$ or smallest-singular-value competition gaps | I8.2 mode identity |
 | `comparisons.delta_a`, `comparisons.delta_b` | $\delta_H$ or $\delta_A$ | same-object machine-scale near-degeneracy thresholds | I8.2 simple/cluster switch |
-| `center_density` | $\eta_{256}=[\tau;\zeta]$ | frozen 256-node center physical density at final `B` candidate | raw stage |
+| `center_density` | $\eta_{n_{\rm tot}}=[\tau;\zeta]$ | fresh frozen center physical density for one invocation; baseline uses $n_{\rm tot}=256$ and optional sensitivity uses a separate $n_{\rm tot}=384$ array | raw stage |
+| `evaluation.material_nodes`, `evaluation.wall_nodes` | $N=512,768$ | two non-native evaluator grids applied to the same frozen field | I8.3 material / walls |
+| `evaluation.disk_grid` | $(16,32),(32,64)$ | coarse and half-angle-shifted fine safe-disk quadratures | I8.3 mass |
 | `Gplus`, `Gminus` | $G_\pm$ | lead incoming-state maps | propagation / material and walls |
 | `Pplus`, `Pminus` | $P_\pm$ | full lead propagation matrices | propagation / finite cells |
 | `cplus`, `cminus` | $c_\pm$ | near-center lead stable coefficients | propagation / finite cells |
@@ -76,3 +82,5 @@ The symbol $\eta$ without a suffix is reserved for physical layer density. `iner
 record and is never passed to a boundary operator. `cfgM` names the Rayleigh-axis configuration so that its `M`
 field remains the cutoff. `Cnum`, `U_num`, `epsilon_num`, and `Rnum` must not be aliased to certified
 overbar/underbar quantities.
+The baseline and optional `ntot=384` invocations each normalize their own `q`; their densities and component
+arrays must never be mixed or interpreted as samples of one shared frozen field.
