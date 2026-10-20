@@ -58,6 +58,7 @@ research/**/checkpoints/
 
 # Local experiment outputs (already tracked files remain tracked)
 test/**/output/
+/test/i8/fmm-v1/vendor/fmm2d/
 test/i4/femref-a1/diagnostics/
 test/i4/femref-a1/watchdog/
 
