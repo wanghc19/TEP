@@ -42,6 +42,8 @@ unless an individual field explicitly says otherwise.
 | `geometry.theta` | $1-hK_*$ | sampled positive Jacobian margin | geometry / `Cnum` |
 | `Nover` in `LOCAL_Cnum` | $N_{\rm ov}$ | sampled collar overlap count, fixed to one after geometry gates | geometry / `Cnum` |
 | `cfg` | configuration | `ntot,nside,ntop,nproxy,mpw,M` | all matrix evaluations |
+| `center_ntot`, `lead_ntot` | $n_c,n_\ell$ | independent center/lead boundary-node counts; I8.3 continuation uses $(512,256)$ | hybrid raw-field construction |
+| `config.id = C512L256` | $(n_c,n_\ell)=(512,256)$ | continuation configuration with center and lead node counts kept explicit | result / audit |
 | `cfgB`, `cfgN`, `cfgM` | $B,N,M_{\rm cfg}$ | baseline, boundary-axis and Rayleigh-axis configurations | stability stage |
 | `K` | $2M+1$ | Rayleigh channel count per wall | config / matrices |
 | `cellmap` | $R_L,T_{RL},T_{LR},R_R$ | center scattering blocks | center solve / matching |
@@ -62,8 +64,10 @@ unless an individual field explicitly says otherwise.
 | `inertia.*.eta` | $\eta_c$ | count exclusion band; not a layer density | inertia count only |
 | `comparisons.gap_a`, `comparisons.gap_b` | $g_H$ or $g_A$ | same-object nearest-$|\lambda|$ or smallest-singular-value competition gaps | I8.2 mode identity |
 | `comparisons.delta_a`, `comparisons.delta_b` | $\delta_H$ or $\delta_A$ | same-object machine-scale near-degeneracy thresholds | I8.2 simple/cluster switch |
-| `center_density` | $\eta_{n_{\rm tot}}=[\tau;\zeta]$ | fresh frozen center physical density for one invocation; baseline uses $n_{\rm tot}=256$ and optional sensitivity uses a separate $n_{\rm tot}=384$ array | raw stage |
-| `evaluation.material_nodes`, `evaluation.wall_nodes` | $N=512,768$ | two non-native evaluator grids applied to the same frozen field | I8.3 material / walls |
+| `center_density` | $\eta_{n_c}=[\tau;\zeta]$ | fresh frozen center physical density for one invocation; continuation uses its own $n_c=512$ array | raw stage |
+| `evaluation.material_nodes`, `evaluation.wall_nodes` | $N=512,768$ | evaluator grids applied to one frozen field; $N=512$ is native only for the continuation center-512 material action, while $N=768$ is the primary result | I8.3 material / walls |
+| `levels.center_material_native` | native-grid flag | true only when $N=n_c$; it prevents a collocation residual from being presented as an independent evaluator check | I8.3 level result / audit |
+| `node_ledger` | dimension ledger | actual center, lead, density, matching and port dimensions for the hybrid configuration | I8.3 result / audit |
 | `evaluation.disk_grid` | $(16,32),(32,64)$ | coarse and half-angle-shifted fine safe-disk quadratures | I8.3 mass |
 | `Gplus`, `Gminus` | $G_\pm$ | lead incoming-state maps | propagation / material and walls |
 | `Pplus`, `Pminus` | $P_\pm$ | full lead propagation matrices | propagation / finite cells |
@@ -82,5 +86,7 @@ The symbol $\eta$ without a suffix is reserved for physical layer density. `iner
 record and is never passed to a boundary operator. `cfgM` names the Rayleigh-axis configuration so that its `M`
 field remains the cutoff. `Cnum`, `U_num`, `epsilon_num`, and `Rnum` must not be aliased to certified
 overbar/underbar quantities.
-The baseline and optional `ntot=384` invocations each normalize their own `q`; their densities and component
-arrays must never be mixed or interpreted as samples of one shared frozen field.
+The `(256,256)`, `(384,384)`, and continuation `(512,256)` invocations each normalize their own `q`; their
+densities and component arrays must never be mixed or interpreted as samples of one shared frozen field. Only
+the first and third hold `lead_ntot=256` fixed, and even that pair is a two-point sensitivity comparison rather
+than a convergence sequence.

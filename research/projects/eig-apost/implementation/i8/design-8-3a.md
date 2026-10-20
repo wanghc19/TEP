@@ -3,9 +3,9 @@
 ## 1. 范围与状态
 
 - Design ID: `I8.3-STAR-RAW-V1`
-- Status: `COMPLETE; INDEPENDENT REVIEW PASS WITH CONDITIONS`
+- Status: `CONTINUATION COMPLETE; INDEPENDENT REVIEW PASS WITH CONDITIONS`
 - Review: [[research/projects/eig-apost/implementation/i8/review-8-3a|review-8-3a]]
-- Entry: `[result,evidence] = estimate_i8(k0,ntot)`
+- Entry: `[result,evidence] = estimate_i8(k0,center_ntot,lead_ntot)`
 - Claim boundary: `ORDINARY-DOUBLE UNCERTIFIED RNUM ONLY`
 
 本轮只在 [[research/projects/eig-apost/implementation/i8/design-8-1b|I8.1b]] 的新候选
@@ -227,3 +227,87 @@ $1{,}542{,}520{,}832$ bytes。其同一运行保存的独立 reconstruction audi
 $4.265861106391577\times10^{-15}$。本轮 baseline、两次 audit 与 optional 的累计受监测 wall time 为
 $854.913248$ s，全轮峰值就是上述 run-03 峰值，未超预算。两套 field 的状态均为
 `UNCERTIFIED_RNUM`，且 `certified=false`；本轮没有扫描、inertia 或进一步 `ntot` 阶梯。
+
+## 9. 续轮：center 512 / lead 256
+
+续轮不改变模型、候选或评价公式。固定
+$k_0=1.7562818500073463$、$M=48$、`nside=160`、`ntop=160`、`nproxy=80`、`mpw=32`，只取
+
+$$
+n_c=512,\qquad n_\ell=256.
+$$
+
+center 与 lead 必须由各自节点数 fresh 构造。令 $q_{512,256}$ 是 center-512 scattering 与 lead-256
+QZ/DtN 共同组装的 fresh $A_{\rm phys}$ 最小 right singular vector，经 column-weight recovery 后只作一次
+单位范数归一化与 phase anchor。随后分别冻结
+
+$$
+\eta_c^{512}=\operatorname{fl}(H_{c,L}^{512}a^L+H_{c,R}^{512}b^R)
+$$
+
+和 lead-256 的 $G_\pm,P_\pm,c_\pm$；不得读取或混用历史 `(256,256)`、`(384,384)` 的 $q$、density
+或传播 state。对 $N\in\{512,768\}$，中心与 lead 的 raw actions 分别使用
+
+$$
+r_{c,N}=W_{c,N}^{-1}A_{c,N}^sW_{c,N}I_{512\to N}\eta_c^{512}+B_{c,N}q_{512,256},
+$$
+
+$$
+r_{\ell,N}=W_{\ell,N}^{-1}A_{\ell,N}^sW_{\ell,N}I_{256\to N}\eta_\ell^{256}
+ +B_{\ell,N}x_{\ell},
+$$
+
+其中 $I_{n\to N}$ 是 frozen trigonometric density 的插值。所有 material、center--lead wall、internal
+wall、infinite-tail candidate 与 disk mass 仍来自同一个 fresh hybrid field，完整分项和状态门保持第
+3--5 节不变。
+
+本续轮以 $N=768$ 为主结果。$N=512$ 时，中心材料 action 满足 $I_{512\to512}=I$，target 又与原中心
+配点重合；该中心项是 native/algebraic diagnostic，不是独立的 non-native 复核。因此 512--768 的
+center-material 差只能透明报告，不能称为评价网格收敛率。lead-256 的两层材料评价均为 non-native；
+wall target 与 disk target 不在材料边界，它们的两层结果仍可作为同一 frozen field 的数值变化记录，
+但不得用这些部分变化消除中心配点 caveat。
+
+历史 `(256,256)` 与新 `(512,256)` 只在配置轴上改变 center 节点数，可以作为两个独立归一化 fresh
+field 的 center-only sensitivity 比较；它仍只有两个点，不建立收敛率。历史 `(384,384)` 同时改变
+center 和 lead，不能与前两者排成纯 center 序列，也不能用于归因 center 改善。续轮不扫描、不重做
+inertia、不新增理论或认证门；正式输出继续标为 `UNCERTIFIED_RNUM` 或实际 fail-closed 状态。
+
+### 9.1 实际结果
+
+正式结果保存在
+[[test/i8/estimate-v1/output/attempt-1/run-05/result.json|run-05]]；节点账本确认 center geometry、density、
+$A_{\rm QP}$ 的阶数分别为 $512$、$1024$、$1024$，lead 对应为 $256$、$512$、$512$，matching 阶数
+保持 $194$，所有尺寸门均通过。两层普通数值为：
+
+| $N$ | center native | $\varepsilon_{\rm num}$ | $U_{\rm num}$ | $D_{\rm num}$ | $R_{\rm num}$ |
+|---:|:---:|---:|---:|---:|---:|
+| 512 | yes | $9.135068819702066\times10^{-13}$ | $0.11608305829685367$ | $0.11608305828929573$ | $4.0165490283803493\times10^{-10}$ |
+| 768 | no | $1.6039135669302043\times10^{-12}$ | $0.11608305827964506$ | $0.11608305826637501$ | $7.0521608619273644\times10^{-10}$ |
+
+正式主值是 $N=768$ 行。$N=512$ 的 center-material normal square 只有
+$2.458164336299298\times10^{-30}$，而 $N=768$ 为
+$2.038038951622580\times10^{-24}$；前者是配点重合后的 native residual。相应两层
+$R_{\rm num}$ 相差约 $43.0\%$，所以本续轮没有 512--768 evaluator convergence 结论。fine total normal
+square 为 $2.568905612184280\times10^{-24}$，其中 center-material 占约 $79.33\%$，wall 占约
+$20.66\%$；disk mass 两层相对变化仍只有 $1.4824\times10^{-10}$。这些是完整 ordinary-double
+分项，不是 one-sided enclosure。
+
+三组 fresh fields 必须按下表分别解释：
+
+| $(n_c,n_\ell)$ | fine $\varepsilon_{\rm num}$ | fine center normal square | fine $R_{\rm num}$ | 比较用途 |
+|---:|---:|---:|---:|---|
+| $(256,256)$ | $2.481075542825110\times10^{-7}$ | $6.155735849152025\times10^{-14}$ | $1.0909099845639975\times10^{-4}$ | center-only 轴的旧端点 |
+| $(384,384)$ | $5.717028112067901\times10^{-10}$ | $3.2684357106971763\times10^{-19}$ | $2.5136892889947825\times10^{-7}$ | center 与 lead 同时改变的历史敏感性 |
+| $(512,256)$ | $1.6039135669302043\times10^{-12}$ | $2.038038951622580\times10^{-24}$ | $7.0521608619273644\times10^{-10}$ | center-only 轴的新端点 |
+
+在 lead 固定为 256 时，$(256,256)\to(512,256)$ 使 fine $R_{\rm num}$ 小约
+$1.54692\times10^5$ 倍，center normal square 小约 $3.02042\times10^{10}$ 倍。这建立强烈的 center
+节点敏感性，但只有两个分别归一化的 fresh fields，仍不建立收敛率；$(384,384)$ 不能补成第三点。
+
+[[test/i8/estimate-v1/output/attempt-1/run-05/audit2.json|独立 audit]] 重建全部两层分项，
+`all_pass=true`，最大缺陷为 $4.298966048359329\times10^{-15}$，同时核对 center/lead 节点账本与
+native flags。run-05 entry 用时 $394.471511292$ s，受监测 wall time 为 $415.277293$ s，峰值
+process-tree RSS 为 $1{,}214{,}922{,}752$ bytes。此前 run-04 只是 multiline launcher 未执行 batch 的
+操作失败，没有科学评价；同一 budget ID 的累计 wall time 为 $431.851594$ s。正式状态仍为
+`UNCERTIFIED_RNUM`、`certified=false`。center-512 的 native coarse action 与只有两个 center-only fresh
+fields 都是 `important caveat`：它们限制 evaluator 与空间稳健性解释，但不阻止本轮普通数值主值交付。

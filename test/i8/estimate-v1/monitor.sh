@@ -1,6 +1,6 @@
 #!/bin/bash
 # Monitor I8.3 frozen-field estimates with one new, shared 45-minute computation budget.
-# Based on I8 flow-v1/monitor.sh; the new output root isolates this task ledger.
+# Based on I8 flow-v1/monitor.sh; an explicit budget ID separates authorized tasks.
 exec /usr/bin/python3 - "$@" <<'PY'
 import csv
 import fcntl
@@ -90,13 +90,19 @@ except ValueError as error:
   sys.exit(2)
 
 run_dir = Path(sys.argv[1])
-# All field, evaluation, audit, and debugging calls under this output root share the same cap.
+# All calls with the same budget ID share the cap, including debugging and audit.
+# Omission preserves the original output-root ledger for old launch commands.
+budget_id = os.environ.get("I83_BUDGET_ID", "legacy")
+if not budget_id or any(c not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_" for c in budget_id):
+  print("I83_BUDGET_ID must contain only letters, digits, hyphens or underscores", file=sys.stderr)
+  sys.exit(2)
 # The 120-minute whole-task deadline is tracked separately by the operator.
 prior_wall_seconds = 0.0
 for prior_status in run_dir.parent.parent.glob("attempt-*/run-*/status.txt"):
   fields = dict(line.split("=", 1) for line in prior_status.read_text().splitlines()
                 if "=" in line)
-  prior_wall_seconds += float(fields["wall_seconds"])
+  if fields.get("budget_id", "legacy") == budget_id:
+    prior_wall_seconds += float(fields["wall_seconds"])
 remaining_seconds = int(MAX_WALL_SECONDS - prior_wall_seconds)
 if remaining_seconds <= 0:
   print("I8.3 cumulative computation budget exhausted", file=sys.stderr)
@@ -144,6 +150,7 @@ signal_exit_code = None
 
 command = [matlab_bin, "-batch", matlab_expression]
 with command_file.open("x", encoding="utf-8") as stream:
+  stream.write(f"I83_BUDGET_ID={shlex.quote(budget_id)} ")
   stream.write(f"I83_WALL_LIMIT_SECONDS={wall_limit_seconds} ")
   stream.write(f"I83_RSS_LIMIT_BYTES={rss_limit_bytes} ")
   stream.write(shlex.join(command) + "\n")
@@ -163,6 +170,7 @@ def write_status():
   end_wall = time.time()
   end_utc = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(end_wall))
   lines = [
+      f"budget_id={budget_id}",
       f"start_utc={start_utc}",
       f"end_utc={end_utc}",
       f"wall_seconds={end_wall - start_wall:.6f}",
