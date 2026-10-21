@@ -1,0 +1,28 @@
+{
+  "purpose": "Human and machine-readable provenance only; MATLAB does not parse this file",
+  "frozen_candidate": {
+    "copied_to": "input/frozen-candidate.mat",
+    "source": "test/i3/e-cap/input/fbie-a1-certificate.mat",
+    "mat_variable": "staged.certificate"
+  },
+  "accepted_signed_rows": {
+    "copied_to": "input/i5-v7-attempt6-signed-rows.mat",
+    "source": "test/i5/residual-numerator-v7/output/attempt-6/input-run-02.mat",
+    "mat_variable": "experiment_input",
+    "status": "last accepted v7 conditional input; structural_pass=true",
+    "used_by_valid_run": true
+  },
+  "failed_selection_evidence": {
+    "copied_to": "input/i5-v7-signed-rows.mat",
+    "source": "test/i5/residual-numerator-v7/output/attempt-7/input-run-02.mat",
+    "mat_variable": "experiment_input",
+    "status": "attempt-7 PRE_RUN_CERTIFICATE_STOP; structural_pass=false",
+    "used_only_by_failed_run_01": true
+  },
+  "unused_bridge_copy": {
+    "copied_to": "input/i5-v8-value-bridge.mat",
+    "source": "test/i5/residual-numerator-v8/input/residual-numerator-v8-input-run-04.mat",
+    "status": "copied during inspection but not read by resolvent_bound_v1 or valid run-03"
+  },
+  "runtime_hash_gate": false
+}

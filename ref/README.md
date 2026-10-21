@@ -26,6 +26,7 @@
 | `ref_data/unsorted/huzhen6.pdf` | *Simple Boundary Condition for Terminating Photonic Crystal Waveguides* | Zhen Hu; Ya Yan Lu | 2012 | 光子晶体波导、近似边界条件 | 可与项目采用的精确端口条件比较计算成本和误差 | `HuLu2012` |
 | `ref_data/Huang2007.pdf` | *Analyzing Photonic Crystal Waveguides by Dirichlet-to-Neumann Maps* | Yuexia Huang; Ya Yan Lu; Shaojie Li | 2007 | 光子晶体波导、DtN、模态分析 | 提供以超胞 DtN 将导模问题降维的数值方案 | `HuangLuLi2007` |
 | `ref_data/Joly2006.pdf` | *Exact Boundary Conditions for Periodic Waveguides Containing a Local Perturbation* | Patrick Joly; Jing-Rebecca Li; Sonia Fliss | 2006 | 局部扰动、精确边界条件、Riccati 方程 | 是项目端口截断和局部缺陷波导问题的主要理论来源 | `JolyLiFliss2006` |
+| `ref_data/Klindworth2014.pdf` | *Numerical Realization of Dirichlet-to-Neumann Transparent Boundary Conditions for Photonic Crystal Wave-Guides* | Dirk Klindworth; Kersten Schmidt; Sonia Fliss | 2014 | 光子晶体波导、DtN、透明边界、高阶 FEM | 以同方法高阶解和 supercell 对照展示 DtN 数值实现的收敛，并区分连续 exact reduction 与离散 reference | `KlindworthSchmidtFliss2014` |
 | `ref_data/Klindworth2015.pdf` | *On the Numerical Computation of Photonic Crystal Waveguide Band Structures* | Dirk Klindworth | 2015 | 线缺陷导模、DtN/RtR、非线性特征值 | 给出透明边界的高阶 FEM 实现与色散曲线追踪，并明确把 DtN/RtR 数值误差分析列为开放问题 | `Klindworth2015` |
 | `ref_data/Li2007.pdf` | *Computing Photonic Crystal Defect Modes by Dirichlet-to-Neumann Maps* | Shaojie Li; Ya Yan Lu | 2007 | 缺陷模、DtN | 为缺陷模特征值计算和单元边界降维提供算法参考 | `LiLu2007` |
 | `ref_data/Lin2025.pdf` | *An Adaptive Finite Element DtN Method for the Acoustic-Elastic Interaction Problem in Periodic Structures* | Lei Lin; Junliang Lv | 2025 | 周期散射、DtN 截断、后验误差 | 说明周期结构散射中可把 FEM residual 与可计算 DtN 截断项合并为 estimator | `LinLv2025` |
@@ -58,6 +59,7 @@
 
 | 路径 | 题目 | 作者 | 年份 | 主题 | 与本项目的关系 | BibTeX key |
 | --- | --- | --- | ---: | --- | --- | --- |
+| `ref_data/Barnett2018.pdf` | *Comparable Upper and Lower Bounds for Boundary Values of Neumann Eigenfunctions and Tight Inclusion of Eigenvalues* | Alex H. Barnett; Andrew Hassell; Melissa Tacy | 2018 | Neumann Laplacian、MPS、谱包含、加权边界 tension | 给出到最近 Neumann 谱点的边界残量型包含界；可启发周期情形的通道加权，但其定理本身不识别唯一目标特征值 | `BarnettHassellTacy2018` |
 | `ref_data/Bindel2013.pdf` | *Localization Theorems for Nonlinear Eigenvalue Problems* | David Bindel; Amanda Hood | 2013 | 非线性特征值、谱定位 | 为参数依赖算子特征值的包围和数值验证提供工具 | `BindelHood2013` |
 | `ref_data/Guettel2017.pdf` | *The Nonlinear Eigenvalue Problem* | Stefan Güttel; Françoise Tisseur | 2017 | 非线性矩阵特征值、数值算法综述 | 为项目频率依赖算子和数值特征值算法提供统一框架 | `GuettelTisseur2017` |
 | `ref_data/unsorted/Transmission Eigenvalues for Helmholtz Equation Perturbation Problems of Isotropic Media With Voids.pdf` | 《含空隙的各向同性介质 Helmholtz 方程扰动问题的传输特征值》 | 李诗璇；刘立汉 | 2023 | 传输特征值、折射率扰动、Neumann–Dirichlet 算子 | 与项目传输特征值的扰动理论和算子表述相关 | `LiLiu2023` |

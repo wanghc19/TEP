@@ -1,8 +1,156 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-08-25。
+更新日期：2026-09-02。
 
 ## 当前状态
+
+- **2026-09-02 guided-mode eigensolver validation 文献专题：**
+  [[research/projects/eig-apost/implementation/i4/r-validation|r-validation]] 已按 deep-research/
+  literature-review workflow 核验 22 篇公开全文，并对一篇只有权威 metadata/abstract 的新近来源
+  明确标 `UNVERIFIED`。结论区分三类标准：continuous exact DtN/RtR reduction 与 refinement/cross-method
+  evidence 可以支持 solver numerical consistency；a posteriori estimator 还需 independent 或
+  semi-analytic truth、multi-level effectivity 与 mode matching；certified solver 还需 computable constants、
+  spectral isolation/existence 和覆盖全部离散/截断/roundoff 的 outward enclosure。Fliss (2013) 的
+  “exact computation” 是 continuous transparent reduction，不是 final discrete eigenvalue certification。
+  当前 BIE+DtN baseline 与 curved-$P_2$ FEM ladder 的 $10^{-4}$-scale positional agreement符合领域惯例，
+  但只支持 empirical cross-method consistency，不支持 true-error ranking、estimator effectivity 或
+  continuous enclosure。本轮新增公开全文
+  [[ref/ref_data/Klindworth2014.pdf|Klindworth--Schmidt--Fliss (2014)]] 并同步
+  [[ref/README|ref index]]/`reference.bib`；未运行数值实验，未改动 I4.1c artifacts 或历史 verdict。
+
+- **2026-09-01 I4.1b quadratic fitted-P2 empirical reference candidate：**
+  [[research/projects/eig-apost/implementation/i4/design-4-1b|design-4-1b]] 冻结的
+  `femref-a2` formal `run-002/execution-002` 已自然完成 $61/61$ 次 solve并永久消费；
+  [[research/projects/eig-apost/implementation/i4/review-4-1b#AE. Final post-run review of run-002/execution-002|post-run review §AE]]
+  verdict为 `PASS WITH CONDITIONS`。Pure-P2 field identity为simple root-9 track
+  `[8,32,55,78,101]`，相邻common-grid overlaps至少为 $0.99999991258811038$；
+  selected residuals至多为 $1.1334890039602699\times10^{-16}$，全部twist均有localization，
+  endpoint parity为empirically even。最终标量为
+  $\lambda_{\mathrm{pre}}=3.3672400220423246$、
+  $k_{\mathrm{pre}}=1.8350040931949783$；五个observed components为
+  $\delta_h=7.2025200175129811\times10^{-5}$、
+  $\delta_g=2.7115316763854924\times10^{-3}$、
+  $\delta_N=3.1239311426567440\times10^{-7}$、
+  $\delta_\vartheta=0$、$\delta_{\mathrm{tol}}=0$，故
+  $\Delta_{\mathrm{ref}}^{\mathrm{obs}}=0.0027838692696748879$。Whole-command wall为
+  $232.450046$ s，authoritative aggregate peak RSS为 $1055391744$ B。全部17个bulk phase samples有效，
+  但该结果仅是geometry-dominated、non-certified empirical P2 reference candidate：
+  $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$不是certified upper bound，有限相位bulk evidence不证明continuous gap，
+  field/localization/parity证据不证明continuous guided-mode existence；没有进行或授权effectivity comparison。
+  [[test/i4/femref-a2/README|femref-a2 artifacts]] 为实现与结果入口，本次run不得重试。
+
+- **2026-09-01 I4.1a `run-008/execution-001` sample-out FEM/profile 完成：** fitted
+  $(N,s,g)=(5,30,60)$ mesh 含 $11741$ nodes、$22760$ triangles 和 $11380$ reduced DOFs，五个
+  twist solves 完成并消费。Pure-FEM canonical winner 仍是 candidate $3$，其
+  $(\lambda_{30},k_{30})=(0.61502508946098011,0.78423535336082628)$；独立 common-core field audit
+  将旧 candidate $7$ 唯一支持为新 candidate $9$，并给出 candidate-specific
+  $(\lambda_{30}^{(7)},k_{30}^{(7)})=(3.366203342658638,1.834721598133798)$，不得混称为 canonical
+  winner。[[research/projects/eig-apost/implementation/i4/review-4-1a|post-run review §BT]] verdict 为
+  `POST-RUN PASS WITH CONDITIONS`。四点 profile 的 signed drifts 为
+  $(-0.0052814302919568235,-0.001979901415371188,-0.0009584126670008075)$，contraction ratios 为
+  $(0.37487977799998845,0.4840709035106812)$，样本外 prediction residual 为
+  $4.794533798202494\times10^{-6}$。七起点拟合的 lexicographic winner 为 start $6$：
+  $p=1.8129679837413033$、$k_\infty=1.8327935034213265$、$C=0.9181205139250015$、
+  $\mathrm{SSE}=4.302174060684754\times10^{-12}$。Late positional comparison 给出
+  $|k_{30}^{(7)}-k_{\mathrm{BIE}}|=0.0019513090256411125<0.0029097217$，strict boolean 为true。
+  全流程累计 wall 为 $110.055849$ s，peak RSS 为 $1073594368$ B。`run-008`、`identity-003`与
+  `profile-001`均已消费且不得重跑；全部结果仍为`EMPIRICAL_NON_CERTIFIED`，
+  `effectivity_performed=false`，不证明continuous eigenpair existence、certified bound或effectivity validation。
+
+- **2026-08-31 I4.1a `run-007/execution-001` empirical FEM candidate：** create-once formal run 已
+  自然完成并永久消费；[[research/projects/eig-apost/implementation/i4/review-4-1a|post-run review §BB]]
+  verdict 为 `PASS WITH CONDITIONS / SCIENTIFIC_READY / FEM_REFERENCE_CANDIDATE_READY`。冻结 schedule
+  完成 $119/119$ 次 solve，collection size 为 $16$；48-root fine spectra 已覆盖 $W_3$，故未进入
+  conditional 60-root rung。Lexicographic winner 为 candidate $7$，
+  $\lambda_{\mathrm{ref}}^{\mathrm{FEM}}=3.3697211020626927$、
+  $k_{\mathrm{ref}}^{\mathrm{FEM}}=1.8356800108032698$；四项 observed changes 分别为
+  $\delta_{\mathrm{FEM}}^{\mathrm{obs}}=0.0019799758723477723$、
+  $\delta_{\mathrm{supercell}}^{\mathrm{obs}}=3.3059115711608911\times10^{-5}$、
+  $\delta_{\mathrm{twist}}^{\mathrm{obs}}=3.0119180025600656\times10^{-6}$ 和
+  $\delta_{\mathrm{alg}}^{\mathrm{obs}}=0$，所以
+  $\Delta_{\mathrm{ref}}^{\mathrm{obs}}=0.0020160469060619413$。分类为 `cue-member /`
+  `gap-edge-or-safe-buffer / weakly-localized / stable-parity-assignment /`
+  `empirical-resolution-complete / spectrum-covered-through-W3`；bulk 仍为
+  `BULK_GAP_UNRESOLVED_DIAGNOSTIC`。Whole-command elapsed 为 $140.273679$ s，authoritative aggregate
+  peak RSS 为 $1353826304$ B，均低于 $2700$ s/$2147483648$ B hard uppers。该结果只是
+  `EMPIRICAL_FEM_REFERENCE_CANDIDATE_NO_EFFECTIVITY`：$\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ 不是certified
+  upper bound，结果不证明continuous eigenvalue/guided-mode existence，也未进行或授权effectivity validation。
+  本次完整run不得重试。
+
+- **2026-08-30 I4.1a `run-006` 合法科学负结果：** create-once formal `run-006` 已执行一次并
+  永久消费；[[research/projects/eig-apost/implementation/i4/review-4-1a|post-run review §AW]] verdict
+  为 `PASS WITH CONDITIONS / VALID SCIENTIFIC NEGATIVE`。冻结的 fitted-$P_1$ FEM protocol 在完成
+  $67/119$ 次 solve 后于首个 bulk prerequisite 以 `BULK_GAP_UNRESOLVED` 停止，collection size 为
+  $0$。Whole-command elapsed 为 $21.435584$ s，authoritative aggregate peak RSS 为
+  $812744704$ B，均低于唯一 hard uppers $2700$ s 与 $2147483648$ B；本次不是 operational 或
+  resource failure。该结果只说明冻结协议未通过其 B1 combined cue/guard target-gap gate，不是关于
+  continuous problem、FEM 方法族或 mode 不存在的定理；没有形成 independent reference eigenpair、field、
+  empirical reference collection 或 effectivity evidence。当前 execution 不得无理由重跑，也未授权
+  effectivity comparison；任何未来新方法或 attempt 均须另行开展 Researcher--Engineer--Skeptic 研究、设计和
+  审查 gate。
+
+- **2026-08-29 I4.1a representation-gate-003 完成：** create-once
+  `representation-gate-003` 已自然退出、执行一次并永久消费；
+  [[research/projects/eig-apost/implementation/i4/review-4-1a|postdiagnostic review §AS]] verdict 为
+  `PASS WITH CONDITIONS`。冻结的 zero-scientific-eigensolve representation diagnostic 完成全部
+  schema/count/correctness 门，记录 $737$ 个 valid samples、$0$ 个 unavailable samples，target-active
+  time 为 $761.486755$ s，authoritative aggregate peak RSS 为 $1296187392$ B，均未达到
+  $1800$ s/$2147483648$ B resource uppers。内部 future-formal forecast 仍仅为 advisory：
+  $2671.670676$ s（$44.53$ min），且 timing variability 未通过。该结果不产生 guided-mode
+  eigenpair、independent reference、effectivity validation 或 formal-run feasibility 结论；不授权 retry、
+  新 diagnostic ID 或 `run-006`。
+
+- **2026-08-29 I4.1a representation diagnostic external protocol/wall blocker：** create-once
+  `representation-gate-002` 已执行一次并消费；
+  [[research/projects/eig-apost/implementation/i4/review-4-1a|postdiagnostic review §AM]] 判为
+  `INCOMPLETE / EXTERNAL_MONITOR_PROTOCOL_FAILURE / WALL HARD LIMIT EXCEEDED`。external
+  monitor相邻 samples约间隔 $40$ s，未满足不粗于 $30$ s的冻结协议；whole-command
+  `real` 为 $139.74$ s，超过无 grace 的 $120$ s hard limit。保存的aggregate peak RSS为
+  $1227096064$ B，严格低于授权的 $2147483648$ B，因此本次不是 memory failure。reached
+  evidence仅限三个 phase pairs 的六行 primary K/M均通过；完成 $0$ 次 scientific eigensolve，
+  derived representation、resource forecast及terminal summary均未完成。该 preformal diagnostic
+  不消费 scientific attempt，也不是 FEM method或scientific negative；不授权 retry、新 diagnostic ID、
+  `run-006`、reference collection或 effectivity claim。I4.1 尚未验证 estimator。
+
+- **2026-08-29 I4.1a representation diagnostic resource blocker：** create-once
+  `representation-gate-001` 已执行一次；
+  [[research/projects/eig-apost/implementation/i4/review-4-1a|postdiagnostic review §AJ]] 判为
+  `INCOMPLETE / EXTERNAL_RESOURCE_BUDGET_UNAVAILABLE`，因为 external peak RSS 超过冻结的
+  $1$ GiB gate。reached evidence 仅限三个 phase pairs 的六行 primary K/M 均通过 exact
+  canonical Hermitian gate，且三个 mass `chol` flag 均为 $0$；完成 $0$ 次 scientific
+  eigensolve，derived representation 与 resource forecast 均未完成。该 preformal diagnostic
+  不是 FEM method 或 scientific negative，scientific attempt 未消费；diagnostic ID 已消费，
+  不授权 retry、`run-006`、reference collection 或 effectivity claim。I4.1 尚未验证 estimator。
+
+- **2026-08-28 I4.1a independent-reference 数值负结果（historical verdict retained / 历史 verdict）：**
+  唯一 `femref-a1` attempt 按冻结
+  [[research/projects/eig-apost/implementation/i4/design-4-1a|design-4-1a]] 完成全部前置审查后
+  正式启动。前三个 `run_id` 分别因 dependency capability check、`triangulation` constructor
+  次序和失败工件 schema 停止，均为保留日志、不消费 attempt 的 operational retry；`run-004`
+  则在首个 `bulk-s12-g24` mesh 的预注册 reflection oracle 给出 stiffness defect
+  $2.410043158511017\times10^{-15}$、mass defect
+  $0.014666412555809508>5\times10^{-11}$，故在 `MESH_ORACLES` 以
+  `MESH_QUALITY_UNRESOLVED` fail closed。正式科学运行完成 $0/119$ eigensolves，用时
+  $15.90$ s，external peak RSS $664223744$ B，未触及 $30$ min/$2$ GiB 预算。独立 post-run
+  artifact verdict 为 `PASS`，科学结果为
+  `VALID SCIENTIFIC NEGATIVE / FROZEN M1 METHOD FAILED`；attempt 已消费，不授权 `run-005` 或
+  同方法 retry。没有 eigenvalue、field、qualified reference collection 或 effectivity evidence，
+  I4.1 尚未验证 estimator。详见
+  [[research/projects/eig-apost/implementation/i4/review-4-1a|review-4-1a]]。该 verdict 仅作为
+  `run-001`--`run-004` 历史记录保留；其 current-authority status 已被本轮完成并消费的
+  `representation-gate-003` 状态 supersede，不应冒充当前 method 或 scientific verdict。
+
+- **2026-08-28 I4.1 independent-reference 方法门：** literature/method research 已按冻结
+  search plan 完成。所选 geometry-fitted conforming FEM supercell + twist-band-collapse 路线经
+  同一 Researcher 有界修订和同一 Skeptic 复审，最终 verdict 为 `PASS WITH CONDITIONS`，没有
+  unresolved blocker。第一层只允许对完整 frozen finite empirical branch set 报告 observed
+  set-distance；coverage/resolution 不足时 fail closed。single-mode denominator 另需冻结的
+  target-specific estimator 或 continuous isolation，field label 一致本身不升级 target。
+  $\Delta_{\mathrm{ref}}^{\mathrm{obs}}$ 仍不是 error bound。该方法门阶段本身没有创建 design、
+  实现、实验或 reference/effectivity result；其后 I4.1a 数值负结果见上一条。全部
+  strict/reliable/independent/existence result flags 仍 false。
+  详见 [[research/projects/eig-apost/implementation/i4/README|I4 guide]] 和
+  [[research/projects/eig-apost/implementation/i4/method-review|method review]]。
 
 - **2026-08-25 I3.2 same-trial evaluation-cap 负结果：** `ecap-a1` 已消费并保留为
   `I3_2_EXECUTION_UNAVAILABLE` implementation failure；它在 `LOCAL_identity` 的 integer/double
@@ -14,8 +162,10 @@
   actual-$\Delta T$ contraction $2.2946515117026931>0.80$、finite-image Bloch
   $0.071741947137921119>10^{-10}$、analytic-kernel aggregate `Inf` 三项资格失败。这些是
   ordinary same-chain negative evidence，不是 independent reference 或 strict cap。当前 I3.2
-  包含已建立的 conditional theorem 与 same-trial empirical-cap application；I3.3 只保留
-  independent reference/effectivity；I3.4 负责 strict enclosure、certified gap 和 existence。
+  包含已建立的 conditional theorem 与 same-trial empirical-cap application；原 I3.3 已迁移
+  至未来 I4.1，只登记 independent reference/effectivity；原 I3.4 已迁移至未来 I4.2，继续
+  登记 strict enclosure、certified gap 和 existence。I4.1a 后续已启动但在 reference solve 前以
+  `FROZEN M1 METHOD FAILED` 结束；I4.2 当前未启动。
   全部 strict/reliable/independent/existence flags 仍 false。独立审查见
   [[research/projects/eig-apost/implementation/i3/review-3-2b|review-3-2b]]。
 
@@ -44,8 +194,9 @@
   $M=48$ 是 input-only，所有 512 个已计算 circle modes 进入 $q$ 且 angular-tail 门通过，
   outside-$M$ share $3.6179\%$ 只是描述性诊断。未计算 Fourier tail 仍未 enclosure。I3.1
   状态为 `PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`。circle-action caveat
-  已由上方 I3.2 same-trial application 继续诊断；它不阻止条件性定理。I3.3 只做 independent
-  reference/effectivity；全部 outward/gap/existence flags 仍 false，另属 I3.4。详见
+  已由上方 I3.2 same-trial application 继续诊断；它不阻止条件性定理。I4.1 只做 independent
+  reference/effectivity；其首个 M1 attempt 已失败且未形成 reference。全部
+  outward/gap/existence flags 仍 false，另属 I4.2。详见
   [[research/projects/eig-apost/implementation/i3/review-3-1f|review-3-1f]]。
 
 - **2026-08-24 I3.1 纯 BIE 边界残量 indicator candidate：**
@@ -124,7 +275,7 @@
   $22.43882099031153$。积分加密稳定，但固定单胞 cutoff 导数项主导，名义区间跨过零；正式
   当前解释为 `FIXED_CELL_CUTOFF_RESOLUTION_INSUFFICIENT`，因此它不能冻结为旧 I3.2
   empirical estimator。普通积分尚非可靠 enclosure，sharp-disk projected-gap contract 也未建立，
-  故没有现行 I3.4 连续离散特征值存在性或上界结论；这两项不是现行 I3.3 经验验证的前置条件。
+  故没有未来 I4.2 连续离散特征值存在性或上界结论；这两项不是未来 I4.1 经验验证的前置条件。
   后续全波导 BIE-informed
   Fourier--Hermite/bubble trial 已于 2026-08-16 正式运行并在
   reconstruction fit 首败；见上一条。continuous weak residual 保留为后备。
@@ -327,10 +478,11 @@
   circle-action refinement ratio $0.7741$ 仍使 ordinary candidate 未获内部资格。I3.2
   条件性证书定理不以该诊断为前置；同一阶段的 `ecap-a2` 已完成 same-trial evaluation，但因
   $664.470682>640$ MiB 资源门使本次 empirical cap 未计算。三项 fail-open evaluation
-  qualification failures 按冻结 component gates 也会使 cap unresolved；I3.3 只负责
-  independent reference/effectivity。
+  qualification failures 按冻结 component gates 也会使 cap unresolved；I4.1 literature/method
+  research 已通过方法门，但首个 independent-reference 数值 attempt 在 mesh oracle 结束，未形成
+  reference/effectivity evidence。
   reliability/enclosure flags、current-model projected gap 与 absolute/gap-relative resolution
-  则是 I3.4 相应存在性和上界结论的门。第一层不要求唯一 mode。该状态不表示 sub-grid
+  则是 I4.2 相应存在性和上界结论的门。第一层不要求唯一 mode。该状态不表示 sub-grid
   minimizer、finite root 或连续真值零漂移，也不构成收敛证据。
 - 历史阶段门（均不构成当前实现授权）：manufactured root/correction pipeline 曾为窄范围
   `GO`，finite-tail Half-guide map 曾为 Stage 1 `GO`，Augmented BIE 曾为
@@ -682,6 +834,22 @@ denominator 或 independent reference 中哪些是必需输入；不得为了复
 预先把 exact finite zero 身份设成项目终点。
 既有 Fliss FD candidate 和 SLP/DLP/$M_{\mathrm{trace}}$ 数值证据继续保留，但不缩短上述
 理论—离散桥接链。仍不创建 `research/mainline/`，也不使用绝对优先权表述。
+
+### I5.1h conditional residual-numerator update
+
+The shape-general minimum-energy lifting theorem now has a reviewed two-band
+$p=4$ fallback.  The streamed v7 attempt 3 selected
+$(L_0,L_1,N)=(256,1024,16384)$ solely from explicit far-tail and retained-row
+radius gates and obtained
+$\mathcal M_{\mathrm{ideal}}=9.3745260644300025\,10^{-6}$, with
+$B_{\Gamma_\pm}=1.8732040521480924\,10^{-10}$,
+$B_\Upsilon=5.9741385647183627\,10^{-7}$, and
+$B_{\mathrm{lift}}=8.7769248875529515\,10^{-6}$.  This is only
+`CONDITIONAL_TWO_BAND_P4_MAJORANT_SF_FP_UNRESOLVED`: both
+$\Delta_{\mathrm{sf}}$ and $\Delta_{\mathrm{fp}}$ remain unresolved.  The
+full signed-jump $p=6$ instance is separately blocked at the missing
+order-six regular-image Ewald row-ball and omitted-tail certificate.  See
+[[research/projects/eig-apost/implementation/i5/review-5-1h|I5.1h review]].
 
 ## 新 session handoff
 

@@ -108,3 +108,28 @@
   obtained.
 - This follow-up obeys `research/AGENTS.md`: only verified full texts are stored under `ref/ref_data/`, and
   failed/closed-access responses are not retained with a `.pdf` suffix.
+
+## 2026-09-16 — Barnett inclusion-bound follow-up
+
+- Targeted searches combined Alex Barnett's recent publication record with the terms `eigenvalue
+  inclusion`, `a posteriori`, `method of particular solutions`, `Neumann`, and `periodic`.
+- The directly relevant record is Barnett--Hassell--Tacy (2018), *Comparable Upper and Lower
+  Bounds for Boundary Values of Neumann Eigenfunctions and Tight Inclusion of Eigenvalues*,
+  DOI `10.1215/00127094-2018-0031`, arXiv `1512.04165`.
+- The lawful public arXiv v2 full text was identity-checked from the title page, Theorem 1.8,
+  Section 7, and the numerical discussion on PDF pp. 36--37, then stored as
+  `ref/ref_data/Barnett2018.pdf`.
+- Theorem 1.8 bounds $d(E,\operatorname{spec}_N)$ from a spectrally weighted Neumann boundary
+  tension for exact interior Helmholtz trial functions. It therefore certifies proximity to at
+  least one spectral point, not the identity or index of a unique target eigenvalue.
+- The eigenfunction estimate names $E_J$ by assuming it is the closest eigenvalue and uses the
+  next-nearest eigenvalue $E_*$ in the denominator. The numerical examples separately choose
+  search intervals stated to contain one eigenvalue; the high-frequency index is estimated by
+  a two-term Weyl asymptotic rather than certified by the inclusion theorem.
+- The theorem's constant is non-explicit for the Neumann case. Section 8 uses the empirical
+  choice $C_{\mathrm{est}}=1.6$ inferred from measured slopes, so the quoted numerical bounds
+  should not be treated as rigorous computer-assisted enclosures with a certified constant.
+- Relevance boundary: this is the closest structural precedent found for the current
+  continuous-residual inclusion interval, but it treats a smooth bounded Neumann cavity with
+  compact resolvent, not a fixed-Bloch periodic waveguide with essential spectrum and a
+  projected gap.

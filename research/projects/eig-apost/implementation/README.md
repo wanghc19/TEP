@@ -5,8 +5,10 @@
 当前新路线处于 `I3_1_PRELIMINARY_OBJECTIVE_ACHIEVED / COMPUTED_ESTIMATOR_CANDIDATE`；I3.2
 条件性证书谱包含定理已经建立，same-trial empirical-cap application 则由 `ecap-a2` 给出
 `RESOURCE_BUDGET_UNAVAILABLE / EMPIRICAL_CAP_UNRESOLVED`。该 run 完成 evaluation 后在 cap、
-full-$P$、$q$ 和 interval 前超过 $640$ MiB hard limit。I3.3 只负责 independent
-reference/effectivity，可靠 enclosure/gap 属于 I3.4。其输入阶段 I2 已以
+full-$P$、$q$ 和 interval 前超过 $640$ MiB hard limit。原 I3.3 已迁移至未来 I4.1；I4.1
+只登记使用独立方法/reference 对经验 estimator 进行 effectivity validation，当前未启动。
+原 I3.4 已迁移至未来 I4.2，继续负责可靠 enclosure/gap 与可计算上界；I4.2 同样未启动。
+其输入阶段 I2 已以
 `I2_3_PASS_WITH_CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` 收口。精确
 half-guide DtN 由半无限边值问题定义，连续中心算子 $\mathcal F(k)$ 在任何
 BIE/Fourier 截断和 ordered QZ 之前定义真实谱对象。现行数学权威是
@@ -74,7 +76,7 @@ implementation failure；正式 `pbie-a2` 得到 $q=1.1049370224693775\times10^{
 $4.0501912934587381\times10^{-10}$ 的普通双精度名义区间。wall refinement $0.2302$、nonzero-mode
 $T$ oracle 最大误差 $1.4439$ 和 outside-$M$ share $0.5147$ 使 verdict 只能为
 `PASS WITH CONDITIONS / NUMERICALLY_UNQUALIFIED`。该 attempt 当时的 wall/T/outside-$M$
-三项 warnings 解释其历史 verdict；outward enclosure 与 continuous projected gap 现属 I3.4。
+三项 warnings 解释其历史 verdict；outward enclosure 与 continuous projected gap 现属 I4.2。
 详见
 [[research/projects/eig-apost/implementation/i3/review-3-1e|review-3-1e]]。
 最新全边界胞元 BIE
@@ -88,7 +90,7 @@ circle modes 进入 $q$ 且 angular-tail 门通过，未计算 Fourier tail 仍�
 I3.2 theorem。same-trial cap 的正式 `ecap-a2` 通过 identity 并完成 evaluation，但以
 $664.470682>640$ MiB 资源门停止，因此 cap 未计算。actual-$\Delta T$、finite-image Bloch 和
 analytic-kernel 资格也未通过；按冻结 component gates，这些 fail-open warnings 会保存 raw
-diagnostics，但也使相应 empirical cap unresolved。I3.4 的
+diagnostics，但也使相应 empirical cap unresolved。I4.2 的
 outward/gap 条件仍独立未闭合。I3.2 见
 [[research/projects/eig-apost/implementation/i3/design-3-2a|design-3-2a]]、
 [[research/projects/eig-apost/implementation/i3/review-3-2a|review-3-2a]]、
@@ -142,6 +144,8 @@ implementation/
 │   ├── review-3-1f.md
 │   ├── design-3-2a.md
 │   └── review-3-2a.md
+├── i4/
+│   └── README.md
 └── archive/
     └── legacy-route-v1/
         ├── README.md
@@ -159,16 +163,18 @@ implementation/
   [[research/projects/eig-apost/implementation/i2/report|I2 stage report]] 综合向尚未启动的 I3
   交付两条 conditional hierarchy。
 - [[research/projects/eig-apost/implementation/i3/README|i3/]]：维护 candidate 误差估计、
-  independent truth comparison 和上界可行性的目标、输入与预期输出；中心空列强残量
+  条件性证书和 same-trial cap 的目标、输入与状态；中心空列强残量
   baseline 分辨率不足，lead-aware reconstruction 在 BIE-informed fit 首败，Q1--RT0 V2 又在
   phase/scale Gram qualification 首败；BIE-collar V3 随后在含材料圆修正的 RT0-majorant
   pre-factor 首败；纯 BIE `pbie-a2` 随后形成首个 finite indicator。最新全边界 `fbie-a1`
   关闭旧 wall/$T$/outside-$M$ 问题，但 circle-action refinement 未通过。I3.1 已完成 preliminary
   objective；I3.2 conditional theorem 已建立。same-trial `ecap-a2` 已在 I3.2 内尝试 empirical
   cap，但资源硬门使本次 cap 未计算；三项 fail-open qualification failures 也会使相应 cap
-  unresolved。I3.3 只做
-  independent reference/effectivity，可靠 enclosure 留给 I3.4。
-- [[research/projects/eig-apost/implementation/ROADMAP|ROADMAP.md]]：只维护新路线 I1--I3
+  unresolved。milestone 表保留原 I3.3、I3.4 条目，并标记已分别迁移至 I4.1、I4.2。
+- [[research/projects/eig-apost/implementation/i4/README|i4/]]：未来阶段入口；I4.1 登记独立
+  method/reference effectivity validation，I4.2 登记可靠 enclosure、projected gap 与可计算
+  上界。两项均未启动，目录中没有 design、review 或 experiment 文件。
+- [[research/projects/eig-apost/implementation/ROADMAP|ROADMAP.md]]：只维护新路线 I1--I4
   的项目级依赖和退出条件。
 - [[research/projects/eig-apost/implementation/SYMBOL|SYMBOL.md]]：集中说明跨阶段缩写、
   数学对象、code variable 和稳定标签。

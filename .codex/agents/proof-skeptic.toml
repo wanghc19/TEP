@@ -6,8 +6,6 @@ mainline arguments. Use this agent after a theorem, proposition, lemma, or
 proof has already been written and needs adversarial verification.
 """
 
-model = "gpt-5.6"
-model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 
 developer_instructions = """

@@ -11,6 +11,8 @@ function [pot_ext, gradx_ext, grady_ext, hessxx_ext, hessxy_ext, hessyy_ext] = .
 %   trg   - Target coordinates as a 2-by-nt array.
 %   pars1 - Physical parameter struct with fields d, beta, and k.  Optional
 %           field periodic_axis selects the physical periodic direction.
+%           Optional h2d_evaluator is a function handle for the proxy-source
+%           term. Missing or empty preserves kernel.h2d_directch.
 %   proxy - Precomputed proxy/plane-wave struct from kernel.precomp_proxy.
 %   varargin - Optional periodic axis override, either 'x' or 'y'.
 %
@@ -100,7 +102,16 @@ function [pot_ext, gradx_ext, grady_ext, hessxx_ext, hessxy_ext, hessyy_ext] = .
   if any(idx_in(:))
     T_in = [X0(idx_in).'; Y(idx_in).'];
     [pot0, grad0, hess0] = kernel.h2d_directch(k, [0; 0], 1, T_in);
-    [potP, gradP, hessP] = kernel.h2d_directch(k, Z, q, T_in);
+    if isfield(pars1, 'h2d_evaluator') && ~isempty(pars1.h2d_evaluator)
+      h2d_evaluator = pars1.h2d_evaluator;
+      if ~isa(h2d_evaluator, 'function_handle') || ~isscalar(h2d_evaluator)
+        error('kernel:qpgreen_mfs_pairmat:InvalidH2DEvaluator', ...
+          'pars1.h2d_evaluator must be a scalar function handle.');
+      end
+      [potP, gradP, hessP] = h2d_evaluator(k, Z, q, T_in);
+    else
+      [potP, gradP, hessP] = kernel.h2d_directch(k, Z, q, T_in);
+    end
 
     pot_ext(idx_in) = (pot0 + potP) .* phase_shift(idx_in).';
     gradx_ext(idx_in) = (grad0(1, :) + gradP(1, :)) .* phase_shift(idx_in).';

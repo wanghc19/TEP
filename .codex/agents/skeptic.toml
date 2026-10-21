@@ -7,8 +7,6 @@ Classifies concerns by their consequence for the current goal and prefers the
 smallest decisive numerical check over unnecessary theoretical expansion.
 """
 
-model = "gpt-5.6-sol"
-model_reasoning_effort = "xhigh"
 sandbox_mode = "read-only"
 
 developer_instructions = """

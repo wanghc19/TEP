@@ -30,8 +30,9 @@ evaluation 后因资源硬门停止，未形成 empirical cap、$q$ 或 interval
   minimizer/root 零漂移或收敛。2026-08-24 起，I3.1 状态为
   `PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`；新 I3.2 包含已经建立的
   条件性证书定理和 same-trial empirical-cap application，后者当前为
-  `RESOURCE_BUDGET_UNAVAILABLE / EMPIRICAL_CAP_UNRESOLVED`；I3.3 只保留 independent
-  reference/effectivity，I3.4 负责 reliable enclosure/gap/existence。
+  `RESOURCE_BUDGET_UNAVAILABLE / EMPIRICAL_CAP_UNRESOLVED`；原 I3.3 已迁移至未来 I4.1，
+  只登记使用独立方法/reference 对经验 estimator 进行 effectivity validation；原 I3.4 已迁移
+  至未来 I4.2，继续负责 reliable enclosure/gap/existence。I4.1、I4.2 当前均未启动。
 - 本目录只管理新专题；不续写或改写冻结的 Müller--Cauchy 主线。
 - 归档理论、旧草稿中的命题和现有数值候选均不得被预设为正确。
 - 生产 MATLAB/package 代码保持未修改；实验实现和生成结果只位于仓库根目录 `test/`
@@ -180,15 +181,18 @@ current-model gap 且通过预注册 absolute/gap-relative resolution 时，先�
   [[test/i2/h-inertia/README|I2.2 experiment index]]、
   [[test/i2/k-drift/README|I2.3 ntot-axis experiment index]] 与
   [[test/i2/m-drift/README|I2.3 M-axis experiment index]] 进入。
-- `implementation/i3/`：维护 candidate 到连续谱的 residual indicator、条件性证书定理、
-  same-trial empirical cap、independent effectivity 与 reliable enclosure/gap 的分层合同。I3.1 当前证据由
+- `implementation/i3/`：维护 candidate 到连续谱的 residual indicator、条件性证书定理与
+  same-trial empirical cap。I3.1 当前证据由
   [[research/projects/eig-apost/implementation/i3/review-3-1f|full-boundary BIE review]] 进入；
   I3.2 定理与独立审查分别见
   [[research/projects/eig-apost/implementation/i3/design-3-2a|design-3-2a]] 和
   [[research/projects/eig-apost/implementation/i3/review-3-2a|review-3-2a]]；same-trial cap 设计与
   资源负结果见 [[research/projects/eig-apost/implementation/i3/design-3-2b|design-3-2b]] 和
-  [[research/projects/eig-apost/implementation/i3/review-3-2b|review-3-2b]]。I3.3 只做独立
-  reference/effectivity；不得把 ordinary evaluation 或名义区间称为可靠 enclosure。
+  [[research/projects/eig-apost/implementation/i3/review-3-2b|review-3-2b]]。I3 milestone 表保留
+  原 I3.3、I3.4 条目，并标记已分别迁移至 I4.1、I4.2。
+- `implementation/i4/`：未来阶段入口；I4.1 只做独立 method/reference effectivity，I4.2 只做
+  reliable enclosure/gap/upper-bound research。两项当前均未启动；不得把 ordinary evaluation
+  或名义区间称为可靠 enclosure。
 - `test/archive/legacy-route-v1/eig-apost-nep/`、`test/archive/legacy-route-v1/hg-map/`、
   `test/archive/legacy-route-v1/aug-bie/`、`test/archive/legacy-route-v1/root-ready/`：四个互相
   独立的 Octave 实验或受控诊断及可审计输出；历史 I3 provenance 输出在

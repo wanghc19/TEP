@@ -1,0 +1,14 @@
+{
+  "migration_utc": "2026-09-20",
+  "old_directory": "test/i6/resolvent-nonfourier-v1",
+  "new_directory": "test/i6/resolvent-v2",
+  "all_files_preserved_before_document_link_updates": true,
+  "original_file_count": 41,
+  "moved_documents": {
+    "design.md": "design-6-1b.md",
+    "review.md": "review-6-1b.md",
+    "SYMBOLS.md": "SYMBOLS.md"
+  },
+  "history_policy": "Original logs, JSON/MAT outputs and source snapshots retain historical paths and byte contents. Current documentation paths are updated separately.",
+  "runtime_dependency": false
+}

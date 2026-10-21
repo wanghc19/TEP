@@ -1,0 +1,4 @@
+interface:
+  display_name: "Commit Draft"
+  short_description: "Review changes and draft repository-style commits"
+  default_prompt: "Use $commit-draft to review the current changes and draft two copy-ready commit message versions."

@@ -58,6 +58,9 @@ research/**/checkpoints/
 
 # Local experiment outputs (already tracked files remain tracked)
 test/**/output/
+/test/i8/fmm-v1/vendor/fmm2d/
+test/i4/femref-a1/diagnostics/
+test/i4/femref-a1/watchdog/
 
 # Local legacy snapshot artifacts
 /legacy/draft-2026-07-24/examples/output/
@@ -68,3 +71,6 @@ ref/**
 !ref/README.md
 !ref/reference.bib
 !ref/AGENTS.md
+
+# Temporary experiment history
+/test/**/tmp/

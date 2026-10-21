@@ -11,6 +11,8 @@ experiments on periodic waveguides and related eigenvalue problems.
   `research/AGENTS.md` in addition to this file.
 - The nested file governs research authority, notation, naming, temporary
   material, and handoff rules; this root file continues to apply everywhere.
+- Before planning, creating, debugging, or running experiments under `test/`,
+  read and follow `test/AGENTS.md`; it governs run budgets and attempt reuse.
 
 ## Always follow
 

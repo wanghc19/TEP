@@ -19,8 +19,10 @@ I3.1 已以全边界胞元 BIE 得到 ordinary-double continuous-residual estima
 application。正式 `ecap-a2` 已通过 certificate identity 并完成 same-trial evaluation，但在 cap、
 full-$P$ contraction、$q$ 和 interval 前以 $664.470682$ MiB 超过 $640$ MiB hard limit，故当前为
 `EMPIRICAL_CAP_UNRESOLVED`；actual-$\Delta T$、finite-image Bloch 和 analytic-kernel 三项资格也
-未通过。I3.3 现只研究 independent reference/effectivity；I3.4 研究 strict outward enclosure、
-certified projected gap 和离散特征值存在性。可靠区间、gap 和存在性仍只属于 I3.4。
+未通过。原 I3.3 已迁移至未来 I4.1，只登记使用独立方法/reference 对经验 estimator 进行
+effectivity validation；原 I3.4 已迁移至未来 I4.2，继续登记 strict outward enclosure、
+certified projected gap 和离散特征值存在性。I4.1、I4.2 当前均未启动；可靠区间、gap 和
+存在性只属于 I4.2。
 该专题仍不构成新的统一主线。
 在形成可以明确命名且经过审核的统一框架以前，不建立空的 `mainline/` 作为占位。
 
