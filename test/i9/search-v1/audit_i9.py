@@ -101,7 +101,14 @@ def rel(a, b):
 from pathlib import Path
 from collections import Counter
 import csv
-root=Path(sys.argv[1]); state=json.loads((root/'state.json').read_text()); cfg=state['config']; ps=state['points']; checks=0; details={}
+import argparse
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('run_directory')
+parser.add_argument('--expected-star-scale',type=float,default=1.0,
+  help='Independent expected extra center scale; default 1 for the native-star comparison')
+args=parser.parse_args()
+expected_star_scale=args.expected_star_scale
+root=Path(args.run_directory); state=json.loads((root/'state.json').read_text()); cfg=state['config']; ps=state['points']; checks=0; details={}
 def ck(ok,label):
   global checks
   checks+=1
@@ -119,6 +126,15 @@ def detect(y,valid=None):
 ck(cfg['model']['a_negative']==.12 and cfg['model']['a_positive']==.20 and cfg['model']['beta']==.5,'frozen independent geometry')
 ck(cfg['resolutions']=={'coarse':{'center_ntot':256,'negative_ntot':128,'positive_ntot':128},'fine':{'center_ntot':512,'negative_ntot':256,'positive_ntot':256}},'independent resolution fields')
 ck(cfg['backend']['fmm_eps']==1e-12,'FMM tolerance')
+ck(cfg['model']['star_scale']==expected_star_scale,'explicit expected extra center scale')
+geometry=state['geometry']; expected_center_area=.0618*np.pi*expected_star_scale**2
+ck(abs(geometry['center_area']-expected_center_area)<1e-12,'independent center area contract')
+for side in ['negative','positive']:
+  ck(abs(geometry[side]['area']-.04*np.pi)<1e-12,'unchanged lead area')
+ck(geometry['center_minimum_speed']>0 and geometry['center_wall_clearance']>0 and geometry['center_vertical_clearance']>0,'center regularity and clearance')
+details['center_geometry']={'expected_star_scale':expected_star_scale,'expected_area':expected_center_area,
+  'measured_area':geometry['center_area'],'absolute_area_difference':abs(geometry['center_area']-expected_center_area),
+  'position_envelope':[.36*expected_star_scale,.26*expected_star_scale]}
 leadlog=state['lead_log']; leads=leadlog['records']; qcfg=cfg['qualification']; margins=[]; residuals=[]
 def classify(d,label):
   alpha=np.asarray(d['alpha_real'])+1j*np.asarray(d['alpha_imag']); theta=np.asarray(d['theta_real'])+1j*np.asarray(d['theta_imag']); res=d['residual']
@@ -213,6 +229,14 @@ def norm(x): return float(np.linalg.norm(x))
 def geom_expected(n,a,R):
   t=np.arange(n)*(2*np.pi/n); c=R/np.sqrt(1+a*a/2); r=c*(1+a*np.cos(3*t)); rp=-3*c*a*np.sin(3*t); rpp=-9*c*a*np.cos(3*t)
   return np.vstack((r*np.cos(t),rp*np.cos(t)-r*np.sin(t),(rpp-r)*np.cos(t)-2*rp*np.sin(t),r*np.sin(t),rp*np.sin(t)+r*np.cos(t),(rpp-r)*np.sin(t)+2*rp*np.cos(t)))
+def center_expected(n,scale):
+  t=np.arange(n)*(2*np.pi/n)
+  return .2*scale*np.vstack((1.5*np.cos(t)+.15*np.cos(6*t)+.15*np.cos(4*t),
+    -1.5*np.sin(t)-.9*np.sin(6*t)-.6*np.sin(4*t),
+    -1.5*np.cos(t)-5.4*np.cos(6*t)-2.4*np.cos(4*t),
+    np.sin(t)+.15*np.sin(6*t)-.15*np.sin(4*t),
+    np.cos(t)+.9*np.cos(6*t)-.6*np.cos(4*t),
+    -np.sin(t)-5.4*np.sin(6*t)+2.4*np.sin(4*t)))
 matrix_results=[]
 for path in sorted(root.glob('candidate-evidence-*.mat')):
   raw=matload(path); p=raw['point']; e=raw['evidence']; lead=e['leads']; m=e['matching']; center=e['center']; gamma=np.asarray(lead['channels']['gamma_m']).reshape(-1); beta=np.asarray(lead['channels']['beta_m']).reshape(-1); K=len(gamma); G=np.diag(gamma); I=np.eye(K); zero=np.zeros((K,K)); dtn={}; direction={}; ge={}
@@ -243,7 +267,15 @@ for path in sorted(root.glob('candidate-evidence-*.mat')):
   Sn=np.block([[lead['negative']['R_L'],lead['negative']['T_RL']],[lead['negative']['T_LR'],lead['negative']['R_R']]])
   Sp=np.block([[lead['positive']['R_L'],lead['positive']['T_RL']],[lead['positive']['T_LR'],lead['positive']['R_R']]])
   ck(norm(Sn-Sp)>1e-8,'genuinely distinct side scattering')
-  ck(np.asarray(center['geometry']).shape==(6,512),'fine center size')
+  Cc=np.asarray(center['geometry']); ck(Cc.shape==(6,512),'fine center size')
+  ck(scalar(e['model']['star_scale'])==expected_star_scale and scalar(center['shape_arg'])==expected_star_scale,'evidence center scale identity')
+  center_diff=float(np.max(abs(Cc-center_expected(512,expected_star_scale))))
+  center_area=float(np.sum(Cc[0]*Cc[4]-Cc[3]*Cc[1])*np.pi/512)
+  ck(center_diff<5e-14,'independent analytic public star all six rows with internal 0.2 retained')
+  ck(abs(center_area-expected_center_area)<1e-12,'fine center analytic area')
+  ck(np.max(abs(Cc[0]))<=.36*expected_star_scale+1e-12 and np.max(abs(Cc[3]))<=.26*expected_star_scale+1e-12,'center analytic position envelope')
+  ge['center']=dict(max_absolute_six_row_difference=center_diff,area=center_area,area_absolute_difference=abs(center_area-expected_center_area),
+    maximum_absolute_x=float(np.max(abs(Cc[0]))),maximum_absolute_y=float(np.max(abs(Cc[3]))))
   matrix_results.append({'file':path.name,'k':scalar(p['k']),'geometry_max_absolute':ge,'direction_checks':direction,'Adef_relative_reassembly':adiff,'Aphys_relative_reassembly':pdiff,'SVD_values':vals,'SVD_absolute_differences':differences,'two_lead_S_absolute_difference':norm(Sn-Sp)})
 ck(len(matrix_results)==len(state['confirmations']),'all confirmations have matrix evidence')
 equal=matload(root/'equal-lead-validation.mat')['evidence']; ck(norm(equal['reference']['Adef']-equal['independent']['Adef'])<1e-10 and norm(equal['reference']['Aphys']-equal['independent']['Aphys'])<1e-10,'same-lead degeneration raw matrices')

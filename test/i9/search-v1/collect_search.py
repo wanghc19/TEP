@@ -7,6 +7,7 @@ runs MATLAB, selects candidates, changes classification or feeds a search.
 import argparse
 import csv
 import json
+import datetime as dt
 from pathlib import Path
 
 
@@ -25,6 +26,7 @@ def main():
   parser = argparse.ArgumentParser(description=__doc__)
   parser.add_argument('run_directory')
   parser.add_argument('--presentation-status', help='Current-attempt MATLAB plotting monitor status')
+  parser.add_argument('--baseline-run', help='Optional explicit completed baseline for post-run reporting only')
   args = parser.parse_args()
   directory = Path(args.run_directory)
   state = json.loads((directory/'state.json').read_text())
@@ -78,6 +80,18 @@ def main():
     validation_extra_constructions=dict(lead_cells=2, center_cells=1) if 'equal_validation' in state else {},
     unresolved_intervals=[t for t in state['intervals'] if t['status'] not in ('COMPLETE','SPLIT')],
     unresolved_edges=[e for e in state['edge_records'] if e['status']=='NONWINNING_EDGE_PENDING'])
+  def round_vs_best(run_state):
+    records=[]
+    for candidate in run_state['candidates']:
+      best=run_state['points'][candidate['best_id']-1]
+      records.append(dict(interval_id=candidate['interval_id'],formal_point_id=candidate['point_id'],
+        cumulative_best_point_id=candidate['best_id'],formal_k=candidate['k'],cumulative_best_k=best['k'],
+        formal_aphys_ratio=candidate['aphys_ratio'],cumulative_best_aphys_ratio=best['aphys_ratio'],
+        signed_ratio_difference=candidate['aphys_ratio']-best['aphys_ratio'],
+        relative_ratio_increase=(candidate['aphys_ratio']/best['aphys_ratio']-1) if best['aphys_ratio'] else None,
+        cumulative_best_four_metrics={key:best[key] for key in ('adef_sigma','adef_ratio','aphys_sigma','aphys_ratio')}))
+    return records
+  summary['final_round_vs_cumulative_best']=round_vs_best(state)
   if args.presentation_status:
     presentation=json.loads(Path(args.presentation_status).read_text())
     summary['presentation_process_seconds']=presentation['wall_seconds']
@@ -85,7 +99,62 @@ def main():
     summary['shared_monitored_seconds']=presentation['shared_elapsed_seconds']
     summary['presentation_peak_rss_bytes']=presentation['peak_rss_bytes']
     summary['presentation_survivors']=presentation['survivors']
+    science_command=json.loads((directory/'command.json').read_text())
+    span=(dt.datetime.fromisoformat(presentation['finished_utc'])-dt.datetime.fromisoformat(science_command['started_utc'])).total_seconds()
+    summary['complete_delivery_elapsed_wall_seconds']=span
+    summary['interprocess_and_reporting_gap_seconds']=span-summary['complete_delivery_process_seconds']
   (directory/'summary.json').write_text(json.dumps(summary,indent=2,allow_nan=False)+'\n')
+  if args.baseline_run:
+    baseline_directory=Path(args.baseline_run)
+    baseline=json.loads((baseline_directory/'summary.json').read_text())
+    baseline_state=json.loads((baseline_directory/'state.json').read_text())
+    baseline_plot_status=baseline_directory.parent/'plot-01'/'status.json'
+    if baseline_plot_status.exists():
+      baseline_start=json.loads((baseline_directory/'command.json').read_text())['started_utc']
+      baseline_finish=json.loads(baseline_plot_status.read_text())['finished_utc']
+      baseline['complete_delivery_elapsed_wall_seconds']=(dt.datetime.fromisoformat(baseline_finish)-dt.datetime.fromisoformat(baseline_start)).total_seconds()
+    differences=[]
+    def compare_config(old,new,path=''):
+      if isinstance(old,dict) and isinstance(new,dict):
+        for key in sorted(set(old)|set(new)):
+          compare_config(old.get(key),new.get(key),path+'.'+key if path else key)
+      elif old!=new:
+        differences.append(dict(path=path,baseline=old,current=new))
+    compare_config(baseline['config'],summary['config'])
+    metric_fields=['k','adef_sigma','adef_ratio','aphys_sigma','aphys_ratio','W','status']
+    candidate_rows=[]
+    for label,data in [('scaled_baseline',baseline),('native_center',summary)]:
+      for candidate in data['candidates']:
+        candidate_rows.append(dict(experiment=label,interval_id=candidate['interval_id'],
+          **{key:candidate[key] for key in metric_fields}))
+    formal_old=[c for c in baseline['candidates'] if c['status']=='COMPLETE']
+    formal_new=[c for c in summary['candidates'] if c['status']=='COMPLETE']
+    candidate_change=None
+    if len(formal_old)==len(formal_new)==1:
+      old,new=formal_old[0],formal_new[0]
+      delta=new['k']-old['k']
+      candidate_change=dict(signed_k_difference=delta,absolute_k_difference=abs(delta),
+        relative_k_difference=abs(delta)/abs(old['k']),
+        four_metric_absolute_differences={key:abs(new[key]-old[key]) for key in metric_fields[1:5]},
+        interpretation='comparison of the sole observed candidate in each model, not a mode-identity or eigenvalue-error claim')
+    comparison=dict(config_differences=differences,candidates=candidate_rows,candidate_change=candidate_change,
+      baseline_final_round_vs_cumulative_best=round_vs_best(baseline_state),
+      current_final_round_vs_cumulative_best=round_vs_best(state),
+      baseline_geometry=baseline_state['geometry'],current_geometry=state['geometry'],
+      baseline_initial_classification=baseline_state['gap_exploration'],current_initial_classification=state['gap_exploration'],
+      baseline_common_gaps=baseline['common_gaps'],current_common_gaps=summary['common_gaps'],
+      baseline_unresolved_intervals=baseline['unresolved_intervals'],current_unresolved_intervals=summary['unresolved_intervals'],
+      baseline_unresolved_edges=baseline['unresolved_edges'],current_unresolved_edges=summary['unresolved_edges'],
+      baseline_counts=baseline['counts'],current_counts=summary['counts'],
+      baseline_timing=baseline['timing'],current_timing=summary['timing'],
+      baseline_process_seconds=baseline['process_wall_seconds'],current_process_seconds=summary['process_wall_seconds'],
+      baseline_complete_delivery_seconds=baseline.get('complete_delivery_process_seconds'),
+      current_complete_delivery_seconds=summary.get('complete_delivery_process_seconds'),
+      baseline_complete_delivery_elapsed_wall_seconds=baseline.get('complete_delivery_elapsed_wall_seconds'),
+      current_complete_delivery_elapsed_wall_seconds=summary.get('complete_delivery_elapsed_wall_seconds'),
+      baseline_peak_rss_bytes=baseline['peak_rss_bytes'],current_peak_rss_bytes=summary['peak_rss_bytes'])
+    (directory/'comparison.json').write_text(json.dumps(comparison,indent=2,allow_nan=False)+'\n')
+    table(directory/'comparison.csv',candidate_rows,['experiment','interval_id']+metric_fields)
   print(json.dumps({k: summary[k] for k in ('status','counts','final_candidates','timing','process_wall_seconds','peak_rss_bytes')},indent=2))
 
 

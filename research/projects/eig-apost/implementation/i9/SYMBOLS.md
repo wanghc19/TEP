@@ -52,3 +52,25 @@ lead 与匹配的 exact cache 键均以 `jsonencode(config) + resolution_id + nu
 不能把 callback 或 lead 子计时重复加到完整匹配点时间。
 `equal_validation` 在普通调度外另构造两套 lead 和一个中心；报告总构造数时单列补入。
 其嵌套 callback ledger 不保留外层中心回调，完整验证时间仍由外层 `seconds` 计量。
+
+## 中心缩放对照的局部记号
+
+[[research/projects/eig-apost/implementation/i9/design-9-1a|设计第 8 节]] 保留原 `attempt-1`，追加
+`attempt-2`。`model.star_scale` 是公共 star 结果以外的统一六行尺度 $s$；公共函数内部 $0.2$
+是原始形状定义的一部分，两者不可混淆。基线 $s=\sqrt{0.04/0.0618}$，本次对照 $s=1$。
+
+| 量 | 代码/数值口径 |
+|---|---|
+| $C_0=[x_0;x_0';x_0'';y_0;y_0';y_0'']$ | 公共 `geom.construct_cont(...,'star',...)` 原输出，已包含内部 $0.2$ |
+| $C=sC_0$ | 中心六行统一外层缩放；本次 $s=1$ |
+| 中心面积 | $0.0618\pi s^2$；不使用 lead 的 $\pi R^2$ 作为中心面积目标 |
+| `geometry.center_scale` | 本次实际外层 $s$ |
+| `geometry.center_position_envelope` | $[0.36,0.26]s$，位置绝对值包络，不是两分量实际同时达到的极值 |
+| `geometry.center_expected_area` / `center_area` | 派生解析目标与实际周期采样面积，分开保留 |
+| `geometry.center_minimum_speed` / `center_wall_clearance` / `center_vertical_clearance` | 当前采样最小速度、左右壁距、上下周期壁距 |
+| lead 面积 | 每侧仍为 $0.04\pi$，与中心对照无关 |
+| `attempt-1` / `attempt-2` | 两次独立完整科学运行，后者只改变中心外层尺度，不跨 attempt 取缓存 |
+
+这组符号只解释明确授权的模型参数对照，不新增谱距离符号或评价配置。
+独审脚本的 `--expected-star-scale` 是显式审查预期（本次为 1），不影响 MATLAB 科学参数或搜索。
+审查据此独立重建中心六行、面积和包络；不能把审查参数当作第二份数值运行配置。
