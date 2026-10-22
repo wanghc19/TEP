@@ -196,3 +196,35 @@ adapted to the single 768 layer, and refinement/comparison helpers are excluded.
 formula remains `UNCERTIFIED_RNUM` with `certified=false`. Differences between independent pipeline
 results conflate candidate changes and field-construction/evaluator changes; they do not isolate
 FMM kernel error.
+
+## I8.5 two-resolution multidip search ledger
+
+This section applies only to `test/i8/scan-v1/` and
+[[research/projects/eig-apost/implementation/i8/design-8-5a|design-8-5a]]. No spectral-distance
+quantity is evaluated in this experiment. Historical I8.4 candidate and field schemas remain unchanged.
+
+| Code name / responsibility | Mathematical object | Meaning and scope |
+|---|---|---|
+| `scan_i8_config()` | one scientific configuration | Sole source for shared model, auxiliary parameters, two resolutions, search rules and FMM request |
+| `resolution_id` | coarse / fine spatial order | Coarse means center/lead $(256,128)$; fine means $(512,256)$; independent of the refinement `round` |
+| `scan_i8_point(k,resolution_id,config)` | complete finite matching evaluation | Computes four metrics and status without choosing grids, branches or stopping conditions |
+| `scan_i8_search(output_dir,mode)` | current-run manager | Owns grid scheduling, interval lineage, refinement, successful-point cache and terminal records |
+| `point_id`, `k_hex` | point identity / binary64 input | Stable current-run identifier and exact `num2hex(k)` encoding; no decimal rounding for cache identity |
+| scientific config + resolution + `k_hex` | cache identity | Same successful point can serve overlapping branches; coarse and fine values never share an entry |
+| `source_ids`, `parent_id` | search lineage | Every coarse dip or pending region retains all descendant or terminal destinations |
+| `interval.pending_groups` | internal dips observed during expansion | Stores bounds, exact anchor IDs, source history and destination; same anchors can refer to the current group, otherwise a recovery child preserves the observation |
+| `edge_records`, `pending_edge_count` | unresolved edge trends | A nonwinning descending endpoint stays `NONWINNING_EDGE_PENDING`; it is never silently called covered by its parent |
+| `round` | local refinement iteration | Not a spatial order; each full fine grid has eleven actual nodes |
+| raw minima / saddle / prominence | finite-grid dip evidence | Every strict minimum and exact plateau is retained before numerical ambiguity grouping |
+| `ambiguity` threshold | $\tau=64\,\mathrm{eps}\max(1,\max_j|y_j|)$ | Fine-branch proliferation guard only; not an error bound, a coarse-dip filter or a stopping threshold |
+| ambiguity cluster | unresolved neighboring minima | All constituent extrema and saddles remain recorded; next window covers the whole cluster with outer neighbors |
+| actual whole-round width | $W=k_{11}-k_1$ | Completion requires a full valid fine round, $W\le2\times10^{-14}$ and an interior winner |
+| winner neighbor width | $w=k_{j+1}-k_{j-1}$ | Distinct from $W$ and requested step; uses actual binary64 neighbors |
+| formal candidate | final-round first argmin | First minimum `aphys_ratio` in a normally completed fine round; it has recorded two-sided grid support |
+| cumulative fine best | first supported all-history argmin | Separate diagnostic that may differ from the formal candidate; never substitutes for the width gate |
+| cache bypass confirmation | fresh complete fine point | Recomputes each terminal fine best/candidate and records four absolute/relative differences without overwriting the cached record |
+| requested / new / hit / bypass counts | scheduling workload | Request references, actual missing-point calls, successful cache reuses and fresh confirmation calls are reported separately |
+| `checkpoint.mat` | current-run evidence | Saved state only; this implementation has no resume input and regenerates all points from an empty output directory |
+
+All four singular-value metrics keep the earlier I8 definitions. Neither a small score nor a small final
+window certifies a continuous eigenvalue, uniqueness, full-window coverage or a spectral-distance bound.
