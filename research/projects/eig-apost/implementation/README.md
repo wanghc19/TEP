@@ -2,6 +2,8 @@
 
 ## 当前状态
 
+2026-10-22 新案例登记：[[research/projects/eig-apost/implementation/i9/README|I9.1 不同非对称双 lead 的共同数值带隙与候选搜索]] 已完成，独审 `PASS WITH CONDITIONS`。得到一个 fine 内部候选，另保留左边界未解决趋势；两侧观测 gap 段均被探索窗口截断。本次不计算谱距离，不改写下述历史阶段合同。
+
 当前新路线处于 `I3_1_PRELIMINARY_OBJECTIVE_ACHIEVED / COMPUTED_ESTIMATOR_CANDIDATE`；I3.2
 条件性证书谱包含定理已经建立，same-trial empirical-cap application 则由 `ecap-a2` 给出
 `RESOURCE_BUDGET_UNAVAILABLE / EMPIRICAL_CAP_UNRESOLVED`。该 run 完成 evaluation 后在 cap、
