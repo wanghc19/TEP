@@ -106,8 +106,11 @@ parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('run_directory')
 parser.add_argument('--expected-star-scale',type=float,default=1.0,
   help='Independent expected extra center scale; default 1 for the native-star comparison')
+parser.add_argument('--expected-rho-center',type=float,default=4.0,
+  help='Independent expected center relative permittivity, not refractive index')
 args=parser.parse_args()
 expected_star_scale=args.expected_star_scale
+expected_rho_center=args.expected_rho_center
 root=Path(args.run_directory); state=json.loads((root/'state.json').read_text()); cfg=state['config']; ps=state['points']; checks=0; details={}
 def ck(ok,label):
   global checks
@@ -127,6 +130,9 @@ ck(cfg['model']['a_negative']==.12 and cfg['model']['a_positive']==.20 and cfg['
 ck(cfg['resolutions']=={'coarse':{'center_ntot':256,'negative_ntot':128,'positive_ntot':128},'fine':{'center_ntot':512,'negative_ntot':256,'positive_ntot':256}},'independent resolution fields')
 ck(cfg['backend']['fmm_eps']==1e-12,'FMM tolerance')
 ck(cfg['model']['star_scale']==expected_star_scale,'explicit expected extra center scale')
+ck(cfg['model']['rho_center']==expected_rho_center,'explicit center relative permittivity')
+ck(cfg['model']['rho_lead']==17 and cfg['model']['rho_exterior']==1,'unchanged lead and exterior materials')
+details['material_contract']={'expected_rho_center':expected_rho_center,'expected_center_index':math.sqrt(expected_rho_center)}
 geometry=state['geometry']; expected_center_area=.0618*np.pi*expected_star_scale**2
 ck(abs(geometry['center_area']-expected_center_area)<1e-12,'independent center area contract')
 for side in ['negative','positive']:
@@ -241,9 +247,12 @@ matrix_results=[]
 for path in sorted(root.glob('candidate-evidence-*.mat')):
   raw=matload(path); p=raw['point']; e=raw['evidence']; lead=e['leads']; m=e['matching']; center=e['center']; gamma=np.asarray(lead['channels']['gamma_m']).reshape(-1); beta=np.asarray(lead['channels']['beta_m']).reshape(-1); K=len(gamma); G=np.diag(gamma); I=np.eye(K); zero=np.zeros((K,K)); dtn={}; direction={}; ge={}
   ck(K==97 and np.asarray(m['Aphys']).shape==(194,194),'matching matrix dimensions')
+  ck(scalar(e['model']['rho_center'])==expected_rho_center,'raw model center relative permittivity')
+  ck(scalar(center['rho'])==expected_rho_center and scalar(center['kext'])==scalar(p['k']) and scalar(center['kint'])==math.sqrt(expected_rho_center)*scalar(p['k']),'raw center interior wavenumber sqrt epsilon times k')
   for side,a,sgn in [('negative',.12,-1),('positive',.20,1)]:
     s=lead[side]; Z=np.asarray(s['Z']); n=int(scalar(s['ntot'])); C=np.asarray(s['geometry']); expected=geom_expected(n,a,.2); ge[side]=float(np.max(abs(C-expected)))
     ck(n==256 and abs(scalar(s['shape_arg'])-a)<1e-16 and ge[side]<5e-14,'analytic nonmirrored fine geometry')
+    ck(scalar(s['rho'])==17 and scalar(s['kext'])==scalar(p['k']) and scalar(s['kint'])==math.sqrt(17)*scalar(p['k']),'raw lead material and interior wavenumber')
     A=np.block([[-s['R_L'],I],[s['T_LR'],zero]]); B=np.block([[zero,s['T_RL']],[I,-s['R_R']]])
     lhs,rhs=(A@Z,B@Z) if side=='positive' else (B@Z,A@Z)
     H,_,rank,_=np.linalg.lstsq(rhs,lhs,rcond=None); defect=norm(lhs-rhs@H)/max(1,norm(lhs),norm(rhs)*norm(H)); radius=float(max(abs(np.linalg.eigvals(H))))
@@ -276,7 +285,7 @@ for path in sorted(root.glob('candidate-evidence-*.mat')):
   ck(np.max(abs(Cc[0]))<=.36*expected_star_scale+1e-12 and np.max(abs(Cc[3]))<=.26*expected_star_scale+1e-12,'center analytic position envelope')
   ge['center']=dict(max_absolute_six_row_difference=center_diff,area=center_area,area_absolute_difference=abs(center_area-expected_center_area),
     maximum_absolute_x=float(np.max(abs(Cc[0]))),maximum_absolute_y=float(np.max(abs(Cc[3]))))
-  matrix_results.append({'file':path.name,'k':scalar(p['k']),'geometry_max_absolute':ge,'direction_checks':direction,'Adef_relative_reassembly':adiff,'Aphys_relative_reassembly':pdiff,'SVD_values':vals,'SVD_absolute_differences':differences,'two_lead_S_absolute_difference':norm(Sn-Sp)})
+  matrix_results.append({'file':path.name,'k':scalar(p['k']),'geometry_max_absolute':ge,'direction_checks':direction,'Adef_relative_reassembly':adiff,'Aphys_relative_reassembly':pdiff,'SVD_values':vals,'SVD_absolute_differences':differences,'two_lead_S_absolute_difference':norm(Sn-Sp),'center_material':{'rho':scalar(center['rho']),'kext':scalar(center['kext']),'kint':scalar(center['kint'])}})
 ck(len(matrix_results)==len(state['confirmations']),'all confirmations have matrix evidence')
 equal=matload(root/'equal-lead-validation.mat')['evidence']; ck(norm(equal['reference']['Adef']-equal['independent']['Adef'])<1e-10 and norm(equal['reference']['Aphys']-equal['independent']['Aphys'])<1e-10,'same-lead degeneration raw matrices')
 details['matrices']=matrix_results; details['checks']=checks; details['status']='PASS'; details['audit_seconds']=time.perf_counter()-audit_start; details['numpy_version']=np.__version__; details['python']=sys.version.split()[0]

@@ -9,12 +9,14 @@ quantity and does not use historical candidates or results.
 
 `search_i9_config.m` is the only scientific parameter source. It freezes
 $\beta=0.5$, negative/positive radial deformation $a=0.12/0.20$, lead material
-17, the native public five-star center with material 2 and extra scale 1, FMM request
+17, the native public five-star center with relative permittivity 4 and extra scale 1, FMM request
 $10^{-12}$, and coarse center/negative/positive nodes 256/128/128 versus fine
 512/256/256. The current center has area $0.0618\pi$; both leads retain
 area $0.04\pi$. The public star formula retains its internal 0.2 multiplier.
-Only the additional `sqrt(0.04/0.0618)` normalization was removed in the
-authorized controlled comparison. The completed scaled baseline remains below.
+The previous controlled comparison removed only the additional
+`sqrt(0.04/0.0618)` normalization. The current material comparison changes
+only center relative permittivity from 2 to 4, so the interior wavenumber is
+`sqrt(4)*k = 2*k`. The completed scaled and native-material-2 baselines remain below.
 
 The initial 33-point frequency exploration window is $[1.45,2.25]$. Each lead
 uses its own scattering pencil and homogeneous QZ diagnostics. A two-ring
@@ -64,12 +66,12 @@ not discover the repository, read Markdown/Git, or load historical data.
 
 ```bash
 conda activate octave
-python run_search.py --mode selftest --output output/attempt-2/setup-01 \
+python run_search.py --mode selftest --output output/attempt-3/setup-01 \
   --package-root "$PACKAGE_ROOT" --fmm-root "$FMM_MATLAB" --matlab "$MATLAB_BIN"
-python run_search.py --mode run --output output/attempt-2/run-01 \
-  --config output/attempt-2/setup-01/config.json \
+python run_search.py --mode run --output output/attempt-3/run-01 \
+  --config output/attempt-3/setup-01/config.json \
   --package-root "$PACKAGE_ROOT" --fmm-root "$FMM_MATLAB" --matlab "$MATLAB_BIN"
-python collect_search.py output/attempt-2/run-01
+python collect_search.py output/attempt-3/run-01
 ```
 
 The setup export only supplies monitor limits from the unique configuration;
@@ -227,9 +229,9 @@ python collect_search.py output/attempt-2/run-01 \
   --presentation-status output/attempt-2/plot-01/status.json
 ```
 
-## Native-center controlled comparison: attempt-2
+## Historical native-center controlled comparison: attempt-2
 
-The current configuration changes only `model.star_scale` to 1. Geometry
+The attempt-2 configuration changed only `model.star_scale` to 1. Geometry
 validation now uses the center's analytic area
 $0.0618\pi\,\mathrm{star\_scale}^2$ and retains the separate strict lead-area
 checks. The analytic position envelopes are $|x|\le0.36\,\mathrm{star\_scale}$
@@ -241,14 +243,17 @@ unchanged. This attempt begins from empty output and does not read attempt-1.
 
 The audit now independently reconstructs all six center rows, verifies the
 public internal 0.2 factor, checks center/lead areas separately, and accepts
-`--expected-star-scale` (default 1). For this comparison invoke explicitly:
+`--expected-star-scale` (default 1). At that time the audit was invoked explicitly as follows (a historical command,
+not a claim that the current stricter material-metadata audit accepts old MAT files):
 
 ```bash
 python audit_i9.py output/attempt-2/run-01 --expected-star-scale 1
 ```
 
-The historical audit remains reproducible by explicitly supplying its original
-extra scale, computed as `sqrt(0.04/0.0618)`, to the same audit option.
+The historical audit output and its then-current code remain preserved.
+The current material-comparison audit additionally requires raw `rho`, `kext`
+and `kint` fields, absent from historical MAT files; it does not silently
+skip this evidence requirement or rerun the old physics.
 
 ### Attempt-2 observed results and comparison
 
@@ -373,3 +378,160 @@ file. Continuous-spectrum certification, complete gap-edge localization,
 finite-grid coverage and spectral-distance estimation remain outside this
 controlled comparison. No $C_{\mathrm{num}}$, $\varepsilon_{\mathrm{num}}$,
 $U_{\mathrm{num}}$ or $R_{\mathrm{num}}$ was computed.
+
+## Center-material controlled comparison: attempt-3
+
+The current configuration changes only `model.rho_center` from 2 to 4. This
+parameter is relative permittivity; `kint=sqrt(rho_center)*kext=2*k` in the
+center, while the unchanged lead relation is `sqrt(17)*k`. The native star,
+its six analytic geometry rows and extra scale 1, all lead geometry/materials,
+FMM tolerance, discretizations, common-gap and multi-dip search rules remain
+unchanged. No anticipated frequency is used as a seed, target or stopping rule.
+
+The compact raw cell evidence now includes `rho`, `kext` and `kint`, using
+the same local values actually passed to `bloch.construct_S`. The independent
+audit requires this evidence and checks the center and each lead separately:
+
+```bash
+python audit_i9.py output/attempt-3/run-02 \
+  --expected-star-scale 1 --expected-rho-center 4
+```
+
+The monitor records `budget_started_utc` and carries the original science
+start into the presentation batch. Its shared hard clock now includes time
+between processes, rather than summing process runtimes alone. This changes
+resource accounting only, not scientific parameters or computation.
+
+After the full new science run, the optional comparison uses attempt-2 as the
+explicit primary baseline. Its labels are neutral `baseline` / `current`,
+with `rho_center` and `star_scale` stored alongside every candidate:
+
+```bash
+python run_search.py --mode plot --output output/attempt-3/plot-02 \
+  --config output/attempt-3/setup-01/config.json \
+  --data-dir output/attempt-3/run-02 \
+  --prior-status output/attempt-3/run-02/status.json \
+  --package-root "$PACKAGE_ROOT" --fmm-root "$FMM_MATLAB" --matlab "$MATLAB_BIN"
+python collect_search.py output/attempt-3/run-02 \
+  --presentation-status output/attempt-3/plot-02/status.json \
+  --baseline-run output/attempt-2/run-01
+```
+
+### Preserved operational diagnosis
+
+The first material run (`attempt-3/run-01`) reached the first fine round but
+reported `MATLAB:error:missingMessageArgument` at $k=1.5875$. It therefore did
+not complete the internal dip. The original assertion trigger was obscured
+by identifier-only `assert` calls; it is **not established** that the BIE
+qualification threshold was exceeded. All original raw records are retained.
+
+A same-configuration, exact-point diagnostic (`diagnose-01`) succeeded. Its
+center BIE relative residual was $1.2926313512724865\times10^{-15}$; the two
+lead residuals were $3.4251193729025305\times10^{-15}$ and
+$3.299794023355351\times10^{-15}$. The evidence records center relative
+permittivity 4 and interior wavenumber 3.175 at exterior wavenumber 1.5875.
+This did not reproduce the earlier failure and does not identify its cause.
+
+The temporary `search_i9_diagnose.m` source is archived inside
+`output/attempt-3/diagnose-01/`, alongside its evidence. It is not part of the
+permanent search entry points. The historical `command.json` is unchanged and
+records its original pre-archive MATLAB path. To inspect or manually reproduce
+that diagnostic, explicitly add the archived source directory and this
+experiment's current source directory to the MATLAB path, together with the
+public packages and installed FMM2D; use a new output directory and call
+`search_i9_diagnose(new_output,1.5875,'fine')`. The normal fresh search requires
+none of this archived source or evidence. This archival edit did not rerun MATLAB.
+
+The corrected full `run-02` starts from the unchanged wide grid. The repair
+only supplies missing assertion messages and saves point/lead exception
+stacks and extended reports; no assertion condition, tolerance or algorithm
+was changed. The failed first run (184.531165708 s) and diagnostic process
+(20.955598208 s) remain separate from corrected-run performance. Their
+combined process cost was 205.486763916 s and counts toward total task time.
+An unreproduced original operational failure remains an important caveat.
+
+### Completed material comparison
+
+The corrected `attempt-3/run-02` completed with no failed evaluation. Only
+`model.rho_center` differs from the completed attempt-2 baseline. The two
+geometry reports are identical. Both leads classify all initial 33 exploration
+nodes as numerical `GAP`; the safe common search interval remains
+$[1.4509999999999998,2.249]$. Both exploration ends remain truncated, so these
+are not measured full band edges. The three representative coarse/fine lead
+checks and all actual fine candidate-neighborhood classifications are `GAP`.
+No frequency extension was used.
+
+The coarse search found one interior dip. Its neighbor bracket
+$[1.5375,1.575]$ was expanded to $[1.525,1.5875]$ before fine sampling. After
+19 fine rounds, the formal candidate is the fifth node of the final grid
+$[1.5584378941820844,1.5584378941821007]$. Its final-round winner and cumulative
+best are the same point 196. The only other task follows the coarse right
+endpoint trend; it remains `BOUNDARY_UNRESOLVED` at 2.249. No fine dip split or
+nonwinning unresolved fine edge was recorded. A boundary trend is not counted
+as a formal candidate.
+
+| Quantity | Baseline: center material 2 | Current: center material 4 |
+|---|---:|---:|
+| candidate $k$ | 1.7245767064712256 | 1.5584378941820909 |
+| `adef_sigma` | 9.968314121327948e-14 | 1.9492443044385317e-13 |
+| `adef_ratio` | 1.6499025187720787e-16 | 3.226276216246245e-16 |
+| `aphys_sigma` | 4.99358987318351e-14 | 1.0508097636631883e-13 |
+| `aphys_ratio` | 1.6870752240995276e-14 | 2.9344919212372774e-14 |
+| final full width $W$ | 1.9761969838327786e-14 | 1.6209256159527285e-14 |
+| formal status | COMPLETE | COMPLETE |
+
+The signed candidate change is $-0.16613881228913474$, with absolute change
+0.16613881228913474 and relative change 0.09633599460419637. This compares the
+sole observed candidate of each model; it does not establish mode identity or
+an actual eigenvalue error. In the current run, the entire final round is
+valid, both side classifications are `GAP`, and the four indicators agree
+exactly with the full fresh bypass confirmation (point 201). The provisional
+right boundary point also has a fresh confirmation (point 213); its indicators
+are 3.5308048971248907, 0.005844067848480552, 1.3259522653041997 and
+0.7335793554846374, with $W=0.06150000000000011$. Its status remains unresolved.
+
+Matching requests total 266: 213 actual evaluations and 53 exact-cache hits.
+The coarse tier uses 44 distinct matching points; the fine tier uses 167
+distinct points plus 2 fresh confirmations, hence 169 actual fine calls.
+Lead-pair construction counts are 46 coarse and 172 fine, with 35 coarse
+lead-cache hits. The bounded lead cache peaks at 95,991,099 bytes and has 168
+LRU evictions. Including the separately timed equal-lead regression adds two
+lead cells and one center cell: 438 lead-cell and 214 center-cell constructions
+in total. These counts do not include the failed first run or diagnostic.
+
+| Corrected-run stage or resource | Observed value |
+|---|---:|
+| gap exploration, s | 28.40966425 |
+| representative and equal-lead checks, s | 12.955570791666666 |
+| coarse search, s | 39.87983062500001 |
+| fine search, s | 508.24273658333317 |
+| fresh confirmations, s | 5.739799666666666 |
+| remaining science process, s | 47.75935312544709 |
+| science process, s | 642.9869550421136 |
+| plotting process, s | 18.86539620894473 |
+| science plus plotting process durations, s | 661.8523512510583 |
+| science-launch to plot-finish elapsed wall clock, s | 713.261805 |
+| science peak process-tree RSS, bytes | 1422639104 |
+| plot peak process-tree RSS, bytes | 1036795904 |
+
+The monitored shared clock, including cleanup, ended at 713.2710374169983 s,
+under 2400 s; no process tree exceeded 3,000,000,000 bytes and no MATLAB
+survivors were left. The corrected process duration is distinct from elapsed
+wall clock and from the 205.486763916 s failed-run/diagnostic cost. Including
+setup, all five material-attempt processes total 887.3295123751741 s.
+These are single-run observations, not a speedup claim for changing material.
+
+Raw `candidate-evidence-0201.mat` and `candidate-evidence-0213.mat` contain
+fresh two-lead, center and matching evidence. `state.json`, `checkpoint.mat`,
+`points.csv`, `rounds.csv`, `lead-points.csv`, `summary.json` and the generated
+figures preserve the actual search. `comparison.json`/`comparison.csv` compare
+to attempt-2 only after computation. `comparison-command.json` and
+`operational-history.json` preserve command and resource/failure provenance.
+Every generated artifact remains under ignored `output/`; no old result is
+needed for a fresh run. The final independent review is recorded in
+`research/projects/eig-apost/implementation/i9/review-9-1a.md`.
+
+The unreproduced original assertion trigger, truncated band edges and unresolved
+right boundary trend remain explicit caveats. Finite-grid coverage and
+continuous-spectrum certification are not claimed. No spectral-distance
+quantity or $R_{\mathrm{num}}$ was computed.

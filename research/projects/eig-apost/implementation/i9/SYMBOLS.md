@@ -74,3 +74,29 @@ lead 与匹配的 exact cache 键均以 `jsonencode(config) + resolution_id + nu
 这组符号只解释明确授权的模型参数对照，不新增谱距离符号或评价配置。
 独审脚本的 `--expected-star-scale` 是显式审查预期（本次为 1），不影响 MATLAB 科学参数或搜索。
 审查据此独立重建中心六行、面积和包络；不能把审查参数当作第二份数值运行配置。
+
+## 中心材料对照的局部记号
+
+[[research/projects/eig-apost/implementation/i9/design-9-1a|设计第 9 节]] 的 `attempt-3` 以
+`attempt-2` 为主基线，唯一科学变化为 `model.rho_center: 2→4`；外层尺度仍为1。
+
+| 量 | 实际代码语义 |
+|---|---|
+| $\rho_c$ / `model.rho_center` | 此处的中心相对介电常数，基线2、本次4；不是折射率 |
+| $n_c=\sqrt{\rho_c}$ | 中心折射率，基线 $\sqrt2$、本次2 |
+| $k_{\rm int}=\sqrt{\rho_c}\,k$ | `LOCAL_cellmap` 传入 `bloch.construct_S` 的内部波数，本次 $2k$ |
+| `cellmap.rho/kext/kint` | 本次补充保存的实际材料和波数调用证据；中心必须为4、$k$、$2k$，两侧仍为17、$k$、$\sqrt{17}k$ |
+| `model.star_scale` | 本次仍为1，公共star内部0.2保持，不随材料改变 |
+| `attempt-3` | 材料对照的独立完整运行，不载入基线计算状态；旧结果仅在结束后比较 |
+
+代码中的材料字段不表示 BIE 的未知密度。physical density 的坐标与缩放约定仍由原 `construct_S` 保持，
+不能因为 `rho_center` 改变而额外缩放未知量或匹配指标。
+`--expected-rho-center` 为独审显式预期（本次4），不进入 MATLAB 科学配置；独审可据保存的
+`center.rho/kext/kint` 核对实际构场输入。`budget_started_utc` 记录科学预算起点，后续批次沿用，
+从而将批间等待纳入同一个40分钟墙钟；它不是数值参数。
+
+`search_i9_diagnose(output_dir,k,resolution_id)` 是显式单点操作性诊断临时入口，现归档于
+`test/i9/search-v1/output/attempt-3/diagnose-01/`，不属于从零搜索的运行依赖。它复用同一配置及
+`leads/match` 路径，保存 `diagnostic` 中的配置、点/档位、两侧分类、耗时和成功点或异常正文；
+不参与搜索选点。失败匹配点的 `error_stack/error_report`、`lead_log.failures` 的 `stack/report`
+保留断言触发现场，不是新的科学量或分类规则。

@@ -21,7 +21,7 @@ function state = search_i9_run(output_dir,mode)
     state=LOCAL_selftest(config); LOCAL_json(fullfile(output_dir,'selftest.json'),state); return;
   end
   assert(strcmp(mode,'run'));
-  assert(~exist(fullfile(output_dir,'checkpoint.mat'),'file'),'i91:ExistingRun');
+  assert(~exist(fullfile(output_dir,'checkpoint.mat'),'file'),'i91:ExistingRun','The output directory already contains a checkpoint.');
   state=LOCAL_initial(config);
   timer=tic;
   selftest=LOCAL_selftest(config); LOCAL_json(fullfile(output_dir,'selftest.json'),selftest);
@@ -115,7 +115,7 @@ function [state,ids]=LOCAL_schedule(state,k,res,evaluator,bypass,output_dir,time
       catch error
         point=struct('k',k(j),'resolution_id',res,'status','FAILED', ...
           'seconds',toc(started),'error_identifier',error.identifier, ...
-          'error_message',error.message);
+          'error_message',error.message,'error_stack',error.stack,'error_report',getReport(error,'extended','hyperlinks','off'));
       end
       point.id=numel(state.points)+1; point.key=key; point.k_hex=num2hex(k(j));
       point.resolution_id=res; point.bypass_cache=bypass;
@@ -426,7 +426,7 @@ function LOCAL_save(state,output_dir,timer)
 end
 
 function LOCAL_json(path,value)
-  fid=fopen(path,'w'); assert(fid>=0,'i91:Output'); closer=onCleanup(@() fclose(fid)); %#ok<NASGU>
+  fid=fopen(path,'w'); assert(fid>=0,'i91:Output','The output file could not be opened.'); closer=onCleanup(@() fclose(fid)); %#ok<NASGU>
   fprintf(fid,'%s\n',jsonencode(value,'PrettyPrint',true));
 end
 
@@ -581,7 +581,8 @@ function varargout=LOCAL_lead_store(action,varargin)
           lead=search_i9_physics('leads',k,res,config);
         catch error
           failures{end+1}=struct('k',k,'k_hex',num2hex(k),'resolution_id',res, ...
-            'identifier',error.identifier,'message',error.message,'seconds',toc(started),'bypass',bypass);
+            'identifier',error.identifier,'message',error.message,'stack',error.stack, ...
+            'report',getReport(error,'extended','hyperlinks','off'),'seconds',toc(started),'bypass',bypass);
           rethrow(error);
         end
         spent=toc(started);
@@ -619,7 +620,7 @@ function [point,evidence]=LOCAL_evaluate(k,res,config)
   [point,evidence]=search_i9_physics('match',k,res,config,lead);
   point.seconds=toc(timer); point.lead_record_id=record_id;
   values=[point.adef_sigma,point.adef_ratio,point.aphys_sigma,point.aphys_ratio];
-  assert(all(isfinite(values)) && all(values>=0),'i91:NonfiniteMetrics');
+  assert(all(isfinite(values)) && all(values>=0),'i91:NonfiniteMetrics','The matching indicators must all be finite and nonnegative.');
 end
 
 %% ==================== Gap discovery and numerical transition brackets ====================
@@ -665,8 +666,8 @@ function state=LOCAL_gap_stage(state,output_dir,timer)
     [state.equal_validation,evidence]=search_i9_physics('equal_validation',k,'coarse',config,lead);
     save(fullfile(output_dir,'equal-lead-validation.mat'),'evidence','-v7');
     assert(state.equal_validation.Adef_absolute<1e-10 && state.equal_validation.Aphys_absolute<1e-10, ...
-      'i91:EqualLeadRegression');
-    assert(state.equal_validation.negative_positive_S_difference>1e-8,'i91:DistinctLeads');
+      'i91:EqualLeadRegression','Equal-lead matrix regression exceeds the frozen tolerance.');
+    assert(state.equal_validation.negative_positive_S_difference>1e-8,'i91:DistinctLeads','The two independent lead scattering matrices are not distinguishable.');
   end
   state.timing.validation=toc(validation_timer);
   LOCAL_save(state,output_dir,timer);

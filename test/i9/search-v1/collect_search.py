@@ -123,9 +123,10 @@ def main():
     compare_config(baseline['config'],summary['config'])
     metric_fields=['k','adef_sigma','adef_ratio','aphys_sigma','aphys_ratio','W','status']
     candidate_rows=[]
-    for label,data in [('scaled_baseline',baseline),('native_center',summary)]:
+    for label,data in [('baseline',baseline),('current',summary)]:
       for candidate in data['candidates']:
-        candidate_rows.append(dict(experiment=label,interval_id=candidate['interval_id'],
+        candidate_rows.append(dict(experiment=label,rho_center=data['config']['model']['rho_center'],
+          star_scale=data['config']['model']['star_scale'],interval_id=candidate['interval_id'],
           **{key:candidate[key] for key in metric_fields}))
     formal_old=[c for c in baseline['candidates'] if c['status']=='COMPLETE']
     formal_new=[c for c in summary['candidates'] if c['status']=='COMPLETE']
@@ -154,7 +155,7 @@ def main():
       current_complete_delivery_elapsed_wall_seconds=summary.get('complete_delivery_elapsed_wall_seconds'),
       baseline_peak_rss_bytes=baseline['peak_rss_bytes'],current_peak_rss_bytes=summary['peak_rss_bytes'])
     (directory/'comparison.json').write_text(json.dumps(comparison,indent=2,allow_nan=False)+'\n')
-    table(directory/'comparison.csv',candidate_rows,['experiment','interval_id']+metric_fields)
+    table(directory/'comparison.csv',candidate_rows,['experiment','rho_center','star_scale','interval_id']+metric_fields)
   print(json.dumps({k: summary[k] for k in ('status','counts','final_candidates','timing','process_wall_seconds','peak_rss_bytes')},indent=2))
 
 

@@ -79,15 +79,23 @@ def main():
   else:
     expression += '; search_i9_run(' + quote(output) + ',' + quote(args.mode) + ');'
   command = [args.matlab, '-batch', expression]
+  launched_utc=dt.datetime.now(dt.timezone.utc)
+  budget_started_utc=launched_utc
+  if args.prior_status:
+    prior=json.loads(Path(args.prior_status).read_text())
+    original_start=prior.get('budget_started_utc')
+    if original_start is None:
+      original_start=json.loads((Path(args.prior_status).parent/'command.json').read_text())['started_utc']
+    budget_started_utc=dt.datetime.fromisoformat(original_start)
   write_json(output/'command.json', dict(command=command, mode=args.mode,
-    started_utc=dt.datetime.now(dt.timezone.utc).isoformat(), config_source=args.config))
+    started_utc=launched_utc.isoformat(), budget_started_utc=budget_started_utc.isoformat(),config_source=args.config))
   process = None
   known = set()
   peak = 0
   exit_code = 3
   reason = 'not_started'
   started = time.monotonic()
-  prior_elapsed = json.loads(Path(args.prior_status).read_text())['shared_elapsed_seconds'] if args.prior_status else 0
+  prior_elapsed=max(0,(launched_utc-budget_started_utc).total_seconds())
   def interrupted(signum, frame):
     raise KeyboardInterrupt('signal ' + str(signum))
   for sig in (signal.SIGINT, signal.SIGTERM, signal.SIGHUP):
@@ -112,6 +120,8 @@ def main():
     write_json(output/'preflight.json', rows)
     if matlab(rows):
       raise RuntimeError('Existing MATLAB prevents serial launch')
+    if prior_elapsed>=limits['hard_seconds']:
+      raise RuntimeError('Shared scientific hard budget already exhausted before launch')
     with (output/'run.log').open('w') as log, (output/'resources.csv').open('w') as resource:
       writer = csv.writer(resource)
       writer.writerow(['utc', 'elapsed_seconds', 'rss_bytes', 'pids', 'external_matlab'])
@@ -155,6 +165,7 @@ def main():
       reason += '; cleanup verification failed: ' + str(error)
     status = dict(exit_code=exit_code, reason=reason, wall_seconds=time.monotonic()-started,
       shared_elapsed_seconds=prior_elapsed+time.monotonic()-started, peak_rss_bytes=peak,
+      budget_started_utc=budget_started_utc.isoformat(),
       survivors=survivors, finished_utc=dt.datetime.now(dt.timezone.utc).isoformat())
     write_json(output/'status.json', status)
     print(json.dumps(status), flush=True)
