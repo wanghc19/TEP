@@ -3,12 +3,13 @@
 ## Scope
 
 This ledger applies to `test/i8/flow-v1/`, `test/i8/locate-v1/`, `test/i8/check-v1/`,
-`test/i8/estimate-v1/`, `test/i8/fmm-est-v1/`,
+`test/i8/estimate-v1/`, `test/i8/fmm-est-v1/`, `test/i8/pipeline-v1/`,
 [[research/projects/eig-apost/implementation/i8/design-8-1a|I8.1]], and
 [[research/projects/eig-apost/implementation/i8/design-8-1b|I8.1 local location]], and
 [[research/projects/eig-apost/implementation/i8/design-8-2a|I8.2 fixed-point checks]], and
 [[research/projects/eig-apost/implementation/i8/design-8-3a|I8.3 frozen-field estimate]], and
-[[research/projects/eig-apost/implementation/i8/design-8-4a|I8.4 FMM location and fixed-field estimate]]. It maps the equal-area
+[[research/projects/eig-apost/implementation/i8/design-8-4a|I8.4 FMM location and fixed-field estimate]], and
+[[research/projects/eig-apost/implementation/i8/design-8-4b|I8.4 independent direct/FMM pipelines]]. It maps the equal-area
 star flow, its independent local locator, the five-configuration fixed-point checks, the fresh frozen-field
 estimate, the independent FMM wide locator, and its newly authorized fixed-field evaluator comparison without changing the historical I6/I7 meanings. All `*_num`
 quantities are ordinary numerical values unless an individual field explicitly says otherwise.
@@ -141,3 +142,57 @@ recompute $q$, physical densities, propagation, Rayleigh coefficients or normali
 The old and new candidate fields have distinct $k_0$ and independent normalizations; their saved arrays
 must never be mixed. $Q_{\rm num}$ is retained because it is the explicit denominator subtraction term,
 while certified upper/lower-bound notation remains excluded.
+
+## I8.4 independent pipeline ledger
+
+This section applies only to `test/i8/pipeline-v1/` and
+[[research/projects/eig-apost/implementation/i8/design-8-4b|design-8-4b]]. The historical stage-2
+`result.direct` above remains a same-field evaluator control. Here each backend owns its search,
+candidate, fresh source field, normalization, and complete 768 evaluation. No array is shared between
+the two backend results. Code field spelling below is the implementation interface freeze; runtime
+verification and result-schema reconciliation are recorded in the new design after implementation.
+
+| Code name / owner | Mathematical object | Meaning and scope |
+|---|---|---|
+| `pipeline_i8_config` | shared scientific configuration | Sole MATLAB constants source; common `model`, `discretization`, `evaluation`, `search`, `backend`, and `resources` settings; numerical entry locally calls `discretization` its `cfg` |
+| `pipeline_i8_numeric(action,k0,backend)` | one backend numerical call | `point` constructs a complete new search point; `estimate` constructs one additional fresh field and evaluates its unique 768 level |
+| `pipeline_i8_batch(request_path)` | explicit batch input transport | Serial launcher-supplied requests; does not choose scientific parameters from historical output or human documentation |
+| `run_pipeline.py` | search and execution controller | Owns current-run search state, actual nodes, deterministic selection, process timing and resource monitoring |
+| `requested_config`, `science_config` | explicit-input/configuration equality check | Launcher request and fresh MATLAB configuration, both excluding resource controls and JSON-normalized, must be equal before numerical execution |
+| `actual_nodes` | actual binary64 batch nodes | Validated finite, strictly increasing, exact-distinct nodes; a refinement batch also checks the preceding selected point is interior and its node vector is not a repeated grid |
+| `point_seconds`, `export_seconds` | point / export batch sums | Accumulators for evaluator-reported complete-point time and separate point/progress/aggregate JSON writing; exported as `search_point` and `save_export` |
+| `environment` | observed execution environment | MATLAB version/release, computer, thread settings, and resolved numerical entry/public-package/FMM paths; does not identify the agent's runtime model |
+| controller `--resume` | optional current-attempt continuation | May reuse only a verified completed batch whose request matches exactly; no old experiment inputs, deadline reset, or implicit claim that this option was used |
+| `backend` | direct / FMM rule | Smooth-proxy callback selection only; all public singular quadrature, matching and raw-field formulas remain common |
+| `cfg.ntot_center`, `cfg.ntot_lead` | $n_c=512,n_\ell=256$ | Fixed from the first wide-search point through the additional final field |
+| `model.L` in geometry `lead_gap` | longitudinal neighbor-center translation | Frozen $L=1=X_R-X_L$; the same star-to-circle clearance uses centers $(\pm L,0)$, while `model.d` is the transverse $y$ period |
+| `evaluation.material_nodes`, `evaluation.wall_nodes` | $N=768$ | Exactly one postprocessing layer per independent field, non-native for both source orders |
+| `evaluation.disk_grid`, `evaluation.disk_shift` | $(32,64),1/2$ | Unique safe-disk quadrature; no coarse layer or third field/evaluator comparison |
+| per-backend cumulative candidate | $k_{*,\rm direct},k_{*,\rm fmm}$ | First executed row attaining the exact minimum ratio among all that backend's successful new samples, including endpoints and recovery |
+| per-backend final-round winner | final bracket center | Stable-first round winner used for the final interior-width gate; may differ from the formal cumulative candidate |
+| `actual_W` | $W$ | Actual last-minus-first binary64 node of a complete valid 11-point round; successful stopping also requires an interior winner |
+| per-backend search count | $N_{\rm direct},N_{\rm fmm}$ | Actual complete-point search invocation counts; allowed to differ and never replaced by a common assumed count |
+| final fresh-field count | one per backend | Additional complete construction at that backend's cumulative candidate, charged separately from search |
+| fresh `q`, density and propagation arrays | independent source fields | Each backend uses one consistent normalization and phase throughout its own jump, trace, mass and observed-tail computations |
+| `mu_num` | $\operatorname{fl}(k_*k_*)$ | Backend-specific rounded square; not the exact-real square or a shared scalar |
+| `Cnum`, `epsilon_num`, `U_num`, `Q`, `denominator`, `Rnum` | $C_{\rm num},\varepsilon_{\rm num},U_{\rm num},Q_{\rm num},D_{\rm num},R_{\rm num}$ | Same I8.3 scalar formulas, separately recomputed from each backend's own source field and candidate |
+| main timing ledger | disjoint stage wall times | Search calls, search controller, extra field, jumps, mass, geometry/assembly/audit, saving, process startup/shutdown and orchestration |
+| callback timing ledger | nested diagnostic wall times | Smooth-proxy call time and counts are already inside their owning numerical stages and are not added again |
+| full pipeline wall time | total measured backend cost | Includes all backend batches, required saves and startup/shutdown; differs from pure numerical stage sum |
+| `summarize_pipeline.py` | current-attempt postprocessing | Reads the two completed pipeline results and exports `summary.json/csv`, `rounds.csv`, `components.csv`, and `callbacks.csv` into the supplied run directory by default; launches no numerical solves |
+| `candidate_*`, `fresh_*` | four matching metrics at two call sites | Search-candidate row and the independently rebuilt final-field point; both contain `adef_sigma`, `adef_ratio`, `aphys_sigma`, `aphys_ratio` |
+| `candidate_round/evaluation_index/node`, `final_winner_round/evaluation_index/node` | provenance indices | Separate first cumulative-minimum row and final-round selected row; allow the reported formal candidate to be traced to an actual evaluation |
+| `search_point_min/median/max` | measured point-duration summary | Distribution of complete per-point calls within each backend; actual point counts remain separate |
+| `unclassified_process_overhead` | monitored residual process time | Successful process wall minus disjoint numerical timers and explicitly timed saves; includes startup/shutdown/preflight/cleanup/wrapper work without claiming a finer measured split |
+| `stage_speedups` | direct/FMM stage-time ratios | Descriptive ratios for this sequential run, not profiler fractions or universal acceleration factors |
+| `successful_process_speedup`, `elapsed_pipeline_speedup` | direct/FMM total-time ratios | Respectively use summed successful process walls and measured backend pipeline elapsed time; callback subsets are never added |
+| `setup_wall`, `failed_wall`, `launcher_wall` | shared setup, failures, and full controller cost | Common configuration export and operational failures are disclosed separately from successful backend ratios; launcher time includes both backend executions |
+| summary/component `relative_to_direct` | $\lvert x_{\rm fmm}-x_{\rm direct}\rvert/\lvert x_{\rm direct}\rvert$ | Descriptive reference-relative difference alongside signed and absolute differences; both zero gives zero, zero direct with nonzero FMM is undefined |
+
+The only new mathematical subscripts identify backend ownership and actual work counts. They do not
+introduce a new estimator or notation for certified bounds. `LOCAL_*` numerical helper names copied
+from `fmm_est_i8.m` retain the source meanings within the new function file; its two-level audit is
+adapted to the single 768 layer, and refinement/comparison helpers are excluded. A successful finite
+formula remains `UNCERTIFIED_RNUM` with `certified=false`. Differences between independent pipeline
+results conflate candidate changes and field-construction/evaluator changes; they do not isolate
+FMM kernel error.
