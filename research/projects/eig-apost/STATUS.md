@@ -4,20 +4,23 @@
 
 ## 当前状态
 
-- **2026-10-23 FEM 原生场无限域谱距离理论完成：**
+- **2026-10-23 FEM 原生场精度评价 v2 / Revision B.1 方法层完成：**
   [[research/projects/eig-apost/phase3-analysis/fem-bound/p-scope|范围]]、
-  [[research/projects/eig-apost/phase3-analysis/fem-bound/theory|完整证明与可计算性]]、
-  [[research/projects/eig-apost/phase3-analysis/fem-bound/r-theory|实际独立审查]]。
-  仅启用 Researcher 和 skeptic，继承当前设置；先形成正文再独审。
-  **PASS WITH CONDITIONS，无未解决 blocker，达到本轮理论验收标准。**
-  相容曲边 $P_2$ 场零延拓后属于 $H^1_\beta$；任意合格通量给含左右人工端的显式弱残差上界，
-  谱测度反演给无需正分母、模态计数或谱隔离的全谱距离界。
-  零通量、材料上下界、参考多项式矩和 Jacobian 正下界已给出完全有限后备，
-  不需真实界面切割或无限域辅助求解。与旧 $2\mu Q/(U-Q)$ 同形的公式已另行推导，
-  没有把体残差直接加进 BIE 跳跃范数。
-  **尚无 I9.3 原生场的新数值上界**：精确相位、全局网格资格和单侧积分评价仍待实现；
+  [[research/projects/eig-apost/phase3-analysis/fem-bound/theory|非零通量、完整证明与算法]]、
+  [[research/projects/eig-apost/phase3-analysis/fem-bound/r-theory|新版独立审查]]。
+  复用 Researcher 和 skeptic，继承当前设置；先形成正文再独审，不沿用 v1 PASS。
+  **撤回旧零通量后备的精度完成声明及“先评价后备再决定”的建议。**
+  旧式输出对所有正移位均大于 $10.0142$，取 $s=\mu_h$ 时至少 $45.6804$；
+  这是估计式的局限，不表示实际谱距离大。零延拓、弱残差与谱测度转换保留并复核。
+  v2 采用曲边 Piola–RT2 通量、复准周期边矩、自由人工端付费及真实材料目标；
+  显式插值和边矩平均给可计算的小量机制。实际独审裁定：
+  **数学正确性/可计算性 PASS；本轮精度机制 PASS WITH CONDITIONS，无现存理论 blocker。**
+  首轮发现的未分类片漏材料风险、端迹常速假设缺口均已修补并复审；
+  未分类片只在局部使用全部真实材料候选，端项直接评价通量迹，不移动原生节点。
+  **尚无 I9.3 原生场的新数值上界**：精确相位、全局网格资格、通量构造和单侧积分仍待实现；
+  固定截断/几何不保证仅网格细化就使估计趋零，当前精度与计算成本尚未评价。
   点谱存在另需排除本质谱。问题集中于
-  [[research/projects/eig-apost/implementation/i9/README#FEM 原生场理论问题账目|FB-1--FB-4]]。
+  [[research/projects/eig-apost/implementation/i9/README#FEM 原生场理论问题账目|FB-1--FB-5]]。
   main 草稿及已有修改保持原样；未运行实验、未修改数值代码、未下载新文献、未进行 Git 提交操作。
 
 - **2026-10-23 I9.3 FEM 原生场谱距离文献检索：** 新增

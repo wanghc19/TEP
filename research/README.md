@@ -4,8 +4,10 @@
 
 ## 当前阶段
 
-2026-10-23 新增 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-scope|FEM 原生场谱距离专题]]，
-研究 I9.3 有限截断场的零延拓、弱残差与原无限算子的谱距离，包含有限可计算后备和实际独立审查。
+2026-10-23 续研 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-scope|FEM 原生场谱距离专题 v2]]，
+研究曲边 RT2 非零通量、真实材料积分与可核验的小量机制。
+旧零通量后备已被解析证明无实用分辨率，不再作为精度评价的完成依据；新版已完成独审，
+数学/可计算性通过，精度机制有条件通过，实际 I9.3 数值仍待评价。
 状态见 [[research/projects/eig-apost/STATUS|项目状态]]，问题见
 [[research/projects/eig-apost/implementation/i9/README#FEM 原生场理论问题账目|I9 理论账目]]。
 本轮不进行数值实验、不修改 main 草稿、不建立或提升统一主线；下方保留各历史阶段记录。

@@ -1,10 +1,11 @@
 # Eigenvalue a posteriori error research
 
-2026-10-23 新理论专题：[[research/projects/eig-apost/phase3-analysis/fem-bound/p-scope|FEM 原生场范围]]、
-[[research/projects/eig-apost/phase3-analysis/fem-bound/theory|无限波导谱距离定理与可计算评价]]、
+2026-10-23 理论专题 v2：[[research/projects/eig-apost/phase3-analysis/fem-bound/p-scope|FEM 原生场范围与新版验收]]、
+[[research/projects/eig-apost/phase3-analysis/fem-bound/theory|无限域谱距离、非零通量与精度评价]]、
 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-theory|独立审查]]。
 对象为 I9.3 有限多胞元曲边 $P_2$ 原生场的零延拓，目标是原连续算子的全谱距离；
-不需要预知模态数。本轮只做理论，没有新数值结果，也不提升到 `mainline/`。
+不需要预知模态数。旧零通量后备的必然大量级已排除其作为精度方案；v2 要求具体有限维
+通量及小量机制，旧 PASS 不覆盖新版。本轮只做理论，没有新数值结果，也不提升到 `mainline/`。
 当前问题集中于 [[research/projects/eig-apost/implementation/i9/README#FEM 原生场理论问题账目|I9 FEM 理论账目]]。
 以下原阶段简介和各历史结论保持其原有范围，当前状态见 `STATUS.md`。
 
@@ -155,7 +156,7 @@ current-model gap 且通过预注册 absolute/gap-relative resolution 时，先�
 ## 当前入口
 
 - `phase3-analysis/fem-bound/`：当前有限截断 FEM 原生场到原无限算子谱距离的理论专题；
-  包含弱残差、正定源问题、人工端贡献、曲边几何与有限可计算后备。
+  包含弱残差、曲边 RT2 通量、人工端贡献、真实材料积分与有限可核验的小量机制。
 - `p-scope.md`：已完成的历史 Phase 1 范围界定计划；保留启动时的研究轴、工作包和
   Phase 2 入口门槛作为决策证据，不再作为当前计划维护。
 - `phase1-scope/materials.md`：现有代码、草稿、结果和本地文献的只读材料清单。

@@ -7,12 +7,14 @@
 ## 当前阶段
 
 2026-10-23，eig-apost 完成
-[[research/projects/eig-apost/phase3-analysis/fem-bound/theory|FEM 原生场的无限域谱距离理论]]，
-实际 Researcher–skeptic 顺序协作的
-[[research/projects/eig-apost/phase3-analysis/fem-bound/r-theory|独立结论]] 为
-**PASS WITH CONDITIONS，无未解决 blocker**。
-已证明零延拓、含人工端的弱残差上界、无正分母的谱距离转换及零通量多项式矩后备；
-达到本轮理论验收，仍未评价 I9.3 数值上界或证明点谱存在。
+[[research/projects/eig-apost/phase3-analysis/fem-bound/theory|FEM 原生场精度评价 v2 / Revision B.1]] 的方法层证明与算法交接。
+保留并复核零延拓及弱残差到谱距离的桥接；撤回旧零通量后备足以完成精度评价的声明：
+该后备的输出有必然大量级下限，不能用于本轮目标。新版采用曲边 RT2 通量、
+真实材料局部积分及有限构造的小量机制；
+[[research/projects/eig-apost/phase3-analysis/fem-bound/r-theory|实际新版独审]] 为
+**数学正确性/可计算性 PASS；精度机制 PASS WITH CONDITIONS，无现存理论 blocker**。
+首轮材料候选与端迹问题已修补复审；旧 PASS 不沿用。
+当前阶段仍未评价 I9.3 数值上界或证明点谱存在，未承诺当前固定截断的精度目标必可达。
 实例化事项集中在 [[research/projects/eig-apost/implementation/i9/README#FEM 原生场理论问题账目|I9 理论账目]]。
 本轮不运行实验、不改 main 草稿、不提升到 `mainline/`。下方文献检索为本次理论工作的先行记录。
 
