@@ -4,6 +4,22 @@
 
 ## 当前状态
 
+- **2026-10-23 FEM 原生场无限域谱距离理论完成：**
+  [[research/projects/eig-apost/phase3-analysis/fem-bound/p-scope|范围]]、
+  [[research/projects/eig-apost/phase3-analysis/fem-bound/theory|完整证明与可计算性]]、
+  [[research/projects/eig-apost/phase3-analysis/fem-bound/r-theory|实际独立审查]]。
+  仅启用 Researcher 和 skeptic，继承当前设置；先形成正文再独审。
+  **PASS WITH CONDITIONS，无未解决 blocker，达到本轮理论验收标准。**
+  相容曲边 $P_2$ 场零延拓后属于 $H^1_\beta$；任意合格通量给含左右人工端的显式弱残差上界，
+  谱测度反演给无需正分母、模态计数或谱隔离的全谱距离界。
+  零通量、材料上下界、参考多项式矩和 Jacobian 正下界已给出完全有限后备，
+  不需真实界面切割或无限域辅助求解。与旧 $2\mu Q/(U-Q)$ 同形的公式已另行推导，
+  没有把体残差直接加进 BIE 跳跃范数。
+  **尚无 I9.3 原生场的新数值上界**：精确相位、全局网格资格和单侧积分评价仍待实现；
+  点谱存在另需排除本质谱。问题集中于
+  [[research/projects/eig-apost/implementation/i9/README#FEM 原生场理论问题账目|FB-1--FB-4]]。
+  main 草稿及已有修改保持原样；未运行实验、未修改数值代码、未下载新文献、未进行 Git 提交操作。
+
 - **2026-10-23 I9.3 FEM 原生场谱距离文献检索：** 新增
   [[research/projects/eig-apost/implementation/i9/r-fem-lit|r-fem-lit]]，区分线缺陷有限超胞 FEM 后验估计、
   波导截断的先验收敛、含人工边界通量的无限域源问题估计及二阶谱包含。

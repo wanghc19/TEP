@@ -1,5 +1,13 @@
 # Eigenvalue a posteriori error research
 
+2026-10-23 新理论专题：[[research/projects/eig-apost/phase3-analysis/fem-bound/p-scope|FEM 原生场范围]]、
+[[research/projects/eig-apost/phase3-analysis/fem-bound/theory|无限波导谱距离定理与可计算评价]]、
+[[research/projects/eig-apost/phase3-analysis/fem-bound/r-theory|独立审查]]。
+对象为 I9.3 有限多胞元曲边 $P_2$ 原生场的零延拓，目标是原连续算子的全谱距离；
+不需要预知模态数。本轮只做理论，没有新数值结果，也不提升到 `mainline/`。
+当前问题集中于 [[research/projects/eig-apost/implementation/i9/README#FEM 原生场理论问题账目|I9 FEM 理论账目]]。
+以下原阶段简介和各历史结论保持其原有范围，当前状态见 `STATUS.md`。
+
 本专题用于把仓库中的周期波导特征值计算，转向偏工程实现的特征值后验误差分析与
 数值认证研究。当前按 Academic Research Suite 的 Deep Research 工作流推进，已经
 形成受条件约束的方法稿、完成三个离散实现 checkpoint，并在历史受控诊断之后完成
@@ -74,6 +82,10 @@ eig-apost/
     r-gate.md
   phase3-analysis/
     README.md
+    fem-bound/
+      p-scope.md
+      theory.md
+      r-theory.md
     s-dtn-chain.md
     s-root.md
     s-errors.md
@@ -142,6 +154,8 @@ current-model gap 且通过预注册 absolute/gap-relative resolution 时，先�
 
 ## 当前入口
 
+- `phase3-analysis/fem-bound/`：当前有限截断 FEM 原生场到原无限算子谱距离的理论专题；
+  包含弱残差、正定源问题、人工端贡献、曲边几何与有限可计算后备。
 - `p-scope.md`：已完成的历史 Phase 1 范围界定计划；保留启动时的研究轴、工作包和
   Phase 2 入口门槛作为决策证据，不再作为当前计划维护。
 - `phase1-scope/materials.md`：现有代码、草稿、结果和本地文献的只读材料清单。

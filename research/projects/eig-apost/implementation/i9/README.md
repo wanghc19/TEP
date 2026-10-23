@@ -2,7 +2,27 @@
 
 ## 当前状态
 
-2026-10-23 已完成 FEM 原生场谱距离与有限域截断的定向文献检索，见 [[research/projects/eig-apost/implementation/i9/r-fem-lit|检索记录与适用性分析]]。已有线缺陷 FEM 后验估计、波导截断收敛和带隙谱包含先例；本轮未核实到可不加改造接入 I9.3 的完整无限波导谱距离公式。优先建议核对含人工边界通量的源问题估计与当前 resolvent 路线的对应关系；这是后续研究建议，不是新的实验或定理授权。新增四份公开 PDF，书目已同步；未运行实验或修改数值代码。
+2026-10-23 已完成 **FEM 原生场针对原无限波导的谱距离上界理论**。
+[[research/projects/eig-apost/phase3-analysis/fem-bound/p-scope|范围与模型核对]]、
+[[research/projects/eig-apost/phase3-analysis/fem-bound/theory|推导及有限可计算后备]]、
+[[research/projects/eig-apost/phase3-analysis/fem-bound/r-theory|独立审查]] 为当前入口。
+skeptic 的实际结论为 **PASS WITH CONDITIONS，无未解决 blocker**；本轮理论验收已达到。
+定理针对相容原生场的零延拓，保留体残差、内部/材料边、左右人工端及准周期导数接缝，
+不依赖模态数或谱隔离。取正移位 $s>0$，可靠输入 $0<\underline U\le\|u\|_{\mathcal H}$、
+$\overline\eta_s\ge\|a(u,\cdot)-\mu_h(u,\cdot)_{\mathcal H}\|_{V_s'}$，令
+$\tau=\overline\eta_s/\underline U$，则
+
+$$
+\operatorname{dist}(\mu_h,\sigma(A(\beta)))
+\le \frac{\tau}{2}\left(\tau+\sqrt{\tau^2+4(\mu_h+s)}\right).
+$$
+
+该式不需正分母。正文另给显式通量上界和只依赖材料极值、曲边多项式矩、Jacobian 下界的
+零通量后备，故没有把形式对偶范数留作未知量。**本轮未计算 I9.3 的新数值界**；
+精确网格/相位资格及单侧积分尚待实际评价，不能把既有 BIE 的 0.11866142633964537
+改称 FEM 原生场误差。未来最小任务见本页 FEM 理论账目；不自动执行。
+
+先行文献检索记录（早于上述理论研究）：2026-10-23 完成 FEM 原生场谱距离与有限域截断的定向检索，见 [[research/projects/eig-apost/implementation/i9/r-fem-lit|检索记录与适用性分析]]。已有线缺陷 FEM 后验估计、波导截断收敛和带隙谱包含先例；该次检索未核实到可不加改造接入 I9.3 的完整无限波导谱距离公式，因而建议核对含人工边界通量的源问题估计与当前 resolvent 路线的对应关系。当时未授权新实验或定理研究；上述理论工作由后续用户指令单独授权。该次检索新增四份公开 PDF 并同步书目，未运行实验或修改数值代码。
 
 I9.3 后续授权已完成**固定FEM candidate的BIE重构谱距离数值估计**：固定 $k_0=1.5584630910866906$，从零重求BIE密度并冻结场，得到 **`UNCERTIFIED_RNUM`，$R_{\rm num}=0.11866142633964537$**，分母0.12047661142314603为正。本轮由主agent独立实施及91项自检，没有subagent独审；未重跑FEM或修正频率。该结果不是FEM原生场误差。详见本页末节、[[research/projects/eig-apost/implementation/i9/design-9-3a|设计第8节]]、[[research/projects/eig-apost/implementation/i9/review-9-3a|主agent自检追加节]]。
 
@@ -83,9 +103,22 @@ I9.1 当前已完成同一设计的中心材料对照：保持 `star_scale=1`、
 
 | I9.3 固定FEM频率的BIE重构身份 | important caveat：使用的是新BIE场，非FEM原生场；与历史I9.2的k及场不同，R大小不表示实际误差排序或同模态证明 | 明确字段来源及比较边界，不自动追加频率修正 | DISCLOSED |
 | I9.3 重构估计与自检范围 | important caveat：沿用sampled几何、观察尾及未认证FMM/求积；本轮只有主agent自检，没有独立审查 | 保留原始场、分项和91项重组记录，交付UNCERTIFIED_RNUM | DISCLOSED |
-| I9.3 FEM 原生场估计与无限域目标的衔接 | important caveat：已有有限模型后验估计与无限域相关先例，但尚未建立 I9 的体残差、内部边及人工端通量到谱距离的完整对应；不使既有 candidate 或 BIE 重构数值结果无效 | 另行授权后优先核对 Chaumont-Frelet (2025) 正定源问题估计与现有 resolvent 框架，范围见 [[research/projects/eig-apost/implementation/i9/r-fem-lit|文献记录]] | OPEN |
+| I9.3 FEM 原生场估计与无限域目标的衔接 | 原理论缺口已闭合：已证明弱残差、人工端及正移位谱距离转换；当前数据的数值实例化仍独立待办 | 见 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-theory|独立审查]] 和下方 FB-1--FB-4；不更改既有数值结果身份 | RESOLVED（理论） |
 
 I9.1 到此停止。没有启动后续谱距离、额外 $\beta$ 优化或参数扫描。
+
+## FEM 原生场理论问题账目
+
+阶段：2026-10-23 `fem-bound`。理论已通过实际独审；没有未解决 `blocker`。
+以下为本专题唯一持续维护的账目，review 中的移交表保留其审查时快照。
+“尚未实现”不等于定理不可计算；若将来实际核验发现违反输入假设，才会阻断该数据的应用。
+
+| ID / 事项 | 分类与影响范围 | 最小后续任务 | 状态 |
+|---|---|---|---|
+| FB-1 准确相位与全局网格资格 | important caveat：限制当前 I9.3 输出的实例化；旧 ordinary audit 不等于精确资格，尚无证据表明网格实际无效 | 冻结已存代表向量，构造准确 $P_\beta$；核验公共边、矩形外边界、无重叠/完整覆盖和全参考单元正 Jacobian。无需重跑 FEM | OPEN；待授权实现 |
+| FB-2 可靠标量评价 | important caveat：未评价前不能报告 I9.3 数值可靠界；理论已有有限后备，无未知常数 | 首先按 theory 式 (21)–(23) 评价多项式矩与 Jacobian 下界，再代式 (15)；若采用更精细方案，另控制真实材料/失配和求积误差 | OPEN；待授权实现 |
+| FB-3 后备界可能很宽 | minor caveat：仅限制实用分辨率，不阻断基本全谱距离上界 | 先评价后备；仅在精度目标需要时构造相容非零通量并评价式 (9) | WONT-FIX FOR CURRENT CLAIM；可选改进 |
+| FB-4 点谱存在解释 | important caveat：只限制“区间内有离散导模”的升级，不限制全谱距离 | 另行证明同一双侧不同 lead 算子的包含区间与本质谱不交；不以旧 band scan 或共同背景猜想替代 | WONT-FIX FOR CURRENT CLAIM；本轮范围外 |
 
 ## 取消中心额外缩放的对照（attempt-2）
 

@@ -1,5 +1,11 @@
 # Eigenvalue a posteriori open-problem ledger
 
+I9 当前问题统一维护于
+[[research/projects/eig-apost/implementation/i9/README#I9 当前问题账目|I9 账目]]；
+2026-10-23 FEM 原生场理论阶段的具体分类、影响范围及最小后续任务见
+[[research/projects/eig-apost/implementation/i9/README#FEM 原生场理论问题账目|FEM 理论账目]]，
+此处不重复维护同一问题列表。
+
 本文件集中维护 `eig-apost` 各实现阶段仍与当前目标有关的问题。项目只有两个最终目标：
 提出 continuous physical eigenvalue candidate；估计该 candidate 到真实连续特征值的误差，
 并研究可计算上界。I3.2 条件性证书定理已经建立，并负责 same-trial empirical-cap

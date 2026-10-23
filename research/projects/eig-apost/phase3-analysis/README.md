@@ -1,5 +1,12 @@
 # Phase 3：I3.1 连续物理残量路线
 
+2026-10-23 独立专题入口：
+[[research/projects/eig-apost/phase3-analysis/fem-bound/p-scope|FEM 原生场范围]] →
+[[research/projects/eig-apost/phase3-analysis/fem-bound/theory|弱残差及正移位谱距离]] →
+[[research/projects/eig-apost/phase3-analysis/fem-bound/r-theory|独立审查]]。
+该专题以 I9.3 有限截断曲边 $P_2$ 场为对象；基本结论面向全谱，不以本质谱带隙或唯一模态
+为前提。它不恢复下文旧 residual/lift 实现的权威，也不改写历史 I3 的验收标准。
+
 本目录先研究 I2 实际保存的 numerical candidate $\widehat k_h$ 到当前 continuous projected
 gap 内正离散特征频率集合的距离
 

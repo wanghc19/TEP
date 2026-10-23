@@ -2,6 +2,18 @@
 
 这里只记录能由现有文件支持的研究决定。`Revisitable` 表示将来可在新证明或新证据下重新审议。
 
+## 2026-10-23 阶段：FEM 原生场用形式弱残差直接面向原无限算子
+
+- **决定：** I9.3 原生场在有限条带两端零值的前提下作零延拓，以原模型的质量权重定义
+  弱残差；正移位源问题和显式通量估计连接全谱距离，不向旧 BIE 跳跃范数直接拼接体残差。
+- **可计算性：** 保留任意相容通量的端面贡献，并提供零通量、材料上下界和曲边多项式矩的
+  有限后备；不把精确几何、有限求积或辅助离散误差默认为零。
+- **边界：** 左右不同 lead 分别保留；不依赖 main 的共同背景本质谱猜想。
+  本轮纯理论、只使用两个实际 subagent，不改 main 或数值代码，不自动启动后处理。
+- **证据及状态：** [[research/projects/eig-apost/phase3-analysis/fem-bound/p-scope|范围]]、
+  [[research/projects/eig-apost/phase3-analysis/fem-bound/theory|证明]]、
+  [[research/projects/eig-apost/phase3-analysis/fem-bound/r-theory|独立审查]]；仅项目专题，不提升到 `mainline/`。
+
 ## 2026-08-11 阶段：eig-apost 恢复 continuous DtN/BIE 主层级并暂停 I4 数值
 
 - **决定：** 精确 half-guide DtN 只由半无限边值问题定义；physical center variational

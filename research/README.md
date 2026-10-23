@@ -4,6 +4,12 @@
 
 ## 当前阶段
 
+2026-10-23 新增 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-scope|FEM 原生场谱距离专题]]，
+研究 I9.3 有限截断场的零延拓、弱残差与原无限算子的谱距离，包含有限可计算后备和实际独立审查。
+状态见 [[research/projects/eig-apost/STATUS|项目状态]]，问题见
+[[research/projects/eig-apost/implementation/i9/README#FEM 原生场理论问题账目|I9 理论账目]]。
+本轮不进行数值实验、不修改 main 草稿、不建立或提升统一主线；下方保留各历史阶段记录。
+
 当前没有活动中的统一理论主线。原 Müller--Cauchy 主线已于 2026-07-26 冻结在
 Git 标签 `mainline-muller-cauchy-2026-07-26`，并移至
 `research/archive/muller-cauchy-2026-07/`。`research/projects/eig-apost/` 已确认
