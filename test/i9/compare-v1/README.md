@@ -1,8 +1,10 @@
-# I9.3 FEM candidate delivery and historical timing comparison
+# I9.3 FEM candidate timing and fixed-frequency BIE reconstruction
 
-This experiment runs FEM only. It does not call FMM, search a projected gap,
-compute spectral distance, or compare numerical errors. Historical FMM data
-are used only after independent FEM candidate delivery.
+The original I9.3 timing experiment below runs FEM only; its contract and
+results remain unchanged. The separately authorized continuation at the end
+reconstructs one BIE/FMM field at the fixed delivered FEM frequency and evaluates
+the existing spectral-distance formula. It does not rerun FEM or optimize k.
+This continuation is a main-agent self-check, not a new independent review.
 
 ## Frozen configuration
 
@@ -211,3 +213,148 @@ Finite truncation, quadratic geometry and finite shifts/requests are scope
 and coverage limitations. No mesh/truncation convergence or same-accuracy
 comparison was attempted. There is no spectral-distance computation.
 
+
+## Continuation: fixed FEM candidate, BIE reconstructed spectral-distance estimate
+
+This is **固定FEM candidate的BIE重构谱距离数值估计**. Only the FEM frequency
+`1.5584630910866906` is used. No FEM vector or historical density is loaded.
+It is not an error estimate for the native FEM field. This continuation does
+not change the earlier FEM timing experiment or claim an independent review.
+
+`reconstruct_i93_config.m` is the unique configuration for this continuation.
+It preserves the actual I9.2 inputs, with only k and metadata labels changed:
+center/negative/positive nodes512/256/256, M48/K97, nside/ntop160,
+nproxy80, mpw32, H1.1, proxy_dist0.2, beta0.5, center star_scale1/rho4,
+negative/positive trilobes0.12/0.20/rho17, background1, FMM tolerance1e-12.
+Material/wall evaluation uses768 points, each lead40 cells and separate numerical
+tails; wall_batch64, mass_batch32. Mass is the local background disk at
+$(0,3/8)$, radius1/16, 32×64 half-angle-shifted nodes. Geometry uses4096/8192
+samples, collar0.004, arc_band0.01 and the same I9.2 trace formula.
+
+`reconstruct_i93.m` migrates only the required numerical evaluator and local
+geometry/classification helpers from I9.2. It independently builds three cells,
+uses the physical column-scaled minimum right singular vector, normalizes its
+Euclidean norm and positive-real maximum component, and freezes the density
+and propagation state once. Evaluation at768 points only interpolates the
+frozen density. Smooth proxy fields use FMM; free-space/Kress/singular terms
+and the existing directly evaluated regular diagonal remain unchanged.
+There is no small-singular-value acceptance gate or frequency correction.
+
+Top/bottom periodic seams remain theoretical zero for the exact-QP mathematical
+field; their numerical consistency diagnostics are saved separately and excluded
+from the original epsilon formula. All required material and longitudinal-wall
+finite terms and tails are included. Only a positive denominator permits a finite
+`UNCERTIFIED_RNUM`.
+
+### From-zero reconstruction and self-check
+
+From the repository root, using installed tools and a fresh output identity:
+
+```sh
+conda run -n octave python test/i9/compare-v1/run_fem.py --entry reconstruct \
+  --output test/i9/compare-v1/output/attempt-1/reconstruct-01 \
+  --package-root /Users/whc/Documents/Work/epost \
+  --fmm-root /Users/whc/Documents/Work/epost/test/i8/fmm-v1/vendor/fmm2d/matlab \
+  --matlab /Applications/MATLAB_R2023b.app/bin/matlab
+mkdir -p test/i9/compare-v1/output/attempt-1/reconstruct-01/selfcheck
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 \
+  /Users/whc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 \
+  test/i9/compare-v1/check_reconstruct.py \
+  test/i9/compare-v1/output/attempt-1/reconstruct-01 \
+  > test/i9/compare-v1/output/attempt-1/reconstruct-01/selfcheck/check-01.json
+```
+
+Paths are explicit launcher examples; numerical MATLAB functions use ordinary
+path resolution and no directory inference, history, Markdown, Git or hashes.
+Only installed FMM2D is resolved from its vendor path, not an old experiment entry.
+`--entry reconstruct` calls `run_reconstruct_i93`, never `fem_i9_run`.
+The same local monitor enforces40min/3,000,000,000 bytes, rejects concurrent
+MATLAB, samples RSS and cleans the process tree. Output directories must be new;
+operational retries use reconstruct-02 etc within the same attempt. Original
+FEM run directories are preserved. No preflight or second scientific batch was
+needed in this continuation.
+
+### Actual continuation result: attempt-1/reconstruct-01
+
+| Quantity | Value |
+|---|---:|
+| Fixed k | **1.5584630910866906** |
+| Actual binary64 k*k | 2.4288072062794823 |
+| adef_sigma / adef_ratio | 0.0003072570853809984 / 5.085541227475573e-7 |
+| aphys_sigma / aphys_ratio | 0.00016586532312818552 / 4.632113870520935e-5 |
+| C_num | 9.5778611959313427 |
+| epsilon_num | 0.00030727040364047489 |
+| U_num | 0.1234196046988323 |
+| Q_num | 0.0029429932756862651 |
+| U_num-Q_num | **0.12047661142314603** |
+| R_num | **0.11866142633964537** |
+| Status | **UNCERTIFIED_RNUM** |
+
+Both leads have97 stable/97 unstable modes, with no near-unit, uncertain or
+indeterminate classifications. The inverse negative pencil also passes.
+The new q norm is0.9999999999999998; component146 is the positive-real phase
+anchor. The maximum internal fixed-field check defect is2.0603073386301774e-13,
+below the unchanged1e-10 gate. All215 FMM calls return ier0.
+
+| Jump source | Value squared, finite/single | Normal squared, finite/single |
+|---|---:|---:|
+| Center material | 1.549253881393317e-29 | 1.5895918423517847e-24 |
+| Negative material40 | 1.0070806828922435e-30 | 8.99857773595241e-29 |
+| Positive material40 | 1.0514975847982383e-30 | 9.947002755160048e-29 |
+| Left junction | 1.5271318111743475e-27 | 4.7908394950857145e-8 |
+| Right junction | 1.5476447470688144e-27 | 4.650670600252322e-8 |
+| Negative walls40 | 1.1523333006223523e-27 | 6.662205467029817e-26 |
+| Positive walls40 | 1.414627920208404e-27 | 1.2224051435405234e-25 |
+
+| Numerical tail | Value squared | Normal squared |
+|---|---:|---:|
+| Negative material | 1.3040916967543603e-64 | 1.1644610115212147e-62 |
+| Positive material | 5.724422290259699e-64 | 5.418590042297253e-62 |
+| Negative walls | 1.4946548875230524e-61 | 8.622360748240968e-60 |
+| Positive walls | 7.709544943772479e-61 | 6.658821515233862e-59 |
+
+All four tails are available; negative ratios are approximately0.14219692054,
+positive0.14739497040. Totals are value_squared5.659288896155542e-27 and
+normal_squared9.441510095338036e-8. Left/right junction normal jumps contribute
+approximately50.7423%/49.2577% of the total. No required term was zeroed.
+Separate periodic diagnostic value/normal squares are center
+4.457631143790577e-28/3.510885776796606e-27, negative
+4.9138556499535117e-29/3.2058434070146733e-28, positive
+7.7626853852775e-29/5.819393169110105e-28.
+
+The unchanged actual-geometry checks pass; theta0.7428571428571429 and
+curvature_max64.28571428571426. The disk's sampled curve clearance is
+0.08315076090331691 and wall/periodic clearance0.0625, exceeding twice the collar.
+U remains a local disk mass norm, not a full-waveguide integral.
+
+| Exclusive timing | Seconds |
+|---|---:|
+| Field construction/freeze | 3.2540724583333334 |
+| Material jumps | 9.442822541666667 |
+| Longitudinal walls | 29.185655916666665 |
+| Periodic consistency diagnostic | 19.208633416666668 |
+| Local mass | 8.420549791666666 |
+| Geometry/scalar assembly | 6.109614916666667 |
+| Stage sum / numerical function | 75.62134904166668 / 75.62383166666666 |
+| Serialization and MAT export | 4.080915875 |
+| MATLAB driver | 79.72312741666667 |
+| Complete monitored process | **98.16553341597319** |
+
+Final JSON/log writing is covered by process time; inner FMM62.18798158333336s
+is nested and not added again. UTC span98.166423s; one process, exit0,
+no concurrent MATLAB or survivors; peak sampled RSS **1,423,163,392 bytes**.
+EnvironmentR2023b/MACA64, MATLAB/OpenMP11, OMP_DYNAMIC=FALSE. No failed run or retry
+occurred in this continuation; prior FEM failures remain separate historical costs.
+
+`evidence.mat` preserves the fresh field, matrices, interpolated densities,
+propagation, every finite/tail term and mass samples. `result.json`, `config.json`,
+`components.csv`, `timing.json`, commands, resources and logs retain scalar ledgers.
+`selfcheck/check-01.json` records **91 main-agent checks, PASS**; reassembled scalars
+have maximum relative difference1.7642476457870755e-16. This is **not an independent
+review**. The self-check reuses only the MAT reader from I9.2; it does not copy its
+old audit flow or launch MATLAB.
+
+For historical context only, I9.2 used k1.5584378941820909 and a different BIE field,
+with R_num7.745852555568109e-10. The two values do not rank actual errors or prove
+mode identity. Sampled geometry, numerical tails and FMM/quadrature are uncertified;
+no new method, direct comparison, sensitivity or frequency correction was attempted.

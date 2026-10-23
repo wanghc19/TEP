@@ -175,3 +175,22 @@ I9.3实际配置为 `fem_i9_config('formal')`，入口 `fem_i9_run(output_dir,'f
 `modes.duplicate_of` 指向最低残差去重代表；`candidate` 不使用历史频率。
 `timings.mesh_seconds/assembly_constraints_seconds/eigensolve_seconds/delivery_seconds` 为互斥算法四段，
 `algorithm_seconds` 是其和，`save_export_seconds` 及进程墙钟另列。
+
+### I9.3 续作：固定FEM频率的BIE重构场
+
+本节对应 [[research/projects/eig-apost/implementation/i9/design-9-3a|设计第8节]]；
+不将前述FEM向量当作跳跃评价输入，不沿用它的质量归一化。
+
+| 量/字段 | 本轮语义 |
+|---|---|
+| `reconstruct_i93_config().k0` | 显式固定1.5584630910866906，仅继承FEM交付频率 |
+| `mu_num` | 此k的实际双精度乘积，不读取FEM的特征值字段 |
+| `evidence.base.q`、`center_density` | 在该k从零BIE匹配后归一化并冻结的向量/物理密度，非FEM原生场 |
+| `propagation.Gminus/Pminus/cminus`、`Gplus/Pplus/cplus` | 两侧自身负向/正向衰减传播及状态 |
+| `components`、`periodic` | 完整材料/纵墙有限与尾项；周期理论零及数值诊断分开，沿用I9.2语义 |
+| `C_num/epsilon_num/U_num/Q_num/denominator/R_num` | 同一重构场及I9.2公式的数值量；U仍为上方背景盘局部质量范数 |
+| `MAIN_AGENT_SELF_CHECK_ONLY` | 本轮自检身份，不能继承前文FEM独审或I9.2独审为本轮审查 |
+
+`reconstruct_i93` 从零生成场，`run_reconstruct_i93` 只导出；本目录 `run_fem.py --entry reconstruct`
+复用资源监控并仅调用重构入口，默认 `--entry fem` 仍保持既有FEM入口。
+本轮输出身份 `attempt-1/reconstruct-01` 与原FEM `run-02` 不同，不覆盖旧结果。

@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Launch and monitor one serial I9.3 FEM MATLAB run without scientific decisions.
+"""Launch and monitor one serial I9.3 MATLAB run without scientific decisions.
 
-Based on the I9.1 serial process-tree monitor; no FMM paths or search calls.
-Scientific inputs are exclusively supplied by fem_i9_config.m. Resource limits
+Based on the I9.1 serial process-tree monitor. The optional reconstruction
+entry adds explicit public-package and installed FMM paths; it never runs FEM.
+Scientific inputs come from fem_i9_config.m or reconstruct_i93_config.m,
+according to --entry. The --mode argument applies only to FEM. Resource limits
 are explicit command-line operational inputs, frozen by the I9.3 design.
 """
 import argparse
@@ -54,17 +56,27 @@ def main():
   parser = argparse.ArgumentParser(description=__doc__)
   parser.add_argument('--output', required=True)
   parser.add_argument('--matlab', required=True)
+  parser.add_argument('--entry', choices=['fem', 'reconstruct'], default='fem')
+  parser.add_argument('--package-root')
+  parser.add_argument('--fmm-root', help='Installed FMM2D matlab directory')
   parser.add_argument('--mode', choices=['formal', 'preflight'], default='formal')
   parser.add_argument('--hard-seconds', type=float, default=2400)
   parser.add_argument('--rss-bytes', type=int, default=3_000_000_000)
   parser.add_argument('--prior-status', help='Current science monitor status to share its elapsed budget')
   args = parser.parse_args()
+  if args.entry == 'reconstruct' and (not args.package_root or not args.fmm_root):
+    parser.error('reconstruct requires --package-root and --fmm-root')
   output = Path(args.output).resolve()
   output.mkdir(parents=True, exist_ok=False)
   limits = dict(rss_bytes=args.rss_bytes, hard_seconds=args.hard_seconds, sample_seconds=1)
   threads = 11
   experiment = str(Path(__file__).resolve().parent)
-  expression = 'addpath(' + quote(experiment) + '); fem_i9_run(' + quote(output) + ',' + quote(args.mode) + ');'
+  expression = 'addpath(' + quote(experiment) + '); '
+  if args.entry == 'fem':
+    expression += 'fem_i9_run(' + quote(output) + ',' + quote(args.mode) + ');'
+  else:
+    expression += 'addpath(' + quote(args.package_root) + '); addpath(' + quote(args.fmm_root) + '); '
+    expression += 'run_reconstruct_i93(' + quote(output) + ');'
   command = [args.matlab, '-batch', expression]
   launched_utc=dt.datetime.now(dt.timezone.utc)
   budget_started_utc=launched_utc
@@ -74,7 +86,7 @@ def main():
     if original_start is None:
       original_start=json.loads((Path(args.prior_status).parent/'command.json').read_text())['started_utc']
     budget_started_utc=dt.datetime.fromisoformat(original_start)
-  write_json(output/'command.json', dict(command=command, mode=args.mode,
+  write_json(output/'command.json', dict(command=command, entry=args.entry, mode=args.mode,
     started_utc=launched_utc.isoformat(), budget_started_utc=budget_started_utc.isoformat(),limits=limits, threads=threads))
   process = None
   known = set()
