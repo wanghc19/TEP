@@ -1,10 +1,17 @@
 # Research status
 
-更新日期：2026-09-02。
+更新日期：2026-10-23。
 
 状态词含义：`established in archived mainline` 仅表示冻结主线给出了论证，不等于已完成独立来源核验；`needs review` 表示已有陈述或证明草案但仍需严格审计；`tentative` 表示研究性判断；`unresolved` 表示尚未解决。
 
 ## 当前阶段
+
+2026-10-23，eig-apost I9.3 完成 FEM 原生场谱距离及人工边界的定向文献检索，见
+[[research/projects/eig-apost/implementation/i9/r-fem-lit|检索记录]] 和
+[[research/projects/eig-apost/implementation/i9/README|I9 当前状态]]。已有有限模型 FEM 后验估计、
+无限波导截断收敛与带隙谱包含先例，但尚未核实到可直接接入当前 I9.3 的完整方案。
+新增四份公开 PDF，更新书目与 I9 问题账目；未运行数值实验，也未建立或提升新主线定理。
+以下旧日期内容保留为历史阶段记录，不代替 I9 的当前实现与结果。
 
 2026-09-02，eig-apost 完成 guided-mode eigensolver validation 专题文献审计；见
 [[research/projects/eig-apost/implementation/i4/r-validation|r-validation]]。本次原文核验把

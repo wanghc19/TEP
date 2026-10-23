@@ -10,8 +10,11 @@
 
 | 路径 | 题目 | 作者 | 年份 | 主题 | 与本项目的关系 | BibTeX key |
 | --- | --- | --- | ---: | --- | --- | --- |
+| [机构公开稿](https://orca.cardiff.ac.uk/id/eprint/158306/)（未保存本地 PDF） | *On the Eigenvalues of Spectral Gaps of Elliptic PDEs on Waveguides* | Salma Aljawi; Marco Marletta | 2023 | 波导带隙、耗散扰动、域截断 | 给出固定耗散扰动问题的 DtN／特征值截断收敛；不是现有 FEM 场的后验谱距离公式 | `AljawiMarletta2023` |
+| [作者公开全文](https://www.researchgate.net/publication/2484711_Eigenvalue_Inclusions_Via_Domain_Decomposition)（未保存本地 PDF） | *Eigenvalue Inclusions via Domain Decomposition* | Henning Behnke; Ulrich Mertins; Michael Plum; Christian Wieners | 2000 | 无限声学波导、谱包含、区域分解 | 对称类内用 Dirichlet／Neumann 比较和 FEM 包围处理无限域；不直接覆盖周期带隙 | `BehnkeMertinsPlumWieners2000` |
 | `ref_data/Bonnet1995.pdf` | *Spectral Approximation of a Boundary Condition for an Eigenvalue Problem* | Anne-Sophie Bonnet-Ben Dhia; Nabil Gmati | 1995 | 光纤导模、Fourier 边界算子、谱逼近 | 证明截断 exact boundary operator 后导模特征值与特征函数的超代数先验收敛 | `BonnetBenDhiaGmati1995` |
 | `ref_data/Boureghda2022.pdf` | *On Domain Error Truncation in a Problem of Guided Modes Computation in Optical Fibers* | Abdelouahab Boureghda; Abdelaziz Choutri; Hayat Rezgui | 2022 | 光纤导模、域截断、特征值误差 | 提供开放导模特征值随人工边界半径变化的指数型误差分析近邻 | `BoureghdaChoutriRezgui2022` |
+| `ref_data/Chaumont-Frelet2025.pdf` | *A Posteriori Error Estimates for the Finite Element Discretization of Second-Order PDEs Set in Unbounded Domains* | Théophile Chaumont-Frelet | 2025 预印本 | 平衡通量、人工边界、无限域源问题 | 显式控制截断端通量；可研究与 resolvent 估计的衔接，尚非特征值估计 | `ChaumontFrelet2025` |
 | `ref_data/Choutri2008.pdf` | *Étude de l'erreur de troncature du domaine pour un problème aux valeurs propres* | Abdelaziz Choutri | 2008 | 光纤导模、Robin 边界、截断误差 | 给出光纤导模特征值与特征函数的先验域截断误差估计 | `Choutri2008` |
 | `ref_data/Coatleven2012.pdf` | *Helmholtz Equation in Periodic Media with a Line Defect* | Julien Coatléven | 2012 | 线缺陷、Floquet–Bloch 变换、DtN | 研究带局部结构的周期介质与精确截断，是项目波导模型的直接背景 | `Coatleven2012` |
 | `ref_data/Nittis2021.pdf` | *Spectral and Scattering Theory of One-Dimensional Coupled Photonic Crystals* | Giuseppe De Nittis; Marco Moscolari; Serge Richard; Rafael Tiedra de Aldecoa | 2021 | 一维耦合光子晶体、谱与散射理论 | 提供周期光子结构谱分解和散射算子的抽象背景 | `DeNittisEtAl2021` |
@@ -61,6 +64,9 @@
 | --- | --- | --- | ---: | --- | --- | --- |
 | `ref_data/Barnett2018.pdf` | *Comparable Upper and Lower Bounds for Boundary Values of Neumann Eigenfunctions and Tight Inclusion of Eigenvalues* | Alex H. Barnett; Andrew Hassell; Melissa Tacy | 2018 | Neumann Laplacian、MPS、谱包含、加权边界 tension | 给出到最近 Neumann 谱点的边界残量型包含界；可启发周期情形的通道加权，但其定理本身不识别唯一目标特征值 | `BarnettHassellTacy2018` |
 | `ref_data/Bindel2013.pdf` | *Localization Theorems for Nonlinear Eigenvalue Problems* | David Bindel; Amanda Hood | 2013 | 非线性特征值、谱定位 | 为参数依赖算子特征值的包围和数值验证提供工具 | `BindelHood2013` |
+| `ref_data/Boulton2007.pdf` | *On Approximation of the Eigenvalues of Perturbed Periodic Schrödinger Operators* | Lyonell Boulton; Michael Levitin | 2007 | 二阶谱、带隙、后验谱包含 | 基本包含不要求唯一模态；需算子定义域相容试探空间，不能直接平方 P2 刚度矩阵 | `BoultonLevitin2007` |
+| `ref_data/Cances2014.pdf` | *Non-consistent Approximations of Self-adjoint Eigenproblems: Application to the Supercell Method* | Eric Cancès; Virginie Ehrlacher; Yvon Maday | 2014（本地为公开预印稿） | 周期背景局部缺陷、超胞、先验收敛 | 区分超胞无谱污染与可计算后验界；不直接覆盖双侧不同周期背景 | `CancesEhrlacherMaday2014` |
+| `ref_data/Cances2020.pdf` | *Guaranteed A Posteriori Bounds for Eigenvalues and Eigenvectors: Multiplicities and Clusters* | Eric Cancès; Geneviève Dusson; Yvon Maday; Benjamin Stamm; Martin Vohralík | 2020 | 特征值簇、可靠后验界、通量 | 允许重根但要求簇外隔离和紧预解式，不能直接套用于无限波导 | `CancesDussonMadayStammVohralik2020` |
 | `ref_data/Guettel2017.pdf` | *The Nonlinear Eigenvalue Problem* | Stefan Güttel; Françoise Tisseur | 2017 | 非线性矩阵特征值、数值算法综述 | 为项目频率依赖算子和数值特征值算法提供统一框架 | `GuettelTisseur2017` |
 | `ref_data/unsorted/Transmission Eigenvalues for Helmholtz Equation Perturbation Problems of Isotropic Media With Voids.pdf` | 《含空隙的各向同性介质 Helmholtz 方程扰动问题的传输特征值》 | 李诗璇；刘立汉 | 2023 | 传输特征值、折射率扰动、Neumann–Dirichlet 算子 | 与项目传输特征值的扰动理论和算子表述相关 | `LiLiu2023` |
 | `ref_data/Moskow2015.pdf` | *Nonlinear Eigenvalue Approximation for Compact Operators* | Shari Moskow | 2015 | 紧算子、非线性特征值逼近、扰动 | 支撑项目对离散或参数扰动下特征值收敛的分析 | `Moskow2015` |

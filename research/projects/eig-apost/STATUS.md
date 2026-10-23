@@ -1,8 +1,17 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-09-02。
+更新日期：2026-10-23。
 
 ## 当前状态
+
+- **2026-10-23 I9.3 FEM 原生场谱距离文献检索：** 新增
+  [[research/projects/eig-apost/implementation/i9/r-fem-lit|r-fem-lit]]，区分线缺陷有限超胞 FEM 后验估计、
+  波导截断的先验收敛、含人工边界通量的无限域源问题估计及二阶谱包含。
+  新核对 Aljawi–Marletta (2023)、Chaumont-Frelet (2025) 等来源，下载四份公开 PDF 并更新 ref 索引。
+  未核实到直接覆盖当前双侧周期介质、曲边 P2 原生场与原无限算子谱距离的即用方案；
+  优先建议做源问题估计到 resolvent 公式的有限范围适用性分析，未实施或授权新实验。
+  当前 I9 数值进展与问题账目以 [[research/projects/eig-apost/implementation/i9/README|I9 README]] 为准；
+  下方旧日期条目保留为各自阶段的历史记录。
 
 - **2026-09-02 guided-mode eigensolver validation 文献专题：**
   [[research/projects/eig-apost/implementation/i4/r-validation|r-validation]] 已按 deep-research/

@@ -2,6 +2,8 @@
 
 ## 当前状态
 
+2026-10-23 已完成 FEM 原生场谱距离与有限域截断的定向文献检索，见 [[research/projects/eig-apost/implementation/i9/r-fem-lit|检索记录与适用性分析]]。已有线缺陷 FEM 后验估计、波导截断收敛和带隙谱包含先例；本轮未核实到可不加改造接入 I9.3 的完整无限波导谱距离公式。优先建议核对含人工边界通量的源问题估计与当前 resolvent 路线的对应关系；这是后续研究建议，不是新的实验或定理授权。新增四份公开 PDF，书目已同步；未运行实验或修改数值代码。
+
 I9.3 后续授权已完成**固定FEM candidate的BIE重构谱距离数值估计**：固定 $k_0=1.5584630910866906$，从零重求BIE密度并冻结场，得到 **`UNCERTIFIED_RNUM`，$R_{\rm num}=0.11866142633964537$**，分母0.12047661142314603为正。本轮由主agent独立实施及91项自检，没有subagent独审；未重跑FEM或修正频率。该结果不是FEM原生场误差。详见本页末节、[[research/projects/eig-apost/implementation/i9/design-9-3a|设计第8节]]、[[research/projects/eig-apost/implementation/i9/review-9-3a|主agent自检追加节]]。
 
 I9.3 已完成一次固定配置的曲边P2 FEM candidate 计算，得到一个通过预设局域性门的候选 $k=1.5584630910866906$。本轮只运行FEM，不重跑FMM、不计算谱距离、不比较误差。科学算法阶段合计1.450940958秒，受监控进程16.722826417秒；历史I9.1可明确归属的candidate阶段为553.862366875秒，口径限制及独审见下方I9.3节。入口为 [[research/projects/eig-apost/implementation/i9/design-9-3a|设计]]、[[research/projects/eig-apost/implementation/i9/review-9-3a|独审]]、[[test/i9/compare-v1/README|从零运行]]。
@@ -81,6 +83,7 @@ I9.1 当前已完成同一设计的中心材料对照：保持 `star_scale=1`、
 
 | I9.3 固定FEM频率的BIE重构身份 | important caveat：使用的是新BIE场，非FEM原生场；与历史I9.2的k及场不同，R大小不表示实际误差排序或同模态证明 | 明确字段来源及比较边界，不自动追加频率修正 | DISCLOSED |
 | I9.3 重构估计与自检范围 | important caveat：沿用sampled几何、观察尾及未认证FMM/求积；本轮只有主agent自检，没有独立审查 | 保留原始场、分项和91项重组记录，交付UNCERTIFIED_RNUM | DISCLOSED |
+| I9.3 FEM 原生场估计与无限域目标的衔接 | important caveat：已有有限模型后验估计与无限域相关先例，但尚未建立 I9 的体残差、内部边及人工端通量到谱距离的完整对应；不使既有 candidate 或 BIE 重构数值结果无效 | 另行授权后优先核对 Chaumont-Frelet (2025) 正定源问题估计与现有 resolvent 框架，范围见 [[research/projects/eig-apost/implementation/i9/r-fem-lit|文献记录]] | OPEN |
 
 I9.1 到此停止。没有启动后续谱距离、额外 $\beta$ 优化或参数扫描。
 
