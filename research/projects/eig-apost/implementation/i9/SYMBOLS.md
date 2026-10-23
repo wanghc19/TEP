@@ -1,7 +1,8 @@
 # I9 符号与代码映射
 
-本表局部服务于 [[research/projects/eig-apost/implementation/i9/design-9-1a|I9.1 设计]]。
-不修改 I8 记号，不定义谱距离估计量。
+本表局部服务于 [[research/projects/eig-apost/implementation/i9/design-9-1a|I9.1 设计]] 与
+[[research/projects/eig-apost/implementation/i9/design-9-2a|I9.2 谱距离数值估计]]。
+不修改 I8 记号；I9.1 历史局部字段保留，I9.2 的新增谱距离字段见末节。
 
 | 记号 | 代码语义 | 说明 |
 |---|---|---|
@@ -100,3 +101,42 @@ lead 与匹配的 exact cache 键均以 `jsonencode(config) + resolution_id + nu
 `leads/match` 路径，保存 `diagnostic` 中的配置、点/档位、两侧分类、耗时和成功点或异常正文；
 不参与搜索选点。失败匹配点的 `error_stack/error_report`、`lead_log.failures` 的 `stack/report`
 保留断言触发现场，不是新的科学量或分类规则。
+
+
+## I9.2 固定场谱距离数值估计
+
+配置入口属于新 `test/i9/estimate-v1/`，不从 I9.1 结果加载配置或场。本节只描述数学语义，
+实际函数/字段在实现完成后核对。
+
+| 量 | 数学/实现语义 |
+|---|---|
+| $k_0$ | 显式字面量 `1.5584378941820909`，固定不重定位 |
+| $\mu_{\rm num}$ | 普通双精度 $k_0k_0$ |
+| $q$ | 本次 $A_{\rm phys}$ 的列权回变换、单位范数与相位锚定匹配向量 |
+| $P_+,P_-$ | 分别由正侧正向铅笔、负侧逆向铅笔构造的向无穷推进矩阵 |
+| $G_+,G_-$ | $[Z_{+,1};Z_{+,2}P_+]$ 与 $[Z_{-,1}P_-;Z_{-,2}]$，各侧独立 |
+| $G_sP_s^nc_s$ | 该侧第 $n$ 个胞元的入射状态；其密度用该侧自己的 $H$ 映射 |
+| $E_v,E_n$ | 同场完整值/普通法向跳跃平方和，分中心材料、两侧材料、接合墙、内部墙及各自尾项 |
+| $\varepsilon_{\rm num}$ | $\sqrt{E_n+E_v/d^2}$；不是 $R_{\rm num}$ |
+| $\kappa_*,\theta$ | 三条真实曲线的全局采样最大绝对曲率及 $1-h\kappa_*$，包括直墙曲率0 |
+| $C_{\rm num}$ | 当前几何、$\rho_{\min}=1$、$\rho_{\max}=17$、$\mu_{\rm num}$ 的 sampled-collar 迹常数公式值 |
+| $U_{\rm num}$ | 冻结中心场在背景盘 $(0,3/8)$、半径 $1/16$ 上32×64积分得到的局部质量范数，不是全波导质量 |
+| $Q_{\rm num}$ | $C_{\rm num}\varepsilon_{\rm num}$ |
+| $D_{\rm num}$ | $U_{\rm num}-Q_{\rm num}$，必须为正 |
+| $R_{\rm num}$ | $2\mu_{\rm num}Q_{\rm num}/D_{\rm num}$；仅 `UNCERTIFIED_RNUM` |
+| 上下周期 seam | exact-QP 数学场理论值为0；768点相位对齐 value/同向 $y$ 导数差为另存的数值一致性诊断 |
+| observed tail | 每侧、每种平方项分别用下一项和末项比率形成几何尾数值候选；不是可靠无限尾界 |
+
+768材料节点只对512/256/256构场所得密度插值；“节点数”须分构场、后处理、几何采样及物理目标/
+源—目标配对数。FMM callback 只替换光滑 proxy 势/梯度/Hessian，自由空间、奇异核、Kress、
+跳跃项与密度坐标约定保持。上下周期诊断不另加入 $E_v,E_n$，以保持已声明的 exact-QP raw 场
+和材料/纵向墙 collar 覆盖公式；不能把诊断残差小写成 exact-kernel 误差认证。
+
+I9.2 的实际入口为 `estimate_i9_numeric()`，配置为 `estimate_i9_config()`；主输出
+`result.mu_num/C_num/epsilon_num/U_num/Q_num/denominator/R_num` 逐一对应上表。
+`evidence.base.center/negative/positive` 保存本次三套独立胞元，`base.matching` 保存匹配矩阵，
+`base.q`、`center_density`、`lead_plus/lead_minus` 及 `propagation` 固定场身份。
+`center_action/negative_action/positive_action` 是768节点完整材料行；
+`negative_sum/positive_sum` 各有自己的有限前缀和观察尾。`walls` 是纵向墙账目，
+`periodic` 是不计入主跳跃能量的上下周期一致性账目，`mass` 保存背景盘样本。
+内层 `proxy_calls` 记录 FMM 子调用；外层 `timing` 为互斥阶段，不能把两者相加。
