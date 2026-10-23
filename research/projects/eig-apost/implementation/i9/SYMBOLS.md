@@ -1,8 +1,9 @@
 # I9 符号与代码映射
 
 本表局部服务于 [[research/projects/eig-apost/implementation/i9/design-9-1a|I9.1 设计]] 与
-[[research/projects/eig-apost/implementation/i9/design-9-2a|I9.2 谱距离数值估计]]。
-不修改 I8 记号；I9.1 历史局部字段保留，I9.2 的新增谱距离字段见末节。
+[[research/projects/eig-apost/implementation/i9/design-9-2a|I9.2 谱距离数值估计]] 和
+[[research/projects/eig-apost/implementation/i9/design-9-3a|I9.3 FEM candidate 交付]]。
+不修改 I8 记号；I9.1 历史局部字段保留，I9.2 谱距离与 I9.3 FEM 字段分别列于后文。
 
 | 记号 | 代码语义 | 说明 |
 |---|---|---|
@@ -140,3 +141,37 @@ I9.2 的实际入口为 `estimate_i9_numeric()`，配置为 `estimate_i9_config(
 `negative_sum/positive_sum` 各有自己的有限前缀和观察尾。`walls` 是纵向墙账目，
 `periodic` 是不计入主跳跃能量的上下周期一致性账目，`mass` 保存背景盘样本。
 内层 `proxy_calls` 记录 FMM 子调用；外层 `timing` 为互斥阶段，不能把两者相加。
+
+## I9.3 FEM candidate 与历史交付耗时
+
+本节对应 [[research/projects/eig-apost/implementation/i9/design-9-3a|I9.3设计]]，不修改I9.1的匹配阵定义，
+也不把FEM代数残差当作I9.2谱距离。唯一当前运行入口在 `test/i9/compare-v1/`。
+
+| 量 | 数学/实现语义 |
+|---|---|
+| $\Omega_N$ | 截断条带 $[-N-1/2,N+1/2]\times[-1/2,1/2]$，正式 $N=6$ |
+| $h,n_\Gamma$ | 基准网格尺度 $1/12$，每界面参数段数80；不是I9.1的BIE节点数 |
+| $F_T$ | 六节点P2等参几何映射，界面端点和中点取解析参数位置 |
+| $A,B$ | FEM梯度刚度、$\rho$加权质量阵；与BIE的 $A_{\rm def},A_{\rm phys}$ 无关 |
+| $P$ | 上下相位 $e^{\mathrm i\beta d}$ 和左右Dirichlet的延拓矩阵 |
+| $A_r=P^*AP,B_r=P^*BP$ | 约束后的广义Hermitian特征值问题 |
+| $\mu,k$ | FEM广义特征值和其正平方根；shift只按给定 $\mu$ 窗口计算 |
+| $\eta_{\rm alg}$ | $\|A_rv-\mu B_rv\|_2/(\|A_rv\|_2+|\mu|\|B_rv\|_2)$，代数残差，不是连续误差 |
+| $m_S$ | 区域 $S$ 的 $\rho|Pv|^2$ 积分除以整个有限条带质量 |
+| $m_{\rm center},m_{\rm core},m_{\rm ends}$ | 中心胞元、中心三胞元、两端各末两胞元质量比例；门为0.15、0.60、0.02 |
+| 质量overlap | $|v_i^*B_rv_j|/\sqrt{(v_i^*B_rv_i)(v_j^*B_rv_j)}$；与频率差联合用于去重 |
+| $T_{\rm FMM,stages}$ | 历史coarse+fine+完整确认阶段和553.8623668749998秒，不含gap，不是反事实从零已知窗口全成本 |
+| FEM/FMM耗时比 | 本轮冻结FEM配置与历史阶段和的观察比；非同时、非同精度、非误差比较 |
+
+FEM质量分数用于模式局域性筛选，区别于I9.2背景圆盘局部质量范数 $U_{\rm num}$。
+有限端点Dirichlet不是负/正半无穷DtN；本轮不将两者等同，也不由频率接近证明同一模态。
+
+I9.3实际配置为 `fem_i9_config('formal')`，入口 `fem_i9_run(output_dir,'formal')`。
+`mesh.triangle_p2/p2_points/interface_parameters/material/cell_id` 固定曲边单元与分区；
+`forms.stiffness_full/mass_full/mass_cells` 保存全空间及各胞元质量账目，`constraint.prolongation` 为 $P$，
+`A/B` 为约束后矩阵。`solve_permutation` 仅是求解时数学等价AMD坐标排序，保存向量已回到原始约束坐标。
+`eigenvalues/eigenvectors/source_shift/solver_flags/solve_records` 保存全部36个返回记录；
+`cell_mass/overlaps/modes` 为同一组质量归一向量的区域分数、重叠与交付判据。
+`modes.duplicate_of` 指向最低残差去重代表；`candidate` 不使用历史频率。
+`timings.mesh_seconds/assembly_constraints_seconds/eigensolve_seconds/delivery_seconds` 为互斥算法四段，
+`algorithm_seconds` 是其和，`save_export_seconds` 及进程墙钟另列。
