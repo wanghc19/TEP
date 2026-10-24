@@ -194,3 +194,56 @@ I9.3实际配置为 `fem_i9_config('formal')`，入口 `fem_i9_run(output_dir,'f
 `reconstruct_i93` 从零生成场，`run_reconstruct_i93` 只导出；本目录 `run_fem.py --entry reconstruct`
 复用资源监控并仅调用重构入口，默认 `--entry fem` 仍保持既有FEM入口。
 本轮输出身份 `attempt-1/reconstruct-01` 与原FEM `run-02` 不同，不覆盖旧结果。
+
+## I9.4 固定原生 FEM 场的显式 RT2 通量
+
+本节由 [[research/projects/eig-apost/implementation/i9/design-9-4a|I9.4设计]] 和
+[[research/projects/eig-apost/phase3-analysis/fem-bound/theory|FEM-bound Revision B.1]] 支配。
+复用 I9.3 `run-02` 的原生 reduced vector 和曲边网格；不读取随后BIE重构场。
+这里的全场质量和弱残差公式不同于 I9.2/I9.3 BIE 的局部盘质量与跳跃常数。
+
+| 量 | 本轮数学/数值语义 |
+|---|---|
+| $k_h,\mu_h,s$ | 固定 `1.5584630910866906`，$\mu_h=k_hk_h$，正移位 $s=\mu_h$ |
+| $u$ | 保存的自由系数配合上下相位 $e^{\mathrm{i}\beta d}$ 重建、左右零延拓的同一原生P2函数 |
+| $\rho_h,\rho$ | 曲边网格材料标签、原解析几何材料；只以 $\rho$ 计算主质量与体缺陷 |
+| $\widehat p,p$ | 参考RT2和经 $p\circ F=J\widehat p/\det J$ 推前的实际通量 |
+| $p_K^0,p^w$ | 局部15矩插值通量、一次共享边/准周期边平均后的显式相容通量 |
+| $z_{E,m}$ | 固定全局法向/参数的第 $m=0,1,2$ 个Legendre通量矩 |
+| $\epsilon_{K,E},\kappa_{K,E}$ | 外法向相对号、参数方向号；局部矩为 $\epsilon\kappa^mz$，两种号不可合并省略 |
+| $U^2$ | $\int_{B_6}\rho|u|^2$；零延拓场的全质量，不是I9.2局部盘积分 |
+| $M_s(p)^2$ | 梯度差平方加 $s^{-1}$ 倍加权体缺陷平方，直接形成小差值后积分 |
+| $g_-,g_+$ | 左右人工端 $p\cdot n$ 的 $L^2$ 范数，非原生端部质量比例 |
+| $C_{\rm end}$ | $(2\sqrt{s\rho_{\min}})^{-1/2}$，本轮 $\rho_{\min}=1$；不同于BIE collar常数 |
+| $\eta_{\rm num}$ | $\sqrt{M_s^2}+C_{\rm end}(g_-+g_+)$ 的普通数值评价 |
+| $\tau_{\rm num}$ | $\eta_{\rm num}/U_{\rm num}$ |
+| $R_{\rm num}$ | $\tau_{\rm num}(\tau_{\rm num}+\sqrt{\tau_{\rm num}^2+4(\mu_h+s)})/2$；理论式(15)数值实例 |
+| $a_K,b_K,r_K,l_K^0,l_K^1$ | theory式(33)局部表示、原生方程与边平均修正诊断；不自动是互斥真实误差分解 |
+| $W$ | 仅本节表示theory式(34)充分界诊断，**不是** I9.1搜索整轮宽度；本轮没有搜索 |
+| 未决材料包络 | 仅对未分类子片用完整 $\{1,4,17\}$ 重评；普通积分包络不等于可靠积分区间 |
+| 求积阶差 | 同一固定通量、同一分片的Q8/Q10差异；不是误差上界证明 |
+
+本轮没有全局RT2优化矩阵/求解残差；人工端矩不变且自由。
+参考矩、Piola映射、边相位、场身份通过数值检查不自动建立机器认证。
+判读尺度 $0.01$ 与 $10^{-4}$ 在运行前固定，不改变字段、场或参数以追求通过。
+
+I9.4入口为 `fem_bound_i94(input_path,output_dir)`，唯一新配置 `fem_bound_i94_config()`。
+`reduced/full_field/mapu` 保存同一原生场；`mapx/mapy` 是原六节点几何的二次系数。
+`D` 将参考生成基系数映到15矩；`moments0/coeff0` 是局部插值，`moments/coeff` 是边平均后的实际通量。
+`edge_data` 保存独立边编号、法向号、参数号、上下配对和全局矩；这些是可复核通量相容性的证据。
+`element_values/element_check` 分别为Q8诊断和Q10正式逐元积分；`leaves` 保存本次真实材料分片。
+`values.mass_squared/gradient_difference_squared/body_defect_weighted_squared` 对应上表三个体积分，
+`values.end_squared/end_norms/C_end/eta/tau/R` 对应直接公式；
+`diagnostic.material_mismatch_squared/W_squared` 是归因诊断，不重新加进主式。
+
+具体数组口径：`moments0/moments` 为每单元15个DOF（9边矩、6内部矩），
+`coeff0/coeff = moments0/moments / D.'` 为参考生成基系数，不能把两者互换。
+`mapx/mapy/mapu` 的六列顺序为 $1,\xi_1,\xi_2,\xi_1^2,\xi_1\xi_2,\xi_2^2$。
+`edge_data.ids/epsilon/kappa` 为单元×3，`signs` 为单元×3边×3矩，
+`global_moments` 为全局边×3，`periodic` 的两列依次为bottom、top。
+`leaves` 九列依次是单元编号、三个参考顶点的交错坐标、已分类材料值（0表示未决）、深度。
+`element_values/element_check` 十列依次为质量平方、梯度差平方、加权体缺陷平方、
+$a^2,b^2,r^2,(l^0)^2,(l^1)^2$、材料失配平方、通量平方范数。
+`unknown_values/unknown_check` 五列依次为未决片质量最小值、体项最小值、质量最大值、
+体项最大值、物理面积。其包络仅具有固定求积节点材料扰动语义。
+`postprocess.json` 记录保存数据上的标量/分类后验，不是新的科学积分结果或机器证书。
