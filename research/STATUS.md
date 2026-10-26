@@ -6,11 +6,10 @@
 
 ## 当前阶段
 
-2026-10-26，按用户要求恢复eig-apost持续研究；整体目标未完成。
-[[research/projects/eig-apost/phase3-analysis/fem-bound/r-mm|D.1 attempt-2实际独审]] 接受同场线性普通估计约0.254%的改善，candidate未变。
-正式对照492.187秒；冷261.58/暖118.88秒为拆项估算，未建立完整流程成本下降。
-最小下一步为 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#10. 当前最小下一步 E.1：固定几何的一次 FEM 空间敏感性对照|E.1固定域/表示几何的一次FEM空间对照]]，尚未执行，不附带细层通量估计。
-本轮复用Researcher/skeptic审查实际源码、结果及日志，没有运行实验或修改数值代码。工具goal仍为旧blocked，接口没有恢复操作；研究工作已恢复，不另建目标、不标记完成。
+2026-10-26，[[research/projects/eig-apost/implementation/i9/review-9-5a|E.2 实际结果审查]]：**PASS WITH CONDITIONS，仅限普通算术完整数值链**。
+新candidate $k_h=1.558439927483915$；新场主 $R$ 为Q10 $0.004627470466476482$、Q8 $0.004625864372333271$，对旧最佳同阶下降约69.47%。
+受监控完整科学链515.14695675秒、采样峰值1,759,723,520字节；同合同成本下降未建立。真材料积分、薄片元、H+及BIE参考条件仍须披露。
+用户已清除goal，本轮没有建立或恢复goal；只读审查源码/已有结果并维护研究文档，未重跑实验，不自动进入下一轮。
 
 2026-10-26 实验前历史，已交付
 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next|唯一下一轮方案及Claude prompt]]，

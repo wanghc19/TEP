@@ -1,4 +1,4 @@
-function eq_temple_i95(input_path,output_dir,mode,tail)
+function eq_temple_i95(input_path,output_dir,mode,tail,reference_path)
 %EQ_TEMPLE_I95 Weighted RT2 flux, localized bound and resolvent-Temple estimate.
 % Purpose: Evaluate research/.../fem-bound/s-eq-temple.md steps 0-1 on the
 %   frozen I9.3 native curved-P2 field: Theorem B, B.1 (9), Corollaries C1-C3.
@@ -18,8 +18,15 @@ function eq_temple_i95(input_path,output_dir,mode,tail)
 % Main changes: optimized fluxes, Poincare-weighted localized evaluation and
 %   the one-sided-gap quadratic bound; no FEM solve, search or mesh change.
 % Numerical goal: ordinary-arithmetic estimates, not certified bounds.
+% E.2 (design-9-5a Section 6): modes 'e2'/'e2smoke' take a NEW compare-v1 e2 FEM
+%   evidence.mat, select the unique gated root near k_old, build the finite tail at
+%   the new mu_h, solve one unweighted RT2 least-squares flux at m=mu_h, s=m/2 with
+%   element-interior condensation, and evaluate Theorem B directly in Q10 and Q8.
+%   Optional reference_path (old I9.3 evidence) feeds only a wall-trace similarity.
   if nargin<3,mode='formal';end
   if nargin<4,tail=[];end
+  if nargin<5,reference_path='';end
+  if startsWith(mode,'e2'),LOCAL_e2(input_path,output_dir,mode,tail,reference_path);return,end
   config=eq_temple_i95_config(mode);maxNumCompThreads(config.threads);
   if ~isempty(tail),config.s_factors=config.s_factors(config.s_factors<=1);config.tail=tail;end
   if ~isfolder(output_dir),mkdir(output_dir);end
@@ -134,6 +141,392 @@ function eq_temple_i95(input_path,output_dir,mode,tail)
       'elapsed_seconds',toc(started)));
     rethrow(err);
   end
+end
+
+%% ==================== E.2 joint-refinement chain (design-9-5a Section 6) ====================
+% New candidate -> new-frequency finite tail -> one condensed unweighted RT2 flux
+% -> direct Q10/Q8 Theorem B at m=mu_h^new. Element data live in blocks only.
+function LOCAL_e2(input_path,output_dir,mode,tail,reference_path)
+  config=eq_temple_i95_config(mode);maxNumCompThreads(config.threads);
+  if ~isempty(tail),config.tail=tail;end
+  if ~isfolder(output_dir),mkdir(output_dir);end
+  started=tic;lap=tic;stage='candidate_input';timings=struct();rss=struct();checks=struct();
+  try
+    % --- stage 1: new FEM candidate, unique gated root near k_old ---
+    data=load(input_path,'config','mesh','modes','eigenvectors','constraint','forms','validation','solve_records');
+    source=data.config;
+    assert(isequal(source.model,struct('beta',.5,'d',1,'L',1,'star_scale',1, ...
+      'rho_center',4,'rho_negative',17,'rho_positive',17,'rho_background',1, ...
+      'a_negative',.12,'a_positive',.20,'radius',.2)),'e2:Model','Frozen model mismatch.');
+    assert(source.mesh.half_cells==config.fem.half_cells&&source.mesh.subdivisions==config.fem.subdivisions&& ...
+      source.mesh.interface_segments==config.fem.interface_segments&&source.mesh.quadrature_order==8, ...
+      'e2:Mesh','FEM mesh configuration differs from E.2.');
+    sv=source.solver;
+    assert(isequal(sv.shifts_mu,config.k_old^2+.01)&&sv.requested==3&&sv.subspace==20&&sv.seed==193&& ...
+      sv.tolerance==1e-10&&sv.max_iterations==1000,'e2:Solver','FEM solver configuration differs from E.2.');
+    modes=data.modes;gated=find([modes.candidate]);
+    near=gated(abs([modes(gated).k]-config.k_old)<=config.candidate_k_window);
+    selection=struct('returned',numel(modes),'gated',gated,'near_k_old',near, ...
+      'window',config.candidate_k_window,'solver_flags',[data.solve_records.flag]);
+    fem_checks=data.validation;
+    if numel(near)~=1
+      % No root is picked by BIE or by extra shifts; every returned root is kept.
+      result=struct('status','UNRESOLVED_LOCAL_CONTINUATION','pipeline','INCOMPLETE_FULL_PIPELINE', ...
+        'config',config,'selection',selection,'modes',modes,'fem_validation',fem_checks);
+      LOCAL_json(fullfile(output_dir,'result.json'),result);
+      fprintf('UNRESOLVED: %d gated roots within %.3g of k_old\n',numel(near),config.candidate_k_window);return
+    end
+    id=near;mesh=data.mesh;reduced=data.eigenvectors(:,id);P=LOCAL_constraint(mesh,config.beta);
+    native_field=P*reduced;checks.native=LOCAL_input(mesh,P,native_field,data);
+    m=modes(id);mu_h=m.mu_real;k_h=m.k;s=config.s_factors*mu_h;
+    config.k_h=k_h;config.mu_h=mu_h;config.m_residual=mu_h;config.s=s;
+    checks.native.mass_normalization_defect=abs(checks.native.original_weighted_mass-1);
+    checks.native.fem_residual=m.residual;checks.native.mu_imag=m.mu_imag;
+    assert(m.solver_flag==0&&m.residual<=1e-8&&abs(m.mu_imag)<=1e-10&&mu_h>0&& ...
+      checks.native.mass_normalization_defect<=1e-10&&fem_checks.mass_cholesky_flag==0&& ...
+      fem_checks.determinant_minimum>0&&max(fem_checks.stiffness_hermitian_defect, ...
+      fem_checks.mass_hermitian_defect)<1e-12,'e2:Candidate','New candidate failed algebraic gates.');
+    native_mesh_counts=struct('triangles',size(mesh.triangles,1),'p2_nodes',size(mesh.p2_points,1), ...
+      'interface_edges',mesh.interface_edge_count,'full_dof',size(P,1),'reduced_dof',size(P,2));
+    clear data P
+    fprintf('STAGE candidate: id %d of %d, k=%.17g (drift %.3g), mu=%.17g, %d triangles\n', ...
+      id,numel(modes),k_h,k_h-config.k_old,mu_h,native_mesh_counts.triangles);
+    [timings,rss,lap]=LOCAL_lap(timings,rss,'candidate_input',lap);
+
+    % --- stage 2 (diagnostic only): old/new wall-trace similarity ---
+    similarity=struct();
+    if ~isempty(reference_path)
+      stage='reference_similarity';similarity=LOCAL_similarity(reference_path,mesh,native_field,config);
+      fprintf('STAGE similarity: %.12f on %d common wall nodes\n',similarity.total,similarity.common_nodes);
+      [timings,rss,lap]=LOCAL_lap(timings,rss,'reference_similarity',lap);
+    end
+
+    % --- stage 3: new-frequency finite tail (no fallback to the old tail) ---
+    stage='tail';
+    [mesh,tail_info]=eq_tail_build_i95(mesh,native_field,mu_h,config.beta,config.tail(1),config.tail(2));
+    u=mesh.field;tail_info.field_checks=LOCAL_tailcheck(mesh,u,config.beta);
+    tail_info.topology=LOCAL_topology(mesh);scale=max(abs(u));
+    tail_info.gates=struct('match_max',max([tail_info.sides.match_residual]), ...
+      'merge_scaled',tail_info.merge_value_defect/scale,'qp_scaled',tail_info.field_checks.qp_field_defect/scale, ...
+      'wall_dofs',[tail_info.sides.wall_dofs],'zeta_max',max([tail_info.sides.zeta_abs_max]), ...
+      'unit_circle_gap_min',min([tail_info.sides.unit_circle_gap]));
+    assert(tail_info.gates.match_max<=config.tail_tolerance&&tail_info.gates.merge_scaled<=config.tail_tolerance&& ...
+      tail_info.gates.qp_scaled<=config.tail_tolerance&&tail_info.gates.zeta_max<1&& ...
+      tail_info.sides(1).wall_dofs==tail_info.sides(2).wall_dofs,'e2:Tail','Finite tail gates failed.');
+    fprintf('STAGE tail: %d cells, wall dofs %d/%d, zeta max %.4g/%.4g, match %.2g, closing %.2g, nt=%d\n', ...
+      config.tail(2),tail_info.sides(1).wall_dofs,tail_info.sides(2).wall_dofs,tail_info.sides(1).zeta_abs_max, ...
+      tail_info.sides(2).zeta_abs_max,tail_info.gates.match_max,max([tail_info.sides.closing_relative_amplitude]),tail_info.elements);
+    [timings,rss,lap]=LOCAL_lap(timings,rss,'tail',lap);
+
+    % --- stage 4: maps, geometry constants, RT2 space ---
+    stage='geometry_space';
+    nt=size(mesh.triangles,1);nodes=reshape(mesh.p2_points(mesh.triangle_p2(:),:),nt,6,2);
+    mapx=LOCAL_poly(nodes(:,:,1));mapy=LOCAL_poly(nodes(:,:,2));
+    mapu=LOCAL_poly(reshape(u(mesh.triangle_p2),nt,6));clear nodes
+    [D,basis_checks]=LOCAL_dual();Dinv=D\eye(15);
+    [~,E]=LOCAL_average(mesh,complex(zeros(nt,15)),config.beta);
+    geo=LOCAL_geometry(mapx,mapy);[g,phi,ndof,dofinfo]=LOCAL_dofs(mesh,E,nt,config.beta);
+    ends=LOCAL_endlist(mesh,mapx,mapy,E,config.end_order);
+    bs=config.element_block;blocks=arrayfun(@(b)(b-1)*bs+1:min(b*bs,nt),1:ceil(nt/bs),'UniformOutput',false);
+    fprintf('STAGE space: nt=%d, ndof=%d (edge %d), CP max %.3g, %d blocks\n',nt,ndof,dofinfo.edge_dofs, ...
+      max(geo.CP),numel(blocks));
+    [timings,rss,lap]=LOCAL_lap(timings,rss,'geometry_space',lap);
+
+    % --- stage 5: true-material leaves, one numeric table per element block ---
+    stage='partition';[leafblocks,counts,classification]=LOCAL_partition_blocks(mesh,mapx,mapy,blocks,config);
+    fprintf('STAGE partition: %d leaves, %d unresolved, max depth %d\n',classification.leaves, ...
+      classification.unresolved_leaves,classification.max_depth);
+    [timings,rss,lap]=LOCAL_lap(timings,rss,'partition',lap);
+
+    % --- stage 6: unweighted LS flux with element-interior condensation ---
+    stage='ls_condense';Cend=(2*sqrt(s*config.rho_min))^(-.5);gamma=config.gamma_factor*Cend^2;
+    form=@(b)LOCAL_blockform(blocks{b},leafblocks{b},mesh,mapx,mapy,mapu,ends,s,mu_h,gamma,Dinv,config);
+    nE=dofinfo.edge_dofs;A=sparse(nE,nE);rhs=zeros(nE,1);Y=zeros(6,9,nt);r=complex(zeros(6,nt));
+    hii=struct('min_eig',Inf,'min_ratio',Inf);
+    for b=1:numel(blocks)
+      ids=blocks{b};nb=numel(ids);[Hm,qm]=form(b);
+      Hii=Hm(10:15,10:15,:);Hie=Hm(10:15,1:9,:);lam=real(pageeig(Hii));
+      hii.min_eig=min(hii.min_eig,min(lam,[],'all'));hii.min_ratio=min(hii.min_ratio,min(min(lam,[],1)./max(lam,[],1),[],'all'));
+      assert(all(lam>0,'all'),'e2:Hii','Interior block H_ii is not positive definite (no regularization).');
+      Yb=pagemldivide(Hii,Hie);rb=pagemldivide(Hii,complex(reshape(qm(10:15,:),6,1,nb)));
+      S=Hm(1:9,1:9,:)-pagemtimes(Hie,'transpose',Yb,'none');S=(S+pagetranspose(S))/2;
+      qt=reshape(qm(1:9,:),9,1,nb)-pagemtimes(Hie,'transpose',rb,'none');
+      Y(:,:,ids)=Yb;r(:,ids)=reshape(rb,6,nb);
+      pe=phi(ids,1:9).';ge=g(ids,1:9).';V=conj(reshape(pe,9,1,nb)).*S.*reshape(pe,1,9,nb);
+      I=repmat(reshape(ge,9,1,nb),1,9,1);J=repmat(reshape(ge,1,9,nb),9,1,1);
+      A=A+sparse(I(:),J(:),V(:),nE,nE);rhs=rhs+full(sparse(ge(:),1,conj(pe(:)).*reshape(qt,[],1),nE,1));
+      clear Hm qm Hii Hie Yb rb S qt V I J
+    end
+    A=(A+A')/2;
+    [timings,rss,lap]=LOCAL_lap(timings,rss,'ls_assembly_condense',lap);
+    stage='ls_factor_solve';
+    % Peak model: RSS + 40 B per symbolic nnz(L) + 48 B per nnz(A) (A(p,p) copy and
+    % workspace); a debug probe measured ~28 B per nnz(L) for complex sparse chol.
+    p=amd(A);count=symbfact(A(p,p));nnzL=sum(count);now_rss=LOCAL_rss();
+    factor=struct('edge_dofs',nE,'nnz_A',nnz(A),'nnz_L_symbolic',nnzL,'rss_before_bytes',now_rss, ...
+      'estimated_peak_bytes',now_rss+40*nnzL+48*nnz(A),'bytes_per_nnzL_model',40);
+    fprintf('STAGE factor estimate: nnz(A)=%d nnz(L)=%d rss %.0f MB est peak %.0f MB\n',nnz(A),nnzL, ...
+      now_rss/2^20,factor.estimated_peak_bytes/2^20);
+    assert(factor.estimated_peak_bytes<=config.rss_warning_bytes,'e2:Resource', ...
+      'Estimated factorization peak %.3g bytes exceeds %.3g.',factor.estimated_peak_bytes,config.rss_warning_bytes);
+    Ap=A(p,p);[R,flag]=chol(Ap);clear Ap
+    assert(flag==0,'e2:Cholesky','Condensed edge matrix is not positive definite.');
+    factor.nnz_R=nnz(R);z=zeros(nE,1);z(p)=-(R\(R'\rhs(p)));clear R
+    factor.condensed_relative_residual=norm(A*z+rhs)/norm(rhs);factor.rss_after_bytes=LOCAL_rss();
+    assert(factor.condensed_relative_residual<=config.condensed_tolerance,'e2:Solve', ...
+      'Condensed relative residual %.3g.',factor.condensed_relative_residual);
+    clear A rhs
+    [timings,rss,lap]=LOCAL_lap(timings,rss,'ls_factor_solve',lap);
+    stage='ls_recovery';
+    ye=phi(:,1:9).*z(g(:,1:9));yi=-reshape(pagemtimes(Y,reshape(ye.',9,1,nt)),6,nt)-r;
+    yloc=[ye,yi.'];coeff=yloc*Dinv.';clear Y r yi
+    [timings,rss,lap]=LOCAL_lap(timings,rss,'ls_recovery',lap);
+
+    % --- stage 7: rebuilt local blocks, uncondensed residual (global edge assembly) ---
+    stage='ls_residual_rebuild';
+    [residual,full_check]=LOCAL_uncondensed(form,blocks,yloc,g,phi,ndof,nE,Dinv,coeff,config);
+    solve_info=struct('s',s,'m',mu_h,'gamma',gamma,'C_end',Cend,'hii',hii,'factor',factor, ...
+      'uncondensed',residual,'condense_check',full_check,'ndof',ndof,'edge_dofs',nE, ...
+      'flux_norm_coefficients',norm(coeff,'fro'));
+    assert(residual.relative<=config.condensed_tolerance&&residual.interior_relative<=config.condensed_tolerance, ...
+      'e2:Residual','Recovered uncondensed residual %.3g / interior %.3g.',residual.relative,residual.interior_relative);
+    fprintf('STAGE LS: condensed res %.3g, uncondensed %.3g (interior %.3g, edge %.3g), Hii min eig %.3g\n', ...
+      factor.condensed_relative_residual,residual.relative,residual.interior_relative,residual.edge_relative,hii.min_eig);
+    [timings,rss,lap]=LOCAL_lap(timings,rss,'ls_residual_rebuild',lap);
+
+    % --- stage 8: physical normal traces and artificial ends ---
+    stage='trace_checks';trace=LOCAL_trace_check(mesh,mapx,mapy,coeff,E);
+    trace.internal_scaled=trace.internal_normal_jump/trace.trace_scale;trace.qp_scaled=trace.qp_normal_jump/trace.trace_scale;
+    trace.end_lengths=ends.lengths;
+    assert(max(trace.internal_scaled,trace.qp_scaled)<=config.trace_tolerance,'e2:Trace', ...
+      'Scaled normal trace defect %.3g / %.3g.',trace.internal_scaled,trace.qp_scaled);
+    [timings,rss,lap]=LOCAL_lap(timings,rss,'trace_checks',lap);
+
+    % --- stage 9: final direct two-pass evaluations, same u, p, m ---
+    stage='direct_q10';
+    direct.q10=LOCAL_e2_direct(leafblocks,blocks,mesh,mapx,mapy,mapu,coeff,geo,E,config, ...
+      config.evaluation_order,config.end_order);
+    LOCAL_e2_print(direct.q10);[timings,rss,lap]=LOCAL_lap(timings,rss,'direct_q10',lap);
+    stage='direct_q8';
+    direct.q8=LOCAL_e2_direct(leafblocks,blocks,mesh,mapx,mapy,mapu,coeff,geo,E,config, ...
+      config.check_order,config.check_end_order);
+    LOCAL_e2_print(direct.q8);[timings,rss,lap]=LOCAL_lap(timings,rss,'direct_q8',lap);
+
+    % --- stage 10: frozen comparison rule against the historical baselines ---
+    stage='comparison';comparison=LOCAL_e2_compare(direct,config);
+    fprintf('CLASSIFICATION %s (vs MM), %s (vs LS)\n',comparison.mm.classification,comparison.ls.classification);
+    [timings,rss,lap]=LOCAL_lap(timings,rss,'comparison',lap);
+
+    % --- stage 11: save evidence ---
+    stage='save';status='UNCERTIFIED_ORDINARY_ARITHMETIC_ESTIMATE';
+    if strcmp(mode,'e2smoke'),status='IMPLEMENTATION_SMOKE_ONLY';end
+    summary=struct('q10',LOCAL_e2_summary(direct.q10),'q8',LOCAL_e2_summary(direct.q8));
+    result=struct('status',status,'pipeline','FULL_PIPELINE_COMPLETED','config',config, ...
+      'candidate',struct('id',id,'k_h',k_h,'mu_h',mu_h,'drift_k',k_h-config.k_old, ...
+      'drift_mu',mu_h-config.k_old^2,'fem_residual',m.residual,'center_mass',m.center_mass, ...
+      'core_mass',m.core_mass,'end_mass',m.end_mass),'selection',selection,'modes',modes, ...
+      'native_mesh',native_mesh_counts,'fem_validation',fem_checks,'checks',checks,'similarity',similarity, ...
+      'tail',tail_info,'basis_checks',basis_checks,'dofs',dofinfo,'classification',classification, ...
+      'geometry',struct('CP_max',max(geo.CP),'CP_median',median(geo.CP),'dmin',min(geo.dmin), ...
+      'ratio_max',max(geo.dmax./geo.dmin)),'solve',solve_info,'trace',trace,'direct',summary, ...
+      'comparison',comparison,'environment',struct('version',version,'platform',computer, ...
+      'threads',maxNumCompThreads,'OMP_NUM_THREADS',getenv('OMP_NUM_THREADS')));
+    tail_mesh=rmfield(mesh,'field');tail_field=u;
+    save(fullfile(output_dir,'evidence.mat'),'config','reduced','native_field','tail_mesh','tail_field', ...
+      'mapx','mapy','mapu','D','coeff','z','geo','counts','direct','result','-v7');
+    [timings,rss]=LOCAL_lap(timings,rss,'save',lap);
+    timings.matlab_function_seconds=toc(started);
+    timings.unattributed_seconds=timings.matlab_function_seconds-sum(cellfun(@(f)timings.(f), ...
+      setdiff(fieldnames(timings),{'matlab_function_seconds'})));
+    result.timings=timings;result.rss_bytes_at_lap=rss;
+    LOCAL_json(fullfile(output_dir,'result.json'),result);
+    fprintf('COMPLETE %s time=%.1fs\n',status,toc(started));
+  catch err
+    LOCAL_json(fullfile(output_dir,'failure.json'),struct('stage',stage,'identifier',err.identifier, ...
+      'message',err.message,'report',getReport(err,'extended','hyperlinks','off'), ...
+      'elapsed_seconds',toc(started),'timings',timings,'rss_bytes_at_lap',rss));
+    keep={'config','selection','checks','similarity','tail_info','dofinfo','classification','factor', ...
+      'hii','residual','full_check','trace','direct','coeff','z','counts'};
+    keep=keep(cellfun(@(v)exist(v,'var')==1,keep));
+    if ~isempty(keep),save(fullfile(output_dir,'failure_evidence.mat'),keep{:},'-v7');end
+    rethrow(err);
+  end
+end
+function [t,rss,lap]=LOCAL_lap(t,rss,name,lap)
+  % Exclusive stage time plus this MATLAB process RSS (launcher keeps the tree peak).
+  t.(name)=toc(lap);rss.(name)=LOCAL_rss();
+  fprintf('LAP %-24s %9.2fs  rss %7.0f MB\n',name,t.(name),rss.(name)/2^20);lap=tic;
+end
+function b=LOCAL_rss()
+  [~,out]=system(sprintf('ps -o rss= -p %d',feature('getpid')));b=1024*str2double(out);
+end
+function check=LOCAL_topology(mesh)
+  % Shared-edge P2 numbering and disk coverage of the merged tail mesh.
+  tr=mesh.triangles;nt=size(tr,1);nv=size(mesh.points,1);ne=size(mesh.edges,1);
+  [edges,~,ix]=unique(sort([tr(:,[1,2]);tr(:,[2,3]);tr(:,[3,1])],2),'rows');incidence=accumarray(ix,1);
+  check=struct('triangles',nt,'vertices',nv,'edges',ne,'boundary_edges',sum(incidence==1),'euler',nv-ne+nt);
+  assert(isequal(edges,mesh.edges)&&all(incidence<=2)&&isequal(mesh.triangle_p2(:,4:6),nv+reshape(ix,nt,3)) ...
+    &&check.euler==1,'e2:Topology','Tail mesh topology failed.');
+end
+function out=LOCAL_similarity(path,mesh,u,config)
+  % Normalized complex trace similarity on common core vertical-wall P2 nodes.
+  old=load(path,'mesh','eigenvectors','constraint','modes');
+  assert(old.modes(1).candidate&&old.modes(1).k==config.k_old,'e2:Reference','Old reference candidate differs.');
+  uo=old.constraint.prolongation*old.eigenvectors(:,1);tol=1e-9;walls=[-1.5,-.5,.5,1.5];
+  a=[];b=[];per=zeros(size(walls));count=zeros(size(walls));
+  for j=1:numel(walls)
+    io=find(abs(old.mesh.p2_points(:,1)-walls(j))<tol);
+    [found,in]=ismember(round(old.mesh.p2_points(io,:)/tol),round(mesh.p2_points/tol),'rows');
+    x=uo(io(found));y=u(in(found));per(j)=abs(x'*y)/(norm(x)*norm(y));count(j)=nnz(found);
+    a=[a;x];b=[b;y]; %#ok<AGROW>
+  end
+  out=struct('walls',walls,'per_wall',per,'nodes_per_wall',count,'common_nodes',numel(a), ...
+    'total',abs(a'*b)/(norm(a)*norm(b)),'label','DIAGNOSTIC_ONLY_NOT_IDENTITY_PROOF');
+end
+function ends=LOCAL_endlist(mesh,mx,my,E,order)
+  % Artificial-end Grams only for elements carrying an x=xmin or x=xmax edge.
+  [z,w]=LOCAL_gauss(order);el=[];G=zeros(15,15,0);len=[0,0];
+  for side=1:2
+    loc=mesh.xmin;if side==2,loc=mesh.xmax;end
+    edges=find(abs(E.midpoints(:,1)-loc)<1e-12);[ti,le]=find(ismember(E.ids,edges));
+    for j=1:numel(ti)
+      t=ti(j);e=le(j);[x,y,n]=LOCAL_edge(e,z);[vx,vy]=LOCAL_rt(x,y);
+      [~,~,~,~,J]=LOCAL_field(repmat(mx(t,:),order,1),repmat(my(t,:),order,1),zeros(order,6),x,y);
+      if e==1,tx=J(:,1);ty=J(:,3);elseif e==2,tx=-J(:,1)+J(:,2);ty=-J(:,3)+J(:,4);else,tx=-J(:,2);ty=-J(:,4);end
+      hn=vx*n(1)+vy*n(2);G(:,:,end+1)=hn'*((w./hypot(tx,ty)).*hn); %#ok<AGROW>
+      el(end+1,1)=t;len(side)=len(side)+sum(w.*hypot(tx,ty)); %#ok<AGROW>
+    end
+  end
+  assert(numel(unique(el))==numel(el)&&all(abs(len-1)<1e-12),'e2:Ends','End wall Grams failed.');
+  ends=struct('elements',el,'G',(G+permute(G,[2,1,3]))/2,'lengths',len);
+end
+function [leafblocks,counts,info]=LOCAL_partition_blocks(mesh,mx,my,blocks,config)
+  % Same recursive classification as LOCAL_partition; leaves of each element block
+  % are compressed at once into one numeric table with block-local element ids.
+  ng=config.curve_segments;cmin=min(mesh.cell_id);curves=LOCAL_curves(mesh,ng);
+  nt=size(mx,1);counts=zeros(nt,1);leafblocks=cell(numel(blocks),1);
+  for b=1:numel(blocks)
+    ids=blocks{b};parts=cell(numel(ids),1);
+    for j=1:numel(ids)
+      k=ids(j);c=mesh.cell_id(k);
+      parts{j}=LOCAL_split(j,[0,0;1,0;0,1],0,(1:ng)',mx(k,:),my(k,:),c,curves{c-cmin+1},config.maximum_subdivision);
+      counts(k)=size(parts{j},1);
+    end
+    leafblocks{b}=vertcat(parts{:});clear parts
+  end
+  total=sum(counts);unres=sum(cellfun(@(L)sum(L(:,8)==0),leafblocks));depth=max(cellfun(@(L)max(L(:,9)),leafblocks));
+  info=struct('leaves',total,'unresolved_leaves',unres,'max_depth',depth,'curve_segments',ng, ...
+    'maximum_subdivision',config.maximum_subdivision,'element_block',config.element_block, ...
+    'leaf_table_bytes',8*9*total);
+end
+function [Hm,qm]=LOCAL_blockform(ids,leaf,mesh,mx,my,mu,ends,s,m,gamma,Dinv,config)
+  % Unweighted J_m in local moments: H=G0+Gdr/s+gamma*Gend, q=-f0+(m/s)gu (no rho in the cross term).
+  nb=numel(ids);mb=struct('cell_id',mesh.cell_id(ids));
+  el=LOCAL_element(mx(ids,:),my(ids,:),mu(ids,:),config.element_order);
+  lf=LOCAL_leafdata(leaf,mb,mx(ids,:),my(ids,:),mu(ids,:),config.assembly_leaf_order,config.batch_size);
+  H=permute(el.G0,[2,3,1])+permute(reshape(lf.Gdr,nb,15,15),[2,3,1])/s;
+  [hit,loc]=ismember(ends.elements,ids);H(:,:,loc(hit))=H(:,:,loc(hit))+gamma*ends.G(:,:,hit);
+  q=-el.f0.'+(m/s)*el.gu.';
+  Hm=pagemtimes(pagemtimes(Dinv.',H),Dinv);Hm=(Hm+pagetranspose(Hm))/2;qm=Dinv.'*q;
+end
+function [res,fc]=LOCAL_uncondensed(form,blocks,yloc,g,phi,ndof,nE,Dinv,coeff,config)
+  % Rebuild each local block; interior equations per element, edge equations only
+  % after signed/phased global assembly. Optional uncondensed solve (smoke only).
+  edge=zeros(nE,1);redge=zeros(nE,1);int2=0;rint2=0;Jval=0;fc=struct('performed',false);
+  if config.condense_check,Iall=[];Jall=[];Vall=[];rall=complex(zeros(ndof,1));end
+  for b=1:numel(blocks)
+    ids=blocks{b};nb=numel(ids);[Hm,qm]=form(b);y=yloc(ids,:).';
+    grad=reshape(pagemtimes(Hm,reshape(y,15,1,nb)),15,nb)+qm;
+    Jval=Jval+real(sum(conj(y).*(grad+qm),'all'));
+    int2=int2+sum(abs(grad(10:15,:)).^2,'all');rint2=rint2+sum(abs(qm(10:15,:)).^2,'all');
+    pe=phi(ids,1:9).';ge=g(ids,1:9).';
+    edge=edge+full(sparse(ge(:),1,conj(pe(:)).*reshape(grad(1:9,:),[],1),nE,1));
+    redge=redge+full(sparse(ge(:),1,conj(pe(:)).*reshape(qm(1:9,:),[],1),nE,1));
+    if config.condense_check
+      pt=phi(ids,:).';gt=g(ids,:).';V=conj(reshape(pt,15,1,nb)).*Hm.*reshape(pt,1,15,nb);
+      Iall=[Iall;reshape(repmat(reshape(gt,15,1,nb),1,15,1),[],1)]; %#ok<AGROW>
+      Jall=[Jall;reshape(repmat(reshape(gt,1,15,nb),15,1,1),[],1)];Vall=[Vall;V(:)]; %#ok<AGROW>
+      rall=rall+full(sparse(gt(:),1,conj(pt(:)).*qm(:),ndof,1));
+    end
+  end
+  den=sqrt(sum(abs(redge).^2)+rint2);
+  res=struct('relative',sqrt(sum(abs(edge).^2)+int2)/den,'edge_relative',norm(edge)/den, ...
+    'interior_relative',sqrt(int2)/den,'objective_quadratic_part',Jval);
+  if config.condense_check
+    Af=sparse(Iall,Jall,Vall,ndof,ndof);Af=(Af+Af')/2;zf=-(Af\rall);
+    cf=(phi.*zf(g))*Dinv.';
+    fc=struct('performed',true,'ndof',ndof,'relative_residual',norm(Af*zf+rall)/norm(rall), ...
+      'coefficient_difference',max(abs(cf-coeff),[],'all')/max(abs(cf),[],'all'), ...
+      'objective_full',real(zf'*Af*zf+2*real(zf'*rall)),'objective_condensed',Jval);
+    fc.objective_relative_difference=abs(fc.objective_full-Jval)/abs(fc.objective_full);
+    assert(fc.coefficient_difference<1e-8,'e2:CondenseCheck','Condensed and full solutions differ (%.3g).', ...
+      fc.coefficient_difference);
+  end
+end
+function out=LOCAL_e2_direct(leafblocks,blocks,mesh,mx,my,mu,c,geo,E,config,order,end_order)
+  % Theorem B two-pass direct evaluation, per element block (element-local passes).
+  t0=tic;nt=size(mx,1);ev1=struct();ev2=struct();
+  for b=1:numel(blocks)
+    ids=blocks{b};mb=struct('cell_id',mesh.cell_id(ids));
+    [a1,a2]=LOCAL_twopass(leafblocks{b},mb,mx(ids,:),my(ids,:),mu(ids,:),c(ids,:),config.m_residual,order,config.batch_size);
+    ev1=LOCAL_place(ev1,a1,ids,nt);ev2=LOCAL_place(ev2,a2,ids,nt);
+  end
+  endsq=LOCAL_ends(mesh,mx,my,mu,c,E,end_order);s=config.s;m=config.m_residual;
+  bound=LOCAL_bound(ev1,ev2,geo,s,config,endsq);mass=sum(ev1.mass);U=sqrt(mass);muR=sum(ev1.grad2)/mass;
+  sc=LOCAL_scalars(bound,U,muR,m,s,config,true);R=sc.R_linear_mu_h;
+  applicable=muR<config.lambda_plus;muc=[muR-sc.x_T(1),muR];
+  final=struct('eta_m',bound.etaB,'U',U,'mass',mass,'mu_R',muR,'mu_R_minus_m',muR-m, ...
+    'tau_h',bound.etaB/U,'R',R,'mu_interval',[m-R,m+R],'k_interval',[sqrt(max(m-R,0)),sqrt(m+R)], ...
+    'k_halfwidth_direct',max(abs([sqrt(max(m-R,0)),sqrt(m+R)]-sqrt(m))),'k_halfwidth_first_order',R/(2*sqrt(m)), ...
+    'gradient_difference',sqrt(bound.eps2_total),'mean_part_over_s',bound.mean_part_over_s, ...
+    'osc2_total',bound.osc2_total,'weighted_osc_total',bound.weighted_osc_total,'branch1_elements',bound.branch1_elements, ...
+    'end_norms',bound.end_norms,'end_contributions',bound.C_end*bound.end_norms,'bulk',bound.bulkB, ...
+    'unresolved_area',bound.unresolved_area,'eta9',bound.eta9,'R_eta9',sc.R_linear_mu_h_eta9, ...
+    'conditional',struct('label','CONDITIONAL_H_PLUS_UNVERIFIED','applicable_mu_R_below_lambda_plus',applicable, ...
+    'tau_R',sc.tau_R,'x_T',sc.x_T(1),'mu_interval',muc,'k_interval',sqrt(max(muc,0)), ...
+    'distance_mu',sc.dist_mu_h_conditional,'k_distance_direct',max(abs(sqrt(max(muc,0))-sqrt(m))), ...
+    'lambda_plus',config.lambda_plus),'status','UNCERTIFIED_ORDINARY_ARITHMETIC_ESTIMATE');
+  out=struct('order',order,'end_order',end_order,'bound',bound,'final',final,'scalars',sc,'seconds',toc(t0));
+end
+function ev=LOCAL_place(ev,part,ids,nt)
+  names=fieldnames(part);
+  for j=1:numel(names)
+    if ~isfield(ev,names{j}),ev.(names{j})=zeros(nt,1);end
+    ev.(names{j})(ids)=part.(names{j});
+  end
+end
+function out=LOCAL_e2_summary(d)
+  out=d.final;out.order=d.order;out.end_order=d.end_order;out.seconds=d.seconds;
+  out.totals=rmfield(d.bound,'element');
+end
+function LOCAL_e2_print(d)
+  f=d.final;fprintf(['STAGE direct Q%d: eta=%.10g U=%.10g muR=%.12g R=%.12g grad=%.6g ends=[%.4g %.4g] ' ...
+    'unres=%.4g xT=%.4g (%.1fs)\n'],d.order,f.eta_m,f.U,f.mu_R,f.R,f.gradient_difference,f.end_contributions, ...
+    f.unresolved_area,f.conditional.x_T,d.seconds);
+end
+function c=LOCAL_e2_compare(direct,config)
+  % Frozen rule: both orders decrease and the smaller decrease exceeds the larger
+  % Q-order difference of the new and old fields (a sensitivity comparison only).
+  h=config.history;new=[direct.q10.final.R,direct.q8.final.R];dq=abs(new(1)-new(2));
+  c=struct('mm',LOCAL_rule(new,[h.R_mm_q10,h.R_mm_q8],dq),'ls',LOCAL_rule(new,[h.R_ls_q10,h.R_ls_q8],dq), ...
+    'new_R',new,'new_q_difference',dq,'unresolved_area_q_difference', ...
+    abs(direct.q10.final.unresolved_area-direct.q8.final.unresolved_area), ...
+    'k_new',config.k_h,'k_old',config.k_old,'drift_k',config.k_h-config.k_old, ...
+    'bie',struct('label','CONDITIONAL_WORKING_ASSUMPTION','k_bie',h.k_bie,'k_new_minus_bie',config.k_h-h.k_bie, ...
+    'k_old_minus_bie',config.k_old-h.k_bie,'mu_new_minus_bie',config.mu_h-h.k_bie^2, ...
+    'inside_q10_k_interval',h.k_bie>=direct.q10.final.k_interval(1)&&h.k_bie<=direct.q10.final.k_interval(2)));
+end
+function r=LOCAL_rule(new,old,dq)
+  drop=old-new;threshold=max(dq,abs(old(1)-old(2)));
+  cls='FLAT_OR_UNRESOLVED';
+  if all(drop>0)&&min(drop)>threshold
+    cls='RESOLVED_IMPROVEMENT_ORDINARY_ARITHMETIC';
+  elseif all(drop<0)&&min(-drop)>threshold
+    cls='RESOLVED_WORSE_ORDINARY_ARITHMETIC';
+  end
+  r=struct('old_R',old,'ratio',new./old,'absolute_drop',drop,'relative_drop',drop./old, ...
+    'threshold_max_q_difference',threshold,'old_q_difference',abs(old(1)-old(2)), ...
+    'sensitivity_over_drop',threshold./abs(drop),'classification',cls);
 end
 
 %% ==================== Bound assembly and scalar outputs ====================
@@ -502,7 +895,18 @@ end
 %% ==================== Local true-material subdivision (from I9.4) ====================
 % Bernstein image boxes and analytic second-derivative tubes classify each leaf.
 function [leaves,info]=LOCAL_partition(mesh,mx,my,config)
-  ng=config.curve_segments;t=(0:ng)'*2*pi/ng;cmin=min(mesh.cell_id);cmax=max(mesh.cell_id);
+  ng=config.curve_segments;cmin=min(mesh.cell_id);curves=LOCAL_curves(mesh,ng);
+  nt=size(mx,1);parts=cell(nt,1);
+  for k=1:nt
+    c=mesh.cell_id(k);parts{k}=LOCAL_split(k,[0,0;1,0;0,1],0,(1:ng)',mx(k,:),my(k,:),c,curves{c-cmin+1},config.maximum_subdivision);
+  end
+  leaves=vertcat(parts{:});
+  info=struct('leaves',size(leaves,1),'unresolved_leaves',sum(leaves(:,8)==0),'max_depth',max(leaves(:,9)), ...
+    'curve_segments',ng,'maximum_subdivision',config.maximum_subdivision);
+end
+function curves=LOCAL_curves(mesh,ng)
+  % Segment boxes of the analytic interface, enlarged by the chord-to-arc tube.
+  t=(0:ng)'*2*pi/ng;cmin=min(mesh.cell_id);cmax=max(mesh.cell_id);
   curves=cell(cmax-cmin+1,1);
   for cell_id=cmin:cmax
     if cell_id==0
@@ -515,13 +919,6 @@ function [leaves,info]=LOCAL_partition(mesh,mx,my,config)
     curves{cell_id-cmin+1}=struct('radius',radius,'box',[min(x(1:end-1),x(2:end))+cell_id-radius, ...
       max(x(1:end-1),x(2:end))+cell_id+radius,min(y(1:end-1),y(2:end))-radius,max(y(1:end-1),y(2:end))+radius]);
   end
-  nt=size(mx,1);parts=cell(nt,1);
-  for k=1:nt
-    c=mesh.cell_id(k);parts{k}=LOCAL_split(k,[0,0;1,0;0,1],0,(1:ng)',mx(k,:),my(k,:),c,curves{c-cmin+1},config.maximum_subdivision);
-  end
-  leaves=vertcat(parts{:});
-  info=struct('leaves',size(leaves,1),'unresolved_leaves',sum(leaves(:,8)==0),'max_depth',max(leaves(:,9)), ...
-    'curve_segments',ng,'maximum_subdivision',config.maximum_subdivision);
 end
 function rows=LOCAL_split(k,v,level,candidates,mx,my,c,curve,maxdepth)
   ref=[v;(v(1,:)+v(2,:))/2;(v(2,:)+v(3,:))/2;(v(3,:)+v(1,:))/2];

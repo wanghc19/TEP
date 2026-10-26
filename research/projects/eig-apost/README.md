@@ -1,10 +1,10 @@
 # Eigenvalue a posteriori error research
 
-2026-10-26 当前：已按用户要求恢复持续研究，整体目标未完成；联合改善 FEM candidate、谱距离估计与完整流程成本。
-[[research/projects/eig-apost/phase3-analysis/fem-bound/r-mm|D.1 attempt-2 实际独审]] 接受同场普通估计约0.254%的改善；完整成本下降尚无证据。
-[[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#10. 当前最小下一步 E.1：固定几何的一次 FEM 空间敏感性对照|唯一最小下一步 E.1]] 为固定域/表示几何的一次 FEM 空间对照，尚未执行。
-本轮只读源码/结果/日志、核算已有标量并维护研究文档；未重跑实验。原 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-i95|理论及计划独审]] 保持其范围。
-下文为历史阶段说明；B.1旧PASS不覆盖I9.5，原“必然地板/必须加密”诊断以新审查更正为准。
+2026-10-26，[[research/projects/eig-apost/implementation/i9/review-9-5a|E.2 实际结果审查]]：**PASS WITH CONDITIONS，仅限普通算术完整数值链**。
+新candidate $k_h=1.558439927483915$；新场主 $R$ 为Q10 $0.004627470466476482$、Q8 $0.004625864372333271$，对旧最佳同阶下降约69.47%。
+受监控完整科学链515.14695675秒、采样峰值1,759,723,520字节；同合同成本下降未建立。真材料积分、薄片元、H+及BIE参考条件仍须披露。
+用户已清除goal，本轮没有建立或恢复goal；只读审查源码/已有结果并维护研究文档，未重跑实验，不自动进入下一轮。
+完整设计仍见 [[research/projects/eig-apost/implementation/i9/design-9-5a#6. 当前设计 E.2：联合细化后的完整谱距离交付|design §6]]；问题统一维护于 [[research/projects/eig-apost/implementation/i9/README#FEM 原生场理论问题账目|I9账目]]。旧审查保持各自范围。
 
 2026-10-23 理论专题 v2：[[research/projects/eig-apost/phase3-analysis/fem-bound/p-scope|FEM 原生场范围与新版验收]]、
 [[research/projects/eig-apost/phase3-analysis/fem-bound/theory|无限域谱距离、非零通量与精度评价]]、

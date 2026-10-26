@@ -2,16 +2,12 @@
 
 ## 当前持续目标与本轮交付（2026-10-26）
 
-持续目标：联合改善 FEM candidate 的连续谱精度、原无限波导谱距离估计的有效性与完整流程成本。
-用户交回 Claude 的 D.1 attempt-2 结果并要求恢复研究；本轮只读审查源码、机器结果与日志，不重跑实验。
-研究工作已恢复，整体目标未完成。工具仍显示旧 blocked 且未提供恢复操作；不另建目标或伪报 active。
-D.1 的小幅普通算术改善经实际独审接受，完整成本下降尚无证据；见
-[[research/projects/eig-apost/phase3-analysis/fem-bound/r-mm|attempt-2 独审]]。
-唯一最小下一步为 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#10. 当前最小下一步 E.1：固定几何的一次 FEM 空间敏感性对照|E.1 固定表示几何的一次 FEM 空间对照]]，尚未实施，须用户另行授权。
-[[research/projects/eig-apost/phase3-analysis/fem-bound/r-i95|原理论及 D.1 方案审查]] 保持其历史范围，不替代本次实际结果审查。
-复用 Researcher 与 skeptic，不新增代理；工具不支持对既有代理重设或核验模型/effort，未指定替代型号。
-本轮不修改数值代码、不运行 MATLAB/实验、不发送 Claude 消息、不改 main 或 Git 索引。
-下文是2026-10-23 B.1 的历史范围及验收，不覆盖后来 I9.5 的有限尾场或新独审。
+专题长期关注candidate精度、原无限算子谱距离估计与完整成本。用户已清除goal；本轮只审查E.2结果，不新建/恢复goal。
+[[research/projects/eig-apost/implementation/i9/review-9-5a|E.2 实际结果审查]] 接受E.2为完整普通算术交付：新candidate、新有限尾/RT2、新场Q10/Q8和完整科学链成本齐备，主R下降约69.47%。
+真误差、谱唯一性、严格积分认证和同合同提速未建立；条件Temple仍须H+，BIE差仅作条件参考。
+复用Researcher与skeptic审查实际源码/JSON/日志；主agent额外核对保存MAT逐元取小和聚合。实际报告不继承旧PASS，边界见review。
+本轮保护已有未提交代码及文档，不运行MATLAB/实验、不改main、不stage/commit/push；证明文件未修改。
+接受本次结果不要求追加实验；不自动制定或执行下一轮。下文为2026-10-23 B.1历史范围，不覆盖E.2数值结果。
 
 ## 历史：B.1 方法层范围
 

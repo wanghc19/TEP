@@ -22,7 +22,29 @@ function config = fem_i9_config(mode)
   config.resources = struct('hard_seconds',2400,'rss_bytes',3e9, ...
     'sample_seconds',1,'threads',11);
   config.mode = mode;
-  if strcmp(mode,'preflight')
+  if startsWith(mode,'e2')
+    % I9.5 design 6.2 (E.2): jointly refined native FEM, one local shift.
+    % N=8 cells per side, h=1/24, 160 interface segments; other mesh rules,
+    % quadrature, gates and seed are unchanged. 'e2smoke' is a debug probe only.
+    k_old = 1.5584630910866906;               % historical I9.3 candidate
+    config.mesh.half_cells = 8;
+    config.mesh.subdivisions = 24;
+    config.mesh.interface_segments = 160;
+    config.solver.shifts_mu = k_old^2+0.01;    % sigma = k_old^2 + 0.01
+    config.solver.shift_count = 1;
+    config.solver.requested = 3;
+    config.solver.subspace = 20;
+    if strcmp(mode,'e2smoke')
+      config.mesh.half_cells = 2;              % smallest domain holding the tail reference cells
+      config.mesh.subdivisions = 6;
+      config.mesh.interface_segments = 40;
+      config.selection.center_mass_min = 0;    % locality gates relaxed for the probe only
+      config.selection.core_mass_min = 0;
+      config.selection.end_mass_max = 1;
+    else
+      assert(strcmp(mode,'e2'),'i93:Mode','E.2 modes are e2 or e2smoke.');
+    end
+  elseif strcmp(mode,'preflight')
     config.mesh.half_cells = 1;
     config.mesh.subdivisions = 6;
     config.mesh.interface_segments = 40;

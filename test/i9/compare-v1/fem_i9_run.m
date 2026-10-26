@@ -9,6 +9,9 @@ function fem_i9_run(output_dir,mode)
 % Main changes: two different global-oriented trilobe leads, native star,
 %   Dirichlet x ends, beta-periodic y, one frozen mesh, no reference matching.
 % Numerical goal: candidate delivery timing, without an error comparison.
+% Notes: mode 'e2' (I9.5 design 6, E.2) uses the refined mesh and one local
+%   shift from fem_i9_config; it skips the raw binary audit export (all arrays
+%   stay in evidence.mat). Modes 'formal' and 'preflight' are unchanged.
   config = fem_i9_config(mode);
   if ~isfolder(output_dir), mkdir(output_dir); end
   maxNumCompThreads(config.resources.threads);
@@ -76,11 +79,14 @@ function fem_i9_run(output_dir,mode)
       'validation',validation,'constraint',rmfield(constraint,{'prolongation','top','bottom','dirichlet'}), ...
       'solves',solve_records,'modes',modes,'candidate_ids',find([modes.candidate]),'timings',timings);
     if strcmp(mode,'preflight'), summary.status='IMPLEMENTATION_PREFLIGHT_ONLY'; end
+    if strcmp(mode,'e2smoke'), summary.status='IMPLEMENTATION_SMOKE_ONLY'; end
     stage = 'save_export'; timer = tic;
     save(fullfile(output_dir,'evidence.mat'),'config','mesh','forms','constraint','A','B', ...
       'eigenvectors','eigenvalues','source_shift','solver_flags','solve_records', ...
       'cell_mass','overlaps','modes','validation','solve_permutation','-v7');
-    LOCAL_export(output_dir,mesh,forms,constraint,A,B,eigenvectors,eigenvalues,cell_mass,overlaps);
+    if ~startsWith(mode,'e2')
+      LOCAL_export(output_dir,mesh,forms,constraint,A,B,eigenvectors,eigenvalues,cell_mass,overlaps);
+    end
     writetable(struct2table(modes),fullfile(output_dir,'modes.csv'));
     summary.timings.save_export_seconds = toc(timer);
     summary.timings.matlab_function_seconds = toc(started);
@@ -296,7 +302,7 @@ function [modes,V,cell_mass,overlaps]=LOCAL_modes(config,mesh,forms,constraint,A
     if duplicate==0,representatives(end+1)=j;else,modes(j).status='DUPLICATE';end %#ok<AGROW>
   end
   for j=1:nm
-    modes(j).candidate=strcmp(config.mode,'formal')&&modes(j).valid&&modes(j).in_window&& ...
+    modes(j).candidate=ismember(config.mode,{'formal','e2','e2smoke'})&&modes(j).valid&&modes(j).in_window&& ...
       modes(j).localized&&modes(j).duplicate_of==0;
     if modes(j).candidate,modes(j).status='CANDIDATE';end
   end

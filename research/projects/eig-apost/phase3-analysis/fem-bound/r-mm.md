@@ -8,8 +8,8 @@
 编者说明：下方 A–H 为复用的独立 skeptic 返回报告，由主 agent 保存；“未修改文件”指审查者。
 本报告不替换 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-theory|B.1 审查]] 或
 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-i95|原理论及计划 D.1 审查]]。
-本次研究者的建设性分析、主 agent 的选择及 E.1 实际合同见
-[[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#10. 当前最小下一步 E.1：固定几何的一次 FEM 空间敏感性对照|p-next 第10节]]。
+编者入口更新：本报告审查的E.1实际合同保留于提交 `35270c9` 的 `p-next.md` 第10节；它未实施，后因用户改变目标而由E.2取代。
+当前 [[research/projects/eig-apost/implementation/i9/design-9-5a#6. 当前设计 E.2：联合细化后的完整谱距离交付|E.2 design]] 不属于下方历史审查范围；结果review待实验后进行。下方报告正文和结论未改。
 
 ## A. 审查框架与材料
 
