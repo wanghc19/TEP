@@ -2,6 +2,23 @@
 
 ## 当前状态
 
+2026-10-24 **I9.5 已实施 s-eq-temple 第0–2步**，见 [[research/projects/eig-apost/implementation/i9/design-9-5a|结果记录]] 与 [[test/i9/eq-temple-v1/README|实验]]。复用原生 FEM 场的内部部分，以有限离散 Floquet 尾替换外部场，保持候选频率不变；配无权 LS 通量、再经定理 B 评价，得到：
+- 无条件线性界 $R(\mu_h)=0.0152$，比 I9.4 的 $1.72$ 改善约 113 倍，仍未达 $0.01$；
+- 在单侧谱隙假设 $\mathrm H^+(\mu_{\mathrm R},2.1875^2)$ 下，Temple 半径 $1.60\times10^{-4}$，$\operatorname{dist}(\mu_h,\sigma)\le1.76\times10^{-4}$。
+
+当前估计主要受梯度差项 $\|\nabla u-p\|\approx0.0079$ 限制；该项不等于实际 FEM 能量误差，尚未排除通量与估计式继续收紧的空间。全部为普通算术估计，只有主agent自检，没有独立审查。
+
+2026-10-24 续：针对 I9.4 偏松，提出 **方法提案 Revision C 候选**，见
+[[research/projects/eig-apost/phase3-analysis/fem-bound/s-eq-temple|局部化通量界与预解式 Temple 二次界]]。
+诊断出四个独立原因：无网格权重的体缺陷、材料失配地板、线性谱距离式的固有阶数和零延拓端项。
+对应的新组件有四项：
+- 对任意通量成立、从不劣于 B.1 式(9) 的局部化估计；
+- 加权最小二乘 RT2 通量；
+- Bloch 尾试探函数；
+- 只需 $u\in V$ 的单侧谱隙 Temple 二次界。
+其中二次界以未认证的谱隙假设为条件，与无条件线性界并列。
+方法提案形成时，新增定理已有证明草案但未独审、未实施，当时的量级只是规划预测。后续第0–2步已实施并产生上述数值结果；**独立审查仍未完成**。问题见下方 FB-6–FB-10。
+
 2026-10-24 已完成 **I9.4 固定原生 FEM 场的显式非零 RT2 通量评价**。
 直接复用 I9.3 `attempt-1/run-02` 的代表模式1，没有重跑 FEM、构造 BIE 场或求解全局通量优化系统。
 普通数值主结果为 **$R_{\rm num}=1.7197786075650205$**，身份是
@@ -136,9 +153,14 @@ I9.1 到此停止。没有启动后续谱距离、额外 $\beta$ 优化或参数
 |---|---|---|---|
 | FB-1 准确相位与全局网格资格 | important caveat：I9.4 重建同一 reduced vector 的准周期场，检查公共P2边、连通性、单外环、全元 Jacobian；普通浮点检查不等于精确资格 | 保留当前网格/相位证据，不重跑 FEM；严格机器资格仅属未来认证工作 | NUMERICALLY CHECKED；CERTIFICATION OPEN |
 | FB-2 真实材料与可靠标量评价 | important caveat：已按真实曲线局部分类；260971个小片仍未决，完整材料候选的节点包络宽度未达预算；Q阶差不是严格余项 | 主结果限为数值估计，保留材料包络与求积诊断；不把原标签积分当作原算子 | NUMERICAL ESTIMATE DELIVERED；CERTIFICATION OPEN |
-| FB-3 有限非零通量与实际分辨率 | 显式 RT2 插值及一次边平均已实现；$R=1.7197786075650205$，未达 $0.01$；直接体缺陷主导，式(33)各组不能简单相加 | 若后续获授权，优先研究通量构造；不声称优化必达目标，不把大R解释为candidate误差大 | IMPLEMENTED；REFERENCE RESOLUTION NOT MET |
+| FB-3 有限非零通量与实际分辨率 | 显式 RT2 插值及一次边平均已实现；$R=1.7197786075650205$，未达 $0.01$；直接体缺陷主导，式(33)各组不能简单相加 | 若后续获授权，优先研究通量构造；不声称优化必达目标，不把大R解释为candidate误差大；2026-10-24 新构造提案见 FB-6–FB-10 | IMPLEMENTED；REFERENCE RESOLUTION NOT MET；NEW METHOD PROPOSED |
 | FB-4 点谱存在解释 | important caveat：只限制“区间内有离散导模”的升级，不限制全谱距离公式 | 另行证明同一算子的包含区间与本质谱不交；不以有限扫描替代 | WONT-FIX FOR CURRENT CLAIM |
 | FB-5 后处理成本 | 已实际计量：成功受监控进程126.703秒，峰值采样RSS871923712 bytes；未求全局系统 | 见I9.4互斥阶段表；一秒采样不能排除采样间瞬时峰 | MEASURED；无资源停止 |
+| FB-6 单侧谱隙假设 $\mathrm H^+$ | important caveat：[[research/projects/eig-apost/phase3-analysis/fem-bound/s-eq-temple|s-eq-temple]] 的二次界以 $(c,\lambda_+)$ 无谱为条件；现仅有 lead 采样 GAP 与候选搜索的数值证据；只限制“可靠二次界”措辞 | 实施时并列报告无条件线性界与条件二次界；认证路径见该文 §6.5 | OPEN |
+| FB-7 加权 LS 通量的实际分辨率 | important caveat：I9.5 实测 $\tau=0.0079$–$0.0124$，D1–D4 诊断均获数值支持；但 $\theta=1$ 的加权设计在定理 B 下比无权 LS 差 11–13%，当前估计受梯度差项限制；尚未证明达到 $10^{-4}$ 必须改变原生 FEM 场 | 可研究以定理 B 为目标的通量优化及估计式收紧；FEM 加密或提高阶数是另行授权的后续方向，尚未确定各路线的改善幅度 | MEASURED；REFERENCE 0.01 MET ONLY CONDITIONALLY |
+| FB-8 Bloch 尾的有限条件 | minor caveat：I9.5 在保存网格上核验：墙节点平移重合，合并值缺陷不超过 $1.3\times10^{-16}$；每侧恰 24 个衰减乘子，最大模 0.384；采用有限尾（外墙置零），不是 Stein 无限和 | — | RESOLVED（有限变体） |
+| FB-9 曲边 Poincaré 常数 | minor caveat：实测 $C_{P,K}\le0.0511$，$\overline d_K/\underline d_K\le1.59$，无病态单元 | — | RESOLVED |
+| FB-10 Revision C 候选未独审 | important caveat：新定理由主agent从零证明，未经独立审查；背景文献线索未核验 | 实施前独立审查 | OPEN |
 
 ## 取消中心额外缩放的对照（attempt-2）
 

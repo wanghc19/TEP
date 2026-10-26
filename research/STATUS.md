@@ -1,10 +1,27 @@
 # Research status
 
-更新日期：2026-10-23。
+更新日期：2026-10-24。
 
 状态词含义：`established in archived mainline` 仅表示冻结主线给出了论证，不等于已完成独立来源核验；`needs review` 表示已有陈述或证明草案但仍需严格审计；`tentative` 表示研究性判断；`unresolved` 表示尚未解决。
 
 ## 当前阶段
+
+2026-10-24，eig-apost I9.5 已复用 FEM candidate 与原生场的内部部分实施新方案，尾部方案替换外部场，候选频率不变（[[research/projects/eig-apost/implementation/i9/design-9-5a|结果记录]]）：
+- 无条件谱距离普通估计从 $1.72$ 降到 $0.0152$；
+- 以未认证的单侧谱隙为条件，Temple 二次界给出 $\operatorname{dist}(\mu_h,\sigma)\le1.76\times10^{-4}$。
+
+当前估计主要受梯度差项限制；该项不等于实际 FEM 能量误差，尚未排除通量与估计式继续收紧的空间。这些结果均未认证、未独审。
+
+2026-10-24，eig-apost 针对 I9.4 显式 RT2 通量估计偏松（$R=1.7198$），提出
+[[research/projects/eig-apost/phase3-analysis/fem-bound/s-eq-temple|局部化通量界与预解式 Temple 二次界]]
+（Revision C 候选，`needs review`）。新组件包括：
+- 对任意通量成立、从不劣于 B.1 的局部化估计；
+- 加权最小二乘 RT2 通量；
+- Bloch 尾试探函数；
+- 只需 $u\in V$、以单侧谱隙为条件的二次谱距离界。
+
+二次精度必须付出谱隙信息，相应假设记为 I9 账目 FB-6。
+上述方法提案形成时只做理论与规划，未运行实验或修改数值代码；当时的量级为预测。后续第0–2步已实施，结果见本节开头；尚未提升到 `mainline/`。
 
 2026-10-23，eig-apost 完成
 [[research/projects/eig-apost/phase3-analysis/fem-bound/theory|FEM 原生场精度评价 v2 / Revision B.1]] 的方法层证明与算法交接。

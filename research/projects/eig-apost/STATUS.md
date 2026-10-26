@@ -1,8 +1,38 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-10-23。
+更新日期：2026-10-24。
 
 ## 当前状态
+
+- **2026-10-24 I9.5 数值实施（s-eq-temple 第0–2步）：**
+  [[research/projects/eig-apost/implementation/i9/design-9-5a|结果记录]]、[[test/i9/eq-temple-v1/README|实验]]。
+  第0步逐位复现 I9.4 的 $\eta=0.67057$。全局无权 LS RT2 通量配有限离散 Floquet 尾（端项从 $0.003$ 降到 $3\times10^{-6}$）、经定理 B 评价后：
+  - 无条件 $R(\mu_h)=0.0152$，比 I9.4 的 $1.72$ 改善约 113 倍；
+  - 条件 $\mathrm H^+(\mu_{\mathrm R},2.1875^2)$ 下 Temple 半径 $1.60\times10^{-4}$，$\operatorname{dist}(\mu_h,\sigma)\le1.76\times10^{-4}$。
+
+  当前梯度差项 $\|\nabla u-p\|\approx0.0079$，不等于实际 FEM 能量误差；达到 $10^{-4}$ 可考虑收紧通量与估计式，或另行授权 FEM 加密、提高阶数，尚未证明后两者是必要条件。
+  其他发现：加权 LS（$\theta=1$）一致比无权差 11–13%。
+  资源：7 次 MATLAB 运行合计约 28.5 分钟，峰值 RSS 不超过 1.78 GB。
+  普通算术、未认证、仅主agent自检。
+
+- **2026-10-24 I9 FEM 谱距离新方案（Revision C 候选，方法提案）：**
+  [[research/projects/eig-apost/phase3-analysis/fem-bound/s-eq-temple|局部化通量界与预解式 Temple 二次界]]。
+  I9.4 的 $R=1.7198$ 偏松，诊断出四个独立机制：
+  - 无网格权重的体缺陷；
+  - 无权形式下约 $0.012$ 的材料失配 $\eta$ 地板；
+  - B.1 定理 3 对残差的线性阶；无谱隙信息时该阶不可改进，即使通量最优也约为 $0.02$；
+  - 零延拓端项。
+
+  新增结果：
+  - 引理 A（曲边 Poincaré，参考三角形 Neumann 谱间隙 $\pi^2$）；
+  - 定理 B（对任意分片通量成立、带切线、从不劣于 B.1 式(9) 的局部化界）；
+  - 加权最小二乘 RT2 通量；
+  - 命题 E（Bloch 尾与 Stein 精确求和）；
+  - 定理 C 与推论 C1–C3：只需 $u\in V$ 的预解式 Temple 不等式，在单侧谱隙 $\mathrm H^+$ 下给出 $x_T\lesssim(\lambda_++s)\tau^2/(\lambda_+-\mu_{\mathrm R})$。
+
+  规划预测（非结果）：无条件线性界约 $0.02$–$0.06$；在 $\lambda_+=2.1875^2$ 的条件下二次界约 $2.5\times10^{-4}$–$1.9\times10^{-3}$。
+  方法提案形成时由主agent从零证明，尚未实施或运行 MATLAB；后续第0–2步已实施，结果见上条。**目前仍未独审**，背景文献线索未核验。
+  问题移交 [[research/projects/eig-apost/implementation/i9/README#FEM 原生场理论问题账目|I9 账目]] FB-6–FB-10。
 
 - **2026-10-23 FEM 原生场精度评价 v2 / Revision B.1 方法层完成：**
   [[research/projects/eig-apost/phase3-analysis/fem-bound/p-scope|范围]]、
