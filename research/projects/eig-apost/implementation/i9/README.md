@@ -2,6 +2,15 @@
 
 ## 当前状态
 
+2026-10-26，[[research/projects/eig-apost/implementation/i9/review-9-5b|I9.5b FEM＋DtN实际结果审查]]：**PASS WITH CONDITIONS**，对应[[research/projects/eig-apost/implementation/i9/design-9-5b|设计D2]]、`fem-dtn-v1/output/attempt-1/run-02/`。
+- 最终 $k=1.558438079544167$，与BIE参考绝对差 $1.85362\times10^{-7}$，较E.2缩小约10.97倍；不是真误差或新谱距离估计。
+- 一次同材料局部翻边修好粗网，MAT确认全部界面P2点不变；正式粗细/Q10/Q12链全部合格，没有使用细层例外入口，Q16未触发。$\delta_h=1.77185\times10^{-6}$，机器$\delta_Q=0$仅表示停止分辨率内未观察到漂移。
+- 完整墙钟30.318秒、MATLAB子进程树采样峰值1,582,481,408字节；冷candidate字段是拆账估计，旧515秒不是可比candidate成本。不宣称同精度提速。
+- 无当前主结果blocker；设计所需曲线33点偏差和QZ原始块未交齐，一次目录外约16秒探针未保留，全部研发成本不闭合。两项未触发的复用门缺口另列下方账目。
+本轮按用户通知进行实际结果审查，复用Researcher和skeptic；只读核对源码/机器记录及选定MAT，未重跑、改设计或实验文件，不创建/恢复goal。D1失败及全部已有记录保留，问题见[[research/projects/eig-apost/implementation/i9/README#FEM＋DtN 问题账目|FEM＋DtN账目]]。
+
+以下为已完成E.2及更早阶段的证据，不自动适用于I9.5b。
+
 2026-10-26 E.2实际结果 **PASS WITH CONDITIONS**，见 [[research/projects/eig-apost/implementation/i9/review-9-5a|E.2 实际结果审查]]；仅接受完整普通算术数值链，不是认证或真误差证明。运行为 `eq-temple-v1/output/attempt-3/run-01/`，记录见 `test/i9/eq-temple-v1/README.md` 的 E.2 节。
 - 新 candidate 为 3 根中唯一合格根，$k_h=1.558439927483915$，漂移 $-2.32\times10^{-5}$。新有限尾每侧墙自由度 48，无权凝聚 RT2 的全部资格门通过。
 - 新场主 $R_h$：Q10 为 $0.004627470466$，Q8 为 $0.004625864372$。对旧 MM 基线同阶下降 69.47%，Q 阶差至多 $1.73\times10^{-6}$，冻结判读为 `RESOLVED_IMPROVEMENT_ORDINARY_ARITHMETIC`；两阶均低于 0.01 参照尺度。$\eta$ 的下降几乎全部体现在梯度差。网格、几何与域联合改变，不能严格归因，均未认证。
@@ -197,6 +206,20 @@ I9.1 到此停止。没有启动后续谱距离、额外 $\beta$ 优化或参数
 | FB-14 E.2资源可行性 | minor caveat：正式498次采样无并发MATLAB，峰值1,759,723,520字节/515.147秒，无预警/宽限；采样非瞬时保证 | 保留单次实测及稀疏填充数据，不外推任意加密可行 | MEASURED AND REVIEWED；NO RESOURCE STOP |
 | FB-15 未来运行的软限门 | minor caveat：run_eq.py到30分钟仅打标，没有客观即将完成的宽限判据；本次515秒未触发 | 未来可能触及软限前明确停止/一次宽限的证据与记录，不静默延至40分钟 | CURRENT RUN UNAFFECTED；REUSE GUARD OPEN |
 | FB-16 起向量契约 | minor caveat：源码未显式归一复随机v0，与design措辞不同；实际场质量归一和残差通过 | 下次相关修改时对齐实现或准确修订契约；不为接受本次结果重跑 | DISCLOSED；CURRENT RESULT UNAFFECTED |
+
+## FEM＋DtN 问题账目
+
+本表管理I9.5b当前问题。2026-10-26已完成[[research/projects/eig-apost/implementation/i9/review-9-5b|D2 run-02实际结果审查]]，PASS WITH CONDITIONS：主candidate/普通参考差/正式成本可接受，记录合同仍有缺项。D1/D2设计审查不代替本次结果审查；既有FEM原生场谱距离账目继续保留原范围。
+
+| ID / 事项 | 分类与影响范围 | 最小检查或处理 | 状态 |
+|---|---|---|---|
+| DTN-1 非对称半导与异常频率 | important caveat：run-02左右独立Schur/QZ/DtN及原始载荷检查通过，未见极点/分支切换伪根；不认证连续背景谱外或半带适定 | 保留逐频资格和局部续算范围，不将离散PASS升级为连续唯一模态 | D2 NUMERICALLY CHECKED；CONTINUOUS CONDITIONS OPEN |
+| DTN-2 曲边几何与积分 | important caveat：D2一次翻边保持480条界面及P2中点，粗/细det最大比1.345/1.163；但逐段33点真实曲线偏差未实现，面积差不能代替，几何未认证 | 下次实现维护补采样偏差；当前接受普通candidate但不声称几何合同全齐；Q零差仅为停止分辨率内一致 | D1 BLOCKER RESOLVED；CURVE DIAGNOSTIC OPEN |
+| DTN-3 局部根身份与BIE解释 | important caveat：正式正常粗细链和两次墙迹相关通过，BIE差约1.85e-7，非真误差；E.2初始化不是全窗搜索 | 保留delta_h约1.77e-6、Q10/Q12重装配及普通括区；例外入口仅smoke验证，不混写正式证据 | D2 PASS WITH CONDITIONS；NO UNIQUENESS CLAIM |
+| DTN-4 完整成本和资源 | important caveat：正式30.318秒/采样峰值1.582GB可审查，旧515秒不同任务；保留运行累计176.577秒不含丢失探针，全部研发总账未闭合 | 区分直接wall与冷candidate账目估计；不称同精度提速。采样及启动器/后汇总监控覆盖另属minor限制，后续复用补全 | FORMAL COST MEASURED；TOTAL R&D INCOMPLETE |
+| DTN-5 写入与失败证据保留 | important caveat：README披露目录外约16秒meshcheck且输出未保留，违反目录/留档合同；不推翻另行留档的正式run-02 | 未来探针也进入既定目录/监控；不得补造旧证据或以重跑冒充恢复，不改研究设计/审查文档 | DEVIATION DISCLOSED；NO FORMAL RESULT BLOCKER |
+| DTN-6 QZ审计数据缺失 | important caveat：保存S/D/P/乘子，未保存QZ分解块/稳定基；不能复核所报实际QZ基不变性残差，S/P仍可重核图一致性，记录合同有缺项 | 下次运行保存必要小块、基和对应pencil；本次审查明确源码/标量与独立MAT核对的边界 | OUTPUT CONTRACT PARTIAL |
+| DTN-7 未触发的复用门 | minor caveat：Q16追加名称但未同步required索引，未来失败时布尔量可能矛盾；初链未单独拒绝最小绝对特征值并列 | 下次复用前同步索引、补并列门并检查状态；本次Q16未触发、目标邻间距4.77，不必为接受结果重跑 | CURRENT RUN UNAFFECTED；GUARDS OPEN |
 
 ## 取消中心额外缩放的对照（attempt-2）
 

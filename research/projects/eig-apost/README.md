@@ -1,5 +1,9 @@
 # Eigenvalue a posteriori error research
 
+2026-10-26，[[research/projects/eig-apost/implementation/i9/review-9-5b|I9.5b FEM＋DtN实际结果审查]]：**PASS WITH CONDITIONS**。D2 run-02交付 $k=1.558438079544167$，BIE参考差 $1.85362\times10^{-7}$，较E.2缩小约10.97倍；完整墙钟30.318秒、采样峰值1.582GB。粗网一次局部翻边成功，正式粗细及Q10/Q12链通过；Q零差只表示求根停止尺度内一致。无主结果blocker，但曲线偏差/QZ原始块未交齐，另有未保留探针；不宣称真误差、完整研发成本或同精度提速。设计保持D2，本轮只审查、不重跑或改代码。问题见[[research/projects/eig-apost/implementation/i9/README#FEM＋DtN 问题账目|I9 FEM＋DtN账目]]。
+
+以下为E.2及更早阶段记录。
+
 2026-10-26，[[research/projects/eig-apost/implementation/i9/review-9-5a|E.2 实际结果审查]]：**PASS WITH CONDITIONS，仅限普通算术完整数值链**。
 新candidate $k_h=1.558439927483915$；新场主 $R$ 为Q10 $0.004627470466476482$、Q8 $0.004625864372333271$，对旧最佳同阶下降约69.47%。
 受监控完整科学链515.14695675秒、采样峰值1,759,723,520字节；同合同成本下降未建立。真材料积分、薄片元、H+及BIE参考条件仍须披露。
