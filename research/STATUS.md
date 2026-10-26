@@ -1,16 +1,30 @@
 # Research status
 
-更新日期：2026-10-24。
+更新日期：2026-10-26。
 
 状态词含义：`established in archived mainline` 仅表示冻结主线给出了论证，不等于已完成独立来源核验；`needs review` 表示已有陈述或证明草案但仍需严格审计；`tentative` 表示研究性判断；`unresolved` 表示尚未解决。
 
 ## 当前阶段
 
+2026-10-26，按用户要求恢复eig-apost持续研究；整体目标未完成。
+[[research/projects/eig-apost/phase3-analysis/fem-bound/r-mm|D.1 attempt-2实际独审]] 接受同场线性普通估计约0.254%的改善，candidate未变。
+正式对照492.187秒；冷261.58/暖118.88秒为拆项估算，未建立完整流程成本下降。
+最小下一步为 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#10. 当前最小下一步 E.1：固定几何的一次 FEM 空间敏感性对照|E.1固定域/表示几何的一次FEM空间对照]]，尚未执行，不附带细层通量估计。
+本轮复用Researcher/skeptic审查实际源码、结果及日志，没有运行实验或修改数值代码。工具goal仍为旧blocked，接口没有恢复操作；研究工作已恢复，不另建目标、不标记完成。
+
+2026-10-26 实验前历史，已交付
+[[research/projects/eig-apost/phase3-analysis/fem-bound/p-next|唯一下一轮方案及Claude prompt]]，
+由Researcher建设性分析、skeptic独立审查实际理论与计划，结果见
+[[research/projects/eig-apost/phase3-analysis/fem-bound/r-i95|r-i95]]。
+选定固定I9.5最佳有限尾场的RT2投影诊断和最多三步直接目标优化，末尾成对Q8/Q10评价并计入缓存冷成本。
+原全通量材料地板及“0.015由固有阶决定”的解释撤回；核心谱距离与条件Temple公式可在明确假设下保留。
+本轮未运行实验或修改数值代码，整体目标未完成。以下为原阶段记录。
+
 2026-10-24，eig-apost I9.5 已复用 FEM candidate 与原生场的内部部分实施新方案，尾部方案替换外部场，候选频率不变（[[research/projects/eig-apost/implementation/i9/design-9-5a|结果记录]]）：
 - 无条件谱距离普通估计从 $1.72$ 降到 $0.0152$；
 - 以未认证的单侧谱隙为条件，Temple 二次界给出 $\operatorname{dist}(\mu_h,\sigma)\le1.76\times10^{-4}$。
 
-当前估计主要受梯度差项限制；该项不等于实际 FEM 能量误差，尚未排除通量与估计式继续收紧的空间。这些结果均未认证、未独审。
+当前估计主要受梯度差项限制；该项不等于实际 FEM 能量误差，尚未排除通量与估计式继续收紧的空间。这些数值均未认证；原轮没有独审，2026-10-26追加的理论/源码审查不代替全部原始数组复算。
 
 2026-10-24，eig-apost 针对 I9.4 显式 RT2 通量估计偏松（$R=1.7198$），提出
 [[research/projects/eig-apost/phase3-analysis/fem-bound/s-eq-temple|局部化通量界与预解式 Temple 二次界]]

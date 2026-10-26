@@ -4,6 +4,11 @@
 
 ## 当前阶段
 
+2026-10-26 eig-apost FEM专题按用户要求恢复持续研究，整体目标未完成。
+[[research/projects/eig-apost/phase3-analysis/fem-bound/r-mm|D.1 attempt-2实际结果独审]] 接受同场普通估计0.254%的改善，未证完整成本下降。
+唯一最小后续为 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#10. 当前最小下一步 E.1：固定几何的一次 FEM 空间敏感性对照|E.1固定表示几何的FEM空间对照]]，尚未执行。
+本轮没有重跑实验或修改数值代码。goal接口仍显示旧blocked且无恢复操作，见p-scope；不另建目标、不标记完成。以下保留历史阶段记录。
+
 2026-10-23 续研 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-scope|FEM 原生场谱距离专题 v2]]，
 研究曲边 RT2 非零通量、真实材料积分与可核验的小量机制。
 旧零通量后备已被解析证明无实用分辨率，不再作为精度评价的完成依据；新版已完成独审，

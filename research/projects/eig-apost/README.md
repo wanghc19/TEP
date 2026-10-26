@@ -1,5 +1,11 @@
 # Eigenvalue a posteriori error research
 
+2026-10-26 当前：已按用户要求恢复持续研究，整体目标未完成；联合改善 FEM candidate、谱距离估计与完整流程成本。
+[[research/projects/eig-apost/phase3-analysis/fem-bound/r-mm|D.1 attempt-2 实际独审]] 接受同场普通估计约0.254%的改善；完整成本下降尚无证据。
+[[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#10. 当前最小下一步 E.1：固定几何的一次 FEM 空间敏感性对照|唯一最小下一步 E.1]] 为固定域/表示几何的一次 FEM 空间对照，尚未执行。
+本轮只读源码/结果/日志、核算已有标量并维护研究文档；未重跑实验。原 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-i95|理论及计划独审]] 保持其范围。
+下文为历史阶段说明；B.1旧PASS不覆盖I9.5，原“必然地板/必须加密”诊断以新审查更正为准。
+
 2026-10-23 理论专题 v2：[[research/projects/eig-apost/phase3-analysis/fem-bound/p-scope|FEM 原生场范围与新版验收]]、
 [[research/projects/eig-apost/phase3-analysis/fem-bound/theory|无限域谱距离、非零通量与精度评价]]、
 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-theory|独立审查]]。

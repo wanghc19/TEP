@@ -1,5 +1,20 @@
 # FEM 原生场的无限波导谱距离：范围与验收
 
+## 当前持续目标与本轮交付（2026-10-26）
+
+持续目标：联合改善 FEM candidate 的连续谱精度、原无限波导谱距离估计的有效性与完整流程成本。
+用户交回 Claude 的 D.1 attempt-2 结果并要求恢复研究；本轮只读审查源码、机器结果与日志，不重跑实验。
+研究工作已恢复，整体目标未完成。工具仍显示旧 blocked 且未提供恢复操作；不另建目标或伪报 active。
+D.1 的小幅普通算术改善经实际独审接受，完整成本下降尚无证据；见
+[[research/projects/eig-apost/phase3-analysis/fem-bound/r-mm|attempt-2 独审]]。
+唯一最小下一步为 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#10. 当前最小下一步 E.1：固定几何的一次 FEM 空间敏感性对照|E.1 固定表示几何的一次 FEM 空间对照]]，尚未实施，须用户另行授权。
+[[research/projects/eig-apost/phase3-analysis/fem-bound/r-i95|原理论及 D.1 方案审查]] 保持其历史范围，不替代本次实际结果审查。
+复用 Researcher 与 skeptic，不新增代理；工具不支持对既有代理重设或核验模型/effort，未指定替代型号。
+本轮不修改数值代码、不运行 MATLAB/实验、不发送 Claude 消息、不改 main 或 Git 索引。
+下文是2026-10-23 B.1 的历史范围及验收，不覆盖后来 I9.5 的有限尾场或新独审。
+
+## 历史：B.1 方法层范围
+
 日期：2026-10-23。对应正文版本：**FEM-bound v2 / Revision B.1：非零通量与精度评价**。
 工作树 `/Users/whc/Documents/Work/epost`，分支 `codex/epost`。
 本轮完整重写旧专题的构造与验收；没有数值实验、求解器改写或主线晋升。

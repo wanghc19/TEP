@@ -2,22 +2,40 @@
 
 ## 当前状态
 
+2026-10-26 结果复审：**D.1 同场小幅改善可接受；尚无完整流程成本下降证据**。实际源码、机器结果及日志的独审见
+[[research/projects/eig-apost/phase3-analysis/fem-bound/r-mm|r-mm]]；运行为 `eq-temple-v1/output/attempt-2/run-01/`。
+- 设置：场、候选、RT2 空间均固定为 run-03。
+- 第3步通量的 Q10 线性 $R(\mu_h)$：$0.015193834057524306\to0.015155221757483163$，下降 $0.2541\%$；Q8 下降 $0.2566\%$，改善量约为最大两阶差的22倍。改善有实用比较证据，但仍未到0.01参照尺度，不能称candidate更准或严格认证。
+- 总 $\eta$ 改善约14.8%来自端项下降，其余主要体现为均值项下降；梯度差仅减 $5.51\times10^{-7}$。第2–3步收益很小，不证明全局最优。
+- 若未验证的 $\mathrm H^+(\mu_{\mathrm R},2.1875^2)$ 成立，转回candidate的条件半径数值为 $0.00017541423792266642$，原为 $0.0001762265350642167$。
+- 纯投影普通诊断 $0.00468468837$ 不是严格下限；该投影通量的完整 $F\approx0.519$，不能据此承诺完整估计更小。
+- 实测正式对照492.187秒、采样峰值1.633 GB；4次smoke另计103.299秒。冷261.58秒/暖118.88秒均为删阶段账目估算，未测独立生产入口，缓存未保存；不能标作已实测冷/暖成本或已提速。候选未重解，1.45/16.72秒仅是历史算法/进程成本。
+- 用户已要求恢复研究，整体目标未完成；唯一最小下一步选 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#10. 当前最小下一步 E.1：固定几何的一次 FEM 空间敏感性对照|E.1 固定域、固定表示几何的一次 FEM 空间敏感性对照]]，不附带细层RT2或新R。本轮未运行实验，后续须另行授权。
+
+2026-10-26 实验前历史：**计划 D.1 选定时的记录**。
+本轮复用 Researcher 与 skeptic，独立审查现有实际理论/必要源码，核对原始 JSON 与运行日志；
+结论及限定范围见 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-i95|r-i95]]。
+只推荐 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next|固定 run-03 尾场的 RT2 投影诊断与至多三步直接目标优化]]，
+内含完整 Claude prompt。目标是区分当前通量/估计式的余量并计量必要成本，不重解 FEM、不换场。
+原文若干“材料地板”“0.015由固有阶数决定”等解释已撤回，不作为加密 FEM 的依据。
+本轮未运行实验、未改数值代码；下方2026-10-24条目是原实施时记录，不能覆盖本次审查范围。
+
 2026-10-24 **I9.5 已实施 s-eq-temple 第0–2步**，见 [[research/projects/eig-apost/implementation/i9/design-9-5a|结果记录]] 与 [[test/i9/eq-temple-v1/README|实验]]。复用原生 FEM 场的内部部分，以有限离散 Floquet 尾替换外部场，保持候选频率不变；配无权 LS 通量、再经定理 B 评价，得到：
 - 无条件线性界 $R(\mu_h)=0.0152$，比 I9.4 的 $1.72$ 改善约 113 倍，仍未达 $0.01$；
 - 在单侧谱隙假设 $\mathrm H^+(\mu_{\mathrm R},2.1875^2)$ 下，Temple 半径 $1.60\times10^{-4}$，$\operatorname{dist}(\mu_h,\sigma)\le1.76\times10^{-4}$。
 
-当前估计主要受梯度差项 $\|\nabla u-p\|\approx0.0079$ 限制；该项不等于实际 FEM 能量误差，尚未排除通量与估计式继续收紧的空间。全部为普通算术估计，只有主agent自检，没有独立审查。
+当前估计主要受梯度差项 $\|\nabla u-p\|\approx0.0079$ 限制；该项不等于实际 FEM 能量误差，尚未排除通量与估计式继续收紧的空间。全部为普通算术估计；原实施轮只有主agent自检，2026-10-26追加独审仅覆盖理论及必要源码，没有重算全部原始分项。
 
 2026-10-24 续：针对 I9.4 偏松，提出 **方法提案 Revision C 候选**，见
 [[research/projects/eig-apost/phase3-analysis/fem-bound/s-eq-temple|局部化通量界与预解式 Temple 二次界]]。
-诊断出四个独立原因：无网格权重的体缺陷、材料失配地板、线性谱距离式的固有阶数和零延拓端项。
+当时按体缺陷、材料失配、线性转换及人工端四方面提出诊断；2026-10-26审查保留这些分项，但撤回其中未获证明的定量地板和必要性推断。
 对应的新组件有四项：
 - 对任意通量成立、从不劣于 B.1 式(9) 的局部化估计；
 - 加权最小二乘 RT2 通量；
 - Bloch 尾试探函数；
 - 只需 $u\in V$ 的单侧谱隙 Temple 二次界。
 其中二次界以未认证的谱隙假设为条件，与无条件线性界并列。
-方法提案形成时，新增定理已有证明草案但未独审、未实施，当时的量级只是规划预测。后续第0–2步已实施并产生上述数值结果；**独立审查仍未完成**。问题见下方 FB-6–FB-10。
+方法提案形成时，新增定理已有证明草案但未独审、未实施，当时的量级只是规划预测。后续第0–2步已实施并产生上述数值结果；2026-10-26实际审查以 r-i95 为准，不沿用 B.1 的旧 PASS。问题见下方 FB-6–FB-11。
 
 2026-10-24 已完成 **I9.4 固定原生 FEM 场的显式非零 RT2 通量评价**。
 直接复用 I9.3 `attempt-1/run-02` 的代表模式1，没有重跑 FEM、构造 BIE 场或求解全局通量优化系统。
@@ -143,7 +161,7 @@ I9.1 到此停止。没有启动后续谱距离、额外 $\beta$ 优化或参数
 
 ## FEM 原生场理论问题账目
 
-阶段：2026-10-23 `fem-bound v2 / Revision B.1`。实际独审无现存理论 `blocker`。
+当前阶段：2026-10-26 D.1 attempt-2 实际结果复审及 E.1 最小后续设计；旧 B.1 和 r-i95 各自保持原审查范围。
 旧零通量方案对精度目标的 blocker 记为 **RESOLVED BY REPLACEMENT**；
 首轮未分类片候选漏材料及端迹假设缺口已在 B.1 修补并经 skeptic 复审。
 以下为本专题唯一持续维护的账目，review 中的移交表保留其审查时快照。
@@ -152,15 +170,18 @@ I9.1 到此停止。没有启动后续谱距离、额外 $\beta$ 优化或参数
 | ID / 事项 | 分类与影响范围 | 最小后续任务 | 状态 |
 |---|---|---|---|
 | FB-1 准确相位与全局网格资格 | important caveat：I9.4 重建同一 reduced vector 的准周期场，检查公共P2边、连通性、单外环、全元 Jacobian；普通浮点检查不等于精确资格 | 保留当前网格/相位证据，不重跑 FEM；严格机器资格仅属未来认证工作 | NUMERICALLY CHECKED；CERTIFICATION OPEN |
-| FB-2 真实材料与可靠标量评价 | important caveat：已按真实曲线局部分类；260971个小片仍未决，完整材料候选的节点包络宽度未达预算；Q阶差不是严格余项 | 主结果限为数值估计，保留材料包络与求积诊断；不把原标签积分当作原算子 | NUMERICAL ESTIMATE DELIVERED；CERTIFICATION OPEN |
+| FB-2 真实材料与可靠标量评价 | important caveat：D.1尾场共1627664叶片，541461未决，面积0.0317056；成对Q8/Q10支持本次改善，但共同分类偏差及严格求积余项未控制 | 主结果限普通估计；保留真实材料分类及Q阶敏感性，不把原标签或Q差当连续认证 | NUMERICAL COMPARISON REVIEWED；CERTIFICATION OPEN |
 | FB-3 有限非零通量与实际分辨率 | 显式 RT2 插值及一次边平均已实现；$R=1.7197786075650205$，未达 $0.01$；直接体缺陷主导，式(33)各组不能简单相加 | 若后续获授权，优先研究通量构造；不声称优化必达目标，不把大R解释为candidate误差大；2026-10-24 新构造提案见 FB-6–FB-10 | IMPLEMENTED；REFERENCE RESOLUTION NOT MET；NEW METHOD PROPOSED |
 | FB-4 点谱存在解释 | important caveat：只限制“区间内有离散导模”的升级，不限制全谱距离公式 | 另行证明同一算子的包含区间与本质谱不交；不以有限扫描替代 | WONT-FIX FOR CURRENT CLAIM |
 | FB-5 后处理成本 | 已实际计量：成功受监控进程126.703秒，峰值采样RSS871923712 bytes；未求全局系统 | 见I9.4互斥阶段表；一秒采样不能排除采样间瞬时峰 | MEASURED；无资源停止 |
-| FB-6 单侧谱隙假设 $\mathrm H^+$ | important caveat：[[research/projects/eig-apost/phase3-analysis/fem-bound/s-eq-temple|s-eq-temple]] 的二次界以 $(c,\lambda_+)$ 无谱为条件；现仅有 lead 采样 GAP 与候选搜索的数值证据；只限制“可靠二次界”措辞 | 实施时并列报告无条件线性界与条件二次界；认证路径见该文 §6.5 | OPEN |
-| FB-7 加权 LS 通量的实际分辨率 | important caveat：I9.5 实测 $\tau=0.0079$–$0.0124$，D1–D4 诊断均获数值支持；但 $\theta=1$ 的加权设计在定理 B 下比无权 LS 差 11–13%，当前估计受梯度差项限制；尚未证明达到 $10^{-4}$ 必须改变原生 FEM 场 | 可研究以定理 B 为目标的通量优化及估计式收紧；FEM 加密或提高阶数是另行授权的后续方向，尚未确定各路线的改善幅度 | MEASURED；REFERENCE 0.01 MET ONLY CONDITIONALLY |
-| FB-8 Bloch 尾的有限条件 | minor caveat：I9.5 在保存网格上核验：墙节点平移重合，合并值缺陷不超过 $1.3\times10^{-16}$；每侧恰 24 个衰减乘子，最大模 0.384；采用有限尾（外墙置零），不是 Stein 无限和 | — | RESOLVED（有限变体） |
-| FB-9 曲边 Poincaré 常数 | minor caveat：实测 $C_{P,K}\le0.0511$，$\overline d_K/\underline d_K\le1.59$，无病态单元 | — | RESOLVED |
-| FB-10 Revision C 候选未独审 | important caveat：新定理由主agent从零证明，未经独立审查；背景文献线索未核验 | 实施前独立审查 | OPEN |
+| FB-6 单侧谱隙假设 $\mathrm H^+$ | important caveat：Temple 公式须同一无限算子在 $(c,\lambda_+)$ 既无本质谱又无点谱；采样 GAP 与候选搜索未验证该假设，不能将 $1.7623\times10^{-4}$ 改称无条件结果 | 并列报告无谱隔离假设的线性数值估计与条件 Temple；本轮不启动谱认证 | OPEN；公式经独审 |
+| FB-7 固定 RT2 的分辨率与优化目标 | important caveat：D.1的同场MM改善0.2541%，后两步边际小；投影0.00468469且其完整F约0.519，不是严格下限/可达小R证明；旧全通量地板解释仍撤回 | 接受小改善并保留旧基线；暂不扩大MM扫描，下一步空间敏感性见FB-12 | D.1 PASS WITH CONDITIONS；最优性未证明 |
+| FB-8 有限尾与无限尾条件 | important caveat：当前有限尾在相容节点合并、外墙置零及闭合元全部积分下可用 B.1/B；改变了外部场。24个衰减乘子和给定墙迹的小匹配残差不证明完整墙迹基条件(F) | 保持有限场身份和全元/端积分；本次不使用无限 Stein 结论、不增加(F)认证门 | 有限变体可用；无限条件未核验 |
+| FB-9 曲边 Poincaré 常数 | minor caveat：引理A推导与源码整元Jacobian极值方法经只读审查；实测 $C_{P,K}\le0.0511$、行列式比不超过1.59仍是普通算术 | 下一轮保留检查，不扩展为机器认证 | REVIEWED WITH NUMERICAL LIMITS |
+| FB-10 Revision C 与 D.1 独审范围 | important caveat：r-i95覆盖核心理论及D.1计划；r-mm覆盖实际新增源码、JSON、日志和标量复核，未重算全部MAT/积分。不存在本次已证实的公式或实现blocker | 保留原证明及历史审查范围；后续新场仍需各自资格，不沿用旧PASS | THEORY/PLAN/ATTEMPT-2 REVIEWED WITH LIMITS |
+| FB-11 尾场积分与成本比较 | important caveat：正式492.187秒为研究对照实测，约93.8%花在缓存体积分与四次直接评价；冷261.58/暖118.88是删阶段估算，缓存未存、无暖入口，p0/m来源未完整计入新生产合同 | 以后若测生产成本，先冻结完整输入依赖与可运行路径；首次cache、candidate、p0和Rayleigh来源分别计费，不能用旧432秒作单估计基线 | COST LEDGER CORRECTED；TOTAL SPEEDUP NOT ESTABLISHED |
+| FB-12 candidate 空间敏感性 | important caveat：仅有一个原FEM分辨率，MM小收益不证明FEM细化必要或必有效；固定N/表示几何的空间影响尚未知 | E.1一次精确映射red refinement，用同细积分的粗控制分开求积漂移与空间漂移；只交candidate敏感性及共享对照成本 | PLANNED；NOT RUN；须用户另行授权 |
+| FB-13 缓存异常与复用门 | minor caveat：代码记录负二次量后截零，未对显著负值/最终cache-direct不一致强制失败；本次记录无负值且一致性好，不影响已接受的小改善 | 通用复用前加显著负值和最终一致性失败的回退/失败门；max_relative注明全数组归一尺度，不冒称逐元相对门 | CURRENT RUN UNAFFECTED；FUTURE REUSE GUARDS OPEN |
 
 ## 取消中心额外缩放的对照（attempt-2）
 
