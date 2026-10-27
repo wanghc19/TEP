@@ -1,5 +1,7 @@
 # Eigenvalue a posteriori error research
 
+2026-10-27，**研究路线复评**见 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#11. 研究路线复评：从维护估计器转向评价特征值|p-next §11]]：保留FEM＋DtN求解器，优先研究中心与两侧lead共同富化的有符号特征值修正；不再把继续完善I9.6包围工程当作默认进展。新方向尚非连续误差上界，首门预测层间根漂移，随后才研究余项/饱和性。旧R2结论不变；下文bulk/F/P修复是旧路线的局部下一步，当前研究优先级以上述报告为准。未新建设计、执行实验或恢复goal。
+
 2026-10-27，[[research/projects/eig-apost/implementation/i9/review-9-6a#9. R2：D2 run-03 实际结果审查|I9.6a D2实际审查R2]]：**REVISE，上界资格尚未闭合**。D1空成功出口已补；bulk近整矩形替代的复缺陷矩误差未受控，机器上界标签须收窄。主层报告 $R_k=1.42815\times10^{-4}$，源矩包围占半径91.76%，实用目标未达且不能归因为candidate变差。正式墙钟302.5766秒、MATLAB子树采样峰值2.713GB；目标流程总成本下降未建立。最小后续为冻结场的bulk资格及F/P评价收紧，未授权执行。本轮仅更新审查/入口，未修改理论、设计、实验或运行数值计算。问题见 [[research/projects/eig-apost/implementation/i9/README#I9.6 后验估计问题账目|I9.6账目]]；以下D2“未运行”等表述保留当时历史范围。
 
 2026-10-27续，选定 [[research/projects/eig-apost/implementation/i9/design-9-6a|I9.6a D2修复方案]]：在固定场上用参考元仿射剪裁与几何误差细带，直接评价缺陷及源缺陷矩；有限模采用显式Taylor余项，所有系数分块留存且不重复投影。完整有效上界出口与状态机已设计，实际精度和30/40分钟、3GB内的成本仍待验证。[[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|D2独审]]与 [[research/projects/eig-apost/implementation/i9/README#I9.6 后验估计问题账目|问题账目]]分别维护；旧review不改写。

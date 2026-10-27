@@ -1,5 +1,15 @@
 # Eigenvalue a posteriori decision record
 
+## 2026-10-27 — Reassess estimator structure before further enclosure repair
+
+- Retain the FEM–DtN candidate solver and the positive-source theorem. Neither the solver nor the theorem makes continued refinement of the I9.6 enclosure the default research priority.
+- The next selected question is a signed eigenvalue correction from enrichment of the center and both lead templates, normalized by the complete infinite discrete mass. Start with a finite enrichment prediction and an independently solved enriched root; this is not yet a continuous-error bound.
+- Keep geometry/material consistency, local branch assumptions and saturation/remainder information explicit. A same-space root residual or center-only enrichment is insufficient. Do not infer a fixed I9 accuracy floor or a P2 convergence rate from generic residual examples.
+- B3 remains a genuine qualification gap for the old unconditional bound. Repairing that label and choosing the most informative next research question are separate decisions. Historical designs and experimental reviews are unchanged.
+- The research assistant selects and reviews mathematical methods; Claude implements and runs only after user authorization. No experiment, goal operation or new formal design is authorized by this review.
+
+Stage report and scoped literature comparison: [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#11. 研究路线复评：从维护估计器转向评价特征值|p-next §11]].
+
 ## 2026-10-27 — I9.6 D2 repairs evaluation before changing the native field
 
 - Keep the candidate, native FEM–DtN configuration and source box fixed. The observed ordinary plateau does not establish a native-field accuracy floor.

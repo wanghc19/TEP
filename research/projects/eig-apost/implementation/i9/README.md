@@ -2,6 +2,8 @@
 
 ## 当前状态
 
+2026-10-27，**研究方向复评：不再默认继续修补I9.6估计器。** [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#11. 研究路线复评：从维护估计器转向评价特征值|阶段报告]]保留FEM＋DtN candidate方法，选择全模板富化的有符号特征值修正作为下一理论问题。须计入两侧无限离散质量、真实材料与几何一致性；层间预测不等于连续误差估计，单根/饱和性等条件不得隐含。B3资格缺口真实存在，但它不阻断新方向研究；下方“最小后续修复”仅适用于继续旧路径。旧review/design不改，本轮不安排或运行实验。
+
 2026-10-27，**I9.6a D2 run-03实际审查R2：REVISE / UPPER_BOUND_QUALIFICATION_INCOMPLETE**，见 [[research/projects/eig-apost/implementation/i9/review-9-6a#9. R2：D2 run-03 实际结果审查|review-9-6a §9]]。
 - D1的空成功出口已补；源矩纠正、显式Taylor范数、一次投影及系数留存实际运行。bulk把面积近似相等的四边形当整矩形，其复缺陷矩误差未付费，尚不能确认机器的无条件上界标签；未证明本次发生误分或半径低估。
 - 控制/主层报告 $R_k=3.88352\times10^{-5}/1.42815\times10^{-4}$，均未达到 $10^{-6}$ 目标；主层源矩包围占报告半径91.76%，不能据此归因于candidate变差。当前固定场缺陷的报告下界仍为0。
@@ -245,17 +247,20 @@ I9.1 到此停止。没有启动后续谱距离、额外 $\beta$ 优化或参数
 
 本表是I9.6唯一的持续问题账目。当前证据为D2 run-03，见 [[research/projects/eig-apost/implementation/i9/review-9-6a#9. R2：D2 run-03 实际结果审查|实际审查R2]]；D1/R1保留历史范围。现行设计D2本轮不修改；下表修复建议尚非实现/运行授权。
 
+2026-10-27路线复评后，I96-2至I96-9继续记录旧方法的资格和实施问题，不因此成为默认主线。当前优先研究I96-10；详见 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#11. 研究路线复评：从维护估计器转向评价特征值|阶段报告]]。
+
 | ID / 事项 | 分类与影响范围 | 最小落实/核验 | 状态 |
 |---|---|---|---|
 | I96-1 原无限算子与场身份 | important caveat：D2同配置固定频率恢复资格通过，两层共用输入；不是新candidate或历史场逐系数复用 | 继续保留输入身份，谱论作用于强定义域重构场，不把矩阵残差当连续谱距 | D2 INPUT CHECKED；CANDIDATE UNCHANGED |
 | I96-2 真实材料与单侧积分 | blocker仅针对无条件上界标签：bulk full片按面积容差替代为整矩形，复缺陷矩未付差集误差；尚未证明本次误分/半径低估。原薄带按实际Q归属已修正 | full候选四角对原仿射三角形的包含资格；失败保留真剪裁或付差集矩误差。无需重求FEM | B3 OPEN；REPORTED R CONDITIONAL |
-| I96-3 精度分辨率与归因 | important caveat：控制/主层报告Rk约3.88e-5/1.43e-4，未达1e-6；主层矩项超b约3852倍，P型宽度超约3.06倍 | 先收紧F源矩和P直接缺陷；P当前固定level3、F提前整批片数门不能解释为预算耗尽；不把大R当真误差 | RESOLUTION NOT MET；EVALUATION UNRESOLVED |
+| I96-3 精度分辨率与归因 | important caveat：控制/主层报告Rk约3.88e-5/1.43e-4，未达1e-6；主层矩项超b约3852倍，P型宽度超约3.06倍 | 若继续旧路线，需收紧F/P以区分评价与固定场缺陷；当前优先研究I96-10。不把固定level3或整批cap解释为必要成本，不把大R当真误差 | RESOLUTION NOT MET；EVALUATION UNRESOLVED |
 | I96-4 人工硬截与无限尾 | important caveat：33胞元硬截定义输入；显式Taylor24/25点范数、完整盒外尾及代理遗漏模已实读 | 保留完整尾与模系数；不把固定截断辅助细化当原生缺陷必趋零 | D2 NORM/TAIL PATH CHECKED；B3 STILL APPLIES |
 | I96-5 完整成本 | important caveat：本轮302.5766秒/子树采样2.713GB；旧203.65秒是不同普通路径，不能称同合同提速或已经完成有效上界成本 | 先导左右仅census，补各实际类别吞吐；按可容纳子集细化，不把整批预测超cap当必要成本下界 | FORMAL COST MEASURED；TARGET COST UNESTABLISHED |
 | I96-6 结论范围与认证 | important caveat：无BIE/模态数/谱隔离输入；当前R身份受B3限制。普通列混用纠正前ER和纠正后wd，仅诊断 | 严格分开条件公式、可靠上界、真误差；普通列统一源身份或明确混合标签。不扩展浮点认证 | CLAIM NARROWED；NO NEW SPECTRAL ASSUMPTION |
 | I96-7 可靠成功路径 | D1空出口blocker已关闭；D2源矩/直接缺陷/范数/组合路径已实际执行，B3上界资格另列I96-2 | 不继续写“可靠成功分支根本未实现”，也不因分支存在就升级为全部非舍入误差已闭合 | EMPTY-EXIT ISSUE CLOSED；QUALIFICATION OPEN |
 | I96-8 证据及执行合同 | important caveat：已留启动源码及3.603GB分块有限系数；仍缺full片身份/包含资格，监控漏外层launcher/汇总，残留进程身份与清理不全 | 保留所有旧运行，补必要几何资格和全进程监控/清理；事后启动器改动不能补旧证据 | STORAGE IMPROVED；CONTRACT PARTIAL |
 | I96-9 规则与负量 | minor caveat：6×6/10×10次数对应和Taylor余项已实现，总负Parseval上端拒绝；242列微小负尾保留，总量正 | 保留舍入诊断；Gram抵消及通用几何门按后续复用维护，不把未做舍入认证自动列为blocker | D2 CHECKED WITH ROUNDING CAVEATS |
+| I96-10 特征值定向富化 | important caveat于当前方向评估；完整导数/几何/余项未闭合，阻断未来将指标称作连续误差上界 | 先证明三模板Schur导数与无限质量恒等式，设计跨空间有符号修正；首门预测并独立验证富层根，随后才讨论饱和性。不能只丰富中心、用同层零残差或预设P2四阶 | PRIORITY RESEARCH；NO NEW BOUND OR RUN AUTHORIZATION |
 
 ## FEM＋DtN 问题账目
 

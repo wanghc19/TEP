@@ -1,6 +1,14 @@
 # FEM 原生场的无限波导谱距离：范围与验收
 
-## 当前：I9.6a D2方法修复与设计（2026-10-27续）
+## 当前：研究路线复评（2026-10-27）
+
+阶段报告见 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#11. 研究路线复评：从维护估计器转向评价特征值|p-next §11]]。保留 FEM＋DtN candidate 求解器，建议将研究重点转向三模板富化的有符号特征值修正；不再默认优先收紧 I9.6 的全域积分包围。旧正定源定理和实际R2保留，旧无条件上界资格及实用目标仍未完成；新方向也尚未建立连续误差上界。
+
+本次区分数学必要性、证明技巧和实现选择；条件须说明用途、模型来源、可替代性及适用范围。每阶段交付明确的继续/替换/停止判断、严格结论、未证假设、主要瓶颈和一项待验证问题。Codex负责理论/设计/审查，Claude负责经授权的实现和实验，用户评估重要结论。下一步先研究完整无限质量导数、跨空间缺陷与几何项，不自动开展实验、谱隙认证或恢复goal。
+
+下述D2设计已执行，当前结果见 [[research/projects/eig-apost/implementation/i9/review-9-6a#9. R2：D2 run-03 实际结果审查|R2]]；其“尚待实验”只保留当时历史语境。
+
+## 历史：I9.6a D2方法修复与设计（2026-10-27续）
 
 唯一选案为 [[research/projects/eig-apost/implementation/i9/design-9-6a|design-9-6a D2]]；[[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|s-dtn-bound §11]]以标记块原位补齐可靠源矩、直接缺陷、几何细带和有限范数的证明与算法，保留D1原文。冻结candidate、原生配置及源盒，不以普通平台决定加密FEM，不引入BIE、谱隔离或新求解器。
 

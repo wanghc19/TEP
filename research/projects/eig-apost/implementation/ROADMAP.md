@@ -1,263 +1,126 @@
-# Eigenvalue a posteriori implementation roadmap
+# 特征值后验估计研究路线图
 
-本页只维护当前项目的最短研究主线、阶段关系和长期规划规则。I1 的离散 readiness 见
-[[research/projects/eig-apost/implementation/i1/README|I1 guide]]，I2 的三个里程碑见
-[[research/projects/eig-apost/implementation/i2/README|I2 guide]]，I3 的目标、输入和输出见
-[[research/projects/eig-apost/implementation/i3/README|I3 guide]]，未来 I4.1--I4.2 见
-[[research/projects/eig-apost/implementation/i4/README|I4 guide]]。具体实验只由
-[[test/README|experiment index]] 索引。
+更新：2026-10-27。本页是当前方向与阶段关系的简明导航，不是逐次运行日志。
+阶段事实以各自设计、实际结果和审查为准；详细历史见
+[[research/projects/eig-apost/STATUS|项目状态]]，当前方向依据
+[[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#11. 研究路线复评：从维护估计器转向评价特征值|路线复评 §11]]。
 
-## 项目唯一目标
+## 现在进行到哪里
 
-整个项目只服务于两个最终目标：
+**已经有可用的 BIE/FMM 和 FEM＋DtN candidate 求解流程；尚未取得既有足够分辨力、又完成全部资格核验的当前 FEM＋DtN 后验上界。研究重心正在从继续收紧 I9.6 的积分包围，转向直接预测特征值修正。**
 
-1. 用数值方法提出连续物理谱问题的正频率特征值 candidate；
-2. 估计该 candidate 与真实连续特征值之间的误差，并研究何时能够给出可计算的误差上界。
-
-有限维矩阵、determinant zero、近核向量、inertia、transport 和 derivative 都只是实现这两个
-目标的工具。项目不把“证明 numerical candidate 本身就是某个精确离散特征值”作为独立终点，
-也不要求先消除所有连续—离散概念差异才允许提出 candidate。所有差异都应进入误差来源、
-适用条件或 uncertainty 账本。
-
-## 长期阶段规则
-
-- 每个大阶段的正式内部里程碑通常以 **4 个为宜**，任何情况下不得超过 **5 个**；四个不是
-  最低数量要求，三个彼此独立的问题优于为了凑数拆出的第四项。
-- 只有会使当前交付不可解释、或真正阻止下一次必要计算的问题，才能成为正式里程碑或
-  `BLOCKER`。
-- 对主目标有帮助但不阻止后续工作的检查，统一列入 `OPTIONAL`；不得为了术语完备、
-  定理级身份或额外稳健性无限扩张阶段。
-- 一个实验不得同时承担发现 candidate、证明连续谱定理、认证离散结构和构造误差上界。
-  每个里程碑只回答它对最终两项目标所必需的问题。
-- I2 之后的规划只冻结大方向。具体算法、参数、阈值和验收流程必须根据 I2 实际结果另行设计。
-
-## 项目主线
-
-$$
-\text{连续物理特征值问题}
-\longrightarrow
-\text{可信离散 evaluator}
-\longrightarrow
-\text{高可信 candidate}
-\longrightarrow
-\text{误差来源与可计算估计}
-\longrightarrow
-\text{真值误差验证与上界研究}.
-$$
-
-| Stage | 核心目标 | 为最终目标解决什么 | 主要交付 | 为什么下一阶段需要它 |
-|---|---|---|---|---|
-| I1 | 建立可重复调用、对象不漂移的离散 evaluator，并找到显著实轴 dip | 没有可信 evaluator，后续 candidate 和误差变化都可能只是 branch、chart、rank 或 solver 改变 | 冻结的 $A_{\mathrm{def}}(k)$ 计算链、已知 dip、小邻域 readiness 与失败边界 | I2 需要在同一对象上判断这个 dip 是否值得作为连续特征值 candidate |
-| I2 | 汇总 count、端点 surrogate sign-count，并比较不同离散阶数下同一 mode 的 candidate 漂移 | 把“看见一个 dip”提升为“有局部计数、端点诊断和跨离散 candidate 证据支持的连续物理 candidate” | 各冻结离散阶数的 saved candidate、observed drift、terminal-cell/minimizer-localization diagnostic 及最低 residual/factor/field/boundary/mode-identity 证据 | I3 需要这些同-mode candidate 数据来识别误差来源；terminal-cell 尺度不再充当 candidate error bar |
-| I3 | 构造可计算误差估计，并建立条件性证书与 same-trial cap verdict | 防止把层间变化、矩阵残差或 correction 误称为真实 eigenvalue error 或可靠上界 | error indicator/correction、条件性证书与 same-trial cap verdict | I4 接收冻结 estimator/candidate、条件性定理和 same-trial diagnostics |
-| I4 | 使用独立方法/reference 验证经验 estimator，并研究可靠 enclosure、gap 与可计算上界 | 防止共享 BIE/QZ chain 的同方法证据被误称为独立真值验证或可靠上界 | I4.1 independent-effectivity verdict；I4.2 reliable interval/existence/upper-bound verdict | 未来阶段；当前只登记，不授权设计、审查或实验 |
-
-## I1：可信离散 evaluator
-
-### 核心目标
-
-I1 把连续 half-guide/DtN/BIE 谱问题落实成一个可审计的有限维 evaluator，并在固定模型上找到
-显著 dip。它解决的是“程序在不同参数点究竟有没有计算同一个对象”，而不是证明 candidate
-等于连续特征值。
-
-### 已完成的四个里程碑
-
-| Milestone | 通俗目标 | 状态 |
+| 当前事项 | 已有结论 | 下一步定位 |
 |---|---|---|
-| I1.1 | 冻结连续对象到离散矩阵的符号、尺寸和失败语义 | `PASS WITH CONDITIONS` |
-| I1.2 | 验证 one-cell、QZ、graph、DtN 到 $A_{\mathrm{def}}$ 的联合计算链 | `PASS WITH CONDITIONS` |
-| I1.3 | 检查实轴参数连续性并记录显著 dip | `PASS WITH CONDITIONS` |
-| I1.4 | 检查 dip 小邻域内 branch、chart、factor 和 evaluator readiness | `PASS WITH CONDITIONS` |
+| BIE/FMM 求解与谱距离 | I7–I9 已在非空、非圆形及双侧不同 lead 的模型上交付 candidate 和谱距离公式数值估计 | 保留为求解方法与对照；不把未认证数值当作连续真值 |
+| FEM＋DtN 求解器 | I9.5b 已交付 candidate；完整正式流程约30.32秒，与 BIE 参考频率差约 $1.85\times10^{-7}$ | 保留求解器与三模板结构；该差值不是真实误差 |
+| I9.6 正定源后验估计 | 理论及主要有限评价实现已建立；D2 主层报告 $R_k\approx1.43\times10^{-4}$，精度目标未达，上界资格仍有缺口 | 保留定理、实现与阴性结果；不再默认把全域积分细分作为主线 |
+| 新方向 | 路线复评建议同时扩充中心胞元和左右半波导的有限元空间，研究有符号特征值修正 | 建议另列 I10；尚未建立新方法的完整理论、设计或数值结果 |
 
-I1 的交付是可信 evaluator 和 dip 邻域，不是 root、continuous eigenvalue 或 estimator。I2 不再
-重复宽区间扫描、dip 搜索或逐层局部加密。
+I9.6 的未解决问题不等于 FEM＋DtN 求解器失效，也不等于新方向必须先完成旧路线全部修复才能研究。
+本页的 I10 是规划定位，**不构成实验执行授权，也不宣告 I9.6 上界目标完成**。
 
-## I2：提出高可信连续特征值 candidate
+## 始终不变的目标与结果口径
 
-### 核心目标
+项目服务于两个目标：提出原无限周期缺陷波导的特征值 candidate；评价其精度，并研究何时能给出可计算上界。固定 $\beta$ 时，谱参数为 $\mu=k^2$，比较必须区分 $k$ 与 $\mu$ 的尺度。
 
-I2 不是要证明某个有限矩阵的精确特征值身份，而是汇集最低成本、互补且不循环的数值证据，判断
-I1 dip 是否足够可信，可以作为连续物理问题的 eigenvalue candidate 交给误差分析。连续物理
-算子的实谱支持优先使用实轴数据；离散结构缺陷则作为近似质量和 uncertainty 记录。
+| 交付层级 | 能说明什么 | 不能自动说明什么 |
+|---|---|---|
+| candidate 与经验收敛证据 | 有可复现的频率、场、离散层间变化或独立方法对照 | 连续特征值存在、模态唯一、真实误差大小 |
+| 条件误差估计／修正 | 在明确分支、饱和性或一致性条件下评价误差 | 条件已验证，或结果已是无条件上界 |
+| 连续谱距离上界 | 在公式输入及误差控制成立时，限制 candidate 到连续算子谱集合的距离 | 到某个指定点谱的误差；点谱解释还需排除相关范围的本质谱 |
 
-### 三个正式里程碑
+有限矩阵最小奇异值、扫描末轮宽度、BIE/FEM 频率差、谱距离公式值是不同量。
+“理论已证明”“数值公式已评价”“所有非舍入误差已控制”“浮点舍入已认证”也分别记录。
+不为缺少当前任务未要求的认证而否定数值交付，但不将不完整评价标成可靠上界。
 
-| Milestone | 核心问题 | 当前状态 | 交付 |
+## I1–I6：建立求解与谱距离路线
+
+早期实验主要使用圆形周期 inclusion 和空中心基准。这里按研究贡献概括，不复述每次失败和修订。
+
+| 阶段 | 核心问题与实际贡献 | 留给后续的认识／状态 | 入口 |
 |---|---|---|---|
-| I2.1 单零计数诊断 | dip 小圆盘中是否存在一个孤立的有限维 zero，而不是没有 zero、多个 zero 或 factor pole 混淆 | `PASS WITH CONDITIONS` | 条件性 finite-dimensional count one；只作 candidate 可信度证据 |
-| I2.2 端点 sign-count/inertia-like jump 数值诊断 | 已知 dip 邻域左右端点的符号计数是否发生稳定跳变 | `PASS WITH CONDITIONS / HERMITIAN_PART_SINGLE_JUMP` | 已观察到稳定 endpoint count difference；只作数值佐证，不证明 raw finite matrix inertia 或实根 |
-| I2.3 跨离散阶数 candidate 漂移 | 预先冻结的不同离散阶数是否给出同一物理 mode，保存的 candidate 是否发生观测漂移 | `PASS WITH CONDITIONS / NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE` | `ntot` 与 $M$ 两条三层单轴实验均返回完全相同的 saved candidate，并分别形成 conditional algorithmic hierarchy；terminal-cell 尺度只限制 sub-grid minimizer 解释 |
+| I1：可信离散 evaluator | 固定 BIE、QZ、graph/DtN 和匹配矩阵链，检查参数连续性、分支、chart 与失败语义，发现实轴 dip | 建立可重复评价的候选邻域；不是连续根证明 | [[research/projects/eig-apost/implementation/i1/README|I1]] |
+| I2：candidate 可信度 | 局部有限维零计数、端点符号计数、跨边界离散与通道截断的同模态比较 | 形成候选及互补证据；零观测漂移和末轮网格宽度不是误差界 | [[research/projects/eig-apost/implementation/i2/README|I2]] |
+| I3：误差指标与条件证书 | 尝试连续场／弱残差重构，推进纯 BIE 与全边界评价，建立条件性谱包含连接 | 得到估计量候选；部分评价、尾项及 same-trial cap 未闭合，不能把条件定理写成已执行证书 | [[research/projects/eig-apost/implementation/i3/README|I3]] |
+| I4：独立 FEM 参考 | 以独立 FEM、有限超胞／截断及场识别研究参考解，比较空间、几何、截断等敏感性 | 已有经验 FEM 参考实验，不再是“未来未启动”；未完成对旧估计器的独立真误差验证，不能把参考值当真值 | [[research/projects/eig-apost/implementation/i4/README|I4]] |
+| I5：lift 残差 majorant | 分项处理人工墙、材料界面、值跳跃 lift 与尾项；由 Fourier 评价发展到实变量插值 | 形成条件性理想 majorant，特定函数／浮点评价缺项仍保留；这是旧 lift 路线，不是 I7–I9 的默认方法 | [[research/projects/eig-apost/implementation/i5/design-5-1j|I5 后期设计]] |
+| I6：resolvent 谱距离 | 改用 raw 场的完整界面跳跃与质量范数，经预解式公式评价全谱距离；推进非 Fourier 界面范数与 Arb 认证 | 在指定冻结圆形／空中心输入上完成谱距离认证；不认证搜索、带隙或模态编号，也不自动覆盖后来几何 | [[research/projects/eig-apost/implementation/i6/review-6-1c|I6 最终审查]] |
 
-I2.2 只复用 I1.3 已确定的区间端点，不重新扫描、寻找 dip、二分定位或复平面求根。旧
-I2.2 structure experiment 的 `NaN/UNAVAILABLE` 与 `I2_2_STOP_THEORY_GATE` 保持历史原样；
-它只说明当时不能把 raw $H$ 的计数解释成定理级 inertia。当前计划允许把明确标注对象和
-结构缺陷的端点 sign-count/inertia-like jump 作为数值可信度诊断，但 exact finite Hermitian
-证明不再是主线。
+这段演进的关键是：**从“矩阵 dip 是否可信”走向“重构场能给连续谱问题什么信息”，再从复杂 lift 分项转向直接跳跃的 resolvent 公式。** I5 的缺项不再是运行 I7–I9 数值估计的前置条件。
 
-I2 的退出不是“candidate 已被证明为精确特征值”。`drift-a1` 的 `ntot` 轴与
-`m-drift-a2` 的 $M$ 轴均给出三个可复现、同 mode 且完全相同的 saved candidates，故当前 I2 退出为
-`NO_OBSERVED_CANDIDATE_DRIFT / SAME_MODE`。I3 可以接收这一 conditional algorithmic
-hierarchy；但 terminal-cell 尺度只说明 sub-grid minimizer 尚未解析，两条零-shift 轴也不能
-单独提供非零 correction、收敛证据或误差界。
+## I7–I8：非圆形缺陷与计算加速
 
-## I3：误差估计与条件性证书
+### I7：中心椭圆，验证物理密度与谱距离流程
 
-### 核心目标
+两侧保留圆形 lead，中心换为等面积椭圆、材料参数2。分别进行搜索、端点惯性诊断、空间离散／通道加密及冻结场谱距离评价。
 
-I3 直接研究 candidate 与真实连续特征值之间的误差。它不以某种固定 estimator 公式为预设，
-也不把 next-level shift、matrix residual 或 effectivity 单独当成最终答案。具体算法和验收流程
-应根据 I2 实际交付另行冻结。当前 `drift-a1` 与 `m-drift-a2` 已提供两条经 mode-identity
-检查的 candidate sequence。I3.1 的早期路线给出四个正式负向结果，纯 BIE 路线首次形成
-finite indicator；最新全边界 BIE 进一步关闭旧 wall/$T$/outside-$M$ 资格问题，但 circle-action
-refinement 尚未通过。当前 I3.1 状态为
-`PRELIMINARY OBJECTIVE ACHIEVED / COMPUTED ESTIMATOR CANDIDATE`；I3.2 条件性证书谱包含定理已
-建立。same-trial `ecap-a2` application 通过 identity 并完成 evaluation，但以
-$664.470682>640$ MiB 资源硬门停止，未形成 cap、full-$P$、$q$ 或 interval；当前为
-`EMPIRICAL_CAP_UNRESOLVED`。
-零 observed shift 不能单独
-验证 next-level correction、收敛或 estimator；中心空列 ratio 因固定单胞 cutoff 主导而失去
-分辨率，lead-aware 实验则在形成通过资格的全波导 continuous trial/residual 之前即于固定
-BIE-informed fit 首败；Q1--RT0 实验又在 fine phase/scale Gram qualification 首败。V3
-`bie-a3` 虽通过真实 incoming BIE 的 branch/density/surface/safe-field 门，却在 coarse lead
-RT0-majorant 的含圆盘修正预因子处停止，未形成 flux、majorant、tail 或区间。纯 BIE
-`pbie-a2` 随后得到 $q=1.1049370224693775\times10^{-10}$ 和宽度
-$4.0501912934587381\times10^{-10}$ 的普通双精度名义区间，但 wall refinement $23.0\%$、
-nonzero-mode $T$ oracle 的 $O(1)$ 误差和 outside-$M$ share $51.5\%$ 使其只能作为
-`NUMERICALLY_UNQUALIFIED` candidate。这三项解释 `pbie-a2` 的历史 verdict。最新 `fbie-a1`
-得到 $q=1.0318643108971929\times10^{-10}$ 和宽度
-$3.7823388865376728\times10^{-10}$；wall/actual-$\Delta T$ 检查通过，全部 512 个已计算 circle
-modes 进入 $q$ 且 angular-tail 门通过；未计算 Fourier tail 仍未 enclosure。唯一 warning 是
-circle action change $0.77408786032496468>0.20$。该内部 action 分辨率不阻止 I3.2 theorem，
-并已由同一阶段的 same-trial design 继续诊断。新 nested evaluation 已实际暴露
-actual-$\Delta T$、finite-image Bloch 和 analytic-kernel
-三项资格失败，但尚未形成 cap。原 I3.3、I3.4 已分别整体迁移至未来 I4.1、I4.2：I4.1 使用
-独立方法/reference 对经验 estimator 进行 effectivity validation；I4.2 研究可靠 outward
-enclosure、projected gap、预注册宽度门与可计算上界。两项当前均未启动。
+本阶段发现并修正公共 `bloch.construct_S` 的密度坐标缩放错误，随后复验 I7.1–I7.3。修正前记录保留，但不能继续作为物理候选可信度的证据。I7.4 给出约 $1.99\times10^{-8}$ 的谱距离公式数值估计，完整跳跃上界未闭合，不能继承 I6 的认证标签。
 
-### I3 当前输出与未来 I4.1--I4.2
+入口：[[research/projects/eig-apost/implementation/i7/README|I7 模型、复验与四项里程碑]]。
 
-- **从 I2.3 接收：**预先冻结的离散阶数、同一物理 mode 的 candidate 序列、相邻/相对漂移、
-  terminal-cell/minimizer-localization diagnostic，以及最低 residual、factor、field、boundary、
-  mode-identity 和复现诊断。`drift-a1` 与 `m-drift-a2` 已分别提供边界 Nyström 与
-  trace-cutoff 轴的原始数值事实；两条轴的三层 saved candidate 均相同，observed shift 为零。
-  这些事实可进入误差来源分析，但不能单独支持非零 correction、effectivity 或 convergence claim。
-- **由 I3 另行建立：**连续模型适用边界，以及空间/trace/half-guide/BIE--QZ/结构/求解/
-  continuous--discrete 误差与实际 estimator 的关系。
-- **I3.1 输出：**一个冻结、可计算的 $\eta_h$，以及它覆盖和忽略的误差、适用假设和内部
-  一致性证据。没有证明时只能称渐近误差指标或 estimator candidate。
-- **I3.2 输出：**对同一连续 trial，证明 strict residual/field caps 若成立，则
-  $\overline q_h<1$ 给出 continuous spectral-intersection interval；same-$A$ certified gap
-  containment 再给出条件性离散存在；并以同一 frozen certificate 做 ordinary same-trial
-  empirical evaluation-cap application。定理已建立；`ecap-a2` 因资源首败未形成 empirical
-  cap，三项 fail-open warnings 按 component gates 也会使 cap unresolved；strict application
-  亦未形成。
-- **I4.1 未来输出：**在 estimator/candidate 与 I3.2 same-trial evaluation 冻结后，只用未参与其构造的独立 reference 检验其是否跟踪
-  candidate 到 gap 内连续离散特征频率集合的距离。通过后才称
-  `empirical eigenvalue-error estimator`；只有 reference 独立识别特定 mode 时才检验
-  target-specific error。同方法高分辨率结果只能作有共享偏差的后备。I4.1 当前未启动。
-- **I4.2 未来输出：**若还能给出 certified residual dual-norm upper bound、field-norm lower
-  bound、numerical enclosure、当前 continuous projected essential gap，以及结果前冻结的
-  absolute/gap-relative resolution，则先产生
+### I8：星形中心，建立可负担的完整流程
 
-  $$
-  \operatorname{dist}\bigl(
-  \widehat k_h,\mathcal K_{\mathrm{disc}}(A;G_\lambda)
-  \bigr)\le U_h.
-  $$
+两侧仍为圆形 lead，中心为等面积光滑五瓣星形。I8.1–I8.3 分开完成定位、离散／惯性检查和谱距离评价；中心512／lead256的主评价得到 $R_{\rm num}\approx7.05\times10^{-10}$。固定场512点评价与768点评价仍相差约43%，该结果是数值估计，不是已证明评价收敛或可靠上界。
 
-  只有另有 continuous spectral isolation/count 时，才升级为指定
-  $|k_*-\widehat k_h|\le U_h$。若这些条件不能建立，必须明确输出
-  `UPPER_BOUND_UNAVAILABLE`；已经通过独立 truth validation 的 empirical estimator 仍然可以
-  保留。
+随后解决两个计算问题：
 
-### I3 当前保留的两个正式里程碑
+- **单点成本：** profiler 定位 smooth proxy 场求值为主要热点；FMM2D 固定点对照后，I8.4 用相同中心512／lead256配置比较两条完整 pipeline。各242次搜索评价，完整成功流程耗时比约6.11，谱距离数值相差约0.157%。这是本次同流程对照，不是任意规模的速度保证。
+- **扫描成本与覆盖：** I8.5 把网格构造与格点评价分开，粗扫中心256／lead128，所有发现的内部 dip 转到512／256细化。有限窗口内交付一个正式 candidate；边界趋势与窄 dip 遗漏仍不能排除。
 
-| Milestone | 只回答什么问题 | 独立输出 |
+I8 的可复用成果是 FMM 求值、分阶段 pipeline 和多 dip 管理，不只是另一个星形候选。
+入口：[[research/projects/eig-apost/implementation/i8/README|I8 全部里程碑与结果]]。
+
+## I9：由非对称案例扩展到 FEM 误差研究
+
+### 原始目的与范围变化
+
+I9 起初要检验：**两侧不再是相同圆形介质柱，而是两个不同、左右不对称的周期 lead 时，能否找到共同 projected gap、candidate 并评价谱距离。**
+
+当前比较模型固定 $\beta=0.5$，中心为未额外缩放的单个光滑五瓣 inclusion、材料参数4；左右为不同三瓣 inclusion、材料参数17，背景1。早期 I9.1 的等面积中心及材料参数2结果是对照历史，不与当前模型混用。
+
+I9.1–I9.2 完成原案例流程后，FEM candidate 的低成本促成了新问题：“如何公平评价另一种求解器的精度？”于是 I9.3–I9.6 扩展到原生 FEM、FEM＋DtN 及后验理论。**I9 已不再只是几何案例阶段，下一次实质方法转向宜单独编号。**
+
+### 各里程碑交付了什么
+
+| 里程碑 | 问题／方法 | 主要结果及准确边界 |
 |---|---|---|
-| I3.1 构造并内部论证误差指标 | 能否构造实际可计算的 $\eta_h$，并说明其数学来源、假设、覆盖和忽略的误差 | 冻结的 estimator candidate 与内部检查结果 |
-| I3.2 条件性定理与 same-trial evaluation cap | strict residual/field caps 若存在，能否推出连续谱相交及条件性离散存在；同一 certificate 的 nested evaluation 能否形成 ordinary empirical cap | 条件性定理、cap 可行域、certificate obligations；`ecap-a2` 当前为 `RESOURCE_BUDGET_UNAVAILABLE / EMPIRICAL_CAP_UNRESOLVED` |
+| I9.1：共同 gap 与 candidate | 独立构造两侧 lead，分类共同窗口并搜索；追加中心面积与材料单参数对照 | 材料4版本 BIE candidate 为 $1.5584378941820909$；窗口采样支持共同 gap，但真实带边及边界趋势未完全解决 |
+| I9.2：BIE 谱距离 | 在该 candidate 上以 FMM 构场并评价完整跳跃、质量和迹常数 | $R_{\rm num}\approx7.74585\times10^{-10}$，`UNCERTIFIED_RNUM`；不是实际特征值误差 |
+| I9.3：FEM 对照 | 有限多胞元、曲边 P2 FEM 独立交付 candidate；后来在固定 FEM 频率作 BIE 重构 | FEM $k\approx1.5584630910866906$，算法约1.45秒；与历史 FMM 非同精度计时。固定频率 BIE 重构得到 $R\approx0.119$，不评价原生 FEM 场误差 |
+| I9.4：原生 FEM 后验估计 | 零延拓 FEM 场、弱残差与显式 RT2 通量 | 数值公式值约1.72，体缺陷主导；实现与场身份检查有价值，但无法有效分辨 candidate 精度 |
+| I9.5a：通量、尾场与 FEM 联合改进 | 优化通量、采用 Floquet 尾、研究条件 Temple 界，并加密 FEM | 线性谱距离估计约 $0.0152$，后续联合加密降至约 $0.00463$；Temple 结果依赖未验证的单侧谱隙，不能称无条件上界 |
+| I9.5b：Fliss FEM＋DtN | 三个曲边 P2 单胞模板，左右独立 DtN，局部非线性特征值搜索 | $k=1.558438079544167$；完整正式流程30.318秒，与 BIE 参考差约 $1.85362\times10^{-7}$。候选交付通过审查，不是真误差或同精度加速证明 |
+| I9.6：正定源重构 | 将有限原生场转为强定义域重构场，用两场差及全部辅助评价误差估计连续谱距离 | 理论成立于所列条件；D2 实际评价仍未达到实用分辨目标，且上界资格未完整闭合，详见下节 |
 
-I3.1 已冻结并运行首个最低成本特殊情形：在 homogeneous empty center column 中，由 I2 的
-Fourier 墙系数构造显式场，乘固定单胞 cutoff 后直接计算 continuous strong-residual norm ratio。
-`center-a1` 得到 $22.43882099031153$；积分层稳定，但两个 cutoff 导数项分别约为 $17.14$ 和
-$4.93$，名义区间跨过零，因而该 reconstruction 对预注册 $10^{-6}$ 频率尺度分辨率不足。
-这是一项有效负结果，不能实例化现行 I3.2 strict theorem，也没有形成可进入未来 I4.1 independent
-effectivity 的冻结 estimator。
+阶段总入口与唯一持续账目：[[research/projects/eig-apost/implementation/i9/README|I9 README]]。
+FEM＋DtN 的已完成求解器结果以 [[research/projects/eig-apost/implementation/i9/review-9-5b|I9.5b 实际审查]] 为准。
 
-I3.1 下一步仍须直接作用于连续物理算子，不先定位 finite zero 或预测 projected finite-root shift。
-历史全波导 BIE-informed Fourier--Hermite/bubble reconstruction 已正式运行；
-`lead-a3` 通过 finite input、density representation 和 propagation，但 $J=4/8$ holdout error
-分别约为 $4.522421/5.138028$，高于 $0.20$ 且随 bubble order 变差，故按预注册优先级停止于
-`CONFORMING_RECONSTRUCTION_UNRESOLVED`。center、Gram、tail 和 residual ratio 均未到达。
+### I9.6 的现状与为何调整优先级
 
-由于 training/holdout targets 到圆周仅约为 source-panel arc scale 的 $0.86\%/1.08\%$，direct
-close layer-potential evaluation 尚未资格化；当前不能区分近奇异评价与 basis/metric 的贡献。
-当前 [[research/projects/eig-apost/implementation/i3/design-3-1b|design-3-1b]] 已在保留 Git
-历史的前提下改写为 V2：用 frozen QZ wall traces、conforming Q1 cell extension、global RT0
-flux 与 functional majorant 构造 weak residual。正式 `weak-a1` 的 base finite input、Q1--RT0
-与 full-$P$ tails 通过，但 fine phase/scale repeat 中 center 的 $A,B$ Gram 及左右 first-cell 的
-$A$ Gram 的最大 Hermitian
-defect 为 $6.2442\times10^{-10}>10^{-12}$，故 producer 停止于
-`MAJORANT_QUADRATURE_UNRESOLVED`。该 valid negative 没有形成 estimator；独立结论见
-[[research/projects/eig-apost/implementation/i3/review-3-1c|review-3-1c]]。
+I9.6 的核心是对有限场作常系数正定源重构，再用重构差异控制原无限算子的谱距离；辅助评价采用矩形多项式、Fourier／Yukawa 和无限尾。它不以 BIE 参考值、预知模态数或谱隔离作为主公式输入。
 
-V3 [[research/projects/eig-apost/implementation/i3/design-3-1d|design-3-1d]] 改用真实
-incoming BIE、安全 collars、conforming Q1 companion 与 constrained RT0 majorant。正式
-`bie-a3` 已通过 finite input、branch/Wood、propagation、density、surface trace 与 safe-field
-门，但在 coarse lead 的 composite RT0-majorant pre-factor 处停止。当前最近的下一门是先保存
-并检查 background、disk correction 与最终 free-block 的正性和 bad-edge 诊断，再决定是
-quadrature positivity 还是 assembly/index 问题；不得绕过首败。关闭后仍须另行通过
-$H(\mathrm{div})$、tail、mesh 与有用 interval width。独立结论见
-[[research/projects/eig-apost/implementation/i3/review-3-1d|review-3-1d]]。
-纯 BIE [[research/projects/eig-apost/implementation/i3/design-3-1e|design-3-1e]] 随后形成首个
-finite indicator；全边界
-[[research/projects/eig-apost/implementation/i3/design-3-1f|design-3-1f]] 的正式 `fbie-a1`
-进一步通过 actual $\Delta T$ 与 wall refinement；全部 512 个已计算 circle modes 进入 $q$ 且
-angular-tail 门通过，未计算 Fourier tail 仍未 enclosure。独立结论见
-[[research/projects/eig-apost/implementation/i3/review-3-1f|review-3-1f]]。当前下一门是诊断并
-冻结 circle action $256\to512$ 分辨率；它是 I3.1 caveat，并已由 I3.2 same-trial design 继续
-诊断。`ecap-a2` 完成 evaluation 后因资源门停止，所以本次 cap 未计算；actual-$\Delta T$、
-finite-image Bloch、analytic-kernel fail-open warnings 按冻结 component gates 也会使 cap
-unresolved。这不阻止 I3.2 theorem。residual upper、field lower、tail、continuous projected gap 与可靠宽度的
-outward enclosure 已迁移至 I4.2。I3.2 的现行设计与审查见
-[[research/projects/eig-apost/implementation/i3/design-3-2a|design-3-2a]] 和
-[[research/projects/eig-apost/implementation/i3/review-3-2a|review-3-2a]]，same-trial application
-见 [[research/projects/eig-apost/implementation/i3/design-3-2b|design-3-2b]] 与
-[[research/projects/eig-apost/implementation/i3/review-3-2b|review-3-2b]]。
-finite one-step correction 仅为 OPTIONAL 离散分量诊断。对中心宽
-baseline 优先增加可靠积分 enclosure 或 gap 认证仍不能提高分辨率。
+- **D1：** 两层普通公式评价已完成，但可靠成功出口尚未实现。普通主层 $R_k\approx1.17\times10^{-5}$ 不能作为完整上界，也不能据平台直接认定 FEM 已达误差地板。
+- **D2：** 已补源矩包围与纠正、范数余项、实际薄带点归属和分块系数留存。run-03 控制／主层报告 $R_k\approx3.88\times10^{-5}/1.43\times10^{-4}$；主层源矩包围占半径约91.76%。完整墙钟302.58秒，MATLAB子树采样峰值约2.713GB。
+- **仍未闭合：** bulk 近整矩形捷径未支付复缺陷矩的差集代价，故 R2 为 `REVISE / UPPER_BOUND_QUALIFICATION_INCOMPLETE`。细层评价调度和片数预停又使包围未充分收紧；更大的报告值不表示同一 candidate 变差。
 
-误差来源识别并入 I3.1；conditional certificate theorem 与 same-trial empirical cap 属于 I3.2；
-independent reference/effectivity 与 norm enclosure、continuous projected-gap containment、
-预注册分辨率研究分别整体迁移至未来 I4.1、I4.2。唯一目标识别只在下游必须跟踪特定 mode 时升级。
-它们不另拆里程碑。任何后续 levels、reconstruction、reference 算法、阈值或实验命令仍须
-单独冻结。I3.1 的定义、常数和样本规则必须在查看 I4.1 的 reference 结果前冻结；一般经验
-reference 的 uncertainty 不能进入严格 $U_h$，除非 reference 自身给出经证明的 enclosure。
+这些结果说明已有实质理论与实现进展，但**尚不能证明该估计器具有所需精度与成本优势**。继续修 bulk、细化 F/P 评价是恢复旧上界资格的局部修复；它不是当前所有研究选择中默认优先的一项。最新复评建议保留此路线作为后备，将主研究转向利用特征值结构的有符号修正，不把新增积分工程本身当作精度进展。
 
-## I4：未来 effectivity validation 与可靠上界研究
+本页不重写原审查，也不新增重复问题清单：
+[[research/projects/eig-apost/implementation/i9/review-9-6a#9. R2：D2 run-03 实际结果审查|I9.6 R2]]、
+[[research/projects/eig-apost/implementation/i9/README#I9.6 后验估计问题账目|I9.6 账目]]。
 
-I4 的完整阶段入口见 [[research/projects/eig-apost/implementation/i4/README|I4 guide]]。
+## 拟议 I10：FEM＋DtN 特征值修正与误差评价
 
-### I4.1（未启动）
+**状态：研究方向建议，尚无 I10 正式设计或数值结果。** 保留 I9.5b 的 FEM＋DtN 求解器，研究同时扩充中心胞元和左右半波导的有限元空间后，如何得到有符号的特征值修正，并以中心和两条无限半波导的完整质量归一化。目标是直接评价 candidate 的变化及剩余误差，探索比继续收紧全域残差包围更有分辨力、成本更合适的方法。
 
-I4.1 只登记为未来阶段：使用独立方法/reference 对经验 estimator 进行 effectivity validation。
-原 I3.3 的科学问题、独立性边界和 claim boundary 均随之迁移；当前不开展 I4.1，也不创建
-design、review 或 experiment 文件。
+当前尚未建立这种修正与连续特征值误差的完整联系；准确预测离散层间变化也不自动给出连续谱距离上界。扩充有限元空间的具体方式、理论条件、验收标准及实验安排由后续研究确定，本页不预设内部里程碑。
 
-### I4.2（未启动）
+最新方向依据见 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#11. 研究路线复评：从维护估计器转向评价特征值|路线复评 §11]]。I9 的有效成果及未解决事项保留原记录，路线图更新不启动新实验。
 
-I4.2 由原 I3.4 整体迁移而来：研究可靠 residual/field/tail enclosure、continuous projected
-gap、预注册分辨率以及不含未知常数的存在性或误差上界。当前不开展 I4.2，也不创建 design、
-review 或 experiment 文件。
+## 后续工作与本页维护规则
 
-## OPTIONAL：不构成正式阶段
-
-- 重新证明 exact finite Hermitian/Lagrangian identity，或把 endpoint diagnostic 升级为严格
-  inertia theorem；
-- 第二种 count 方法、额外 contour、$N_k=128$ 或大范围复平面扫描；
-- 更多参数、第二 mode、跨环境 parity、额外高精度与可迁移性实验；
-- 不被当前 estimator 或上界路径实际使用的 derivative、transport、Gram、adjoint 或
-  structure-preserving 完备性工作。
-
-这些项目只有在主线异常、I3 公式实际需要或准备提升 claim 时才另行设计。历史实验及其
-审查结论不因本路线压缩而改变。
+1. **先定问题，再补控制。** 每一轮明确回答“继续／替换／停止”；修补必须说明能改变哪项验收。旧路线 blocker 的范围不自动扩大到所有替代方法。
+2. **各阶段保持紧凑。** 新大阶段以3–4个独立里程碑为宜，最多5个；不追溯重编号既有 I9.1–I9.6。诊断和小修放在对应里程碑，不机械新增阶段。
+3. **职责与授权分开。** 当前协作为研究助手负责理论、设计及结果审查，Claude 执行另行授权的实现／实验。预算、参数与可修改范围在当轮设计中确定，路线图不授权运行。
+4. **更新正文，不追加周报。** 当前结论或优先级变化时替换相应段落；运行明细、失败记录和长期问题分别留在实验 README、review 与阶段账目。本页只保留能解释路线转折的关键数字。
+5. **编号与证据不混用。** 本页 I1–I9 指当前 `implementation/i1` 至 `i9`。[[research/projects/eig-apost/implementation/archive/legacy-route-v1/README|旧路线 I0–I4 归档]] 使用另一套编号，不据其旧 PASS 覆盖当前阶段。实验入口总索引见 [[test/README|test README]]。
