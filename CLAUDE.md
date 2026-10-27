@@ -13,6 +13,19 @@ Claude Code does not load `AGENTS.md` files automatically, but they are binding 
 
 If this file and an `AGENTS.md` disagree, the `AGENTS.md` wins. The key rules are summarized below.
 
+## Long tasks: save work in stages
+
+Sessions can be cut off at any moment by usage limits. In one past session, 2 hours of thinking produced no file output, and then the 5-hour limit stopped the work and all of it was lost. Unsaved reasoning is lost reasoning. For any task that needs long thinking (theory, proofs, method design, large code or documents):
+
+- **Plan in small deliverables.** Before deep work, split the task into stages that can each be written down on their own, such as a section, a lemma, a module, or a script stage. Write the plan to a file first, for example a `p-` plan note or a skeleton with placeholder sections.
+- **Write after each stage.** When a stage is done, write it to its target file right away. Do not keep finished conclusions only in thinking. Aim to touch a file at least every 20–30 minutes of work. If nothing is ready to deliver yet, write a working note instead.
+- **Keep thinking bounded.** Do not do one huge thinking pass that tries to solve the whole task at once. Think about the current stage, write it out, then move to the next. If a hard step needs a long derivation, write the partial derivation, attempts, and dead ends to a working note before continuing.
+- **Mark partial state honestly.** Label unfinished parts as `TODO`, `draft`, or `unverified`, and keep a short progress section (done / next / open questions) at the top of the main file. Then a fresh session can resume from the files alone.
+- **Where to write:**
+  - Durable results go in their final location: `research/projects/...` or the active `test/i*/...` directory.
+  - Scratch working notes go in `research/tmp/` or `tmp/`. When a note becomes a durable conclusion, move its content to the right place.
+- These checkpoints are local file writes only. They do not authorize commits; commit only when asked.
+
 ## Project summary
 
 This is a MATLAB codebase plus research workspace for **2D periodic dielectric waveguides with $y$-periodicity**. The topics are Bloch-mode eigenvalue problems, transmission eigenvalue problems (TEP), forced scattering, and line-defect guided modes. The core numerical framework is trace matching. It couples Rayleigh expansions in homogeneous regions to Bloch-mode (outgoing Cauchy/trace) expansions in periodic half-leads. Each lead-cell BIE is a Müller system. Its quasi-periodic Green function comes from the **augmented Method of Fundamental Solutions** (proxy sources plus plane-wave expansions).
