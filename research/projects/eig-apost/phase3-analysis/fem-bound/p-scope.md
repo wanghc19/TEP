@@ -1,6 +1,22 @@
 # FEM 原生场的无限波导谱距离：范围与验收
 
-## 当前持续目标与本轮交付（2026-10-26）
+## 当前：I9.6a结果审查（2026-10-27）
+
+[[research/projects/eig-apost/implementation/i9/review-9-6a|review-9-6a R1]]裁定 **REVISE / UPPER_BOUND_DELIVERY_INCOMPLETE**。已审查实际源码及run-02原始证据；普通主层 $R_k=1.16586\times10^{-5}$，可靠成功路径尚未实现。两层平台不能排除共同评价偏差，真实材料薄带的矩形归属保障存在缺口；未证明当前场有必然精度地板。可靠完整成本未知，203.65秒仅为普通诊断路径。
+
+本轮只交付审查及状态，不改理论、设计、源码或输出，不重跑实验。后续最小建议是冻结具体代理的可靠切割评价块，待用户另行授权；不自动转向加密FEM。复用Researcher和skeptic，实际R1正文已经skeptic复核。原理论/设计结论不被改写为实际结果PASS。
+
+## 历史：I9.6理论与设计交付（2026-10-26）
+
+当前授权对象是I9.5b已经实现的Fliss型FEM＋DtN候选，$k_h=1.558438079544167$，固定 $\beta=0.5$、中心及双侧不同lead的真实物理模型。目标是原无限连续算子 $A(\beta)$ 的全谱距离，不要求预先知道模态数或谱隔离；BIE值不进入本次估计。下文B.1“不研究FEM＋DtN”是历史范围，不限制本次明确授权。
+
+本轮选定 [[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|正定源重构理论D1]]：原生场有限硬截后作为 $L^2$ 输入，以常系数正定源重构获得强定义域试探场。矩形Q1源投影、解析Fourier／Yukawa解及Q2比较场给出完整有限右端；真实材料、源盒外指数尾、未保留模及积分误差均计入。独立审查见 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|r-dtn-bound]]，下一轮唯一设计见 [[research/projects/eig-apost/implementation/i9/design-9-6a|design-9-6a]]。
+
+验收分为：公式成立与有限定义；可控辅助误差趋小的机制；当前实例达到预设精度及成本。前两项由正文证明及独审判断，第三项尚无本方法数值证据。设计冻结同配置固定频率重建场或显式提供的历史场、左右各16胞元、两层辅助分辨率，以 $R_k\le10^{-6}$ 为待检验的精度目标；不得用正确但过宽的结果宣布达到实用目标。可靠积分能否在3GB/30分钟计划预算内闭合尚未建立，首批切割块收紧率是实施门，非额外研究扫描。
+
+Researcher负责建设性证明与原文适配，skeptic独立审查实际正文与设计，主agent整合并维护状态；不引入其他代理。工作树和分支保持epost/codex/epost；main只读，不改实验代码、不运行MATLAB或其他数值实验、不安装依赖、不stage/commit/push。用户已清除goal，本轮不新建或恢复。问题统一维护于 [[research/projects/eig-apost/implementation/i9/README#I9.6 后验估计问题账目|I9.6账目]]，不提升到mainline。
+
+## 历史：E.2结果审查交付（2026-10-26）
 
 专题长期关注candidate精度、原无限算子谱距离估计与完整成本。用户已清除goal；本轮只审查E.2结果，不新建/恢复goal。
 [[research/projects/eig-apost/implementation/i9/review-9-5a|E.2 实际结果审查]] 接受E.2为完整普通算术交付：新candidate、新有限尾/RT2、新场Q10/Q8和完整科学链成本齐备，主R下降约69.47%。

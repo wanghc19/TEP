@@ -1,8 +1,14 @@
 # Research workspace
 
+2026-10-27，[[research/projects/eig-apost/implementation/i9/review-9-6a|I9.6a实际结果审查]]已交付：**REVISE，上界交付未完成**。主层普通 $R_k=1.16586\times10^{-5}$；可靠成功路径尚未实现。平台的纯native归因及必然下限未获支持；普通诊断墙钟203.65秒不代表可靠估计成本。最小后续为冻结场的可靠切割评价块，本轮未执行。以下2026-10-26内容为理论交接历史。
+
 `research/` 保存尚处于研究、核查和整合阶段的理论工作。这里允许出现猜想、未证明命题、proof gap 和待核验引用；它不是正式论文草稿的替代品。
 
 ## 当前阶段
+
+2026-10-26，I9.6新增 [[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|FEM＋DtN自身谱距离理论]]、[[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|独立审查]]及 [[research/projects/eig-apost/implementation/i9/design-9-6a|待执行设计]]。常系数正定源重构与有限Fourier／多项式评价面向原无限算子，不使用BIE或谱隔离；小量机制已给，当前实例精度和可靠积分预算未测。本轮仅理论与设计，不运行实验或改main；问题统一见 [[research/projects/eig-apost/implementation/i9/README#I9.6 后验估计问题账目|I9.6账目]]。
+
+以下为I9.5b及更早阶段记录。
 
 2026-10-26，[[research/projects/eig-apost/implementation/i9/review-9-5b|I9.5b FEM＋DtN实际结果审查]]：**PASS WITH CONDITIONS**。D2正式run-02交付 $k=1.558438079544167$，BIE参考差 $1.85362\times10^{-7}$，较E.2缩小约10.97倍；完整墙钟30.318秒、MATLAB子进程树采样峰值1.582GB。粗网一次翻边成功，正常粗细及Q10/Q12链通过；Q零差只表示当前停止分辨率内一致。缺曲线采样偏差/QZ原始块，另有未保留探针；不宣称全部合同交齐、真误差或同精度提速。本轮仅审查及更新研究文档，未重跑或改实验代码，不创建/恢复goal。
 

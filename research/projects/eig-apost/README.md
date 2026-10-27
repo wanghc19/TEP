@@ -1,5 +1,11 @@
 # Eigenvalue a posteriori error research
 
+2026-10-27，[[research/projects/eig-apost/implementation/i9/review-9-6a|I9.6a实际结果审查R1]]：**REVISE，上界交付未完成**。保留两层普通诊断，主层 $R_\mu=3.63384\times10^{-5}$、$R_k=1.16586\times10^{-5}$。可靠成功路径未实现；源矩、范数误差及真实材料薄带的矩形归属仍须处理，不能把平台认定为纯原生FEM缺陷。203.65秒是普通路径成本；可靠方法成本仍未知。复用两位代理并完成正文独审，本轮没有改设计/理论/实验文件或运行实验。以下是理论交接历史。
+
+2026-10-26，I9.6已形成 [[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|FEM＋DtN正定源重构谱距离理论]]、[[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|独立审查]]及 [[research/projects/eig-apost/implementation/i9/design-9-6a|待执行设计]]。目标为原无限连续算子，不使用BIE或谱隔离；常系数重构把原生场转成强定义域试探场，并以有限Q1/Fourier/Yukawa/Q2评价其已抵消缺陷。小量机制与有限常数已给出，当前candidate的实际分辨能力和可靠积分总成本仍未建立；两层计算须同时交付 $R_\mu,R_k$ 与成本，不能用过宽上界宣布精度目标完成。本轮仅理论与设计，没有实验或代码修改。问题集中于 [[research/projects/eig-apost/implementation/i9/README#I9.6 后验估计问题账目|I9.6账目]]。
+
+以下为I9.5b及更早阶段记录。
+
 2026-10-26，[[research/projects/eig-apost/implementation/i9/review-9-5b|I9.5b FEM＋DtN实际结果审查]]：**PASS WITH CONDITIONS**。D2 run-02交付 $k=1.558438079544167$，BIE参考差 $1.85362\times10^{-7}$，较E.2缩小约10.97倍；完整墙钟30.318秒、采样峰值1.582GB。粗网一次局部翻边成功，正式粗细及Q10/Q12链通过；Q零差只表示求根停止尺度内一致。无主结果blocker，但曲线偏差/QZ原始块未交齐，另有未保留探针；不宣称真误差、完整研发成本或同精度提速。设计保持D2，本轮只审查、不重跑或改代码。问题见[[research/projects/eig-apost/implementation/i9/README#FEM＋DtN 问题账目|I9 FEM＋DtN账目]]。
 
 以下为E.2及更早阶段记录。
@@ -97,6 +103,8 @@ eig-apost/
       p-scope.md
       theory.md
       r-theory.md
+      s-dtn-bound.md
+      r-dtn-bound.md
     s-dtn-chain.md
     s-root.md
     s-errors.md

@@ -1,10 +1,16 @@
 # Research status
 
-更新日期：2026-10-26。
+2026-10-27，[[research/projects/eig-apost/implementation/i9/review-9-6a|I9.6a实际结果审查]]：**REVISE / UPPER_BOUND_DELIVERY_INCOMPLETE**。两层普通结果已取得，主层 $R_k=1.16586\times10^{-5}$；可靠积分和成功实现分支未完成。不能将平台确定归因于原生场，或将gate代理外推解释为必要成本。普通路径203.65秒、采样峰值2.865GB；可靠完整成本未知。本轮仅审查并更新文档，未运行实验。问题见I9.6账目；以下未运行表述属于原设计交接日期。
+
+更新日期：2026-10-27。
 
 状态词含义：`established in archived mainline` 仅表示冻结主线给出了论证，不等于已完成独立来源核验；`needs review` 表示已有陈述或证明草案但仍需严格审计；`tentative` 表示研究性判断；`unresolved` 表示尚未解决。
 
 ## 当前阶段
+
+2026-10-26，I9.6已交付 [[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|正定源重构理论]]、[[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|独立理论/设计审查]]及 [[research/projects/eig-apost/implementation/i9/design-9-6a|下一轮设计]]，**尚无新数值结果**。源平滑与有限Q1/Fourier/Yukawa/Q2构造给出原无限算子的无谱隔离假设上界，BIE不是输入。实际精度与可靠积分能否在3GB预算内收紧仍待有界计算检验；不把形式有效性升级为实用目标已完成。只修改研究文档，未运行实验、修改代码或提交；后续问题见I9.6账目。
+
+以下为I9.5b及更早阶段记录。
 
 2026-10-26，[[research/projects/eig-apost/implementation/i9/review-9-5b|I9.5b FEM＋DtN实际结果审查]]：**PASS WITH CONDITIONS**。D2 run-02的 $k=1.558438079544167$，BIE参考差 $1.85362\times10^{-7}$，较E.2缩小约10.97倍；完整墙钟30.318秒、采样峰值1.582GB。粗层局部翻边保留界面后成功，正式粗细/Q链齐备；Q10/Q12同值只表示停止尺度内未见漂移。无当前主结果blocker；曲线偏差/QZ保存缺项、目录外未保留探针及未来复用门见I9账目。未证明真误差或同精度提速；本轮不重跑、不改代码或设计、不创建/恢复goal。
 

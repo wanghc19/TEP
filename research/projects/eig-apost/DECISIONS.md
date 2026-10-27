@@ -1,5 +1,15 @@
 # Eigenvalue a posteriori decision record
 
+## 2026-10-26 — I9.6 uses positive-source reconstruction for the FEM–DtN field
+
+- The target is the distance from the frozen I9.5b $\mu=k^2$ to the spectrum of the original infinite self-adjoint operator. BIE data, a spectral count, and spectral isolation are not estimator inputs.
+- The native curved-P2 field supplies an $L^2$ source after a finite hard cut. The constant-coefficient positive operator $-\Delta+s$ produces a strong-domain trial field; all discontinuities of the original input are handled through the reconstructed defect, not through a fictitious $L^2$ strong residual of the FEM field.
+- Broken Q1 source projection, analytic Fourier/Yukawa evaluation, and a Q2 comparison field give a finite bound with explicit projection, source-moment, mode-tail, exterior-tail, and integration terms. The original true material is retained. The earlier RT2 and conditional Temple results retain their historical scope.
+- The selected experiment freezes the frequency and discretization, then compares two auxiliary resolutions. Its default adapter reconstructs a field at the fixed frequency and must not claim coefficient-wise identity with the historical saved field. There is no new eigenvalue search.
+- The mechanism has no fixed large floor, but useful resolution for the current input remains untested. Reliable cut-region integration may dominate cost; a formal finite termination argument is not a budget proof. The design retains a shared-budget first-block feasibility gate and reports unresolved integration instead of labeling ordinary quadrature a bound.
+
+Theory, independent review and the experiment contract are [[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|s-dtn-bound]], [[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|r-dtn-bound]] and [[research/projects/eig-apost/implementation/i9/design-9-6a|design-9-6a]]. This turn does not execute the experiment or promote a mainline.
+
 ## 2026-08-11 — Continuous DtN/BIE method supersedes finite-tail formulation
 
 - **Current spectral object.** The exact left/right DtN operators are defined by the

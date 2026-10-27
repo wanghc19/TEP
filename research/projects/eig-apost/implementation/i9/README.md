@@ -2,6 +2,23 @@
 
 ## 当前状态
 
+2026-10-27，**I9.6a实际结果审查：REVISE / UPPER_BOUND_DELIVERY_INCOMPLETE**，见 [[research/projects/eig-apost/implementation/i9/review-9-6a|review-9-6a]]。对象为 `dtn-bound-v1/output/attempt-1/run-02/`；原理论/设计独审不代替本次结果审查。
+- 固定频率恢复场资格通过；主层普通 $R_\mu=3.63384\times10^{-5}$、$R_k=1.16586\times10^{-5}$，$E_v=3.14494\times10^{-6}$ 占普通半径约91.76%。可靠积分未闭合，且源码尚无可靠上界成功路径；没有交付连续谱距离上界。
+- 撤回“平台已确定来自native”“无论积分闭合如何均有固定地板”的解释。两层共用评价误差尚未排除；真实材料薄带存在未保证实际点矩形归属的算法缺口，当前影响未量化。深度92–98只是保守代理外推，不是必要成本下界。
+- 普通诊断完整受监控墙钟203.6542秒、采样峰值2,865,004,544 bytes；全部10份运行记录墙钟和363.7816秒。可靠方法的完整成本仍未知，不与旧515秒宣称同合同提速。
+- 最小后续是冻结具体场/代理，先闭合一个含真实材料和矩形切割的可靠评价块，保存必要系数，再决定是否扩展或改进原生场；本轮不实施。复用Researcher与skeptic审查源码、原始结果和实际review正文，仅改研究审查/入口，设计、理论和实验文件保持不变。
+
+以下为I9.6的理论/设计交接历史；“未运行”等表述只描述该日期。
+
+2026-10-26，**I9.6：FEM＋DtN自身后验估计的理论与实验设计，未运行。** 选定 [[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|常系数正定源重构D1]]，独审见 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|r-dtn-bound]]；当时交接方案为 [[research/projects/eig-apost/implementation/i9/design-9-6a|design-9-6a]]。
+- 冻结I9.5b的 $k_h=1.558438079544167$ 与fine-Q12配置，用同配置固定频率重建场或显式提供的历史场作为输入；默认重建不声称逐系数复用历史场。矩形Q1源、Fourier／Yukawa重构、Q2比较场给出原无限算子的 $R_\mu$ 及 $R_k$，不输入BIE、模态数或谱隔离。
+- 已证明的机制是对抵消后 $L^2$ 缺陷付费，源投影误差获显式二阶平滑；真实材料、无限指数尾和所有未保留模均保留。没有旧零通量的固定大量级下限；辅助细化只收敛到固定输入场的缺陷，不承诺使它消失。
+- 本版实际skeptic独审：核心理论 **PASS**；有限可计算性和有门控的设计 **PASS WITH CONDITIONS**；当前精度 **UNTESTED**、可靠积分完整成本 **UNESTABLISHED**。尾级数抵消、场身份、完整成本措辞和Green常数开方问题已经实际修补复核。
+- 待执行：左右各16胞元、两层辅助网格/模数，预设 $R_k\le10^{-6}$ 的分辨目标，完整分项及成本必须一起交付。可靠积分的预算可行性和当前场可达精度未建立，首批切割块不能收紧则有界停止，不以普通Gauss差代替余项，不把大R解释为candidate误差大。
+- 本轮只读检查当前实现/既有结果、核验本地原文并写研究文档；未运行实验、未改实验代码或main，未操作Git提交。当前问题集中于下方I9.6账目；I9.5b结果审查保持原范围。
+
+以下为I9.5b及更早已完成阶段记录。
+
 2026-10-26，[[research/projects/eig-apost/implementation/i9/review-9-5b|I9.5b FEM＋DtN实际结果审查]]：**PASS WITH CONDITIONS**，对应[[research/projects/eig-apost/implementation/i9/design-9-5b|设计D2]]、`fem-dtn-v1/output/attempt-1/run-02/`。
 - 最终 $k=1.558438079544167$，与BIE参考绝对差 $1.85362\times10^{-7}$，较E.2缩小约10.97倍；不是真误差或新谱距离估计。
 - 一次同材料局部翻边修好粗网，MAT确认全部界面P2点不变；正式粗细/Q10/Q12链全部合格，没有使用细层例外入口，Q16未触发。$\delta_h=1.77185\times10^{-6}$，机器$\delta_Q=0$仅表示停止分辨率内未观察到漂移。
@@ -206,6 +223,22 @@ I9.1 到此停止。没有启动后续谱距离、额外 $\beta$ 优化或参数
 | FB-14 E.2资源可行性 | minor caveat：正式498次采样无并发MATLAB，峰值1,759,723,520字节/515.147秒，无预警/宽限；采样非瞬时保证 | 保留单次实测及稀疏填充数据，不外推任意加密可行 | MEASURED AND REVIEWED；NO RESOURCE STOP |
 | FB-15 未来运行的软限门 | minor caveat：run_eq.py到30分钟仅打标，没有客观即将完成的宽限判据；本次515秒未触发 | 未来可能触及软限前明确停止/一次宽限的证据与记录，不静默延至40分钟 | CURRENT RUN UNAFFECTED；REUSE GUARD OPEN |
 | FB-16 起向量契约 | minor caveat：源码未显式归一复随机v0，与design措辞不同；实际场质量归一和残差通过 | 下次相关修改时对齐实现或准确修订契约；不为接受本次结果重跑 | DISCLOSED；CURRENT RESULT UNAFFECTED |
+
+## I9.6 后验估计问题账目
+
+本表是I9.6的持续问题账目。2026-10-27已完成 [[research/projects/eig-apost/implementation/i9/review-9-6a|run-02实际审查]]：可靠上界交付未完成，保留普通诊断。理论/设计独审保持原范围；公式、实现、精度、成本分开判断。
+
+| ID / 事项 | 分类与影响范围 | 最小后续任务 | 状态 |
+|---|---|---|---|
+| I96-1 原无限算子与场身份 | important caveat：run-02同配置固定频率恢复资格通过；谱论作用于强定义域重构场，不声称逐系数复用历史场 | 保留native、QZ和两层共用场身份；不将矩阵残差当连续谱距离 | ORDINARY INPUT QUALIFIED |
+| I96-2 真实材料与单侧积分 | important caveat：普通薄带以P2界面中点判矩形，未保证实际积分点归属；当前影响未量化。gate为保守代理，深度外推不是必要成本下界 | 冻结具体Q2代理，查实际薄带归属，建立直接小缺陷和源矩的可靠评价块 | OPEN；PROXY GATE FAILED |
+| I96-3 精度分辨率与归因 | 原审查blocker仅针对“纯native平台/必然地板”声明；2026-10-27实验README已撤回该声明。剩余归因不确定性为important caveat：主层普通 $R_k=1.16586\times10^{-5}$，两层共同评价偏差未排除 | 可靠控制评价误差后再决定原生FEM是否应改进；本次仅修正文档，不改变原审查快照或I96-7的未完成状态 | CLAIM CORRECTED；ORDINARY ABOVE TARGET；CAUSE UNRESOLVED |
+| I96-4 人工硬截与无限尾 | important caveat：恢复尾/末胞元诊断已保存，盒外指数尾及未保留模进入普通式；不以谱半径替代幂范数控制 | 保留实际完整尾及其可靠评价；Eq.(27)的量按平方质量解释 | ORDINARY TERMS INCLUDED；RELIABLE EVALUATION OPEN |
+| I96-5 完整成本 | important caveat：普通路径203.6542秒、采样峰值2.865GB；主层6次完整投影，87.83%函数成本在总投影；不是可靠估计成本 | 保留全部363.7816秒运行记录；以实际可靠小块收紧测可行性，不宣称同合同提速 | ORDINARY MEASURED；RELIABLE COST UNKNOWN |
+| I96-6 结论范围与认证 | important caveat：未使用BIE、模态数或谱隔离；未完成非舍入误差控制，不能仅称缺浮点认证 | 区分普通公式值、可靠连续上界、实际特征值误差 | DISCLOSED；EXACT COLUMN UNRESOLVED |
+| I96-7 可靠成功路径 | blocker：源码即使gate通过仍返回NOT_IMPLEMENTED_AFTER_SUPPORTED_GATE；源矩项为空，范数Gauss无余项 | 实际补齐单侧评价出口及正下包围，不以失败代理代替完整实现 | OPEN；UPPER_BOUND_DELIVERY_INCOMPLETE |
+| I96-8 证据及执行合同 | important caveat：投影/模系数未保存；源码身份有事后差异；gate失败后扩张普通计算、批量超过设计，监控留有survivor记录 | 后续保存可复核系数/启动源码，设计变更先交研究助手，补齐清理及监控口径 | DISCLOSED；REVISE |
+| I96-9 规则与负量 | minor caveat：6×6 Duffy不具一般18阶精确性但只用于checksum；组合有负总量截零入口，本次总量为正 | 未来可靠路径统一精确规则及负量拒绝门；不覆盖原始负列记录 | OPEN；NO IDENTIFIED CURRENT AGGREGATE EFFECT |
 
 ## FEM＋DtN 问题账目
 

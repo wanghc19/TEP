@@ -1,8 +1,19 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-10-26。
+更新日期：2026-10-27。
 
 ## 当前状态
+
+- **2026-10-27 I9.6a实际结果审查：REVISE，上界交付未完成。** [[research/projects/eig-apost/implementation/i9/review-9-6a|review-9-6a]] 覆盖 `dtn-bound-v1/attempt-1/run-02`。
+  主层普通 $R_k=1.16586\times10^{-5}$、$R_\mu=3.63384\times10^{-5}$；可靠成功路径未实现、源矩及范数误差未闭合。两层 $E_v$ 接近不证明纯原生场平台；薄带实际点的矩形归属有保障缺口，影响未量化。代理深度外推不是必需成本下界。
+  普通路径墙钟203.6542秒、采样峰值2.865GB；全部10份运行记录合计363.7816秒。可靠上界完整成本未知，不能宣称同合同提速。最小后续是冻结具体代理的可靠切割评价块，本轮不执行。
+  复用两位代理完成实际源码/结果审查，skeptic复核R1正文；仅更新审查与入口，未修改设计、理论、代码或输出，未运行实验。以下理论交接记录保持历史范围。
+
+- **2026-10-26 I9.6理论与设计交付，数值未执行。** [[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|正定源重构理论D1]]、[[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|独立审查]]、[[research/projects/eig-apost/implementation/i9/design-9-6a|design-9-6a]]。
+  固定I9.5b的 $k_h=1.558438079544167$ 与fine-Q12配置；默认同配置固定频率重建场，或显式输入历史场，不重求candidate、不依赖BIE/谱隔离。已给原无限算子谱距离公式、Q1源/解析Fourier–Yukawa/Q2比较的有限构造、全部尾及非舍入误差，证明了随输入缺陷与辅助误差减小的机制。
+  预设 $R_k\le10^{-6}$ 仅为下一轮目标；没有当前场可达精度证据。可靠材料/矩形切割积分的成本是主要未决项，完整10–25分钟预测已撤回，改为同一3GB/30分钟计划预算内首批切割块收紧门。可计算性不等于预算内达标，宽界不代表candidate不准。
+  Researcher负责原文适配与建设性正文，skeptic独立检查实际理论和设计；主agent整合范围、设计和账目。未改实验代码、main或历史证明，未运行数值实验、安装依赖或操作提交；不创建/恢复goal。问题见I9.6唯一账目。
+  本版独审：核心理论PASS；有限可计算性及有门控设计PASS WITH CONDITIONS；当前精度UNTESTED，完整可靠积分成本UNESTABLISHED。首稿的有限尾交叉项、场身份和预算表述已修补；新增Green $L^1$ 项和常数平方根也经实际复核。
 
 - **2026-10-26 I9.5b实际结果审查：PASS WITH CONDITIONS。** [[research/projects/eig-apost/implementation/i9/review-9-5b|D2 run-02审查]]。
   最终 $k=1.558438079544167$，对BIE参考差 $1.85362\times10^{-7}$，较E.2缩小10.97倍，只是数值参考改善。粗网一次同材料翻边保留全部界面P2点；正常粗细及Q10/Q12链合格，正式没有使用缺粗例外入口，Q16未触发。
