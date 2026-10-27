@@ -1,5 +1,9 @@
 # Research status
 
+2026-10-27，[[research/projects/eig-apost/implementation/i9/review-9-6a#9. R2：D2 run-03 实际结果审查|I9.6a D2实际审查R2]]：**REVISE，上界资格尚未闭合**。D1空成功出口已补；bulk近整矩形替代的复缺陷矩误差未受控，机器上界标签须收窄。主层报告 $R_k=1.42815\times10^{-4}$，源矩包围占半径91.76%，实用目标未达且不能归因为candidate变差。正式墙钟302.5766秒、MATLAB子树采样峰值2.713GB；目标流程总成本下降未建立。最小后续为冻结场的bulk资格及F/P评价收紧，未授权执行。本轮仅更新审查/入口，未修改理论、设计、实验或运行数值计算。问题见 [[research/projects/eig-apost/implementation/i9/README#I9.6 后验估计问题账目|I9.6账目]]；以下D2“未运行”等表述保留当时历史范围。
+
+2026-10-27续，当前待执行合同为 [[research/projects/eig-apost/implementation/i9/design-9-6a|I9.6a D2]]：可靠源矩、直接缺陷、几何细带及解析范数出口已写入原理论；旧实现未完成状态保留，不能提前标为修复成功。冻结candidate/原生配置，30分钟计划/40分钟硬限、3GB、串行。仅研究文档修订，未运行实验；D2独审见 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|追加审查]]。
+
 2026-10-27，[[research/projects/eig-apost/implementation/i9/review-9-6a|I9.6a实际结果审查]]：**REVISE / UPPER_BOUND_DELIVERY_INCOMPLETE**。两层普通结果已取得，主层 $R_k=1.16586\times10^{-5}$；可靠积分和成功实现分支未完成。不能将平台确定归因于原生场，或将gate代理外推解释为必要成本。普通路径203.65秒、采样峰值2.865GB；可靠完整成本未知。本轮仅审查并更新文档，未运行实验。问题见I9.6账目；以下未运行表述属于原设计交接日期。
 
 更新日期：2026-10-27。

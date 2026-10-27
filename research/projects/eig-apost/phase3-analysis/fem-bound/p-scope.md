@@ -1,6 +1,14 @@
 # FEM 原生场的无限波导谱距离：范围与验收
 
-## 当前：I9.6a结果审查（2026-10-27）
+## 当前：I9.6a D2方法修复与设计（2026-10-27续）
+
+唯一选案为 [[research/projects/eig-apost/implementation/i9/design-9-6a|design-9-6a D2]]；[[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|s-dtn-bound §11]]以标记块原位补齐可靠源矩、直接缺陷、几何细带和有限范数的证明与算法，保留D1原文。冻结candidate、原生配置及源盒，不以普通平台决定加密FEM，不引入BIE、谱隔离或新求解器。
+
+后续必须实际实现完整有效上界出口，分列评价宽度、精度目标和成本，不得只保留失败门。每层投影一次并留存有限系数，30分钟计划/40分钟硬限、进程树3GB、串行且保留失败。D2实际独审为新增理论PASS、有限评价与实施设计PASS WITH CONDITIONS；是否实现成功、达到 $R_k\le10^{-6}$ 及预算内闭合均待实验，不能继承旧PASS。
+
+本轮只改研究文档，不改实验代码或main，不运行数值实验，不安装依赖或操作提交。旧结果审查 [[research/projects/eig-apost/implementation/i9/review-9-6a|review-9-6a]]保持原文；新方法独审追加在 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|r-dtn-bound]]。下文记录按其日期保持历史范围。
+
+## 历史：I9.6a结果审查（2026-10-27）
 
 [[research/projects/eig-apost/implementation/i9/review-9-6a|review-9-6a R1]]裁定 **REVISE / UPPER_BOUND_DELIVERY_INCOMPLETE**。已审查实际源码及run-02原始证据；普通主层 $R_k=1.16586\times10^{-5}$，可靠成功路径尚未实现。两层平台不能排除共同评价偏差，真实材料薄带的矩形归属保障存在缺口；未证明当前场有必然精度地板。可靠完整成本未知，203.65秒仅为普通诊断路径。
 

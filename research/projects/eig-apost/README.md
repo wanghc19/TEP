@@ -1,5 +1,9 @@
 # Eigenvalue a posteriori error research
 
+2026-10-27，[[research/projects/eig-apost/implementation/i9/review-9-6a#9. R2：D2 run-03 实际结果审查|I9.6a D2实际审查R2]]：**REVISE，上界资格尚未闭合**。D1空成功出口已补；bulk近整矩形替代的复缺陷矩误差未受控，机器上界标签须收窄。主层报告 $R_k=1.42815\times10^{-4}$，源矩包围占半径91.76%，实用目标未达且不能归因为candidate变差。正式墙钟302.5766秒、MATLAB子树采样峰值2.713GB；目标流程总成本下降未建立。最小后续为冻结场的bulk资格及F/P评价收紧，未授权执行。本轮仅更新审查/入口，未修改理论、设计、实验或运行数值计算。问题见 [[research/projects/eig-apost/implementation/i9/README#I9.6 后验估计问题账目|I9.6账目]]；以下D2“未运行”等表述保留当时历史范围。
+
+2026-10-27续，选定 [[research/projects/eig-apost/implementation/i9/design-9-6a|I9.6a D2修复方案]]：在固定场上用参考元仿射剪裁与几何误差细带，直接评价缺陷及源缺陷矩；有限模采用显式Taylor余项，所有系数分块留存且不重复投影。完整有效上界出口与状态机已设计，实际精度和30/40分钟、3GB内的成本仍待验证。[[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|D2独审]]与 [[research/projects/eig-apost/implementation/i9/README#I9.6 后验估计问题账目|问题账目]]分别维护；旧review不改写。
+
 2026-10-27，[[research/projects/eig-apost/implementation/i9/review-9-6a|I9.6a实际结果审查R1]]：**REVISE，上界交付未完成**。保留两层普通诊断，主层 $R_\mu=3.63384\times10^{-5}$、$R_k=1.16586\times10^{-5}$。可靠成功路径未实现；源矩、范数误差及真实材料薄带的矩形归属仍须处理，不能把平台认定为纯原生FEM缺陷。203.65秒是普通路径成本；可靠方法成本仍未知。复用两位代理并完成正文独审，本轮没有改设计/理论/实验文件或运行实验。以下是理论交接历史。
 
 2026-10-26，I9.6已形成 [[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|FEM＋DtN正定源重构谱距离理论]]、[[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|独立审查]]及 [[research/projects/eig-apost/implementation/i9/design-9-6a|待执行设计]]。目标为原无限连续算子，不使用BIE或谱隔离；常系数重构把原生场转成强定义域试探场，并以有限Q1/Fourier/Yukawa/Q2评价其已抵消缺陷。小量机制与有限常数已给出，当前candidate的实际分辨能力和可靠积分总成本仍未建立；两层计算须同时交付 $R_\mu,R_k$ 与成本，不能用过宽上界宣布精度目标完成。本轮仅理论与设计，没有实验或代码修改。问题集中于 [[research/projects/eig-apost/implementation/i9/README#I9.6 后验估计问题账目|I9.6账目]]。

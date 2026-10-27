@@ -4,6 +4,18 @@
 
 ## 当前状态
 
+- **2026-10-27 I9.6a D2 run-03审查R2：REVISE / UPPER_BOUND_QUALIFICATION_INCOMPLETE。** [[research/projects/eig-apost/implementation/i9/review-9-6a#9. R2：D2 run-03 实际结果审查|review §9]]。
+  D1空出口已补，源矩纠正/显式范数/分块留存实际执行；bulk把近整矩形片当整矩形后，复缺陷矩误差没有出口，阻断当前无条件上界标签。尚未证明本次实际误分或数值半径错误。
+  控制/主层报告 $R_k=3.88352\times10^{-5}/1.42815\times10^{-4}$，均未达目标；主层源矩包围占91.76%，P型固定level3导致宽度未能继续收紧。不能把评价增宽解释为candidate变差或自动加密FEM。
+  正式墙钟302.5766秒、MATLAB子树采样峰值2,712,928,256 bytes；比旧普通路径更长但合同不同，未建立同任务提速。14份留档运行合计768.8422秒不含开发/等待，全进程监控/清理仍有缺项。
+  两位原代理审实际源码/数据，skeptic独立复审R2正文；本轮未改理论、设计、实验及输出，未运行实验或恢复goal。最小后续是补bulk包含资格/差集矩付费及已有F/P预算收紧，具体变更待用户授权。以下为原设计交接与历史审查记录。
+
+- **2026-10-27续 I9.6a D2修复设计，待Claude实现/实验。** [[research/projects/eig-apost/implementation/i9/design-9-6a|D2]]、[[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|理论§11标记修补]]、[[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|D2独审]]。
+  冻结同一candidate和原生配置；以参考元几何误差细带代替整未分类片代理，直接残差/源缺陷矩给全域上包围；一次源中点纠正后统一重算相关量，范数采用显式Taylor余项及全模式累积。真实薄带不再沿用中点矩形归属。
+  每层投影一次、系数分块落盘、至多32模读取；实际先导只作资源预测，不控制上界真假。完整成功状态机已写，30分钟计划/40分钟硬限和3GB保持。实现完整性、实际精度、总成本尚待测；旧I96-7实现blocker不提前关闭。
+  D2实际独审：新增数学论证PASS，有限评价与设计PASS WITH CONDITIONS，未发现理论blocker。Researcher写修补块，skeptic只读审实际文本并返回独审，主agent保存及整合。
+  本轮无实验/代码/main修改，旧review逐字保留；只复用Researcher和skeptic，没有新增代理或goal。
+
 - **2026-10-27 I9.6a实际结果审查：REVISE，上界交付未完成。** [[research/projects/eig-apost/implementation/i9/review-9-6a|review-9-6a]] 覆盖 `dtn-bound-v1/attempt-1/run-02`。
   主层普通 $R_k=1.16586\times10^{-5}$、$R_\mu=3.63384\times10^{-5}$；可靠成功路径未实现、源矩及范数误差未闭合。两层 $E_v$ 接近不证明纯原生场平台；薄带实际点的矩形归属有保障缺口，影响未量化。代理深度外推不是必需成本下界。
   普通路径墙钟203.6542秒、采样峰值2.865GB；全部10份运行记录合计363.7816秒。可靠上界完整成本未知，不能宣称同合同提速。最小后续是冻结具体代理的可靠切割评价块，本轮不执行。

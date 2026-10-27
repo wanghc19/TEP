@@ -1,5 +1,9 @@
 # Research workspace
 
+2026-10-27，[[research/projects/eig-apost/implementation/i9/review-9-6a#9. R2：D2 run-03 实际结果审查|I9.6a D2实际审查R2]]：**REVISE，上界资格尚未闭合**。D1空成功出口已补；bulk近整矩形替代的复缺陷矩误差未受控，机器上界标签须收窄。主层报告 $R_k=1.42815\times10^{-4}$，源矩包围占半径91.76%，实用目标未达且不能归因为candidate变差。正式墙钟302.5766秒、MATLAB子树采样峰值2.713GB；目标流程总成本下降未建立。最小后续为冻结场的bulk资格及F/P评价收紧，未授权执行。本轮仅更新审查/入口，未修改理论、设计、实验或运行数值计算。问题见 [[research/projects/eig-apost/implementation/i9/README#I9.6 后验估计问题账目|I9.6账目]]；以下D2“未运行”等表述保留当时历史范围。
+
+2026-10-27续，I9.6a已原位修订为 [[research/projects/eig-apost/implementation/i9/design-9-6a|D2修复设计]]：冻结场，实际几何细带剪裁、直接缺陷/缺陷矩、带余项范数及完整成功出口；一次投影分块留存。方法补充见 [[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|理论§11]]，本轮独审追加于 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|r-dtn-bound]]。尚未实现或运行，精度及成本待验证；下方D1审查保持历史范围。
+
 2026-10-27，[[research/projects/eig-apost/implementation/i9/review-9-6a|I9.6a实际结果审查]]已交付：**REVISE，上界交付未完成**。主层普通 $R_k=1.16586\times10^{-5}$；可靠成功路径尚未实现。平台的纯native归因及必然下限未获支持；普通诊断墙钟203.65秒不代表可靠估计成本。最小后续为冻结场的可靠切割评价块，本轮未执行。以下2026-10-26内容为理论交接历史。
 
 `research/` 保存尚处于研究、核查和整合阶段的理论工作。这里允许出现猜想、未证明命题、proof gap 和待核验引用；它不是正式论文草稿的替代品。

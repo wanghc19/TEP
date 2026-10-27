@@ -2,6 +2,23 @@
 
 ## 当前状态
 
+2026-10-27，**I9.6a D2 run-03实际审查R2：REVISE / UPPER_BOUND_QUALIFICATION_INCOMPLETE**，见 [[research/projects/eig-apost/implementation/i9/review-9-6a#9. R2：D2 run-03 实际结果审查|review-9-6a §9]]。
+- D1的空成功出口已补；源矩纠正、显式Taylor范数、一次投影及系数留存实际运行。bulk把面积近似相等的四边形当整矩形，其复缺陷矩误差未付费，尚不能确认机器的无条件上界标签；未证明本次发生误分或半径低估。
+- 控制/主层报告 $R_k=3.88352\times10^{-5}/1.42815\times10^{-4}$，均未达到 $10^{-6}$ 目标；主层源矩包围占报告半径91.76%，不能据此归因于candidate变差。当前固定场缺陷的报告下界仍为0。
+- 正式墙钟302.5766秒，MATLAB子树采样峰值2,712,928,256 bytes；没有测得目标流程的完整成本下降。14份保留运行记录墙钟和768.8422秒，不是完整研发历时；外层进程监控和残留清理仍有缺项。
+- 最小后续：补full片几何包含资格/差集矩付费，并完善冻结场的F/P预算收紧；不先重求FEM。本轮只审查及维护研究记录，未修改理论、设计、实验代码/记录或运行实验；Researcher与skeptic均实际参与，R1历史正文保留。
+
+以下D2设计交付与D1审查段均为当时的历史状态，不再表示实验尚未执行。
+
+2026-10-27续，**I9.6a D2修复设计已原位形成，尚未实现/运行**，见 [[research/projects/eig-apost/implementation/i9/design-9-6a|design-9-6a D2]]。理论 [[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|§11 P1–P4/C1–C2]] 保留原D1证明并补齐具体可靠评价；本轮独审追加至 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|r-dtn-bound]]。
+- 唯一方案：冻结candidate/原生配置，具体Q1源与Q2代理；参考元仿射剪裁及几何误差细带，直接小缺陷与源缺陷矩；一次确定性源矩纠正；显式Taylor余项模范数。实际薄带不再用中点继承矩形。
+- Researcher负责P1–P4/C1–C2建设性证明，skeptic只读独审实际修订：新增理论PASS、实施设计PASS WITH CONDITIONS；主agent整合设计和保存独审。未增加代理或覆盖模型设置；工具不提供复用代理运行时model/effort遥测。
+- 完整成功公式的所有非舍入误差出口已写，正分母后交付有效R；有效但宽、评价未收紧、目标达成分开记。没有新FEM求根、BIE输入或谱隔离条件。
+- 每层投影一次、条带/模式系数落盘、至多32模读取，取消6次重复投影；成本门基于实际正式块及全域类别，不沿用深度92–98的必要成本解释。
+- 单次完整运行计划30分钟/硬限40分钟、进程树3,000,000,000 bytes，串行并保留全部失败；继续同一attempt。具体实现、实际精度和总成本仍待Claude执行；旧run-02不升级为可靠上界。
+
+以下为D1结果审查及更早历史，保持原审查范围。
+
 2026-10-27，**I9.6a实际结果审查：REVISE / UPPER_BOUND_DELIVERY_INCOMPLETE**，见 [[research/projects/eig-apost/implementation/i9/review-9-6a|review-9-6a]]。对象为 `dtn-bound-v1/output/attempt-1/run-02/`；原理论/设计独审不代替本次结果审查。
 - 固定频率恢复场资格通过；主层普通 $R_\mu=3.63384\times10^{-5}$、$R_k=1.16586\times10^{-5}$，$E_v=3.14494\times10^{-6}$ 占普通半径约91.76%。可靠积分未闭合，且源码尚无可靠上界成功路径；没有交付连续谱距离上界。
 - 撤回“平台已确定来自native”“无论积分闭合如何均有固定地板”的解释。两层共用评价误差尚未排除；真实材料薄带存在未保证实际点矩形归属的算法缺口，当前影响未量化。深度92–98只是保守代理外推，不是必要成本下界。
@@ -226,19 +243,19 @@ I9.1 到此停止。没有启动后续谱距离、额外 $\beta$ 优化或参数
 
 ## I9.6 后验估计问题账目
 
-本表是I9.6的持续问题账目。2026-10-27已完成 [[research/projects/eig-apost/implementation/i9/review-9-6a|run-02实际审查]]：可靠上界交付未完成，保留普通诊断。理论/设计独审保持原范围；公式、实现、精度、成本分开判断。
+本表是I9.6唯一的持续问题账目。当前证据为D2 run-03，见 [[research/projects/eig-apost/implementation/i9/review-9-6a#9. R2：D2 run-03 实际结果审查|实际审查R2]]；D1/R1保留历史范围。现行设计D2本轮不修改；下表修复建议尚非实现/运行授权。
 
-| ID / 事项 | 分类与影响范围 | 最小后续任务 | 状态 |
+| ID / 事项 | 分类与影响范围 | 最小落实/核验 | 状态 |
 |---|---|---|---|
-| I96-1 原无限算子与场身份 | important caveat：run-02同配置固定频率恢复资格通过；谱论作用于强定义域重构场，不声称逐系数复用历史场 | 保留native、QZ和两层共用场身份；不将矩阵残差当连续谱距离 | ORDINARY INPUT QUALIFIED |
-| I96-2 真实材料与单侧积分 | important caveat：普通薄带以P2界面中点判矩形，未保证实际积分点归属；当前影响未量化。gate为保守代理，深度外推不是必要成本下界 | 冻结具体Q2代理，查实际薄带归属，建立直接小缺陷和源矩的可靠评价块 | OPEN；PROXY GATE FAILED |
-| I96-3 精度分辨率与归因 | 原审查blocker仅针对“纯native平台/必然地板”声明；2026-10-27实验README已撤回该声明。剩余归因不确定性为important caveat：主层普通 $R_k=1.16586\times10^{-5}$，两层共同评价偏差未排除 | 可靠控制评价误差后再决定原生FEM是否应改进；本次仅修正文档，不改变原审查快照或I96-7的未完成状态 | CLAIM CORRECTED；ORDINARY ABOVE TARGET；CAUSE UNRESOLVED |
-| I96-4 人工硬截与无限尾 | important caveat：恢复尾/末胞元诊断已保存，盒外指数尾及未保留模进入普通式；不以谱半径替代幂范数控制 | 保留实际完整尾及其可靠评价；Eq.(27)的量按平方质量解释 | ORDINARY TERMS INCLUDED；RELIABLE EVALUATION OPEN |
-| I96-5 完整成本 | important caveat：普通路径203.6542秒、采样峰值2.865GB；主层6次完整投影，87.83%函数成本在总投影；不是可靠估计成本 | 保留全部363.7816秒运行记录；以实际可靠小块收紧测可行性，不宣称同合同提速 | ORDINARY MEASURED；RELIABLE COST UNKNOWN |
-| I96-6 结论范围与认证 | important caveat：未使用BIE、模态数或谱隔离；未完成非舍入误差控制，不能仅称缺浮点认证 | 区分普通公式值、可靠连续上界、实际特征值误差 | DISCLOSED；EXACT COLUMN UNRESOLVED |
-| I96-7 可靠成功路径 | blocker：源码即使gate通过仍返回NOT_IMPLEMENTED_AFTER_SUPPORTED_GATE；源矩项为空，范数Gauss无余项 | 实际补齐单侧评价出口及正下包围，不以失败代理代替完整实现 | OPEN；UPPER_BOUND_DELIVERY_INCOMPLETE |
-| I96-8 证据及执行合同 | important caveat：投影/模系数未保存；源码身份有事后差异；gate失败后扩张普通计算、批量超过设计，监控留有survivor记录 | 后续保存可复核系数/启动源码，设计变更先交研究助手，补齐清理及监控口径 | DISCLOSED；REVISE |
-| I96-9 规则与负量 | minor caveat：6×6 Duffy不具一般18阶精确性但只用于checksum；组合有负总量截零入口，本次总量为正 | 未来可靠路径统一精确规则及负量拒绝门；不覆盖原始负列记录 | OPEN；NO IDENTIFIED CURRENT AGGREGATE EFFECT |
+| I96-1 原无限算子与场身份 | important caveat：D2同配置固定频率恢复资格通过，两层共用输入；不是新candidate或历史场逐系数复用 | 继续保留输入身份，谱论作用于强定义域重构场，不把矩阵残差当连续谱距 | D2 INPUT CHECKED；CANDIDATE UNCHANGED |
+| I96-2 真实材料与单侧积分 | blocker仅针对无条件上界标签：bulk full片按面积容差替代为整矩形，复缺陷矩未付差集误差；尚未证明本次误分/半径低估。原薄带按实际Q归属已修正 | full候选四角对原仿射三角形的包含资格；失败保留真剪裁或付差集矩误差。无需重求FEM | B3 OPEN；REPORTED R CONDITIONAL |
+| I96-3 精度分辨率与归因 | important caveat：控制/主层报告Rk约3.88e-5/1.43e-4，未达1e-6；主层矩项超b约3852倍，P型宽度超约3.06倍 | 先收紧F源矩和P直接缺陷；P当前固定level3、F提前整批片数门不能解释为预算耗尽；不把大R当真误差 | RESOLUTION NOT MET；EVALUATION UNRESOLVED |
+| I96-4 人工硬截与无限尾 | important caveat：33胞元硬截定义输入；显式Taylor24/25点范数、完整盒外尾及代理遗漏模已实读 | 保留完整尾与模系数；不把固定截断辅助细化当原生缺陷必趋零 | D2 NORM/TAIL PATH CHECKED；B3 STILL APPLIES |
+| I96-5 完整成本 | important caveat：本轮302.5766秒/子树采样2.713GB；旧203.65秒是不同普通路径，不能称同合同提速或已经完成有效上界成本 | 先导左右仅census，补各实际类别吞吐；按可容纳子集细化，不把整批预测超cap当必要成本下界 | FORMAL COST MEASURED；TARGET COST UNESTABLISHED |
+| I96-6 结论范围与认证 | important caveat：无BIE/模态数/谱隔离输入；当前R身份受B3限制。普通列混用纠正前ER和纠正后wd，仅诊断 | 严格分开条件公式、可靠上界、真误差；普通列统一源身份或明确混合标签。不扩展浮点认证 | CLAIM NARROWED；NO NEW SPECTRAL ASSUMPTION |
+| I96-7 可靠成功路径 | D1空出口blocker已关闭；D2源矩/直接缺陷/范数/组合路径已实际执行，B3上界资格另列I96-2 | 不继续写“可靠成功分支根本未实现”，也不因分支存在就升级为全部非舍入误差已闭合 | EMPTY-EXIT ISSUE CLOSED；QUALIFICATION OPEN |
+| I96-8 证据及执行合同 | important caveat：已留启动源码及3.603GB分块有限系数；仍缺full片身份/包含资格，监控漏外层launcher/汇总，残留进程身份与清理不全 | 保留所有旧运行，补必要几何资格和全进程监控/清理；事后启动器改动不能补旧证据 | STORAGE IMPROVED；CONTRACT PARTIAL |
+| I96-9 规则与负量 | minor caveat：6×6/10×10次数对应和Taylor余项已实现，总负Parseval上端拒绝；242列微小负尾保留，总量正 | 保留舍入诊断；Gram抵消及通用几何门按后续复用维护，不把未做舍入认证自动列为blocker | D2 CHECKED WITH ROUNDING CAVEATS |
 
 ## FEM＋DtN 问题账目
 

@@ -1,5 +1,15 @@
 # Eigenvalue a posteriori decision record
 
+## 2026-10-27 — I9.6 D2 repairs evaluation before changing the native field
+
+- Keep the candidate, native FEM–DtN configuration and source box fixed. The observed ordinary plateau does not establish a native-field accuracy floor.
+- Use reference-element affine clipping with explicit quadratic-map and true-curve tubes. Integrate the already-cancelled defect and source defect moments; certify the concrete comparison function, not its identity as an exact Q2 projection.
+- Close the source-moment, finite-norm and positive-denominator success path. Distinguish a valid wide bound from unresolved evaluation and from the resolution target.
+- Project once per level, retain finite coefficients in blocks, and process at most 32 modes per batch. Resource predictions use actual reliable blocks and remain separate from mathematical enclosures.
+- D1 review and failures remain unchanged. D2 is a design repair, not an implemented result; the shared 30-minute plan, 40-minute hard stop and 3,000,000,000-byte process-tree limit remain in force.
+
+Contract: [[research/projects/eig-apost/implementation/i9/design-9-6a|design-9-6a D2]]. Proof additions and independent audit: [[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|s-dtn-bound §11]], [[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|r-dtn-bound]].
+
 ## 2026-10-26 — I9.6 uses positive-source reconstruction for the FEM–DtN field
 
 - The target is the distance from the frozen I9.5b $\mu=k^2$ to the spectrum of the original infinite self-adjoint operator. BIE data, a spectral count, and spectral isolation are not estimator inputs.

@@ -6,6 +6,8 @@ cleanup, machine records, soft/grace/hard limits). Main changes: the grace
 rule reads MATLAB's predicted_remaining_seconds (design 6); the entry is
 dtn_bound_i96(dtn_bound_i96_config(mode),[],output); summarize_bound.py runs
 inside the same wall clock. MATLAB receives only the output path and mode.
+D2: the launched sources are copied to output/source/ before MATLAB starts;
+after run-03 the survivor check records command names and polls 10 s.
 """
 import argparse
 import csv
@@ -15,6 +17,7 @@ import json
 import math
 import os
 from pathlib import Path
+import shutil
 import signal
 import subprocess
 import sys
@@ -133,6 +136,10 @@ def main():
   write_json(output/'provenance.json', dict(sources=provenance({p.name: p for p in [
     HERE/'dtn_bound_i96.m', HERE/'dtn_bound_i96_config.m', HERE/'run_bound.py',
     HERE/'summarize_bound.py']})))
+  (output/'source').mkdir()
+  for path in [HERE/'dtn_bound_i96.m', HERE/'dtn_bound_i96_config.m', HERE/'run_bound.py',
+      HERE/'summarize_bound.py']:
+    shutil.copy2(path, output/'source'/path.name)
   process = None
   known = set()
   peak = 0
@@ -234,15 +241,24 @@ def main():
     try:
       rows = snapshot() if process else {}
       survivors = [pid for pid, row in rows.items() if process and row['group'] == process.pid]
+      survivor_records = [dict(pid=pid, command=rows[pid]['command'], rss=rows[pid]['rss'])
+        for pid in survivors]
+      for _ in range(20):  # exiting children: poll up to 10 s, then record what remains
+        if not survivors:
+          break
+        time.sleep(0.5)
+        rows = snapshot()
+        survivors = [pid for pid in survivors if pid in rows and rows[pid]['group'] == process.pid]
     except (OSError, subprocess.SubprocessError) as error:
       survivors = []
+      survivor_records = []
       reason += '; cleanup verification failed: ' + str(error)
     log.close()
   summary_started = time.monotonic()
   launcher = dict(launched_utc=launched_utc.isoformat(), exit_code=exit_code, reason=reason,
     stop_status=stop_status, matlab_process_seconds=matlab_seconds, peak_rss_bytes=peak,
     soft_limit_crossed_seconds=soft_crossed, grace=grace, rss_warning_seconds=warned,
-    survivors=survivors, limits=limits)
+    survivors=survivors, survivors_at_first_check=survivor_records, limits=limits)
   summary_error = None
   try:
     summarize_bound.summarize(output, launcher, summary_started - started)

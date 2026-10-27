@@ -1,5 +1,7 @@
 # Phase 3：I3.1 连续物理残量路线
 
+2026-10-27续，[[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|s-dtn-bound §11 D2]]已通过标记块补充实际几何剪裁、直接缺陷矩和范数余项；D1原证明保留。对应 [[research/projects/eig-apost/implementation/i9/design-9-6a|D2设计]]继续同一固定场路线，未运行实验；本轮独审追加于 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|r-dtn-bound]]。D1结果审查仍是历史证据，不自动升级为新实现通过。
+
 2026-10-27，[[research/projects/eig-apost/implementation/i9/review-9-6a|I9.6a运行结果审查]]为 **REVISE，上界交付未完成**：普通 $R_k\approx1.17\times10^{-5}$ 不等于已完成可靠上界；纯native平台归因及gate必要成本外推均未成立。原理论/设计独审保持原范围，本轮未修改证明或设计。后续最小任务是固定具体代理的可靠切割评价块；详见I9.6问题账目。以下为理论交接历史。
 
 2026-10-26当前新增专题：[[research/projects/eig-apost/phase3-analysis/fem-bound/s-dtn-bound|I9.6 FEM＋DtN的正定源重构谱距离界]]、[[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|独立理论/设计审查]]、[[research/projects/eig-apost/implementation/i9/design-9-6a|待执行设计]]。固定原生配置与candidate，构造属于原无限算子强定义域的辅助场；不使用BIE、谱隔离或矩阵残差替代连续缺陷。有限评价与小量机制已写，当前实例精度和可靠积分总成本未测；下文旧I3/B.1路线保持其历史范围。

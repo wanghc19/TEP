@@ -3,7 +3,8 @@
 
 Reads only the run directory written by dtn_bound_i96.m and the launcher
 record; writes summary.json and summary.md (identity, native qualification,
-gate verdicts, ordinary terms per level, cost ledger). Missing pieces are
+pilot and self-test verdicts, D2 intervals and ordinary column per level,
+acceptance answers, cost ledger). Missing pieces are
 recorded as missing, never filled in.
 """
 import json
@@ -52,31 +53,54 @@ def summarize(output, launcher, launcher_seconds_before_summary):
   if isinstance(levels, dict):
     levels = [levels]
   rows = []
-  lines += ['', '| level | N | M | D0 | delta_u | E_v | c_R E_R | E_y/b_M | eps0 | R_mu | R_k | ordinary | exact |',
-    '|---|---|---|---|---|---|---|---|---|---|---|---|---|']
+  lines += ['', 'D2 exact-arithmetic intervals and ordinary column (per level):', '',
+    '| level | N | M | status | D0^- | delta_u^+ | E_v^+ | c_R E_R^+ | moment | E_y^+/b_M | eps0^+ | R_mu | R_k | R_k ordinary | correction | engine stops |',
+    '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|']
   for level in levels:
-    o = level.get('ordinary', {})
-    e = level.get('exact', {})
-    row = dict(name=level.get('name'), N=level.get('N'), M=level.get('M'), skipped=level.get('skipped'),
-      D0=o.get('D0'), delta_u=o.get('delta_u'), E_v=o.get('E_v'), c_R_E_R=o.get('c_R_E_R'),
-      E_y_over_b_M=o.get('E_y_over_b_M'), eps0=o.get('eps0'), R_mu=o.get('R_mu'), R_k=o.get('R_k'),
-      ordinary_status=o.get('resolution_status'), exact_status=e.get('status'))
+    o = level.get('ordinary') or {}
+    e = level.get('exact') or {}
+    c = level.get('correction') or {}
+    eng = level.get('engine') or []
+    if isinstance(eng, dict):
+      eng = [eng]
+    def lo(key):
+      v = e.get(key)
+      return v[0] if isinstance(v, list) and v else v
+    def hi(key):
+      v = e.get(key)
+      return v[-1] if isinstance(v, list) and v else v
+    row = dict(name=level.get('name'), N=level.get('N'), M=level.get('M'),
+      completed=level.get('completed'), skip_reason=level.get('skip_reason'),
+      status=e.get('status'), reason=e.get('reason'), D0_lo=lo('D0'), delta_u_hi=hi('delta_u'),
+      E_v_hi=hi('E_v'), c_R_E_R=e.get('c_R_E_R'), moment_term=e.get('moment_term'),
+      E_y_over_b_M=e.get('E_y_over_b_M'), eps0=e.get('eps0'), R_mu=e.get('R_mu'), R_k=e.get('R_k'),
+      R_k_ordinary=o.get('R_k'), failed_budgets=e.get('failed_budgets'),
+      correction=c.get('decision'), T0=c.get('T0'), T1=c.get('T1'),
+      engine_stops=[x.get('stop') for x in eng], seconds=level.get('seconds'))
     rows.append(row)
-    lines.append('| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |' % (
-      row['name'], row['N'], row['M'], fmt(row['D0'], '.6e'), fmt(row['delta_u']), fmt(row['E_v']),
-      fmt(row['c_R_E_R']), fmt(row['E_y_over_b_M']), fmt(row['eps0']), fmt(row['R_mu']),
-      fmt(row['R_k']), row['ordinary_status'], row['exact_status']))
+    lines.append('| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |' % (
+      row['name'], row['N'], row['M'], row['status'], fmt(row['D0_lo'], '.9f'), fmt(row['delta_u_hi']),
+      fmt(row['E_v_hi']), fmt(row['c_R_E_R']), fmt(row['moment_term']), fmt(row['E_y_over_b_M']),
+      fmt(row['eps0']), fmt(row['R_mu']), fmt(row['R_k']), fmt(row['R_k_ordinary']), row['correction'],
+      ','.join(map(str, row['engine_stops']))))
   summary['levels'] = rows
-  gates = source.get('gates') or []
-  if isinstance(gates, dict):
-    gates = [gates]
-  summary['gates'] = [dict(level=g.get('level'), closure_supported=g.get('closure_supported'),
-    reason=g.get('reason'), seconds=g.get('seconds')) for g in gates]
-  if gates:
-    lines += ['', 'Gate:']
-    for g in gates:
-      lines.append('- %s: closure_supported=%s; %s (%.1fs)' % (g.get('level'),
-        g.get('closure_supported'), g.get('reason'), g.get('seconds') or 0))
+  for row in rows:
+    if row['reason'] or row['skip_reason']:
+      lines.append('- %s: %s %s' % (row['name'], row['reason'] or '', row['skip_reason'] or ''))
+  pilot = source.get('pilot') or load(output/'pilot.json')
+  if pilot:
+    summary['pilot'] = dict(passed=pilot.get('pass'), reason=pilot.get('reason'),
+      closure_prediction=pilot.get('closure_prediction'), seconds=pilot.get('seconds'))
+    lines += ['', '- pilot: pass=%s; %s; closure %s (%s s)' % (pilot.get('pass'), pilot.get('reason'),
+      pilot.get('closure_prediction'), fmt(pilot.get('seconds'), '.1f'))]
+  selftest = source.get('selftest') or load(output/'selftest.json')
+  if selftest:
+    summary['selftest'] = dict(passed=selftest.get('pass'), reason=selftest.get('reason'))
+    lines.append('- selftest: pass=%s %s' % (selftest.get('pass'), selftest.get('reason') or ''))
+  if source.get('acceptance'):
+    summary['acceptance'] = source['acceptance']
+    lines += ['', 'Acceptance answers (machine):']
+    lines += ['- %s: %s' % (k, v) for k, v in source['acceptance'].items()]
   timing = source.get('timing')
   if timing:
     lines += ['', 'MATLAB exclusive timers (s): ' + ', '.join('%s %s' % (k, fmt(v, '.2f'))
