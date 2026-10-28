@@ -1,8 +1,15 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-10-27。
+更新日期：2026-10-28。
 
 ## 当前状态
+
+- **2026-10-28 I10.1 D2 run-02结果审查：PASS WITH CONDITIONS。** [[research/projects/eig-apost/implementation/i10/review-10-1a#6. R2：D2 run-02 完整结果审查|R2]]接受首轮有实际分辨能力的条件估计：P4 $k=1.5584378941804409$，$B_4=9.8028871425\times10^{-10}$、$R_0=5.7873603285\times10^{-7}$、$R_N=1.6629701812\times10^{-9}$，均为 $\mu$尺度。六根链和D2定位修复已执行，S/E仍未证明；不能把与BIE的约 $1.65\times10^{-12}$ 频率差称为真精度。完整墙钟127.844845秒、全树采样峰2,508,603,392 bytes；31.3秒只属P4子链，非完整估计冷成本。同阶段Researcher/skeptic审源码及原始结果，无当前交付blocker；不需为本次验收重跑。研究助手仅更新审查/状态，未改设计/证明/实验代码或运行实验。后续不自动加阶或扩认证，问题见[[research/projects/eig-apost/implementation/i10/README#I10.1 唯一问题账目|I10账目]]。
+
+- **2026-10-28 I10.1首轮失败审查及D2修复交接：** [[research/projects/eig-apost/implementation/i10/review-10-1a|R1]]为 **REVISE / ESTIMATE_NOT_PRODUCED**。D1把容差双解误当真实公共边，primary52点被拒；正式DtN/根尚未运行，不能判方法失败。[[research/projects/eig-apost/implementation/i10/design-10-1a|D2]]保留实际点/有向权重，明确唯一owner；分离Stein/预测诊断与独立根资格，优先交付P3/P4及B4/R0。原模型/积分/条件公式/30–40分钟和3GB不变，同attempt保留失败后继续。sizing支持资源可行估计，完整成本及实际分辨力仍未知。同阶段Researcher/skeptic复审；本轮未改代码或运行实验，原证明未改，详细问题仅见[[research/projects/eig-apost/implementation/i10/README#I10.1 唯一问题账目|I10账目]]。
+
+- **2026-10-27 I10.1正式启动：三模板真实材料扩充与条件特征值误差估计。** [[research/projects/eig-apost/implementation/i10/README|入口/账目]]、[[research/projects/eig-apost/phase3-analysis/fem-bound/s-enrich|理论]]、[[research/projects/eig-apost/implementation/i10/design-10-1a|设计]]。保留I9.5b求解器与fine二次几何，中心/左右共同 $P_2/P_3/P_4$，真实质量通过有向薄带补入方程；预测以完整无限质量归一化，独立富层根验证。
+  原candidate、预测candidate和最终P4根半径分别给出，依赖明示的 $\mathrm S_{1/2}$ 与数值评价条件；三层比和积分差不证明条件。理论/设计实际独审 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-enrich|r-enrich]] 为 **PASS WITH CONDITIONS**，无本阶段blocker，不是实验结果PASS。本阶段新建Researcher/skeptic，模型/effort继承；尚无实现/数值结果，本轮不运行实验或操作goal。后续Claude预算30/40分钟、进程树3GB，串行。
 
 - **2026-10-27 研究路线复评：保留FEM＋DtN求解器，改变后验估计研究优先级。** [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#11. 研究路线复评：从维护估计器转向评价特征值|阶段报告]]建议先研究三模板富化的有符号特征值修正及完整无限质量归一化。范数残差可能不能利用特征值驻值性；这不证明I9存在固定地板，也未形成新的连续上界。
   I9.6 B3仍阻断原无条件标签，但不阻断探索替代方案；下方“先修bulk/F/P”是原路径的局部修复建议，已不代表当前最高研究优先级。新方向首门仅验证层间修正，连续误差解释仍需几何/lead一致性、分支和余项证据。本轮复用Researcher与skeptic，仅维护研究计划与状态，不改证明、设计、历史review或实验，不操作goal。

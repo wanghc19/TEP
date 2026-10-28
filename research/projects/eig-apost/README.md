@@ -1,5 +1,11 @@
 # Eigenvalue a posteriori error research
 
+2026-10-28，**I10.1 D2已完成首轮条件估计，R2为PASS WITH CONDITIONS**：[[research/projects/eig-apost/implementation/i10/review-10-1a#6. R2：D2 run-02 完整结果审查|实际结果审查]]、[[research/projects/eig-apost/implementation/i10/README|入口/账目]]。最终P4 $k=1.5584378941804409$，条件 $B_4=9.8028871425\times10^{-10}$（$\mu$）；完整墙钟127.844845秒、全树采样峰2.509GB。已获得有分辨力的独立数值对照，仍未证明S/E或无条件连续误差界；BIE末位差不是精度保证。无需本轮补跑，以下保留各历史阶段。
+
+2026-10-28，**I10.1首轮因定位合同缺陷提前终止，D2待执行**：[[research/projects/eig-apost/implementation/i10/review-10-1a|实际失败审查R1]]、[[research/projects/eig-apost/implementation/i10/design-10-1a|唯一设计D2]]。修复近边容差双解的owner选择，保持实际积分点及有向权重；质量/预测诊断不再阻断独立根。尚无新candidate或估计，保留原条件边界和预算；下一步直接争取完整条件半径，非新增认证/定位专题。账目见[[research/projects/eig-apost/implementation/i10/README|I10入口]]。以下为历史阶段记录。
+
+2026-10-27，**I10.1正式进入方法与设计阶段**：[[research/projects/eig-apost/implementation/i10/README|I10入口及账目]]、[[research/projects/eig-apost/phase3-analysis/fem-bound/s-enrich|三模板真实材料扩充理论]]、[[research/projects/eig-apost/implementation/i10/design-10-1a|实验合同]]。固定fine二次网格，$P_2/P_3/P_4$共同扩充；完整无限质量归一化预测、独立求根验证及明示饱和性/评价假设下的三类误差半径。新建本阶段Researcher/skeptic，未运行数值或修改实验代码；不将条件估计改称无条件上界。当前阶段关系以 [[research/projects/eig-apost/implementation/ROADMAP|ROADMAP]] 为准。
+
 2026-10-27，**研究路线复评**见 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#11. 研究路线复评：从维护估计器转向评价特征值|p-next §11]]：保留FEM＋DtN求解器，优先研究中心与两侧lead共同富化的有符号特征值修正；不再把继续完善I9.6包围工程当作默认进展。新方向尚非连续误差上界，首门预测层间根漂移，随后才研究余项/饱和性。旧R2结论不变；下文bulk/F/P修复是旧路线的局部下一步，当前研究优先级以上述报告为准。未新建设计、执行实验或恢复goal。
 
 2026-10-27，[[research/projects/eig-apost/implementation/i9/review-9-6a#9. R2：D2 run-03 实际结果审查|I9.6a D2实际审查R2]]：**REVISE，上界资格尚未闭合**。D1空成功出口已补；bulk近整矩形替代的复缺陷矩误差未受控，机器上界标签须收窄。主层报告 $R_k=1.42815\times10^{-4}$，源矩包围占半径91.76%，实用目标未达且不能归因为candidate变差。正式墙钟302.5766秒、MATLAB子树采样峰值2.713GB；目标流程总成本下降未建立。最小后续为冻结场的bulk资格及F/P评价收紧，未授权执行。本轮仅更新审查/入口，未修改理论、设计、实验或运行数值计算。问题见 [[research/projects/eig-apost/implementation/i9/README#I9.6 后验估计问题账目|I9.6账目]]；以下D2“未运行”等表述保留当时历史范围。

@@ -1,6 +1,12 @@
 # FEM 原生场的无限波导谱距离：范围与验收
 
-## 当前：研究路线复评（2026-10-27）
+## 当前：I10.1方法与实验设计（2026-10-27）
+
+当前合同见 [[research/projects/eig-apost/implementation/i10/design-10-1a|design-10-1a]]，方法及证明见 [[research/projects/eig-apost/phase3-analysis/fem-bound/s-enrich|s-enrich]]，独审见 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-enrich|r-enrich]]。保留I9.5b求解器，固定二次几何的三模板共同 $P_2/P_3/P_4$ 扩充；真实材料进入每层质量和DtN。区分原candidate、Newton预测、独立富层根及最终剩余误差；后验公式明确依赖饱和性与评价条件，不声称无条件连续上界。
+
+本阶段新建Researcher与skeptic；本轮只理论/设计，不实施或实验。Claude后续权限、预算、交付位置和阴性结果处理均写入design。问题只登记 [[research/projects/eig-apost/implementation/i10/README#I10.1 唯一问题账目|I10账目]]；I9历史问题不自动阻断I10，不预设后续里程碑。
+
+## 历史：研究路线复评（2026-10-27）
 
 阶段报告见 [[research/projects/eig-apost/phase3-analysis/fem-bound/p-next#11. 研究路线复评：从维护估计器转向评价特征值|p-next §11]]。保留 FEM＋DtN candidate 求解器，建议将研究重点转向三模板富化的有符号特征值修正；不再默认优先收紧 I9.6 的全域积分包围。旧正定源定理和实际R2保留，旧无条件上界资格及实用目标仍未完成；新方向也尚未建立连续误差上界。
 

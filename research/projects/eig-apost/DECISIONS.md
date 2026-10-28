@@ -1,5 +1,22 @@
 # Eigenvalue a posteriori decision record
 
+## 2026-10-28 — Repair I10.1 ownership without turning diagnostics into global vetoes
+
+- Retain the scientific method and budget. Select one inverse-map owner by maximum minimum barycentric coordinate, then residual and deterministic id; do not alter the physical quadrature point or signed weight. Tolerance overlap is not a true shared-edge continuity test.
+- Separate valid operator/root evidence from Stein, prediction and evaluation-resolution diagnostics. Preserve computable conditional B4/R0 when their P3/P4 inputs exist; do not claim an unconditional bound or hide unsupported assumptions.
+- Reuse attempt-1 with a new run id; preserve all failures. Sizing with zeroed weights supplies cost information only. No new stage, parameter scan or certification project.
+
+Evidence and executable contract: [[research/projects/eig-apost/implementation/i10/review-10-1a|R1]], [[research/projects/eig-apost/implementation/i10/design-10-1a|D2]].
+
+## 2026-10-27 — I10.1 uses true-material three-template enrichment
+
+- Keep the I9.5b fine quadratic geometry and FEM–DtN structure; enrich all three field spaces through P2/P3/P4. Assemble true-material mass by a signed homotopy strip correction, and recompute both lead responses at every level.
+- Separate the original candidate, one-step signed prediction, independently computed enriched roots and final P4 candidate. Use the complete infinite discrete mass for the frequency derivative; do not solve a dense Kronecker system.
+- The first executable error formula is conditional on declared one-half saturation and explicit evaluation budgets. Three-level ratios and quadrature sensitivity are evidence, not proofs of these assumptions. BIE is only a final external comparison.
+- New stage-specific Researcher and skeptic handle construction and independent audit. Claude implements/runs only within the new experiment directory; no future milestones or experimental PASS are prefilled.
+
+Contract: [[research/projects/eig-apost/implementation/i10/design-10-1a|I10.1a]]. Method: [[research/projects/eig-apost/phase3-analysis/fem-bound/s-enrich|s-enrich]].
+
 ## 2026-10-27 — Reassess estimator structure before further enclosure repair
 
 - Retain the FEM–DtN candidate solver and the positive-source theorem. Neither the solver nor the theorem makes continued refinement of the I9.6 enclosure the default research priority.
