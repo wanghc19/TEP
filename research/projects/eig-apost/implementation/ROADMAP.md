@@ -7,7 +7,7 @@
 
 ## 现在进行到哪里
 
-**I10.1 D2已完成首轮有实际分辨能力的条件估计，R2为PASS WITH CONDITIONS。** 三模板真实材料 $P_2/P_3/P_4$ 扩充交付最终 $k=1.5584378941804409$、条件 $B_4=9.8029\times10^{-10}$（$\mu$），完整墙钟127.844845秒、采样峰2.509GB。D1定位blocker已关闭；S/E仍未证明，尚未取得无条件的高分辨率连续谱距离上界。
+**I10.2三组求解离散对照已完成实际审查，R1为PASS WITH CONDITIONS。** 两粗一细网格各自三模板共同 $P_2/P_3/P_4$，最终条件 $k$半径依次 $1.33\times10^{-7},4.44\times10^{-9},3.15\times10^{-10}$。中层完整新算39.606秒，粗/细层复用历史25.05/127.84秒结果；两次调试输出未保留，总任务成本只能有限审计。S/E仍未证明，不升级为无条件连续上界。
 
 | 当前事项 | 已有结论 | 下一步定位 |
 |---|---|---|
@@ -15,6 +15,7 @@
 | FEM＋DtN 求解器 | I9.5b 已交付 candidate；完整正式流程约30.32秒，与 BIE 参考频率差约 $1.85\times10^{-7}$ | 保留求解器与三模板结构；该差值不是真实误差 |
 | I9.6 正定源后验估计 | 理论及主要有限评价实现已建立；D2 主层报告 $R_k\approx1.43\times10^{-4}$，精度目标未达，上界资格仍有缺口 | 保留定理、实现与阴性结果；不再默认把全域积分细分作为主线 |
 | I10.1 | [[research/projects/eig-apost/implementation/i10/review-10-1a#6. R2：D2 run-02 完整结果审查|R2]]接受六链独立根、预测验证、条件半径和完整成本 | 本轮无需补跑；保留S/E条件及评价尺度限制，不自动追加阶段或认证 |
+| I10.2 | [[research/projects/eig-apost/implementation/i10/review-10-2a|R1实际审查]]接收12/80、24/160、48/320的九个candidate及逐组条件估计 | 无需为本次交付补跑；保留S/E、评价尺度和留存成本例外，不自动追加实验 |
 
 I9.6 的未解决问题不等于 FEM＋DtN 求解器失效，也不等于新方向必须先完成旧路线全部修复才能研究。
 I10.1理论/设计与后续Claude实验分工已明确；本轮研究助手不执行实验，**也不宣告 I9.6 上界目标完成**。
@@ -111,16 +112,16 @@ I9.6 的核心是对有限场作常系数正定源重构，再用重构差异控
 
 ## I10：FEM＋DtN 特征值修正与误差评价
 
-**当前唯一里程碑为I10.1：D2 run-02已完整交付，R2为PASS WITH CONDITIONS。** 固定I9.5b fine二次网格，中心和左右lead一起取 $P_2/P_3/P_4$；有向同伦带真实材料进入各层质量及两侧DtN。完整无限质量归一化的P3预测经独立check根验证；P4为最终candidate。D2定位修复实际生效，未删点或改权重。
+**I10.1已交付，I10.2三组求解离散对照也已通过条件性审查。** I10.1 D2 run-02在固定fine二次网格上，中心和左右lead一起取 $P_2/P_3/P_4$；有向同伦带真实材料进入各层质量及两侧DtN。完整无限质量归一化的P3预测经独立check根验证；P4为最终candidate。I10.2沿用完整流程改变背景/界面网格，P4半径两次缩小约29.93/14.12倍，中层以约40秒提供有区分度的条件分辨尺度；不将此称为真误差改善倍数，不追加其他方法分支。
 
 连续误差公式明确依赖 $\mathrm S_{1/2}$ 饱和性及 $10^{-10}$（$\mu$尺度）的数值评价假设；给原candidate、预测candidate和最终candidate分别计算半径。三层比、双规则积分与局部分支检查提供支持性证据，不证明条件。BIE只供事后对照。目标是检验分辨能力、精度改善和完整成本，不把Newton修正直接称为连续上界。
 
-入口：[[research/projects/eig-apost/implementation/i10/README|I10状态与唯一账目]]、[[research/projects/eig-apost/phase3-analysis/fem-bound/s-enrich|方法证明]]、[[research/projects/eig-apost/phase3-analysis/fem-bound/r-enrich|理论/设计独审]]、[[research/projects/eig-apost/implementation/i10/design-10-1a|design-10-1a]]、[[research/projects/eig-apost/implementation/i10/review-10-1a#6. R2：D2 run-02 完整结果审查|实际R2]]。完整实测127.844845秒在30/40分钟、3GB预算内；31.3秒子链不得替代估计总成本。当前接收后停止，不自动实验；本页不预设后续里程碑，不重写I9历史结果。
+入口：[[research/projects/eig-apost/implementation/i10/README|I10状态与账目]]、[[research/projects/eig-apost/phase3-analysis/fem-bound/s-enrich|方法证明]]、[[research/projects/eig-apost/phase3-analysis/fem-bound/r-enrich|原理论/设计独审]]、[[research/projects/eig-apost/implementation/i10/design-10-2a|I10.2设计]]、[[research/projects/eig-apost/implementation/i10/review-10-2a|I10.2实际R1]]、[[research/projects/eig-apost/implementation/i10/review-10-1a#6. R2：D2 run-02 完整结果审查|I10.1实际R2]]。完整配置成本和已留存执行合计分开报告；不把局部子链当完整估计，也不称留存审计已全覆盖。研究助手未重跑实验，本页不预设后续里程碑，不重写I9历史结果。
 
 ## 后续工作与本页维护规则
 
 1. **先定问题，再补控制。** 每一轮明确回答“继续／替换／停止”；修补必须说明能改变哪项验收。旧路线 blocker 的范围不自动扩大到所有替代方法。
-2. **各阶段保持紧凑。** 只登记已有明确研究问题与合同的里程碑；I10当前仅列I10.1，不为凑固定数量预设后续。既有I9.1–I9.6不重编号，诊断和小修留在对应里程碑。
+2. **各阶段保持紧凑。** 只登记已有明确研究问题与合同的里程碑；I10当前列I10.1与用户启动的I10.2，不为凑固定数量预设后续。既有I9.1–I9.6不重编号，诊断和小修留在对应里程碑。
 3. **职责与授权分开。** 当前协作为研究助手负责理论、设计及结果审查，Claude 执行另行授权的实现／实验。预算、参数与可修改范围在当轮设计中确定，路线图不授权运行。
 4. **更新正文，不追加周报。** 当前结论或优先级变化时替换相应段落；运行明细、失败记录和长期问题分别留在实验 README、review 与阶段账目。本页只保留能解释路线转折的关键数字。
 5. **编号与证据不混用。** 本页 I1–I9 指当前 `implementation/i1` 至 `i9`。[[research/projects/eig-apost/implementation/archive/legacy-route-v1/README|旧路线 I0–I4 归档]] 使用另一套编号，不据其旧 PASS 覆盖当前阶段。实验入口总索引见 [[test/README|test README]]。

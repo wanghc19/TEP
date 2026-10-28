@@ -4,6 +4,10 @@
 
 ## 当前状态
 
+- **2026-10-28 I10.2实际审查R1：PASS WITH CONDITIONS。** [[research/projects/eig-apost/implementation/i10/review-10-2a|review-10-2a]]核查三网格各P2/P3/P4求解；中层有限翻边成功，历史粗/细复用资格成立。P4条件 $k$半径依次 $1.32878\times10^{-7},4.43946\times10^{-9},3.14510\times10^{-10}$；中层完整新算39.6061秒/1.712GB，历史粗/细25.05/127.84秒单列。已留存新增执行合计67.9785秒；两次/tmp Python试跑被删除及缺总任务终结记录限制完整成本/留存声明，不影响已交齐科学链。S/E未证，g24/g48末位BIE差不能解释为真精度；原README的R0/预算主导/BIE分辨说法在review收窄。Researcher/skeptic审实际源码/原始结果，当前无科学blocker，无需补跑；研究助手仅审查/文档更新，未改代码/设计/理论或运行实验。问题见[[research/projects/eig-apost/implementation/i10/README#I10.2 问题账目|I10.2账目]]。
+
+- **2026-10-28 I10.2设计：三组求解离散对照，待执行。** [[research/projects/eig-apost/implementation/i10/design-10-2a|design-10-2a]]选择 $(s,n_\Gamma)=(12,80),(24,160),(48,320)$，每组中心及左右lead共同P2/P3/P4；主比较最终candidate、逐组条件半径及完整成本。优先复用核验后的历史粗/细完整链，中层局部移植已有有限翻边；固定物理模型、q、epsilon、积分/求根规则，不以BIE调参。总任务2小时、单配置40分钟/3GB、串行监控，历史成本单列。复用Researcher/skeptic；仅设计和入口更新，无代码/实验、无预填review，问题见[[research/projects/eig-apost/implementation/i10/README#I10.2 问题账目|I10.2账目]]。
+
 - **2026-10-28 I10.1 D2 run-02结果审查：PASS WITH CONDITIONS。** [[research/projects/eig-apost/implementation/i10/review-10-1a#6. R2：D2 run-02 完整结果审查|R2]]接受首轮有实际分辨能力的条件估计：P4 $k=1.5584378941804409$，$B_4=9.8028871425\times10^{-10}$、$R_0=5.7873603285\times10^{-7}$、$R_N=1.6629701812\times10^{-9}$，均为 $\mu$尺度。六根链和D2定位修复已执行，S/E仍未证明；不能把与BIE的约 $1.65\times10^{-12}$ 频率差称为真精度。完整墙钟127.844845秒、全树采样峰2,508,603,392 bytes；31.3秒只属P4子链，非完整估计冷成本。同阶段Researcher/skeptic审源码及原始结果，无当前交付blocker；不需为本次验收重跑。研究助手仅更新审查/状态，未改设计/证明/实验代码或运行实验。后续不自动加阶或扩认证，问题见[[research/projects/eig-apost/implementation/i10/README#I10.1 唯一问题账目|I10账目]]。
 
 - **2026-10-28 I10.1首轮失败审查及D2修复交接：** [[research/projects/eig-apost/implementation/i10/review-10-1a|R1]]为 **REVISE / ESTIMATE_NOT_PRODUCED**。D1把容差双解误当真实公共边，primary52点被拒；正式DtN/根尚未运行，不能判方法失败。[[research/projects/eig-apost/implementation/i10/design-10-1a|D2]]保留实际点/有向权重，明确唯一owner；分离Stein/预测诊断与独立根资格，优先交付P3/P4及B4/R0。原模型/积分/条件公式/30–40分钟和3GB不变，同attempt保留失败后继续。sizing支持资源可行估计，完整成本及实际分辨力仍未知。同阶段Researcher/skeptic复审；本轮未改代码或运行实验，原证明未改，详细问题仅见[[research/projects/eig-apost/implementation/i10/README#I10.1 唯一问题账目|I10账目]]。

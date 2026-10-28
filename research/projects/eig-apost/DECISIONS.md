@@ -1,5 +1,13 @@
 # Eigenvalue a posteriori decision record
 
+## 2026-10-28 — Compare three solve discretizations in I10.2
+
+- Use background/interface resolutions 12/80, 24/160 and 48/320; enrich the center and both leads through P2/P3/P4 separately on each mesh. Keep the physical model, true-material assembly, evaluation budgets and saturation factor fixed.
+- Reuse scientifically equivalent complete historical chains, retaining their original labels and costs. Admit the fully recorded coarse smoke chain only after explicit qualification; port the already tested bounded I9.5b edge flip for the middle mesh.
+- Compare each final candidate's conditional radius with its full-chain cost; BIE is a final external reference. Cross-grid trace agreement and interval consistency do not prove saturation or true error. The total task has two hours, with forty minutes and 3,000,000,000 bytes per complete configuration, serially.
+
+Contract and design audit: [[research/projects/eig-apost/implementation/i10/design-10-2a|I10.2a]]. No experimental review or result is prefilled.
+
 ## 2026-10-28 — Repair I10.1 ownership without turning diagnostics into global vetoes
 
 - Retain the scientific method and budget. Select one inverse-map owner by maximum minimum barycentric coordinate, then residual and deterministic id; do not alter the physical quadrature point or signed weight. Tolerance overlap is not a true shared-edge continuity test.

@@ -1,6 +1,24 @@
 # I10：FEM＋DtN 特征值误差估计
 
-更新：2026-10-28。当前唯一里程碑 **I10.1** 的D2正式 `attempt-1/run-02` 已完成。[[research/projects/eig-apost/implementation/i10/review-10-1a#6. R2：D2 run-02 完整结果审查|R2实际结果审查]]裁定 **PASS WITH CONDITIONS**：最终P4 $k=1.5584378941804409$，条件 $B_4=9.8028871425\times10^{-10}$（$\mu$尺度），完整墙钟127.844845秒、全进程树采样峰值2,508,603,392 bytes。D1失败及R1保留为历史；本次不是无条件连续上界或 $10^{-12}$ 真误差认证，不新建阶段。
+更新：2026-10-28。**I10.2实际结果已审查：PASS WITH CONDITIONS。** [[research/projects/eig-apost/implementation/i10/review-10-2a|R1]]接收三组P2/P3/P4 candidate、条件半径和已留存运行成本；无当前科学blocker。最终P4的条件 $k$半径由粗至细为 $1.32878\times10^{-7}$、$4.43946\times10^{-9}$、$3.14510\times10^{-10}$，中层完整新算39.6061秒。S/E仍未证明，末位BIE差不能作真精度；两次已删除Python试跑限制完整任务成本/留存声明。I10.1 [[research/projects/eig-apost/implementation/i10/review-10-1a#6. R2：D2 run-02 完整结果审查|R2]]保留历史范围。
+
+## I10.2 实际交付
+
+- [[research/projects/eig-apost/implementation/i10/design-10-2a|design-10-2a D1]]：固定物理模型，取背景/界面网格 $(12,80),(24,160),(48,320)$；每组中心和两侧共同P2/P3/P4，真实质量及DtN进入各层重新求根。改变的是求解离散，不是固定场评价积分。
+- 实验目录 `test/i10/refine-v1/`。粗/细层已核对并复用历史 `smoke-03` / `run-02` 完整链；g24 `run-g24-01` 经一次有限翻边后完成六根，新g12探针与历史六根相同。旧源码/结果未改，复用保留历史来源/成本。
+- 每组独立保留 $\mathrm S_{1/2}^{(g)},\mathrm E^{(g)}$，固定 $q=1/2,\epsilon_p=10^{-10}$；主比较为本组最终P4的 $B_{g,4}$。跨网格公共物理墙相关和区间相容仅是支持证据；BIE仅在最后外部比较，不调参或选根。
+- 完整配置成本：g12历史25.0500秒、g24本轮39.6061秒、g48历史127.8448秒；采样峰值分别1.663/1.712/2.509GB。已留存新增执行合计67.9785秒；它不等于含编写/调试的总任务成本。受监控运行串行且未触发40分钟/3GB硬限；两次已删除dry run及缺总任务终结记录作为例外保留。
+- [[research/projects/eig-apost/implementation/i10/review-10-2a|实际结果审查R1]]含九行阶数/candidate/BIE差/半径表，纠正实验README的R0“不缩小”、评价项“主导”及“BIE无法分辨”口径。复用同一Researcher/skeptic审实际源码与结果，不用设计PASS替代实际审查；研究助手未重跑实验，不自动追加阶段。
+
+### I10.2 问题账目
+
+| ID | 分类及影响范围 | 最小检查/落实 | 当前状态 |
+|---|---|---|---|
+| I102-1 中层几何 | 原g24旧路径blocker已关闭 | 一次同材料翻边、全网Jacobian比1.345、共享边/真质量和六根实际通过，未改界面/权重 | CLOSED FOR RUN-G24-01 |
+| I102-2 历史复用与成本 | important caveat：历史smoke及不同运行成本不是本轮重测 | 科学合同/源码差/原始MAT及新g12等价探针已核对；历史完整成本单列，不用31.3秒子账 | REUSE ACCEPTED；HISTORICAL COST DISCLOSED |
+| I102-3 条件半径与同模 | important caveat：逐组S/E与共同连续目标未证明，细层评价项不可忽略 | 三组q_obs/双规则/公共墙均提供支持，保持两项false；g24/g48末位参考差低于预声明E尺度 | CONDITIONAL；NUMERICALLY SUPPORTED |
+| I102-4 跨网格解释 | minor caveat：非嵌套不保证单调；原README有过强口径 | R1明确R0实际下降、fine评价项30.60%非主导、低于E预算非BIE能力判断；不拟造收敛率 | R1 CLARIFIED；NO RERUN REQUIRED |
+| I102-5 试跑留存/总任务结账 | important caveat：两次/tmp Python dryrun已删除，完整状态/成本不可审；复用核对未全树监控，缺最终任务终结时钟 | 67.9785秒仅列已留存执行合计；披露记录例外，后续attempt内留存全部试跑并结账，不重跑掩盖缺档 | DISCLOSED；FULL TASK AUDIT INCOMPLETE |
 
 ## I10.1 当前交付
 
