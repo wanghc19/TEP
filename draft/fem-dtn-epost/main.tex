@@ -1,0 +1,1174 @@
+% 周期线缺陷波导导模特征值的 FEM--DtN 富化估计：面向初学者的详细讲义（中文）
+% 编译：latexmk -xelatex main.tex（配套教程：tutorial.tex）
+% 状态：draft。数值全部来自 test/i10/enrich-v1 run-02 与 test/i9/fem-dtn-v1 run-02；
+% 本讲义写作时没有重新运行 MATLAB。
+\documentclass[11pt,a4paper,fontset=fandol]{ctexart}
+\input{preamble}
+
+\title{周期线缺陷波导导模特征值的 FEM--DtN 富化估计\\[2pt]\large 一份带完整推导的讲义}
+\author{}
+\date{草稿，2026 年 10 月}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+本讲义详细介绍一种估计周期线缺陷波导中导模特征值误差的方法，以及它在一个非对称算例上的数值结果。
+求解器把无限长的波导约化到一个中心胞元上，两侧的无限半波导由精确的离散 Dirichlet-to-Neumann（DtN）矩阵表示。
+误差估计的思路是：把有限元多项式次数从 2 依次提高到 3、4，比较各层算出的特征值，并在一个明确写出的“饱和性假设”下把层间差转化为误差半径。
+为了让这个比较有意义，我们需要三样工具：用真实材料界面组装质量矩阵；证明约化矩阵对谱参数的导数等于整条无限波导上的总质量，由此得到一次 Newton 预测；以及把层间差转化为半径的简单定理。
+所有推导都按本科生能逐行验证的方式写出。需要的有限元基础知识见配套的《有限元方法入门》教程（下称“教程”）。
+\end{abstract}
+
+\tableofcontents
+
+% ======================================================================
+\section{这份讲义要回答什么问题}
+\label{sec:intro}
+
+\subsection{物理背景}
+
+光子晶体是一种折射率周期变化的介质。在某些频率区间内，光不能在光子晶体中传播，这些区间叫做\emph{带隙}。如果在完美的光子晶体中去掉或改变一列介质柱，就形成一条\emph{线缺陷}。频率落在带隙中的光不能进入两侧的晶体，只能沿缺陷传播，这样的波叫做\emph{导模}\citep{JoannopoulosJohnsonWinnMeade2008}。
+
+我们考虑二维问题：缺陷沿 $y$ 方向延伸，结构在 $y$ 方向周期为 1；$x$ 方向上，中心是缺陷区域，左右两侧是两块（可以不同的）周期介质。固定沿缺陷方向的 Bloch 参数 $\beta$ 后，导模频率 $k$ 是一个特征值问题的特征值（第~\ref{sec:setting}~节）。我们用 $\mu=k^2$ 作为谱参数，因为方程关于 $\mu$ 是线性的。
+
+\subsection{要回答的问题}
+
+此前的计算已经用 $P_2$ 有限元算出一个候选值 $\mu_0$（$k_0=\sqrt{\mu_0}\approx1.5584381$）。本讲义要回答：
+\begin{enumerate}
+\item $\mu_0$ 离真正的导模特征值有多远？
+\item 能否给出一个更好的近似值，以及它的误差有多大？
+\end{enumerate}
+
+\subsection{为什么不直接用残差估计}
+
+估计特征值误差的一个常见思路是计算残差：把近似特征函数代回方程，看方程不满足的程度。但教程第~2.3~节说明，特征值误差大致是\emph{场误差的平方}，而残差与场误差同阶。所以当特征值已经算得很准（例如误差 $10^{-7}$）时，残差型估计给出的界往往大得多（在本算例中是 $10^{-4}$ 到 $10^{-3}$，见第~\ref{sec:compare}~节）。
+
+本讲义换一个角度：直接比较特征值本身。在同一网格上把多项式次数从 $p=2$ 提高到 $3$、$4$，每一层都求一次根。由于特征值收敛得很快，相邻层之间的差很小，并且（在一个需要假设的条件下）它能控制真实误差。
+
+\subsection{方法的四个组成部分}
+
+\begin{enumerate}
+\item \textbf{FEM--DtN 求解器}（第~\ref{sec:continuous-dtn}--\ref{sec:discrete-dtn}~节）。把无限长的波导精确地约化到中心胞元上，不需要人为截断。
+\item \textbf{真实材料质量矩阵}（第~\ref{sec:mass}~节）。保证各层逼近的是同一个连续问题。
+\item \textbf{导数等于无限质量}（第~\ref{sec:deriv}~节）。给出一次 Newton 预测，用来检查层间变化是否符合预期。
+\item \textbf{条件误差半径}（第~\ref{sec:radius}~节）。把 $P_3$、$P_4$ 两层的根转化为误差半径。
+\end{enumerate}
+第~\ref{sec:numerics}~节是数值实验，第~\ref{sec:discussion}~节讨论局限。
+
+\subsection{阅读建议与记号}
+
+如果你对有限元不熟悉，建议先读教程第~1--2~节（弱形式、Galerkin 方法），再读本讲义第~\ref{sec:setting}--\ref{sec:continuous-dtn}~节；读第~\ref{sec:discrete-dtn}~节之前读教程第~8~节（静态凝聚）和第~10.3--10.4~节（二次特征值问题、QZ）；读第~\ref{sec:deriv}~节之前读教程第~10.2~节（Hellmann--Feynman 公式）和第~10.5~节（Stein 方程）。
+
+表~\ref{tab:symbols}~列出反复出现的记号。只出现一两次的量在用到时就地说明，不另设记号。
+
+\begin{table}[ht]
+\centering
+\caption{反复出现的记号}
+\label{tab:symbols}
+\small
+\begin{tabular}{>{\centering\arraybackslash}p{2.6cm}p{11cm}}
+\toprule
+记号 & 含义 \\
+\midrule
+$\beta$ & 沿缺陷方向（$y$ 方向）的 Bloch 参数，固定 \\
+$\mu=k^2$ & 谱参数，$k$ 为频率（真空波数） \\
+$\rho$ & 分片常数材料系数（相对介电常数），背景为 1 \\
+$\Gamma^-$，$\Gamma^+$ & 中心胞元的左墙、右墙，也是它与两侧半波导的交界面 \\
+$p$ & 有限元多项式次数（层），$p=2,3,4$ \\
+$S$ & 单胞关于两面墙的 Schur 补（教程第~8~节） \\
+$T$ & 传播矩阵：把一面墙上的迹映到下一面墙上的迹（第~\ref{sec:discrete-dtn}~节） \\
+$D$ & 半波导的离散 DtN 矩阵，$D=S_{00}+S_{01}T$ \\
+$F(\mu)$ & 约化到中心两面墙上的矩阵，导模对应 $F(\mu)$ 奇异 \\
+$W$，$\theta$ & 墙上的一维质量矩阵；$F(\mu)\bm g=\theta W\bm g$ 中目标分支的特征值 \\
+$m_\infty$ & 整条无限波导上的总质量（第~\ref{sec:deriv}~节） \\
+$\mu_0$，$\mu_N$ & 原候选值；一次 Newton 预测值 \\
+$\nut_p$ & 第 $p$ 层实际算出的根（$\mu$ 尺度） \\
+$B$，$R_0$，$R_N$ & $\nut_4$、$\mu_0$、$\mu_N$ 的条件误差半径（第~\ref{sec:radius}~节） \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ======================================================================
+\section{一般几何设定}
+\label{sec:setting}
+
+\subsection{几何}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[x=1.55cm,y=1.55cm]
+  % cell walls and strip boundary
+  \foreach \x in {-3.5,-2.5,-1.5,1.5,2.5,3.5} {\draw[black!35,dashed] (\x,-0.5) -- (\x,0.5);}
+  \draw[black!35,dashed] (-3.9,-0.5) -- (3.9,-0.5);
+  \draw[black!35,dashed] (-3.9,0.5) -- (3.9,0.5);
+  \draw[black,very thick] (-0.5,-0.5) -- (-0.5,0.5);
+  \draw[black,very thick] (0.5,-0.5) -- (0.5,0.5);
+  % left inclusions (example shape 1)
+  \foreach \c in {-1,-2,-3} {
+    \draw[fill=blue!22,draw=black!70,line width=0.4pt]
+      plot[domain=0:360,samples=150,smooth cycle,variable=\t]
+      ({\c+0.2*(1+0.12*cos(3*\t))/sqrt(1.0072)*cos(\t)},{0.2*(1+0.12*cos(3*\t))/sqrt(1.0072)*sin(\t)});
+  }
+  % right inclusions (example shape 2)
+  \foreach \c in {1,2,3} {
+    \draw[fill=teal!22,draw=black!70,line width=0.4pt]
+      plot[domain=0:360,samples=150,smooth cycle,variable=\t]
+      ({\c+0.2*(1+0.2*cos(3*\t))/sqrt(1.02)*cos(\t)},{0.2*(1+0.2*cos(3*\t))/sqrt(1.02)*sin(\t)});
+  }
+  % centre inclusion (example shape 3)
+  \draw[fill=orange!32,draw=black!70,line width=0.4pt]
+    plot[domain=0:360,samples=300,smooth cycle,variable=\t]
+    ({0.2*(1.5+0.3*cos(5*\t))*cos(\t)},{0.2*(1+0.3*cos(5*\t))*sin(\t)});
+  \node at (-4.15,0) {$\cdots$};
+  \node at (4.15,0) {$\cdots$};
+  % interface labels above the thick walls
+  \node[above] at (-0.5,0.5) {\small $\Gamma^-$};
+  \node[above] at (0.5,0.5) {\small $\Gamma^+$};
+  % cell widths above the second cells
+  \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}] (-2.5,0.68) -- (-1.5,0.68) node[midway,above] {\footnotesize $L^-$};
+  \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}] (1.5,0.68) -- (2.5,0.68) node[midway,above] {\footnotesize $L^+$};
+  % period in y
+  \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}] (4.45,-0.5) -- (4.45,0.5) node[midway,right] {\footnotesize 1};
+  % braces under the three regions
+  \draw[decorate,decoration={brace,mirror,amplitude=5pt}] (-3.9,-0.58) -- (-0.53,-0.58)
+    node[midway,below=6pt] {\footnotesize 左半波导（胞元向左重复）};
+  \draw[decorate,decoration={brace,mirror,amplitude=5pt}] (-0.47,-0.58) -- (0.47,-0.58)
+    node[midway,below=6pt] {\footnotesize 中心胞元};
+  \draw[decorate,decoration={brace,mirror,amplitude=5pt}] (0.53,-0.58) -- (3.9,-0.58)
+    node[midway,below=6pt] {\footnotesize 右半波导（胞元向右重复）};
+\end{tikzpicture}
+\caption{一般几何设定的示意图（只画出 $y$ 方向的一个周期）。三个区域中的夹杂形状、材料系数和胞元宽度都可以不同；图中的具体形状只是示例，第~\ref{sec:numerics}~节给出数值实验所用的参数。两条粗线 $\Gamma^\pm$ 是中心胞元与两侧半波导的交界面。}
+\label{fig:geometry}
+\end{figure}
+
+见图~\ref{fig:geometry}。计算区域是水平带 $\RR\times(-\tfrac12,\tfrac12)$，它分成三部分：
+\begin{itemize}
+\item \emph{中心胞元}：矩形 $x^-<x<x^+$。缺陷在这里。它的左右两条边就是交界面 $\Gamma^-$（$x=x^-$）和 $\Gamma^+$（$x=x^+$）。
+\item \emph{右半波导}：$x>x^+$。它由一个宽度为 $L^+$ 的胞元沿 $x$ 方向无限重复构成。
+\item \emph{左半波导}：$x<x^-$。它由另一个宽度为 $L^-$ 的胞元向左无限重复构成。
+\end{itemize}
+左右两侧不要求相同，也不要求互为镜像。
+
+材料系数 $\rho(x,y)$ 是分片常数：背景中 $\rho=1$，每个夹杂内部取各自的常数（大于零）。夹杂的边界是光滑闭曲线（数值实验中由解析参数式给出）。
+
+\subsection{方程与弱形式}
+
+在 TM 偏振下，电场的 $z$ 分量 $u$ 满足
+\begin{equation}
+\label{eq:helmholtz}
+-\Delta u=\mu\,\rho\,u ,
+\end{equation}
+在材料界面上 $u$ 和法向导数连续。由于结构在 $y$ 方向周期为 1，固定 Bloch 参数 $\beta$ 后，我们寻找满足准周期条件
+\begin{equation}
+\label{eq:qp}
+u(x,\tfrac12)=\ee^{\ii\beta}u(x,-\tfrac12),\qquad \partial_yu(x,\tfrac12)=\ee^{\ii\beta}\partial_yu(x,-\tfrac12)
+\end{equation}
+的解。所谓\emph{导模}，是指在带上平方可积（于是 $|x|\to\infty$ 时衰减）的非零解。
+
+按教程第~1~节的推导，弱形式为：求 $\mu$ 和非零的 $u$（在带上属于 $H^1$，满足 \eqref{eq:qp} 的值条件），使得
+\begin{equation}
+\label{eq:weak}
+\int\nabla u\cdot\nabla\overline v\,\dd x\,\dd y=\mu\int\rho\,u\,\overline v\,\dd x\,\dd y\qquad\text{对所有同类的 }v ,
+\end{equation}
+积分区域是整条带。界面条件和 $\partial_yu$ 的准周期条件都是自然条件，已经包含在 \eqref{eq:weak} 中。取 $v=u$ 可知 $\mu$ 是正实数（教程第~1.3~节的 Rayleigh 商）。
+
+\subsection{导模特征值在哪里：带隙}
+
+为什么导模会存在，又为什么它的计算困难？考虑右半波导所在的完美周期介质（让右胞元向左右两边都无限重复）。对这种介质，方程 \eqref{eq:helmholtz} 有形如“周期函数乘以 $\ee^{\ii\kappa x}$”的有界解（Bloch 波），它们能在 $x$ 方向传播。这些解存在的 $\mu$ 构成若干区间（能带），能带之间的空隙就是带隙。
+
+如果 $\mu$ 落在右侧介质的带隙中，右半波导里就没有能传播的波，任何解在 $x\to+\infty$ 时要么指数衰减，要么指数增长。左侧同理。因此，只有当 $\mu$ 落在\emph{左右两侧带隙的公共部分}中时，才可能存在在两侧都衰减的导模。在数学上，这对应于：两侧周期介质的能带构成算子 $-\rho^{-1}\Delta$ 的本质谱，导模特征值是位于本质谱间隙中的孤立特征值。
+
+这带来两个困难：
+\begin{enumerate}
+\item 计算区域在 $x$ 方向是无限的；
+\item 目标特征值的上下方都有（连续的）谱。教程第~2.3~节的注提到，此时 Galerkin 特征值不再单调逼近，截断区域的方法还可能产生伪特征值\citep{CancesEhrlacherMaday2014}。
+\end{enumerate}
+第一个困难由下一节的 DtN 约化精确解决；第二个困难是本讲义需要“饱和性假设”的根本原因（第~\ref{sec:radius}~节）。
+
+本讲义假设我们关心的 $\mu$ 在两侧的公共带隙内部，并且不讨论带隙本身的严格验证。
+
+% ======================================================================
+\section{连续层面：把无限问题约化到中心胞元}
+\label{sec:continuous-dtn}
+
+这一节在连续层面（不离散）解释 DtN 约化的思想。它源自 Joly、Li 和 Fliss 对局部扰动周期波导的工作\citep{JolyLiFliss2006,Fliss2013}。离散版本（第~\ref{sec:discrete-dtn}~节）与这里一一对应。
+
+\subsection{半波导上的 Dirichlet 问题}
+
+以右半波导为例，记它为 $\Omega^+=\{x>x^+\}$（$y$ 方向仍是一个周期）。给定交界面 $\Gamma^+$ 上的一个函数 $g(y)$（满足准周期条件），考虑问题：
+\begin{equation}
+\label{eq:half-dirichlet}
+\text{求 }u\text{ 使 }-\Delta u=\mu\rho u\text{ 于 }\Omega^+,\quad u=g\text{ 于 }\Gamma^+,\quad u\text{ 在 }x\to+\infty\text{ 时衰减 .}
+\end{equation}
+当 $\mu$ 在右侧带隙中、并且 $\mu$ 不是半波导上带零边值的特征值时，这个问题有唯一解\citep{Fliss2013}。我们把这个解记为 $u_g$。它线性地依赖于 $g$。
+
+\subsection{半波导的“能量形式”}
+
+对 $\Gamma^+$ 上的两个函数 $g,h$，定义
+\begin{equation}
+\label{eq:dtn-form}
+d^+(g,h)=\int_{\Omega^+}\bigl(\nabla u_g\cdot\nabla\overline v-\mu\rho\,u_g\overline v\bigr)\,\dd x\,\dd y ,
+\end{equation}
+其中 $v$ 是 $\Omega^+$ 上任意一个在 $\Gamma^+$ 上等于 $h$、在远处衰减的 $H^1$ 函数。
+
+\emph{这个定义与 $v$ 的选取无关。} 设 $v_1,v_2$ 都在 $\Gamma^+$ 上等于 $h$，则 $w=v_1-v_2$ 在 $\Gamma^+$ 上为零。由于 $u_g$ 在 $\Omega^+$ 内满足方程，对任何在 $\Gamma^+$ 上为零的测试函数 $w$，都有 $\int_{\Omega^+}(\nabla u_g\cdot\nabla\overline w-\mu\rho u_g\overline w)=0$（这就是 $\Omega^+$ 上方程的弱形式）。所以用 $v_1$ 和 $v_2$ 算出的 $d^+$ 相同。
+
+\emph{与法向导数的关系。} 对 \eqref{eq:dtn-form} 用 Green 公式（教程第~1.3~节），$\Omega^+$ 在 $\Gamma^+$ 上的外法向是 $-x$ 方向，上下边界的项因准周期而相消，远处的项因衰减而消失，得到
+\[
+d^+(g,h)=-\int_{\Gamma^+}\partial_xu_g\,\overline h\,\dd y .
+\]
+映射 $g\mapsto-\partial_xu_g|_{\Gamma^+}$ 就叫做 \emph{Dirichlet-to-Neumann（DtN）映射}：输入边界值（Dirichlet 数据），输出法向导数（Neumann 数据）。本讲义始终使用 \eqref{eq:dtn-form} 这种积分形式，因为它与有限元的写法直接对应，而且不需要法向导数。
+
+左半波导 $\Omega^-=\{x<x^-\}$ 上同样定义 $d^-(g,h)$。
+
+\subsection{中心胞元上的非线性特征值问题}
+
+设 $u$ 是一个导模。把弱形式 \eqref{eq:weak} 中的积分拆成中心胞元 $\cell$ 与两个半波导三部分：
+\[
+\int_{\cell}\bigl(\nabla u\cdot\nabla\overline v-\mu\rho u\overline v\bigr)+\int_{\Omega^-}(\cdots)+\int_{\Omega^+}(\cdots)=0 .
+\]
+在 $\Omega^+$ 中，$u$ 满足方程、在远处衰减，边界值是 $u|_{\Gamma^+}$。由唯一性，$u$ 在 $\Omega^+$ 上就是 $u_g$，其中 $g=u|_{\Gamma^+}$。所以第三项等于 $d^+(u|_{\Gamma^+},v|_{\Gamma^+})$。第二项同理。于是 $u$ 在中心胞元上的限制满足：
+\begin{equation}
+\label{eq:center-weak}
+\int_{\cell}\bigl(\nabla u\cdot\nabla\overline v-\mu\rho\,u\overline v\bigr)+d^-\bigl(u|_{\Gamma^-},v|_{\Gamma^-}\bigr)+d^+\bigl(u|_{\Gamma^+},v|_{\Gamma^+}\bigr)=0
+\end{equation}
+对中心胞元上所有（准周期的）测试函数 $v$ 成立。反过来，若中心胞元上的 $u\ne0$ 满足 \eqref{eq:center-weak}，把它与两侧的 $u_g$ 拼起来，就得到整条带上的导模。
+
+所以，原来的无限区域问题等价于中心胞元上的问题 \eqref{eq:center-weak}。代价是：$d^\pm$ 依赖于 $\mu$，并且依赖得很复杂，\eqref{eq:center-weak} 关于 $\mu$ 是\emph{非线性}的特征值问题。
+
+\subsection{周期性给出的传播算子}
+\label{sec:propagation}
+
+怎样计算 $d^+$？关键是周期性。把半波导 $\Omega^+$ 向右平移一个胞元宽度 $L^+$，得到 $\Omega^+_1=\{x>x^++L^+\}$。由于材料在 $x>x^+$ 中以 $L^+$ 为周期，$\Omega^+_1$ 与 $\Omega^+$ 中的材料完全相同。
+
+$u_g$ 在 $\Omega^+_1$ 上满足方程、在远处衰减。由唯一性，它就是 $\Omega^+_1$ 上以自己的边界值 $u_g|_{x=x^++L^+}$ 为数据的那个衰减解。于是定义\emph{传播算子}
+\[
+T^+:\ g\ \longmapsto\ u_g|_{x=x^++L^+}\quad(\text{看作 }y\text{ 的函数}).
+\]
+反复使用这个论证：$u_g$ 在第 $j$ 面墙 $x=x^++jL^+$ 上的值就是 $(T^+)^jg$。这意味着：
+\begin{itemize}
+\item 只要知道 $T^+$，整个半波导上的解就被一个胞元上的问题决定：第 $j$ 个胞元中，$u_g$ 是两面墙上取值 $(T^+)^jg$ 和 $(T^+)^{j+1}g$ 的胞元解。
+\item 解在远处衰减，相当于 $(T^+)^jg\to0$。
+\end{itemize}
+下一节在离散层面推导 $T^+$ 满足的方程以及怎样计算它。
+
+% ======================================================================
+\section{离散层面：有限元 DtN 矩阵}
+\label{sec:discrete-dtn}
+
+本节把上一节的每一步都换成有限元版本。所用的结构来自 Fliss 和 Klindworth 等人的工作\citep{Fliss2013,KlindworthSchmidtFliss2014}；这里的写法允许左右两侧不同。
+
+\subsection{三个胞元模板}
+
+整个无限问题只需要三个\emph{模板}：中心胞元、一个左侧胞元、一个右侧胞元。三个模板放在同一次网格生成中，满足：
+\begin{itemize}
+\item 中心胞元与右模板在 $\Gamma^+$ 上的节点一一重合，与左模板在 $\Gamma^-$ 上同样重合；
+\item 每个侧向模板自己的左右两面墙上的节点，平移一个胞元宽度后一一重合（这样无限多个平移副本可以首尾拼接）；
+\item 上下边界的节点按 $y$ 方向的周期配对（用于准周期约束，教程第~7~节）。
+\end{itemize}
+几何采用二次曲边三角形（教程第~4~节），场采用 $P_p$ 元。每个模板上组装刚度矩阵 $K$ 和质量矩阵 $M$ 并施加准周期约束。设每面墙上有 $n$ 个自由度（教程第~7.3~节）。
+
+右半波导由右模板的无穷多个平移副本组成，这些副本的矩阵完全相同。我们从靠近中心的一侧开始给它们编号 $j=0,1,2,\dots$，并把第 $j$ 个副本靠中心的墙上的迹（节点值组成的向量）记为 $\bm g_j$。于是 $\bm g_0$ 位于 $\Gamma^+$ 上，第 $j$ 个副本的两面墙上的迹分别是 $\bm g_j$ 和 $\bm g_{j+1}$（图~\ref{fig:cells}）。
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[x=2.4cm,y=1.6cm]
+  \fill[orange!15] (-1,-0.5) rectangle (0,0.5);
+  \node at (-0.5,0) {\small 中心胞元};
+  \foreach \j in {0,1,2} {
+    \draw[black!50] (\j,-0.5) rectangle (\j+1,0.5);
+    \node at (\j+0.5,0) {\small 第 \j 个胞元};
+  }
+  \draw[black!50] (-1,-0.5) rectangle (0,0.5);
+  \draw[very thick] (0,-0.5) -- (0,0.5);
+  \node at (3.3,0) {$\cdots$};
+  \node[below] at (0,-0.5) {\small $\bm g_0=\bm g$};
+  \node[below] at (1,-0.5) {\small $\bm g_1=T\bm g$};
+  \node[below] at (2,-0.5) {\small $\bm g_2=T^2\bm g$};
+  \node[below] at (3,-0.5) {\small $\bm g_3=T^3\bm g$};
+  \node[above] at (0,0.5) {\small $\Gamma^+$};
+  \node[above,black!70] at (1,0.5) {\scriptsize 墙 0};
+  \node[above,black!70] at (2,0.5) {\scriptsize 墙 1};
+  \draw[black!70,line width=1.2pt] (1,-0.5) -- (1,0.5);
+  \draw[black!70,line width=1.2pt] (2,-0.5) -- (2,0.5);
+\end{tikzpicture}
+\caption{右半波导中胞元与墙上迹的编号。每个胞元靠中心的墙称为“墙 0”，远离中心的墙称为“墙 1”（图中以第 1 个胞元为例加粗）。第~\ref{sec:recurrence}~节证明衰减解满足 $\bm g_j=T^j\bm g$。}
+\label{fig:cells}
+\end{figure}
+
+\subsection{单胞的 Schur 补}
+
+固定实数 $\mu$。对右模板的矩阵 $A=K-\mu M$ 做静态凝聚（教程第~8~节），消去所有内部自由度，得到两面墙上的 Schur 补，按（墙 0，墙 1）分块：
+\[
+S=\begin{pmatrix}S_{00}&S_{01}\\ S_{10}&S_{11}\end{pmatrix}.
+\]
+$S$ 是 Hermite 矩阵，所以 $S_{00},S_{11}$ 是 Hermite 的，$S_{10}=S_{01}^*$。
+
+回忆它的含义：若一个胞元两面墙上的迹为 $\bm a$（墙 0）和 $\bm b$（墙 1），内部按离散方程延拓，则这个胞元作用在两面墙上的“载荷”为
+\[
+\text{墙 0 上：}S_{00}\bm a+S_{01}\bm b,\qquad \text{墙 1 上：}S_{10}\bm a+S_{11}\bm b .
+\]
+这里“载荷”指的是：对墙上每个基函数 $\psi_i$，量 $\int_{\text{胞元}}(\nabla u\cdot\nabla\overline{\psi_i}-\mu\rho u\overline{\psi_i})$ 的值。并且这个胞元上的“能量”为（教程第~8.3~节的能量恒等式）
+\begin{equation}
+\label{eq:cell-energy}
+\begin{pmatrix}\bm a\\ \bm b\end{pmatrix}^{\!*}S\begin{pmatrix}\bm a\\ \bm b\end{pmatrix}=\int_{\text{胞元}}|\nabla u|^2-\mu\int_{\text{胞元}}\rho|u|^2 .
+\end{equation}
+
+\subsection{墙上的递推关系}
+\label{sec:recurrence}
+
+现在把无穷多个胞元拼起来。拼接后的有限元方程分为两类：
+\begin{enumerate}
+\item 每个胞元内部的方程。它们已经通过“内部按离散方程延拓”满足了。
+\item 每面墙上的方程。墙 $\bm g_j$（$j\ge1$）上的一个基函数，支集横跨第 $j-1$ 个和第 $j$ 个胞元，所以它对应的方程是两个胞元载荷之和等于零。
+\end{enumerate}
+第 $j-1$ 个胞元在它的墙 1 上的载荷是 $S_{10}\bm g_{j-1}+S_{11}\bm g_j$；第 $j$ 个胞元在它的墙 0 上的载荷是 $S_{00}\bm g_j+S_{01}\bm g_{j+1}$。两者之和为零：
+\begin{equation}
+\label{eq:recurrence}
+S_{10}\,\bm g_{j-1}+(S_{11}+S_{00})\,\bm g_j+S_{01}\,\bm g_{j+1}=0,\qquad j=1,2,\dots
+\end{equation}
+这是一个关于墙迹序列的二阶线性递推（类似于二阶差分方程）。它对应连续层面“法向导数在胞元之间连续”。
+
+\subsection{传播矩阵与二次矩阵方程}
+
+仿照第~\ref{sec:propagation}~节，我们寻找形如 $\bm g_j=T^j\bm g$ 的解，其中 $T$ 是 $n\times n$ 矩阵（离散的传播算子），$\bm g=\bm g_0$ 是 $\Gamma^+$ 上的迹。代入 \eqref{eq:recurrence}：
+\[
+\bigl(S_{10}+(S_{11}+S_{00})T+S_{01}T^2\bigr)T^{j-1}\bm g=0 .
+\]
+如果 $T$ 满足\emph{二次矩阵方程}
+\begin{equation}
+\label{eq:quadratic}
+S_{01}T^2+(S_{11}+S_{00})T+S_{10}=0 ,
+\end{equation}
+那么对任何 $\bm g$，序列 $\bm g_j=T^j\bm g$ 都满足递推。我们还要求解衰减：$T^j\to0$，即 $T$ 的所有特征值的模都小于 1。
+
+\paragraph{第一步：先看特征值。} 若 $T\bm v=\zeta\bm v$，把 \eqref{eq:quadratic} 作用在 $\bm v$ 上得到
+\begin{equation}
+\label{eq:qep-lead}
+\bigl(\zeta^2S_{01}+\zeta(S_{11}+S_{00})+S_{10}\bigr)\bm v=0 .
+\end{equation}
+这是二次特征值问题（教程第~10.3~节）。它的每个解 $(\zeta,\bm v)$ 都给出递推的一个特解 $\bm g_j=\zeta^j\bm v$：墙迹每过一个胞元乘以 $\zeta$。这正是离散的 Bloch 波，$\zeta$ 是 Floquet 乘子。$|\zeta|=1$ 对应能传播的波，$|\zeta|<1$ 对应向右衰减的波，$|\zeta|>1$ 对应向右增长的波。
+
+\paragraph{第二步：特征值成对出现。} 记 $P(\zeta)=\zeta^2S_{01}+\zeta(S_{11}+S_{00})+S_{01}^*$。对 $\zeta\ne0$，利用 $S_{11}+S_{00}$ Hermite，
+\[
+P(1/\overline\zeta)^*=\zeta^{-2}S_{01}^*+\zeta^{-1}(S_{11}+S_{00})+S_{01}=\zeta^{-2}P(\zeta) .
+\]
+所以 $P(\zeta)$ 奇异当且仅当 $P(1/\overline\zeta)$ 奇异：特征值关于单位圆成对出现，$\zeta$ 与 $1/\overline\zeta$ 配对。线性化后共有 $2n$ 个特征值。当 $\mu$ 在带隙中时，没有能传播的波，单位圆上没有特征值；于是恰好 $n$ 个在单位圆内，$n$ 个在单位圆外（若 $S_{01}$ 奇异，会出现 $\zeta=0$ 和“无穷大”特征值，它们也按同样方式配对）。
+
+\paragraph{第三步：用 QZ 取出稳定子空间。} 按教程第~10.3~节的方法把 \eqref{eq:qep-lead} 线性化，取 $A_2=S_{01}$，$A_1=S_{11}+S_{00}$，$A_0=S_{10}$：
+\[
+\begin{pmatrix}-(S_{11}+S_{00})&-S_{10}\\ I&0\end{pmatrix}\bm z=\zeta\begin{pmatrix}S_{01}&0\\0&I\end{pmatrix}\bm z,\qquad \bm z=\begin{pmatrix}\zeta\bm v\\ \bm v\end{pmatrix}.
+\]
+对这个 $2n$ 阶问题做 QZ 分解，并把 $n$ 个模小于 1 的特征值排到左上角（教程第~10.4~节）。取 $\mathcal Z$ 的前 $n$ 列 $\binom{Z_1}{Z_0}$，则由教程第~10.4~节的命题，
+\begin{equation}
+\label{eq:T}
+T=Z_1Z_0^{-1}
+\end{equation}
+满足 \eqref{eq:quadratic}，并且 $T$ 的特征值恰好是那 $n$ 个模小于 1 的 $\zeta$。
+
+这一做法不需要计算特征向量，也不要求特征向量构成一组基（即使 $T$ 不可对角化也没关系）；QZ 分解本身是向后稳定的。需要 $Z_0$ 可逆，它对应连续层面“半波导 Dirichlet 问题唯一可解”；数值上检查它的条件数。
+
+\paragraph{为什么这样得到的就是“那个”衰减解（选读）。} 设 $S_{01}$ 可逆。令 $\bm z_j=\binom{\bm g_{j+1}}{\bm g_j}$，递推 \eqref{eq:recurrence} 可以写成一阶形式 $\bm z_j=\mathcal T\bm z_{j-1}$，其中 $\mathcal T$ 是上面线性化问题的矩阵 $\mathcal B^{-1}\mathcal A$。序列衰减当且仅当 $\bm z_0$ 落在 $\mathcal T$ 关于模小于 1 的特征值的不变子空间中，即 $\bm z_0=\binom{Z_1}{Z_0}\bm c$。于是 $\bm g_0=Z_0\bm c$，$\bm g_1=Z_1\bm c=T\bm g_0$。若 $Z_0$ 可逆，给定 $\bm g_0$ 后 $\bm c$ 唯一，所以衰减解唯一，并且就是 $\bm g_j=T^j\bm g_0$。
+
+\subsection{离散 DtN 矩阵}
+
+半波导作用在 $\Gamma^+$ 上的载荷，就是第 0 个胞元在它的墙 0 上的载荷：
+\[
+S_{00}\bm g_0+S_{01}\bm g_1=(S_{00}+S_{01}T)\,\bm g .
+\]
+于是定义右半波导的\emph{离散 DtN 矩阵}
+\begin{equation}
+\label{eq:D}
+D=S_{00}+S_{01}T .
+\end{equation}
+它把 $\Gamma^+$ 上的迹映为半波导在 $\Gamma^+$ 上的载荷，是第~\ref{sec:continuous-dtn}~节 $d^+$ 的离散版本。
+
+\begin{proposition}
+\label{prop:D-energy}
+对实数 $\mu$ 和任意 $\bm g$，
+\[
+\bm g^*D\bm g=\sum_{j=0}^\infty\Bigl(\int_{\text{第 }j\text{ 个胞元}}|\nabla U|^2-\mu\int_{\text{第 }j\text{ 个胞元}}\rho|U|^2\Bigr),
+\]
+其中 $U$ 是由 $\bm g$ 生成的整个半波导上的离散场。特别地，$\bm g^*D\bm g$ 是实数，$D$ 是 Hermite 矩阵。
+\end{proposition}
+
+\begin{proof}
+记第 $j$ 个胞元的能量为 $e_j$。由 \eqref{eq:cell-energy}，
+\[
+e_j=\bm g_j^*\bigl(S_{00}\bm g_j+S_{01}\bm g_{j+1}\bigr)+\bm g_{j+1}^*\bigl(S_{10}\bm g_j+S_{11}\bm g_{j+1}\bigr).
+\]
+把 $e_0+e_1+\cdots+e_{N-1}$ 按墙重新分组：墙 $\bm g_0$ 只出现在 $e_0$ 的第一项中；墙 $\bm g_j$（$1\le j\le N-1$）出现在 $e_{j-1}$ 的第二项和 $e_j$ 的第一项中；墙 $\bm g_N$ 只出现在 $e_{N-1}$ 的第二项中。于是
+\[
+\begin{aligned}
+\sum_{j=0}^{N-1}e_j={}&\bm g_0^*\bigl(S_{00}\bm g_0+S_{01}\bm g_1\bigr)
++\sum_{j=1}^{N-1}\bm g_j^*\underbrace{\bigl(S_{10}\bm g_{j-1}+(S_{11}+S_{00})\bm g_j+S_{01}\bm g_{j+1}\bigr)}_{=0\text{（递推 \eqref{eq:recurrence}）}}\\
+&+\bm g_N^*\bigl(S_{10}\bm g_{N-1}+S_{11}\bm g_N\bigr).
+\end{aligned}
+\]
+第一项就是 $\bm g^*D\bm g$。最后一项中 $\bm g_N=T^N\bm g\to0$，当 $N\to\infty$ 时趋于零。所以 $\bm g^*D\bm g=\sum_je_j$，它是实数。一个复矩阵的二次型对所有向量都取实值，当且仅当它是 Hermite 矩阵，所以 $D$ 是 Hermite 的。
+\end{proof}
+
+\subsection{左半波导}
+
+左半波导用左模板做完全相同的事。唯一要注意的是方向：左侧胞元从 $\Gamma^-$ 开始\emph{向左}编号，每个左侧胞元靠中心的墙（墙 0）是它的\emph{右}墙，远离中心的墙（墙 1）是它的\emph{左}墙。按这个约定分块 Schur 补后，公式 \eqref{eq:recurrence}--\eqref{eq:D} 原样成立，得到左侧的传播矩阵和 DtN 矩阵。为区分两侧，记它们为 $T^\pm$、$D^\pm$。左右模板不同，所以 $T^-\ne T^+$，$D^-\ne D^+$；我们不使用任何镜像对称。
+
+\subsection{中心胞元上的矩阵方程}
+
+对中心胞元的矩阵 $K-\mu M$ 做同样的静态凝聚，消去中心胞元的内部自由度，得到两面墙 $\Gamma^-$、$\Gamma^+$ 上的 Schur 补 $S_c(\mu)$（$2n\times2n$）。$\Gamma^+$ 上的有限元方程是：中心胞元的载荷加上右半波导的载荷等于零；$\Gamma^-$ 同理。记 $\bm g=\binom{\bm g_-}{\bm g_+}$ 为两面墙上的迹，这些方程合起来就是
+\begin{equation}
+\label{eq:F}
+F(\mu)\,\bm g=0,\qquad
+F(\mu)=S_c(\mu)+\begin{pmatrix}D^-(\mu)&0\\0&D^+(\mu)\end{pmatrix}.
+\end{equation}
+这是 \eqref{eq:center-weak} 的离散版本。离散导模对应于使 $F(\mu)$ 奇异的 $\mu$。由命题~\ref{prop:D-energy} 和 \eqref{eq:cell-energy}，
+\begin{equation}
+\label{eq:F-energy}
+\bm g^*F(\mu)\bm g=\int|\nabla U|^2-\mu\int\rho|U|^2 ,
+\end{equation}
+积分区域是整条带，$U$ 是由 $\bm g$ 生成的整条带上的离散场（中心由消元恢复，两侧由 $T^\pm$ 和胞元消元恢复）。所以 $F(\mu)$ 是 Hermite 矩阵。
+
+需要强调：$D^\pm$ 是精确的离散 DtN 矩阵，没有截断任何东西。$F(\mu)$ 奇异，与“由中心模板和两侧无穷多个模板副本拼成的无限离散问题有衰减解”完全等价。
+
+\subsection{怎样求根}
+\label{sec:root}
+
+$F(\mu)$ 是 $2n\times2n$ 的 Hermite 矩阵，“奇异”意味着它有一个零特征值。我们不直接用行列式（它的数值大小会在很大范围内变化），而是求解广义 Hermite 特征值问题
+\begin{equation}
+\label{eq:theta}
+F(\mu)\bm g=\theta\,W\bm g ,
+\end{equation}
+其中 $W$ 是两面墙上的一维质量矩阵（教程第~7.3~节），与 $\mu$ 无关。$\theta$ 都是实数。我们跟踪其中一条特征值曲线 $\theta(\mu)$，求它的零点。
+
+\begin{itemize}
+\item \emph{为什么要乘 $W$。} 有了 $W$，$\bm g^*W\bm g=\int_{\Gamma^-}|g_-|^2+\int_{\Gamma^+}|g_+|^2$，$\theta$ 就不依赖于基函数的缩放，不同 $p$ 层的 $\theta$ 可以直接比较。
+\item \emph{跟踪分支。} 每次改变 $\mu$ 都要重新计算 $D^\pm$ 和 $F$。我们不是每次取模最小的 $\theta$，而是取与上一次的墙迹 $\bm g$ 最相关（$|\bm g_{\rm new}^*W\bm g_{\rm old}|$ 最大）的那一个。这样即使其他分支从旁边穿过，也不会跟错。
+\item \emph{括号法求根。} 先找一个区间，使 $\theta$ 在两端异号，然后用带括号保护的割线法缩小区间，直到区间宽度小于预定精度。第~\ref{sec:deriv}~节将证明 $\theta'(\mu)<0$，所以分支在零点附近单调下降，零点是孤立的。
+\end{itemize}
+每计算一个 $\mu$，还要做以下检查：单胞内部消元的后向误差和条件数；QZ 稳定子空间恰有 $n$ 维，且离单位圆有距离；二次矩阵方程 \eqref{eq:quadratic} 的残差；$D^\pm$ 的 Hermite 性。
+
+\subsection{中心胞元的消元为什么安全}
+\label{sec:center-safe}
+
+中心胞元的消元需要 $A_{II}=K_{II}-\mu M_{II}$ 可逆，也就是 $\mu$ 不是“两面墙上取零值”的中心胞元问题的特征值。下面给出一个简单的充分条件。
+
+设 $v$ 在中心胞元上，并且在两面墙上为零。记中心胞元宽度为 $w=x^+-x^-$。对固定的 $y$，函数 $f(x)=v(x,y)$ 在区间两端为零，可以展开为正弦级数 $f=\sum_{m\ge1}c_m\sin\bigl(m\pi(x-x^-)/w\bigr)$。由正弦函数的正交性，
+\[
+\int|f'|^2\,\dd x=\frac w2\sum_m\Bigl(\frac{m\pi}w\Bigr)^2|c_m|^2\ \ge\ \Bigl(\frac\pi w\Bigr)^2\frac w2\sum_m|c_m|^2=\Bigl(\frac\pi w\Bigr)^2\int|f|^2\,\dd x .
+\]
+对 $y$ 积分，并利用 $|\nabla v|^2\ge|\partial_xv|^2$ 和 $\rho\le\rho_{\max}$（中心胞元中的最大材料系数），得到
+\[
+\int|\nabla v|^2-\mu\int\rho|v|^2\ \ge\ \Bigl(\frac{\pi^2}{w^2\rho_{\max}}-\mu\Bigr)\int\rho|v|^2 .
+\]
+所以当 $\mu<\pi^2/(w^2\rho_{\max})$ 时，$A_{II}$ 对应的二次型正定，$A_{II}$ 可逆。有限元函数是这类 $v$ 的特例，所以离散矩阵同样正定。在数值实验中 $w=1$，$\rho_{\max}=4$，条件变为 $k<\pi/2\approx1.5708$，而目标频率 $k\approx1.5584$，条件成立（虽然余量不大）。
+
+侧向胞元的材料系数大得多（数值实验中为 17），这一论证不适用，只能依靠前面列出的逐频点数值检查。
+
+% ======================================================================
+\section{真实材料的质量矩阵}
+\label{sec:mass}
+
+\subsection{问题：名义材料逼近的是另一个问题}
+
+教程第~6.2~节提到，组装质量矩阵时最自然的做法是按单元赋材料值：曲边界面内侧的单元取夹杂的 $\rho$，外侧取 1。这样得到的“名义材料”是以网格的二次曲边界面为分界线的，而真实界面是解析曲线。两者之间夹着一条很薄的带。
+
+这看起来是一个很小的误差，但对我们的方法是致命的。我们的方法要比较 $p=2,3,4$ 三层的特征值，并把层间差当作误差的度量。如果每一层都用名义材料，那么随着 $p$ 提高，各层的根会收敛到“以二次曲边界面为材料边界”的那个问题的特征值，而不是原问题的特征值。层间差只反映这个错误问题的离散误差，与真正关心的误差无关。在数值实验中，从名义材料换成真实材料使 $P_2$ 的根移动了约 $1.6\times10^{-8}$，而 $P_3$ 与 $P_4$ 之差只有 $6.8\times10^{-10}$：如果不修正，几何误差会完全淹没层间差。
+
+所以我们要在每一层都使用真实材料的质量矩阵
+\[
+M_{ij}=\int\rho_{\text{真}}\,\psi_j\,\overline{\psi_i}\,\dd x\,\dd y ,
+\]
+其中 $\rho_{\text{真}}$ 以真实界面为分界。这样一来，对任何有限元函数 $u_h=\sum_jc_j\psi_j$，都有 $\bm c^*M\bm c=\int\rho_{\text{真}}|u_h|^2$，每一层都是\emph{原问题}的 Galerkin 离散，而且由于 $V_2\subset V_3\subset V_4$，三层是同一个问题在越来越大的子空间上的逼近。刚度矩阵不含 $\rho$，不需要修正。
+
+\subsection{只需要计算一个差}
+
+设某个夹杂的材料系数为 $\rho_{\rm in}$，背景为 1。记真实界面围成的区域为 $D$，网格曲边界面围成的区域为 $D_h$。真实材料与名义材料只在 $D$ 与 $D_h$ 的差异处不同，所以
+\[
+M=M_h+(\rho_{\rm in}-1)\Bigl(\int_Df-\int_{D_h}f\Bigr),\qquad f=\psi_j\overline{\psi_i},
+\]
+其中 $M_h$ 是名义材料的质量矩阵（已经能算），每个夹杂贡献一项。问题归结为：怎样准确计算一个函数在两个几乎重合的区域上的积分之差。
+
+直接的办法是把夹在两条曲线之间的薄带剖分成小块再积分。但这条带非常薄，而且两条曲线会互相穿过（图~\ref{fig:band}）：在一些地方真实曲线在外，在另一些地方在内。显式剖分很麻烦。下面的恒等式绕开了这个困难。
+
+\subsection{有向同伦薄带恒等式}
+
+设真实界面和网格界面都按逆时针方向参数化，并使用同一个参数 $t$：网格界面由若干段二次曲线组成，每段的两个端点和中点都在真实曲线上，我们让两条曲线在这些点处取相同的参数值。记真实曲线为 $\gamma(t)$，网格曲线为 $\gamma_h(t)$，$t\in[0,2\pi]$。在两条曲线之间作“直线插值”：
+\[
+H(t,\tau)=(1-\tau)\,\gamma_h(t)+\tau\,\gamma(t),\qquad 0\le\tau\le1 .
+\]
+固定 $t$ 时，$\tau\mapsto H(t,\tau)$ 是从 $\gamma_h(t)$ 到 $\gamma(t)$ 的一条短线段；固定 $\tau$ 时，$t\mapsto H(t,\tau)$ 是一条介于两者之间的闭曲线。$H$ 把参数矩形 $[0,2\pi]\times[0,1]$ 映成那条薄带（图~\ref{fig:band}）。
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[x=9cm,y=14cm]
+  % mesh curve gamma_h (quadratic) and true curve gamma = gamma_h + delta(t)
+  \foreach \t in {0.025,0.05,...,0.975} {
+    \pgfmathsetmacro{\yh}{0.25*\t*(1-\t)}
+    \pgfmathsetmacro{\dy}{0.035*sin(360*\t)}
+    \pgfmathsetmacro{\yt}{\yh+\dy}
+    \ifdim \dy pt>0pt
+      \draw[blue!60,line width=0.5pt] (\t,\yh) -- (\t,\yt);
+    \else
+      \draw[red!60,line width=0.5pt] (\t,\yh) -- (\t,\yt);
+    \fi
+  }
+  \draw[black,thick,dashed] plot[domain=0:1,samples=80] (\x,{0.25*\x*(1-\x)});
+  \draw[black,thick] plot[domain=0:1,samples=120] (\x,{0.25*\x*(1-\x)+0.035*sin(360*\x)});
+  \foreach \t in {0,0.5,1} \fill (\t,{0.25*\t*(1-\t)}) circle (0.006);
+  \node[right] at (1.01,0.0) {\small 网格界面 $\gamma_h$（虚线）};
+  \node[left] at (-0.01,0.0) {\small 真实界面 $\gamma$（实线）};
+  \node[blue!70!black] at (0.22,0.115) {\small $\det>0$};
+  \node[red!70!black] at (0.8,-0.008) {\small $\det<0$};
+  \draw[-{Latex[length=2mm]}] (0.62,-0.05) -- (0.38,-0.05) node[midway,below] {\small $t$ 增加的方向};
+  \node[black!60] at (0.2,-0.04) {\small 夹杂内部在这一侧};
+\end{tikzpicture}
+\caption{一段界面附近的薄带示意（竖直方向放大）。黑点是两条曲线的公共点（每段二次曲线的端点和中点）。短线段是固定 $t$、$\tau$ 从 0 到 1 时 $H(t,\tau)$ 走过的路径。界面逆时针定向，$t$ 增加时夹杂内部在行进方向的左侧，即图中下方。蓝色部分真实曲线在外，面积元 $\det(\partial_\tau H,\partial_tH)$ 为正；红色部分真实曲线在内，面积元为负。}
+\label{fig:band}
+\end{figure}
+
+\begin{proposition}[有向薄带恒等式]
+\label{prop:band}
+设 $f$ 在包含两条曲线及其间薄带的区域上连续。则
+\begin{equation}
+\label{eq:band}
+\int_Df\,\dd x\,\dd y-\int_{D_h}f\,\dd x\,\dd y=\int_0^{2\pi}\!\!\int_0^1f\bigl(H(t,\tau)\bigr)\,\det\bigl(\partial_\tau H,\ \partial_tH\bigr)\,\dd\tau\,\dd t ,
+\end{equation}
+其中 $\det(\bm a,\bm b)=a_xb_y-a_yb_x$。
+\end{proposition}
+
+右端的 $\det(\partial_\tau H,\partial_tH)\,\dd\tau\,\dd t$ 就是薄带上的“带符号的面积元”。恒等式说：两个区域上的积分之差，等于在薄带上按带符号的面积积分。真实曲线在外的地方贡献为正，在内的地方贡献为负，自动正确计数，不需要知道两条曲线在哪里相交。
+
+\emph{一个检验。} 取 $\gamma_h$ 为半径 $a$ 的圆，$\gamma$ 为半径 $b$ 的同心圆，$f=1$。则 $H=r(\tau)(\cos t,\sin t)$，$r(\tau)=a+\tau(b-a)$，
+\[
+\partial_\tau H=(b-a)(\cos t,\sin t),\qquad \partial_tH=r(\tau)(-\sin t,\cos t),\qquad \det(\partial_\tau H,\partial_tH)=(b-a)\,r(\tau) .
+\]
+右端为 $2\pi(b-a)\int_0^1r(\tau)\,\dd\tau=2\pi(b-a)\frac{a+b}2=\pi(b^2-a^2)$，正是两个圆的面积之差。若 $b<a$，结果自动为负。
+
+\begin{proof}[命题~\ref{prop:band} 的证明]
+先设 $f$ 是光滑的实值函数。
+
+\emph{第 1 步：把面积分写成线积分。} 取一个包含所有曲线的大矩形，令 $\Phi(x,y)=\int_{x_0}^xf(s,y)\,\dd s$（$x_0$ 是矩形左边界），则 $\partial_x\Phi=f$。由 Green 公式 $\oint(P\,\dd x+Q\,\dd y)=\iint(\partial_xQ-\partial_yP)$，取 $P=0$，$Q=\Phi$，对逆时针曲线 $\gamma$ 有
+\[
+\int_Df=\oint_\gamma\Phi\,\dd y=\int_0^{2\pi}\Phi\bigl(\gamma(t)\bigr)\,\gamma_y'(t)\,\dd t ,
+\]
+其中 $\gamma_y$ 是 $\gamma$ 的 $y$ 分量。$D_h$ 同理。
+
+\emph{第 2 步：沿 $\tau$ 连续变形。} 定义
+\[
+I(\tau)=\int_0^{2\pi}\Phi\bigl(H(t,\tau)\bigr)\,\partial_tH_y(t,\tau)\,\dd t .
+\]
+因为 $H(\cdot,1)=\gamma$，$H(\cdot,0)=\gamma_h$，由第 1 步，$I(1)=\int_Df$，$I(0)=\int_{D_h}f$。注意，对中间的 $\tau$，曲线 $H(\cdot,\tau)$ 可能自交，不一定围成一个区域，但 $I(\tau)$ 作为一个数总是有定义的。我们只对两条端曲线使用 Green 公式。
+
+\emph{第 3 步：求导。} 由 $I(1)-I(0)=\int_0^1I'(\tau)\,\dd\tau$，只需计算 $I'(\tau)$。用乘积法则和链式法则：
+\[
+I'(\tau)=\int_0^{2\pi}\Bigl[\bigl(\Phi_x\,\partial_\tau H_x+\Phi_y\,\partial_\tau H_y\bigr)\partial_tH_y+\Phi(H)\,\partial_t\partial_\tau H_y\Bigr]\dd t ,
+\]
+这里 $\Phi_x,\Phi_y$ 都在 $H(t,\tau)$ 处取值。对最后一项关于 $t$ 分部积分。$t\mapsto H(t,\tau)$ 是闭曲线，首尾两端的边界项相同，互相抵消；分段处 $H$ 和 $\partial_\tau H=\gamma-\gamma_h$ 都连续，各段的端点项也两两抵消。于是
+\[
+\int_0^{2\pi}\Phi(H)\,\partial_t\partial_\tau H_y\,\dd t=-\int_0^{2\pi}\bigl(\Phi_x\,\partial_tH_x+\Phi_y\,\partial_tH_y\bigr)\partial_\tau H_y\,\dd t .
+\]
+代回去，含 $\Phi_y$ 的两项是 $\Phi_y\,\partial_\tau H_y\,\partial_tH_y-\Phi_y\,\partial_tH_y\,\partial_\tau H_y=0$，恰好相消；含 $\Phi_x$ 的两项合起来是
+\[
+\Phi_x\bigl(\partial_\tau H_x\,\partial_tH_y-\partial_tH_x\,\partial_\tau H_y\bigr)=f(H)\,\det(\partial_\tau H,\partial_tH).
+\]
+所以 $I'(\tau)=\int_0^{2\pi}f(H)\det(\partial_\tau H,\partial_tH)\,\dd t$，再对 $\tau$ 从 0 到 1 积分就得到 \eqref{eq:band}。
+
+\emph{第 4 步：推广。} 复值函数对实部、虚部分别使用上面的结果。若 $f$ 只是连续的，用光滑函数一致逼近 $f$；\eqref{eq:band} 两端都是在有界集合上对有界权重的积分，随 $f$ 一致收敛，所以等式对连续 $f$ 也成立。
+\end{proof}
+
+有限元基函数在整个网格上连续（但在单元之间只是分片光滑），所以 $f=\psi_j\overline{\psi_i}$ 满足命题的条件。于是
+\begin{equation}
+\label{eq:true-mass}
+M_{ij}=(M_h)_{ij}+(\rho_{\rm in}-1)\int_0^{2\pi}\!\!\int_0^1\psi_j(H)\,\overline{\psi_i(H)}\,\det(\partial_\tau H,\partial_tH)\,\dd\tau\,\dd t .
+\end{equation}
+三个模板中的每个夹杂各贡献这样一项。
+
+这个修正用在每一层 $p$ 的所有三个模板上，因此它进入中心胞元的 Schur 补，也进入两侧的 Schur 补、传播矩阵 $T^\pm$ 和 DtN 矩阵 $D^\pm$。这与“先在名义材料下求出场，再对场做一次几何修正”不同：后者只是一阶近似，没有计入场本身对材料变化的响应。
+
+\subsection{数值计算}
+
+\paragraph{积分公式。} \eqref{eq:true-mass} 的积分区域是参数矩形，可以对 $t$ 和 $\tau$ 用张量积 Gauss 公式（教程第~5~节）。网格界面由许多段二次曲线组成，我们在每一段上把 $t$ 再等分为若干子段，在每个子段上用张量 Gauss 点。之所以要分子段，是因为被积函数 $\psi_j(H)\overline{\psi_i(H)}$ 在 $H$ 穿过单元边界时只是连续而不光滑，子段越细，这些“折点”对 Gauss 公式的影响越小。和体积积分一样，我们用两套点数不同的公式各算一遍并比较（第~\ref{sec:numerics}~节）。
+
+\paragraph{找到每个积分点所在的单元。} 计算 $\psi_j(H)$ 需要知道点 $H(t,\tau)$ 落在哪个曲边单元里，以及它在该单元参考三角形中的坐标 $(\xi,\eta)$。不能简单地沿用界面段所属的单元，因为积分点可能落到相邻的单元中。做法是：
+\begin{enumerate}
+\item 先试界面两侧的两个单元，不行再试它们顶点周围的单元，最后试包围盒包含该点的所有单元。（曲边单元的包围盒用二次曲边的 Bernstein 控制点来取，以保证能盖住弯曲的边。）
+\item 对每个候选单元，用 Newton 法解方程 $F_K(\xi,\eta)=H$（教程第~4~节的曲边映射）：
+\[
+\begin{pmatrix}\xi\\ \eta\end{pmatrix}\leftarrow\begin{pmatrix}\xi\\ \eta\end{pmatrix}-J^{-1}\bigl(F_K(\xi,\eta)-H\bigr),
+\]
+必要时把步长减半以保证残差下降。
+\item 如果残差 $|F_K(\xi,\eta)-H|$ 不超过单元尺寸的 $10^{-12}$ 倍，并且三个重心坐标都不小于 $-10^{-10}$（即点在单元内或几乎在边上），就接受这个单元。
+\item 一个点可能同时被两个单元接受（它在公共边附近）。这时选择最小重心坐标较大的那个单元（点更深地位于其内部），平局时再比较残差和单元编号。
+\end{enumerate}
+
+\paragraph{一个容易犯的错误。} 早期实现中曾经要求：如果一个点被两个单元同时接受，那么两个单元算出的基函数值必须相同，否则判为失败。这个检查是错的。连续有限元只保证两个单元的多项式\emph{在公共边上}相同；一个点在容差内被两个单元接受，并不意味着它恰好在公共边上。离开公共边后，两个单元的多项式各自外推，取值一般不同。
+
+一个一维的例子可以说明这一点。设单元 $[-1,0]$ 上的函数是 $x$，单元 $[0,1]$ 上的函数是 $2x$，它们在公共点 $x=0$ 处相等，拼起来是连续函数。对点 $x=10^{-10}$，两个单元在容差 $10^{-10}$ 内都“接受”它，但两边的值分别是 $10^{-10}$ 和 $2\times10^{-10}$。差值的大小取决于点到公共边的距离和导数的跳跃，而不是实现是否有错。
+
+正确的检查是直接检查公共边本身：在每条共享边上取若干固定参数点（例如 $0,\tfrac14,\tfrac12,\tfrac34,1$），比较两侧单元的几何映射和所有基函数的迹是否一致。数值实验采用了这种检查。
+
+\paragraph{组装。} 每个积分点只涉及它所在单元的至多 15 个基函数（$P_4$），对应的乘积按批次累加进稀疏矩阵即可，不需要存储“所有自由度 $\times$ 所有积分点”的稠密数组。点的定位结果只与几何有关，三个阶数 $p$ 共用。
+
+% ======================================================================
+\section{导数等于无限质量，以及一次 Newton 预测}
+\label{sec:deriv}
+
+\subsection{为什么需要导数}
+
+原候选值 $\mu_0$ 来自名义材料的 $P_2$ 计算。提升到 $P_3$（并换成真实材料）后，根会移动一点。如果我们能从 $\mu_0$ 出发\emph{预测}这个移动，再与 $P_3$ 上独立求根的结果比较，就能检查：$P_3$ 上找到的确实是从原候选值延续过来的那个根，而且 DtN 矩阵等实现没有出错。
+
+预测的工具是 Newton 法（教程第~10.2~节）：在 $\mu_0$ 处计算 $P_3$ 的特征值 $\theta(\mu_0)$ 和导数 $\theta'(\mu_0)$，然后
+\[
+\mu_N=\mu_0-\frac{\theta(\mu_0)}{\theta'(\mu_0)} .
+\]
+由 Hellmann--Feynman 公式（教程命题~2），$\theta'=\bm g^*F'(\mu)\bm g/\bm g^*W\bm g$，所以需要 $F(\mu)$ 对 $\mu$ 的导数。$F$ 里含有 $D^\pm$，而 $D^\pm$ 通过 QZ 分解依赖于 $\mu$，直接求导很麻烦。本节证明一个简洁的结论：$-F'(\mu)$ 就是整条无限波导上的“质量”。
+
+\subsection{单个胞元}
+
+先回忆教程第~8.4~节的结果。对一个胞元，记 $E$ 为从两面墙上的迹到整个胞元系数的离散延拓矩阵（内部按离散方程求解），则 Schur 补的导数是
+\begin{equation}
+\label{eq:cell-deriv}
+S'(\mu)=-E^*ME,\qquad
+-\begin{pmatrix}\bm a\\ \bm b\end{pmatrix}^{\!*}S'(\mu)\begin{pmatrix}\bm a\\ \bm b\end{pmatrix}=\int_{\text{胞元}}\rho\,|u|^2 ,
+\end{equation}
+其中 $u$ 是两面墙上的迹为 $\bm a$、$\bm b$ 的离散延拓。也就是说，$-S'$ 给出这个胞元上的质量。
+
+\subsection{半波导}
+
+在右半波导中，第 $j$ 个胞元两面墙上的迹为 $\bm h_j=\binom{\bm g_j}{\bm g_{j+1}}=\binom{I}{T}T^j\bm g$，其中 $I$ 是单位矩阵。由 \eqref{eq:cell-deriv}，这个胞元上的质量是
+\[
+\int_{\text{第 }j\text{ 个胞元}}\rho|U|^2=\bm h_j^*E^*ME\,\bm h_j=(T^j\bm g)^*\,C\,(T^j\bm g),\qquad
+C=\begin{pmatrix}I\\ T\end{pmatrix}^{\!*}E^*ME\begin{pmatrix}I\\ T\end{pmatrix}.
+\]
+$C$ 是“第 0 个胞元上的质量”对应的矩阵。把所有胞元加起来，半波导上的总质量为 $\bm g^*X\bm g$，其中
+\begin{equation}
+\label{eq:X}
+X=\sum_{j=0}^\infty(T^*)^j\,C\,T^j .
+\end{equation}
+由于 $T$ 的特征值都在单位圆内，这个级数收敛，并且 $X$ 是 Stein 方程 $X-T^*XT=C$ 的唯一解（教程命题~4）。
+
+\begin{proposition}[半波导的导数等于质量]
+\label{prop:D-deriv}
+设在 $\mu$ 的一个邻域内，胞元内部消元可逆，$Z_0$ 可逆，$T$ 光滑地依赖于 $\mu$ 且特征值都在单位圆内。则
+\[
+-D'(\mu)=X .
+\]
+特别地，对任意 $\bm g$，$-\bm g^*D'(\mu)\bm g$ 等于由 $\bm g$ 生成的半波导离散场的总质量。
+\end{proposition}
+
+\begin{proof}
+固定向量 $\bm g$（不随 $\mu$ 变化）。由命题~\ref{prop:D-energy}，
+\[
+\bm g^*D(\mu)\bm g=\sum_{j=0}^\infty e_j(\mu),\qquad e_j=\bm h_j^*S\,\bm h_j ,
+\]
+这里 $S$ 和 $\bm h_j=\binom{\bm g_j}{\bm g_{j+1}}$ 都依赖于 $\mu$（后者通过 $T$）。
+
+\emph{逐项求导。} 对每一项用乘积法则：
+\[
+e_j'=\bm h_j^*S'\bm h_j+(\bm h_j')^*S\bm h_j+\bm h_j^*S\bm h_j'=\bm h_j^*S'\bm h_j+2\,\mathrm{Re}\bigl[(\bm h_j')^*S\bm h_j\bigr] ,
+\]
+最后一步用了 $S$ 是 Hermite 矩阵。（逐项求导是允许的：$\|T^j\|$ 按某个 $r^j$（$r<1$）衰减，$\|(T^j)'\|$ 不超过 $j\,r^{j-1}$ 的常数倍，求导后的级数仍一致收敛。）
+
+\emph{交叉项之和为零。} 把 $S\bm h_j$ 按两面墙写开：
+\[
+(\bm h_j')^*S\bm h_j=(\bm g_j')^*\bigl(S_{00}\bm g_j+S_{01}\bm g_{j+1}\bigr)+(\bm g_{j+1}')^*\bigl(S_{10}\bm g_j+S_{11}\bm g_{j+1}\bigr).
+\]
+和命题~\ref{prop:D-energy} 的证明一样，对 $j$ 求和后按墙重新分组：
+\begin{itemize}
+\item 墙 $\bm g_0$ 上的项是 $(\bm g_0')^*(\cdots)$。但 $\bm g_0=\bm g$ 是固定的，$\bm g_0'=0$，这一项为零。
+\item 墙 $\bm g_j$（$j\ge1$）上的项是 $(\bm g_j')^*\bigl(S_{10}\bm g_{j-1}+(S_{11}+S_{00})\bm g_j+S_{01}\bm g_{j+1}\bigr)$。对每个 $\mu$ 递推 \eqref{eq:recurrence} 都成立，括号为零。
+\item 截断在第 $N$ 个胞元时剩下的远端项含 $\bm g_N$ 和 $\bm g_N'$，当 $N\to\infty$ 时趋于零。
+\end{itemize}
+所以 $\sum_j(\bm h_j')^*S\bm h_j=0$，交叉项全部消失。
+
+\emph{剩下的项。} 由 \eqref{eq:cell-deriv}，
+\[
+\bm g^*D'(\mu)\bm g=\sum_j\bm h_j^*S'\bm h_j=-\sum_j\int_{\text{第 }j\text{ 个胞元}}\rho|U|^2=-\bm g^*X\bm g .
+\]
+$D'$ 和 $X$ 都是 Hermite 矩阵（$D$ 对每个实 $\mu$ 是 Hermite 的，它的导数也是），两个 Hermite 矩阵的二次型处处相等，矩阵就相等（极化恒等式）。所以 $-D'=X$。
+\end{proof}
+
+这个证明有一个值得注意的地方：我们完全不需要知道 $T'(\mu)$。$T$ 对 $\mu$ 的依赖只出现在交叉项中，而交叉项因为递推关系整体消失了。这与连续层面的直观一致：场的变化 $\bm g_j'$ 在 $\Gamma^+$ 上为零，是一个“允许的测试函数”，而解满足方程，所以它对能量的一阶变化没有贡献。
+
+\subsection{整条波导}
+
+中心胞元的 Schur 补满足 \eqref{eq:cell-deriv}，两侧满足命题~\ref{prop:D-deriv}。对 \eqref{eq:F} 求导：
+\begin{equation}
+\label{eq:F-deriv}
+-\bm g^*F'(\mu)\bm g=\underbrace{\int_{\text{中心胞元}}\rho|U|^2}_{\text{中心}}+\underbrace{\bm g_-^*X^-\bm g_-}_{\text{左半波导}}+\underbrace{\bm g_+^*X^+\bm g_+}_{\text{右半波导}}=\int\rho|U|^2>0 ,
+\end{equation}
+最后一个积分是在整条带上。它严格为正，因为非零的墙迹生成非零的场，而质量矩阵正定。
+
+结合 Hellmann--Feynman 公式，对 $F(\mu)\bm g=\theta W\bm g$ 的一条单重分支，取 $\bm g^*W\bm g=1$，
+\begin{equation}
+\label{eq:theta-deriv}
+\theta'(\mu)=\bm g^*F'(\mu)\bm g=-m_\infty,\qquad m_\infty=\int\rho|U|^2 .
+\end{equation}
+这里 $m_\infty$ 就是由墙迹 $\bm g$ 生成的整条无限波导上的离散场的质量，所以称它为“无限质量”。由此还得到：$\theta(\mu)$ 是单调递减的，零点附近不会有多个根挤在一起（第~\ref{sec:root}~节用到了这一点）。
+
+\paragraph{一个常见的错误。} 如果只用中心胞元的质量代替 $m_\infty$，相当于假设导模完全局限在中心胞元内。实际上导模会延伸到两侧，在数值实验中两侧质量约占总质量的 44\%（第~\ref{sec:numerics}~节），只用中心质量会使 Newton 修正量偏大约 79\%。
+
+\subsection{计算无限质量：Stein 方程的倍增算法}
+
+$X$ 由级数 \eqref{eq:X} 给出。用教程第~10.5~节的倍增算法：令 $X_0=C$，$Q_0=T$，
+\[
+X_{k+1}=X_k+Q_k^*X_kQ_k,\qquad Q_{k+1}=Q_k^2 .
+\]
+第 $k$ 步之后，$X_k$ 恰好是级数前 $2^k$ 项之和，剩余部分满足
+\[
+\|X-X_k\|_F\le\frac{r_k^2}{1-r_k^2}\,\|X_k\|_F,\qquad r_k=\|Q_k\|_2<1 .
+\]
+当右端小于预定容差时停止。整个计算只涉及 $n\times n$ 矩阵的乘法，代价可以忽略。
+
+计算 $C$ 需要 $E^*ME$ 作用在 $\binom{I}{T}$ 上，也就是对 $n$ 个右端项做一次胞元内部求解，这在构造 Schur 补时已经分解过的矩阵上完成。
+
+\subsection{一次 Newton 预测}
+
+在 $\mu_0$ 处，用 $P_3$ 层（真实材料）计算 $F(\mu_0)\bm g=\theta W\bm g$ 的目标分支，归一化 $\bm g^*W\bm g=1$，并计算 $m_\infty$。由 \eqref{eq:theta-deriv}，Newton 预测为
+\begin{equation}
+\label{eq:newton}
+\mu_N=\mu_0+\frac{\theta(\mu_0)}{m_\infty} .
+\end{equation}
+它只需要一次频点计算。
+
+这个预测是用来\emph{检验}的，而不是用来\emph{估计误差}的：
+\begin{itemize}
+\item 若 $\mu_N$ 与 $P_3$ 上独立求得的根非常接近（误差远小于修正量本身），说明 $P_3$ 根是从原候选值延续过来的同一个根，并且导数、DtN 矩阵等都算对了。
+\item 但它只说明 $P_2\to P_3$ 的离散修正被准确预测，并不说明 $P_3$ 本身离真实特征值有多近。后者要靠下一节的定理。
+\end{itemize}
+此外，我们用有限差分 $\bigl(\theta(\mu+\delta)-\theta(\mu-\delta)\bigr)/(2\delta)$ 独立检查 $-m_\infty$，作为实现的验证。
+
+% ======================================================================
+\section{条件误差半径}
+\label{sec:radius}
+
+现在回到最初的问题：$\mu_0$ 以及新算出的根离真实特征值有多远？
+
+\subsection{三种“根”}
+
+需要区分三种量：
+\begin{itemize}
+\item $\mu_*$：原连续问题的导模特征值，即我们要逼近的真值。
+\item $\nu_p$：第 $p$ 层离散问题（真实材料、积分精确、矩阵运算精确）在目标分支上的\emph{精确}根。
+\item $\nut_p$：第 $p$ 层\emph{实际算出}的根。它与 $\nu_p$ 的差别来自数值积分、点定位、矩阵分解与 QZ 的舍入、求根的停止精度等。
+\end{itemize}
+原候选值 $\mu_0$ 只是一个给定的数，不要求它满足任何方程。
+
+\subsection{饱和性假设}
+
+如果知道各层误差 $|\nu_p-\mu_*|$ 按某种速度减小，就可以用层间差来估计误差。最简单的情形是下面的假设。
+
+\begin{assumption}[饱和性]
+\label{ass:S}
+存在原问题的导模特征值 $\mu_*$（它就是我们跟踪的那个目标），使得
+\[
+|\nu_4-\mu_*|\le\tfrac12\,|\nu_3-\mu_*| .
+\]
+\end{assumption}
+
+用文字说：从 $P_3$ 提高到 $P_4$，离散特征值的误差至少减半。这在直观上很自然：同一网格上 $P_4$ 空间包含 $P_3$ 空间，并且对光滑问题，提高多项式次数通常使误差迅速减小（比减半快得多）。在数值实验中，观察到的层间收缩比约为 $10^{-3}$（下面第~\ref{sec:q-obs}~节），远小于 $1/2$。
+
+但是我们\emph{不能证明}这个假设，原因有三：
+\begin{enumerate}
+\item 目标特征值位于本质谱的间隙中。教程第~2.3~节的注说明，此时 Galerkin 特征值不再单调逼近，“空间更大，特征值更准”在一般情况下没有保证。
+\item 理论上的收敛速度只在 $h$ 或 $p$ 充分“渐近”时成立，而我们无法确定当前的网格和次数是否已经进入渐近区。
+\item 真实界面与网格曲边界面不重合。真解的法向导数在真实界面处有折点，这个折点落在网格单元的\emph{内部}（薄带中），而单元内的多项式是光滑的。这会限制高次多项式的收敛速度。
+\end{enumerate}
+在光子晶体特征值的 $hp$ 后验估计文献中，饱和性假设也是一个常用但通常无法验证的假设\citep{EngstromGianiGrubisic2016}。常数 $1/2$ 是在计算之前就固定的，没有根据结果调整。
+
+\subsection{数值评价假设}
+
+\begin{assumption}[数值评价]
+\label{ass:E}
+对 $p=3,4$，$|\nut_p-\nu_p|\le\epsilon$，其中 $\epsilon=10^{-10}$。
+\end{assumption}
+
+这个假设覆盖\emph{所有}非精确计算带来的误差，而不仅仅是舍入误差。支持它的证据是：两套不同点数的积分公式算出的根之差在 $10^{-11}$ 量级，求根的括号区间宽度在 $10^{-12}$ 量级（第~\ref{sec:numerics}~节）。但这些只是证据，不是证明。
+
+\subsection{定理与证明}
+
+\begin{theorem}[条件误差半径]
+\label{thm:radius}
+在假设~\ref{ass:S}~和~\ref{ass:E}~下，令
+\[
+d_{34}=|\nut_4-\nut_3|,\qquad B=d_{34}+3\epsilon .
+\]
+则
+\begin{align}
+|\mu_*-\nut_4|&\le B, \label{eq:B}\\
+|\mu_*-\mu_0|&\le R_0:=|\nut_4-\mu_0|+B, \label{eq:R0}\\
+|\mu_*-\mu_N|&\le R_N:=|\nut_4-\mu_N|+B. \label{eq:RN}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+记 $e_3=|\nu_3-\mu_*|$，$e_4=|\nu_4-\mu_*|$。
+
+\emph{第 1 步：用饱和性把 $e_4$ 化为层间差。} 由三角不等式，$e_3=|\nu_3-\mu_*|\le|\nu_3-\nu_4|+|\nu_4-\mu_*|=|\nu_3-\nu_4|+e_4$。代入假设~\ref{ass:S}：
+\[
+e_4\le\tfrac12e_3\le\tfrac12\bigl(|\nu_3-\nu_4|+e_4\bigr)
+\quad\Longrightarrow\quad
+\tfrac12e_4\le\tfrac12|\nu_3-\nu_4|
+\quad\Longrightarrow\quad
+e_4\le|\nu_3-\nu_4| .
+\]
+
+\emph{第 2 步：换成算出的值。} 由假设~\ref{ass:E}，
+\[
+|\nu_3-\nu_4|\le|\nu_3-\nut_3|+|\nut_3-\nut_4|+|\nut_4-\nu_4|\le d_{34}+2\epsilon .
+\]
+
+\emph{第 3 步：合起来。}
+\[
+|\mu_*-\nut_4|\le|\mu_*-\nu_4|+|\nu_4-\nut_4|\le(d_{34}+2\epsilon)+\epsilon=B .
+\]
+这就是 \eqref{eq:B}。\eqref{eq:R0} 和 \eqref{eq:RN} 由三角不等式 $|\mu_*-\mu_0|\le|\mu_*-\nut_4|+|\nut_4-\mu_0|$ 得到（$\mu_N$ 同理）。
+\end{proof}
+
+几点说明：
+\begin{itemize}
+\item 第 1 步中常数 $1/2$ 的作用是使 $e_4$ 的系数 $1-\frac12$ 为正。若把 $1/2$ 换成一般的 $q<1$，结论变为 $e_4\le\frac q{1-q}|\nu_3-\nu_4|$。$q=1/2$ 时系数恰好是 1。
+\item $B$ 中的 $3\epsilon$ 是数值评价的预算，不会因为计算更准而消失（除非重新声明更小的 $\epsilon$）。所以 $B$ 至少是 $3\times10^{-10}$。
+\item 由于 $\mu_*$ 是原问题的特征值，$B$、$R_0$、$R_N$ 也分别是 $\nut_4$、$\mu_0$、$\mu_N$ 到原问题谱的距离的上界。
+\item 对原候选值，我们不仅有半径，还有一个\emph{带符号的}估计：$\mu_*-\mu_0\approx\nut_4-\mu_0$，误差不超过 $B$。
+\item 单独的层间差 $d_{34}$、单独的修正量 $\mu_N-\mu_0$ 都\emph{不是}误差。只有通过定理，它们才转化为误差半径。
+\end{itemize}
+
+\subsection{\texorpdfstring{换算到频率 $k$}{换算到频率 k}}
+
+物理上更常用的是频率 $k=\sqrt\mu$。若 $|\mu_*-m|\le R$，其中 $m>R$，则 $\mu_*\in[m-R,m+R]$，从而
+\[
+\sqrt{\mu_*}\in\bigl[\sqrt{m-R},\ \sqrt{m+R}\bigr] .
+\]
+以 $\sqrt m$ 为中心，这个区间两边的半宽分别为
+\[
+\sqrt m-\sqrt{m-R}=\frac{R}{\sqrt m+\sqrt{m-R}},\qquad
+\sqrt{m+R}-\sqrt m=\frac{R}{\sqrt{m+R}+\sqrt m}
+\]
+（分子有理化：$(\sqrt a-\sqrt b)(\sqrt a+\sqrt b)=a-b$）。前者的分母较小，所以较大。因此 $k$ 尺度的半径为
+\[
+\frac{R}{\sqrt m+\sqrt{m-R}} .
+\]
+当 $R\ll m$ 时它约等于 $R/(2\sqrt m)$，但后者只是一阶近似，比真正的半径略小。数值实验中我们使用精确公式。
+
+\subsection{三层数据的作用}
+\label{sec:q-obs}
+
+定理只用到 $P_3$ 和 $P_4$ 两层。$P_2$ 层的作用是提供一个\emph{诊断}：记 $d_{23}=|\nut_3-\nut_2|$，观察到的收缩比
+\[
+q_{\rm obs}=\frac{d_{34}}{d_{23}}
+\]
+如果远小于 $1/2$，两次增量同号，相邻两层的墙迹几乎平行（相关系数接近 1），那么数据与饱和性解释是相容的。但这些检查都不能证明假设~\ref{ass:S}：三层数据只给出一个比值，无法排除“碰巧”的情况。只有当 $d_{23}$ 明显大于评价误差（例如 $d_{23}>10\times2\epsilon$）时，这个比值才有意义。
+% ======================================================================
+\section{数值实验}
+\label{sec:numerics}
+
+本节报告一次完整计算。计算在单台 Apple 芯片笔记本上用 MATLAB R2023b 完成（11 线程）。除特别说明外，误差量都按谱参数 $\mu=k^2$ 给出。
+
+\subsection{算例参数}
+
+图~\ref{fig:geometry}~画的正是本算例的几何。具体参数如下。
+\begin{itemize}
+\item \emph{胞元。} 中心胞元为 $-\tfrac12<x<\tfrac12$，即 $x^\pm=\pm\tfrac12$；两侧胞元宽度 $L^\pm=1$。$y$ 方向周期为 1，Bloch 参数 $\beta=0.5$。背景材料 $\rho=1$。
+\item \emph{中心夹杂。} 材料系数 $\rho=4$，边界是五瓣曲线
+\[
+(x,y)=0.2\bigl((1.5+0.3\cos5t)\cos t,\ (1+0.3\cos5t)\sin t\bigr),\qquad t\in[0,2\pi) .
+\]
+\item \emph{两侧夹杂。} 材料系数都为 $\rho=17$，边界是以各自胞元中心为原点的三瓣曲线，用极坐标表示为
+\[
+r(t)=\frac{0.2\,(1+a\cos3t)}{\sqrt{1+a^2/2}},\qquad a=0.12\ \text{（左侧）},\qquad a=0.20\ \text{（右侧）}.
+\]
+分母使两侧单个夹杂的面积都等于 $0.04\pi$（可以用面积公式 $\frac12\int_0^{2\pi}r^2\,\dd t$ 验证），所以两侧只有形状不同。左右两侧既不相同，也不互为镜像。
+\end{itemize}
+中心胞元的消元满足第~\ref{sec:center-safe}~节的条件（$\rho_{\max}=4$，$k<\pi/2$）。
+
+\subsection{原候选值}
+
+原候选值来自同一 FEM--DtN 求解器的 $P_2$ 计算，材料按单元赋值（名义材料）：
+\[
+k_0=1.558438079544167,\qquad \mu_0=k_0^2=2.4287292477733113 .
+\]
+那次计算的完整流程耗时 30.3 秒。图~\ref{fig:field}~是它的场：模态集中在中心，向两侧衰减。
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth,trim=0 0 0 18bp,clip]{figs/field-amplitude.png}
+\caption{原候选值 $k_0$ 处 $P_2$ 离散模态的模 $|u|$（中心胞元与两侧各 4 个胞元，任意归一化）。两侧胞元中的场由传播矩阵 $T^\pm$ 和胞元消元恢复，仅用于展示，不参与求根。白线为夹杂边界。}
+\label{fig:field}
+\end{figure}
+
+\subsection{网格、自由度和积分公式}
+
+富化计算固定一套网格及其二次曲边几何，只改变场的次数 $p$ 和质量矩阵中的材料。网格有 19\,132 个三角形、38\,649 个二次几何节点，其中 1\,921 个曲边单元；单元 Jacobi 行列式的最大最小值之比不超过 1.16（教程第~4.3~节）。每面墙上有 48 条边。自由度见表~\ref{tab:setup}。
+
+\begin{table}[ht]
+\centering
+\caption{各层的自由度数（施加准周期约束之后）。“每面墙”即 $n=48p$。}
+\label{tab:setup}
+\begin{tabular}{cccccc}
+\toprule
+次数 $p$ & 单元局部基函数数 & 左模板 & 中心模板 & 右模板 & 每面墙 \\
+\midrule
+2 & 6  & 12\,916 & 12\,756 & 12\,880 & 96 \\
+3 & 10 & 28\,989 & 28\,629 & 28\,908 & 144 \\
+4 & 15 & 51\,472 & 50\,832 & 51\,328 & 192 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+每一层都用两套积分公式各求一次根：
+\begin{itemize}
+\item \emph{主公式}：体积积分用每个方向 12 点的 Gauss--Duffy 公式（教程第~5.2~节，每个三角形 144 点）；薄带积分把每个界面段的 $t$ 分成 2 个子段，每个子段用 $8\times8$ 个 Gauss 点。
+\item \emph{检查公式}：体积积分每个方向 16 点；薄带积分 4 个子段，每个子段 $12\times12$ 点。
+\end{itemize}
+薄带上的积分点总数分别为 122\,880 和 552\,960。最终数值取检查公式的结果。预先约定：若某层两套公式的根之差超过 $\epsilon/4$，再用更细的第三套公式复核；本次计算没有触发这一条。
+
+求根时，第 2 层从 $k_0$ 出发，其余各层从前一层的根出发，频率窗口固定为 $k_0\pm0.01$。三层共六条根链（三个次数 $\times$ 两套公式），共用 29 次频点计算，每条链 4 到 6 次。停止条件是：$k$ 的括号区间宽度不超过 $2\times10^{-12}$，$\mu$ 的括号区间宽度不超过 $\epsilon/8$，分支特征值 $|\theta|\le10^{-10}$，以及中心方程（消元之前）的相对残差不超过 $10^{-9}$。
+
+\subsection{实现检查}
+
+在求根之前，程序对每一层做了以下检查，全部通过：
+\begin{itemize}
+\item \emph{基函数。} 节点插值性（$N_\alpha$ 在自己的节点为 1、在其余节点为 0）、单位分解（所有基函数之和为 1）的偏差在 $10^{-15}$ 量级；用差分检验梯度，相对差在 $5\times10^{-11}$ 到 $7.2\times10^{-11}$ 之间。
+\item \emph{嵌套关系。} 检验教程第~9~节的 $K_p=J^*K_{p+1}J$、$M_p=J^*M_{p+1}J$，相对差约 $10^{-15}$。
+\item \emph{共享边。} 三个模板分别有 9\,519、9\,399、9\,492 条内部共享边。在每条边的五个参数点上比较两侧的几何映射和 $P_2/P_3/P_4$ 基函数迹，差值全部为 0。这是第~\ref{sec:mass}~节所说的“正确的连续性检查”。
+\item \emph{薄带定位。} 两套公式下所有积分点都找到了所在单元，没有失败。被两个单元同时接受的点在主公式下有 54 个、检查公式下有 612 个；两个单元在这些点上的外推值之差最大约 $6\times10^{-9}$（正如第~\ref{sec:mass}~节的一维例子所预期的，这不是错误），这些点的积分权重只有 $10^{-17}$ 到 $10^{-16}$。
+\item \emph{质量修正。} 取所有系数为 1 的向量 $\bm 1$，$\bm 1^{\mathsf T}(M-M_h)\bm 1$ 应等于（真实面积 $-$ 曲边面积）$\times(\rho_{\rm in}-1)$，偏差约 $10^{-15}$。所有质量矩阵的 Cholesky 分解成功（即它们正定）。
+\end{itemize}
+在每个频点上，两侧 QZ 稳定特征值与单位圆的相对距离约 0.45（离开单位圆很远，说明频率确实在带隙中），二次矩阵方程的残差约 $10^{-15}$，DtN 矩阵的 Hermite 性偏差远低于 $10^{-8}$。
+
+\subsection{三层的根}
+
+表~\ref{tab:roots}~列出三层的根。两套积分公式给出的 $\mu$ 之差在 $5\times10^{-12}$ 到 $10^{-11}$ 之间，最终括号区间宽度不超过 $5.4\times10^{-12}$，都远小于评价预算 $\epsilon=10^{-10}$。相邻层的墙迹相关系数和中心场相关系数都大于 $1-1.6\times10^{-12}$，说明三层跟踪的是同一个模态。
+
+\begin{table}[ht]
+\centering
+\caption{三层的根（检查公式的结果为最终值）。最后一列是两套积分公式所得 $\mu$ 之差的绝对值。}
+\label{tab:roots}
+\begin{tabular}{cccc}
+\toprule
+次数 & $k$（主公式） & $k$（检查公式，最终） & $\mu$ 的公式差 \\
+\midrule
+$P_2$ & 1.5584380745637625 & 1.5584380745656239 & $5.80\times10^{-12}$ \\
+$P_3$ & 1.5584378944018153 & 1.5584378943987007 & $9.71\times10^{-12}$ \\
+$P_4$ & 1.5584378941787247 & 1.5584378941804409 & $5.35\times10^{-12}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+由最终值得到
+\[
+\nut_4=2.4287286700175672,\qquad d_{23}=5.6156\times10^{-7},\qquad d_{34}=6.8029\times10^{-10} .
+\]
+两次增量都为负，观察到的收缩比 $q_{\rm obs}=d_{34}/d_{23}=1.21\times10^{-3}$，远小于 $1/2$。即使把两个层间差各按评价预算 $\pm2\epsilon$ 扰动，比值仍在 $[0.86,1.57]\times10^{-3}$ 内，所以这个小比值不是分母接近零造成的。
+
+从原候选值出发的移动可以分成三段（图~\ref{fig:layers}(a)）：
+\begin{enumerate}
+\item 仅把质量换成真实材料（仍是 $P_2$）：根移动 $-1.55\times10^{-8}$；
+\item 从 $P_2$ 到 $P_3$：移动 $-5.62\times10^{-7}$，这是主要部分；
+\item 从 $P_3$ 到 $P_4$：只再移动 $-6.8\times10^{-10}$。
+\end{enumerate}
+这只是固定网格下的数据分解，不是对误差来源的严格归因。
+
+\subsection{一次 Newton 预测}
+
+在 $\mu_0$ 处、用第 3 层的检查公式，求得目标分支的 $\theta=-2.7255\times10^{-6}$。按第~\ref{sec:deriv}~节计算的无限质量为
+\[
+m_\infty=4.7230=\underbrace{2.6390}_{\text{中心}}+\underbrace{1.0353}_{\text{左半波导}}+\underbrace{1.0486}_{\text{右半波导}} .
+\]
+两侧合计约占 44\%。Stein 倍增 4 轮收敛（即求和了 16 个胞元），截断尾项对预测的影响约 $10^{-20}$。用中心差分（步长 $10^{-5}$）检验导数，得 $-4.7230099$，与 $-m_\infty$ 的相对差为 $3.4\times10^{-8}$。由 \eqref{eq:newton}，
+\[
+\begin{gathered}
+\mu_N-\mu_0=\frac{\theta}{m_\infty}=-5.77073\times10^{-7},\\
+\mu_N=2.4287286707002487,\qquad k_N=1.5584378943994683 .
+\end{gathered}
+\]
+第 3 层的实际移动为 $\nut_3-\mu_0=-5.77075\times10^{-7}$，与预测的相对偏差为 $4.1\times10^{-6}$；$\nut_3-\mu_N=-2.4\times10^{-12}$。预测在第 3 层的根算出之前就已保存，没有使用第 3 层的根。这个差已经低于评价预算 $\epsilon$，所以我们不把它解释为“Newton 余项被解析到了这个精度”。
+
+如果只用中心胞元的质量 2.6390，预测的修正量将是 $\theta/2.6390$，比上面大约 79\%，与实际移动明显不符。这从数值上说明了两侧无限半波导对频率导数的贡献不能忽略。
+
+\subsection{条件误差半径}
+
+按定理~\ref{thm:radius}，取 $\epsilon=10^{-10}$，得到三个半径（表~\ref{tab:radii}，图~\ref{fig:layers}(b)）。
+
+\begin{table}[ht]
+\centering
+\caption{条件误差半径。只有在假设~\ref{ass:S}~和~\ref{ass:E}~成立时，它们才是相应数值到目标特征值的距离上界。$k$ 尺度的半径按第~\ref{sec:radius}~节的精确公式换算。}
+\label{tab:radii}
+\begin{tabular}{lccc}
+\toprule
+对象 & $k$ 值 & $\mu$ 尺度半径 & $k$ 尺度半径 \\
+\midrule
+最终 $P_4$ 根，$B$ & 1.5584378941804409 & $9.8029\times10^{-10}$ & $3.1451\times10^{-10}$ \\
+一次预测 $\mu_N$，$R_N$ & 1.5584378943994683 & $1.6630\times10^{-9}$ & $5.3354\times10^{-10}$ \\
+原候选值 $\mu_0$，$R_0$ & 1.558438079544167 & $5.7874\times10^{-7}$ & $1.8568\times10^{-7}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+在假设成立时，目标频率位于区间
+\[
+\sqrt{\mu_*}\in[1.558437893865931,\ 1.558437894494951] .
+\]
+对开头提出的两个问题，回答如下：
+\begin{enumerate}
+\item 原候选值的带符号误差估计为 $\nut_4-\mu_0=-5.78\times10^{-7}$，而半宽 $B\approx10^{-9}$ 远小于它，所以在同样的假设下，原候选值的 $\mu$ 偏高约 $5.78\times10^{-7}$（$k$ 偏高约 $1.85\times10^{-7}$）。
+\item 更好的近似值是 $\nut_4$，半径 $B=9.8\times10^{-10}$。如果只想要一个便宜的改进，一次 Newton 预测（在旧频率上做一次 $P_3$ 计算和一次 Stein 计算）就把误差半径缩小了约 350 倍。
+\end{enumerate}
+
+$B$ 由两部分组成：层间差 $d_{34}$ 占 69\%，评价预算 $3\epsilon$ 占 31\%。$B$ 只比 $3\epsilon$ 大约 3.3 倍，已经接近预先声明的评价尺度。继续提高次数并不能让 $B$ 按层间差的比例继续下降，除非同时有依据地缩小 $\epsilon$。
+
+\begin{figure}[t]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.95\textwidth, height=5.6cm,
+  xlabel={次数 $p$}, ylabel={$\nut_p-\mu_0$\ \ $(\times10^{-7})$},
+  xtick={2,3,4}, xmin=1.8, xmax=4.2, ymin=-6.3, ymax=0.5,
+  grid=major, grid style={black!12},
+  legend style={font=\footnotesize, at={(0.97,0.62)}, anchor=east},
+]
+\addplot[blue!70!black, thick, mark=*, mark size=1.8pt] coordinates {(2,-0.155175) (3,-5.770755) (4,-5.777557)};
+\addlegendentry{数值根 $\nut_p$}
+\addplot[red!70!black, dashed, thick, domain=1.8:4.2, samples=2] {-5.770731};
+\addlegendentry{一次预测 $\mu_N$}
+\addplot[black!60, densely dotted, domain=1.8:4.2, samples=2] {0};
+\addlegendentry{原候选值 $\mu_0$}
+\end{axis}
+\end{tikzpicture}
+\caption{各层的根相对原候选值的移动}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.95\textwidth, height=5.6cm,
+  ybar, ymode=log, log origin=infty, bar width=14pt, bar shift=0pt,
+  ymin=1e-10, ymax=4e-6,
+  xmin=0.4, xmax=4.6, xtick={1,2,3,4},
+  xticklabels={$B$,$R_N$,$R_0$,$3\epsilon$},
+  xtick pos=bottom, ytick pos=left, ylabel={$\mu$ 尺度半径},
+  ymajorgrids=true, grid style={black!12},
+  nodes near coords={\pgfmathprintnumber[sci,precision=2]{\pgfplotspointmeta}},
+  point meta=rawy, every node near coord/.append style={font=\tiny},
+]
+\addplot[fill=blue!35, draw=blue!60!black] coordinates {(1,9.8029e-10) (2,1.6630e-9) (3,5.7874e-7)};
+\addplot[fill=black!20, draw=black!60] coordinates {(4,3e-10)};
+\end{axis}
+\end{tikzpicture}
+\caption{条件误差半径与评价预算}
+\end{subfigure}
+\caption{(a) 三层的根与一次预测。$P_3$ 与 $P_4$ 的点在此尺度上几乎重合，预测线与 $P_3$ 的根只差 $2.4\times10^{-12}$。(b) 定理~\ref{thm:radius}~给出的三个半径；灰色柱是 $B$ 中评价预算 $3\epsilon$ 的部分。}
+\label{fig:layers}
+\end{figure}
+
+\subsection{与边界积分方法的对照}
+
+作为外部参照，我们使用同一模型上一个独立的边界积分方程（BIE）求解器给出的值 $k_{\rm BIE}=1.5584378941820909$。这个值只在全部计算结束后用于比较，没有参与任何参数选择或停止判据。BIE 本身也有离散误差，所以下面的差不是真实误差。
+
+\begin{table}[ht]
+\centering
+\caption{各数值与 BIE 参照值的差。}
+\label{tab:bie}
+\begin{tabular}{lcc}
+\toprule
+数值 & $k-k_{\rm BIE}$ & $|\mu-\mu_{\rm BIE}|$ \\
+\midrule
+原候选值 $k_0$ & $1.854\times10^{-7}$ & $5.778\times10^{-7}$ \\
+真实材料 $P_2$ 根 & $1.804\times10^{-7}$ & $5.622\times10^{-7}$ \\
+$P_3$ 根 & $2.166\times10^{-10}$ & $6.751\times10^{-10}$ \\
+一次预测 $k_N$ & $2.174\times10^{-10}$ & $6.775\times10^{-10}$ \\
+$P_4$ 根（最终） & $-1.650\times10^{-12}$ & $5.143\times10^{-12}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+表~\ref{tab:bie}~显示：原候选值与 BIE 的差落在 $R_0$ 内，预测值和 $P_4$ 根与 BIE 的差也分别落在 $R_N$ 和 $B$ 内。两种完全不同的离散方法在 $10^{-12}$ 量级上相互接近，与富化估计的方向和量级一致。但 $P_4$ 与 BIE 的 $k$ 差 $1.65\times10^{-12}$ 已经小于 $P_4$ 两套积分公式之间的 $k$ 差 $1.72\times10^{-12}$，所以不能据此声称达到了 $10^{-12}$ 的真实精度。
+
+\subsection{计算成本}
+
+完整流程（包括 MATLAB 启动、六条根链、预测与导数检查、全部实现检查、场恢复、保存与汇总）的墙钟时间为 127.8 秒，进程树内存峰值约 2.51\,GB（每秒采样一次）。表~\ref{tab:timing}~是 MATLAB 内部计时的分类。
+
+\begin{table}[ht]
+\centering
+\caption{MATLAB 内部计时（秒）。各项互不重叠，合计 108.7 秒，另有 0.7 秒未归类。}
+\label{tab:timing}
+\begin{tabular}{lr@{\hspace{3em}}lr}
+\toprule
+项目 & 时间 & 项目 & 时间 \\
+\midrule
+两侧单胞内部消元 & 39.1 & 体积积分组装（两套公式） & 10.8 \\
+中心系统 & 19.3 & 薄带组装（两套公式） & 2.8 \\
+QZ 与 DtN & 17.4 & 组装检查（两套公式） & 2.9 \\
+半波导场恢复 & 4.3 & 薄带定位 & 1.7 \\
+作图 & 4.1 & 基函数与嵌套检查 & 1.0 \\
+保存 & 2.6 & 根控制 & 1.2 \\
+网格与自由度 & 0.5 & Stein、预测、导数、估计 & 0.3 \\
+恢复交付与身份诊断 & 0.4 & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+逐频点的 DtN 求解（单胞消元、QZ 和中心系统）约占内部时间的 70\%；真实材料薄带的定位与组装只占约 4\%；Stein 方程与预测的开销可以忽略。第 4 层单次频点计算最慢约 4.3 秒。由于每层从前一层的根出发，每条根链只需 4 到 6 次频点计算。
+
+需要注意：检查公式的 $P_4$ 根链本身约 16.7 秒；“只为得到最终候选值”的子链可以列出约 31 秒，但它不包括定理~\ref{thm:radius}~必需的 $P_3$ 根，也不是实测的冷启动流程。本讲义引用的成本一律指 127.8 秒的完整流程。原 $P_2$ 求解（30.3 秒）只给出候选值、不给误差估计，两者任务不同，不宜直接比较速度。
+
+\subsection{与残差型误差估计的比较}
+\label{sec:compare}
+
+在同一模型上，我们此前尝试过几种基于残差的谱距离估计。它们的保证层级不同，数值不能直接比较，但量级差别本身说明了问题（表~\ref{tab:compare}）。
+
+\begin{table}[ht]
+\centering
+\caption{同一模型上不同误差评价路线的数值（均为普通浮点计算，未经认证）。各行的保证层级不同。}
+\label{tab:compare}
+\begin{tabular}{p{4.6cm}p{2.6cm}p{6.2cm}}
+\toprule
+路线 & 报告值 & 性质 \\
+\midrule
+有限元场加 Floquet 尾部延拓，Raviart--Thomas 通量重构，线性谱距离公式 & $4.6\times10^{-3}$（$\mu$） & 公式本身无条件，但数值评价未认证；对已较准确的候选值几乎没有分辨力 \\
+同上，配合单侧谱隙的 Temple 型二次界 & $1.8\times10^{-4}$（$\mu$） & 依赖未验证的单侧谱隙假设 \\
+正定源问题重构 & $1.4\times10^{-4}$（$k$） & 理论在所列条件下成立；部分积分误差的上界资格尚未闭合 \\
+本讲义：$P_2/P_3/P_4$ 富化，最终根 & $9.8\times10^{-10}$（$\mu$） & 依赖饱和性与数值评价两个假设 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+残差型路线评价的是试探函数的残差范数，而特征值误差是场误差的平方量级（教程第~2.3~节）。当候选值的误差已经在 $10^{-7}$ 量级时，残差范数受界面附近的通量失配、无限尾部的处理、数值积分等因素主导，很难继续下降。富化路线直接比较特征值，利用了特征值对场误差的二阶敏感性，代价是引入了饱和性假设。两类结论应分开陈述：前者在评价完整时可以是无条件的，但很保守；后者分辨力高，但是有条件的。
+% ======================================================================
+\section{讨论与局限}
+\label{sec:discussion}
+
+\paragraph{真实材料的必要性。} 本算例中，仅把质量矩阵换成真实材料就使 $P_2$ 的根移动了 $-1.55\times10^{-8}$，比最终半径 $B$ 大一个多数量级。如果富化时仍用名义材料，三层的根会收敛到“二次曲边几何”对应的特征值，层间差反映的就不是原问题的误差。有向薄带恒等式（命题~\ref{prop:band}）让这个修正可以精确写出，而且不需要对两条曲线之间的细带做显式剖分。刚度矩阵不含材料系数，曲边单元又精确地铺满了矩形胞元，所以网格本身的二次几何不改变连续问题。
+
+\paragraph{饱和性假设。} 假设~\ref{ass:S}~是整个结论中最强的一环。观察到的收缩比 $1.2\times10^{-3}$ 远小于 $1/2$，两次增量同号，相邻层的模态高度相关，这些都与假设相容。但三层数据只给出一个比值，不能排除渐近区之前的偶然小比值。此外，第~\ref{sec:radius}~节提到，真实界面穿过网格单元内部，真解的法向导数在单元内部有折点；随着 $p$ 提高，这一效应终将限制收敛速度，饱和性在更高的 $p$ 上不一定自动成立。假设~\ref{ass:S}~还隐含了目标连续特征值的存在性以及它与离散分支的对应关系；连续谱隙与点谱的存在性本讲义没有讨论。
+
+\paragraph{数值评价假设。} $\epsilon=10^{-10}$ 是预先声明的总评价预算，覆盖积分、几何逆映射、矩阵分解、稳定子空间和求根的误差。两套积分公式之差（不超过 $10^{-11}$）和最终括号区间宽度（不超过 $5.4\times10^{-12}$）支持这个预算，但它们本身就是浮点计算的结果，不构成严格界。由于 $B$ 只有 $3\epsilon$ 的 3.3 倍，进一步缩小半径的瓶颈将是评价误差本身的可信控制，而不是更高的多项式次数。
+
+\paragraph{没有被检验到的分支。} 实现中为一些异常情形设计了处理路径，例如负重心坐标点的补充定位、第三套积分公式、数值零点、Stein 尾项未收敛等。本次计算中它们都没有被触发，所以其稳健性没有得到数值检验。
+
+\paragraph{成本结构。} 主要开销是逐频点的 DtN 求解，而不是真实材料积分或误差估计本身。由于每层从前一层的根热启动，每条根链只需少量频点。若只需要最终候选值与 $B$，至少要算 $P_3$ 和 $P_4$ 两层的根；本讲义的流程还为检验目的多算了 $P_2$ 层和第二套积分公式。这种精简流程的实际耗时没有测量。
+
+% ======================================================================
+\section{总结}
+\label{sec:summary}
+
+把整个方法按计算顺序串起来，就是下面几步：
+\begin{enumerate}
+\item 在一套固定的曲边网格上，为中心胞元和左右两个侧向模板组装 $P_p$ 刚度矩阵；质量矩阵用名义材料组装后，再按薄带恒等式 \eqref{eq:true-mass} 加上真实材料的修正（第~\ref{sec:mass}~节）。
+\item 对给定的 $\mu$：对两个侧向模板做静态凝聚得到 $S$，用 QZ 分解求出传播矩阵 $T^\pm$ 和 DtN 矩阵 $D^\pm$；对中心胞元做静态凝聚得到 $S_c$；组成 $F(\mu)=S_c+\mathrm{diag}(D^-,D^+)$，解 $F\bm g=\theta W\bm g$（第~\ref{sec:discrete-dtn}~节）。
+\item 沿目标分支用括号法求 $\theta(\mu)=0$ 的根，对 $p=2,3,4$ 各做一次，每层从前一层的根出发。
+\item 在原候选值处，用 Stein 方程算出无限质量 $m_\infty$，得到 Newton 预测 $\mu_N=\mu_0+\theta/m_\infty$，并与 $P_3$ 的根比较（第~\ref{sec:deriv}~节）。
+\item 由 $P_3$、$P_4$ 的根和评价预算 $\epsilon$，按定理~\ref{thm:radius}~算出 $B$、$R_0$、$R_N$，再换算到 $k$（第~\ref{sec:radius}~节）。
+\end{enumerate}
+
+在一个两侧介质不同的非对称算例上，最终 $P_4$ 根的条件半径为 $9.8\times10^{-10}$（$\mu$ 尺度），即 $3.1\times10^{-10}$（$k$ 尺度）；原候选值的误差估计为 $-5.78\times10^{-7}$；一次预测与独立求根的相对偏差为 $4\times10^{-6}$。完整计算约两分钟，内存约 2.5\,GB。与此前同一模型上的残差型估计相比，分辨力提高了五个数量级以上，代价是结论依赖未经证明的饱和性假设和数值评价假设。
+
+后续值得研究的问题有：在更多次数或更多网格层上检验饱和性假设的稳健性；为数值评价误差（尤其是薄带积分与稳定子空间计算）提供可信的上界；以及在本质谱与谱隙的连续分析下，把条件半径与导模特征值的存在性联系起来\citep{Klindworth2015,CancesDussonMadayStammVohralik2020}。
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
