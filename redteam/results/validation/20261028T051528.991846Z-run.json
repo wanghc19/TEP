@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/Applications/MATLAB_R2023b.app/bin/matlab",
+    "-batch",
+    "files={'/Users/whc/Documents/Work/epost/redteam/cases/exact_mechanisms.m','/Users/whc/Documents/Work/epost/redteam/cases/qp-wrap/probe_qp_wrap.m','/Users/whc/Documents/Work/epost/redteam/cases/mode-identity/extract_mode_inputs.m','/Users/whc/Documents/Work/epost/redteam/cases/mode-identity/compare_mode_fields.m'}; result=cell(size(files)); for j=1:numel(files), result{j}=struct('file',files{j},'messages',checkcode(files{j},'-id')); end; fid=fopen('/Users/whc/Documents/Work/epost/redteam/results/validation/checkcode.json','w'); fprintf(fid,'%s',jsonencode(result,'PrettyPrint',true)); fclose(fid); disp(jsonencode(result,'PrettyPrint',true));"
+  ],
+  "cwd": "/Users/whc/Documents/Work/epost",
+  "run_id": "20261028T051528.991846Z",
+  "wall_seconds": 14.10494008299429,
+  "sampled_peak_rss_bytes": 861880320,
+  "returncode": 0,
+  "stopped": null,
+  "wall_limit_seconds": 90.0,
+  "memory_limit_bytes": 2147483648.0,
+  "sampling_seconds": 0.25
+}

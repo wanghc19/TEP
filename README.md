@@ -15,6 +15,7 @@
 | 数值实验 | [test/](test/)；具体参数、运行方式和结果见对应实验目录 |
 | FEM＋DtN 讲义与教程 | [draft/fem-dtn-epost/](draft/fem-dtn-epost/) |
 | 独立探索 | [research/explorations/](research/explorations/) |
+| 两条数值路线的对照检查 | [redteam/](redteam/README.md) |
 
 具体进展与数值结果由各专题和实验记录维护，首页不重复汇总。
 作判断时核对相关文件与原始结果，并遵守所在目录的 `AGENTS.md`。

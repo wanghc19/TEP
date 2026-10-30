@@ -1,0 +1,49 @@
+{
+  "status": "ORDINARY_SAVED_DATA_ANALYSIS",
+  "regions": {
+    "left": {
+      "mass_fraction_B": 0.21914754509641937,
+      "mass_fraction_F": 0.21914754515094564,
+      "far_cell_mass_ratios_B": [
+        0.14220813856061565,
+        0.14220813856061554,
+        0.1422081385606153,
+        0.14220813856061534
+      ],
+      "dominant_multiplier_abs_squared_B": 0.14220813856061537,
+      "far_cell_mass_ratios_F": [
+        0.1422081385619439,
+        0.14220813856194373,
+        0.14220813856194373,
+        0.14220813856194361
+      ],
+      "dominant_multiplier_abs_squared_F": 0.14220813856194406,
+      "F_tail_fraction_after12": 1.4891012979834477e-11
+    },
+    "center": {
+      "mass_fraction_B": 0.558886437631951,
+      "mass_fraction_F": 0.558886437557981
+    },
+    "right": {
+      "mass_fraction_B": 0.22196601727163018,
+      "mass_fraction_F": 0.22196601729106882,
+      "far_cell_mass_ratios_B": [
+        0.14740659482531665,
+        0.14740659482531573,
+        0.14740659482531615,
+        0.14740659482531618
+      ],
+      "dominant_multiplier_abs_squared_B": 0.14740659482531598,
+      "far_cell_mass_ratios_F": [
+        0.14740659482686325,
+        0.14740659482686286,
+        0.1474065948268628,
+        0.1474065948268629
+      ],
+      "dominant_multiplier_abs_squared_F": 0.14740659482686388,
+      "F_tail_fraction_after12": 2.319130758558261e-11
+    }
+  },
+  "mass_fraction_outside_four_cells_each_side_B": 0.00019301182210480005,
+  "mass_fraction_outside_four_cells_each_side_F": 0.00019301182214371095
+}

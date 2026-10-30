@@ -1,0 +1,1454 @@
+                                           A DIRICHLET-TO-NEUMANN APPROACH FOR THE EXACT COMPUTATION
+                                                  OF GUIDED MODES IN PHOTONIC CRYSTAL WAVEGUIDES
+                                                                                            SONIA FLISS†
+
+                                               Abstract. This works deals with one dimensional infinite perturbation - namely line defects - in periodic media.
+                                          In optics, such defects are created to construct an (open) waveguide that concentrates light. The existence and the
+                                          computation of the eigenmodes is a crucial issue. This is related to a self-adjoint eigenvalue problem associated
+                                          to a PDE in an unbounded domain (in the directions orthogonal to the line defect), which makes both the analysis
+                                          and the computations more complex. Using a Dirichlet-to-Neumann (DtN) approach, we show that this problem is
+                                          equivalent to one set on a small neighborhood of the defect. On contrary to existing methods, this one is exact but
+
+
+
+
+arXiv:1202.4928v2 [math.SP] 30 Jan 2013
+                                          there is a price to be paid : the reduction of the problem leads to a nonlinear eigenvalue problem of a fixed point
+                                          nature.
+
+                                              Key words. Periodic media, line defect, guided waves, spectral analysis, Dirichlet-to-Neumann operator
+
+                                              AMS subject classifications. 78A10,78A48,47A70,35P99
+
+
+                                               1. Introduction. Periodic media play a major role in applications, in particular in op-
+                                          tics for micro and nano-technology [20, 21, 27, 38]. From the point of view of applications,
+                                          one of the main interesting features is that it can exist intervals of frequencies for which the
+                                          propagative waves cannot exist in the media. This phenomenon is due to the fact that a wave
+                                          on the media is multiply scattered by the periodic structure, which can lead, depending on the
+                                          characteristics of the media and the frequency, to possibly destructive interferences. It seems
+                                          then that an appropriate choice of the structure and the dielectric materials of the photonic
+                                          crystal can create particular band gap and then, from a practical point of view, banish some
+                                          monochromatic electromagnetic waves. Thus, the periodic media could be used to several
+                                          potential applications such as in the realization of filters, antennas and more generally, com-
+                                          ponents used in telecommunications.
+
+                                          Mathematically, this property is linked to the gap structure of the spectrum of the under-
+                                          lying differential operator appearing in the model. For a complete, mathematically oriented
+                                          presentation, we refer the reader to [27, 28]. Even if the necessary conditions for the existence
+                                          of band gaps are not known -except for the one dimensional case in [4] where authors state
+                                          that the absence of gaps implies that the coefficients of the media are constant-, sufficient
+                                          conditions exist. Figotin and Kuchment have given examples of high contrast medium for
+                                          which at least one band gap exists and can be characterized [13, 14]. Using asymptotic argu-
+                                          ments, Nazarov and co-workers have established that a small perturbation of an homogeneous
+                                          waveguide can open a gap in the continuous spectrum of the operator [30, 7]. Moreover, other
+                                          band gap structures have been characterized through numerical approaches in [8].
+
+                                          Besides, Sommerfeld and Bethe in 1933 made the conjecture that the number of gaps has
+                                          to be finite in 2D and 3D. This conjecture has been proven by Skriganov for Schrödinger
+                                          operator in 2D [40, 36] and in 3D [41, 42] - the last article goes further: if the contrast is too
+                                          small, gaps cannot exist and on suitable assumptions on the lattice, the conjecture holds for
+                                          higher dimensions. Parnovski [32] has generalized this last result provided that the potential
+                                          is sufficiently smooth and in [33] the conjecture was proven in full generality. Another proof
+
+                                              † POEMS, (UMR 7231 CNRS/ENSTA/INRIA),
+
+                                          ENSTA ParisTech,
+                                          828, boulevard des Maréchaux, 91762 Palaiseau Cedex
+                                          sonia.fliss@ensta-paristech.fr
+                                                                                                   1
+2                                            S. Fliss
+
+
+can be found in the book of Yu Karpeshina [24]. For Maxwell equations, it is much more
+complicated. Nevertheless, there is now evidence that gaps exists. Experimentally this was
+first observed by Yablonovitch et al [47]. There are also many numerical results for different
+structures (see [43, 44] for references). Recently, Vorobets in [46] has proven the conjec-
+ture for 2D periodic Maxwell operator (which corresponds to a 2D periodic photonic crystal
+which is homogeneous in the third direction) with separable dielectric function. Moreover, if
+the dielectric function is close enough to a constant, there is no gaps at all.
+
+These media can present perturbations or defects which are introduced in the media to change
+their properties. Thus, in optics, in order to produce lasers, fibers or waveguides in general,
+it is necessary to have authorized frequencies inside the forbidden intervals of frequencies.
+This property can be obtained, for example, introducing localized defect or line defect and
+corresponds, from a mathematical point of view, to isolated eigenvalues of finite multiplicity
+inside the gaps of the underlying differential operator appearing in the model.
+
+Figotin and Klein have proven rigorously that introducing a defect in a periodic structure,
+namely a perturbation of compact support, can create defect modes, which are eigenvectors
+associated to eigenvalues inside a gap [10, 11, 12]. More precisely, these defect modes are
+stationary waves exponentially decreasing far from the perturbation, then they seems to ”live”
+around the defect which explains their name. Using asymptotic arguments, Nazarov has stud-
+ied in [31] sufficient conditions for existence of eigenvalues below the essential spectrum for
+elastic waveguide. Here again, it seems difficult to obtain necessary conditions for the exis-
+tence of defect modes.
+
+There are very few works in the same spirit in the mathematical literature for the case of
+line defect, that means a one dimensional perturbation of the periodic medium. A first natural
+question concerns the spectrum of the perturbed operator compared to the spectrum of the
+perfectly periodic operator. More precisely, if a gap is in the spectrum of the perfectly peri-
+odic operator, can a part of the spectrum of the perturbed one arise in this gap? Moreover, if a
+part of a spectrum arises, is it of absolutely continuous or singular type? Does it corresponds
+to guided modes, meaning that the waves are confined to the guide (evanescent in the periodic
+media) and they are propagating along the line defect? Kuchment et Ong [29] have answered
+partially to these questions for the case of homogeneous line defect. Indeed, for any gap (a, b)
+of the perfectly periodic operator, they found a sufficient condition on a, b, the characteristics
+of the line defect (its size and its coefficients) such that spectrum of the perturbed operator
+arises in the gap. Moreover, they have shown that the associated eigenvector is confined to
+the guide. However, they have not concluded on the existence or not of bound states - this
+question is linked to the nature of the spectrum. Vu Hoang and Maria Radosz in [19] have
+shown for waveguide in 2D periodic structures the absence of bound states. It seems then that
+if the spectrum arises in the gap, it corresponds to guided modes. Let us remark that for the
+particular case of a line periodic perturbation in a homogeneous media, Bonnet-BenDhia and
+Starling [3] have given necessary and sufficient conditions for the existence of guided modes.
+
+Finally, few works ([1] and the present one) characterized precisely (respectively using Green’s
+function or DtN operator) the guided waves if they exist, for general line defect. These par-
+ticular modes can help for the determination of the spectrum of the perturbed operator. The
+advantage is that the study can be reduced to a band (bounded in the direction of the period-
+icity and infinite in the other direction).
+                                  Waveguides in periodic media                                 3
+
+From a numerical point of view, there exist only few methods. The most known is the Su-
+percell method. It consists in making computations in a bounded domain of large size with
+periodic boundary conditions, the resulting solution converging to the true solution when the
+size tends to infinity. The convergence for the computation of defect modes has been shown
+for 2D problems and compact perturbations in [45] and generalized to 3D problems and to
+exponentially decreasing perturbations in [6]. In this case, as the localized modes are ex-
+ponentially decreasing, this convergence is exponentially fast with respect to the size of the
+truncated domain. In practice, this approach replaces the eigenvalue problem set in an un-
+bounded domain to an approximated one set in a bounded domain. See [39] for numerical
+results. The main drawback of this strategy relies on the increase of the computational cost,
+especially when a mode is not well confined. We can mention also the fictitious source su-
+perposition method [5] and the reflective scattering matrix method.
+
+By adapting to eigenvalue problems the construction of Dirichlet-to-Neumann operators orig-
+inally developed for scattering problems [22, 16, 15], we want to offer a rigorously justified
+alternative to existing methods. Compared to the supercell method, the DtN method allows
+us to reduce the numerical computation to a small neighborhood of the defect independently
+from the confinement of the computed guided modes. Moreover, as the method is exact, we
+improve the accuracy for non well-confined guided modes. Obviously, there is a price to be
+paid : the reduction of the problem leads to a non linear eigenvalue problem, of a fixed point
+nature. However, this difficulty has been already overcome for homogeneous open waveg-
+uides for which the DtN approach is well known [23, 34, 35].
+     2. Model problem. In order to describe the medium of study, let us first consider a
+two-dimensional periodic medium - the photonic crystal - characterized by a coefficient ρp
+(typically the square of the refraction index of the medium) which is
+       • a L∞ f unction : ∃ρ− , ρ+ , 0 < ρ− ≤ ρp (x, y) ≤ ρ+ ;
+       • periodic in the two directions
+
+           ∃Lx , Ly > 0, ∀n, m ∈ Z, ∀(x, y) ∈ R2         ρp (x + nLx , y + mLy ) = ρp (x, y)
+
+where the periods Lx and Ly are not necessarily equal.We introduce a one dimensional infi-
+nite perturbation - called the line defect - in the y−direction in
+
+                                    Ω0 = ] − a, a[ × R
+
+and characterized by a coefficient ρ0 which is
+      • a L∞ f unction satisfying 0 < ρ− ≤ ρ0 ≤ ρ+ ;
+      • periodic in the y−direction
+
+                  ∃L0y > 0, ∀m ∈ Z, ∀(x, y) ∈ Ω0          ρ0 (x, y + mL0y ) = ρ0 (x, y)
+
+        where Ly and L0y are commensurate. Without lack of generality, we suppose Ly =
+        L0y .
+The propagation medium is then characterized by the function ρ defined by
+
+                            ρ(x, y) = ρp (x, y) in R2 \ Ω0
+                                                                                          (2.1)
+                                      ρ0 (x, y) in Ω0 .
+
+     R EMARK 2.1 (Some extensions).
+1. We can consider a more general medium of propagation than Ω = R2 . It could consist
+for example of R2 minus a periodic set of holes. The only assumption is that the periodicity
+4                                                   S. Fliss
+
+
+
+
+                       Ω−                                 Ω0                       Ω+
+
+     F IG . 2.1. Domain of propagation : typically ρ = 1 in the white region, ρ = 2 in the dark grey regions and
+ρ = 3 in the light grey regions.
+
+
+property of Ω has to the be the same as ρ.
+2. Even if the spectral properties are different, the analysis and the method can be extended
+to coefficient defined by
+                             ρ(x, y) = ρ−
+                                        p (x, y) in            ] − ∞, −a[×R
+                                            ρ0 (x, y)     in   Ω0
+                                            ρ+
+                                             p (x, y)     in   ]a, +∞[×R.
+where ρ−        +
+        p and ρp have the same properties than ρp with the same period in the y−direction
+(Ly ) and not necessarily the same in the x-direction (L−      +
+                                                        x and Lx ).
+
+
+     R EMARK 2.2 (Some open questions). The case where the line defect has not the same
+periodicity properties as the photonic crystal and the case where the line defect is not intro-
+duced along one of the direction of periodicity of the photonic crystal are out of the scope of
+the present paper.
+
+The propagation model is a simple 2D space-(x = (x, y)) time harmonic scalar wave equa-
+tion (corresponding for example to transverse electric (TE) mode electromagnetic wave in
+two dimensions)
+                                      − 4w − ρ ω 2 w = 0,           in Ω,                                  (P)
+where ω ∈ R+ is the frequency. In the rest of the article, ω 2 will be considered as the spectral
+parameter.
+
+     R EMARK 2.3. The results developed in this article can be easily extended to more gen-
+eral elliptic operator u 7→ ∇ · (µ∇u) where µ is line perturbation of a periodic function.
+
+Using the Floquet-Bloch theory, we could show that the spectrum of the operator −4/ρ
+could be deduced from the study of the guided modes. A guided mode of this problem is by
+definition a solution w 6= 0 to (P) which can be written in the form
+                                          w(x, y) = v(x, y) eıβy                                          (2.2)
+                                         Waveguides in periodic media                                          5
+
+where, in full generality
+      • β - called the quasi period - is in ] − π/Ly , π/Ly [;
+      • v is periodic in the y−direction with period Ly and
+
+                                                                               Ly Ly
+                                 v B ∈ H 1 (B) where B = R×] −                   ,   [
+                                                                               2 2
+We will identify in the following any periodic function in Ω to its restriction to the period B.
+
+    R EMARK 2.4. In full generality, the coefficient β is in R but it is enough to consider it
+only in ] − π/Ly , π/Ly [. Indeed, it is easy to see that if there exists a mode for β ∈ R,
+
+                   w(x, y, t) = v(x, y) eıβy , with v Ly -periodic and ω ∈ R+ ,
+
+it corresponds to a mode for β ± π/Ly of the form
+
+   w(x, y) = ṽ(x, y) eı(β±π/Ly )y with ṽ(x, y) = v(x, y)e∓ıπ/Ly y which is Ly -periodic.
+
+Replacing the expression (2.2) in (P) we see easily that finding the guided modes corresponds
+
+                                               Γ−
+                                                a                 Γ+
+                                                                   a                             Σ
+
+           B−                                              B0                                    B+
+                                                                                                 e
+                                                                                                 Σ
+
+        F IG . 2.2. The band B - one period in the y-direction of the domain Ω represented in Figure 2.1.
+
+to finding couples (ω 2 , β) such that there exists v ∈ H 1 (B), v 6= 0 solution of
+
+                                1     2ıβ        β2
+                              − 4v −      ∇v +      v = ω 2 v,              in B
+                                ρ      ρ         ρ                                                          (2.3)
+                                    e,
+                              v Σ=v Σ     ∂y v Σ = ∂y v
+                                                                   Σ
+                                                                   e
+                                        Ly                            L
+where (see Figure 2.2) Σ = R ×             2
+                                                    e =R×
+                                                and Σ                 − 2y .
+
+We can rewrite the previous problem using u(x, y) = v(x, y)eıβy and then finding the guided
+modes is equivalent to finding couples (ω 2 , β) such that there exists u ∈ H 1 (B), u 6= 0
+solution of
+                                1
+                              − 4u = ω 2 u, in B
+                                ρ                                                                           (2.4)
+                              u |Σ = eıβ u |Σ
+                                            e, ∂y u |Σ = eıβ ∂y u |Σ
+                                                                   e
+
+To characterize the guided modes, there exist two different formulations : the ω−formulation
+in which ω is fixed and β is looked for and the β−formulation in which β is fixed and ω is
+looked for. The first one leads to a quadratic eigenvalue problem in the band B (it is obvious
+with the formulation (2.3) of the problem) and the second one to an eigenvalue problem in
+the band B.
+
+The classical approach for solving this problem set in an unbounded domain is the Super-
+cell Method which is based on the exponentially decreasing property of the mode in the x−
+6                                            S. Fliss
+
+
+direction (see Theorem 3.5 where we remind this result) and consists in truncating the band
+B far enough. One (artificial) parameter of the method is then the position of the truncature
+position. The main advantage is that this approach leads to an eigenvalue problem (for the
+β-formulation) or a quadratic one (for the ω−formulation) set on a bounded domain (the trun-
+cated one). The main drawback of this strategy relies on the increase of the computational
+cost when a mode is not well confined.
+
+Here we propose a novel method based on a DtN approach, which is originally developed for
+scattering problems. This method offers a rigorously justified alternative to existing meth-
+ods.This approach allows us to reduce the numerical computation to a small neighborhood of
+the defect independently from the confinement of the computed guided mode. The main ad-
+vantage is that the method is exact so we improve the accuracy for non well-confined guided
+modes and could deduce the behavior of the dispersive curves - β 7→ ω(β) where (β, ω(β))
+is solution of (2.3) - near the edges of the gaps. The main drawback is that the reduction of
+the problem leads to a nonlinear eigenvalue problem, of a fixed point nature. To simplify the
+presentation, we choose here the ω−formulation but the method extends to the other formu-
+lation - which could be more adapted for dispersive media for example. ρ = ρ(ω)).
+
+The article is organized as follows. We will remind in Section 3 the spectral properties of
+the locally perturbed periodic operator involved in the study. Section 4 deals with the DtN
+approach and present the non linear eigenvalue problem which has to be solved to compute
+the guided modes. It is the most important and original part of the article. Section 5 is devoted
+to numerical results and Section 6 to give some conclusions and perspectives.
+     3. Spectral theory results for the problem. We focus on the guided modes defined in
+(2.4) and then reduce the problem to the following one :
+                 π π
+For any β ∈] −     ,   [,
+                 Ly Ly
+
+                 find ω 2 ∈ R+ ,   s.t. ∃u ∈ H 1 (B), u 6= 0,     A(β)u = ω 2 u             (E β )
+
+where
+                1
+        A(β) = − 4
+                ρ
+        D(A(β)) = u ∈ H 1 (4, B),         u|Σ = eıβ u|Σ
+                                                      e     and    ∂y u|Σ = eıβ ∂y u|Σ
+                                                                                     e .
+
+
+with H 1 (4, B) = {u ∈ H 1 (B), ∆u ∈ L2 (B)}.
+
+The problem is then reduced to the determination of eigenvalues of the locally perturbed
+periodic operator A(β), for any β ∈] − π/Ly , π/Ly [.
+
+We introduce for the following the operator with perfectly periodic coefficients
+                                     1
+                        Ap (β) = −      4,     D (Ap (β)) = D(A(β))                        (3.1)
+                                     ρp
+
+Using [26, 10] and the Weyl’s theorem [37, Vol. IV, Theorem XIII-14], we describe in the
+following proposition the essential spectrum of the operator A(β).
+                                   Waveguides in periodic media                              7
+
+   P ROPOSITION 3.1 (Essential spectrum of A(β)). The operator A(β) is selfadjoint in
+H = L2 (B, ρdxdy), positive and its essential spectrum, denoted σess (β), satisfies
+                                                   [
+                σess (β) = σ (Ap (β)) = R \              ]an (β), bn (β)[
+                                                   1≤n≤N (β)
+
+
+where Ap (β) is the operator with periodic coefficient defined by (3.1), N (β) (0 ≤ N (β) ≤
++∞) is the number of gaps and for any n, 0 ≤ an (β) < bn (β).
+
+    Proof. The operator Ap (β) is selfadjoint in L2 (B, ρp dxdy) and positive, the operator
+A(β) is closed in L2 (B, ρp dxdy) (and obviously selfadjoint and positive in H). More-
+over, (A(β) + 1)−1 − (Ap (β) + 1)−1 is compact (by the compactness of the embedding
+of H 1 (B0 ) ,→ L2 (B0 ) where B0 = B ∩ Ω0 ). Using [37, Vol. IV, Theorem XIII-14], the
+essential spectrum of A(β) coincide with the essential spectrum of Ap (β)
+
+                                   σess (β) = σess (Ap (β)) .                             (3.2)
+
+Moreover, one of the main result of the Floquet-Bloch theory is (see [26] for more details)
+that the spectrum of Ap (β), σ (Ap (β)) is reduced to its essential spectrum, σess (Ap (β)) and
+is given by
+                                                      [
+                 σ (Ap (β)) = σess (Ap (β)) =                   σ (Ap (β, k))             (3.3)
+                                                 k∈]−π/Lx ,π/Lx ]
+
+where
+                       1
+        Ap (β, k) = −    4,
+                      ρp
+                                      u |x=Lx /2 = eıkLx u |x=−Lx /2 ,
+                                                                              
+                         
+                                                                             
+                                                                              
+                                                          ıkLx
+                                           |                        |
+                                                                             
+                         
+                             1        ∂x u   x=Lx /2 =  e      ∂x u  x=−Lx /2
+                                                                              
+        D (Ap (β, k)) = u ∈ H (4, C),                 ıβLy                      .
+                         
+                                     u |y=Ly /2 = e        u |y=−Ly /2 ,     
+                                                                              
+                                      ∂y u |y=Ly /2 = eıβLy ∂y u |y=−Ly /2 
+                         
+                                                                             
+
+
+with C =] − Lx /2, Lx /2[×] − Ly /2, Ly /2[ and H 1 (4, C) = {u ∈ H 1 (C), ∆u ∈ L2 (C}.
+
+Moreover, for any k in ] − π/Lx , π/Lx ], Ap (β, k) is a self-adjoint positive operator with
+compact resolvent so its spectrum is purely discrete
+
+     0 < ω1 (β, k) ≤ ω2 (β, k) ≤ . . . ≤ ωn (β, k) < . . .    with   lim ωn (β, k) = +∞
+                                                                     n→+∞
+
+and we can find (en (β, k)) a corresponding family of eigenvectors which is an Hilbert basis
+of L2 (C).
+
+Using the min-max principle to Ãp (β, k), we could show that the so called dispersive curve
+
+                              (β, k) 7→ ωn (β, k) is continuous.                          (3.4)
+
+Finally, we deduce from (3.2), (3.3) and (3.4) that
+                                                   [
+                       σess (β) = σ (Ap (β)) =       ωn ([−π, π[, β)
+                                                    n∈N
+8                                            S. Fliss
+
+
+
+
+    R EMARK 3.2. In Section 4.4, we will give another characterization of the essential spec-
+trum with a by-product of the method.
+
+As described in the Introduction, only sufficient conditions of existence are known and finite-
+ness of the number of gaps is conjectured in the general case and proven for particular cases.
+Let us suppose in the following that at least one gap exists (N (β) ≥ 1). Using the theory of
+selfadjoint operators ([37]), we deduce that
+
+    P ROPOSITION 3.3 (Discrete spectrum of A(β)). The spectrum of A(β) inside the gaps
+consists only of isolated eigenvalues of finite multiplicity, which can accumulate only at the
+edges of the gap.
+
+One should ask if there is a way to ensure the rise of at least one eigenvalue in gaps of
+A(β). Figotin and Klein have given in [10] sufficient condition on the defect (supposed ho-
+mogeneous) and the gaps to introduce eigenvalues in any gaps of A(β). Using asymptotic
+arguments, Nazarov and co-workers [31] have studied sufficient conditions for existence of
+eigenvalue for elastic waveguides.
+
+We are interested now, in characterizing and then computing the eigenvalues (λm (β))m ,
+
+                0 ≤ λ1 (β) ≤ λ2 (β) ≤ . . . ≤ λM (β) (β),      0 ≤ M (β) ≤ +∞
+
+if they exist (we suppose then M (β) ≥ 1), which are in the gaps of the essential spectrum (see
+[2] -optical waveguides- and [29] -photonic crystal waveguides- for existence of eigenvalues
+inside gaps) :
+
+   P ROPOSITION 3.4 (Properties of each λm (β)). The dispersion curves β 7→ λm (β) are
+2π/Ly -periodic, even and continuous.
+
+    Proof.
+      • β 7→ λm (β) is 2π/Ly -periodic : by definition
+
+                  A(β + 2π/Ly ) = A(β) and              D (A(β + 2π/Ly )) = D (A(β)) .
+
+      • β 7→ λm (β) is even because
+
+                          A(β) = A(−β) and              D (A(β)) = D (A(−β)) .
+
+        and A(β) is a self-adjoint positive operator.
+      • The continuity with respect to β of the eigenvalues sorted in ascended order is due
+        to the analyticity of the operator A(β) with respect to β [25].
+
+
+
+We deduce in particular that it is sufficient to study the dispersive curves for β ∈ [0, π/Ly ].
+
+We study now the properties of the eigenvectors associated to the eigenvalues. By defini-
+tion, they are in L2 (B) but we can be more precise : they decay exponentially fast far from
+                                   Waveguides in periodic media                                   9
+
+the defect, with a rate depending on the distance from the eigenvalue to the edges of the gap.
+It is a result based on [9] and shown in [10].
+
+    T HEOREM 3.5 (Exponential decay of the eigenvectors). Let β ∈] − π/Ly , π/Ly ]. For
+any eigenvalue λn (β) of A(β), the associated eigenvectors ϕn (β; ·) satisfies
+
+  ∀n ∈ J1, M (β)K,     ∃C1 , C2 > 0, ∃a > 0, ∀(x, y) ∈ B, |x| < a,
+                                           C1
+              |ϕn (β; x, y)| ≤                            e(−C2 dist(λn (β),σess (A(β)))|x|)   (3.5)
+                               dist (λn (β), σess (A(β)))
+
+ This property is exactly the one which encourages to use the Supercell method. Indeed,
+this method consists in approaching the eigenvalues and the associated eigenvectors by the
+ones of a truncated problem in the x−direction with periodic conditions. If the eigenvec-
+tors are exponentially decreasing in the x−direction, they will satisfy almost periodic condi-
+tions far enough from the perturbation and then be almost-eigenvectors for the almost-same
+eigenvalues of an operator defined from the truncated domain. The main advantage of this
+approach it that it leads to eigenvalue problem for a β-formulation and a quadratic one for
+a ω−formulation, both of them set on a bounded domain. However, we could note several
+drawbacks.
+      1. The essential spectrum of A(β) has to be computed initially.
+      2. For a fixed β, it seems important to have an estimation of the distance between the
+          not yet computed eigenvalue and the essential spectrum of A(β) to choose a relevant
+          truncated domain.
+      3. The size of the truncated domain depends on β and on the distance between the
+          eigenvalue and the essential spectrum. If the eigenvalue approaches more and more
+          the essential spectrum of A(β) when β varies, the corresponding eigenvector be-
+          comes less and less confined (less and less exponentially decreasing) and then the
+          truncated domain has to be bigger and bigger. This can increase dramatically the
+          computational cost.
+      4. Because, this method is based on the exponential decay of the eigenvectors, it cannot
+          describe the behavior of the dispersive curves (the eigenvalues as functions of β,
+          β 7→ λn (β)) near the edges of the essential spectrum.
+We propose now a novel method based on a DtN approach which overcome these disad-
+vantages because it is an exact method (in the sense which is precised in the next section).
+However, its main drawback is that it leads to a nonlinear eigenvalue problem of a fixed point
+nature.
+    4. The non linear eigenvalue problem.
+     4.1. The DtN approach. Let β ∈] − π/Ly , π/Ly ] and let us suppose from this point
+that α2 ∈/ σess (β). We want here to write an equivalent problem to the problem (E β ) which
+is set on a bounded domain.
+
+For the sequel, it is essential to introduce functional spaces appearing naturally in the study.
+Let us remind that B ± = B ∩ Ω± , Σ± = Σ ∩ Ω± , Σ        e± = Σ e ∩ Ω± and Γ± a = {±a}×] −
+Ly /2, Ly /2[ (see Figure 2.2).
+
+We start from smooth quasi-periodic functions in B ± :
+                    n                                                          o
+        Cβ∞ (B ± ) = u = ũ B ± , ũ ∈ C ∞ (Ω± ), ũ(x, y + L) = eıβLy ũ(x, y) .
+10                                             S. Fliss
+
+
+Let Hβ1 (B ± ) be the closure of Cβ∞ (B ± ) in H 1 (B ± )
+                                  n                                 o
+                     Hβ1 (B ± ) = u ∈ H 1 (B ± ), u Σ± = eıβLy u Σ
+                                                                 e±
+
+where in the last equation we have identified the spaces H 1/2 (Σ± ) and H 1/2 (Σ   e ± ). As
+Hβ (B ) is a closed subspace of H (B ), we equip it with the norm of H (B ± ). Let
+  1   ±                                1    ±                                     1
+
+Hβ1 (4, B ± ) be the closure of H 1 (4, B ± ) = {u ∈ H 1 (B ± ), ∆u ∈ L2 (B ± )}.
+                         n                                  ∂u              ∂u      o
+        Hβ1 (4, B ± ) = u ∈ H 1 (4, B ± ) ∩ Hβ1 (B ± ),            = eıβLy           .
+                                                            ∂y Σ±           ∂y eΣ±
+                                                          1/2            1/2 e ± 0
+where in the last equation we have identified the spaces H00 (Σ± )0 and H00 (Σ  ).
+
+             1/2
+The space Hβ (Γ±
+               a ) is defined by
+                                                           
+                                  1/2         ±
+                                 Hβ (Γ±
+                                      a ) = γ 0   Hβ
+                                                    1
+                                                      (B ±
+                                                           )
+                                                                               ±
+where γ0± ∈ L(H 1 (B ± ), H 1/2 (Γ±                         ±          1  ±
+                                  a )) is the trace map on Γa : ∀ u ∈ H (B ), γ0 u = u|Γ±
+                                                                                        a
+                                                                                          .
+  1/2                                                                               1/2
+Hβ (Σ0 ) is then a dense subspace of H 1/2 (Σ0 ) and the injection from Hβ (Γ±
+                                                                             a ) onto
+ 1/2 ±
+H (Γa ) is continuous.
+             −1/2                        1/2
+We define Hβ        (Γ±                       ±
+                      a ) as the dual of Hβ (Γa ).
+
+                                                             1/2
+Finally, the trace application γ1± ∈ L(H 1 (4, B ± ), H(a,a) (Γ±  0
+                                                               a ) ) defined by :
+
+                                                                    ∂u
+                             ∀ u ∈ H 1 (4, B ± ),         γ1± u =
+                                                                    ∂x Γ±
+                                                                        a
+
+                                                             −1/2
+is a continuous application from Hβ1 (4, B ± ) onto Hβ  (Γ±a ) and we can show that
+                                                           
+                                −1/2
+                              Hβ     (Γ±            1    ±
+                                       a ) = γ1 Hβ (4, B ) .
+
+Let us now introduce the two half-band problems: for any β and α and for any given ϕ in
+  1/2
+Hβ (Γ±  a)
+
+                                                 −4u± − ρp α2 u± = 0 in B ±
+              Find u± ∈ Hβ1 (4, B ± ),                                                    (P ± )
+                                                 u|Γ±
+                                                    a
+                                                      = ϕ.
+
+     T HEOREM 4.1 (Well-posedness of the problem (P ± )).
+     2
+If α ∈/ σess (β), the problem (P ± ) is well-posed in Hβ1 except for a countable set of frequen-
+cies which depends on β.
+
+If the periodicity cell is symmetric with respect to the axis x = 0 and if α2 ∈
+                                                                              / σess (β),
+the problem (P ± ) is always well-posed in Hβ1 .
+
+     Proof. It is enough to show the result for (P + ). We introduce the following operators
+                         1                        n                              o
+        AD,+ (β) = − 4, D(AD,+ (β)) = u+ ∈ Hβ1 (B + ), u+ Γ+ = 0
+                         ρp                                                a
+
+                         1                        n                                  o
+        AD,− (β) = − 4, D(AD,− (β)) = u ∈ Hβ (Ω \ B ), u− Γ+ = 0
+                                                      −      1       +
+                         ρp                                                    a
+
+                       1                      n                        o
+        AD (β) = − 4, D(AD (β)) = u ∈ Hβ1 (Ω), u Γ+ = 0
+                      ρp                                         a
+                                     Waveguides in periodic media                                       11
+
+It is easy to see that the spectrum of AD is the union of the spectrums of AD,+ and AD,− .
+Moreover the resolvant of AD is a compact perturbation of the resolvant of A so AD and
+A has the same essential spectrum. These two properties implies that AD,+ has its essen-
+tial spectrum included in the spectrum of A but this operator may have a countable set of
+eigenvalues. In conclusion, α2 ∈  / σess (β), the problem (P + ) is well posed if α2 is not an
+eigenvalue of AD,+ .
+
+If the periodicity cell is symmetric with respect to the axis x = 0, the operator AD,+ has
+no eigenvalues. Indeed, if an eigenvector exists, we could construct by antisymmetry with
+respect to Γ+
+            a an eigenvector of A, which is not possible.
+
+
+
+     R EMARK 4.2 (Robin-to-Robin operators instead of DtN operators). The countable set of
+frequencies for which the half-band problems are not well-posed is introduced by our method
+of construction of DtN operators. If we use Robin-to-Robin operators instead of Dirichlet-to-
+Neumann operators, the problems are always well posed when the frequency α2 ∈       / σess (β).
+We choose to use DtN operators in the present paper to simplify the presentation of the method
+(see [15, 18] for more details on Robin-to-Robin operators)
+
+Suppose from this point that the problems (P + ) and (P − ) are well posed. We denote by
+u+ (β, α; ϕ) and u− (β, α; ϕ) the respective unique solutions.
+                                        1/2          −1/2
+The DtN operators Λ± (β, α) ∈ L(Hβ (Γ±
+                                     a ), Hβ                (Γ±
+                                                              a )) are then defined by
+
+                              1/2
+                       ∀ϕ ∈ Hβ (Γ±
+                                 a ),         Λ± (β, α)ϕ = ∓∂x u± (β, α; ϕ)
+                      1/2
+or else ∀ϕ, ψ ∈ Hβ (Γ±
+                     a)
+                             Z
+         ±
+   < Λ (β, α)ϕ, ψ >Γ±
+                    a
+                      =             ∇u± (β, α; ϕ) · ∇u± (β, α; ψ)
+                               B±
+                                                       Z
+                                                  − α2      ρp u± (β, α; ϕ)u± (β, α; ψ) (4.1)
+                                                             B±
+                                                               −1/2            ±    1/2
+where < ·, · >Γ± a
+                   denotes the duality product between Hβ      (Γ±a ) and Hβ (Γa ). We have
+then by definition the continuity properties of the DtN operators
+                                                                                     1/2
+    P ROPOSITION 4.3. For any β, the DtN operators Λ± (β, α) are continuous from Hβ (Γ±   a)
+         −1/2
+onto Hβ    (Γ±
+             a ) and are norm continuous with respect to α.
+    Proof. We introduce the operator
+                        1                      n                o
+        AD,± (β) = − 4, D(AD,± (β)) = u± ∈ Hβ1 (B ± ), u± Γ± = 0 .
+                       ρp                                   a
+
+
+We have seen in Theorem 4.1 that if α2 ∈/ σess (β) and α2 ∈
+                                                          / σd,± (β) where σd,± (β) is the
+discrete spectrum of AD,± (β) then the problem (P ± ) is well posed. Moreover, it exists C
+independent from α such that
+                1/2                                                 C
+      ∀ϕ ∈ Hβ (Γ±
+                a ),        ku± (β, α; ϕ)kH 1 (B ± ) ≤                        kϕkH 1/2 (Γ± )          (4.2)
+                                                          dist(α2 , σ± (β))         β         a
+
+
+and so
+                 1/2                                                    C
+         ∀ϕ ∈ Hβ (Γ±
+                   a ),      kΛ± (β, α)ϕkH −1/2 (Γ± ) ≤                          kϕkH 1/2 (Γ± ) .
+                                                β     a      dist(α2 , σ± (β))            β       a
+12                                                S. Fliss
+
+
+where σ± (β) is the spectrum of AD,± (β).
+
+Let now α1 and α2 are such that each corresponding half-band problem (P ± ) is well posed.
+                             1/2
+For any β and any data ϕ in Hβ (Γ±       ±    ±               ±
+                                   a ), v = u (β, α1 ; ϕ) − u (β, α2 ; ϕ) is solution of
+
+                    −4v ± − ρp α12 v ± = ρp (α22 − α12 )u± (β, α2 ; ϕ) in B ±
+                    v ± |Γ±
+                          a
+                            = 0.
+
+That implies that it exists C independent from α1 and α2 such that
+                                          C
+                 kvkHβ1 (Ω± ) ≤                     |α2 − α22 |ku± (β, α2 ; ϕ)kHβ1 (B ± )
+                                  dist(α12 , σ± (β)) 1
+                                               1/2
+then using (4.2), we deduce that ∀ϕ ∈ Hβ (Γ±
+                                           a ),
+
+                                                                 C
+kΛ± (β, α1 )ϕ−Λ± (β, α2 )ϕkH −1/2 (Γ± ) ≤                                            |α2 −α2 |kϕkH 1/2 (Γ± ) .
+                                    β      a     dist(α1 , σ± (β)) dist(α22 , σ± (β)) 1 2
+                                                       2                                          β      a
+
+
+
+
+Besides, the definition 4.1 allows us to establish the following property which will be useful
+for the proof of Lemma 4.7.
+     L EMMA 4.4. For any β and any α such that the problem (P ± ) is well posed, the DtN
+operator Λ± (β, α) satisfies the Gårding’s inequality
+
+                                   1/2
+     ∃C1 , C(α) > 0,    ∀ϕ ∈ Hβ (Γ±
+                                  a)
+
+                             < Λ± (β, α)ϕ, ϕ >Γ±
+                                               a
+                                                 ≥ C1 kϕk2H 1/2 (Γ± ) − C(α)kϕk2L2 (Γ± )          (4.3)
+                                                                    β       a               a
+
+
+
+where C(α) is a constant continuous with respect to α.
+     Proof. By definition of the DtN operator Λ± (β, α) and by continuity of the trace appli-
+cation γ0± , we have
+           1/2
+ ∀ϕ ∈ Hβ (Γ±
+           a ),         < Λ± (β, α)ϕ, ϕ >Γ±
+                                          a
+                                            ≥ C1 kϕk2H 1/2 (Γ± ) − (α2 ρ+ + 1)ku± k2L2 (B ± ) .
+                                                               β        a
+
+
+
+where u± = u± (β, α; ϕ). To conclude, it is sufficient to show that
+                                  1/2
+                       ∀ϕ ∈ Hβ (Γ±
+                                 a ),          ku± kL2 (B ± ) ≤ c(α)kϕkL2 (Γ±
+                                                                            a )
+
+
+with c(α) continuous with respect to α. For this, we use a duality argument. Let v ± ∈
+Hβ1 (4, B ± ) be the unique solution of the problem (which is well posed if the problem (P ± )
+is well posed)
+
+                                  −4v ± − ρp α2 v ± = u±           in B ±
+                                                                                                  (4.4)
+                                  v|Γ±
+                                     a
+                                       = 0.
+
+Since u± ∈ L2 (B ± ) then v ± ∈ H 2 (B ± ) (elliptic regularity) and using the well-posedness
+of the problem and the continuity of the trace aplication γ1± , we have in particular
+
+                             ∂v ±                    C
+                         k        kL2 (Γ±
+                                        a )
+                                            ≤       2
+                                                               ku± kL2 (B ± )                     (4.5)
+                              ∂x              dist(α , σ± (β))
+                                     Waveguides in periodic media                                              13
+
+where σ± (β) is the spectrum of AD,± (β) defined in Theorem 4.1. Let us now multiply (4.4)
+by u± , integrate over B ± and apply Green’s formula twice, we get
+                                                          ∂v ±
+                                                    Z
+                                ku± k2L2 (B ± ) = ±     ϕ
+                                                     Γ±
+                                                      a
+                                                           ∂x
+which together with (4.5) finishes the proof.
+
+Finally, using the continuity of any eigenvector of (E β ) and its normal derivative across the
+                   −
+sections Γ+a and Γa , the next theorem is therefore straightforward.
+
+
+    T HEOREM 4.5 (Problem with DtN conditions). The problem (E β ) is equivalent to the
+problem posed on B0 = B ∩ Ω0
+                        Find ω 2 ∈
+                                 / σess (β), s.t. ∃u0 ∈ H 1 (B0 ), u0 6= 0
+
+                                     1
+                                    − 4u0 = ω 2 u0 ,            in B0                                      (E0β )
+                                     ρ
+u0 satisfying the boundary conditions
+                        +∂x u0 + Λ+ (β, ω) u0 = 0,          on Γ+
+                                                                a
+
+                        −∂x u0 + Λ− (β, ω) u0 = 0,          on Γ−
+                                                                a,
+
+                        u0 |Σ0 = eıβLy u0 | e
+                                           Σ0 , ∂y u0 |Σ0 = e
+                                                              ıβLy
+                                                                   ∂ y u0 | e
+                                                                           Σ0 .
+
+where Σ0 = Σ ∩ Ω0 and Σ     e0 = Σe ∩ Ω0 . These problems are equivalent in the sense that if
+(ω, u) is solution of (E ) then (ω, u|B0 ) is solution of (E0β ). Conversely, if (u0 , ω) is solution
+                         β
+
+of (E0β ) then u defined by
+                           u|B0 = u0
+                           u|B ± = u± (β, ω, ϕ),       where ϕ = u0 |Γ±
+                                                                      a
+
+
+associated to the same value ω is solution of (E β ). Moreover, the multiplicity of ω is the same
+for the two problems.
+
+Whereas the problem (E β ) was linear with respect to the eigenvalue ω 2 but defined on an
+unbounded domain, the problem (E0β ) is set on a bounded domain but non linear.
+
+      R EMARK 4.6. Note that the problem (E0β ) is also non linear with respect to β (whereas
+the problem (E β ) can be rewritten as a quadratic eigenvalue problem). In other words, this
+difficulty would be present if we decided to fix ω and look for β.
+
+We now introduce the solution algorithm of the non linear eigenvalue problem, explain how
+to compute the DtN operators in the case where ω 2 ∈ / σess (β) and finally deduce another
+characterization of the essential spectrum σess (β).
+    4.2. Solution algorithm. For α2 ∈
+                                    / σess (β), we denote by A0 (β, α) the operator
+                 1
+ A0 (β, α) = −      4
+                 ρ0
+                                            +∂x u0 + Λ+ (β, α) u0 = 0,            on Γ+
+                                                                                      a
+
+ D(A0 (β, α)) = u0 ∈ H 1 (4, B0 ), −∂x u0 + Λ− (β, α) u0 = 0,                     on Γ−
+                   
+                                                                                      a,                       .
+                                                         ıβLy                            ıβLy
+                                            u0 |Σ0 = e          u0 | e
+                                                                    Σ0 , ∂y u0 |Σ0 = e          ∂ y u0 | e
+                                                                                                        Σ0 .
+14                                                 S. Fliss
+
+
+The following lemma allows us to show the main properties of the operator A0 (β, α) given
+in Proposition 4.8
+     L EMMA 4.7. The operator A0 (β, α) satisfies the Gårding’s inequality
+
+     ∃C1 , C(α) > 0,   ∀u ∈ D(A0 (β, α))
+
+                                       (A0 (β, α)u, u) ≥ C1 kuk2H 1 (B0 ) − C(α)kuk2L2 (B0 )            (4.6)
+
+where C(α) is a constant continuous with respect to α.
+    Proof. Using Lemma 4.4, we obtain easily that it exists c(α), constant continuous with
+respect to α, such that
+                                                                                             
+∀u ∈ D(A0 (β, α)), (A0 (β, α)u, u) ≥ k∇uk2L2 (B0 ) −c(α) ku|Γ+     k2 + + ku|Γ−
+                                                                 a L2 (Γ )        a
+                                                                                    k2L2 (Γ− ) .
+                                                                                      a                    a
+
+
+                                                                         s
+Let s be in ]1/2, 1[. By continuity of the trace application in H (B0 ), we have
+
+                        ∀u ∈ H s (B0 ),        ku|Γ±
+                                                   a
+                                                     k2L2 (Γ± ) ≤ Ckuk2H s (B0 ) ,
+                                                              a
+
+
+and from the compactness of the embedding H (B0 ) ,→ H s (B0 ), we could prove easily that
+                                                       1
+
+
+        ∀ε > 0, ∃Cε > 0, ∀u ∈ H 1 (B0 ),           kuk2H s (B0 ) ≤ εkuk2H 1 (B0 ) + Cε kuk2L2 (B0 ) .
+
+Choosing ε small enough, these three relation give us the Gårding inequality.
+
+
+     P ROPOSITION 4.8. The operator A0 (β, α) is self-adjoint, has a compact resolvant and
+is bounded from below.
+     Proof. The only difficulty is to show the self-ajointness (the Gårding inequality implies
+that the operator is bounded from below).
+
+The operator A0 (β, α) is clearly symmetric. To show self-ajointness, it is sufficient to show
+that it exists a real number ν such that A0 (β, α) + νId is surjective. The Gårding inequality
+gives us the coercivity and then the surjectivity of A0 (β, α) + C(α)Id.
+
+The spectrum of A0 (β, α) is then a pure point one and consists of a sequence of eigenvalues
+(µn (β, α))n of finite multiplicity tending to +∞:
+
+                       µ1 (β, α) ≤ µ2 (β, α) ≤ . . . ≤ µn (β, α) → +∞
+
+The explicit expression of these eigenvalues using the Min-Max principle yields some regu-
+larity properties of each eigenvalue with respect to α.
+
+    T HEOREM 4.9 (Characterization of the eigenvalues (µn (β, α))n ). Let us fix β ∈ [0, π/Ly [
+and α ∈/ σess (β) and denote H0 = L2 (B0 , ρ0 dxdy). In the following Vm is the set of sub-
+spaces of dimension m of
+                                n                                    o
+                     Hβ1 (B0 ) = u0 ∈ H 1 (B0 ), u0 |Σ0 = eıβ u0 |Σ
+                                                                  e0
+
+
+Then ∀m ∈ N,
+                                             |∇u0 |2 + hΛ+ (β, α)u0 , u0 iΓ+ + hΛ− (β, α)u0 , u0 iΓ−
+                                       R
+                                        B0                                 a                       a
+µm (β, α) =      inf       sup
+               Vm ∈Vm u0 ∈Vm ,u0 6=0                                ku0 k2H0
+                                      Waveguides in periodic media                                    15
+                                                             −1/2                1/2
+and < ·, · >Γ±
+             a
+               denotes the duality product between Hβ                (Γ±            ±
+                                                                       a ) and Hβ (Γa ).
+
+
+Moreover, the functions (β, α) 7→ µm (β, α) are continuous.
+    Proof. The first part of the theorem is a classical application of the min-max principle
+since A0 (β, α) is selfadjoint and bounded from below.
+
+For the continuity, Lemma 4.7 gives us that for any β, it exists positive constants C1 and
+C(α) which depends continuously of α such that for any α
+
+       ∀u ∈ D(A0 (β, α)),        (A0 (β, α)u, u) + C(α)kuk2L2 (B0 ) ≥ C1 kuk2H 1 (B0 )              (4.7)
+
+Let us then consider the following Rayleigh quotients :
+
+                   |∇u0 |2 + hΛ+ (β, α)u0 , u0 iΓ+ + hΛ− (β, α)u0 , u0 iΓ−
+               R
+                                                                           + C(α)ku0 kH 1 (B0 )
+R(β, α; u0 ) = B0                                a
+                                                        2
+                                                                         a
+                                                                                                .
+                                                   ku0 kH0
+
+For any β, let α1 and α2 be such that the DtN operators Λ± (β, αi ; ·) are well defined. For all
+u0 ∈ Hβ1 (B0 ) such that ku0 kH0 = 1, we have
+
+  |R(β, α1 ; u0 ) − R(β, α2 ; u0 )| ≤ | Λ+ (β, α1 ) − Λ+ (β, α2 ) u0 , u0 Γ+ |
+                                                                 
+                                                                           a
+
+               + | Λ− (β, α1 ) − Λ− (β, α2 ) u0 , u0 Γ− | + |C(α1 ) − C(α2 )|kuk2H 1 (B0 ) .
+                                             
+                                                              a
+
+
+So using Proposition 4.3 and its proof and the continuity of the trace application from H 1 (B0 )
+                                                           0
+onto H 1/2 (Γ±
+             a ), we obtain the existence of a constant C independent from α1 and α2 such
+that
+
+                                                          C0
+  |R(β, α1 ; u0 ) − R(β, α2 ; u0 )| ≤                                         |α2 − α22 |ku0 k2H 1 (B0 )
+                                         dist(α12 , σ+ (β)) dist(α22 , σ+ (β)) 1
+                                                                  + |C(α1 ) − C(α2 )|ku0 k2H 1 (B0 ) .
+
+Taking into account finally the coercivity property (4.7), we obtain
+                                                        C0
+  R(β, α2 ; u0 ) ≤ R(β, α1 ; u0 ) +                                         |α2 − α22 |R(β, α1 ; u0 )
+                                       dist(α12 , σ+ (β)) dist(α22 , σ+ (β)) 1
+                                    + |C(α1 ) − C(α2 )|R(β, α1 ; u0 ).
+
+For all m, if we denote
+
+                  ∀m ∈ N,        νm (β, α) =      inf        sup        R(β, α; u0 )
+                                               Vm ∈Vm u0 ∈Vm ,u0 6=0
+
+we obtain from the last inequality for all m
+                                                      C0
+      νm (β, α2 ) ≤ νm (β, α1 ) +                                         |α2 − α22 |νm (β, α1 )
+                                     dist(α12 , σ+ (β)) dist(α22 , σ+ (β)) 1
+                                  + |C(α1 ) − C(α2 )|νm (β, α1 ).
+
+By exchanging the roles of α1 and α2 , we finally obtain
+                                                 C0
+|νm (β, α2 ) − νm (β, α1 )| ≤                                        |α2 − α22 | max (νm (β, α1 ), νm (β, α2 ))
+                                dist(α12 , σ+ (β)) dist(α22 , σ+ (β)) 1
+                                + |C(α1 ) − C(α2 )| max (νm (β, α1 ), νm (β, α2 )) .
+16                                                   S. Fliss
+
+
+We deduce the continuity of the µm (β, α), C(α) depending continuously of α.
+
+Consequently, using Theorem 4.5, the solutions of the problem (E β ) are obtained as explained
+in the following proposition.
+     P ROPOSITION 4.10. The solutions of the non-linear problem (E β ) are the roots of the
+equations :
+
+                            ω2 ∈
+                               / σess (β) and ∃m ≥ 1, µm (β, ω) = ω 2 .
+
+ We then infer the iterative algorithm for the computation of the guided modes and associated
+eigenvalues with two nested loops:
+      • the outer loop consists in a fixed point algorithm to solve the non linear equations:
+
+
+                                           µm (β, ω) = ω 2 ,      ω2 ∈
+                                                                     / σess (β);
+
+       • each iteration of this fixed point algorithm requires the computation of the m−th
+          eigenvalue µm (β, α) of the operator A0 (β, α) (and possibly the derivative of µm (β, α)
+          with respect to α if a Newton method is used to solve the fixed point problem).
+This algorithm is quite classical for the computation of guided modes in open waveguides
+(see [2]). Here the novelty comes from the facts that the eigenvalues ω 2 could belong to any
+gap of the spectrum and that the operators Λ± (β, ω) have no analytical expression. We show
+in the following section how they can be computed in practice.
+     4.3. Characterization of the DtN operators . As explained in [22], the construction of
+the operators Λ± (β, α) is based only on the resolution of a family of cell problems and the
+resolution of a stationary Ricatti equation. For the sake of clarity, we shall recall the method
+for the construction of Λ+ .
+
+We will suppose again in this section that α2 ∈
+                                              / σess (β) and the problem (P + ) is well posed.
+
+We shall use the division of the half-band into periodicity cells separated by vertical seg-
+ments (See Figure 4.1):
+                                      +∞
+                                      [
+                             B+ =           Cn ,   Cn := C1 + ((n − 1)Lx , 0),               (4.8)
+                                      n=1
+
+The segments Γn = Γ0 + (nL, 0), with Γ0 = Γ+   a can all be identified to the leftmost one
+Γ0 ∼ [−Ly /2, Ly /2] and the cells Cn can all be identified to the first cell C1 = C. By
+
+                       Σ+
+                        1             Σ+
+                                       2                                       Σ+
+                                                                                n        Σ+
+
+         Γ0                 Γ1               Γ2                 Γn−1                Γn
+                                                                                         B+
+                  C1             C2                                       Cn
+     y
+                       e1
+                       Σ              e2
+                                      Σ                                        en
+                                                                               Σ         e
+                                                                                         Σ
+              x
+
+                                        F IG . 4.1. Notation in a half band
+                                    Waveguides in periodic media                              17
+
+periodicity in x, the construction of the unique solution u+ (β, α, ϕ) of (P + ) will be reduced
+to the knowledge of a linear operator, called the propagation operator, denoted P (β, α) and
+defined by
+                                         1/2                  1/2
+                            P (β, α) : Hβ (Γ0 ) →          Hβ (Γ0 )
+                                                                                            (4.9)
+                                                 ϕ 7→ u+ (β, α, ϕ)                .
+                                                                             Γ1
+
+One can show that P (β, α) for any β and α is compact (using interior elliptic regularity for
+u+ (β, α, ϕ)), injective (using an argument of unique continuation) and has a spectral radius
+less than 1 when α2 ∈  / σess (β) (because of the L2 nature of u+ (β, α, ϕ)). See [22, 15] for
+more details on the proof of these results.
+
+Using the periodicity of the problem, one easily see that
+                                  1/2                                                 n
+               ∀n ∈ N, ∀ϕ ∈ Hβ (Γ0 ),            u+ (β, α, ϕ)            = (P (β, α)) ϕ.
+                                                                    Γn
+
+                                                  1/2
+Then by linearity, we have ∀n ∈ N, ∀ϕ ∈ Hβ (Γ0 )
+                                                 
+                                             n−1                         n
+      u+ (β, α, ϕ)     = e0 β, α, (P (β, α))     ϕ + e1 (β, α, (P (β, α)) ϕ)               (4.10)
+                    Cn
+
+                      1/2
+where for all ϕ in Hβ (Γ0 ) e0 (β, α, ϕ) and e1 (β, α, ϕ) are the solutions in H 1 (C) to the
+following elementary cell problems
+
+                         − 4e` − ρp α2 e` = 0 in C,                     ` ∈ {0, 1}         (4.11)
+
+satisfying β-quasi periodic boundary conditions on Σ1 = Σ ∩ C and Σ    e ∩C
+                                                                  e1 = Σ
+
+                     e` |Σ1 = eıβLy e` |Σ
+                                        e1           ∂y e` |Σ1 = eıβLy ∂y e` |Σf1          (4.12)
+
+and Dirichlet boundary conditions on Γ0 and Γ1
+
+                                e0 |Γ0 = ϕ                 e1 |Γ0 = 0
+                                                 and                         .             (4.13)
+                                e0 |Γ1 = 0                 e1 |Γ1 = ϕ
+
+
+                                                  Σ1
+
+
+                                                 C
+                                        Γ0                  Γ1
+                                                  e1
+                                                  Σ
+
+                                   F IG . 4.2. The periodicity cell C
+
+
+     R EMARK 4.11. The cell problems are well posed except for a countable set of fre-
+quencies which correspond to the eigenvalues of the operator −4/ρp defined in a cell with
+Dirichlet boundary conditions. This set of forbidden frequencies is a priori different from
+the one introduced in Theorem 4.1 and Remark 4.2. Indeed the first one is introduced be-
+cause of the Dirichlet boundary conditions set in the vertical boundaries of the cell whereas
+the second one is introduced because of the Dirichlet boundary conditions set in the vertical
+18                                             S. Fliss
+
+
+boundary of the half band. Imposing Robin-type boundary conditions instead of Dirichlet in
+the cell problems would solve this issue (and can be used for the characterization of DtN or
+Robin-to-Robin operators). We choose here Dirichlet-type cell problems only to simplify the
+presentation of the method.
+
+Formula (4.10) shows that the computation of the solution u+ is achieved through the char-
+acterization of the operator P (β, α). At this stage of the exposition, the definition of this
+operator relies on u+ (β, α, ϕ) which is a solution of a problem posed in an unbounded do-
+main. We shall see in the following how to determine this operator by solely solving local
+problems of the type (4.11, 4.12, 4.13), which is one key point of the method.
+
+Note that the relation (4.10) ensures that u+ (β, α, ϕ) is the solution of the Helmholtz equation
+inside each cell Cn . To make the characterization complete, we have to add the transmission
+condition across Γj (the continuity of the normal derivative of u+ accross Γj ), which gives
+          T10 (β, α)P (β, α)2 + (T00 (β, α) + T11 (β, α)) P (β, α) + T01 (β, α) = 0.
+where the operators Tpq (β, α) are four corresponding local DtN operators :
+
+                 T00 (β)ϕ = −∂x e0 (β, ϕ)            T10 (β)ϕ = −∂x e1 (β, ϕ)
+                                               Γ0                               Γ0        (4.14)
+                 T01 (β)ϕ = −∂x e0 (β, ϕ)            T10 (β)ϕ = −∂x e1 (β, ϕ)
+                                               Γ1                               Γ1
+                           2
+Actually, for any β, if α ∈/ σess (β), this equation characterizes uniquely the operator
+P (β, α):
+    T HEOREM 4.12 (Characteristic equation). Suppose that α2 ∈  / σess (β) and the prob-
+lem (P + ) is well posed. The operator P (β, α) is then the unique compact operator of
+     1/2     
+L Hβ (Γ0 ) satisfying the condition
+                                           ρ(P (β, α)) < 1                                (4.15)
+which solves the stationary Riccati equation:
+                                           T (β, α) X = 0,                           (E P (β, α))
+where
+                1/2                    1/2    
+  T (β, α) : L Hβ (Γ0 ) →            L Hβ (Γ0 )
+                          X 7→ T10 (β, α)X 2 + (T00 (β, α) + T11 (β, α)) X + T01 (β, α).
+
+     Proof. As explained before, the operator P (β, α) is a compact operator whose spectral
+radius is strictly less than one. Moreover, the continuity of the normal derivative of the unique
+solution u+ (β, α; ϕ) accross each Γj , P (β, α) is solution of (E P (β, α)).
+
+Reciprocally, let P be a compact operator with spectral radius ρ(P ) < 1 which satisfies
+(E P (β, α)). The function defined by
+
+                                = e0 β, α, P n−1 ϕ + e1 (β, α, P n ϕ)
+                                                  
+                       u(ϕ)
+                               Cn
+
+satisfies the helmoltz equation cell by cell, is continuous by definition and has continuous nor-
+mal derivatives accross each Γj because the operator P is solution of (E P (β, α)). Moreover,
+the fact that ρ(R) < 1 implies that u(ϕ) belongs to H 1 (B + ). Indeed, the property
+                                               1/n
+                                    lim kP n kL(H 1/2 (Γ)) = ρ(P )
+                                    n→+∞
+                                       Waveguides in periodic media                            19
+
+implies that, for some ρ∗ ∈ (ρ(P ), 1) and N large enough
+
+                                  ∀n ≥ N,      kP n kL(H 1/2 (Γ)) ≤ ρn∗
+
+so that, it exists C independant of N, such that
+
+                          ∀n ≥ N,      ku(ϕ)kH 1 (Cn ) ≤ Cρn∗ kϕkH 1/2 (Γ0 ) .
+                                                                      β
+
+
+
+We have then constructed a solution in Hβ1 (4, B + ) of (P + ). By well-posedness of this prob-
+lem, the solution is unique so u = u+ and then P = P (β, α).
+
+Once P (β, α) is determined solving the stationary Ricatti equation, we build cell by cell
+the solution u+ using (4.10) and finally using again (4.10) for n = 0, we see that
+
+                           Λ+ (β, α) = T00 (β, α) + T10 (β, α) P (β, α)                     (4.16)
+
+    4.4. Characterization of the essential spectrum. The characterization of the essential
+spectrum is a by-product of the determination of the DtN operators.
+
+Indeed, in [22], we have shown that when α2 lies in the essential spectrum σess (β), not
+only the spectral radius of the propagation operator is equal to 1 but in addition this operator
+is no more the unique solution of the Ricatti equation (E P (β, α)). Consequently, we can give
+this characterization of the essential spectrum of A.
+
+    T HEOREM 4.13. The Ricatti equation (E P (β, α)) has a unique solution whose spectral
+radius is strictly less than one if and only if α2 ∈
+                                                   / σess (β).
+
+     Proof. In Theorem 4.12, we have already proven that if α2 ∈    / σess (β), the Ricatti equa-
+tion (E P (β, α)) has a unique solution whose spectral radius is strictly less than one.
+
+For α2 ∈ σess (β), we can show that it does not exist solution of (E P (β, α)) with spectral
+radius strictly less than one but solution whose spectral radius equal to one. Moreover, there
+is no more uniqueness of this kind of solutions. Indeed, by definition of the essential spectrum
+(see the proof of Proposition 3.1)
+
+             α2 ∈
+                / σess (β)        ⇔     ∃q, ∃k0 ∈] − π/Lx , π/Lx ] α2 = ωq (β, k0 )
+
+where ωq (β, k) is the q−th eigenvalue of the operator Ap (β, k) defined in the proof of Propo-
+sition 3.1. Let us denote eq (β, k) a corresponding eigenvector. Using the same idea than in
+the proof of Proposition 4.3, we could show that k 7→ ωq (β, k) is an even function and then
+
+                                    ωq (β, k0 ) = ωq (β, −k0 ) = α2
+
+Let us denote now ϕ± = eq (β, ±k0 ). Using the well-posedness of the cell problems, the
+eigenvectors eq (β, ±k0 ) can be expressed by
+
+                     eq (β, ±k0 ) = e0 (β, α, ϕ± ) + e±ık0 Lx e1 (β, α, ϕ± )
+
+and, thanks to their quasi-periodicity, can be extended as H 1 (4, B + ) function by
+
+           eq (β, ±k0 )        = e±ı(n−1)k0 Lx e0 (β, α, ϕ± ) + e±ınk0 Lx e1 (β, α, ϕ± ).
+                          Cn
+20                                                S. Fliss
+
+
+We have found then solutions of the problem (P + ) with ϕ± as Dirichlet boundary condition
+on Γ0 . We can then construct at least three solutions of the Ricatti equation whose spectral
+radius is equal to one :
+                P1    such that P1 ϕ+ = eık0 Lx ϕ+
+                P2    such that P2 ϕ− = e−ık0 Lx ϕ−
+                P3    such that P3 ϕ+ = eık0 Lx ϕ+ and P3 ϕ− = e−ık0 Lx ϕ−
+
+
+    5. Numerical results. We want to apply this approach to compute the guided modes of
+the media, whose refraction index is given by (see the isovalues Figure 5.1):
+                                                                           x2 + y 2
+                          2
+   ∀ (x, y) ∈ [−0.5, 0.5] , ∀ n, m ∈ Z , ρ p∗(x + n, y + m) = 1 + 16 exp(−          )
+                                                                            0.22
+                                         ρ0 (x, y + m) = 1
+                                                                                     (5.1)
+The period here is equal to 1.
+
+
+
+
+                              F IG . 5.1. The lineic perturbed periodic media.
+
+
+
+For any β ∈ [0, π/Ly ] and α2 ∈ [0, 20], we determine if α2 is in σess (β) or not. If not,
+we compute the Dirichlet-to-Neumann operators Λ± (β, α). The corresponding algorithm is
+the following : for each β and α
+      1. solve the cell problems (4.11,4.12,4.13) - using a FE method or a mixed finite ele-
+         ment one (see [22, 15, 17] for more details) and compute the local DtN operators
+           ±
+         Tpq (β, α) (see (4.14));
+      2. solve the stationary equation (4.12) using a spectral decomposition method (which
+         leads to a quadratic eigenvalue problem) or a modified Newton algorithm (see [22,
+         15, 17] for more details):
+           (i) If it exists a unique solution whose spectral radius is strictly less than one then
+               α2 ∈  / σess (β), so we can determine the propagation operator P ± (β, α) and
+               deduce the DtN operators Λ± (β, α) by (4.16).
+          (ii) If it exists a solution whose spectral radius is equal to one then α2 ∈ σess (β)
+               and we stop the computation.
+                                         Waveguides in periodic media                                        21
+
+We can then, for any β and α, compute the eigenvalues µm (β, α).
+
+We plot on Figure 5.2 the isovalue lines of the function log|µ1 (β, α) − α2 | for β ∈ [0, π/Ly ]
+and α2 ∈ [0, 20] \ σess (β).
+
+
+
+
+       Ơ
+
+
+
+
+                                                     ơ
+      F IG . 5.2. Isovalues of log|µ1 (β, α) − α2 |; β ∈ [0, π/L], α2 ∈ [0, 20]. For a fixed β, the white regions
+correspond to the essential spectrum σess (β). The dispersion curves are given by the blue lines. The two black
+circles correspond to guided modes represented Figure 5.3.
+
+
+For a fixed β, the white regions correspond to the essential spectrum σess (β). A part of the
+dispersion curves, given by the values (β, ω) for which µ1 (β, ω) − ω 2 = 0, are represented
+by blue lines corresponding to the null isovalue of µ1 (β, α) − α2 . The main difference with
+homogeneous open waveguides is that the function µm (β, α) − α2 may vanish several times
+for a fixed β.
+
+We want now to compute for fixed β, the eigenvalues and the corresponding guided modes.
+To do so, we use the following steps :
+       1. Solution of the non linear eigenvalue problem : using the algorithm of the non
+          linear eigenvalue problem described at the end of Section 4.2, ω 2 is computed so that
+          it exists m such that µm (β, ω) = ω 2 and ω 2 ∈
+                                                        / σess (β). Let u0 be an eigenvector of
+          A0 (β, ω) associated to the eigenvalue µm (β, ω).
+       2. Construction of the guided modes in one band : by continuity arguments, the
+          restriction to a band B of a guided mode u is given by
+
+                                 u B0      =    u0
+                                 u B+      =    u+ (β, ω, ϕ+ ) with ϕ+ = u0 Γ+
+                                                                                        a
+
+                                 u B−      =    u− (β, ω, ϕ− ) with ϕ− = u0 Γ−
+                                                                                        a
+22                                                  S. Fliss
+
+                                            1/2
+          where for any given ϕ ∈ Hβ (Γ±           ±                                       ±
+                                             a ), u (β, ω, ϕ) is the unique solution of (P ). To
+          compute these solutions, we have to
+             • solve the cell problems (4.11,4.12,4.13) for α = ω and compute the local DtN
+                           ±
+               operators Tpq  (β, ω) (see (4.14));
+             • solve the stationary equation (4.12). Since ω 2 ∈   / σess (β), it exists a unique
+               solution whose spectral radius is strictly less than one which is the propagation
+               operator P ± (β, ω)
+             • reconstruct the solutions cell by cell using (4.10).
+       3. Construction of the guided modes in the whole domain : by β−quasi-periodicity,
+          the guided modes can be constructed ”band by band” :
+                           ∀(x, y) ∈ B, ∀q ∈ Z,          u(x, y + qLy ) = u(x, y)eıqβLy .
+We then represent Figure 5.3 guided modes for two values of β in eight periods from each
+side of the line defect. Figure 5.3(a) corresponds to the eigenvalue in the first gap of A(0.5)
+with a well confined mode whereas in Figure 5.3(b) the eigenvalue belongs to the fourth gap
+of A(1.9)) and the associated guided mode is not well confined.
+
+
+
+
+                                           (a) β = 0.5, ω 2 = 3.465
+
+
+
+
+                                          (b) β = 1.42, ω 2 = 10.46
+
+      F IG . 5.3. Two guided modes: one is well confined (left); the other not well confined (right). The couples
+(β, ω 2 ) of this guided modes are represented by black circles in Figure 5.2
+                                         Waveguides in periodic media                                          23
+
+     6. Conclusions. We have shown that this method is well adapted to the computation of
+guided modes which are not well confined. The advantage of this method is that it is exact
+independently from the confinement of the computed guided modes. It can be well adapted
+for the study of the dispersive curves near the essential spectrum. In terms of computation
+time, the solution of the non linear eigenvalue problem is much more costly than the one of
+a linear eigenvalue problem. However, in contrast to existing methods, we do not have to
+compute independently -and often using a separate code- the essential spectrum of the media:
+here it is a by-product of this method.
+
+In a forthcoming article, we will compare exactly this method with the Supercell Method
+in terms of accuracy and computation time. Moreover, this DtN strategy will be applied to a
+β-formulation which is more adapted for dispersive media.
+
+Another interesting perspective concerns the study of the dispersive curves: with our charac-
+terization, we could study if they can or cannot be constant with respect to β (and conclude
+on the existence or not of bound state) and analyze their behavior near the essential spectrum.
+
+     Acknowledgments. The author would like to thank P. Joly and A.-S. Bonnet-BenDhia
+for numerous discussions on the subject of this article.
+
+
+                                                 REFERENCES
+
+ [1] H. A MMARI AND F. S ANTOSA, Guided waves in a photonic bandgap structure with a line defect, SIAM J.
+          Appl. Math., 64 (2004), pp. 2018–2033 (electronic).
+ [2] A.-S. B ONNET-B EN D HIA AND P. J OLY, Mathematical analysis and numerical approximation of optical
+          waveguides., vol. 22 of Frontiers Appl. Math., SIAM, Philadelphia, PA, 2001, pp. 273–324.
+ [3] A.-S. B ONNET-B EN D HIA AND F. S TARLING, Guided waves by electromagnetic gratings and non-
+          uniqueness examples for the diffraction problem, Math. Methods Appl. Sci., 17 (1994), pp. 305–338.
+ [4] G. B ORG, Eine Umkehrung der Sturm-Liouvilleschen Eigenwertaufgabe. Bestimmung der Differentialgle-
+          ichung durch die Eigenwerte, Acta Math., 78 (1946), pp. 1–96.
+ [5] L.C. B OTTEN , K.B. D OSSOU , S. W ILCOX , R.C. M C P HEDRAN , C.M. DE S TERKE , N.A. N ICOROVICI ,
+          AND A.A. A SATRYAN , Int. J. Microwave Opt. Technol.
+ [6] E. C ANC ÉS , V. E HRLACHER , AND Y. M ADAY, Periodic Schrödinger operators with local defects and spec-
+          tral pollution, submitted to SIAM J. Numer. Anal., (2012).
+ [7] G. C ARDONE , S. A. NAZAROV, AND C. P ERUGIA, A gap in the continuous spectrum of a cylindrical waveg-
+          uide with a periodic perturbation of the surface, arXiv.org, math.SP (2009).
+ [8] A. F IGOTIN AND Y. A. G ODIN, The computation of spectra of some 2D photonic crystals, J. Comput. Phys.,
+          136 (1997), pp. 585–598.
+ [9] A. F IGOTIN AND A. K LEIN, Localization of classical waves .1. Acoustic waves, Comm. Math. Phys., 180
+          (1996), pp. 439–482.
+[10]        , Localized classical waves created by defects, J. Statist. Phys., 86 (1997), pp. 165–177.
+[11]        , Localization of light in lossless inhomogeneous dielectrics, J. Opt. Soc. Am., A 15 (1998), pp. 1423–
+          1435.
+[12]        , Midgap defect modes in dielectric and acoustic media, SIAM J. Appl. Math., 58 (1998), pp. 1748–
+          1773 (electronic).
+[13] A. F IGOTIN AND P. K UCHMENT, Band-gap structure of spectra of periodic dielectric and acoustic media. I.
+          Scalar model, SIAM J. Appl. Math., 56 (1996), pp. 68–88.
+[14]        , Band-gap structure of spectra of periodic dielectric and acoustic media. II. Two-dimensional pho-
+          tonic crystals, SIAM J. Appl. Math., 56 (1996), pp. 1561–1620.
+[15] S. F LISS, Etude mathématique et numérique de la propagation des ondes dans des milieux périodiques lo-
+          calement perturbés, PhD thesis, Ecole Polytechnique, 5 2009.
+[16] S. F LISS AND P. J OLY, Exact boundary conditions for time-harmonic wave propagation in locally perturbed
+          periodic media, Appl. Numer. Math., 59(9), p. 21552178.
+[17]        , Wave propagation in locally perturbed periodic media (case with absorption): Numerical aspects, J.
+          Comput. Phys., (2011).
+[18] S. F LISS , P. J OLY, AND J.-R. L I, Exact boundary conditions for wave propagation in periodic media con-
+24                                                  S. Fliss
+
+
+           taining a local perturbation, Bentham Science Publishers, E-Book Series Progress in Computational
+           Physics (PiCP), Volume 1, 12 2009.
+[19] V. H OANG AND M. R ADOSZ, Absence of bound states for waveguides in 2D periodic structures,
+           arXiv:1111.4578v1.
+[20] J. D. J OANNOPOULOS , R. D. M EADE , AND J. N. W INN, Photonic Crystal - Molding the Flow of Light,
+           Princeton Univeristy Press, 1995.
+[21] S.G. J OHNSON AND J. D. J OANNOPOULOS, Photonic Crystal - The road from theory to practice, Kluwer
+           Acad. Publ., 2002.
+[22] P. J OLY, J.-R. L I , AND S. F LISS, Exact boundary conditions for periodic waveguides containing a local
+           perturbation, Commun. Comput. Phys., 1 (2006), pp. 945–973.
+[23] P. J OLY AND C. P OIRIER, A numerical method for the computation of electromagnetic modes in optical fibres,
+           Math. Methods Appl. Sci., 22 (1999), pp. 389–447.
+[24] Y. E. K ARPESHINA, Perturbation theory for the Schrödinger operator with a periodic potential, vol. 1663 of
+           Lecture Notes in Mathematics, Springer-Verlag, Berlin, 1997.
+[25] T. K ATO, Perturbation theory for linear operators, Classics in Mathematics, Springer-Verlag, Berlin, 1995.
+           Reprint of the 1980 edition.
+[26] P. K UCHMENT, Floquet theory for partial differential equations, vol. 60 of Operator Theory: Advances and
+           Applications, Birkhäuser Verlag, Basel, 1993.
+[27]         , The mathematics of photonic crystals (chapter 7), in Mathematical modeling in optical science,
+           vol. 22 of Frontiers in applied mathematics, SIAM, Philadelphia, 2001.
+[28]         , On some spectral problems of mathematical physics, in Partial differential equations and inverse
+           problems, vol. 362 of Contemp. Math., Amer. Math. Soc., Providence, RI, 2004, pp. 241–276.
+[29] P. K UCHMENT AND B. O NG, On guided waves in photonic crystal waveguides, in Waves in periodic and
+           random media (South Hadley, MA, 2002), vol. 339 of Contemp. Math., Amer. Math. Soc., Providence,
+           RI, 2003, pp. 105–115.
+[30] S. A. NAZAROV, Opening of a gap in the continuous spectrum of a periodically perturbed waveguide, Math-
+           ematical Notes, 87 (2010), pp. 738–756.
+[31] S. A. NAZAROV, Localized elastic fields in periodic waveguides with defects, J. Appl. Mech. Tech. Phys., 52
+           (2011), pp. 311–320.
+[32] L. PARNOVSKI, Bethe-Sommerfeld conjecture, Ann. Henri Poincaré, 9 (2008), pp. 457–508.
+[33] L. PARNOVSKI AND A. V. S OBOLEV, Bethe-Sommerfeld conjecture for periodic operators with strong per-
+           turbations, Invent. Math., 181 (2010), pp. 467–540.
+[34] D. G. P EDREIRA AND P. J OLY, A method for computing guided waves in integrated optics. I. Mathematical
+           analysis, SIAM J. Numer. Anal., 39 (2001), pp. 596–623 (electronic).
+[35]         , A method for computing guided waves in integrated optics. II. Numerical approximation and error
+           analysis, SIAM J. Numer. Anal., 39 (2001/02), pp. 1684–1711 (electronic).
+[36] V. N. P OPOV AND M. M. S KRIGANOV, Remark on the structure of the spectrum of a two-dimensional
+           Schrödinger operator with periodic potential, Zap. Nauchn. Sem. Leningrad. Otdel. Mat. Inst. Steklov.
+           (LOMI), 109 (1981), pp. 131–133, 181, 183–184.
+[37] M. R EED AND B. S IMON, Methods of modern mathematical physics v. I-IV, Academic Press, New York,
+           1972-1978.
+[38] K. S AKODA, Optical Properties of Photonic Crystals, Springer Verlag Berlin, 2001.
+[39] K. S CHMIDT AND R. K APPELER, Efficient computation of photonic crystal waveguide modes with dispersive
+           material, Opt. Express, 18 (2010), pp. 7307–7322.
+[40] M. M. S KRIGANOV, Proof of the Bethe-Sommerfeld conjecture in dimension 2, Dokl. Akad. Nauk SSSR,
+           248 (1979), pp. 39–42.
+[41]         , Multidimensional Schrödinger operator with periodic potential, Izv. Akad. Nauk SSSR Ser. Mat., 47
+           (1983), pp. 659–687.
+[42]         , The spectrum band structure of the three-dimensional Schrödinger operator with periodic potential,
+           Invent. Math., 80 (1985), pp. 107–121.
+[43] C. M. S OUKOULIS, Photonic band gaps and localization, Plenum Pub Corp, 1993.
+[44]         , Photonic band gap materials, Springer, 1996.
+[45] S. S OUSSI, Convergence of the supercell method for defect modes calculations in photonic crystals, SIAM J.
+           Numer. Anal., 43 (2005), pp. 1175–1201 (electronic).
+[46] M. VOROBETS, On the Bethe-Sommerfeld conjecture for certain periodic Maxwell operators, J. Math. Anal.
+           Appl., 377 (2011), pp. 370–383.
+[47] E. YABLONOVITCH , T. J. G MITTER , AND K. M. L EUNG, Photonic band structure: The face-centered-cubic
+           case employing nonspherical atoms, Phys. Rev. Lett., 67 (1991), pp. 2295–2298.
+

@@ -1,0 +1,147 @@
+{
+  "schema": "REDTEAM_EXACT_MECHANISMS_V1",
+  "matlab": "23.2.0.2365128 (R2023b)",
+  "pole": {
+    "mu": 1,
+    "rho": [
+      4,
+      1
+    ],
+    "lengths": [
+      0.78539816339744828,
+      1.5707963267948966
+    ],
+    "transfer": [
+      [
+        -2,
+        9.1848509936051484E-17
+      ],
+      [
+        -1.8369701987210297E-16,
+        -0.5
+      ]
+    ],
+    "determinant": 1,
+    "trace": -2.5,
+    "multipliers": [
+      -2,
+      -0.5
+    ],
+    "stable_dirichlet_ratio": 6.123233995736766E-17,
+    "shift": 0.39269908169872414,
+    "shifted_log_derivative": 2.0000000000000004,
+    "right_half_outward_dtn": -2.0000000000000004,
+    "other_fourier_lower_bound": 9.869604401089358,
+    "diagonal_error": 2.05379511849076E-16
+  },
+  "saturation": {
+    "ritz": [
+      1.8095238095238093,
+      1.0891089108910894,
+      1.0891089108910876
+    ],
+    "true_eigenvalue": 1,
+    "projected_residual": [
+      1.1102230246251565E-16,
+      5.9796398824481282E-16,
+      2.561774656693993E-15
+    ],
+    "full_residual": [
+      3.7240409135270758,
+      0.89108910891089088,
+      0.89108910891089066
+    ],
+    "increments": [
+      0.7204148986327199,
+      1.7763568394002505E-15
+    ],
+    "observed_ratio": 2.4657413981465538E-15,
+    "actual_error": 0.089108910891087634,
+    "conditional_formula": 3.000017763568394E-10
+  },
+  "shared_boundary": {
+    "bracket": [
+      1.00000001,
+      1.6168424211114507
+    ],
+    "dtn_bias": 0.001,
+    "exact_mu": 1.2595965218743874,
+    "wrong_bisection_mu": 1.2596893620340897,
+    "wrong_fzero_mu": 1.2596893620340894,
+    "solver_agreement": 2.2204460492503131E-16,
+    "true_mu_error": 9.2840159702234359E-5,
+    "true_k_error": 4.1360154699132679E-5
+  },
+  "band_edge": [
+    {
+      "delta": 0.01,
+      "multipliers": [
+        1.1051249219725026,
+        0.90487507802749723
+      ],
+      "unit_distance": 0.095124921972502774,
+      "eigenvector_condition": 20.024984394500983,
+      "residual": 3.1401849173675503E-16
+    },
+    {
+      "delta": 1E-6,
+      "multipliers": [
+        1.0010005001250588,
+        0.99900049987494133
+      ],
+      "unit_distance": 0.00099950012505867214,
+      "eigenvector_condition": 2000.0002498827782,
+      "residual": 1.9229626863835638E-16
+    },
+    {
+      "delta": 1E-10,
+      "multipliers": [
+        1.000010000050414,
+        0.999990000049586
+      ],
+      "unit_distance": 9.9999504139525186E-6,
+      "eigenvector_condition": 199999.99172593598,
+      "residual": 1.1102230246251565E-16
+    }
+  ],
+  "nonnormal": {
+    "P": [
+      [
+        0.5,
+        10
+      ],
+      [
+        0,
+        0.5
+      ]
+    ],
+    "rho": 0.5,
+    "operator_norm": 10.024937810560445,
+    "sum_101_terms": [
+      [
+        1.3333333333333333,
+        8.8888888888888875
+      ],
+      [
+        8.8888888888888875,
+        297.62962962962956
+      ]
+    ],
+    "analytic_22": 297.62962962962962,
+    "naive_rho_only_bound": 1.3333333333333333,
+    "stein_residual": 0
+  },
+  "identity": {
+    "near_eigenvalues": [
+      2,
+      2.000000000001
+    ],
+    "orthogonal_overlap": 0,
+    "rotated_single_overlap": 0.50000000000000011,
+    "subspace_singular_values": [
+      1.0000000000000002,
+      0.99999999999999967
+    ]
+  },
+  "assertions_passed": true
+}

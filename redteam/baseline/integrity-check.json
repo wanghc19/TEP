@@ -1,0 +1,114 @@
+{
+  "checked_before": 3047,
+  "checked_after": 3048,
+  "differences": [
+    {
+      "root": "/Users/whc/Documents/Work/epost",
+      "path": "research/explorations/interface-threshold/DECISIONS.md",
+      "before": {
+        "root": "/Users/whc/Documents/Work/epost",
+        "path": "research/explorations/interface-threshold/DECISIONS.md",
+        "bytes": 1311,
+        "sha256": "a72aef4603ee643e161aa69229915ae5dd9ebd0e34b84775cc1e32b04e3f960b"
+      },
+      "after": {
+        "root": "/Users/whc/Documents/Work/epost",
+        "path": "research/explorations/interface-threshold/DECISIONS.md",
+        "bytes": 2488,
+        "sha256": "e816799a091e253cb562e3280e99f9237981e42424c68a1432b5112a7e098bd9"
+      }
+    },
+    {
+      "root": "/Users/whc/Documents/Work/epost",
+      "path": "research/explorations/interface-threshold/README.md",
+      "before": {
+        "root": "/Users/whc/Documents/Work/epost",
+        "path": "research/explorations/interface-threshold/README.md",
+        "bytes": 1203,
+        "sha256": "e40d5bc98f5bce8a7eaf0c1c3ddb373cf6a0356ac4c8b4504a4da37b7e1a4c17"
+      },
+      "after": {
+        "root": "/Users/whc/Documents/Work/epost",
+        "path": "research/explorations/interface-threshold/README.md",
+        "bytes": 2228,
+        "sha256": "80b80ea6d125ec6b672e0fabac59e7b57dce13a740683bf3f13759aebcfc3e67"
+      }
+    },
+    {
+      "root": "/Users/whc/Documents/Work/epost",
+      "path": "research/explorations/interface-threshold/STATUS.md",
+      "before": {
+        "root": "/Users/whc/Documents/Work/epost",
+        "path": "research/explorations/interface-threshold/STATUS.md",
+        "bytes": 4540,
+        "sha256": "80e7996e52fffc4d90d384b35c5bda75a9599c5254d58928412025deda11350f"
+      },
+      "after": {
+        "root": "/Users/whc/Documents/Work/epost",
+        "path": "research/explorations/interface-threshold/STATUS.md",
+        "bytes": 8859,
+        "sha256": "27b0a3187cdb933a16b73d52b7b6145461162c3a2bfce54e8e39176e16f2931a"
+      }
+    },
+    {
+      "root": "/Users/whc/Documents/Work/epost",
+      "path": "research/explorations/interface-threshold/next_steps.md",
+      "before": {
+        "root": "/Users/whc/Documents/Work/epost",
+        "path": "research/explorations/interface-threshold/next_steps.md",
+        "bytes": 10122,
+        "sha256": "359a3fc6ba91e02450d279fc2a9a77fdeb6ee5d28d9bc1a5190958d3b3eb3836"
+      },
+      "after": {
+        "root": "/Users/whc/Documents/Work/epost",
+        "path": "research/explorations/interface-threshold/next_steps.md",
+        "bytes": 10384,
+        "sha256": "aeac15c24dc598f99334bbbd7a9f9f9697e05e0c7c0f09af607226d5eeec9d92"
+      }
+    },
+    {
+      "root": "/Users/whc/Documents/Work/epost",
+      "path": "research/explorations/interface-threshold/research_priority_decision.md",
+      "before": {
+        "root": "/Users/whc/Documents/Work/epost",
+        "path": "research/explorations/interface-threshold/research_priority_decision.md",
+        "bytes": 10954,
+        "sha256": "8af6b9217ec9e8aa2e6a112ca7d2f0d538284e7d8148c81254c8242ff909a146"
+      },
+      "after": {
+        "root": "/Users/whc/Documents/Work/epost",
+        "path": "research/explorations/interface-threshold/research_priority_decision.md",
+        "bytes": 11759,
+        "sha256": "bd5012544c1e558672fc9a4dbebea999dc4a0d9e530ac09ebf3ded4bc5e08495"
+      }
+    },
+    {
+      "root": "/Users/whc/Documents/Work/epost",
+      "path": "research/explorations/interface-threshold/rigorous_2d_bridge.md",
+      "before": null,
+      "after": {
+        "root": "/Users/whc/Documents/Work/epost",
+        "path": "research/explorations/interface-threshold/rigorous_2d_bridge.md",
+        "bytes": 35638,
+        "sha256": "9bc7630a8a0fe188b2227782a938bcedbaf41bcec623834eb80e8209205519ff"
+      }
+    },
+    {
+      "root": "/Users/whc/Documents/Work/epost",
+      "path": "research/explorations/interface-threshold/spectral_certification_alternatives.md",
+      "before": {
+        "root": "/Users/whc/Documents/Work/epost",
+        "path": "research/explorations/interface-threshold/spectral_certification_alternatives.md",
+        "bytes": 25033,
+        "sha256": "b44a9d39285e02e485d099b5c8d28a88b6f825713b0e7503c561a7b2e5cdddc0"
+      },
+      "after": {
+        "root": "/Users/whc/Documents/Work/epost",
+        "path": "research/explorations/interface-threshold/spectral_certification_alternatives.md",
+        "bytes": 29004,
+        "sha256": "83887c98a26f5929001bde51af300efc02986ed140b0accfad700b1482351348"
+      }
+    }
+  ],
+  "scope": "tracked and nonignored untracked regular files outside redteam in main and codex/epost"
+}

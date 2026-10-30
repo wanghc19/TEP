@@ -1,0 +1,130 @@
+{
+  "schema": "REDTEAM_QP_WRAP_V1",
+  "certified": false,
+  "parameters": {
+    "k": 1.5584378941820909,
+    "beta": 0.5,
+    "d": 1,
+    "periodic_axis": "y"
+  },
+  "proxy_parameters": {
+    "H": 1.1,
+    "proxy_dist": 0.2,
+    "N_side": 160,
+    "N_top": 160,
+    "N_proxy_edge": 80,
+    "M_pw": 32
+  },
+  "grid_sizes": [
+    79,
+    157
+  ],
+  "screening_thresholds": {
+    "value": 1E-11,
+    "gradient": 1E-10,
+    "hessian": 1E-8
+  },
+  "delta": [
+    9.5367431640625E-7,
+    3.7252902984619141E-9,
+    1.4551915228366852E-11
+  ],
+  "source": [
+    0,
+    -0.137
+  ],
+  "wrap_y": 0.363,
+  "fmm_used": false,
+  "levels": [
+    {
+      "nodes": 79,
+      "unwrapped": {
+        "value_max": 7.8510762982222479E-13,
+        "gradient_max": 1.3319172879500597E-10,
+        "hessian_max": 1.0851791167285607E-8,
+        "value_scale": 0.35808072488818604,
+        "gradient_scale": 0.50000862078097463,
+        "hessian_scale": 1.7168573154737081,
+        "above_screen": {
+          "value": false,
+          "gradient": true,
+          "hessian": true
+        }
+      },
+      "physical_seam": {
+        "value_max": 0,
+        "gradient_max": 0,
+        "hessian_max": 0
+      },
+      "wrapped": [
+        {
+          "delta": 9.5367431640625E-7,
+          "value_jump_max": 7.8501560548420555E-13,
+          "gradient_jump_max": 1.3319138460086679E-10,
+          "predicted_value_difference": 3.8300432438579124E-16,
+          "predicted_gradient_difference": 8.6077201682354972E-16
+        },
+        {
+          "delta": 3.7252902984619141E-9,
+          "value_jump_max": 7.8495320504795757E-13,
+          "gradient_jump_max": 1.3319134880400747E-10,
+          "predicted_value_difference": 5.9916151786425877E-16,
+          "predicted_gradient_difference": 9.3436581265112938E-16
+        },
+        {
+          "delta": 1.4551915228366852E-11,
+          "value_jump_max": 7.8486590367936987E-13,
+          "gradient_jump_max": 1.3319145440126941E-10,
+          "predicted_value_difference": 3.2009126840782331E-16,
+          "predicted_gradient_difference": 9.2598420673538981E-16
+        }
+      ]
+    },
+    {
+      "nodes": 157,
+      "unwrapped": {
+        "value_max": 9.7412205463185284E-13,
+        "gradient_max": 9.5908539553676689E-11,
+        "hessian_max": 1.2644646255590137E-8,
+        "value_scale": 0.35808072488818604,
+        "gradient_scale": 0.50002507457475165,
+        "hessian_scale": 1.7168573154737081,
+        "above_screen": {
+          "value": false,
+          "gradient": false,
+          "hessian": true
+        }
+      },
+      "physical_seam": {
+        "value_max": 0,
+        "gradient_max": 0,
+        "hessian_max": 0
+      },
+      "wrapped": [
+        {
+          "delta": 9.5367431640625E-7,
+          "value_jump_max": 9.7435115343974136E-13,
+          "gradient_jump_max": 9.5908620311412123E-11,
+          "predicted_value_difference": 4.3544014819998173E-16,
+          "predicted_gradient_difference": 1.1558169987179009E-15
+        },
+        {
+          "delta": 3.7252902984619141E-9,
+          "value_jump_max": 9.742459384843113E-13,
+          "gradient_jump_max": 9.5908690538687223E-11,
+          "predicted_value_difference": 5.3575100224280787E-16,
+          "predicted_gradient_difference": 9.4992402243296016E-16
+        },
+        {
+          "delta": 1.4551915228366852E-11,
+          "value_jump_max": 9.7427132134774214E-13,
+          "gradient_jump_max": 9.5908616595567053E-11,
+          "predicted_value_difference": 4.1923146919603077E-16,
+          "predicted_gradient_difference": 1.5968334766766764E-15
+        }
+      ]
+    }
+  ],
+  "runtime_seconds": 0.44948925,
+  "interpretation": "A small physical seam mismatch is an enforced periodization identity. An unwrapped mismatch concerns this numerical kernel, not the exact-kernel trial or the candidate spectral error."
+}

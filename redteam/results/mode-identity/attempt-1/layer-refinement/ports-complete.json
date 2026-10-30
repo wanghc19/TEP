@@ -1,0 +1,32 @@
+{
+  "status": "NUMERICAL_CAUCHY_DIAGNOSTIC",
+  "ports": [
+    {
+      "x": -0.5,
+      "value_relative_difference": 9.3600962201712818E-11,
+      "global_x_derivative_relative_difference": 4.8887393059952233E-8,
+      "global_y_derivative_relative_difference": 2.0274505036912103E-8,
+      "lead_value_relative_difference": 9.3540532960524238E-11,
+      "lead_global_x_derivative_relative_difference": 4.5212615523077417E-8,
+      "lead_global_y_derivative_relative_difference": 2.0274411714665129E-8,
+      "F_transmission_value": 5.2831479028573817E-16,
+      "B_transmission_value": 6.6864717505396469E-14,
+      "F_transmission_global_x_derivative": 7.9360693854424319E-8,
+      "B_transmission_global_x_derivative": 3.1817948586410243E-13
+    },
+    {
+      "x": 0.5,
+      "value_relative_difference": 1.208482307000238E-10,
+      "global_x_derivative_relative_difference": 8.4085745034200336E-8,
+      "global_y_derivative_relative_difference": 5.8499668707518542E-8,
+      "lead_value_relative_difference": 1.2080596479585132E-10,
+      "lead_global_x_derivative_relative_difference": 6.62954571851736E-8,
+      "lead_global_y_derivative_relative_difference": 5.8499638022433878E-8,
+      "F_transmission_value": 4.7074585441161346E-16,
+      "B_transmission_value": 6.4684632358923629E-14,
+      "F_transmission_global_x_derivative": 1.1761539946533778E-7,
+      "B_transmission_global_x_derivative": 4.0454048896911815E-13
+    }
+  ],
+  "matlab_seconds": 6.813696625
+}
