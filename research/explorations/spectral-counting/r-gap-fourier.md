@@ -25,7 +25,15 @@
 
 这里的材料是精确有理输入 $\alpha=3/25,1/5$ 所定义的预定解析几何。旧 MATLAB 几何常量的二进制执行值与旧场的几何误差尚未整体包围。共同 bulk gap 也不排除半条带 Dirichlet 表面态；旧端点惯性 $0\to1$ 仍是普通离散证据，I9/I10 的旧半径证据等级未改变。
 
-唯一开放事项及下一步见 [[research/explorations/spectral-counting/STATUS]]：优先解决 G2 的半条带排谱，并把独立复核提供的显式 Robin 补空间常数接入 C1。不能用本轮 bulk 证书替代其中的半条带谱距输入。主路线已成功，未为扩大工作量再运行大规模 C1 实验。
+唯一开放事项及下一步见 [[research/explorations/spectral-counting/STATUS]]。初始主路线成功后，父任务追加推进 G2；下面记录其独立完成结果。不能用 bulk 证书替代半条带谱距输入。
+
+## G2 追加成果：实际切口的半条带排谱
+
+反射捷径被严格排除：未旋转三叶形关于半整数切口的竖直反射改变材料，尽管固定 $\beta$ 被保持。替代路线 [[research/explorations/spectral-counting/s-half-gap|HD1–HD2]] 用单胞 Dirichlet 第一模态与 Neumann 第二模态夹逼任意长整胞段，再以统一预解式界和弱极限进入半条带；排除全部谱类型。
+
+实际25维可靠计算给两侧 $\lambda_1^D<2.30$、$\lambda_2^N>2.60$；两套材料积分和惯性算法全部通过，独立人工复核 §11 为 **PASS**。所以实际切口两侧 Dirichlet 算子在 $[2.30,2.60]$ 无谱，目标窗谱距至少 $1/10$、加权预解式范数至多10。精确 DtN 在目标窗的相应复邻域解析，无 Dirichlet 极点。同一夹逼也给更宽的共同 bulk gap，未修改原 G1 证书。
+
+输出及复现见 [[test/spectral-counting/half-gap-v1/README]]；计算峰值53.5MB、模块载入后约0.186秒。G2 已关闭；中心连续端点惯性仍需独立证书。当前另写 [[research/explorations/spectral-counting/s-box-count|有限箱 DtN 夹逼]]，用新可靠有限箱输入代替旧 FEM 的误差评价；计数桥梁在独审接收前不作完成声明。
 
 ## 文献、资源与审查
 

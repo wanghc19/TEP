@@ -1,0 +1,3 @@
+{"side": "left", "pass": true, "trial": "[2.18074508037187728899610051292545587646022510440085081119 +/- 1.51e-57]", "congruence_negative": 1, "ldl_negative": 1}
+{"side": "right", "pass": true, "trial": "[2.18815871294729415044590510653375900106901945283567449425 +/- 3.17e-57]", "congruence_negative": 1, "ldl_negative": 1}
+{"status": "HALF_GUIDE_DIRICHLET_GAP_PROVED", "resources": {"elapsed_seconds": 0.18508533301064745, "peak_rss_bytes": 53526528, "storage_budget_bytes": 92444768}}

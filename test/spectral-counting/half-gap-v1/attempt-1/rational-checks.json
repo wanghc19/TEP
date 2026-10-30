@@ -1,0 +1,36 @@
+{
+  "status": "SAVED_RATIONAL_CHECKS_PASSED",
+  "time_utc": "2026-10-30T07:40:49.208803+00:00",
+  "source": "certify-01.json",
+  "rows": [
+    {
+      "side": "left",
+      "checks": {
+        "dirichlet_trial_below_barrier": true,
+        "congruence_margin_positive": true,
+        "all_ldl_pivots_nonzero": true,
+        "one_negative_pivot": true,
+        "dimension_consistent": true
+      },
+      "dominance_margin_lower_display": 4.176490976188739,
+      "minimum_pivot_abs_lower_display": 4.372679739814402
+    },
+    {
+      "side": "right",
+      "checks": {
+        "dirichlet_trial_below_barrier": true,
+        "congruence_margin_positive": true,
+        "all_ldl_pivots_nonzero": true,
+        "one_negative_pivot": true,
+        "dimension_consistent": true
+      },
+      "dominance_margin_lower_display": 4.122246062432626,
+      "minimum_pivot_abs_lower_display": 4.327627994736242
+    }
+  ],
+  "distance_from_exact_rational_barriers": {
+    "numerator": "1",
+    "denominator": "10"
+  },
+  "scope": "Read-only rational checks of stored signs and exact barrier difference; not an independent geometry proof."
+}
