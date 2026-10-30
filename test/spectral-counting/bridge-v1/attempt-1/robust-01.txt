@@ -1,0 +1,10 @@
+{"stage": "robust_lead", "side": "left", "pass": true}
+{"stage": "robust_lead", "side": "right", "pass": true}
+{"stage": "fresh_laurent_geometry", "shape": "left", "count": 455}
+{"stage": "fresh_laurent_geometry", "shape": "right", "count": 455}
+{"stage": "fresh_laurent_geometry", "shape": "center", "count": 455}
+{"stage": "robust_box", "boundary": "D", "endpoint": "2.40", "pass": true, "negative": 6}
+{"stage": "robust_box", "boundary": "D", "endpoint": "2.46", "pass": true, "negative": 7}
+{"stage": "robust_box", "boundary": "N", "endpoint": "2.40", "pass": true, "negative": 6}
+{"stage": "robust_box", "boundary": "N", "endpoint": "2.46", "pass": true, "negative": 7}
+{"status": "ROBUST_CONTINUOUS_MODE_COUNT_PROVED", "resources": {"elapsed_seconds": 46.44113449996803, "peak_rss_bytes": 288866304, "storage_budget_bytes": 95382880}}

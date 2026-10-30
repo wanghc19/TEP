@@ -1,0 +1,40 @@
+{
+  "recorded_utc": "2026-10-30T08:50:33.953340+00:00",
+  "branch": "codex/dot",
+  "actual_root": "/Users/whc/Documents/Work/dot-research",
+  "scientific_status": "ROBUST_CONTINUOUS_MODE_COUNT_PROVED",
+  "rational_audit_status": "BINARY_LITERALS_COEFFICIENTS_AND_ROBUST_SIGNS_VERIFIED",
+  "all_seven_python_sources_ast_parse": true,
+  "python_version": "Python 3.14.4",
+  "clean_mathematical_input_rebuild": {
+    "command": "robust_count.py",
+    "read_saved_scientific_outputs": false,
+    "resources": {
+      "elapsed_seconds": 46.44113449996803,
+      "peak_rss_bytes": 288866304,
+      "storage_budget_bytes": 95382880
+    }
+  },
+  "ldl_pivots_checked": 1870,
+  "storage_bytes_excluding_git": 88185697,
+  "git_pointer_allowance_bytes": 1048576,
+  "storage_budgeted_bytes_before_this_manifest": 89234273,
+  "storage_limit_bytes": 1000000000,
+  "max_recorded_main_process_rss_bytes": 288866304,
+  "matlab_started_this_round": false,
+  "octave_numerical_computation_run": false,
+  "parallel_processes_used": false,
+  "new_mat_files": 0,
+  "temporary_extracted_text_removed": [
+    "research/tmp/gap-20261030/trefethen.txt",
+    "research/tmp/gap-20261030/herbst.txt"
+  ],
+  "unchanged_user_files": [
+    ".codex/config.toml",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "redteam/AGENTS.md",
+    "test/AGENTS.md"
+  ],
+  "protected_scope": "Task changes only on codex/dot; no push; user files never staged."
+}

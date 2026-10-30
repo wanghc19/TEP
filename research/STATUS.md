@@ -1,6 +1,6 @@
 # Research status
 
-2026-10-30，自主研究的 [[research/explorations/spectral-counting/r-gap-fourier|共同谱隙结果]]：当前精确解析模型两侧周期端、$\beta=1/2$、$\mu\in[2.40,2.46]$ 已有连续谱隙的可靠有限证书。25 维 Fourier 块覆盖全部 Floquet 参数；两种材料积分和惯性算法均通过，完整补空间与参数间变化有解析界。新增 F6 连接到原有限缺陷的本质谱排除；未把它当作半条带无极点、导模存在或连续计数。G1 关闭，G2/C1 仍见 [[research/explorations/spectral-counting/STATUS|唯一账目]]。本轮仅串行 Python/Arb，未启动 MATLAB，未提升 I9/I10 旧误差半径的证据等级。
+2026-10-30，自主研究的 [[research/explorations/spectral-counting/r-gap-fourier|连续简单导模结果]]：当前精确解析模型、固定 $\beta=1/2$，连续纤维算子在 $\mu=k^2\in(2.40,2.46)$ 中恰有一个简单条带 $L^2$ 导模，端点无谱。G1完整周期谱隙、G2实际半条带排谱、BC1–BC3有限箱夹逼及两套实际材料积分复算均通过独立审查；共同 bulk／半条带 gap 为 $[2.30,2.60]$。补充鲁棒证书覆盖源码 binary64 字面量的解析模型及显式几何邻域，并已从数学常量重建整条证明输入。旧逐位求值、网格和 I9/I10 高精度误差半径未认证，见 [[research/explorations/spectral-counting/STATUS|唯一账目]]。本轮仅串行 Python/Arb，峰值约289MB，未启动 MATLAB、未改旧求解器。
 
 2026-10-30，新增 [[research/weekly-literature/README|每周文献调研归档]]：按用户给定的 10/01、10/09、10/16、10/23、10/30 五批核验 13 篇，新增 12 份合法公开全文、复用 1 份，书目与下载校验清单已同步。[[research/weekly-literature/synthesis|综合评估]] 区分显式谱界、残差全范数工具、胞元 BIE 与周期端 DtN 的借鉴价值和创新性重叠，并修正原简报的版本/编号/假设范围。未发现可直接关闭当前二维无限导模全部认证门的单篇结果；不作全球首创判定。仅文献与研究入口更新，未改模型、理论证明或实验代码，未运行 MATLAB，未改变 I9/I10/谱计数的证据等级。
 

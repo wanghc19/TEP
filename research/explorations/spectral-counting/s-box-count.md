@@ -133,4 +133,4 @@ $$
 $n_L^D(2.40)=n_L^N(2.40)=6$、
 $n_L^D(2.46)=n_L^N(2.46)=7$；上下界矩阵、可靠合同和区间 LDL 全部通过。B7 的独立几何积分重建全部1365个矩后，再次通过全部8个矩阵。独立人工复核§12已接收 BC1–BC3、B5–B6、主程序及实际输出，故精确解析模型的连续导模计数为1。B7复算的后续审查范围以同一复核报告为准。
 
-**Completion report.** Task mode: `Proof from scratch`。Target: 本文新 BC1–BC3 Proof 块及必要定义、矩阵界、真实几何求积、B7复算。Source authority: 当前 SC1、F1–F6、HD1–HD2；无修改既有证明。External references: 仅标准变分、紧嵌入及自伴 Fredholm 基础；所有专门比较步骤在此直接证明。Status: BC1–BC3及实际主证书经独立人工验收 PASS，连续计数为1；B7为另行保存的补充可靠复算。模型桥接和旧候选误差不由该状态自动解决。
+**Completion report.** Task mode: `Proof from scratch`。Target: 本文新 BC1–BC3 Proof 块及必要定义、矩阵界、真实几何求积、B7复算。Source authority: 当前 SC1、F1–F6、HD1–HD2；无修改既有证明。External references: 仅标准变分、紧嵌入及自伴 Fredholm 基础；所有专门比较步骤在此直接证明。Status: BC1–BC3及实际主证书经独立人工验收§12 PASS，连续计数为1；B7及补充复算经反向终审§13 PASS。模型桥接见 [[research/explorations/spectral-counting/s-model-bridge]]；旧候选误差不由该状态自动解决。
