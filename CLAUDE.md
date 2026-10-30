@@ -1,170 +1,113 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working in this repository.
+Guidance for Claude Code in this repository. Claude Code does not load `AGENTS.md` automatically, but they are binding. If this file and an `AGENTS.md` disagree, the `AGENTS.md` wins.
 
-## Instruction files to read first
+## Read first
 
-Claude Code does not load `AGENTS.md` files automatically, but they are binding here:
-
-- `AGENTS.md` (repo root): applies everywhere. It covers code style, MATLAB source documentation, LaTeX cleanup, validation, and the output contract.
-- `README.md` (repo root): project entry points, mathematical language, file naming, and historical-directory policy.
-- `test/AGENTS.md`: read before planning, creating, debugging, or running anything under `test/`. It covers run budgets, attempt lifecycle, and MATLAB runtime portability.
-- `research/AGENTS.md`: read before touching `research/`. It covers authority order, research depth, notation, naming, temporary material, and handoff.
-- `ref/AGENTS.md`: read before adding, renaming, or removing references.
-
-If this file and an `AGENTS.md` disagree, the `AGENTS.md` wins. The key rules are summarized below.
+- `AGENTS.md` (root): scope, naming, code and math documentation, execution, reproducibility, LaTeX cleanup.
+- `README.md` (root): entry points, terminology for math statements, file naming, historical directories.
+- `test/AGENTS.md`: before planning, creating, debugging, or running anything under `test/`.
+- `research/AGENTS.md`: before touching `research/`.
+- `ref/AGENTS.md`: before adding, renaming, or removing references.
 
 ## Long tasks: save work in stages
 
-Sessions can be cut off at any moment by usage limits. In one past session, 2 hours of thinking produced no file output, and then the 5-hour limit stopped the work and all of it was lost. Unsaved reasoning is lost reasoning. For any task that needs long thinking (theory, proofs, method design, large code or documents):
+Usage limits can cut a session off at any moment. One past session spent 2 hours thinking without writing a file, then hit the 5-hour limit and lost everything. For long tasks (theory, proofs, method design, large code or documents):
 
-- **Plan in small deliverables.** Before deep work, split the task into stages that can each be written down on their own, such as a section, a lemma, a module, or a script stage. Write the plan to a file first, for example a `p-` plan note or a skeleton with placeholder sections.
-- **Write after each stage.** When a stage is done, write it to its target file right away. Do not keep finished conclusions only in thinking. Aim to touch a file at least every 20–30 minutes of work. If nothing is ready to deliver yet, write a working note instead.
-- **Keep thinking bounded.** Do not do one huge thinking pass that tries to solve the whole task at once. Think about the current stage, write it out, then move to the next. If a hard step needs a long derivation, write the partial derivation, attempts, and dead ends to a working note before continuing.
-- **Mark partial state honestly.** Label unfinished parts as `TODO`, `draft`, or `unverified`, and keep a short progress section (done / next / open questions) at the top of the main file. Then a fresh session can resume from the files alone.
-- **Where to write:**
-  - Durable results go in their final location: `research/projects/...` or the active `test/i*/...` directory.
-  - Scratch working notes go in `research/tmp/` or `tmp/`. When a note becomes a durable conclusion, move its content to the right place.
-- These checkpoints are local file writes only. They do not authorize commits; commit only when asked.
+- Split the task into stages that can each be written down alone. Write the plan (or a skeleton with placeholder sections) to a file first.
+- Write each finished stage to its target file right away. Touch a file at least every 20–30 minutes; if nothing is deliverable, write a working note (partial derivations, attempts, dead ends).
+- Think about one stage at a time, not the whole task in one pass.
+- Label unfinished parts `TODO`, `draft`, or `unverified`, and keep a short progress section (done / next / open questions) at the top of the main file so a new session can resume from files alone.
+- Durable results go to their final location; scratch notes go to `research/tmp/` or `tmp/`.
+- Checkpoints are local writes only. Commit only when asked.
 
 ## Project summary
 
-This is a MATLAB codebase plus research workspace for **2D periodic dielectric waveguides with $y$-periodicity**. The topics are Bloch-mode eigenvalue problems, transmission eigenvalue problems (TEP), forced scattering, and line-defect guided modes. The core numerical framework is trace matching. It couples Rayleigh expansions in homogeneous regions to Bloch-mode (outgoing Cauchy/trace) expansions in periodic half-leads. Each lead-cell BIE is a Müller system. Its quasi-periodic Green function comes from the **augmented Method of Fundamental Solutions** (proxy sources plus plane-wave expansions).
+MATLAB code and research on **2D periodic dielectric waveguides with $y$-periodicity**: Bloch modes, transmission eigenvalue problems (TEP), forced scattering, line-defect guided modes. The BIE route uses trace matching: Rayleigh expansions in homogeneous regions are coupled to Bloch-mode expansions in periodic half-leads; each lead-cell BIE is a Müller system with a quasi-periodic Green function from the augmented Method of Fundamental Solutions (MFS). The other route is FEM + DtN.
 
-The current activity is mostly research. The project `research/projects/eig-apost/` studies **a posteriori error estimation for fixed-$\beta$ line-defect guided-mode eigenvalues**. Its two end goals are:
+The active project is `research/projects/eig-apost/`: computing fixed-$\beta$ line-defect guided-mode candidates and a posteriori error / spectral-distance estimates through BIE and FEM + DtN routes. Experiments live in `test/i*/`; design and review notes in `research/projects/eig-apost/implementation/i*/`. Shared packages are not modified by this research.
 
-1. Produce a numerical candidate for a continuous eigenvalue.
-2. Estimate, and ideally bound, the candidate's distance to the true spectrum.
+Current status lives in `research/STATUS.md`, `research/projects/eig-apost/STATUS.md`, and the stage READMEs under `implementation/`. Do not rely on numbers copied elsewhere.
 
-The project runs in stages I1–I9. Each stage's experiments live under `test/i*/`; its design and review notes live under `research/projects/eig-apost/implementation/i*/`. Later stages add curved-$P_2$ FEM reference solves, FMM-accelerated pipelines, and spectral-distance estimates with RT2 fluxes. The production packages are **not** modified by this research.
-
-For the current status, read `research/STATUS.md` and `research/projects/eig-apost/STATUS.md`. For the current I9 state, read `research/projects/eig-apost/implementation/i9/README.md`. Do not rely on numbers copied elsewhere.
-
-## Repository layout
+## Layout
 
 ```
-+bloch/   Bloch-mode data for one periodic lead cell (Rayleigh channels, S_cell, modes, traces)
-+kernel/  Free-space and quasi-periodic Helmholtz Green functions (augmented MFS), Kress splits
-+op/      construct_A_QP: quasi-periodic Müller BIE matrix for one cell
-+geom/    Contour construction (star / ellipse / circle), inside tests, geometry cache
-+scan/    Generic 1D scalar scan + recursive dip refinement
-+quad/    Kress product quadrature weights (quad_kress_rvec)
-+utils/   Bessel/Hankel derivatives, trigonometric interpolation grid
-+viz/     Column-lattice plotting helpers (geometry, cell grids, masks, tiles, overlays)
-
-benchmark/   bloch/: Bloch package tests; qpgreen/: MFS vs Ewald/Linton QP-Green benchmarks
-crystal_2d/  Historical 2D crystal, empty-defect and line-defect workflows and validation
-waveguide_1d/ Historical 1D waveguide/TEP workflows, including tep_1d_scan_local.m
-test/        Agent experiments: test/i1 ... test/i9 (eig-apost stages), test/archive/legacy-route-v1
-research/    Theory workspace (Chinese-language notes, Obsidian vault): projects/, planning/, archive/
-draft/       Paper draft "A Boundary Integral Trace-Subspace Formulation for Periodic
-             Line-Defect Waveguides" (draft.tex, appendixA.tex) + draft/examples/ run scripts
-pre/         Presentations (pre1–pre3) and the LaTeX report (pre/report/)
-legacy/      Historical theory notes, manuscripts and related material
-ref/         Reference catalog (README.md, reference.bib); PDFs via ref/ref_data/ (symlink, untracked)
-.agents/skills  Shared agent skills: rigorous-proof, notation-discipline, commit-draft
-.codex/      Codex agent role configs (not used by Claude Code)
-tmp/         Untracked scratch (ignored by git)
++bloch/ +kernel/ +op/ +geom/ +scan/ +quad/ +utils/ +viz/   shared MATLAB packages (still in use)
+benchmark/   bloch/ and qpgreen/ tests and benchmarks
+test/        agent experiments: test/i*/, test/archive/
+research/    Chinese-language theory workspace (Obsidian vault); explorations/ for independent studies
+redteam/     cross-check of the two numerical routes (see its README)
+draft/       paper draft, draft/examples/, draft/fem-dtn-epost/ (FEM + DtN lecture notes)
+pre/         presentations and report
+ref/         reference catalog; PDFs via ref/ref_data/ (untracked symlink)
+.agents/skills  rigorous-proof, notation-discipline, commit-draft
+tmp/         untracked scratch
 ```
 
-Every package directory except `+op`, `+quad`, and `+utils` has a `README.md`. Each one documents the public functions, data structures, conventions, and a typical workflow. Read the relevant one before changing or calling a package.
+Packages `+bloch`, `+kernel`, `+geom`, `+scan`, `+viz` have a `README.md`; read it before changing or calling the package.
 
-`legacy/`, `crystal_2d/`, and `waveguide_1d/` are historical directories. Exclude
-them from routine reading and searches, and do not use them as current theory,
-implementation examples, or result baselines. Consult them only when the user
-explicitly requests historical investigation, reproduction, or migration.
-The root `+kernel/`, `+bloch/`, and other shared packages remain in use.
+`legacy/`, `crystal_2d/`, and `waveguide_1d/` are historical. Do not routinely read or search them, and do not use them as theory, examples, or baselines unless the user explicitly asks for historical investigation, reproduction, or migration.
 
 ## How to run
 
-There is no build step. Choose the entry point and reproduction command from
-the selected current experiment or tutorial. The former root entry points are
-historical: the five 2D workflows are now in `crystal_2d/`, and
-`tep_1d_scan_local.m` is in `waveguide_1d/`. They are not default run targets.
+No build step. Each `test/i*/<experiment>/` README gives its entry point and reproduction command; some use a monitoring launcher (for example `run_bound.py`). Scripts in subdirectories need the repo root on the path (`addpath(pwd)`).
 
-Scripts in subdirectories need the repo root on the path, so call `addpath(pwd)` from the root first. Some scripts do this themselves, for example `benchmark/qpgreen/*` and `draft/examples/*`.
-
-```matlab
-bloch_test_F, bloch_test_S, bloch_test_modes, bloch_test_empty_cell   % benchmark/bloch/
-test_qpgreen_axis_swap, qpgreen_linton_tables, qpgreen_mfs_eval_bench % benchmark/qpgreen/
-run_tep_band_structure, run_tep_fixed_beta_k_scan                     % draft/examples/
-```
-
-Each `test/i*/<experiment>/` directory has a README that gives its entry point and the exact reproduction command. Some recent experiments are started through a Python or shell launcher that monitors MATLAB, for example `test/i9/fem-bound-v1/run_bound.py`, `test/i8/pipeline-v1/run_pipeline.py`, and `test/i7/run_matlab_monitored.sh`. The index `test/README.md` covers I1–I3. For later stages, use `research/projects/eig-apost/implementation/README.md` and the stage READMEs.
-
-### MATLAB / Octave policy
-
-- The local install is MATLAB R2023b at `/Applications/MATLAB_R2023b.app/bin/matlab`. In zsh, `matlab` is an alias, so use the full path in non-interactive commands. Run it non-interactively with `-batch "..."`.
-- Validate numerically in MATLAB. MFS workflows and anything that depends on MATLAB-specific behavior (for example `lsqminnorm`) **must** be validated in MATLAB.
-- Before launching a run under `test/`, estimate its wall time and peak memory. The default budget is 30 min soft, 40 min hard, and 2 GiB, unless the user authorizes a different budget in advance. See `test/AGENTS.md`.
-- Use Octave only as a fallback rough sanity check: `conda run -n octave octave --eval "..."`. Interactive fallback is `conda activate octave` followed by `octave --no-line-editing`. Never treat an Octave result as final validation, and never use Octave plotting or GUI.
-- Never claim MATLAB was run unless it actually was. Report MATLAB and Octave commands and results separately.
-- The Conda environment `octave` is also the project's Python environment.
+- MATLAB R2023b: `/Applications/MATLAB_R2023b.app/bin/matlab -batch "..."` (use the full path; `matlab` is a zsh alias).
+- Run MATLAB code in MATLAB; Octave is not a substitute for validation (MFS and `lsqminnorm` behavior must be checked in MATLAB).
+- Never claim a run or validation that did not happen. Ask before installing any dependency.
+- The Conda env `octave` is only for running Python.
 
 ## Conventions that are easy to get wrong
 
-- **L/R and +/- mean different things.** `L`/`R` are the left and right walls of *one lead cell*. `+`/`-` are the center ports and the positive and negative half-leads. `c^+`/`c^-` are right-going and left-going center Rayleigh coefficients, not leads.
-- `S_cell` convention: `[b^L; a^R] = [R_L, T_RL; T_LR, R_R] * [a^L; b^R]`. Here `a` is the right-going amplitude and `b` is the left-going amplitude. The direct cell phase is added only to the transmission blocks, inside `construct_S`.
-- The BIE density is `eta = [tau; -sigma]`. `F_L` and `F_R` map `eta` to *scattered* outgoing coefficients only.
-- Rows of the contour matrix `C`: `x, x', x'', y, y', y''`. The outward normal is `(y', -x')/speed`, using counter-clockwise orientation.
-- `kernel.precomp_proxy` uses computational coordinates that are periodic in the first coordinate. For physical $y$-periodicity, set `pars1.periodic_axis = 'y'`, set `pars1.d` to the $y$ period, and set `pars2.H` to the half-width after the swap.
-- Keep selector inputs as char or string scalars: `flag_geom` (`'star'|'ellipse'|'circle'`), `portSign` (`'+'|'-'`), and periodic axis (`'x'|'y'`). Do not convert them into structs.
-- Outgoing Hankel functions use `besselh(n, 1, z)`.
-- Shared parameters: `beta` (Bloch phase; `beta_m = beta + 2*pi*m/d`), `d` (y-period), `L` (lead-cell x-period), `M` (Rayleigh half-width; `K = 2M+1`), `ntot` (boundary nodes), and `kext`/`kint` (exterior and interior wavenumbers). `pars2` holds `H, proxy_dist, N_side, N_top, N_proxy_edge, M_pw`.
+- `L`/`R` are the left and right walls of one lead cell. `+`/`-` are the center ports and the positive/negative half-leads. `c^+`/`c^-` are right-/left-going center Rayleigh coefficients.
+- `S_cell`: `[b^L; a^R] = [R_L, T_RL; T_LR, R_R] * [a^L; b^R]`, with `a` right-going and `b` left-going. The direct cell phase is added only to the transmission blocks, inside `construct_S`.
+- BIE density is `eta = [tau; -sigma]`. `F_L`, `F_R` map `eta` to *scattered* outgoing coefficients only.
+- Contour matrix `C` rows: `x, x', x'', y, y', y''`. Outward normal is `(y', -x')/speed` (counter-clockwise).
+- `kernel.precomp_proxy` is periodic in the first coordinate. For physical $y$-periodicity set `pars1.periodic_axis = 'y'`, `pars1.d` = $y$ period, `pars2.H` = half-width after the swap.
+- Selector inputs stay char/string scalars: `flag_geom` (`'star'|'ellipse'|'circle'`), `portSign` (`'+'|'-'`), periodic axis (`'x'|'y'`). Do not turn them into structs.
+- Outgoing Hankel functions: `besselh(n, 1, z)`.
+- Parameters: `beta` (Bloch phase, `beta_m = beta + 2*pi*m/d`), `d` ($y$-period), `L` (lead-cell $x$-period), `M` (Rayleigh half-width, `K = 2M+1`), `ntot` (boundary nodes), `kext`/`kint`.
 
-## Code conventions (summary of root AGENTS.md)
+## Code and documentation
 
-- Do not change the mathematical model or function interfaces unless explicitly asked. Keep changes localized, and preserve numerical results up to floating-point roundoff.
-- Use 2-space indentation and write comments in English. Name local helpers `LOCAL_*`. Prefer readable vectorization.
-- Make substantial new files function files with subfunctions, not scripts with trailing local functions, so that the Octave fallback works.
-- Header rules:
-  - Script header: put the header before any code.
-  - Function help text: put it immediately after the `function` line, starting in column 1.
-  - Begin with an introduction, followed by `Input` and `Output` for functions. These are the only required header sections; follow root `AGENTS.md` for details and LaTeX explanations of complex computations and interfaces.
-- Stage markers look like `% --- stage N: brief description ---`.
-- Group many `LOCAL_` helpers under `%% ==================== Role name ====================`, followed by a one-sentence description.
-- Document user-adjustable parameters where they are defined, for example geometry, scan intervals, grid sizes, `ntot`, and refinement or stopping criteria. Add LaTeX-style formulas when they clarify kernels, jump relations, or block assembly.
-- For a nontrivial refactor, summarize the plan before coding.
-- After edits, report what changed, the files and functions you touched, the checks you ran with their results, and the expected successful outcome. Do not paste whole files.
+- Preserve the mathematical model, function interfaces, and unrelated changes unless authorized. Keep edits local; explain nontrivial refactors before coding and preserve numerical behavior.
+- 2-space indentation, English comments, `LOCAL_*` helpers, readable implementations.
+- Source documentation starts with a concise introduction. Function files: help text right after the signature, then `Input` and `Output` (the only required labels). Scripts: introduction before executable code, describing adjustable parameters and outputs.
+- Use LaTeX formulas to define core mathematical objects in complex computations and link symbols to code. Mention source algorithms or earlier files only when actually used.
+- Names must be short and meaningful, follow the directory's habits, and avoid cosmetic renaming. Every abbreviation in a file or directory name must be expanded: at the top of the file (function files: opening help text), or at the top of the directory's `README.md`; for binary files, list them in the containing directory's `README.md`.
+- Access `.git` only through Git commands; never edit or remove Git files or lock files by hand.
+- After edits report the changes, checks actually run, results, and unresolved limitations. Edit in place; do not paste whole files.
 
-### File naming
+## Terminology in results
 
-Follow root `README.md` and the applicable directory guidance. Use short,
-meaningful names without forcing a prefix template or renaming existing files
-for cosmetic consistency.
+- Estimate computed numerically: "error estimate" / "spectral-distance estimate".
+- Guaranteed bound with a mathematical guarantee: "reliable upper bound" (guaranteed upper bound); if it depends on an unverified condition, say "upper bound valid under the listed conditions" and list them.
+- Field, candidate, or parameter kept unchanged: "fixed" / "held fixed". Enlarging the FEM space: "扩充有限元空间".
+- Do not use "严格认证", "冻结", or "frozen" for these meanings. Quotations, titles, code identifiers, and historical labels stay as written.
 
-## `test/` experiments (summary of test/AGENTS.md)
+## `test/` experiments
 
-- Each experiment gets its own subdirectory, normally `test/i<stage>/<name>-v<N>/` or `.../<name>-a<N>/`. By default the active experiment directory is the only place you may write. Keep logs, figures, and reports inside it, and do not modify packages or main code from an experiment.
-- One attempt directory is reused for implementation, debugging, and reruns of the same method. Operational failures do not consume the attempt. Open a new attempt only after a complete run shows that the *method* failed.
-- MATLAB entry points must run from MATLAB source alone:
-  - Do not read Markdown, README, manifest, Git, hash, or report files.
-  - Do not discover the repo root or depend on the repo layout.
-  - Put parameters in MATLAB source or pass them as explicit inputs.
-- Generated outputs (`test/**/output/`, `test/**/tmp/`) and `*.mat`/`*.png`/`*.pdf` files are git-ignored. Do not show SHA-256 values in human-facing docs.
+- One directory per experiment. By default write only in the active experiment directory (code, logs, outputs, reports); anything outside needs authorization.
+- Budget: estimate complete-run time and peak memory before launch. Unless the user says otherwise: 30 min soft, 40 min hard, **3 GiB** peak memory hard limit. Do not launch a run expected to exceed it. At most one extension beyond 30 min with objective evidence of imminent completion, never beyond 40. Stop and report at a hard limit. All stages of one result share its budget; a corrected rerun after an operational failure gets a fresh budget.
+- Layout for new experiments: `test/iN/name-vN/output/run-001/`, with no `attempt-*` layer. `-vN` is the plan/implementation version; `run-NNN` is one execution. Reuse the version for debugging and reruns, keep failure logs, and open a new version only for substantial plan or implementation changes. Do not move old `attempt-*` outputs.
+- Numerical entry points must not read documentation, designs, reviews, Git metadata, manifests, or hashes, must not require old outputs as hidden prerequisites, and must not discover the repo root or need a fixed layout. Scientific parameters live in MATLAB source or explicit arguments.
+- Untracked large outputs (MAT files) need a recoverable path in Git: source version, configuration, reproduction commands, dependencies, seeds, resource needs, and compact reference results with tolerances. Before deleting outputs behind a retained result, confirm recoverability or get explicit acceptance; never silently erase the only evidence.
+- `test/**/output/`, `*.mat`, `*.png`, `*.pdf` are git-ignored. Keep content hashes out of human-facing reports. Promote only validated results to research records, with limitations.
 
-## `research/` workspace (summary of research/AGENTS.md)
+## `research/` workspace
 
-- Reading order:
-  1. root `AGENTS.md`
-  2. `research/README.md`
-  3. `research/STATUS.md`
-  4. `research/NOTATION.md`
-  5. only the relevant project or planning files
-- There is **no active `research/mainline/`**, and you must not create one without explicit review. The Müller–Cauchy mainline is frozen at tag `mainline-muller-cauchy-2026-07-26` in `research/archive/muller-cauchy-2026-07/`. It is non-authoritative unless a task selects it.
-- Projects: `eig-apost/` is active. `half-guide-dtn/` is paused. `cell-representation/` and `novelty-audit/` are complete. Project conclusions do not auto-promote to a mainline or to `draft/`.
-- Classify each concern as `blocker`, `important caveat`, or `minor caveat`. Only a blocker may stop a stage. Track open items in the project's single open-problem ledger, `implementation/open-problems.md` for eig-apost, rather than duplicating them.
-- Do not modify MATLAB code directories from research tasks unless asked. After long tasks, update `STATUS.md` and record direction decisions in `DECISIONS.md`.
-- Never silently change notation, definitions, assumptions, theorem status, or citations. Use notation local to the selected project, for eig-apost `implementation/SYMBOL.md`.
-- Naming: lowercase ASCII with hyphens and short stable names. Use the prefixes `s-` (section), `a-` (appendix), `r-` (review), and `p-` (plan). Avoid vague words like `new`, `final`, or `latest`.
-- Write notes with Obsidian wikilinks `[[...]]` for substantive connections.
-- Disposable material goes in `research/tmp/` (untracked). Never put durable results there.
-- For theorem proofs or proof audits, follow `.agents/skills/rigorous-proof/SKILL.md` unless the user opts out.
+- Reading order: `research/README.md`, `research/STATUS.md`, `research/NOTATION.md`, then only the relevant project files. Avoid unrelated repository-wide reading.
+- `mainline` is only a historical label with no theoretical or notation authority; do not treat it as an active hierarchy or promotion target. `draft/` is a writing output, not theoretical authority. Archived material and historical notation are for explicitly requested historical work. Planning documents govern strategy, not proofs.
+- Do not silently change definitions, assumptions, notation, theorem status, or citation sources. eig-apost notation: `implementation/SYMBOL.md`. Explain the mapping between symbols and code when needed.
+- Classify concerns by effect: `blocker` (invalidates the deliverable or blocks the next step), `important caveat` (limits interpretation), `minor caveat` (deferrable). Only blockers justify stopping a stage. Keep unresolved issues in one project ledger (`implementation/open-problems.md` for eig-apost). Request revision only for a concrete repair.
+- Match rigor to the claim; keep numerical evidence, conditional conclusions, and reliable bounds distinct. Investigate side questions only if they can change the current acceptance criterion or next computation; prefer the smallest decisive check.
+- Do not modify MATLAB code directories without authorization. After substantial work update `STATUS.md` and record direction decisions in `DECISIONS.md`.
+- Durable results go in project files; temporary derivations go in `tmp/` and have no authority. Reuse existing directories and records; avoid per-lemma folders and overlapping README/STATUS/SUMMARY/PLAN files. Use Obsidian `[[...]]` links; do not duplicate long proofs.
+- Names: lowercase ASCII with hyphens for new files. The prefixes `p-`, `s-`, `a-`, `r-` are no longer required; if kept, expand them at the top of the file.
+- Proofs and proof audits: use `.agents/skills/rigorous-proof/SKILL.md` unless the user opts out.
 
-## Markdown, LaTeX, and references
+## Markdown, LaTeX, references
 
-- In repository Markdown, use `$...$` for inline math and `$$...$$` for display math. Inside math, write Greek letters as LaTeX commands (`\beta`), not as bare names or Unicode glyphs.
-- LaTeX cleanup: only `latexmk -c` in the project directory, or with the main `.tex` file given explicitly. Never use `rm`/globs, and never `latexmk -C` unless asked. Never delete sources, bibliographies, figures, or data.
-- References:
-  - Access PDFs through `ref/ref_data/` (a symlink to `../TEP_ref/`), named `<FirstAuthorSurname><Year>.pdf` with `a`, `b`, … suffixes on collisions. Use only lawful public full texts, and verify their identity.
-  - When adding a reference, update both `ref/README.md` and `ref/reference.bib`, keeping them alphabetized by surname and then year. Never add PDFs to Git.
+- Markdown math: `$...$` and `$$...$$`, Greek letters as LaTeX commands (`\beta`). In chat use the renderer's normal math delimiters.
+- LaTeX cleanup: only `latexmk -c` in the identified project or with its main `.tex`. No manual deletion or globs; `latexmk -C` only if explicitly requested; never delete sources, references, styles, figures, or data. If the project or main file is ambiguous, report it and do not clean.
+- References: follow `ref/AGENTS.md`. Verify metadata and source identity (do not guess fields), use lawful public full texts, keep `ref/README.md` and `ref/reference.bib` in sync (by surname, then year), name PDFs `<FirstAuthorSurname><Year>.pdf` (`a`, `b`, … on collisions) under `ref/ref_data/`, and never commit PDFs.

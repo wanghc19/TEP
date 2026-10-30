@@ -1,123 +1,86 @@
-# AGENTS.md
+# Repository guidance
 
-## Scope
+This repository contains MATLAB code and research on periodic waveguides and
+eigenvalue problems. These rules apply throughout the repository.
 
-This repository contains MATLAB code and research material for numerical
-experiments on periodic waveguides and related eigenvalue problems.
+## Scope and authority
 
-## Directory-specific guidance
+- Read the applicable nested `AGENTS.md` before working in `research/`, `test/`,
+  `redteam/`, or `ref/`. Use `README.md` for terminology and project entry points.
+- `legacy/`, `crystal_2d/`, and `waveguide_1d/` are historical. Do not routinely
+  search, read, or use them as current theory, implementation examples, or
+  baselines; use them only for explicitly requested historical work. Root MATLAB
+  packages such as `+kernel/` and `+bloch/` remain shared dependencies.
+- Preserve the mathematical model, function interfaces, and unrelated changes
+  unless explicitly authorized to change them. Keep edits localized; explain
+  nontrivial refactors before coding and preserve numerical behavior.
+- Access or modify `.git` metadata only through Git commands, including shared
+  worktree metadata. Never manually edit or remove Git files or lock files.
 
-- Before working on files under `research/`, read and follow
-  `research/AGENTS.md` in addition to this file.
-- The nested file governs research authority, notation, naming, temporary
-  material, and handoff rules; this root file continues to apply everywhere.
-- Before planning, creating, debugging, or running experiments under `test/`,
-  read and follow `test/AGENTS.md`; it governs run budgets and attempt reuse.
-- `legacy/`, `crystal_2d/`, and `waveguide_1d/` contain historical theory,
-  implementations, and validation programs. Exclude them from routine reading
-  and searches; do not use them as current theoretical authority, implementation
-  examples, or result baselines. Use them only when the user explicitly requests
-  historical investigation, reproduction, or migration. Root MATLAB packages
-  such as `+kernel/` and `+bloch/` remain shared dependencies of current work.
+## Naming
 
-## Always follow
+- Every abbreviation in a file or directory name must have its full form and
+  meaning stated explicitly. For files, put this at the beginning of the file;
+  in function files, use the opening help text after the signature. For
+  directories, put it at the beginning of that directory's `README.md`.
+- For binary files or formats that cannot contain explanatory text, list each
+  filename and its abbreviation expansions at the beginning of the containing
+  directory's `README.md`; do not alter the file format to add explanations.
 
-- Do not change the mathematical model unless explicitly requested.
-- Preserve function input/output interfaces unless explicitly requested.
-- Write comments in English and use 2-space indentation.
-- Prefer local helper functions with `LOCAL_` prefixes.
-- The project's Python virtual environment is the Conda environment `octave`;
-  activate it with `conda activate octave`.
-- In repository Markdown files only, use `$$...$$` for display math and `$...$`
-  for inline math; inside math delimiters, write Greek letters with LaTeX
-  commands such as `\beta`, not bare names such as `beta` or literal Unicode
-  glyphs such as `β`. This rule does not apply to Codex chat replies: use the
-  chat renderer's default math delimiters and standard LaTeX symbols there, and
-  do not rely on macros or symbols defined in local files.
-- For theorem proofs or proof audits, use `$rigorous-proof` unless the
-  user explicitly opts out.
+## Code and mathematical documentation
 
-## MATLAB source documentation
+- Write source comments in English with 2-space indentation. Prefer readable
+  implementations and local helpers named `LOCAL_*`.
+- Start source documentation with a concise introduction. In function files,
+  place help text immediately after the signature, followed by `Input` and
+  `Output` sections in that order; these are the only required section labels.
+  In scripts, place the introduction before executable code and describe the
+  adjustable parameters and outputs without inventing a function interface.
+- Explain important parameters, dimensions, conventions, and major stages as
+  needed. Mention source algorithms or earlier files only when actually used.
+- For complex computations, inputs, or outputs, use LaTeX formulas to define the
+  core mathematical objects and connect their symbols to the code.
+- In repository Markdown, use `$...$` and `$$...$$`; write Greek symbols with
+  LaTeX commands. Chat replies use the chat renderer's normal math delimiters.
+- Use `$rigorous-proof` for proofs and proof audits unless the user opts out.
 
-- Begin every new source file's documentation with a concise English
-  introduction explaining what the code does. Add algorithm details, expected
-  results, usage conditions, or design rationale when needed to understand or
-  use the code; scale the detail to the file's complexity.
-- For function documentation, place `Input` and `Output` sections, in that
-  order, immediately after the introduction. These are the only required
-  header section labels. Do not require `Purpose`, `Main algorithm`, `Based on`,
-  `Main changes`, or `Numerical goal` labels. For scripts, describe adjustable
-  parameters and expected results without inventing a function interface.
-- Mention an earlier file, algorithm, or reference only when the code is
-  actually adapted from it. Describe differences only when they help explain
-  the current implementation; omit inapplicable provenance rather than adding
-  placeholder sections. Keep routine change history in Git commit messages.
-- In scripts, put the header before executable code. In function files, put
-  MATLAB help text immediately after the `function` signature, starting in
-  column 1; do not add a separate file header above the signature unless needed
-  for licensing or package metadata.
-- Explain input and output meanings, dimensions, and conventions as needed.
-  For complex inputs or return values, use LaTeX notation or formulas to
-  clarify their mathematical meaning and connect the symbols to the actual
-  argument names, return names, or structure fields.
-- Explain user-adjustable parameters near their definitions, especially
-  geometry, scan intervals, grid sizes, refinement levels, discretization sizes
-  such as `ntot`, and stopping or selection criteria.
-- In scripts or tests with several logical stages, add short comments in the
-  form `% --- stage N: brief description ---` before major blocks.
-- Group numerous `LOCAL_` helpers by role. Start each group with a marker in the
-  exact form `%% ==================== Role name ====================`, followed
-  by one English sentence describing the group.
-- When the formulas are complex, use LaTeX notation in comments to define the
-  core computed objects, such as kernels, jump relations, block operators, or
-  assembled matrices. Explain the symbols and their connection to the code;
-  do not rely solely on implementation steps to convey the mathematics.
+## Execution and reporting
 
-## When editing code
+- Run MATLAB code in MATLAB; do not use Octave as a substitute. Put new
+  experimental code under `test/` unless another location is explicitly
+  authorized; follow its execution rules.
+- Report the changes, checks actually run, results, and unresolved limitations.
+  Never claim a run or validation that did not occur. Edit files in place and
+  do not paste complete files into chat unless requested.
+- Before installing dependencies, stop and obtain explicit user permission.
+- The Conda environment named `octave` is only for running Python.
 
-- For nontrivial refactors, summarize the plan before coding.
-- Keep changes localized and preserve numerical behavior up to ordinary
-  floating-point roundoff.
-- Prefer readable vectorization over clever but opaque rewrites.
+## Reproducibility and large outputs
 
-## LaTeX temporary files
+- Untracked large outputs, including MAT files, must have a recoverable
+  generation path. Keep the actual source version, configuration, reproduction
+  commands, dependency versions/setup, and relevant seeds and resource needs in
+  Git, using the existing experiment documentation. A source hash alone is not
+  a substitute for recoverable source code.
+- Reproduction must start from the recorded checkout and documented inputs and
+  dependencies. Include upstream generation steps or durable external sources;
+  do not depend on undocumented old outputs, binaries, or machine-specific paths.
+- Keep compact reference results and comparison tolerances in Git. Numerical
+  reproduction need not preserve MAT bytes, timings, or arbitrary mode phases.
+  Distinguish a recipe, static checks, and a completed rerun; reruns still require
+  the task's execution authorization and resource budget.
+- Before deleting outputs supporting a retained result, confirm recoverability
+  of the source, inputs, recipe, and reference results. If reproduction has not
+  been demonstrated, obtain explicit acceptance of that limitation or retain a
+  recoverable backup within the storage policy. Never silently erase the only
+  evidence; record legacy gaps honestly.
+- Keep provenance and documentation out of numerical runtime prerequisites;
+  see `test/AGENTS.md` for input and path requirements.
 
-* Clean LaTeX build artifacts only by running `latexmk -c` in the corresponding LaTeX project directory, or by passing the relevant main `.tex` file explicitly.
-* Do not use `rm`, recursive deletion, broad globs, or manually maintained extension lists for routine LaTeX cleanup.
-* Do not use `latexmk -C` unless the user explicitly requests removal of generated PDFs and other primary outputs.
-* Never delete LaTeX sources, bibliography files, styles, classes, figures, data, or other project assets as part of cleanup.
-* If the relevant LaTeX project or main file cannot be identified reliably, do not clean anything; report the ambiguity instead.
+## LaTeX cleanup
 
-## Validation
-
-- Put experimental code created during an agent's independent exploration in
-  the repository-root `test/` directory.
-- Prefer MATLAB for numerical validation and run it non-interactively when
-  practical, for example with `matlab -batch "..."`. Never claim MATLAB was run
-  unless it actually was.
-- Validate MFS workflows and any code path that depends on MATLAB-specific
-  behavior such as `lsqminnorm` in MATLAB; an Octave result is not a substitute
-  for that validation.
-- Use Octave only as a fallback for rough compatibility or sanity checks when
-  MATLAB is unavailable or the check does not depend on MATLAB-specific
-  behavior. Prefer non-interactive commands such as
-  `conda run -n octave octave --eval "..."` or
-  `conda run -n octave octave script_name.m`.
-- If interactive Octave is necessary, use `conda activate octave` followed by
-  `octave --no-line-editing`.
-- For substantial new MATLAB files with local helpers, prefer function files
-  with subfunctions; do not rely on script files with trailing local functions
-  when Octave fallback validation is needed.
-- Do not rely on Octave GUI features or plotting. Treat Octave results only as
-  fallback compatibility and sanity checks, not final numerical validation.
-- After code edits, report what changed, the files/functions modified, the
-  MATLAB commands and results, and the expected successful outcome. If Octave
-  was used as a fallback, report its commands and results separately and state
-  what still requires MATLAB validation.
-- Report any possible issues found by static inspection, MATLAB, or Octave.
-
-## Output contract
-
-- Modify files in place and do not paste complete files into chat unless asked.
-- Report a short change summary, modified files/functions, and checks run with
-  their results.
+- Use only `latexmk -c` in the identified project or with its main TeX file.
+  Do not use manual deletion or broad globs. Use `latexmk -C` only when removal
+  of PDFs and other primary outputs is explicitly requested. Never delete
+  sources, references, styles, figures, or data as routine cleanup.
+- If the project or main file is ambiguous, report it and do not clean.
