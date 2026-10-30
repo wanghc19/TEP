@@ -1,0 +1,21 @@
+g12 P2 mu=[2.40,2.46]
+ORDINARY_DISCRETE_INERTIA_DIFFERENCE
+Matlab seconds: 2.601808
+Continuous bulk gap: uncertified. Interval lead pole absence: unverified.
+Counts are [negative, unresolved, positive]; unresolved does not mean exact zero.
+
+Rule primary N=1 interval=[1,1], -deltaT chol flag=0
+mu 2.40 full [0 0 1464] center [0 0 1416] wall [0 0 48] Schur PASS; G-near-zero |lambda|min 2.325374e-02
+  left: unit gap 4.464e-01 Z0 rcond 4.337e-02 cell condest 1.917e+04 backward 3.316e-17 Riccati 4.026e-16 Hermitian 4.833e-17 consistency 1.056e-17 EVALUATED
+  right: unit gap 4.392e-01 Z0 rcond 4.341e-02 cell condest 1.878e+04 backward 3.335e-17 Riccati 4.251e-16 Hermitian 4.501e-16 consistency 2.475e-17 EVALUATED
+mu 2.46 full [1 0 1463] center [0 0 1416] wall [1 0 47] Schur PASS; G-near-zero |lambda|min 2.558715e-02
+  left: unit gap 4.584e-01 Z0 rcond 4.616e-02 cell condest 1.762e+04 backward 3.247e-17 Riccati 4.254e-16 Hermitian 5.025e-17 consistency 7.995e-18 EVALUATED
+  right: unit gap 4.513e-01 Z0 rcond 4.468e-02 cell condest 1.725e+04 backward 3.078e-17 Riccati 4.011e-16 Hermitian 7.097e-17 consistency 3.558e-17 EVALUATED
+
+Rule check N=1 interval=[1,1], -deltaT chol flag=0
+mu 2.40 full [0 0 1464] center [0 0 1416] wall [0 0 48] Schur PASS; G-near-zero |lambda|min 2.325374e-02
+  left: unit gap 4.464e-01 Z0 rcond 4.399e-02 cell condest 1.917e+04 backward 3.245e-17 Riccati 4.231e-16 Hermitian 5.645e-17 consistency 1.565e-17 EVALUATED
+  right: unit gap 4.392e-01 Z0 rcond 4.331e-02 cell condest 1.878e+04 backward 3.307e-17 Riccati 4.089e-16 Hermitian 3.884e-16 consistency 1.224e-17 EVALUATED
+mu 2.46 full [1 0 1463] center [0 0 1416] wall [1 0 47] Schur PASS; G-near-zero |lambda|min 2.558715e-02
+  left: unit gap 4.584e-01 Z0 rcond 4.393e-02 cell condest 1.762e+04 backward 3.231e-17 Riccati 4.484e-16 Hermitian 7.233e-17 consistency 1.565e-17 EVALUATED
+  right: unit gap 4.513e-01 Z0 rcond 4.562e-02 cell condest 1.725e+04 backward 3.028e-17 Riccati 4.520e-16 Hermitian 5.306e-17 consistency 4.650e-17 EVALUATED

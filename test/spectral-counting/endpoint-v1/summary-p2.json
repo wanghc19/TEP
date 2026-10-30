@@ -1,0 +1,43 @@
+{
+  "p": 2,
+  "mu": [
+    2.4,
+    2.46
+  ],
+  "status": "ORDINARY_DISCRETE_INERTIA_DIFFERENCE",
+  "elapsed_seconds": 2.274350625,
+  "N": [
+    1,
+    1
+  ],
+  "acceptance": {
+    "schur_all_pass": true,
+    "schur_all_applicable_pass": true,
+    "quadrature_inertia_agrees": true,
+    "pass": true
+  },
+  "rule_sensitivity": {
+    "mass_relative": 7.7753540854840566E-14,
+    "stiffness_relative": 3.4073317444386361E-15,
+    "N_equal": true,
+    "endpoints": [
+      {
+        "mu": 2.4,
+        "full_inertia_equal": true,
+        "T_relative": 3.4100764096570733E-15,
+        "D_left_relative": 3.7513786557395588E-15,
+        "D_right_relative": 3.8054472473509152E-15
+      },
+      {
+        "mu": 2.46,
+        "full_inertia_equal": true,
+        "T_relative": 3.4102034356883776E-15,
+        "D_left_relative": 3.759752741686818E-15,
+        "D_right_relative": 3.8837072728298411E-15
+      }
+    ]
+  },
+  "projected_gap_status": "PROJECTED_GAP_UNCERTIFIED",
+  "lead_pole_status": "LEAD_DIRICHLET_POLE_FREE_UNVERIFIED",
+  "continuous_count_status": "NOT_CERTIFIED"
+}

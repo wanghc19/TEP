@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "scope": "CSV/JSON/text consistency and MAT HDF5 signature; no independent MAT reconstruction",
+  "row_counts": {
+    "inertia": 12,
+    "lead": 8
+  },
+  "schur_pass_count": 4,
+  "full_inertia": [
+    {
+      "rule": "primary",
+      "mu": 2.4,
+      "negative": 0,
+      "unresolved": 0,
+      "positive": 1464
+    },
+    {
+      "rule": "primary",
+      "mu": 2.46,
+      "negative": 1,
+      "unresolved": 0,
+      "positive": 1463
+    },
+    {
+      "rule": "check",
+      "mu": 2.4,
+      "negative": 0,
+      "unresolved": 0,
+      "positive": 1464
+    },
+    {
+      "rule": "check",
+      "mu": 2.46,
+      "negative": 1,
+      "unresolved": 0,
+      "positive": 1463
+    }
+  ],
+  "max_factor_residual": 2.18201133331396e-16,
+  "max_full_factor_residual": 1.25636837087515e-16,
+  "max_solve_backward": 8.52966909709256e-17,
+  "min_full_abs_pivot": 0.0257035777169173,
+  "min_unit_gap": 0.439200817369176,
+  "min_z0_rcond": 0.0433103780469039,
+  "max_cell_condest": 19166.2014145106,
+  "max_cell_backward": 3.33541068042556e-17,
+  "max_riccati": 4.51970539267671e-16,
+  "max_dtn_hermitian": 4.50091370907704e-16,
+  "max_dtn_consistency": 4.6502434475063e-17,
+  "final_run_seconds": 16.21079200002714,
+  "shared_seconds": 35.92084050002714,
+  "sampled_peak_tree_rss_bytes": 1236140032
+}

@@ -1,0 +1,22 @@
+{
+  "order": 2,
+  "command": [
+    "/Applications/MATLAB_R2023b.app/bin/matlab",
+    "-batch",
+    "addpath('/Users/whc/Documents/Work/epost/test/spectral-counting/endpoint-v1'); endpoint_inertia('/Users/whc/Documents/Work/epost/test/spectral-counting/endpoint-v1',2);"
+  ],
+  "limits": {
+    "soft_seconds": 1800,
+    "hard_seconds": 2400,
+    "rss_bytes": 2147483648,
+    "sample_seconds": 0.2,
+    "prior_seconds": 0
+  },
+  "stage_seconds": 19.7100485,
+  "shared_seconds": 19.7100485,
+  "sampled_peak_tree_rss_bytes": 1190461440,
+  "grace_granted": false,
+  "reason": "COMPLETED",
+  "returncode": 0,
+  "note": "RSS sampled every 0.2 s; peaks between samples are not observed."
+}
