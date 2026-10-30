@@ -1,0 +1,1786 @@
+{
+  "status": "COMMON_PROJECTED_GAP_PROVED",
+  "target": [
+    "2.40",
+    "2.46"
+  ],
+  "beta": "1/2",
+  "cutoff": 2,
+  "dimension": 25,
+  "cells": 16,
+  "bits": 128,
+  "radius": {
+    "lower": {
+      "mantissa": "133628573008120843482460046645233847913",
+      "exponent": -129
+    },
+    "upper": {
+      "mantissa": "133628573008120843482460046645233847913",
+      "exponent": -129
+    },
+    "display": "[0.19634954084936207740391521145496893026 +/- 2.95e-39]"
+  },
+  "a_expanded": {
+    "lower": {
+      "mantissa": "155695034988084179164902687999866022321",
+      "exponent": -126
+    },
+    "upper": {
+      "mantissa": "155695034988084179164902687999866022321",
+      "exponent": -126
+    },
+    "display": "[1.8301863407957135225618781149235753578 +/- 9.42e-39]"
+  },
+  "b_expanded": {
+    "lower": {
+      "mantissa": "264950451080854792539546141702930851067",
+      "exponent": -126
+    },
+    "upper": {
+      "mantissa": "264950451080854792539546141702930851067",
+      "exponent": -126
+    },
+    "display": "[3.1144775849336164795512736643797946096 +/- 4.24e-38]"
+  },
+  "tail_kinetic_lower": {
+    "lower": {
+      "mantissa": "328306168930196057129367189732885981649",
+      "exponent": -120
+    },
+    "upper": {
+      "mantissa": "328306168930196057129367189732885981649",
+      "exponent": -120
+    },
+    "display": "[246.99011002723396547086227499690377838 +/- 1.67e-36]"
+  },
+  "tail_positive_lower": {
+    "lower": {
+      "mantissa": "64482176340461000715262561460761243583",
+      "exponent": -118
+    },
+    "upper": {
+      "mantissa": "64482176340461000715262561460761243583",
+      "exponent": -118
+    },
+    "display": "[194.04399108336248531849062270244727001 +/- 4.11e-36]"
+  },
+  "schur_correction_upper": {
+    "lower": {
+      "mantissa": "272163353937157754828241886866266809423",
+      "exponent": -126
+    },
+    "upper": {
+      "mantissa": "272163353937157754828241886866266809423",
+      "exponent": -126
+    },
+    "display": "[3.1992648505397572192868222837994272252 +/- 1.68e-38]"
+  },
+  "versions": {
+    "numpy": "2.5.4",
+    "python_flint": "0.9.0"
+  },
+  "rows": [
+    {
+      "side": "left",
+      "cell": 0,
+      "theta_over_pi": [
+        -15,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -16,
+        -14,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "299369248132730123722967240789569347423",
+            "exponent": -128
+          },
+          "upper": {
+            "mantissa": "299369248132730123722967240789569347423",
+            "exponent": -128
+          },
+          "display": "[0.87976714997484975880171486027529203945 +/- 1.85e-39]"
+        },
+        "dominance_margin_float": 0.8797671499748497,
+        "ordinary_eigen_min_abs": 0.8797671499756596
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "201334364774501308057134804938229533685",
+            "exponent": -126
+          },
+          "upper": {
+            "mantissa": "201334364774501308057134804938229533685",
+            "exponent": -126
+          },
+          "display": "[2.3666740841882004476766469351927218360 +/- 2.18e-38]"
+        },
+        "dominance_margin_float": 2.3666740841882006,
+        "ordinary_eigen_min_abs": 2.3666740841886202
+      },
+      "pass": true,
+      "seconds": 0.00453933299286291
+    },
+    {
+      "side": "left",
+      "cell": 1,
+      "theta_over_pi": [
+        -13,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -14,
+        -12,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "153330402387044138944505403614608771157",
+            "exponent": -126
+          },
+          "upper": {
+            "mantissa": "153330402387044138944505403614608771157",
+            "exponent": -126
+          },
+          "display": "[1.8023902181527857300456720266439983968 +/- 2.26e-38]"
+        },
+        "dominance_margin_float": 1.8023902181527858,
+        "ordinary_eigen_min_abs": 1.8023902181534979
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "278634183824461815442670410857920926655",
+            "exponent": -126
+          },
+          "upper": {
+            "mantissa": "278634183824461815442670410857920926655",
+            "exponent": -126
+          },
+          "display": "[3.2753290903163366449552136310256805362 +/- 4.93e-38]"
+        },
+        "dominance_margin_float": 3.275329090316337,
+        "ordinary_eigen_min_abs": 3.2753290903169177
+      },
+      "pass": true,
+      "seconds": 0.0035564170102588832
+    },
+    {
+      "side": "left",
+      "cell": 2,
+      "theta_over_pi": [
+        -11,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -12,
+        -10,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "130109805979871168499116927391121398327",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "130109805979871168499116927391121398327",
+            "exponent": -125
+          },
+          "display": "[3.0588668383184488084018801273507572664 +/- 4.53e-38]"
+        },
+        "dominance_margin_float": 3.058866838318449,
+        "ordinary_eigen_min_abs": 3.058866838319222
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "209849338400838829066835470649980263679",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "209849338400838829066835470649980263679",
+            "exponent": -125
+          },
+          "display": "[4.9335342362796113670238943402323547345 +/- 1.70e-38]"
+        },
+        "dominance_margin_float": 4.933534236279612,
+        "ordinary_eigen_min_abs": 4.933534236279772
+      },
+      "pass": true,
+      "seconds": 0.003495291981380433
+    },
+    {
+      "side": "left",
+      "cell": 3,
+      "theta_over_pi": [
+        -9,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -10,
+        -8,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "22782092437857627135403909242690098623",
+            "exponent": -122
+          },
+          "upper": {
+            "mantissa": "22782092437857627135403909242690098623",
+            "exponent": -122
+          },
+          "display": "[4.2848353536980474910581322015566605900 +/- 2.77e-38]"
+        },
+        "dominance_margin_float": 4.284835353698048,
+        "ordinary_eigen_min_abs": 4.284835353698554
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "151707932081049198231606926972340280987",
+            "exponent": -124
+          },
+          "upper": {
+            "mantissa": "151707932081049198231606926972340280987",
+            "exponent": -124
+          },
+          "display": "[7.1332726854481844801320087211363484392 +/- 4.08e-38]"
+        },
+        "dominance_margin_float": 7.133272685448184,
+        "ordinary_eigen_min_abs": 7.133272685448715
+      },
+      "pass": true,
+      "seconds": 0.0038087499560788274
+    },
+    {
+      "side": "left",
+      "cell": 4,
+      "theta_over_pi": [
+        -7,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -8,
+        -6,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "226918203946768987143142218413455604271",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "226918203946768987143142218413455604271",
+            "exponent": -125
+          },
+          "display": "[5.3348213367633329915623301051683360942 +/- 3.28e-38]"
+        },
+        "dominance_margin_float": 5.334821336763333,
+        "ordinary_eigen_min_abs": 5.334821336764007
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "204908222561046936524274102216373179119",
+            "exponent": -124
+          },
+          "upper": {
+            "mantissa": "204908222561046936524274102216373179119",
+            "exponent": -124
+          },
+          "display": "[9.6347383223018670264447747089342237296 +/- 4.93e-38]"
+        },
+        "dominance_margin_float": 9.634738322301867,
+        "ordinary_eigen_min_abs": 9.634738322302344
+      },
+      "pass": true,
+      "seconds": 0.0038277090061455965
+    },
+    {
+      "side": "left",
+      "cell": 5,
+      "theta_over_pi": [
+        -5,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -6,
+        -4,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "261575687457722758941005389684072388499",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "261575687457722758941005389684072388499",
+            "exponent": -125
+          },
+          "display": "[6.1496148583801877437276751985851880998 +/- 1.96e-38]"
+        },
+        "dominance_margin_float": 6.149614858380188,
+        "ordinary_eigen_min_abs": 6.149614858380924
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "32171823360855733622089242578778931475",
+            "exponent": -121
+          },
+          "upper": {
+            "mantissa": "32171823360855733622089242578778931475",
+            "exponent": -121
+          },
+          "display": "[12.101694917228292638745402621638093022 +/- 2.97e-37]"
+        },
+        "dominance_margin_float": 12.101694917228293,
+        "ordinary_eigen_min_abs": 12.10169491722874
+      },
+      "pass": true,
+      "seconds": 0.003770417009945959
+    },
+    {
+      "side": "left",
+      "cell": 6,
+      "theta_over_pi": [
+        -3,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -4,
+        -2,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "142551133204176869060520577325718784651",
+            "exponent": -124
+          },
+          "upper": {
+            "mantissa": "142551133204176869060520577325718784651",
+            "exponent": -124
+          },
+          "display": "[6.7027220713930128824765503003713130396 +/- 2.18e-38]"
+        },
+        "dominance_margin_float": 6.702722071393013,
+        "ordinary_eigen_min_abs": 6.702722071393646
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "149118365916552389587358408170957370827",
+            "exponent": -123
+          },
+          "upper": {
+            "mantissa": "149118365916552389587358408170957370827",
+            "exponent": -123
+          },
+          "display": "[14.023023739100645995266454730630130628 +/- 4.29e-37]"
+        },
+        "dominance_margin_float": 14.023023739100646,
+        "ordinary_eigen_min_abs": 14.023023739101143
+      },
+      "pass": true,
+      "seconds": 0.003722666995599866
+    },
+    {
+      "side": "left",
+      "cell": 7,
+      "theta_over_pi": [
+        -1,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -2,
+        0,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "148486101372456443450216470537919021271",
+            "exponent": -124
+          },
+          "upper": {
+            "mantissa": "148486101372456443450216470537919021271",
+            "exponent": -124
+          },
+          "display": "[6.9817829335579224464949746565686018755 +/- 2.11e-38]"
+        },
+        "dominance_margin_float": 6.9817829335579225,
+        "ordinary_eigen_min_abs": 6.981782933558849
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "159285410450344439825292724594784271845",
+            "exponent": -123
+          },
+          "upper": {
+            "mantissa": "159285410450344439825292724594784271845",
+            "exponent": -123
+          },
+          "display": "[14.979128012223139822683012681777375854 +/- 4.54e-37]"
+        },
+        "dominance_margin_float": 14.97912801222314,
+        "ordinary_eigen_min_abs": 14.979128012224002
+      },
+      "pass": true,
+      "seconds": 0.0037295829970389605
+    },
+    {
+      "side": "left",
+      "cell": 8,
+      "theta_over_pi": [
+        1,
+        16
+      ],
+      "theta_interval_over_pi": [
+        0,
+        2,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "296972202744928731568497434896948248903",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "296972202744928731568497434896948248903",
+            "exponent": -125
+          },
+          "display": "[6.9817829335582949528509839924674479306 +/- 2.02e-38]"
+        },
+        "dominance_margin_float": 6.981782933558295,
+        "ordinary_eigen_min_abs": 6.9817829335586765
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "318570820900694455336868851203714910753",
+            "exponent": -124
+          },
+          "upper": {
+            "mantissa": "318570820900694455336868851203714910753",
+            "exponent": -124
+          },
+          "display": "[14.979128012223401990192136537120850601 +/- 2.51e-38]"
+        },
+        "dominance_margin_float": 14.979128012223402,
+        "ordinary_eigen_min_abs": 14.979128012223876
+      },
+      "pass": true,
+      "seconds": 0.003642624942585826
+    },
+    {
+      "side": "left",
+      "cell": 9,
+      "theta_over_pi": [
+        3,
+        16
+      ],
+      "theta_interval_over_pi": [
+        2,
+        4,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "35637783301045690906951711503537382077",
+            "exponent": -122
+          },
+          "upper": {
+            "mantissa": "35637783301045690906951711503537382077",
+            "exponent": -122
+          },
+          "display": "[6.7027220713932900436983723285663782177 +/- 3.98e-39]"
+        },
+        "dominance_margin_float": 6.70272207139329,
+        "ordinary_eigen_min_abs": 6.7027220713935955
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "149118365916549754437330487523226231185",
+            "exponent": -123
+          },
+          "upper": {
+            "mantissa": "149118365916549754437330487523226231185",
+            "exponent": -123
+          },
+          "display": "[14.023023739100398186948743537461660421 +/- 1.62e-37]"
+        },
+        "dominance_margin_float": 14.023023739100399,
+        "ordinary_eigen_min_abs": 14.023023739101165
+      },
+      "pass": true,
+      "seconds": 0.0034518750035203993
+    },
+    {
+      "side": "left",
+      "cell": 10,
+      "theta_over_pi": [
+        5,
+        16
+      ],
+      "theta_interval_over_pi": [
+        4,
+        6,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "65393921864429837097604128000675713459",
+            "exponent": -123
+          },
+          "upper": {
+            "mantissa": "65393921864429837097604128000675713459",
+            "exponent": -123
+          },
+          "display": "[6.1496148583801075620686668117764777439 +/- 3.97e-38]"
+        },
+        "dominance_margin_float": 6.149614858380107,
+        "ordinary_eigen_min_abs": 6.149614858380954
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "257374586886841742756162663998195650167",
+            "exponent": -124
+          },
+          "upper": {
+            "mantissa": "257374586886841742756162663998195650167",
+            "exponent": -124
+          },
+          "display": "[12.101694917228098624787471721403710924 +/- 3.18e-37]"
+        },
+        "dominance_margin_float": 12.101694917228098,
+        "ordinary_eigen_min_abs": 12.101694917228796
+      },
+      "pass": true,
+      "seconds": 0.003859708027448505
+    },
+    {
+      "side": "left",
+      "cell": 11,
+      "theta_over_pi": [
+        7,
+        16
+      ],
+      "theta_interval_over_pi": [
+        6,
+        8,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "113459101973384101518816594739823534679",
+            "exponent": -124
+          },
+          "upper": {
+            "mantissa": "113459101973384101518816594739823534679",
+            "exponent": -124
+          },
+          "display": "[5.3348213367633145573304038622514668796 +/- 4.1e-41]"
+        },
+        "dominance_margin_float": 5.334821336763315,
+        "ordinary_eigen_min_abs": 5.334821336763585
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "204908222561044963348507325762699101419",
+            "exponent": -124
+          },
+          "upper": {
+            "mantissa": "204908222561044963348507325762699101419",
+            "exponent": -124
+          },
+          "display": "[9.6347383223017742481660937026625852500 +/- 8.0e-40]"
+        },
+        "dominance_margin_float": 9.634738322301775,
+        "ordinary_eigen_min_abs": 9.634738322302487
+      },
+      "pass": true,
+      "seconds": 0.0038237079861573875
+    },
+    {
+      "side": "left",
+      "cell": 12,
+      "theta_over_pi": [
+        9,
+        16
+      ],
+      "theta_interval_over_pi": [
+        8,
+        10,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "182256739502858295363203863915851628657",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "182256739502858295363203863915851628657",
+            "exponent": -125
+          },
+          "display": "[4.2848353536979835037277973942229369795 +/- 2.89e-38]"
+        },
+        "dominance_margin_float": 4.284835353697983,
+        "ordinary_eigen_min_abs": 4.284835353698696
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "151707932081052285821108027476111211867",
+            "exponent": -124
+          },
+          "upper": {
+            "mantissa": "151707932081052285821108027476111211867",
+            "exponent": -124
+          },
+          "display": "[7.1332726854483296578926567950260033716 +/- 1.71e-38]"
+        },
+        "dominance_margin_float": 7.13327268544833,
+        "ordinary_eigen_min_abs": 7.133272685448702
+      },
+      "pass": true,
+      "seconds": 0.0036497500259429216
+    },
+    {
+      "side": "left",
+      "cell": 13,
+      "theta_over_pi": [
+        11,
+        16
+      ],
+      "theta_interval_over_pi": [
+        10,
+        12,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "260219611959752648373540123890362063757",
+            "exponent": -126
+          },
+          "upper": {
+            "mantissa": "260219611959752648373540123890362063757",
+            "exponent": -126
+          },
+          "display": "[3.0588668383185700180360974050635378664 +/- 2.64e-38]"
+        },
+        "dominance_margin_float": 3.05886683831857,
+        "ordinary_eigen_min_abs": 3.0588668383191697
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "209849338400832066666870509522215680043",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "209849338400832066666870509522215680043",
+            "exponent": -125
+          },
+          "display": "[4.9335342362794523837647580874189152955 +/- 4.19e-38]"
+        },
+        "dominance_margin_float": 4.933534236279453,
+        "ordinary_eigen_min_abs": 4.933534236279996
+      },
+      "pass": true,
+      "seconds": 0.0035887500271201134
+    },
+    {
+      "side": "left",
+      "cell": 14,
+      "theta_over_pi": [
+        13,
+        16
+      ],
+      "theta_interval_over_pi": [
+        12,
+        14,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "153330402387054696466760423716532125037",
+            "exponent": -126
+          },
+          "upper": {
+            "mantissa": "153330402387054696466760423716532125037",
+            "exponent": -126
+          },
+          "display": "[1.8023902181529098331233665937201257125 +/- 2.14e-38]"
+        },
+        "dominance_margin_float": 1.80239021815291,
+        "ordinary_eigen_min_abs": 1.8023902181535565
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "278634183824451388828660212844188194221",
+            "exponent": -126
+          },
+          "upper": {
+            "mantissa": "278634183824451388828660212844188194221",
+            "exponent": -126
+          },
+          "display": "[3.2753290903162140806965417082059300660 +/- 5.43e-39]"
+        },
+        "dominance_margin_float": 3.275329090316214,
+        "ordinary_eigen_min_abs": 3.275329090316933
+      },
+      "pass": true,
+      "seconds": 0.0035814159782603383
+    },
+    {
+      "side": "left",
+      "cell": 15,
+      "theta_over_pi": [
+        15,
+        16
+      ],
+      "theta_interval_over_pi": [
+        14,
+        16,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "149684624066375020957705920763777350909",
+            "exponent": -127
+          },
+          "upper": {
+            "mantissa": "149684624066375020957705920763777350909",
+            "exponent": -127
+          },
+          "display": "[0.87976714997490829310845790861613235678 +/- 8.51e-41]"
+        },
+        "dominance_margin_float": 0.8797671499749083,
+        "ordinary_eigen_min_abs": 0.8797671499754394
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "6291698899202686543875432703330950633",
+            "exponent": -121
+          },
+          "upper": {
+            "mantissa": "6291698899202686543875432703330950633",
+            "exponent": -121
+          },
+          "display": "[2.3666740841880201426757178423344511474 +/- 4.54e-38]"
+        },
+        "dominance_margin_float": 2.3666740841880203,
+        "ordinary_eigen_min_abs": 2.366674084188566
+      },
+      "pass": true,
+      "seconds": 0.0035078339860774577
+    },
+    {
+      "side": "right",
+      "cell": 0,
+      "theta_over_pi": [
+        -15,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -16,
+        -14,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "131209596276695477532098088809948257383",
+            "exponent": -127
+          },
+          "upper": {
+            "mantissa": "131209596276695477532098088809948257383",
+            "exponent": -127
+          },
+          "display": "[0.77118069598464291226740591703675343321 +/- 5.36e-40]"
+        },
+        "dominance_margin_float": 0.7711806959846429,
+        "ordinary_eigen_min_abs": 0.7711806959855139
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "196119608809636110143040148327201540859",
+            "exponent": -126
+          },
+          "upper": {
+            "mantissa": "196119608809636110143040148327201540859",
+            "exponent": -126
+          },
+          "display": "[2.3053749224120417742100053148811357252 +/- 3.49e-38]"
+        },
+        "dominance_margin_float": 2.305374922412042,
+        "ordinary_eigen_min_abs": 2.3053749224125917
+      },
+      "pass": true,
+      "seconds": 0.003814959025476128
+    },
+    {
+      "side": "right",
+      "cell": 1,
+      "theta_over_pi": [
+        -13,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -14,
+        -12,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "290865184189831510265035835545799997825",
+            "exponent": -127
+          },
+          "upper": {
+            "mantissa": "290865184189831510265035835545799997825",
+            "exponent": -127
+          },
+          "display": "[1.7095519043301553761542036294403317402 +/- 4.17e-38]"
+        },
+        "dominance_margin_float": 1.7095519043301555,
+        "ordinary_eigen_min_abs": 1.7095519043305067
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "137415410946446646880510837631206377427",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "137415410946446646880510837631206377427",
+            "exponent": -125
+          },
+          "display": "[3.2306207856694232361627813576473532443 +/- 1.08e-38]"
+        },
+        "dominance_margin_float": 3.2306207856694233,
+        "ordinary_eigen_min_abs": 3.2306207856701437
+      },
+      "pass": true,
+      "seconds": 0.003798666992224753
+    },
+    {
+      "side": "right",
+      "cell": 2,
+      "theta_over_pi": [
+        -11,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -12,
+        -10,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "253518246419857677546931469066105807101",
+            "exponent": -126
+          },
+          "upper": {
+            "mantissa": "253518246419857677546931469066105807101",
+            "exponent": -126
+          },
+          "display": "[2.9800926649691531483372863484871221504 +/- 2.29e-38]"
+        },
+        "dominance_margin_float": 2.980092664969153,
+        "ordinary_eigen_min_abs": 2.9800926649694315
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "209147316453638993597362125332925722099",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "209147316453638993597362125332925722099",
+            "exponent": -125
+          },
+          "display": "[4.9170297796178779911679377893326673186 +/- 3.71e-38]"
+        },
+        "dominance_margin_float": 4.917029779617878,
+        "ordinary_eigen_min_abs": 4.917029779618452
+      },
+      "pass": true,
+      "seconds": 0.003675667045172304
+    },
+    {
+      "side": "right",
+      "cell": 3,
+      "theta_over_pi": [
+        -9,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -10,
+        -8,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "89649013933065290589702150158308303093",
+            "exponent": -124
+          },
+          "upper": {
+            "mantissa": "89649013933065290589702150158308303093",
+            "exponent": -124
+          },
+          "display": "[4.2152763774042716611271137473634512815 +/- 2.88e-38]"
+        },
+        "dominance_margin_float": 4.215276377404272,
+        "ordinary_eigen_min_abs": 4.215276377404848
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "152108773419027454273098413695441968069",
+            "exponent": -124
+          },
+          "upper": {
+            "mantissa": "152108773419027454273098413695441968069",
+            "exponent": -124
+          },
+          "display": "[7.1521201545829639691129528189923627757 +/- 4.23e-39]"
+        },
+        "dominance_margin_float": 7.152120154582964,
+        "ordinary_eigen_min_abs": 7.152120154583439
+      },
+      "pass": true,
+      "seconds": 0.0036885410081595182
+    },
+    {
+      "side": "right",
+      "cell": 4,
+      "theta_over_pi": [
+        -7,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -8,
+        -6,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "56051988416267165089157373214985325531",
+            "exponent": -123
+          },
+          "upper": {
+            "mantissa": "56051988416267165089157373214985325531",
+            "exponent": -123
+          },
+          "display": "[5.2711036588542680419461242451978651824 +/- 1.25e-38]"
+        },
+        "dominance_margin_float": 5.271103658854268,
+        "ordinary_eigen_min_abs": 5.271103658854866
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "103115274327126945839068909095373561411",
+            "exponent": -123
+          },
+          "upper": {
+            "mantissa": "103115274327126945839068909095373561411",
+            "exponent": -123
+          },
+          "display": "[9.6969137964022542821237891564152092598 +/- 3.45e-38]"
+        },
+        "dominance_margin_float": 9.696913796402255,
+        "ordinary_eigen_min_abs": 9.696913796402718
+      },
+      "pass": true,
+      "seconds": 0.0035824590013362467
+    },
+    {
+      "side": "right",
+      "cell": 5,
+      "theta_over_pi": [
+        -5,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -6,
+        -4,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "129510664522080131492598004832748103155",
+            "exponent": -124
+          },
+          "upper": {
+            "mantissa": "129510664522080131492598004832748103155",
+            "exponent": -124
+          },
+          "display": "[6.0895621806778258560816940785568217848 +/- 3.55e-38]"
+        },
+        "dominance_margin_float": 6.0895621806778255,
+        "ordinary_eigen_min_abs": 6.089562180678254
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "129920387917492462112962737474067162235",
+            "exponent": -123
+          },
+          "upper": {
+            "mantissa": "129920387917492462112962737474067162235",
+            "exponent": -123
+          },
+          "display": "[12.217654564292205391710654778337746932 +/- 4.26e-37]"
+        },
+        "dominance_margin_float": 12.217654564292205,
+        "ordinary_eigen_min_abs": 12.217654564292864
+      },
+      "pass": true,
+      "seconds": 0.0034763749572448432
+    },
+    {
+      "side": "right",
+      "cell": 6,
+      "theta_over_pi": [
+        -3,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -4,
+        -2,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "8832495805333013969732678797886898821",
+            "exponent": -120
+          },
+          "upper": {
+            "mantissa": "8832495805333013969732678797886898821",
+            "exponent": -120
+          },
+          "display": "[6.6448313106115256030742001284715606465 +/- 3.01e-39]"
+        },
+        "dominance_margin_float": 6.644831310611526,
+        "ordinary_eigen_min_abs": 6.644831310611976
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "301819984940443121371163688637081137793",
+            "exponent": -124
+          },
+          "upper": {
+            "mantissa": "301819984940443121371163688637081137793",
+            "exponent": -124
+          },
+          "display": "[14.191507490510351157600229349652635878 +/- 4.18e-37]"
+        },
+        "dominance_margin_float": 14.191507490510352,
+        "ordinary_eigen_min_abs": 14.191507490511034
+      },
+      "pass": true,
+      "seconds": 0.0034599159844219685
+    },
+    {
+      "side": "right",
+      "cell": 7,
+      "theta_over_pi": [
+        -1,
+        16
+      ],
+      "theta_interval_over_pi": [
+        -2,
+        0,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "294552631061413498913030028622016927795",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "294552631061413498913030028622016927795",
+            "exponent": -125
+          },
+          "display": "[6.9248990766506603989424461157399450537 +/- 6.12e-39]"
+        },
+        "dominance_margin_float": 6.92489907665066,
+        "ordinary_eigen_min_abs": 6.9248990766516405
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "80669732916694834197453499522461450829",
+            "exponent": -122
+          },
+          "upper": {
+            "mantissa": "80669732916694834197453499522461450829",
+            "exponent": -122
+          },
+          "display": "[15.172290452146801907498547950839340808 +/- 1.28e-37]"
+        },
+        "dominance_margin_float": 15.172290452146802,
+        "ordinary_eigen_min_abs": 15.172290452147308
+      },
+      "pass": true,
+      "seconds": 0.003526874992530793
+    },
+    {
+      "side": "right",
+      "cell": 8,
+      "theta_over_pi": [
+        1,
+        16
+      ],
+      "theta_interval_over_pi": [
+        0,
+        2,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "73638157765356025650878477941059666727",
+            "exponent": -123
+          },
+          "upper": {
+            "mantissa": "73638157765356025650878477941059666727",
+            "exponent": -123
+          },
+          "display": "[6.9248990766509096905076795693792483507 +/- 1.41e-38]"
+        },
+        "dominance_margin_float": 6.9248990766509095,
+        "ordinary_eigen_min_abs": 6.924899076651636
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "161339465833389922511677694999152208333",
+            "exponent": -123
+          },
+          "upper": {
+            "mantissa": "161339465833389922511677694999152208333",
+            "exponent": -123
+          },
+          "display": "[15.172290452146825804524820134584182187 +/- 3.23e-37]"
+        },
+        "dominance_margin_float": 15.172290452146825,
+        "ordinary_eigen_min_abs": 15.172290452147509
+      },
+      "pass": true,
+      "seconds": 0.003871833032462746
+    },
+    {
+      "side": "right",
+      "cell": 9,
+      "theta_over_pi": [
+        3,
+        16
+      ],
+      "theta_interval_over_pi": [
+        2,
+        4,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "282639865770664897921430585753571217659",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "282639865770664897921430585753571217659",
+            "exponent": -125
+          },
+          "display": "[6.6448313106117242825429326992474066972 +/- 5.44e-39]"
+        },
+        "dominance_margin_float": 6.644831310611725,
+        "ordinary_eigen_min_abs": 6.644831310612194
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "75454996235111677628391452925079771693",
+            "exponent": -122
+          },
+          "upper": {
+            "mantissa": "75454996235111677628391452925079771693",
+            "exponent": -122
+          },
+          "display": "[14.191507490510519918264949045484735416 +/- 4.25e-37]"
+        },
+        "dominance_margin_float": 14.19150749051052,
+        "ordinary_eigen_min_abs": 14.191507490511068
+      },
+      "pass": true,
+      "seconds": 0.00365799997234717
+    },
+    {
+      "side": "right",
+      "cell": 10,
+      "theta_over_pi": [
+        5,
+        16
+      ],
+      "theta_interval_over_pi": [
+        4,
+        6,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "259021329044166697932865604826053742689",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "259021329044166697932865604826053742689",
+            "exponent": -125
+          },
+          "display": "[6.0895621806779771409743630016589391347 +/- 2.85e-39]"
+        },
+        "dominance_margin_float": 6.089562180677977,
+        "ordinary_eigen_min_abs": 6.08956218067812
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "64960193958745586454240377482386108907",
+            "exponent": -122
+          },
+          "upper": {
+            "mantissa": "64960193958745586454240377482386108907",
+            "exponent": -122
+          },
+          "display": "[12.217654564292084155503804761280484439 +/- 4.88e-37]"
+        },
+        "dominance_margin_float": 12.217654564292085,
+        "ordinary_eigen_min_abs": 12.217654564292816
+      },
+      "pass": true,
+      "seconds": 0.0036405830178409815
+    },
+    {
+      "side": "right",
+      "cell": 11,
+      "theta_over_pi": [
+        7,
+        16
+      ],
+      "theta_interval_over_pi": [
+        6,
+        8,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "224207953665063100603067010426753488685",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "224207953665063100603067010426753488685",
+            "exponent": -125
+          },
+          "display": "[5.2711036588541373327680310014360983590 +/- 1.82e-38]"
+        },
+        "dominance_margin_float": 5.271103658854138,
+        "ordinary_eigen_min_abs": 5.271103658854689
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "103115274327126303229415621604582715571",
+            "exponent": -123
+          },
+          "upper": {
+            "mantissa": "103115274327126303229415621604582715571",
+            "exponent": -123
+          },
+          "display": "[9.6969137964021938514024112912759520805 +/- 3.44e-38]"
+        },
+        "dominance_margin_float": 9.696913796402194,
+        "ordinary_eigen_min_abs": 9.696913796402763
+      },
+      "pass": true,
+      "seconds": 0.0036540000000968575
+    },
+    {
+      "side": "right",
+      "cell": 12,
+      "theta_over_pi": [
+        9,
+        16
+      ],
+      "theta_interval_over_pi": [
+        8,
+        10,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "89649013933057921830058529581749569103",
+            "exponent": -124
+          },
+          "upper": {
+            "mantissa": "89649013933057921830058529581749569103",
+            "exponent": -124
+          },
+          "display": "[4.2152763774039251837137680177517429772 +/- 3.08e-38]"
+        },
+        "dominance_margin_float": 4.215276377403925,
+        "ordinary_eigen_min_abs": 4.215276377404792
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "304217546838048396354835044511286125469",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "304217546838048396354835044511286125469",
+            "exponent": -125
+          },
+          "display": "[7.1521201545828108682298078295023577219 +/- 1.68e-38]"
+        },
+        "dominance_margin_float": 7.152120154582811,
+        "ordinary_eigen_min_abs": 7.152120154583484
+      },
+      "pass": true,
+      "seconds": 0.003537125012371689
+    },
+    {
+      "side": "right",
+      "cell": 13,
+      "theta_over_pi": [
+        11,
+        16
+      ],
+      "theta_interval_over_pi": [
+        10,
+        12,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "253518246419841819230650017384219782183",
+            "exponent": -126
+          },
+          "upper": {
+            "mantissa": "253518246419841819230650017384219782183",
+            "exponent": -126
+          },
+          "display": "[2.9800926649689667347252623529148154046 +/- 2.99e-38]"
+        },
+        "dominance_margin_float": 2.9800926649689665,
+        "ordinary_eigen_min_abs": 2.9800926649697317
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "3267926819588048657469173404431626491",
+            "exponent": -119
+          },
+          "upper": {
+            "mantissa": "3267926819588048657469173404431626491",
+            "exponent": -119
+          },
+          "display": "[4.9170297796177867841066931772519655215 +/- 6.33e-39]"
+        },
+        "dominance_margin_float": 4.917029779617787,
+        "ordinary_eigen_min_abs": 4.917029779618324
+      },
+      "pass": true,
+      "seconds": 0.0034851249656639993
+    },
+    {
+      "side": "right",
+      "cell": 14,
+      "theta_over_pi": [
+        13,
+        16
+      ],
+      "theta_interval_over_pi": [
+        12,
+        14,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "290865184189791007555592896826828354715",
+            "exponent": -127
+          },
+          "upper": {
+            "mantissa": "290865184189791007555592896826828354715",
+            "exponent": -127
+          },
+          "display": "[1.7095519043299173226234877745225256393 +/- 3.42e-38]"
+        },
+        "dominance_margin_float": 1.7095519043299172,
+        "ordinary_eigen_min_abs": 1.7095519043306648
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "137415410946446955618320808867070413793",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "137415410946446955618320808867070413793",
+            "exponent": -125
+          },
+          "display": "[3.2306207856694304945538114863006546261 +/- 2.47e-38]"
+        },
+        "dominance_margin_float": 3.2306207856694305,
+        "ordinary_eigen_min_abs": 3.2306207856700957
+      },
+      "pass": true,
+      "seconds": 0.00359054101863876
+    },
+    {
+      "side": "right",
+      "cell": 15,
+      "theta_over_pi": [
+        15,
+        16
+      ],
+      "theta_interval_over_pi": [
+        14,
+        16,
+        16
+      ],
+      "lower": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "32802399069189768324500101225268068937",
+            "exponent": -125
+          },
+          "upper": {
+            "mantissa": "32802399069189768324500101225268068937",
+            "exponent": -125
+          },
+          "display": "[0.77118069598501669458517786314121117013 +/- 3.08e-39]"
+        },
+        "dominance_margin_float": 0.7711806959850167,
+        "ordinary_eigen_min_abs": 0.7711806959852048
+      },
+      "upper": {
+        "pass": true,
+        "negative": 1,
+        "positive": 24,
+        "unresolved": 0,
+        "dominance_margin": {
+          "lower": {
+            "mantissa": "24514951101201311793389273237232738919",
+            "exponent": -123
+          },
+          "upper": {
+            "mantissa": "24514951101201311793389273237232738919",
+            "exponent": -123
+          },
+          "display": "[2.3053749224117406619759774608511596845 +/- 3.14e-38]"
+        },
+        "dominance_margin_float": 2.305374922411741,
+        "ordinary_eigen_min_abs": 2.305374922412413
+      },
+      "pass": true,
+      "seconds": 0.003510249953251332
+    }
+  ],
+  "resources": {
+    "elapsed_seconds": 0.8414147920557298,
+    "peak_rss_bytes": 55132160,
+    "storage_budget_bytes": 91657728
+  },
+  "scope": "Periodic bulk operators only; no half-guide pole exclusion or defect mode count."
+}

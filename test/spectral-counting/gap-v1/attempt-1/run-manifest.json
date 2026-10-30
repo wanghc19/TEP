@@ -1,0 +1,91 @@
+{
+  "recorded_utc": "2026-10-30T07:22:56.264915+00:00",
+  "storage_including_git_pointer_allowance_bytes": 92403328,
+  "storage_limit_bytes": 1000000000,
+  "symlinks_followed": false,
+  "git_metadata_accessed_by_scanner": false,
+  "outputs": [
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/audit-01.json",
+      "bytes": 717913
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/audit-01.txt",
+      "bytes": 1514
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/audit-02.json",
+      "bytes": 717951
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/audit-02.txt",
+      "bytes": 1548
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/certify-01-moments.json",
+      "bytes": 36131
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/certify-01.csv",
+      "bytes": 2696
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/certify-01.json",
+      "bytes": 48850
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/certify-01.txt",
+      "bytes": 2009
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/certify-02-moments.json",
+      "bytes": 36131
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/certify-02.csv",
+      "bytes": 2701
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/certify-02.json",
+      "bytes": 48892
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/certify-02.txt",
+      "bytes": 2042
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/dependencies-network.log",
+      "bytes": 757
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/dependencies.log",
+      "bytes": 1739
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/guard-checks.json",
+      "bytes": 513
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/probe-01.json",
+      "bytes": 5786
+    },
+    {
+      "path": "test/spectral-counting/gap-v1/attempt-1/probe-01.txt",
+      "bytes": 4176
+    }
+  ],
+  "matlab_started": false,
+  "octave_numerics_run": false,
+  "python_environment": "Conda octave",
+  "thread_limits": {
+    "OPENBLAS_NUM_THREADS": 1,
+    "OMP_NUM_THREADS": 1,
+    "VECLIB_MAXIMUM_THREADS": 1
+  },
+  "cutoff": 2,
+  "cells_per_side": 16,
+  "main_bits": 128,
+  "audit_bits": 192,
+  "audit_taylor_degree": 64,
+  "syntax_checks": "both Python sources parsed successfully"
+}

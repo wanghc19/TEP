@@ -1,0 +1,19 @@
+{
+  "guard_checks": [
+    {
+      "case": "nonpositive-strip",
+      "pass": true,
+      "returncode": 1,
+      "last_error": "ValueError: Require 80--512 bits and a strictly positive strip width.",
+      "output_created": false
+    },
+    {
+      "case": "expired-deadline",
+      "pass": true,
+      "returncode": 1,
+      "last_error": "RuntimeError: Scientific wall-time or research deadline reached.",
+      "output_created": false
+    }
+  ],
+  "numerical_records_identical_after_run_control_change": true
+}

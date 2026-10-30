@@ -69,6 +69,7 @@
 | `ref_data/Lu2026.pdf` | *A Boundary Integral Equation Method for Wave Scattering in Periodic Structures via the Floquet–Bloch Transform* | Wangtao Lu; Kuanrong Shen; Ruming Zhang | 2026 | 局部扰动周期结构、Floquet–Bloch、BIE | 提供以背景 Green 函数和 Floquet–Bloch 逆变换处理非准周期散射的新方法 | `LuShenZhang2026` |
 | `ref_data/Luan2019.pdf` | *A Meshless Numerical Method for Time Harmonic Quasi-Periodic Scattering Problem* | Tian Luan; Yao Sun; Zibo Zhuang | 2019 | 准周期散射、无网格方法 | 可作为项目边界积分离散之外的数值方法对照 | `LuanSunZhuang2019` |
 | `ref_data/PerezArancibia2026.pdf` | *Photonic band structure by direct second-kind free-space boundary integral equations* | Carlos Pérez-Arancibia; Tao Yin | 2026 预印本 | 第二类胞元 BIE、Bloch 真伪核 | 直接胞元方法先例；整曲线判据不能由有限采样认证 | `PerezArancibiaYin2026` |
+| `ref_data/Trefethen2014.pdf` | *The Exponentially Convergent Trapezoidal Rule* | Lloyd N. Trefethen; J. A. C. Weideman | 2014 | 周期解析积分、指数梯形余项 | Thm. 3.2、式 (3.16)，p.396；真实材料矩的显式求积误差。[作者全文](https://people.maths.ox.ac.uk/trefethen/sirev56-3_385.pdf)，2026-10-30 下载 | `TrefethenWeideman2014` |
 
 ## 非线性特征值、谱扰动与传输特征值
 
@@ -88,6 +89,7 @@
 | `ref_data/Cox2017.pdf` | *Manifold Decompositions and Indices of Schrödinger Operators* | Graham Cox; Christopher K. R. T. Jones; Jeremy L. Marzuola | 2017（本地为 arXiv v2，2016，19 页） | 区域分解、Maslov 指数、DtN、Morse 指数 | 给出紧流形上的拼接及 DtN 指数公式；无限波导内部带隙需额外处理相对计数与端部谱 | `CoxJonesMarzuola2017` |
 | `ref_data/Dupuy2025.pdf` | *A Posteriori Error Estimates for Schrödinger Operators Discretized with Linear Combinations of Atomic Orbitals* | Mi-Song Dupuy; Geneviève Dusson; Ioanna-Maria Lygatsika | 2025（本地为 arXiv 稿） | 局部残差双范数、显式谱尾 | 全残差范数控制的近邻；trace 适配及连续 gap 尚缺 | `DupuyDussonLygatsika2025` |
 | `ref_data/Guettel2017.pdf` | *The Nonlinear Eigenvalue Problem* | Stefan Güttel; Françoise Tisseur | 2017 | 非线性矩阵特征值、数值算法综述 | 为项目频率依赖算子和数值特征值算法提供统一框架 | `GuettelTisseur2017` |
+| `ref_data/Herbst2020.pdf` | *A posteriori error estimation for the non-self-consistent Kohn–Sham equations* | Michael F. Herbst; Antoine Levitt; Eric Cancès | 2020，arXiv v2 | 可靠平面波谱界、Schur 补 | §V、式 (7)–(8)，PDF p.5；有限／无限块的近邻，赝势尾不能直接套用于材料跳变。[公开全文](https://arxiv.org/pdf/2004.13549v2)，2026-10-30 下载 | `HerbstLevittCances2020` |
 | `ref_data/unsorted/Transmission Eigenvalues for Helmholtz Equation Perturbation Problems of Isotropic Media With Voids.pdf` | 《含空隙的各向同性介质 Helmholtz 方程扰动问题的传输特征值》 | 李诗璇；刘立汉 | 2023 | 传输特征值、折射率扰动、Neumann–Dirichlet 算子 | 与项目传输特征值的扰动理论和算子表述相关 | `LiLiu2023` |
 | `ref_data/Liu2026.pdf` | *Guaranteed Lower Eigenvalue Bounds for Spectral Galerkin Methods with Application to Schrödinger Operators* | Xuefeng Liu | 2026 预印本 | 谱 Galerkin 下界、模态泄漏 | 辅助投影及补空间常数参考；周期 lead 不满足 confinement | `Liu2026Spectral` |
 | `ref_data/Moskow2015.pdf` | *Nonlinear Eigenvalue Approximation for Compact Operators* | Shari Moskow | 2015 | 紧算子、非线性特征值逼近、扰动 | 支撑项目对离散或参数扰动下特征值收敛的分析 | `Moskow2015` |
@@ -119,5 +121,5 @@
 ## 维护约定
 
 - 新增文献时，先核验题名、作者、年份和 DOI，再更新本索引及 `reference.bib`。
-- 文献原文件和翻译工程通过 `ref_data/` 访问，其实际位置为仓库上级目录中的 `TEP_ref/`，不由 Git 追踪；`ref/` 下只追踪本文件、`reference.bib` 和 `AGENTS.md`。
+- 文献原文件和翻译工程通过 `ref_data/` 访问，不由 Git 追踪；`ref/` 下只追踪本文件、`reference.bib` 和 `AGENTS.md`。历史配置指向仓库上级 `TEP_ref/`；2026-10-30 本轮用户明确要求全部文件留在当前 worktree，因此新增的上述两份 PDF 存于本地 `ref/ref_data/`，没有创建或写入外部目录。
 - 对无法从原文或权威书目信息确认身份的材料，保留“无法可靠确认”标记，不补猜元数据。

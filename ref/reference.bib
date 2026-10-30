@@ -1,6 +1,7 @@
 % Verified bibliography for the local reference catalog in ref/README.md.
-% Local reference data is accessed through ref/ref_data/, which links to
-% the sibling directory ../TEP_ref/.
+% Local reference data is accessed through ref/ref_data/.
+% On 2026-10-30 the task explicitly requires copies inside this worktree;
+% do not create or write an external sibling directory for these additions.
 % Entries are keyed by author surname(s) and publication year.
 
 @article{AdcockHuybrechs2020,
@@ -595,6 +596,23 @@
   url     = {https://arxiv.org/abs/1412.6420}
 }
 
+@article{HerbstLevittCances2020,
+  author  = {Michael F. Herbst and Antoine Levitt and Eric Canc{\`e}s},
+  title   = {A Posteriori Error Estimation for the Non-Self-Consistent
+             {Kohn--Sham} Equations},
+  journal = {Faraday Discussions},
+  year    = {2020},
+  volume  = {224},
+  pages   = {227--246},
+  doi     = {10.1039/D0FD00048E},
+  eprint  = {2004.13549},
+  archiveprefix = {arXiv},
+  url     = {https://arxiv.org/pdf/2004.13549v2},
+  note    = {Public arXiv version 2, 15 June 2020; accessed 30 October 2026.
+             Section V, equations (7)--(8), motivates finite/infinite blocks;
+             pseudopotential tail assumptions do not apply to density jumps}
+}
+
 @article{HiptmairMoiolaSpence2022,
   author  = {Ralf Hiptmair and Andrea Moiola and Euan A. Spence},
   title   = {Spurious Quasi-Resonances in Boundary Integral Equations for the
@@ -936,6 +954,21 @@
   publisher = {Academic Press},
   address   = {New York},
   year      = {1978}
+}
+
+@article{TrefethenWeideman2014,
+  author  = {Lloyd N. Trefethen and J. A. C. Weideman},
+  title   = {The Exponentially Convergent Trapezoidal Rule},
+  journal = {SIAM Review},
+  year    = {2014},
+  volume  = {56},
+  number  = {3},
+  pages   = {385--458},
+  doi     = {10.1137/130932132},
+  url     = {https://people.maths.ox.ac.uk/trefethen/sirev56-3_385.pdf},
+  note    = {Author-hosted public full text; accessed 30 October 2026.
+             Theorem 3.2 and equation (3.16), page 396, give the periodic
+             analytic-strip quadrature remainder used for true material moments}
 }
 
 @book{Wilcox1984,

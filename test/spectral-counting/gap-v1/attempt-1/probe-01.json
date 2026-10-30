@@ -1,0 +1,233 @@
+{
+  "status": "ORDINARY_FEASIBILITY_ONLY",
+  "rows": [
+    {
+      "cutoff": 1,
+      "dimension": 9,
+      "cells": 8,
+      "radius": 0.39269908169872414,
+      "a_expanded": 1.3374789659749378,
+      "b_expanded": 3.846061454250744,
+      "h": 23.693394887541587,
+      "delta": 39.95628663284915,
+      "negative_counts": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "min_abs_eigenvalue": 0.12853356051366402,
+      "ordinary_pass": false,
+      "rough_congruence_work": 23328
+    },
+    {
+      "cutoff": 1,
+      "dimension": 9,
+      "cells": 16,
+      "radius": 0.19634954084936207,
+      "a_expanded": 1.8301863407957137,
+      "b_expanded": 3.1144775849336166,
+      "h": 36.13032066593274,
+      "delta": 17.182192371649826,
+      "negative_counts": [
+        1,
+        2
+      ],
+      "min_abs_eigenvalue": 0.3297447895634441,
+      "ordinary_pass": false,
+      "rough_congruence_work": 46656
+    },
+    {
+      "cutoff": 1,
+      "dimension": 9,
+      "cells": 32,
+      "radius": 0.09817477042468103,
+      "a_expanded": 2.1054548848499177,
+      "b_expanded": 2.77760050691887,
+      "h": 41.85723099218343,
+      "delta": 11.796387891939363,
+      "negative_counts": [
+        1,
+        2
+      ],
+      "min_abs_eigenvalue": 0.4929646929466874,
+      "ordinary_pass": false,
+      "rough_congruence_work": 93312
+    },
+    {
+      "cutoff": 1,
+      "dimension": 9,
+      "cells": 64,
+      "radius": 0.04908738521234052,
+      "a_expanded": 2.250317871037974,
+      "b_expanded": 2.6163906820724505,
+      "h": 44.59779801457257,
+      "delta": 9.823624312929516,
+      "negative_counts": [
+        1,
+        2
+      ],
+      "min_abs_eigenvalue": 0.2719100460116077,
+      "ordinary_pass": false,
+      "rough_congruence_work": 186624
+    },
+    {
+      "cutoff": 1,
+      "dimension": 9,
+      "cells": 128,
+      "radius": 0.02454369260617026,
+      "a_expanded": 2.324556542672241,
+      "b_expanded": 2.5375929481894786,
+      "h": 45.93735949058309,
+      "delta": 8.971351307411226,
+      "negative_counts": [
+        1,
+        2
+      ],
+      "min_abs_eigenvalue": 0.054120144628964056,
+      "ordinary_pass": false,
+      "rough_congruence_work": 373248
+    },
+    {
+      "cutoff": 2,
+      "dimension": 25,
+      "cells": 8,
+      "radius": 0.39269908169872414,
+      "a_expanded": 1.3374789659749378,
+      "b_expanded": 3.846061454250744,
+      "h": 181.60706530497131,
+      "delta": 5.212903340748931,
+      "negative_counts": [
+        0,
+        1,
+        2
+      ],
+      "min_abs_eigenvalue": 0.6415684249013844,
+      "ordinary_pass": false,
+      "rough_congruence_work": 500000
+    },
+    {
+      "cutoff": 2,
+      "dimension": 25,
+      "cells": 16,
+      "radius": 0.19634954084936207,
+      "a_expanded": 1.8301863407957137,
+      "b_expanded": 3.1144775849336166,
+      "h": 194.04399108336247,
+      "delta": 3.1992648505397576,
+      "negative_counts": [
+        1
+      ],
+      "min_abs_eigenvalue": 0.7711806959855139,
+      "ordinary_pass": true,
+      "rough_congruence_work": 1000000
+    },
+    {
+      "cutoff": 3,
+      "dimension": 49,
+      "cells": 8,
+      "radius": 0.39269908169872414,
+      "a_expanded": 1.3374789659749378,
+      "b_expanded": 3.846061454250744,
+      "h": 418.4775709311159,
+      "delta": 2.2622480706086088,
+      "negative_counts": [
+        0,
+        1
+      ],
+      "min_abs_eigenvalue": 1.0190773207590489,
+      "ordinary_pass": false,
+      "rough_congruence_work": 3764768
+    },
+    {
+      "cutoff": 3,
+      "dimension": 49,
+      "cells": 16,
+      "radius": 0.19634954084936207,
+      "a_expanded": 1.8301863407957137,
+      "b_expanded": 3.1144775849336166,
+      "h": 430.91449670950703,
+      "delta": 1.4406526697799893,
+      "negative_counts": [
+        1
+      ],
+      "min_abs_eigenvalue": 0.8048155542918023,
+      "ordinary_pass": true,
+      "rough_congruence_work": 7529536
+    },
+    {
+      "cutoff": 4,
+      "dimension": 81,
+      "cells": 8,
+      "radius": 0.39269908169872414,
+      "a_expanded": 1.3374789659749378,
+      "b_expanded": 3.846061454250744,
+      "h": 734.3049117659754,
+      "delta": 1.289246554479823,
+      "negative_counts": [
+        0,
+        1
+      ],
+      "min_abs_eigenvalue": 1.0244140372758554,
+      "ordinary_pass": false,
+      "rough_congruence_work": 17006112
+    },
+    {
+      "cutoff": 4,
+      "dimension": 81,
+      "cells": 16,
+      "radius": 0.19634954084936207,
+      "a_expanded": 1.8301863407957137,
+      "b_expanded": 3.1144775849336166,
+      "h": 746.7418375443665,
+      "delta": 0.8313423581206107,
+      "negative_counts": [
+        1
+      ],
+      "min_abs_eigenvalue": 0.8186295958135527,
+      "ordinary_pass": true,
+      "rough_congruence_work": 34012224
+    },
+    {
+      "cutoff": 5,
+      "dimension": 121,
+      "cells": 8,
+      "radius": 0.39269908169872414,
+      "a_expanded": 1.3374789659749378,
+      "b_expanded": 3.846061454250744,
+      "h": 1129.0890878095495,
+      "delta": 0.8384635788735743,
+      "negative_counts": [
+        0,
+        1
+      ],
+      "min_abs_eigenvalue": 1.0252773391271084,
+      "ordinary_pass": false,
+      "rough_congruence_work": 56689952
+    },
+    {
+      "cutoff": 5,
+      "dimension": 121,
+      "cells": 16,
+      "radius": 0.19634954084936207,
+      "a_expanded": 1.8301863407957137,
+      "b_expanded": 3.1144775849336166,
+      "h": 1141.5260135879407,
+      "delta": 0.5438317767110847,
+      "negative_counts": [
+        1
+      ],
+      "min_abs_eigenvalue": 0.8217347563260083,
+      "ordinary_pass": true,
+      "rough_congruence_work": 113379904
+    }
+  ],
+  "versions": {
+    "numpy": "2.5.4",
+    "python_flint": "0.9.0"
+  },
+  "resources": {
+    "elapsed_seconds": 0.1744142079842277,
+    "peak_rss_bytes": 54755328
+  }
+}
