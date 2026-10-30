@@ -1,5 +1,9 @@
 # Research status
 
+2026-10-30，新增 [[research/weekly-literature/README|每周文献调研归档]]：按用户给定的 10/01、10/09、10/16、10/23、10/30 五批核验 13 篇，新增 12 份合法公开全文、复用 1 份，书目与下载校验清单已同步。[[research/weekly-literature/synthesis|综合评估]] 区分显式谱界、残差全范数工具、胞元 BIE 与周期端 DtN 的借鉴价值和创新性重叠，并修正原简报的版本/编号/假设范围。未发现可直接关闭当前二维无限导模全部认证门的单篇结果；不作全球首创判定。仅文献与研究入口更新，未改模型、理论证明或实验代码，未运行 MATLAB，未改变 I9/I10/谱计数的证据等级。
+
+以下保留先前阶段记录；项目当前计算状态仍以各专题入口为准。
+
 2026-10-27，[[research/projects/eig-apost/implementation/i9/review-9-6a#9. R2：D2 run-03 实际结果审查|I9.6a D2实际审查R2]]：**REVISE，上界资格尚未闭合**。D1空成功出口已补；bulk近整矩形替代的复缺陷矩误差未受控，机器上界标签须收窄。主层报告 $R_k=1.42815\times10^{-4}$，源矩包围占半径91.76%，实用目标未达且不能归因为candidate变差。正式墙钟302.5766秒、MATLAB子树采样峰值2.713GB；目标流程总成本下降未建立。最小后续为冻结场的bulk资格及F/P评价收紧，未授权执行。本轮仅更新审查/入口，未修改理论、设计、实验或运行数值计算。问题见 [[research/projects/eig-apost/implementation/i9/README#I9.6 后验估计问题账目|I9.6账目]]；以下D2“未运行”等表述保留当时历史范围。
 
 2026-10-27续，当前待执行合同为 [[research/projects/eig-apost/implementation/i9/design-9-6a|I9.6a D2]]：可靠源矩、直接缺陷、几何细带及解析范数出口已写入原理论；旧实现未完成状态保留，不能提前标为修复成功。冻结candidate/原生配置，30分钟计划/40分钟硬限、3GB、串行。仅研究文档修订，未运行实验；D2独审见 [[research/projects/eig-apost/phase3-analysis/fem-bound/r-dtn-bound|追加审查]]。

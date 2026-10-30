@@ -1,0 +1,82 @@
+{
+  "checked_on": "2026-10-30",
+  "pdf_checks": [
+    {
+      "file": "ref_data/Liu2026.pdf",
+      "pages": 28,
+      "sha256_matches": true
+    },
+    {
+      "file": "ref_data/Ammari2026.pdf",
+      "pages": 39,
+      "sha256_matches": true
+    },
+    {
+      "file": "ref_data/Carstensen2026.pdf",
+      "pages": 28,
+      "sha256_matches": true
+    },
+    {
+      "file": "ref_data/Lu2026.pdf",
+      "pages": 20,
+      "sha256_matches": true
+    },
+    {
+      "file": "ref_data/Dupuy2025.pdf",
+      "pages": 27,
+      "sha256_matches": true
+    },
+    {
+      "file": "ref_data/Ammari2026a.pdf",
+      "pages": 75,
+      "sha256_matches": true
+    },
+    {
+      "file": "ref_data/Chouly2026.pdf",
+      "pages": 41,
+      "sha256_matches": true
+    },
+    {
+      "file": "ref_data/CortesCastillo2026.pdf",
+      "pages": 47,
+      "sha256_matches": true
+    },
+    {
+      "file": "ref_data/Zhang2026.pdf",
+      "pages": 22,
+      "sha256_matches": true
+    },
+    {
+      "file": "ref_data/Carstensen2026a.pdf",
+      "pages": 33,
+      "sha256_matches": true
+    },
+    {
+      "file": "ref_data/PerezArancibia2026.pdf",
+      "pages": 29,
+      "sha256_matches": true
+    },
+    {
+      "file": "ref_data/Zou2026.pdf",
+      "pages": 28,
+      "sha256_matches": true
+    },
+    {
+      "file": "ref_data/Hu2026.pdf",
+      "pages": 47,
+      "sha256_matches": true
+    }
+  ],
+  "batch_counts": {
+    "2026-10-01": 5,
+    "2026-10-09": 1,
+    "2026-10-16": 3,
+    "2026-10-23": 3,
+    "2026-10-30": 1
+  },
+  "bibliography_unique_keys": 82,
+  "all_13_catalog_links_present": true,
+  "local_links_and_math_delimiters": "PASS",
+  "issues": [],
+  "scope": "Artifact consistency and source PDF integrity; no MATLAB or numerical validation"
+}
