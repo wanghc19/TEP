@@ -1,156 +1,62 @@
 # Research guidance
 
-This file applies under `research/`; the repository-root `AGENTS.md` also applies.
+The root `AGENTS.md` also applies. Read the relevant research/project README,
+status, notation, and task files; avoid unrelated repository-wide reading.
 
-## Reading order
+## Authority and mathematical meaning
 
-For theoretical tasks, read the root `AGENTS.md`, then `README.md`, `STATUS.md`,
-and `NOTATION.md`, followed by only the relevant planning or project files. Read
-an archived mainline only when the task explicitly selects that archive or its
-Git tag. Do not read the whole repository when the task is narrower.
+- Use the selected project's current theory files, notation, and supporting
+  evidence. Current organization and status belong in README/STATUS.
+- `mainline` is only a historical designation and has no theoretical or notation
+  authority. Do not treat it as an active hierarchy or a destination for promotion.
+- `draft/` is a writing output, not a source of theoretical authority. Selecting
+  a draft for editing or review does not change that status.
+- Archived material and historical notation are for explicitly requested
+  historical work. Planning documents govern strategy, not proofs.
+- Do not silently change definitions, assumptions, notation, theorem status, or
+  citation sources. For approved notation changes, check affected theory,
+  notation records, and both language versions where applicable.
+- Identify the governing theory/version for code or papers. Explain the mapping
+  between mathematical symbols and code when needed; do not force identical names.
 
-## Authority
+## Research depth and evidence
 
-When an active `mainline/` exists, use this order: `mainline/` > `NOTATION.md` >
-`projects/` > `planning/` > `pre/` > `legacy/`. There is currently no active
-`mainline/`.
+- Classify unresolved concerns by their effect on the current task:
+  `blocker` invalidates the deliverable or prevents the next required step;
+  `important caveat` limits interpretation or applicability; `minor caveat`
+  can be deferred. Only blockers justify stopping a stage.
+- Match rigor to the claim. Numerical evidence, conditional conclusions, and
+  reliable bounds must remain distinct; an unproved condition does not by itself
+  invalidate a clearly stated conditional or numerical result.
+- Investigate side questions only when they can change the current acceptance
+  criterion or next computation. Prefer the smallest decisive check; do not
+  expand a numerical question into an unnecessary theoretical project.
+- Request revision for a concrete required repair, not merely for a caveat.
+  Keep unresolved issues in one project-level ledger with their effect, next
+  check, and status, linked from the project README and relevant reviews.
 
-- `mainline/` governs current theory and notation but may contain proof gaps or
-  unproved propositions and is not automatically ready for `draft/`; create it
-  only after a new unified direction has been explicitly reviewed.
-- `NOTATION.md` currently indexes the frozen Müller--Cauchy notation; it does not
-  govern a new direction or define a second system.
-- `archive/` is non-authoritative historical material unless a task explicitly
-  selects an archive or frozen Git version.
-- Do not promote project conclusions into the mainline without explicit review.
-- Planning files govern strategy, not formal mathematics.
-- `pre/` contains stage-specific presentations; use `legacy/` only for explicitly
-  requested historical reconstruction.
-- `draft/` is a downstream writing target, not an authority, unless a task selects
-  a frozen draft version.
+## Scope, records, and handoff
 
-## Research depth
-
-- Classify each unresolved concern relative to the current goal as exactly one
-  of the following:
-  - `blocker`: invalidates the current stage's primary deliverable, makes its
-    main result uninterpretable, or prevents the next required computation;
-  - `important caveat`: materially limits scope, robustness, reproducibility,
-    or interpretation, but does not stop the current stage or the next one;
-  - `minor caveat`: a low-impact limitation, optional robustness extension, or
-    documentation issue that may be deferred.
-- Only an unresolved `blocker` may stop a stage. Important and minor caveats
-  must be disclosed and tracked, but they do not by themselves justify
-  `STOP`, `BLOCKED`, or a new theoretical workstream.
-- Use `REVISE` only when a bounded repair is required before accepting the
-  current deliverable. Caveats alone should normally produce
-  `PASS WITH CONDITIONS` or `PASS`, with their follow-up recorded in the
-  open-problem ledger.
-- Investigate a side issue only as far as needed to advance or validate the
-  current task. Every proposed investigation must identify which current
-  acceptance criterion or next computation it can change.
-- Do not turn a numerical plausibility question into a full theoretical
-  investigation unless the unresolved issue materially blocks the current goal.
-- Prefer a cheap sanity check over a new theoretical branch when it can
-  adequately test the concern.
-- Calibrate rigor to the intended output. An engineering or numerical paper
-  normally requires an executable method, representative validation,
-  reproducibility, sensitivity checks, and honest limitations; it does not
-  require theorem-level certification unless the active claim says so.
-- After each stage review, hand unresolved goal-relevant items to one
-  project-level open-problem ledger. Group the ledger by stage, record category,
-  blocking scope, cheapest next check, and status, and link it from both the
-  review and the project's README. Do not duplicate a growing open-problem list
-  across review files.
-
-## Literature
-
-- If a reference must be downloaded, use a lawful public full text and save it
-  through the repository-root `ref/ref_data/` as
-  `<FirstAuthorSurname><PublicationYear>.pdf`, appending `a`, `b`, and so on for
-  collisions; verify its identity before use.
-
-## Notation
-
-- When an active `mainline/` exists, use its notation. Otherwise use notation
-  local to the selected project or planning task and do not silently inherit the
-  frozen archive's notation.
-- Never silently change notation, definitions, assumptions, theorem status, or
-  citation sources.
-- When changing an active mainline's notation, check mainline-wide consistency,
-  English and Chinese agreement, `NOTATION.md`, and directly related project files.
-- Do not force theory symbols and code variables to match at this stage.
-- Code tasks must name the governing theory file or Git version and add a
-  theory-to-code map when needed.
-- Paper tasks must state whether they use current mainline notation or a frozen
-  version.
-
-## Scope and handoff
-
-- Do not modify MATLAB code directories unless explicitly requested.
-- Do not create a directory for each proposition, lemma, audit item, or small task.
-- Avoid overlapping `README`, `STATUS`, `SUMMARY`, and `PLAN` files.
-- After long tasks update `STATUS.md`; record new direction decisions in
-  `DECISIONS.md`. Record notation, citation, bilingual, and rigor issues in an
-  active `mainline/review-log.md`, or in the selected project's status material
-  when no active mainline exists. Do not edit a frozen review log unless the task
-  explicitly concerns that archive.
-- Do not copy long proofs or complete literature content into collaboration files.
-- When writing research notes, add Obsidian wikilinks (`[[...]]`) for substantive
-  connections to relevant concept, literature, experiment, or report notes; avoid
-  decorative links and use vault-relative paths when filenames are ambiguous.
-
-## Temporary material
-
-- Put disposable derivations, audits, extracted text, conversions, and unclassified
-  outputs in `tmp/`; it is non-authoritative and normally untracked.
-- Never keep durable results, accepted decisions, or established theory in `tmp/`.
-- Move useful material to `planning/` for strategy or `projects/` for multi-stage
-  investigations. Move accepted theory to `mainline/` only after a unified
-  direction has been explicitly reviewed and activated.
-- Create a project directory only for a multi-file or multi-session investigation.
+- Do not modify MATLAB code directories without explicit authorization.
+- Update status after substantial work and record new direction decisions.
+  Keep review issues in the active project's records; do not rewrite historical
+  records unless the task explicitly concerns them.
+- Keep durable results in project files and temporary derivations, extracts,
+  and conversions in `tmp/`. Temporary material is not theoretical authority.
+- Reuse existing directories and records. Avoid separate folders for individual
+  lemmas or tasks, and overlapping README/STATUS/SUMMARY/PLAN documents.
+- Use meaningful Obsidian links between related notes. Do not duplicate long
+  proofs or source literature in handoff files.
+- Follow `ref/AGENTS.md` for literature acquisition and catalog updates.
 
 ## Naming
 
-- These rules cover new directories and durable human-facing documents, not every
-  readable file or supporting record collection.
-- Use lowercase ASCII and hyphens; prefer short, meaningful, stable names and
-  established abbreviations.
-- Do not lengthen concise names, invent arbitrary truncations, or use vague labels
-  such as `new`, `final`, `updated`, `latest`, or `codex-output`.
-- Keep clear structural names such as `mainline`, `planning`, `projects`, `tmp`,
-  `archive`, `legacy`, and `figs` unchanged.
-
-### Directories
-
-- Summarize the topic instead of encoding the full purpose; prefer concise forms
-  such as `hg-dtn`, `sol-rep`, or `novel-audit`.
-- Expand a non-obvious abbreviation in the first-line heading of its `README.md`.
-- Add a README only when an abbreviation, scope, or authority may be misunderstood.
-- Reuse an existing directory when possible and avoid unnecessary deep nesting.
-
-### Filename simplification
-
-- Simplify only primary files readers browse, cite, or maintain directly, such as
-  theory modules, reports, plans, and top-level coordination documents.
-- Exempt checkpoints; files under `tmp/`, `logs/`, caches, rendered-output, or
-  build directories; generated or experimental outputs; extracted text,
-  conversions, and command logs; enumerated evidence collections; and names that
-  preserve dates, stages, sources, provenance, or external conventions.
-- Preserve the current name when scope is uncertain or when the name is a stable
-  record identifier, unless it is actually misleading.
-
-### Human-facing text files
-
-- Prefer at most 15 characters before the extension without arbitrary truncation.
-- Where applicable, use `s-` for sections, `a-` for appendices, `r-` for reviews,
-  and `p-` for plans; preserve abbreviations such as `dtn`, `ucp`, `bie`, `mfs`,
-  and `qp` and invent new prefixes only for repeated use.
-- If a shortened name loses its full meaning, add the complete title as a comment
-  at the start of the file.
-- Obvious standard names such as `README.md`, `STATUS.md`, `NOTATION.md`,
-  `DECISIONS.md`, and `theory.tex` need no title comment.
-- Follow nearby conventions and do not apply these rules retroactively to exempt
-  supporting files unless explicitly requested.
-
-Priority: meaningful and consistent > concise > mechanically descriptive.
+- Follow the root README: use short, meaningful names and existing conventions.
+  Prefer lowercase ASCII and hyphens for new directories and human-facing files.
+- Avoid deep nesting, arbitrary abbreviations, mandatory prefixes, and cosmetic
+  renaming. Preserve established paths and identifiers unless a change is needed;
+  check references before renaming. Follow the root `AGENTS.md` requirements for
+  explaining abbreviations in file and directory names.
+- Historical prefixes such as `p-` and `s-` are no longer required because their
+  meanings are not self-evident. If needed, treat them as abbreviations and
+  explain their full names in a comment at the beginning of the file.

@@ -1,72 +1,49 @@
-# Test Directory Guidelines
+# Experiment guidance
 
-- This directory is for experimental implementations and numerical validation.
-- Each experiment must have its own subdirectory.
-- The active experiment directory is the only writable location by default.
-- Keep generated files, figures, logs, and reports inside the corresponding experiment folder.
-- Experimental code must not modify files outside its own experiment directory unless explicitly requested.
-- Do not modify existing packages or main project code during experiments unless explicitly requested.
-- Promote only validated results to the main research documentation.
+The root `AGENTS.md` also applies.
 
-## Execution budgets
+## Scope and resources
 
-- Estimate the wall time and peak memory of the complete declared experiment
-  before launch.
-- Unless the user explicitly authorizes another budget in advance, one complete
-  scientific run has a 30-minute planned wall-time limit and a 2 GiB
-  peak-memory limit.
-- Do not start a run expected to exceed either limit; stop the design and report
-  the resource blocker.
-- Treat 30 minutes as a soft runtime limit. Continue only when objective
-  progress evidence shows that completion is imminent, and allow at most one
-  grace period of 10 minutes.
-- Treat 40 minutes and 2 GiB as hard limits. Stop and report at either limit;
-  do not grant a second extension.
-- All commands, stages, checkpoints, and subprocesses required for one complete
-  scientific result share the same runtime budget. Do not split a known
-  over-budget computation to reset the clock.
-- This shared budget applies to one correctly configured complete run, not
-  cumulatively across failed debugging runs.
-- Time spent in an operationally failed or debugging run is not charged against
-  the corrected rerun. Each corrected rerun receives a fresh 30-minute soft
-  limit and the same bounded grace period in the same attempt directory.
+- Give each experiment its own directory. By default, write only in the active
+  experiment directory, keeping code, logs, outputs, and reports there.
+  Changes outside it require explicit authorization.
+- Estimate complete-run time and peak memory before launch. Unless the user
+  specifies otherwise, use a 30-minute planned/soft limit, a 40-minute hard
+  limit, and a **3 GiB peak-memory hard limit**. Do not launch a run expected
+  to exceed its budget.
+- Allow at most one extension beyond 30 minutes, only with objective evidence
+  of imminent completion, and never beyond 40 minutes. Stop and report at a
+  hard limit. Monitor resources during execution.
+- All stages and subprocesses of one scientific result share its budget; do not
+  split computation to reset the clock. A corrected rerun after an operational
+  failure receives a fresh run budget; this is not a cumulative debugging budget.
 
-## Attempt lifecycle
+## Experiment versions, runs, and retained results
 
-- Creating an attempt directory does not consume the attempt.
-- Reuse the same attempt directory throughout one conversation for
-  implementation, debugging, fixes, and reruns of the same scientific method.
-- Code, path, dependency, schema, environment, or other operational failures do
-  not consume the attempt. Fix them in place and rerun in the same directory.
-- Keep failed-run evidence in the same attempt directory and distinguish runs
-  with logs or run identifiers; do not create a new attempt merely to preserve
-  outputs.
-- Create the next attempt directory only after the previous attempt completed
-  its declared full run and the scientific method or frozen contract itself
-  failed, requiring a materially different method.
-- A correctly implemented method that cannot fit the frozen resource budget may
-  be closed as a resource failure before a new method receives the next attempt
-  identifier.
-- Multiple attempt directories in one conversation are allowed only under the
-  preceding completed-method-failure rule.
+- For new experiments, default to `test/iN/name-vN/output/run-001/`, without an
+  `attempt-*` layer. The `-vN` suffix identifies an experiment plan or implementation
+  version; `run-NNN` identifies an individual execution.
+- Reuse the experiment version for debugging and reruns; give each execution a
+  distinct run directory and retain failure logs. Do not create a new version
+  merely for code, path, dependency, or environment fixes or to preserve logs.
+- Use a new version for substantial changes to the experiment plan or
+  implementation. Record parameter comparisons in explicit configurations; add
+  meaningful case directories only when needed, not another generic attempt layer.
+- Preserve historical directories, numbering, and references, including existing
+  `attempt-*` paths. This convention does not authorize moving old outputs or
+  rewriting their callers and records.
+- Follow the root reproducibility and large-output rules. Promote only validated
+  results to research records, with their limitations stated.
 
-## MATLAB runtime portability
+## Numerical runtime portability
 
-- Any MATLAB entry point that is actually run must depend only on MATLAB itself and the
-MATLAB source files that are genuinely required for the numerical computation.
-- Executable MATLAB code must not read, parse, hash, validate, or require any human-facing
-Markdown file, design or review document, README, status file, freeze file, manifest, Git
-metadata, generated report, historical output, or other non-code artifact in order to run.
-- Do not make execution conditional on repository-relative paths, absolute paths,
-directory depth, filenames recorded in documentation,
-or a particular layout under `test/`.  If an
-experiment directory and its required MATLAB/package functions are moved together and
-placed on the MATLAB path, the experiment must still run without source edits.
-- Resolve MATLAB dependencies through normal MATLAB function resolution.  A launcher may
-add the experiment directory or required package roots to the MATLAB path, but numerical code must not discover a repository root, reconstruct sibling paths, or require the original worktree layout.
-- Scientific parameters and necessary runtime configuration must live in MATLAB source or
-be supplied as explicit function inputs.  Documentation and provenance may describe a run,
-but they must never control or authorize execution.
-- Untracked SHA-256 files may be retained as optional machine-side provenance.
-MATLAB execution must not depend on them, and human-facing documentation must not display
-SHA-256 values or other content hashes.
+- Numerical entry points use explicit numerical inputs/configuration and the
+  code required for computation. They must not read documentation, designs,
+  reviews, Git metadata, manifests, or hashes to configure or authorize a run,
+  or require old outputs as hidden prerequisites.
+- Keep scientific parameters in MATLAB source or explicit arguments. Resolve
+  functions normally on the MATLAB path; a launcher may supply paths, but the
+  numerical code must not discover repository roots or require a fixed directory
+  layout. Moving the code and its dependencies must not require source edits.
+- Machine-side provenance is optional and cannot be a numerical dependency.
+  Keep content hashes out of human-facing research reports.
