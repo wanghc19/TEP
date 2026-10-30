@@ -1,0 +1,8 @@
+{"geometry": "left", "moment_count": 455, "pass": true}
+{"geometry": "right", "moment_count": 455, "pass": true}
+{"geometry": "center", "moment_count": 455, "pass": true}
+{"boundary": "D", "mu": "2.40", "negative": 6, "pass": true}
+{"boundary": "D", "mu": "2.46", "negative": 7, "pass": true}
+{"boundary": "N", "mu": "2.40", "negative": 6, "pass": true}
+{"boundary": "N", "mu": "2.46", "negative": 7, "pass": true}
+{"status": "LAURENT_GEOMETRY_AND_BOX_LDL_AUDIT_PASSED", "resources": {"elapsed_seconds": 45.71056254202267, "peak_rss_bytes": 209469440, "storage_budget_bytes": 94530368}}

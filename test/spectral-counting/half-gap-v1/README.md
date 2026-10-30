@@ -29,6 +29,7 @@
 ```sh
 source /Users/whc/opt/miniconda3/etc/profile.d/conda.sh
 conda activate octave
+mkdir -p test/spectral-counting/half-gap-v1/tmp
 export PYTHONPATH="$PWD/test/spectral-counting/gap-v1/vendor:$PWD/test/spectral-counting/gap-v1"
 export PYTHONDONTWRITEBYTECODE=1
 export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1

@@ -1,0 +1,92 @@
+{
+  "status": "SAVED_BOX_SIGNS_CHECKED",
+  "time_utc": "2026-10-30T08:08:11.290818+00:00",
+  "main_checks": [
+    {
+      "boundary": "D",
+      "mu": "2.40",
+      "checks": [
+        {
+          "matrix": "upper",
+          "negative": 6,
+          "dimension": 224,
+          "dominance_margin_lower_display": 0.10556146928322437
+        },
+        {
+          "matrix": "lower",
+          "negative": 6,
+          "dimension": 224,
+          "dominance_margin_lower_display": 0.02639715780841034
+        }
+      ]
+    },
+    {
+      "boundary": "D",
+      "mu": "2.46",
+      "checks": [
+        {
+          "matrix": "upper",
+          "negative": 7,
+          "dimension": 224,
+          "dominance_margin_lower_display": 0.05171328829684732
+        },
+        {
+          "matrix": "lower",
+          "negative": 7,
+          "dimension": 224,
+          "dominance_margin_lower_display": 0.13093889561090014
+        }
+      ]
+    },
+    {
+      "boundary": "N",
+      "mu": "2.40",
+      "checks": [
+        {
+          "matrix": "upper",
+          "negative": 6,
+          "dimension": 231,
+          "dominance_margin_lower_display": 0.08122856381268846
+        },
+        {
+          "matrix": "lower",
+          "negative": 6,
+          "dimension": 231,
+          "dominance_margin_lower_display": 0.005846398855463382
+        }
+      ]
+    },
+    {
+      "boundary": "N",
+      "mu": "2.46",
+      "checks": [
+        {
+          "matrix": "upper",
+          "negative": 7,
+          "dimension": 231,
+          "dominance_margin_lower_display": 0.07204475464820505
+        },
+        {
+          "matrix": "lower",
+          "negative": 7,
+          "dimension": 231,
+          "dominance_margin_lower_display": 0.14795969858389255
+        }
+      ]
+    }
+  ],
+  "audit_all_pivots_nonzero": true,
+  "main_pivot_count": 1820,
+  "audit_pivot_count": 1820,
+  "all_four_endpoint_counts": [
+    6,
+    7,
+    6,
+    7
+  ],
+  "center_inertia_after_subtracting_six": [
+    0,
+    1
+  ],
+  "scope": "Exact rational checks of saved signs; mathematical lifting requires BC1--BC3."
+}

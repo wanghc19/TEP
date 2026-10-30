@@ -11,5 +11,6 @@
 5. [[research/explorations/spectral-counting/claude_experiment_spec]]：保留原指定文件名；现为本轮实际实验规格与记录入口，不再交接 Claude。
 6. [[research/explorations/spectral-counting/s-gap-fourier]]：真实二维周期端的连续共同谱隙证明；[[research/explorations/spectral-counting/r-gap-fourier|2026-10-30 结果]] 与 [[test/spectral-counting/gap-v1/README|可靠复现]]。
 7. [[research/explorations/spectral-counting/s-half-gap]]：已验收的实际切口半条带排谱及统一谱距；[[test/spectral-counting/half-gap-v1/README|可靠复现]]。
+8. [[research/explorations/spectral-counting/s-box-count]]：已验收的连续唯一简单导模计数；[[test/spectral-counting/box-count-v1/README|有限箱可靠复现]]。
 
-当前可靠结果：精确解析模型的两侧周期端在 $\mu\in[2.40,2.46]$ 具有共同连续谱隙，全部 Floquet 参数由 25 维 Fourier 见证覆盖，独立算法复算通过。旧 g12/P2 两积分规则给完整中心负惯性 $0\to1$、四项 Schur 记账通过；它仍是普通离散惯性差。状态及唯一未决事项台账：[[research/explorations/spectral-counting/STATUS]]。方向决策：[[research/explorations/spectral-counting/DECISIONS]]。当前尚无该区间的严格连续导模计数证书。
+当前可靠结果：精确解析模型、固定 $\beta=1/2$，在 $\mu\in(2.40,2.46)$ 中恰有一个简单 $L^2$ 导模本征值。两端周期谱隙、实际半条带无极点和完整中心惯性均已由新 Fourier/有限箱证明链认证，独立人工验收通过。旧 g12/P2 结果及旧高精度误差半径没有被自动升级。状态及唯一未决事项台账：[[research/explorations/spectral-counting/STATUS]]；方向决策：[[research/explorations/spectral-counting/DECISIONS]]。

@@ -1,0 +1,44 @@
+{
+  "recorded_utc": "2026-10-30T08:13:43.167443+00:00",
+  "model": {
+    "beta": "1/2",
+    "period_y": "1",
+    "cell_width": "1",
+    "center_density": 4,
+    "lead_density": 17,
+    "background_density": 1,
+    "left_alpha": "3/25",
+    "right_alpha": "1/5",
+    "center_scale": "1",
+    "center_curve_x": "(3/10)cos(t)+(3/100)(cos(4t)+cos(6t))",
+    "center_curve_y": "(1/5)sin(t)+(3/100)(sin(6t)-sin(4t))"
+  },
+  "configuration": {
+    "lead_cells_per_side": 3,
+    "nx": 32,
+    "my": 3,
+    "bits": 192,
+    "boundary_nodes": 256,
+    "independent_taylor_degree": 96,
+    "target": [
+      "12/5",
+      "123/50"
+    ]
+  },
+  "storage": {
+    "logical_without_git": 87676084,
+    "conservative_allocated_without_git": 94280576,
+    "git_pointer_allowance": 1048576,
+    "budget_total_bytes": 95329152,
+    "hard_limit_bytes": 1000000000,
+    "follow_symlinks": false
+  },
+  "runtime": {
+    "conda_environment": "octave",
+    "single_blas_thread": true,
+    "matlab_started": false,
+    "deadline_utc": "2026-10-30T09:10:00Z"
+  },
+  "source_syntax_checks": "all 5 new Python files parsed",
+  "independence": "Independent material integration and inertia methods; shared model, some assembly/helpers, and Arb backend."
+}

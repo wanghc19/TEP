@@ -1,0 +1,9 @@
+{"lead_cells_per_side": 1, "nx": 16, "my": 3, "counts": {"D-2.40": [2, 2], "D-2.46": [2, 2], "N-2.40": [3, 3], "N-2.46": [3, 3]}, "minimum_ordinary_margin": 0.39234663175425327, "ordinary_pass": false}
+{"lead_cells_per_side": 1, "nx": 24, "my": 3, "counts": {"D-2.40": [2, 2], "D-2.46": [2, 2], "N-2.40": [3, 3], "N-2.46": [3, 3]}, "minimum_ordinary_margin": 0.4199301892906023, "ordinary_pass": false}
+{"lead_cells_per_side": 1, "nx": 32, "my": 3, "counts": {"D-2.40": [2, 2], "D-2.46": [2, 2], "N-2.40": [3, 3], "N-2.46": [3, 3]}, "minimum_ordinary_margin": 0.42044061513376957, "ordinary_pass": false}
+{"lead_cells_per_side": 2, "nx": 16, "my": 3, "counts": {"D-2.40": [4, 5], "D-2.46": [4, 5], "N-2.40": [4, 5], "N-2.46": [5, 5]}, "minimum_ordinary_margin": 0.032755368291102815, "ordinary_pass": false}
+{"lead_cells_per_side": 2, "nx": 24, "my": 3, "counts": {"D-2.40": [4, 4], "D-2.46": [4, 5], "N-2.40": [4, 5], "N-2.46": [5, 5]}, "minimum_ordinary_margin": 0.0062384971895445415, "ordinary_pass": false}
+{"lead_cells_per_side": 2, "nx": 32, "my": 3, "counts": {"D-2.40": [4, 4], "D-2.46": [5, 5], "N-2.40": [4, 5], "N-2.46": [5, 5]}, "minimum_ordinary_margin": 0.0020986733168961657, "ordinary_pass": false}
+{"lead_cells_per_side": 3, "nx": 16, "my": 3, "counts": {"D-2.40": [6, 7], "D-2.46": [6, 7], "N-2.40": [6, 7], "N-2.46": [6, 7]}, "minimum_ordinary_margin": 0.12242014534708393, "ordinary_pass": false}
+{"lead_cells_per_side": 3, "nx": 24, "my": 3, "counts": {"D-2.40": [6, 7], "D-2.46": [7, 7], "N-2.40": [6, 7], "N-2.46": [7, 7]}, "minimum_ordinary_margin": 0.02925326910952383, "ordinary_pass": false}
+{"lead_cells_per_side": 3, "nx": 32, "my": 3, "counts": {"D-2.40": [6, 6], "D-2.46": [7, 7], "N-2.40": [6, 6], "N-2.46": [7, 7]}, "minimum_ordinary_margin": 0.005846398860268672, "ordinary_pass": true}

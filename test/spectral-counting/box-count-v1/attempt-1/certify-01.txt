@@ -1,0 +1,5 @@
+{"boundary": "D", "mu": "2.40", "dimension": 224, "pass": true, "upper_negative": 6, "lower_negative": 6, "seconds": 2.046571541985031}
+{"boundary": "D", "mu": "2.46", "dimension": 224, "pass": true, "upper_negative": 7, "lower_negative": 7, "seconds": 2.0342438330408186}
+{"boundary": "N", "mu": "2.40", "dimension": 231, "pass": true, "upper_negative": 6, "lower_negative": 6, "seconds": 2.227655084047001}
+{"boundary": "N", "mu": "2.46", "dimension": 231, "pass": true, "upper_negative": 7, "lower_negative": 7, "seconds": 2.2286159999785013}
+{"status": "CONTINUOUS_BOX_ENDPOINTS_PROVED", "count": 1, "resources": {"elapsed_seconds": 9.945775125001092, "peak_rss_bytes": 264142848, "storage_budget_bytes": 93731552}}
