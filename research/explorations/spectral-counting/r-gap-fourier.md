@@ -49,7 +49,7 @@
 
 [[research/explorations/spectral-counting/s-model-bridge|M1–M4]] 通过同伦扫掠面积，将精确有理与源码 binary64 字面量的解析几何差异化为质量矩误差。每个 inclusion 允许对称差面积 $10^{-10}$，实、虚矩条目同时增宽，覆盖不保留反射对称性的扰动；两个端点各扩成半径 $10^{-12}$ 的带。字面量模型的实际面积差界均小于 $2.072\times10^{-16}$；每个展开系数另允许 $10^{-13}$ 变化的邻域，最大面积差仍小于 $4.148\times10^{-12}$。
 
-`test/spectral-counting/bridge-v1/attempt-1/robust-01.json` 已从数学常量重建完整 G2＋BC 输入，不读取任何历史结果，状态 `ROBUST_CONTINUOUS_MODE_COUNT_PROVED`。两侧单胞与8个有限箱界矩阵全部通过，D/N 各 $6\to7$，最小严格合同余量约0.00581657。`rational-01.json` 用标准库 `Fraction` 核对字面量最近 binary64、系数正根关系、标量界、1870个枢轴和全部合同余量，状态 `BINARY_LITERALS_COEFFICIENTS_AND_ROBUST_SIGNS_VERIFIED`。补充独立人工复核见审查文件的模型桥接部分。
+`test/spectral-counting/bridge-v1/attempt-1/robust-01.json` 已从数学常量重建完整 G2＋BC 输入，不读取任何历史结果，状态 `ROBUST_CONTINUOUS_MODE_COUNT_PROVED`。两侧单胞与8个有限箱界矩阵全部通过，D/N 各 $6\to7$，最小严格合同余量约0.00581657。`rational-01.json` 用标准库 `Fraction` 核对字面量最近 binary64、系数正根关系、标量界、1870个枢轴和全部合同余量，状态 `BINARY_LITERALS_COEFFICIENTS_AND_ROBUST_SIGNS_VERIFIED`。截至08:55 UTC，这项补充的独立人工复核尚未返回；上文已验收的范围为精确有理模型全链及两套复算，桥接此时已完成主实现者证明、可靠执行和有理数审计。
 
 最短完整复现入口是 [[test/spectral-counting/bridge-v1/README|两条实际命令]]：从常量重算再以精确有理数审计；该流程已经执行保存为 `robust-01`／`rational-01`。G2 单胞夹逼本身给所需共同 bulk gap，因此无需先读取 G1 旧证书。各分阶段 README 另保留全部原命令。固定依赖为 Python 3.14.4、NumPy 2.5.4、python-flint 0.9.0／FLINT 3.6.0。算法路径不同但共享部分装配和 Arb；标准库审计不重做全部分解，本成果不是整个软硬件栈的形式化证明。
 

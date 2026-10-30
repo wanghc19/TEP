@@ -72,7 +72,7 @@ BC3 不是直接相减两个无限负指数。所有消去的无限维单胞内�
 
 ## 4. 有限箱 Fourier 证书的完整尾界
 
-箱长 $W=2L+1$。Neumann 基为 $c_nW^{-1/2}\cos[n\pi(x+W/2)/W]e^{2\pi\mathrm i m y}$，$n\ge0$；Dirichlet 基为 $(2/W)^{1/2}\sin[n\pi(x+W/2)/W]e^{2\pi\mathrm i m y}$，$n\ge1$。两者取 $n\le N,|m|\le M$，遗漏动能下界
+箱长 $W=2L+1$，沿用 HD1 去掉 $e^{\mathrm i\beta y}$ 的周期 gauge；动能中的横向导数相应为 $\partial_y+\mathrm i\beta$，质量矩不变。Neumann 基为 $c_nW^{-1/2}\cos[n\pi(x+W/2)/W]e^{2\pi\mathrm i m y}$，$n\ge0$；Dirichlet 基为 $(2/W)^{1/2}\sin[n\pi(x+W/2)/W]e^{2\pi\mathrm i m y}$，$n\ge1$。两者取 $n\le N,|m|\le M$，遗漏动能下界
 
 $$
 \tau=\min\{[\pi(N+1)/W]^2+\beta^2,
