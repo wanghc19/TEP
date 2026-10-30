@@ -1,0 +1,87 @@
+{
+  "recorded_utc": "2026-10-30T09:00:07.642816+00:00",
+  "inspected_commit": "b094657",
+  "audit_replay_command": "python test/spectral-counting/bridge-v1/audit_literals.py test/spectral-counting/bridge-v1/attempt-1/robust-01.json --output test/spectral-counting/bridge-v1/attempt-1/rational-02.json",
+  "audit_replay_identical_to_first": true,
+  "python_assertions_enabled": true,
+  "tracked_python_sources_unchanged_and_parse": [
+    "test/spectral-counting/gap-v1/audit_gap.py",
+    "test/spectral-counting/gap-v1/gap_fourier.py",
+    "test/spectral-counting/half-gap-v1/half_gap.py",
+    "test/spectral-counting/box-count-v1/audit_box.py",
+    "test/spectral-counting/box-count-v1/box_count.py",
+    "test/spectral-counting/bridge-v1/audit_literals.py",
+    "test/spectral-counting/bridge-v1/robust_count.py"
+  ],
+  "actual_certificate_statuses": {
+    "gap-v1/attempt-1/certify-02.json": "COMMON_PROJECTED_GAP_PROVED",
+    "gap-v1/attempt-1/audit-02.json": "INDEPENDENT_GEOMETRY_AND_LDL_AUDIT_PASSED",
+    "half-gap-v1/attempt-1/certify-01.json": "HALF_GUIDE_DIRICHLET_GAP_PROVED",
+    "box-count-v1/attempt-1/certify-01.json": "CONTINUOUS_BOX_ENDPOINTS_PROVED",
+    "box-count-v1/attempt-1/audit-01.json": "LAURENT_GEOMETRY_AND_BOX_LDL_AUDIT_PASSED",
+    "bridge-v1/attempt-1/robust-01.json": "ROBUST_CONTINUOUS_MODE_COUNT_PROVED",
+    "bridge-v1/attempt-1/rational-02.json": "BINARY_LITERALS_COEFFICIENTS_AND_ROBUST_SIGNS_VERIFIED"
+  },
+  "full_matrix_rebuild_repeated": false,
+  "reason": "robust-01 already rebuilt the full proof inputs from mathematical constants; committed sources are unchanged. Only the inexpensive exact-rational output audit was repeated.",
+  "literature": [
+    {
+      "path": "ref/ref_data/Trefethen2014.pdf",
+      "bytes": 1213667,
+      "pages": 74,
+      "title": "The Exponentially Convergent Trapezoidal Rule",
+      "authors": "Lloyd N. Trefethen; J. A. C. Weideman",
+      "year": 2014,
+      "public_url": "https://people.maths.ox.ac.uk/trefethen/sirev56-3_385.pdf",
+      "access_date": "2026-10-30",
+      "identity_verified": "Local PDFKit first-page title, authors, journal and DOI; PDF header and EOF checked.",
+      "used_result": "Theorem 3.2 and equation (3.16), printed p.396."
+    },
+    {
+      "path": "ref/ref_data/Herbst2020.pdf",
+      "bytes": 1245211,
+      "pages": 10,
+      "title": "A posteriori error estimation for the non-self-consistent Kohn-Sham equations",
+      "authors": "Michael F. Herbst; Antoine Levitt; Eric Cances",
+      "year": 2020,
+      "public_url": "https://arxiv.org/pdf/2004.13549v2",
+      "access_date": "2026-10-30",
+      "identity_verified": "Local PDFKit first-page title and authors; PDF header and EOF checked.",
+      "used_result": "Section V, equations (7)-(8), PDF p.5; comparison only, no transfer of pseudopotential assumptions."
+    }
+  ],
+  "local_pdfs_within_authorized_root": true,
+  "optional_pdf_tool_checks": "pdfinfo/pdftotext unavailable and bundled dependency tool unsupported; local PDFKit read succeeded.",
+  "git_diff_check": "passed separately",
+  "matlab_or_octave_run": false,
+  "final_check_utc": "2026-10-30T09:04:02.835011+00:00",
+  "independent_review": {
+    "section": 14,
+    "status": "PASS",
+    "completed_utc": "2026-10-30T08:59:00Z",
+    "file": "research/planning/review-3h-20261030.md"
+  },
+  "final_storage": {
+    "file_logical_bytes_excluding_git": 88207879,
+    "file_allocated_bytes_excluding_git": 94842880,
+    "conservative_bytes_including_directories_and_git_pointer_allowance": 96022048,
+    "git_pointer_allowance_bytes": 1048576,
+    "hard_limit_bytes": 1000000000,
+    "prestop_bytes": 900000000,
+    "scan_follows_symlinks": false,
+    "git_metadata_inspected_by_scanner": false,
+    "file_count": 2810,
+    "directory_count": 432,
+    "symlink_count": 0,
+    "record_note": "Measured before updating this small JSON record; final serialized record remains under 20 KB."
+  },
+  "commits_before_final_review_commit": [
+    "90c27e9 Certify a common bulk gap for the two periodic leads",
+    "eefb955 Record independent acceptance of the bulk gap certificate",
+    "073d731 Certify the actual half-guide Dirichlet gaps by cell bracketing",
+    "d05d83f Certify one simple continuous guided mode by finite-box bracketing",
+    "0e1f824 Certify binary-literal geometry robustness and consolidate the continuous mode proof",
+    "b094657 Clarify gauge conventions and final review scope"
+  ],
+  "all_task_commits_exclude_user_files": true
+}

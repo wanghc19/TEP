@@ -36,5 +36,6 @@
     "redteam/AGENTS.md",
     "test/AGENTS.md"
   ],
-  "protected_scope": "Task changes only on codex/dot; no push; user files never staged."
+  "protected_scope": "Task changes only on codex/dot; no push; user files never staged.",
+  "storage_measurement_note": "This manifest records logical file sizes plus a Git-pointer allowance. The conservative allocated-space and directory-inclusive final measure is in closeout-checks.json."
 }

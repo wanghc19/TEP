@@ -43,3 +43,9 @@ python test/spectral-counting/bridge-v1/audit_literals.py \
 本轮实际文件名为 `robust-01`、`rational-01`；主命令另设置 `--deadline-utc 2026-10-30T09:10:00`，两个 stdout/stderr 日志均在 `attempt-1/`。未来复现应设置新的截止时间或省略该可选参数。必须检查上述成功状态及严格符号数据，不能仅检查 shell 退出码。
 
 主计算模块载入后46.441秒、进程峰值288,866,304 bytes；写结果前仓库预算95,382,880 bytes。计时不包含全部冷启动。完整结果在预定2分钟／0.5GB／5MB预算内；串行、无MATLAB、无`.mat`。算法、先前证书及旧求解器均未修改。本次只有一个成功配置，没有另起 attempt。
+
+## 独立验收与最后复现审核
+
+[[research/planning/review-3h-20261030|独立审查§14]] 为 **PASS**：另用整数平方根构造有理根区间，并以 $\pi<22/7$ 独立核对面积、方向及胞内性；1870个枢轴、全部合同余量及端点带通过。该结果保留上述解析模型与旧执行轨迹的范围区分。
+
+收尾审核确认七份 Python 源码与已提交版本逐字节相同，并通过 AST 检查。按当前已提交的 `audit_literals.py` 再次运行得到 `attempt-1/rational-02.json`，与首份有理审计完全相同；未重复46秒完整矩阵重建。对应命令、七项实际证书状态、文献身份及最终存储检查保存在 `attempt-1/closeout-checks.json`，完整主运行资源仍见 `run-manifest.json`。
