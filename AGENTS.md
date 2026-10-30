@@ -17,6 +17,17 @@ eigenvalue problems. These rules apply throughout the repository.
 - Access or modify `.git` metadata only through Git commands, including shared
   worktree metadata. Never manually edit or remove Git files or lock files.
 
+## Cloud work and synchronization
+
+- Codex Cloud theory work writes only under `research/cloud/`; read its
+  `AGENTS.md` before starting. Local agents treat that directory as read-only
+  unless the user explicitly authorizes maintenance or integration.
+- When authorized to push, first fetch and inspect the target remote branch.
+  Integrate any remote commits missing locally, resolve conflicts, and review
+  the final diff before pushing. If conflicts extend outside the authorized
+  scope, stop and hand them to the user. Never force-push; this rule itself
+  grants no push permission.
+
 ## Naming
 
 - Every abbreviation in a file or directory name must have its full form and
