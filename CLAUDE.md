@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working in this
 Claude Code does not load `AGENTS.md` files automatically, but they are binding here:
 
 - `AGENTS.md` (repo root): applies everywhere. It covers code style, MATLAB source documentation, LaTeX cleanup, validation, and the output contract.
+- `README.md` (repo root): project entry points, mathematical language, file naming, and historical-directory policy.
 - `test/AGENTS.md`: read before planning, creating, debugging, or running anything under `test/`. It covers run budgets, attempt lifecycle, and MATLAB runtime portability.
 - `research/AGENTS.md`: read before touching `research/`. It covers authority order, research depth, notation, naming, temporary material, and handoff.
 - `ref/AGENTS.md`: read before adding, renaming, or removing references.
@@ -51,16 +52,15 @@ For the current status, read `research/STATUS.md` and `research/projects/eig-apo
 +utils/   Bessel/Hankel derivatives, trigonometric interpolation grid
 +viz/     Column-lattice plotting helpers (geometry, cell grids, masks, tiles, overlays)
 
-*.m (root)   Maintained top-level workflows (see "How to run")
 benchmark/   bloch/: Bloch package tests; qpgreen/: MFS vs Ewald/Linton QP-Green benchmarks
-crystal_2d/  Doubly-periodic perfect-crystal validation scripts (not production solvers)
-waveguide_1d/ Legacy 1D TEP scripts (Kress, K-R comparisons, convergence); not maintained
+crystal_2d/  Historical 2D crystal, empty-defect and line-defect workflows and validation
+waveguide_1d/ Historical 1D waveguide/TEP workflows, including tep_1d_scan_local.m
 test/        Agent experiments: test/i1 ... test/i9 (eig-apost stages), test/archive/legacy-route-v1
 research/    Theory workspace (Chinese-language notes, Obsidian vault): projects/, planning/, archive/
 draft/       Paper draft "A Boundary Integral Trace-Subspace Formulation for Periodic
              Line-Defect Waveguides" (draft.tex, appendixA.tex) + draft/examples/ run scripts
 pre/         Presentations (pre1–pre3) and the LaTeX report (pre/report/)
-legacy/notes Historical theory/implementation notes (Bloch modes, scattering formulations, MFS, Kress)
+legacy/      Historical theory notes, manuscripts and related material
 ref/         Reference catalog (README.md, reference.bib); PDFs via ref/ref_data/ (symlink, untracked)
 .agents/skills  Shared agent skills: rigorous-proof, notation-discipline, commit-draft
 .codex/      Codex agent role configs (not used by Claude Code)
@@ -69,18 +69,18 @@ tmp/         Untracked scratch (ignored by git)
 
 Every package directory except `+op`, `+quad`, and `+utils` has a `README.md`. Each one documents the public functions, data structures, conventions, and a typical workflow. Read the relevant one before changing or calling a package.
 
+`legacy/`, `crystal_2d/`, and `waveguide_1d/` are historical directories. Exclude
+them from routine reading and searches, and do not use them as current theory,
+implementation examples, or result baselines. Consult them only when the user
+explicitly requests historical investigation, reproduction, or migration.
+The root `+kernel/`, `+bloch/`, and other shared packages remain in use.
+
 ## How to run
 
-There is no build step. Start MATLAB at the repo root. Root scripts are function files you can call by name:
-
-```matlab
-tep_1d_scan_local            % Recursive local sigma_min scan for the 1D waveguide TEP
-tep_edc_projected_gap_scan   % Pre-scan: k intervals where the lead crystal has no |lambda|=1 Bloch multiplier
-tep_edc_scan_local           % Recursive local scan for the empty-defect-cell (missing-column) cavity problem
-scat_edc_ps                  % Empty-defect forced scattering driven by a center point source
-scat_edc_lead_in             % Empty-defect scattering driven by an incoming lead Bloch mode
-scat_ld_lead_in              % Lead-incoming scattering with a dielectric obstacle in the center cell
-```
+There is no build step. Choose the entry point and reproduction command from
+the selected current experiment or tutorial. The former root entry points are
+historical: the five 2D workflows are now in `crystal_2d/`, and
+`tep_1d_scan_local.m` is in `waveguide_1d/`. They are not default run targets.
 
 Scripts in subdirectories need the repo root on the path, so call `addpath(pwd)` from the root first. Some scripts do this themselves, for example `benchmark/qpgreen/*` and `draft/examples/*`.
 
@@ -101,21 +101,6 @@ Each `test/i*/<experiment>/` directory has a README that gives its entry point a
 - Never claim MATLAB was run unless it actually was. Report MATLAB and Octave commands and results separately.
 - The Conda environment `octave` is also the project's Python environment.
 
-## Core workflow chain (empty-defect cavity / scattering)
-
-```
-kernel.precomp_proxy(pars1, pars2)                 -- MFS proxy, once per (k, beta, d)
-bloch.rayleigh_channels(k, beta, d, M, L)          -- beta_m, gamma_m (imag >= 0), phase = exp(i gamma_m L)
-geom.construct_cont(ntot, flag_geom, 0, 0, radius) -- 6 x ntot contour matrix C, curvelen
-bloch.construct_S(C, kext, kint, pars1, proxy, curvelen, rayleighchan, X_L, X_R)
-    -> op.construct_A_QP, bloch.incident_rhs, bloch.farfield_extractors, multi-RHS solve
-bloch.solve_modes(S_cell, opts)                    -- generalized eigenproblem A_sc v = lambda B_sc v
-bloch.mode_traces(lambda, V, rayleighchan)         -- wall Dirichlet / x-derivative traces
-bloch.select_port_traces(modes, traces, '+'|'-')   -- outgoing trace bases per center port
-    -> LOCAL_ trace-matching assembly in the top-level script
-    -> svd + scan.scan_then_refine (eigenproblem)  |  backslash + residual check (forced)
-```
-
 ## Conventions that are easy to get wrong
 
 - **L/R and +/- mean different things.** `L`/`R` are the left and right walls of *one lead cell*. `+`/`-` are the center ports and the positive and negative half-leads. `c^+`/`c^-` are right-going and left-going center Rayleigh coefficients, not leads.
@@ -135,27 +120,18 @@ bloch.select_port_traces(modes, traces, '+'|'-')   -- outgoing trace bases per c
 - Header rules:
   - Script header: put the header before any code.
   - Function help text: put it immediately after the `function` line, starting in column 1.
-  - Substantial files: use the labels `% Purpose:`, `% Main algorithm:`, `% Based on:`, `% Main changes:`, and `% Numerical goal:` where they apply.
+  - Begin with an introduction, followed by `Input` and `Output` for functions. These are the only required header sections; follow root `AGENTS.md` for details and LaTeX explanations of complex computations and interfaces.
 - Stage markers look like `% --- stage N: brief description ---`.
 - Group many `LOCAL_` helpers under `%% ==================== Role name ====================`, followed by a one-sentence description.
 - Document user-adjustable parameters where they are defined, for example geometry, scan intervals, grid sizes, `ntot`, and refinement or stopping criteria. Add LaTeX-style formulas when they clarify kernels, jump relations, or block assembly.
 - For a nontrivial refactor, summarize the plan before coding.
 - After edits, report what changed, the files and functions you touched, the checks you ran with their results, and the expected successful outcome. Do not paste whole files.
 
-### File naming (top-level and benchmark scripts)
+### File naming
 
-Pattern: `<prefix>_<task>[_model][_qualifier].m`.
-
-- Prefixes:
-  - `tep_`: eigenvalue/resonance problems, including EDC cavities
-  - `bloch_`: Bloch-mode tests and workflows
-  - `scat_`: scattering / forced problems (not `scatt`)
-  - `bie_`: BIE/operator assembly
-  - `test_`: fallback prefix for standalone validation scripts
-- Model abbreviations: `1d`, `edc` (empty defect cell), `ld` (linear defect), `mc` (missing column), `lead`, `pc` (perfect periodic crystal).
-- Task abbreviations: `scan`, `local`, `global`, `test`, `ps` (point source), `trmatch`, `conv`.
-
-Functions inside `+pkg/` need no prefix.
+Follow root `README.md` and the applicable directory guidance. Use short,
+meaningful names without forcing a prefix template or renaming existing files
+for cosmetic consistency.
 
 ## `test/` experiments (summary of test/AGENTS.md)
 

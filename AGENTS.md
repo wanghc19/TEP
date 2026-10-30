@@ -13,6 +13,12 @@ experiments on periodic waveguides and related eigenvalue problems.
   material, and handoff rules; this root file continues to apply everywhere.
 - Before planning, creating, debugging, or running experiments under `test/`,
   read and follow `test/AGENTS.md`; it governs run budgets and attempt reuse.
+- `legacy/`, `crystal_2d/`, and `waveguide_1d/` contain historical theory,
+  implementations, and validation programs. Exclude them from routine reading
+  and searches; do not use them as current theoretical authority, implementation
+  examples, or result baselines. Use them only when the user explicitly requests
+  historical investigation, reproduction, or migration. Root MATLAB packages
+  such as `+kernel/` and `+bloch/` remain shared dependencies of current work.
 
 ## Always follow
 
