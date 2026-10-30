@@ -33,21 +33,27 @@ experiments on periodic waveguides and related eigenvalue problems.
 
 ## MATLAB source documentation
 
-- Give every new source file a clear English header explaining its purpose and
-  workflow. For substantial MATLAB files, also state the earlier file it is
-  based on, the main differences, and the numerical goal or expected output.
-- For substantial MATLAB files, use these labels when applicable:
-  - `% Purpose:`
-  - `% Main algorithm:`
-  - `% Based on:`
-  - `% Main changes:`
-  - `% Numerical goal:`
+- Begin every new source file's documentation with a concise English
+  introduction explaining what the code does. Add algorithm details, expected
+  results, usage conditions, or design rationale when needed to understand or
+  use the code; scale the detail to the file's complexity.
+- For function documentation, place `Input` and `Output` sections, in that
+  order, immediately after the introduction. These are the only required
+  header section labels. Do not require `Purpose`, `Main algorithm`, `Based on`,
+  `Main changes`, or `Numerical goal` labels. For scripts, describe adjustable
+  parameters and expected results without inventing a function interface.
+- Mention an earlier file, algorithm, or reference only when the code is
+  actually adapted from it. Describe differences only when they help explain
+  the current implementation; omit inapplicable provenance rather than adding
+  placeholder sections. Keep routine change history in Git commit messages.
 - In scripts, put the header before executable code. In function files, put
   MATLAB help text immediately after the `function` signature, starting in
   column 1; do not add a separate file header above the signature unless needed
   for licensing or package metadata.
-- For substantial function files, prefer labeled help sections such as
-  `Purpose`, `Input`, `Output`, `Main algorithm`, and `Notes` as appropriate.
+- Explain input and output meanings, dimensions, and conventions as needed.
+  For complex inputs or return values, use LaTeX notation or formulas to
+  clarify their mathematical meaning and connect the symbols to the actual
+  argument names, return names, or structure fields.
 - Explain user-adjustable parameters near their definitions, especially
   geometry, scan intervals, grid sizes, refinement levels, discretization sizes
   such as `ntot`, and stopping or selection criteria.
@@ -56,9 +62,10 @@ experiments on periodic waveguides and related eigenvalue problems.
 - Group numerous `LOCAL_` helpers by role. Start each group with a marker in the
   exact form `%% ==================== Role name ====================`, followed
   by one English sentence describing the group.
-- When documenting mathematical logic, kernels, jump relations, block
-  operators, or matrix assembly, include the defining LaTeX-style formulas when
-  they materially improve clarity.
+- When the formulas are complex, use LaTeX notation in comments to define the
+  core computed objects, such as kernels, jump relations, block operators, or
+  assembled matrices. Explain the symbols and their connection to the code;
+  do not rely solely on implementation steps to convey the mathematics.
 
 ## When editing code
 

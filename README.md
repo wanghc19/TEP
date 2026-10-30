@@ -1,136 +1,46 @@
-## File naming conventions
+# Periodic waveguides and eigenvalue problems
 
-Top-level MATLAB scripts should use short semantic prefixes so that both users and coding agents can quickly identify the purpose of a file.
+## 项目与阅读入口
 
-### General naming guidance
+本仓库保存二维周期波导及相关特征值、散射问题的 MATLAB 代码、研究材料和讲义。
+`eig-apost` 专题研究固定 Bloch 参数下线缺陷局域模态的计算与后验误差估计，
+包括 BIE 和 FEM＋DtN 两条数值路线。
 
-Top-level MATLAB scripts should use short, semantic names. The common reference pattern is:
+| 内容 | 阅读入口 |
+| --- | --- |
+| 仓库工作约定 | [AGENTS.md](AGENTS.md)；Claude 入口为 [CLAUDE.md](CLAUDE.md) |
+| 研究目录与进展 | [研究入口](research/README.md)、[研究状态](research/STATUS.md) |
+| 特征值后验误差专题 | [专题入口](research/projects/eig-apost/README.md)、[专题状态](research/projects/eig-apost/STATUS.md) |
+| 阶段设计与审查 | [implementation/](research/projects/eig-apost/implementation/) |
+| 数值实验 | [test/](test/)；具体参数、运行方式和结果见对应实验目录 |
+| FEM＋DtN 讲义与教程 | [draft/fem-dtn-epost/](draft/fem-dtn-epost/) |
+| 独立探索 | [research/explorations/](research/explorations/) |
 
-```text
-<prefix>_<task>[_model][_qualifier].m
-````
+具体进展与数值结果由各专题和实验记录维护，首页不重复汇总。
+作判断时核对相关文件与原始结果，并遵守所在目录的 `AGENTS.md`。
 
-but this is a guideline, not a rigid template.
+## 数学语言与结果表述
 
-A good filename should make its purpose clear using the approved prefix and abbreviation list. Do not add unnecessary words merely to fit the template.
+以下约定用于仓库文档、研究讨论、实验报告及交接 prompt。
+优先说明数学对象、计算操作和结果含义，使用直接、通行的数学语言，少用流程标签。
+简化措辞时保留必要假设，不改变数学结论的含义。
 
-Examples:
+### 术语
 
-```text
-bloch_test_F.m
-bloch_test_S.m
-bloch_test_modes.m
-scat_edc_ps.m
-scat_edc_ps_scan.m
-tep_scan_local.m
-```
+| 情形 | 使用的表述 |
+| --- | --- |
+| 用数值方法计算误差或谱距离估计表达式 | “误差估计”或“谱距离估计”；英文用 error estimate 或 spectral-distance estimate |
+| 已有数学保证，所给数值不小于目标误差或谱距离 | “可靠上界”；英文用 guaranteed upper bound |
+| 上界依赖尚未核实的条件 | “在所列条件下成立的上界”，并说明条件 |
+| 计算过程中保持场、候选或参数不变 | “固定场”“固定候选”“固定参数”；英文用 fixed 或 held fixed |
+| 增加有限元近似空间中的自由度或多项式次数 | “扩充有限元空间” |
 
-For example, `scat_edc_ps.m` is acceptable because it clearly means a scattering / forced-response script for an empty defect cell with point-source forcing. It does not need to be renamed to `scat_solve_edc_ps.m` unless the extra word `solve` adds useful distinction.
+在上述语境中，不使用“严格认证”“冻结”等流程化措辞，也不用 frozen 代替 fixed。
+原文引用、文献标题、代码标识和历史结果标签保留原样；解释其含义时使用本节术语。
 
-When naming a new file:
+## 文件命名
 
-1. Start with a meaningful prefix such as `tep_`, `bloch_`, `scat_`, `bie_`, `scan_`, or fallback `test_`.
-2. Use existing abbreviations when possible, such as `edc` for empty defect cell and `ps` for point-source forcing.
-3. Prefer clarity over strict template matching.
-4. If a new abbreviation is introduced, add it to the abbreviation list.
-
-
-
-### Prefixes
-
-| Prefix   | Meaning                                                                                      |
-| -------- | -------------------------------------------------------------------------------------------- |
-| `tep_`   | eigenvalue / resonance problems in the transmission/Bloch matching framework; includes the original transmission eigenvalue problem and related empty-defect-cell cavity eigenvalue problems                                                      |
-| `bie_`   | boundary integral equation / operator assembly scripts                                       |
-| `bloch_` | Bloch mode package tests or Bloch-mode workflows                                             |
-| `scat_`  | scattering / forced response scripts (not `scatt`)                                                        |
-| `scan_`  | generic scan infrastructure scripts, only if top-level; package code should live in `+scan/` |
-
-The `tep_` prefix may be used in a broad sense for eigenvalue or resonance searches built from the same transmission / Bloch trace-matching machinery, even when the center defect cell is empty and the problem is not the original material-interface TEP.
-
-Scattering scripts for linear-defect configurations should use the form:
-
-```text
-scat_ld_*.m
-```
-
-### Fallback test prefix
-
-Use `test_` for standalone validation scripts that do not clearly belong to a specific topic prefix such as `tep_`, `bloch_`, `scat_`, or `bie_`.
-
-General form:
-
-```text
-test_<object>[_qualifier].m
-````
-
-Examples:
-
-```text
-test_gamma_branch.m
-test_qpgreen_axis_swap.m
-test_complex_k_smoke.m
-test_matrix_dims.m
-```
-
-If a test clearly belongs to a topic-specific workflow, prefer the topic prefix:
-
-```text
-bloch_test_modes.m
-scat_edc_ps.m
-tep_1d_scan_local.m
-```
-
-Use `test_` only when no more specific prefix is natural.
-
-For disposable scratch scripts that should not be treated as maintained tests, use:
-
-```text
-tmp_<description>.m
-```
-
-and avoid committing them unless intentionally preserving them.
-
-
-### Model abbreviations
-
-| Abbreviation | Meaning                                  |
-| ------------ | ---------------------------------------- |
-| `1d`         | one-dimensional periodic waveguide model |
-| `lead`       | periodic lead cell problem               |
-| `edc`        | empty defect cell                        |
-| `ld`         | linear defect                            |
-| `mc`         | missing column                           |
-| `pc`         | perfect periodic crystal                 |
-| `cent`       | center cell                              |
-| `cav`        | cavity / defect cavity                   |
-
-Prefer `edc` when the center defect cell is empty background medium. Prefer `mc` when emphasizing the physical missing-column crystal interpretation.
-
-### Task abbreviations
-
-| Abbreviation | Meaning                                |
-| ------------ | -------------------------------------- |
-| `scan`       | parameter scan                         |
-| `local`      | local refinement around a selected dip |
-| `global`     | global scan over a larger interval     |
-| `test`       | validation / consistency test          |
-| `ps`         | point-source forcing                   |
-| `rhs`        | right-hand-side construction           |
-| `tr`         | trace computation                      |
-| `trmatch`    | trace matching matrix                  |
-| `svd`        | singular-value diagnostic              |
-| `conv`       | convergence test                       |
-| `demo`       | lightweight demonstration script       |
-
-### Examples
-
-| Filename              | Meaning                                                               |
-| --------------------- | --------------------------------------------------------------------- |
-| `tep_1d_scan_local.m` | local scan for the 1D periodic-waveguide TEP                          |
-| `bloch_test_F.m`      | test for Bloch far-field extraction matrices                          |
-| `bloch_test_S.m`      | test for the Bloch cell scattering matrix                             |
-| `scat_edc_ps.m`       | scattering problem for an empty defect cell with point-source forcing |
-| `scat_edc_ps_scan.m`  | scan for the empty-defect-cell point-source scattering problem        |
-| `scat_edc_trmatch.m`  | trace-matching system for the empty defect cell scattering model      |
-| `scat_ld_lead_in.m`   | scattering problem for a linear defect driven by an incoming lead mode |
+- 名称简短、含义明确，并沿用所在目录的命名习惯。
+- 仅在缩写已经通用或能明显帮助理解时使用，不为套模板增加前缀、缩写或限定词。
+- 不为统一外观重命名已有文件；确需改名时先核对调用与文档引用。
+- 子目录有更具体的命名约定时，遵循其适用范围内的规则。
