@@ -1,6 +1,6 @@
 # 参考文献索引
 
-本目录保存周期波导、周期散射、边界积分方程和非线性特征值问题的参考资料索引。历史配置将文献原文件和翻译工程放在上级 `TEP_ref/`，通过 `ref_data/` 访问；当前 dot-research worktree 的本轮新增资料按用户要求存于本地 `ref/ref_data/`，不写外部目录，见末节说明。下表按研究主题归类；题名、作者和年份优先依据论文原文、DOI 页面或出版方页面核验。`BibTeX key` 指向同目录的 `reference.bib`。
+本目录保存周期波导、周期散射、边界积分方程和非线性特征值问题的参考资料索引。文献原文件和翻译工程放在上级 `TEP_ref/`，通过符号链接 `ref_data/` 访问。下表按研究主题归类；题名、作者和年份优先依据论文原文、DOI 页面或出版方页面核验。`BibTeX key` 指向同目录的 `reference.bib`。
 
 文件名中的年份只用于本地识别，不一定等于正式出版年份。标为“暂不收录”的材料没有足够的书目信息，未写入 `reference.bib`。
 
@@ -16,6 +16,7 @@
 | [作者公开全文](https://www.researchgate.net/publication/2484711_Eigenvalue_Inclusions_Via_Domain_Decomposition)（未保存本地 PDF） | *Eigenvalue Inclusions via Domain Decomposition* | Henning Behnke; Ulrich Mertins; Michael Plum; Christian Wieners | 2000 | 无限声学波导、谱包含、区域分解 | 对称类内用 Dirichlet／Neumann 比较和 FEM 包围处理无限域；不直接覆盖周期带隙 | `BehnkeMertinsPlumWieners2000` |
 | `ref_data/Bonnet1995.pdf` | *Spectral Approximation of a Boundary Condition for an Eigenvalue Problem* | Anne-Sophie Bonnet-Ben Dhia; Nabil Gmati | 1995 | 光纤导模、Fourier 边界算子、谱逼近 | 证明截断 exact boundary operator 后导模特征值与特征函数的超代数先验收敛 | `BonnetBenDhiaGmati1995` |
 | `ref_data/Boureghda2022.pdf` | *On Domain Error Truncation in a Problem of Guided Modes Computation in Optical Fibers* | Abdelouahab Boureghda; Abdelaziz Choutri; Hayat Rezgui | 2022 | 光纤导模、域截断、特征值误差 | 提供开放导模特征值随人工边界半径变化的指数型误差分析近邻 | `BoureghdaChoutriRezgui2022` |
+| `ref_data/books/Bandle2009.pdf`（第 23–30 页） | *On Spectral Bounds for Photonic Crystal Waveguides* | B. M. Brown; V. Hoang; M. Plum; I. G. Wood | 2009（ISNM 157 论文集；本地为整本书） | 线缺陷、谱包围、计算机辅助证明 | 用 $H^{-1}$ 中近似特征对的残差和 Weinstein 定理包围线缺陷引入的谱点；是导模特征值可靠界的直接近邻 | `BrownHoangPlumWood2009` |
 | `ref_data/Brown2015.pdf` | *On the Spectrum of Waveguides in Planar Photonic Bandgap Structures* | B. M. Brown; V. Hoang; M. Plum; I. Wood | 2015（本地为 2012 预印稿） | 加权 Laplacian、弱线缺陷、Birman–Schwinger | 给出同一周期背景中任意弱正介电缺陷的 gap 模态存在性；不直接覆盖左右异质端 | `BrownHoangPlumWood2015` |
 | `ref_data/Brown2017.pdf` | *Gap Localization of TE-Modes by Arbitrarily Weak Defects* | B. M. Brown; V. Hoang; M. Plum; M. Radosz; I. Wood | 2017（本地为公开预印稿） | TE 散度型算子、不连续系数、弱缺陷 | 用负 Sobolev 空间证明正缺陷的无阈值局域化；算子与质量扰动不同，仍要求同一周期远场 | `BrownHoangPlumRadoszWood2017` |
 | `ref_data/Brown2020.pdf` | *Gap Localization of Multiple TE-Modes by Arbitrarily Weak Defects*（本地预印稿题名：*Gap Localization of TE-Modes by Arbitrarily Weak Defects — Multiband Case*） | B. M. Brown; V. Hoang; M. Plum; M. Radosz; I. Wood | 2020（本地为 2019 预印稿） | 多带边、弱缺陷、模态计数 | 在二次非退化带边和正缺陷条件下计数 gap 模态；异质界面的共振耦合尚需另行分析 | `BrownHoangPlumRadoszWood2020` |
@@ -29,11 +30,12 @@
 | `ref_data/Engstrom2016.pdf` | *Efficient and Reliable hp-FEM Estimates for Quadratic Eigenvalue Problems and Photonic Crystal Applications* | Christian Engström; Stefano Giani; Luka Grubišić | 2016 | 二次特征值问题、hp-FEM、后验估计 | 提供光子晶体非线性特征值 residual/DWR estimator 与 effectivity 近邻 | `EngstromGianiGrubisic2016` |
 | `ref_data/Fliss2013.pdf` | *A Dirichlet-to-Neumann Approach for the Exact Computation of Guided Modes in Photonic Crystal Waveguides* | Sonia Fliss | 2013 | 导模、DtN、光子晶体波导 | 项目导模与端口算子理论的核心参考 | `Fliss2013` |
 | `ref_data/Fliss2015.pdf` | *Robin-to-Robin Transparent Boundary Conditions for the Computation of Guided Modes in Photonic Crystal Wave-Guides* | Sonia Fliss; Dirk Klindworth; Kersten Schmidt | 2015 | RtR 透明边界、导模 | 为有限计算域上的导模求解和透明边界构造提供比较框架 | `FlissKlindworthSchmidt2015` |
+| `ref_data/Fliss2021.pdf` | *A Dirichlet-to-Neumann Approach to the Mathematical and Numerical Analysis in Waveguides with Periodic Outlets at Infinity* | Sonia Fliss; Patrick Joly; Vincent Lescarret | 2021（本地为 HAL 投稿版，题名写作 *A DtN approach ...*） | 多周期出口结、DtN 透明边界、Fredholm 性 | 为多个周期半波导的连接构造 DtN 透明边界条件，并证明截断后的有界域问题为 Fredholm 型 | `FlissJolyLescarret2021` |
 | `ref_data/Giani2013.pdf` | *An A Posteriori Error Estimator for hp-Adaptive Continuous Galerkin Methods for Photonic Crystal Applications* | Stefano Giani | 2013 | 光子晶体、hp-FEM、后验估计 | 阻断宽泛的光子晶体线缺陷特征值 estimator 创新声明，并提供 effectivity 基线 | `Giani2013` |
 | `ref_data/Gopalakrishnan2025.pdf` | *Adaptive Resolution of Fine Scales in Modes of Microstructured Optical Fibers* | Jay Gopalakrishnan; Jacob Grosek; Gabriel Pinochet-Soto; Pieter VandenBerge | 2025 | 微结构光纤、泄漏模、自适应有限元、PML | 为复杂光纤模态的细尺度解析、损耗计算和误差控制提供数值参考 | `GopalakrishnanEtAl2025` |
 | `ref_data/Halla2018.pdf` | *Two scale Hardy space infinite elements for scalar waveguide problems* | Martin Halla; Lothar Nannen | 2018（线上2017） | 近截止、Hardy无限元、临界模匹配 | 阈值方法强基线；§3.4与§4；[开放全文](https://link.springer.com/content/pdf/10.1007/s10444-017-9549-5.pdf)，2026-10-31下载 | `HallaNannen2018` |
 | `ref_data/Hempel2015.pdf` | *Bound States for Nano-Tubes with a Dislocation* | Rainer Hempel; Martin Kohlmann; Marko Stautz; Jürgen Voigt | 2015 | 异质圆柱、界面位移、公共带隙 | 在附加谱条件下用一列界面位移实现指定 gap 能量；不保证每个固定界面或任意弱中心缺陷都有模态 | `HempelKohlmannStautzVoigt2015` |
-| `ref_data/Hoang2009.pdf` | *A Computer-Assisted Proof for Photonic Band Gaps* | Vu Hoang; Michael Plum; Christian Wieners | 2009（本地为 KIT 2008/5 预印本，含封面 20 页） | 光子带隙、验证特征值界、Bloch 参数覆盖 | 用有限参数网格上的可靠界和扰动覆盖证明完整带隙；可支撑两侧公共 projected gap 的独立验证 | `HoangPlumWieners2009` |
+| `ref_data/Hoang2009a.pdf` | *A Computer-Assisted Proof for Photonic Band Gaps* | Vu Hoang; Michael Plum; Christian Wieners | 2009（正式发表版；KIT 2008/5 预印本另存为 `ref_data/Hoang2009.pdf`） | 光子带隙、验证特征值界、Bloch 参数覆盖 | 用有限参数网格上的可靠界和扰动覆盖证明完整带隙；可支撑两侧公共 projected gap 的独立验证 | `HoangPlumWieners2009` |
 | `ref_data/Hohage2013.pdf` | *Riesz Bases and Jordan Form of the Translation Operator in Semi-Infinite Periodic Waveguides* | Thorsten Hohage; Sofiane Soussi | 2013 | 平移算子、Riesz 基、Jordan 结构 | 支撑项目对端口传播算子谱结构的分析 | `HohageSoussi2013` |
 | `ref_data/unsorted/huzhen6.pdf` | *Simple Boundary Condition for Terminating Photonic Crystal Waveguides* | Zhen Hu; Ya Yan Lu | 2012 | 光子晶体波导、近似边界条件 | 可与项目采用的精确端口条件比较计算成本和误差 | `HuLu2012` |
 | `ref_data/Hu2026.pdf` | *Time-Harmonic Scattering of Plane Waves from an Infinite Periodically Inhomogeneous Medium* | Guanghui Hu; Andreas Rathsfeld; Jiayi Zhang; Ruming Zhang | 2026（Online First） | Floquet 出射模式、DtN 高频估计 | 有限/高模态分拆参照；可分离一维 lead 非二维圆柱晶体 | `HuRathsfeldZhangZhang2026` |
@@ -125,7 +127,7 @@
 ## 维护约定
 
 - 新增文献时，先核验题名、作者、年份和 DOI，再更新本索引及 `reference.bib`。
-- 文献原文件和翻译工程通过 `ref_data/` 访问，不由 Git 追踪；`ref/` 下只追踪本文件、`reference.bib` 和 `AGENTS.md`。历史配置指向仓库上级 `TEP_ref/`；2026-10-30 本轮用户明确要求全部文件留在当前 worktree，因此新增的上述两份 PDF 存于本地 `ref/ref_data/`，没有创建或写入外部目录。
+- 文献原文件和翻译工程通过 `ref_data/` 访问，不由 Git 追踪；`ref/` 下只追踪本文件、`reference.bib` 和 `AGENTS.md`。`ref_data/` 是指向仓库上级 `TEP_ref/` 的符号链接，所有 worktree 共用同一份文献库。
 - 对无法从原文或权威书目信息确认身份的材料，保留“无法可靠确认”标记，不补猜元数据。
 
-2026-10-31散射方法调研新增本地公开全文：`Halla2018.pdf`、`Lawrence2026.pdf`、`Zhang2021.pdf`，均仅写当前worktree的 `ref/ref_data/`，不提交PDF。Nazarov2017只保留在线阅读与书目，下载HTTP 403后停止。完整访问、版本和核读证据见 [[research/explorations/bend-scattering-methods/landscape]]。
+2026-10-31散射方法调研新增公开全文：`Halla2018.pdf`、`Lawrence2026.pdf`、`Zhang2021.pdf`，不提交PDF。Nazarov2017只保留在线阅读与书目，下载HTTP 403后停止。完整访问、版本和核读证据见 [[research/explorations/bend-scattering-methods/landscape]]。
