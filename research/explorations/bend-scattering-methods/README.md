@@ -30,6 +30,8 @@
 
 全部于2026-10-31合法公开下载，核对首页题名/作者/版本；只写当前仓库内真实目录 `ref/ref_data/`，不写历史外置 `TEP_ref/`，不提交PDF。三份共 **3,993,954字节**。来源、用途和版本同时记入ref两份目录。
 
+PDF未提交是遵守 `ref/AGENTS.md` 的“Do not commit reference documents”约定；现有 `.gitignore` 第66行 `ref/**` 也忽略这些文件，已用 `git check-ignore -v` 核实，未修改忽略规则。三份文件仍实际保留在本地，并未丢失或删除；单独检出Git提交不会携带PDF，可按下表公开URL、版本和SHA-256重新取得并核验。
+
 | 文件 | 作者、题名、版本及公开源 | 字节数 | SHA-256 |
 | --- | --- | ---: | --- |
 | `ref/ref_data/Halla2018.pdf` | Martin Halla、Lothar Nannen，*Two scale Hardy space infinite elements for scalar waveguide problems*，2018正式版（online2017），[出版商PDF](https://link.springer.com/content/pdf/10.1007/s10444-017-9549-5.pdf)；近截止强基线 | 2046782 | `2079475a94316cc03a5b954cb35b7e807e889884a76d7ba6ef812306ae8f3f24` |
