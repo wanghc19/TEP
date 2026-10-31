@@ -155,3 +155,33 @@ This pass reviewed the stated inequalities and performed arithmetic on retained 
 [M96]: /Users/whc/Documents/Work/epost/test/i9/dtn-bound-v1/output/attempt-1/run-03/modes.csv
 [C96]: /Users/whc/Documents/Work/epost/test/i9/dtn-bound-v1/output/attempt-1/run-03/cells.csv
 [J95]: /Users/whc/Documents/Work/epost/test/i9/eq-temple-v1/output/attempt-2/run-01/result.json
+
+## Stage 2 step 2 — Rayleigh quotient of the finite reconstruction
+
+The ordinary whole-strip calculation is complete; method, commands, convergence
+checks and costs are in the [theta experiment README](/Users/whc/Documents/Work/dot-research/test/numerical-directions/theta-v1/README.md).
+It uses the corrected saved source batches, exact finite Fourier integration
+in y, doubled x quadrature, and the exponential exterior tails.
+
+| Level | $\theta(w_d)$ | $\theta-\mu_{\rm BIE}$ | $\theta-\mu_0$ |
+|---|---:|---:|---:|
+| [Control](/Users/whc/Documents/Work/dot-research/test/numerical-directions/theta-v1/output/run-003/science/result.json) | 2.428728699465642 | $+2.9442933\times10^{-8}$ | $-5.4830767\times10^{-7}$ |
+| [Main](/Users/whc/Documents/Work/dot-research/test/numerical-directions/theta-v1/output/run-005/science/result.json) | 2.428728673808740 | $+3.7860306\times10^{-9}$ | $-5.7396457\times10^{-7}$ |
+
+Control/main reproduce the saved unweighted norm squared to relative
+$4.44\times10^{-16}$/$1.55\times10^{-15}$; the two numerator evaluations
+agree to $3.81\times10^{-15}$/$5.22\times10^{-15}$. Doubling x order changes
+$\theta$ by $2.66\times10^{-12}$/$6.22\times10^{-15}$ in magnitude; the final
+doubled y rules agree with exact y integration to $4.44\times10^{-16}$.
+The exterior inclusion allowance changes either quotient by at most
+$2.15\times10^{-13}$. Main minus control is $-2.5656902\times10^{-8}$.
+These values are resolved at the requested scale and place the main Rayleigh
+center within a few $10^{-9}$ of the reference, about 153 times closer than
+the original candidate. [Theta experiment README](/Users/whc/Documents/Work/dot-research/test/numerical-directions/theta-v1/README.md)
+
+This favors a second-order route. The existing $R_\mu$ bounds concern the
+exact source solution $w$, while the measured quotient concerns $w_d$.
+A certified Kato–Temple calculation therefore still needs a same-field
+Rayleigh/residual transfer or a residual bound directly for $w_d$, together
+with certified separating gap edges on both sides. The present calculation
+supplies the ordinary Rayleigh centers and their quadrature checks.
