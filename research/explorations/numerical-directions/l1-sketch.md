@@ -143,7 +143,7 @@ $$g=f-P_M\widetilde f_R=\underbrace{(I-P_M)\widetilde f_R}_{g_1}+\underbrace{(f-
 
 ### 4.5 所用标准结论
 
-4.0–4.3 的证明间接用到下列标准结论。不含 I9.6（`s-dtn-bound.md`）内部用到的结论。"已核页码"指已在本地 `Kato1995.pdf` 中找到原文；其余出处待下载核对，下载前不写定理编号。
+4.0–4.3 的证明间接用到下列标准结论。不含 I9.6（`s-dtn-bound.md`）内部用到的结论。"已核页码"指已在本地文献库（`ref/ref_data/`）的原文中找到；未标"已核"的出处没有定理编号。
 
 **有名字的定理（8 条）**
 
@@ -153,10 +153,10 @@ $$g=f-P_M\widetilde f_R=\underbrace{(I-P_M)\widetilde f_R}_{g_1}+\underbrace{(f-
 | T2 | Kato 第一表示定理（闭形式 $a$ 确定自伴 $A$，$a(v,z)=(Av,z)$） | 4.0 设定；命题 2 证明中 $a(w,e)=(Aw,e)$ | Kato1995 VI-§2.1 定理 2.1，p.322（已核页码） |
 | T3 | Kato 第二表示定理（$D(a)=D(A^{1/2})$，$a(v,v)=\|A^{1/2}v\|^2$） | 命题 3(i) 中 $(L_se,e)_0=\|\nabla e\|_0^2+s\|e\|_0^2$ 及 $\|\cdot\|_-$ 的对偶刻画 | Kato1995 VI-§2.6 定理 2.23，p.331（已核页码） |
 | T4 | Plancherel 定理（$x$ 方向 Fourier 变换是 $L^2$ 上的酉算子） | 命题 3(ii) 中按模式对角化 $L_s^{-1}$ | Kato1995 V-§2 例 2.7，pp.258–259（已核页码） |
-| T5 | Parseval 等式与准周期指数系 $\{e^{iq_my}\}$ 在 $L^2(-1/2,1/2)$ 中完备 | 命题 3(ii)、(iii)；$\min_mq_m^2=\beta^2$ 给出 $L_s\ge s+\beta^2$ | 抽象 Parseval：Kato1995 V-§1.2 式 (1.12)，p.255（已核页码）；三角函数系完备性：Folland 1999 第 8 章（待核） |
-| T6 | Wirtinger 不等式（区间 $I$ 上均值为零的 $v$：$\|v\|_{0,I}\le\|I\|\,\|v'\|_{0,I}/\pi$） | 命题 3(iv) 中 $c_R'$ 的常数 $h/\pi$ | Hardy–Littlewood–Pólya 1952 §7.7（待核，定理编号未确认）；凸域推广见 Payne–Weinberger 1960 |
+| T5 | Parseval 等式与准周期指数系 $\{e^{iq_my}\}$ 在 $L^2(-1/2,1/2)$ 中完备 | 命题 3(ii)、(iii)；$\min_mq_m^2=\beta^2$ 给出 $L_s\ge s+\beta^2$ | 抽象 Parseval：Kato1995 V-§1.2 式 (1.12)，p.255（已核页码）；$\{e^{2\pi imy}\}$ 是 $L^2(\mathbb T)$ 的标准正交基：Folland1999 定理 8.20，p.248（已核页码），再乘单模因子 $e^{i\beta y}$（酉变换） |
+| T6 | Wirtinger 不等式（区间 $I$ 上均值为零的 $v$：$\|v\|_{0,I}\le\|I\|\,\|v'\|_{0,I}/\pi$） | 命题 3(iv) 中 $c_R'$ 的常数 $h/\pi$ | Hardy1934（第一版）§7.7 定理 258，p.185（已核页码）：周期 $2\pi$、均值为零时 $\int_0^{2\pi}y^2\le\int_0^{2\pi}y'^2$。区间版本由偶延拓到周期 $2\pi$ 再缩放得到 |
 | T7 | Hilbert 空间投影定理（最佳逼近存在且唯一，误差与子空间正交） | 命题 3(iv)：$g_2\perp$ broken $Q_1$；$\|f-f_R\|_0\le\|f-\widetilde f_R\|_0$ | Kato1995 V-§1.1 式 (1.3)，p.252（已核页码） |
-| T8 | Kato–Temple 不等式 | 命题 1（本稿附完整证明，不依赖引用） | 原始文献 Temple 1928、Kato 1949（待下载）；Kato1995 中未找到 |
+| T8 | Kato–Temple 不等式 | 命题 1（本稿附完整证明，不依赖引用） | Nakao2019 定理 10.8，pp.356–357（已核页码；假设为 $(\mu,\nu)$ 内恰有一个谱点且含 Rayleigh 商，与命题 1(c) 一致，书中归于 Kato 1949）；原始文献 Temple1928；Kato1995 中未找到 |
 
 **分析基础结论（10 条）**
 
@@ -222,7 +222,7 @@ $$O\!\left(\frac{R_\mu^2}{\text{间隙}}\right)+O\bigl(E_y^2/b_M\bigr)+O\bigl(h^
 - Brown–Hoang–Plum–Wood 2009：解析宽条模型，用 Weinstein 一阶界，区间与 $\tilde\lambda$ 本身同宽，没有数值场。本稿在同一框架下换用数值试探场和二阶界。
 - Hoang–Plum–Wieners 2009、Liu 2015：单胞特征值认证，用于第 6 节第 3 点。
 - Cancès 等 2020：有界区域上的保证界，有效性趋于 1；本问题是无界条带加谱隙。
-- Kato 1949 的原始 Kato–Temple 不等式未入库。正式引用前要按 `ref/AGENTS.md` 核实。2026-11-01 检查：Kato1995 正文中没有 Temple 不等式，不能用它作为该不等式的出处；本稿命题 1 自带证明。待下载文献见 4.5 节。
+- Kato 1949 的原始 Kato–Temple 不等式未入库。正式引用前要按 `ref/AGENTS.md` 核实。2026-11-01 检查：Kato1995 正文中没有 Temple 不等式，不能用它作为该不等式的出处。教材出处改用 Nakao2019 定理 10.8（见 4.5 节）；本稿命题 1 自带证明。
 - **TODO**：需要查 Plum 组及其他组近年关于"光子晶体波导导模的计算机辅助证明 / 二阶包含"的工作，确认二阶 + FEM 场 + 无界 lead 的组合是否已被做过。
 
 ## 8. 演示计划与代价

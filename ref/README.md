@@ -100,6 +100,7 @@
 | `ref_data/Liu2026.pdf` | *Guaranteed Lower Eigenvalue Bounds for Spectral Galerkin Methods with Application to Schrödinger Operators* | Xuefeng Liu | 2026 预印本 | 谱 Galerkin 下界、模态泄漏 | 辅助投影及补空间常数参考；周期 lead 不满足 confinement | `Liu2026Spectral` |
 | `ref_data/Moskow2015.pdf` | *Nonlinear Eigenvalue Approximation for Compact Operators* | Shari Moskow | 2015 | 紧算子、非线性特征值逼近、扰动 | 支撑项目对离散或参数扰动下特征值收敛的分析 | `Moskow2015` |
 | `ref_data/Pushnitski2009.pdf` | *Operator Theoretic Methods for the Eigenvalue Counting Function in Spectral Gaps* | Alexander Pushnitski | 2009（本地为 arXiv v1，2008，25 页） | 带隙计数、谱流、相对指标、广义 Birman–Schwinger 原理 | 为内部带隙中的相对计数提供算子框架；应用前需核对扰动的相对紧性及谱投影对的 Fredholm 条件 | `Pushnitski2009` |
+| `ref_data/Temple1928.pdf` | *The Theory of Rayleigh's Principle as Applied to Continuous Systems* | G. Temple | 1928 | Rayleigh 商、Temple 下界 | Temple 下界的原始文献；L1 雏形 4.5 节引用 | `Temple1928` |
 | `ref_data/Xi2024.pdf` | *Analysis of a Finite Element DtN Method for Scattering Resonances of Sound Hard Obstacles* | Yingxia Xi; Bo Gong; Jiguang Sun | 2024 | 散射共振、DtN 截断、非线性特征值 | 给出 DtN Fourier 截断与 FEM 离散下 holomorphic NEP 的特征值收敛估计 | `XiGongSun2024` |
 | `ref_data/Zhang2026.pdf` | *Least-Squares Finite Element Methods with Weakly Imposed Boundary Conditions: Norm and Error Equivalences, Over-Penalization, and Fully Discontinuous Discretizations* | Shun Zhang | 2026 预印本 | 弱边界最小二乘、后处理 | 区分值/通量迹范数；唯一性和非显式常数限制本征问题应用 | `Zhang2026` |
 
@@ -108,11 +109,14 @@
 | 路径 | 题目 | 作者 | 年份 | 主题 | 与本项目的关系 | BibTeX key |
 | --- | --- | --- | ---: | --- | --- | --- |
 | `ref_data/books/Colton1983 (CH3).pdf` | *Integral Equation Methods in Scattering Theory*, Chapter 3 | David Colton; Rainer Kress | 2013 重印；原版 1983 | 散射积分方程 | 本地文件是第 3 章节选；为层势与散射积分方程提供经典依据 | `ColtonKress1983` |
+| `ref_data/books/Folland1999.pdf` | *Real Analysis: Modern Techniques and Their Applications*, 2nd ed. | Gerald B. Folland | 1999 | 测度、Fourier 分析 | 定理 8.20（p.248）三角函数系完备、定理 8.29（p.252）Plancherel；L1 雏形 4.5 节引用 | `Folland1999` |
+| `ref_data/books/Hardy1934.pdf` | *Inequalities* | G. H. Hardy; J. E. Littlewood; G. Pólya | 1934（第一版） | 经典不等式 | §7.7 定理 258（p.185）Wirtinger 不等式；L1 雏形 4.5 节引用 | `HardyLittlewoodPolya1934` |
 | `ref_data/books/Isakov2017.pdf` | *Inverse Problems for Partial Differential Equations*, 3rd ed. | Victor Isakov | 2017 | 反问题、唯一延拓、稳定性 | 为项目证明中使用的 Cauchy 唯一性与定量估计提供来源 | `Isakov2017` |
 | `ref_data/books/Joannopoulos2011.pdf` | *Photonic Crystals: Molding the Flow of Light*, 2nd ed. | John D. Joannopoulos; Steven G. Johnson; Joshua N. Winn; Robert D. Meade | 2008 | 光子晶体物理与能带 | 提供周期介质、缺陷和导模的物理背景；文件名年份与版本版权页不一致 | `JoannopoulosJohnsonWinnMeade2008` |
 | `ref_data/books/Kato1995.pdf` | *Perturbation Theory for Linear Operators*, 2nd ed. | Tosio Kato | 1995 | 闭算子、谱与扰动理论 | 是项目算子谱、解析族和特征值扰动的理论基础 | `Kato1995` |
 | `ref_data/unsorted/Multiple scattering Interaction of time-harmonic waves with N obstacles (P. A. Martin) (Z-Library).pdf` | *Multiple Scattering: Interaction of Time-Harmonic Waves with N Obstacles* | P. A. Martin | 2006 | 多体散射、加法定理、积分方程 | 为多障碍散射和边界积分表示提供专著级参考；文件名显示来源标记，后续宜以合法来源副本替换 | `Martin2006` |
 | `ref_data/books/McLean2000.pdf` | *Strongly Elliptic Systems and Boundary Integral Equations* | William McLean | 2000 | Sobolev 空间、迹、层势、BIE | 为项目函数空间、迹算子和边界积分映射性质提供基础 | `McLean2000` |
+| `ref_data/books/Nakao2019.pdf` | *Numerical Verification Methods and Computer-Assisted Proofs for Partial Differential Equations* | Mitsuhiro T. Nakao; Michael Plum; Yoshitaka Watanabe | 2019 | 计算机辅助证明、特征值包含 | 定理 10.8（pp.356–357）两侧 Kato–Temple 界；第 10 章 Lehmann–Goerisch 与同伦法可用于谱隙认证 | `NakaoPlumWatanabe2019` |
 | `ref_data/books/Reed1978(Vol4).djvu` | *Methods of Modern Mathematical Physics IV: Analysis of Operators* | Michael Reed; Barry Simon | 1978 | 算子谱理论 | 为自伴算子、谱分解和散射理论提供一般背景；身份由卷名与既有书目记录核对 | `ReedSimon1978` |
 | `ref_data/books/Wilcox1984.pdf` | *Scattering Theory for Diffraction Gratings* | Calvin H. Wilcox | 1984 | 衍射光栅、Floquet 理论、散射 | 是周期光栅散射与辐射条件的系统理论参考 | `Wilcox1984` |
 
