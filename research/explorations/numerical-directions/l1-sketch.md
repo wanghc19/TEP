@@ -132,7 +132,7 @@ $$g=f-P_M\widetilde f_R=\underbrace{(I-P_M)\widetilde f_R}_{g_1}+\underbrace{(f-
 
   最后一步用了 $\|L_s^{1/2}v\|_0^2=\|\nabla v\|_0^2+s\|v\|_0^2$。再用 $\|g_2\|_0=\|f-f_R\|_0\le\|f-\widetilde f_R\|_0\le E_R$：$f_R$ 是 $f$ 在 broken $Q_1$ 中的最佳 $L^2$ 逼近，而 $\widetilde f_R$ 也属于该空间。
 
-  阶数：$E_R=O(h^{1/2})$，因为源在材料界面处间断。所以 $\|g_2\|_-^2=O(h^3)$，与 Fourier 尾的 $O(M^{-3})$ 同阶。
+  阶数（条件性陈述，按 [[l1-proof-review]] 异议 1 修订）：令 $h=\max\{h_x,h_y\}$。若所给上界满足 $E_R=O(h^{1/2})$，则 $c_R'=O(h)$，$\|g_2\|_-^2=O(h^3)$。若沿所选加密序列还有 $E_y^2=O(M^{-1})$，则 $\|g_1\|_-^2=O(M^{-3})$。这两个条件是对所给上界的要求，不能由源的间断自动推出；现有记录中 control→main 的 $E_R$、$E_y$ 都约缩小 $\sqrt2$ 倍，与之相符。
 
 合并：$a(e,e)\le\bigl(E_y/\sqrt{b_M}+c_R'E_R+\delta_c/\sqrt{s+\beta^2}\bigr)^2$，右端全部是 I9.6 已有的量。
 
