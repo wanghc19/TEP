@@ -119,13 +119,13 @@ L2、L3之外，下表记录改变筛选决定的原文。更广但只读摘要�
 | PPS2015俄文编码损坏、英文入口403 | 关键算法摘要已足以否决宽泛新颖性；不能编造定理编号 | 保留A/部分原文等级 |
 | Nazarov2017网页可读、随后本地curl下载403 | 理论引用仍有此前T/P证据；没有本地副本 | 不重试或换路径绕过，记录准确结果 |
 | MPG条目403、PMC后续reCAPTCHA、个别DOI跳转失败/超时 | 仅影响各自访问路径；可用已正常读到的公开作者稿，不宣称下载成功 | 分工及review记录具体来源，不重试拒绝路径 |
-| 真实M0开放bulk未在本轮形成完整误差证书 | **适用范围限制**，不能将M1称原模型已解决；也不能称M0尚无算法 | 已完成直接模型核验，见open-crystal及review §§18–20 |
+| 真实M0开放bulk未在本轮形成完整误差证书 | **适用范围限制**，不能将M1称原模型已解决；也不能称M0尚无算法 | 已完成直接模型核验，见open-crystal及提交 `d6278e8` 中review §§18–20 |
 | 旧方法未被证明在目标例失效 | 限制价值判断；定理范围差异不是算法失败证据 | 先作理论诊断，未启动实验 |
 
 最终建议见 [[research/explorations/bend-scattering-methods/recommendation]]。本轮没有证明新散射主定理，也没有确认一个可直接正式立项的方法空白。
 
 ## 9. 原开放晶体几何的直接方法
 
-为避免用硬壁条带先例代替原模型，后半轮单独核了Hu–Lu2008、Pissoort等2005/2007、Mingaleev–Kivshar2002等原始算法，以及Fliss/Coatléven的连续归约。完整书目和覆盖矩阵集中在 [[research/explorations/bend-scattering-methods/open-crystal]]；独立审查为 [[research/explorations/bend-scattering-methods/review]] §§16–21。不重复把这些条目复制成第二份长目录。
+为避免用硬壁条带先例代替原模型，后半轮单独核了Hu–Lu2008、Pissoort等2005/2007、Mingaleev–Kivshar2002等原始算法，以及Fliss/Coatléven的连续归约。完整书目和覆盖矩阵集中在 [[research/explorations/bend-scattering-methods/open-crystal]]；前轮独立审查为Git提交 `d6278e8` 中review §§16–21；当前 [[research/explorations/bend-scattering-methods/review]] 已用于新报告审查。不重复把这些条目复制成第二份长目录。
 
 核验发现：无限二维背景、局部弯角、半无限导波臂的实际方法已有直接覆盖。连续误差保证、人工表面谱、核尾及倏逝尾的限制应准确保留，但“原模型更复杂”本身没有恢复候选新颖性。最终仍是零项正式推荐。

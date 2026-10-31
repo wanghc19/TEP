@@ -1,34 +1,59 @@
-# 弯折波导散射的数值方法选题
+# 开放晶体弯角散射：两种外部表示
 
-`bend-scattering-methods` 指弯折波导散射数值方法。本轮最终结论是：**零项正式推荐，不设备选；没有为凑题保留已被强先例削弱的路线。** 已核近截止表示、近共振输出和整频窗漏检，并回到原开放二维晶体弯角核查直接算法。没有证明散射方向已被穷尽，也没有证明新散射主定理。
+`bend-scattering-methods` 指弯折波导散射数值方法。**当前阅读入口为 [report.pdf](report.pdf)，源文件为 [report.tex](report.tex)。** `report` 是本专题调研报告；PDF（Portable Document Format）为其7页编译版，4幅TikZ图均内嵌在TeX源内。无需读取全部Markdown即可理解主要结论。
 
-## 阅读顺序与文件作用
+## 当前判断与阅读顺序
 
-1. [[research/explorations/bend-scattering-methods/recommendation]]：简短最终判断、计算用途与学术增量的区别、重新开启的证据门槛。
-2. [[research/explorations/bend-scattering-methods/landscape]]：质量型模型、算法/保证覆盖矩阵，原始书目、2025–2026核读及访问限制。
-3. [[research/explorations/bend-scattering-methods/open-crystal]]：原全平面晶体弯角的直接方法核验。Hu–Lu2008、Pissoort2005/2007等已有有限表示；未核出端到端连续误差证书不等于算法失效。
-4. [[research/explorations/bend-scattering-methods/candidates/threshold-uncertainty]]：曾保留的截止不确定性问题及两通道解析诊断；最终仅为可靠性验收要求。
-5. [[research/explorations/bend-scattering-methods/candidates/cell-to-port]]：胞导数问题、显式解析半径和双模态Cauchy迹的条件推演。局部连续部分经只读分工核查；不是全离散散射证书，也没有识别出新方法机制。
-6. [[research/explorations/bend-scattering-methods/candidates/rejected-routes]]：其余路线的具体淘汰原因及有限精度反例边界。
-7. [[research/explorations/bend-scattering-methods/review]]：指定独立reviewer的冻结原稿，主汇总没有编辑。§§14/16/21的修正已吸收；§§18–20是开放晶体直接先例。它记录审查时快照，部分“待修改”文字不代表终稿仍未修复。
+本轮复原Hu–Lu胞DtN/横向零墙和Pissoort背景Green/缺陷网络的计算机制。共同模型是无损、非磁性、正介电二维晶体中的两条同型单模臂与有限弯角；固定完整体隙内、远离截止且散射适定的工作窗。报告用公式区分局部离散与外部近似，明确半无限尾如何进入有限匹配系统。
 
-本轮主体8份Markdown集中于此目录；另外仅改 `ref/README.md`、`ref/reference.bib` 两份来源目录。未搬动或改写上轮报告，未改数值代码。
+**仍为零项正式新课题，不设备选。** 两种已有表示确实改变了外部近似方式；本轮未识别出新的数值机制，也未证明新的散射主定理。报告不把“未核到端到端误差界”解释为算法失效，不对整个散射方向作穷尽判断。
 
-## 范围、时间与证据
+- [report.pdf](report.pdf) / [report.tex](report.tex)：当前面向学术听众的正文，模型、算子、4张图、两方法及选题判断。
+- [[research/explorations/bend-scattering-methods/review]]：独立审查者本轮原位更新，主作者未修改。§9已通过当前7页稿的数学与全页视觉验收；§§6–8是过程记录。
+- [[research/explorations/bend-scattering-methods/open-crystal]]：三篇直接算法的完整题名、公开全文链接和覆盖证据。
+- [[research/explorations/bend-scattering-methods/landscape]]：前轮更广方法矩阵、2025–2026书目和访问限制。
+- [[research/explorations/bend-scattering-methods/recommendation]] 及既有 `candidates/`：前轮选题、条件推演和淘汰依据；不作为本轮新增候选。
 
-授权窗为2026-10-31 **03:08:10–04:38:10 UTC**。实际网页/原文检索在本窗内进行，主汇总主要检索于04:00前完成，之后为审查整合和提交。实际核到2026文献，包括Lawrence–Yamauchi、Goodwill–Epstein、Lu–Zhou和2026-10-26发表的Ackermann等有理逼近论文，详见landscape。不是2026年文献的穷尽检索，不能以未搜到证明开放性。
+所有内容集中于原目录，没有新增研究子目录或候选文件。前轮完整稿保留于Git提交 `d6278e8`，本轮按用户要求原位复用入口与独立review，新增报告源及本地编译PDF。
 
-采用 academic-research-suite 文献筛选流程；文献审查为 rigorous-proof 的 Review only，未修改被审原文。`cell-to-port.md` 为明确授权的 Proof from scratch 条件推演，其余公式为选题诊断或标准扰动关系。没有数值实验、MATLAB运行、编译、依赖安装或后台实验任务。
+## 本轮范围与复现
 
-## Git基线与保全
+授权窗：2026-10-31 **08:05:41–09:35:41 UTC**。08:07核实真实路径 `/Users/whc/Documents/Work/dot-research`、分支 `codex/dot`、HEAD `d6278e8c861a00ad93259f27e35d035e8775fc25`，初始工作区干净。之后review改动来自指定独立审查者。没有清除旧轮用户改动，没有改数值代码、切换分支、push或访问私有GitHub。
 
-03:09 UTC核实真实路径 `/Users/whc/Documents/Work/dot-research`、分支 `codex/dot`、HEAD `9cb8d8a23f6eae8090da95aa92fa85c7b9df16ae`，初始工作区干净。当前worktree持有该分支；没有切换分支/工作树、push、访问私有GitHub或修改权限/网络。旧轮用户改动在本轮开始时已不表现为未提交变化，不能说是本轮清除了它们。
+本轮主要重新核读2005、2007、2008算法原文和2013横向DtN定理；不声称本轮新增覆盖2026文献。采用academic-research-suite原文核对、rigorous-proof的Review only、PDF逐页渲染检查及Library交付流程。报告中的统一记号、lifting和尾和公式为条件性重述/初等推演，非新主定理。
 
-只提交本目录8份文稿及上述两份ref目录，明确列路径暂存；不提交PDF、AGENTS.override或其它用户文件。提交后的精确SHA由最终交付给出，避免为在文件中嵌入自身SHA再造提交。
+使用已有TeX Live 2024、XeLaTeX、latexmk、Fandol与TeX Gyre Pagella字体及Ghostscript 10.03.0；没有安装软件。以下命令从仓库根运行，所有输出及缓存留在仓库内：
 
-## 公开文献保存清单
+```sh
+mkdir -p tmp/bend-scattering-report/texmf-var tmp/bend-scattering-report/texmf-config tmp/bend-scattering-report/cache
+TEXMFVAR="$PWD/tmp/bend-scattering-report/texmf-var" \
+TEXMFCONFIG="$PWD/tmp/bend-scattering-report/texmf-config" \
+XDG_CACHE_HOME="$PWD/tmp/bend-scattering-report/cache" \
+latexmk -xelatex -interaction=nonstopmode -halt-on-error \
+  -outdir="$PWD/tmp/bend-scattering-report" \
+  research/explorations/bend-scattering-methods/report.tex
+cp tmp/bend-scattering-report/report.pdf research/explorations/bend-scattering-methods/report.pdf
+TMPDIR="$PWD/tmp/bend-scattering-report" \
+gs -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r120 \
+  -sOutputFile=tmp/bend-scattering-report/page-%d.png \
+  research/explorations/bend-scattering-methods/report.pdf
+```
 
-全部于2026-10-31合法公开下载，核对首页题名/作者/版本；只写当前仓库内真实目录 `ref/ref_data/`，不写历史外置 `TEP_ref/`，不提交PDF。三份共 **3,993,954字节**。来源、用途和版本同时记入ref两份目录。
+逐页查看PNG，检查中文、图示、公式、引用与分页。当前Poppler缺少Adobe-GB1 CMap，直接渲染中文不完整，故改用已有Ghostscript，并用macOS CoreGraphics（Quartz）独立渲染全部7页。主作者已实际查看两套图像；最新Quartz图未见右侧裁切。PDF内Fandol的FontDescriptor均指向实际FontFile3嵌入流，故Poppler缺CMap不等于PDF缺中文字体。未安装字体/CMap或改变系统设置。首次编译的字体族查找问题已改为使用TeX内字体文件名。清理LaTeX中间文件只用：
+
+```sh
+latexmk -c -outdir="$PWD/tmp/bend-scattering-report" \
+  research/explorations/bend-scattering-methods/report.tex
+```
+
+`report.pdf` 由仓库已有 `*.pdf` 规则忽略，按约定不强制加入Git；它保留在源文件同目录。Git保留可恢复的完整源和编译方法。引用复用内嵌的6条bibliography，没有新增图源或配置文件；本轮不修改共享ref索引。
+
+**PDF与TeX均已保存为Library附件。** 当地预上传能力不可用，最初尝试在创建上传会话前退出。父线程确认当前技能规定的能力不可用回退路径后，两个新文件按顺序批量创建成功，并将返回的Library身份信息写入对应本地文件。附件与已编译、已查看的本地稿内容一致；真实附件标识随最终交付提供，不将本地路径冒充云端附件。
+
+## 前轮已保存的公开文献
+
+
+以下三份于2026-10-31前一轮合法公开下载；本轮未新增下载。此前已核对首页题名/作者/版本；只写当前仓库内真实目录 `ref/ref_data/`，不写历史外置 `TEP_ref/`，不提交PDF。三份共 **3,993,954字节**。来源、用途和版本同时记入ref两份目录。
 
 PDF未提交是遵守 `ref/AGENTS.md` 的“Do not commit reference documents”约定；现有 `.gitignore` 第66行 `ref/**` 也忽略这些文件，已用 `git check-ignore -v` 核实，未修改忽略规则。三份文件仍实际保留在本地，并未丢失或删除；单独检出Git提交不会携带PDF，可按下表公开URL、版本和SHA-256重新取得并核验。
 
@@ -38,21 +63,10 @@ PDF未提交是遵守 `ref/AGENTS.md` 的“Do not commit reference documents”
 | `ref/ref_data/Lawrence2026.pdf` | Scott Lawrence、Yukari Yamauchi，*Stable minimum principles for scattering states*，arXiv2605.17139v1（提交05-16，PDF题头05-19），[作者PDF](https://arxiv.org/pdf/2605.17139v1)；直接输出界先例 | 655144 | `cc65227b527bf114eb912265bd4a44143af02c5fbbe72921e6ed9e067ffabab7` |
 | `ref/ref_data/Zhang2021.pdf` | Ruming Zhang，*Numerical methods for scattering problems in periodic waveguides*，2021正式版，[出版商PDF](https://link.springer.com/content/pdf/10.1007/s00211-021-01229-0.pdf)；周期条带完整算法基线 | 1292028 | `3f12832cbec1fc0e06167bc06be6501cc63bf772c1ed8639496e54e11c533762` |
 
-Nazarov2017先前网页已读，本地下载HTTP403、无文件；Hu2008公开正文已读，PDF链接404、无下载。其它M0关键原文采用正常公开作者/出版商全文在线核读，未批量下载。已知拒绝入口不重试、不绕过；其余具体访问限制见landscape/open-crystal及review。没有假称被拒资料已本地取得。
+Nazarov2017先前网页已读，本地下载HTTP403、无文件；Hu2008公开正文已读，PDF链接404、无下载。其它开放晶体关键原文采用正常公开作者/出版商全文在线核读，未批量下载。已知拒绝入口不重试、不绕过；其余具体访问限制见landscape/open-crystal及review。没有假称被拒资料已本地取得。
 
-## 验证与资源
+## 验证与资源边界
 
-只做文稿/来源验证：检查本地链接、BibTeX key无重复、3份PDF首页及SHA、`git diff --check`、暂存路径清单、分支/worktree状态和总存储。可从入口按文献记录的页节独立重审结论；本轮没有需要复跑的数值实验或计算manifest。
+本轮只运行文稿编译、渲染、文件/链接检查及附件保存，没有数值实验、MATLAB或后台实验任务。最新7页PDF已由主作者和独立reviewer分别逐页检查，数学与视觉均通过，详见review §9。编译无overfull、未定义引用或缺字警告，仍有字体script元数据警告及一处参考文献underfull警告；实际中文和版面以渲染结果验收。已运行上述 `latexmk -c`，主PDF及源文件保持不变。
 
-```sh
-git branch --show-current
-git status --short
-git show --stat --oneline HEAD
-git diff --name-only 9cb8d8a23f6eae8090da95aa92fa85c7b9df16ae..HEAD
-git diff --check 9cb8d8a23f6eae8090da95aa92fa85c7b9df16ae..HEAD
-git check-ignore ref/ref_data/Halla2018.pdf ref/ref_data/Lawrence2026.pdf ref/ref_data/Zhang2021.pdf
-LC_ALL=C shasum -a 256 ref/ref_data/Halla2018.pdf ref/ref_data/Lawrence2026.pdf ref/ref_data/Zhang2021.pdf
-du -sk .
-```
-
-03:58 UTC工作树为97,816KiB（约100.2MB），含隐藏/忽略文件，不跟随外部链接；远低于1,000,000,000字节上限。本目录当时约140KB，低于250KB文字预算；3份PDF低于20MB下载预算。最终检查值在交付中报告。未启动MATLAB、数值实验或持久任务；先前`ps`拒绝未重试，因此不声称做了系统全进程普查。
+核对 `git diff --check`、明确暂存路径、分支与工作树；不提交AGENTS.override、临时文件或文献PDF。总存储包括隐藏/忽略文件，以不跟随外部链接的 `du -sk .` 监测，远低于1,000,000,000字节上限。未重试此前被拒的全系统进程检查，不声称审计过用户的所有进程。

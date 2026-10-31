@@ -1,0 +1,351 @@
+% Report on exterior representations for open photonic-crystal bend scattering.
+% Compile with XeLaTeX; all diagrams are embedded TikZ sources.
+\documentclass[UTF8,fontset=none,11pt,a4paper]{ctexart}
+\usepackage[left=19mm,right=19mm,top=18mm,bottom=18mm]{geometry}
+\usepackage{amsmath,amssymb,mathtools,bm,mathrsfs,booktabs,array,tabularx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
+\usepackage{xcolor,tcolorbox,enumitem,fancyhdr,hyperref}
+\definecolor{navy}{HTML}{173B57}
+\definecolor{teal}{HTML}{087F8C}
+\definecolor{orange}{HTML}{BD5A24}
+\definecolor{pale}{HTML}{EFF5F8}
+\hypersetup{colorlinks=true,linkcolor=navy,citecolor=teal,urlcolor=teal,pdftitle={开放晶体弯角散射：两种外部表示究竟近似了什么？}}
+\setmainfont{texgyrepagella}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setCJKmainfont{FandolSong-Regular.otf}[BoldFont=FandolSong-Bold.otf,ItalicFont=FandolKai-Regular.otf,Script=Default]
+\setCJKsansfont{FandolHei-Regular.otf}[BoldFont=FandolHei-Bold.otf,Script=Default]
+\setCJKmonofont{FandolFang-Regular.otf}[Script=Default]
+\setlength{\parindent}{0pt}\setlength{\parskip}{5pt}
+\setlength{\emergencystretch}{1em}
+\setlist[itemize]{leftmargin=1.4em,itemsep=3pt,topsep=3pt}
+\setlist[enumerate]{leftmargin=1.7em,itemsep=3pt,topsep=3pt}
+\ctexset{section={format=\Large\bfseries\color{navy},beforeskip=0pt,afterskip=9pt}}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{navy}开放晶体弯角散射\quad /\quad 数值方法调研}
+\fancyhead[R]{\small 2026年10月31日}\fancyfoot[C]{\small\thepage}
+\setlength{\headheight}{15pt}
+\newcommand{\R}{\mathbb R}\newcommand{\C}{\mathbb C}
+\newcommand{\dd}{\,\mathrm d}\newcommand{\spec}{\operatorname{spec}}
+\newcommand{\dist}{\operatorname{dist}}\newcommand{\out}{\mathrm{out}}
+\newcommand{\inn}{\mathrm{in}}\newcommand{\ext}{\mathrm{ext}}
+\newcommand{\bulk}{\mathrm{b}}
+\newcommand{\source}[1]{{\small\raggedright\color{teal}原文定位：#1\par}}
+\newcommand{\takeaway}[1]{\begin{tcolorbox}[colback=pale,colframe=navy,boxrule=.5pt,arc=1mm,left=2mm,right=2mm,top=1.5mm,bottom=1.5mm]#1\end{tcolorbox}}
+\newcommand{\nextpage}{\clearpage}
+\tikzset{arr/.style={-{Latex[length=2.3mm]},thick},blk/.style={draw=navy,rounded corners=1mm,fill=pale,align=center,inner sep=7pt},smalltext/.style={font=\small,align=center}}
+
+\begin{document}
+\thispagestyle{plain}
+{\small\color{teal}同一个散射输出\quad 两种有限化\quad 一次选题判断}
+\vspace{3mm}
+
+{\LARGE\bfseries\color{navy}开放晶体弯角散射：\\[2mm]两种外部表示究竟近似了什么？}
+\vspace{2mm}
+\takeaway{\textbf{区分局部离散误差与外部模型误差，才能解释散射计算的收敛。}\\
+局部离散加密，可以更准确地求解一个仍带人工外边界的问题。背景Green函数可改变这种有限化，但并不免费消除所有尾项。}
+
+\section{先固定真实几何与方程}
+令 $\rho_\bulk$ 为二维周期、实、正有界质量。只在有限弯区及两条周期缺陷臂上改变它：
+\begin{equation}\label{eq:pde}
+ P(\lambda)u:=-\Delta u-\lambda\rho(x)u=0\quad(x\in\R^2),\qquad
+ \lambda=(\omega/c)^2,\quad 0<\rho_-\le\rho\le\rho_+.
+\end{equation}
+\(\rho-\rho_\bulk\) 沿两条臂延伸到无穷。各臂坐标 $s_j$ 向外、$t_j$ 横向，周期为 $a_j$；不设全局准周期相位。取时间因子 $e^{-i\omega t}$，$c$ 为真空光速。
+
+\begin{center}
+\begin{tikzpicture}[x=.75cm,y=.67cm]
+  \foreach \x in {-5,...,5}{\foreach \y in {-3,...,4}{
+    \pgfmathtruncatemacro{\keep}{ifthenelse(((\x<=0)&&(\y==0))||((\x==0)&&(\y>=0)),0,1)}
+    \ifnum\keep=1 \fill[navy!28] (\x,\y) circle(.15);\fi}}
+  \draw[teal!20,line width=10pt] (-5.5,0)--(0,0)--(0,4.5);
+  \draw[navy,thick,dashed] (-1.55,-1.3) rectangle (1.55,1.5);
+  \node[smalltext,fill=white,inner sep=2pt] at (0,-.8){$\Omega_C$};
+  \draw[orange,very thick] (-1.55,-.45)--(-1.55,.45);
+  \draw[orange,very thick] (-.45,1.5)--(.45,1.5);
+  \node[smalltext,above left] at (-1.55,.45){$\Gamma_1$};
+  \node[smalltext,right] at (.45,1.5){$\Gamma_2$};
+  \draw[arr,teal] (-3,.38)--(-4.7,.38) node[midway,above]{$s_1$};
+  \draw[arr,teal] (.4,2.4)--(.4,4.3) node[midway,right]{$s_2$};
+  \node[smalltext,fill=white,inner sep=3pt] at (3.7,2.6){二维周期晶体\\向四周无限延伸};
+  \node[smalltext,orange,fill=white,inner sep=3pt] at (3.5,-2.0){虚线是接口\\不是物理墙};
+  \draw[arr,orange] (2.15,-1.9)--(1.55,-1.1);
+\end{tikzpicture}
+\end{center}
+{\small 图1：共同子类取非磁性方晶格介质圆柱、两条同型旋转单模臂和局部弯角；不包括2007论文的全部材料扩展。图示直角，非拓扑假设。}
+
+取沿柱轴电场 $u=E_z$，则 $\rho=\varepsilon_r$，界面上 $u,\partial_nu$ 连续。这是Hu--Lu的E偏振、Pissoort的非磁性TM$_z$。若取 $H_z$，则为
+\( -\nabla\!\cdot(\varepsilon_r^{-1}\nabla u)-\lambda u=0\)，\textbf{不能混用通量}。
+
+工作窗 $I$ 位于完整体隙：
+\begin{equation}\label{eq:gap}
+ \delta_\bulk:=\dist(I,\spec A_\bulk)>0,\qquad
+ A_\bulk=-\rho_\bulk^{-1}\Delta\ \text{于 }L^2(\rho_\bulk\dd x).
+\end{equation}
+该自伴算子由形式 $\int_{\R^2}\nabla u\cdot\nabla\overline v\,\dd x$、形式域 $H^1(\R^2)$ 定义。另假定两臂远离截止，且极限吸收散射问题适定。这些是比较前提，\textbf{不是本轮新证书}。
+
+\nextpage
+\section{输出相同，外部条件才可以比较}
+参考直臂的模式写成 $w_{j\ell}=e^{iq_{j\ell}s_j}p_{j\ell}$，其中 $p_{j\ell}$ 沿轴周期、横向局域。以向外通量
+\begin{equation}
+ \mathcal F_j(w)=\operatorname{Im}\int_\R\overline w\,\partial_{s_j}w\dd t_j,
+ \qquad\mathcal F_j(w^{\out})=1,\quad\mathcal F_j(w^{\inn})=-1
+\end{equation}
+归一化传播模。用远场各臂附近互不重叠的平滑截断函数 $\chi_j$ 表示辐射条件：
+\begin{equation}\label{eq:rad}
+ u=\sum_{j,\ell}\chi_j(a_{j\ell}w_{j\ell}^{\inn}
+          +b_{j\ell}w_{j\ell}^{\out})+u_{\rm dec},\qquad u_{\rm dec}\in H^1(\R^2).
+\end{equation}
+余项包括倏逝导波与衰减bulk场。由 $\lambda+i\epsilon$、$\epsilon\downarrow0$ 的极限吸收选解；共同单模子类有
+\begin{equation}\label{eq:scattering}
+ \boxed{\ b=S(\omega)a,\quad S:\C^2\to\C^2,\quad \mathcal R=|S_{11}|^2.\ }
+\end{equation}
+实无损、完整体隙、全部传播通道纳入且散射适定时，$S^*S=I$。若存在体辐射，有限导模矩阵只是子块，不能预设幺正；守恒也不证明算对了 $S$。
+
+\subsection*{精确外部对象一：整个闭合接口上的关系}
+取有界Lipschitz中心区 $\Omega_C$，$\Gamma=\partial\Omega_C$，$n$ 从中心指向外部。齐次出射Cauchy关系为
+\begin{equation}
+ \begin{aligned}
+ \mathscr C_\ext^{\out}(\lambda)
+ &=\{(\gamma v,\partial_nv):Pv=0\text{ 于外部},\ v\text{ 无入射}\}\\
+ &\subset H^{1/2}(\Gamma)\times H^{-1/2}(\Gamma).
+ \end{aligned}
+\end{equation}
+若外部Dirichlet问题无极点，该关系成为算子图
+\(T_\ext:H^{1/2}(\Gamma)\to H^{-1/2}(\Gamma)\)。全散射适定并不自动排除此切口的Dirichlet极点。
+
+\textbf{入射lifting有源项，不能丢掉。} 令 $v_a=\sum\chi_j a_{j\ell}w_{j\ell}^{\inn}$，
+\begin{equation}\label{eq:lift}
+ F_a=-Pv_a,\qquad P(u-v_a)=F_a.
+\end{equation}
+选 $\chi_j$ 使 $F_a\in L^2$。记 $E_\ext^D F$ 为零Dirichlet的外部出射源解，右端取源在外部的限制；$g=\gamma u$，则
+\begin{equation}\label{eq:exactdtn}
+ \partial_nu=T_\ext g+\underbrace{\partial_nv_a-T_\ext\gamma v_a
+              +\partial_n E_\ext^D F_a}_{f_\inn(a)}.
+\end{equation}
+这里假定所需出射解算子存在；不是普通自伴 $L^2$ 逆。
+
+\takeaway{\(\Gamma=\Gamma_1\cup\Gamma_2\cup\Gamma_\bulk\)：还有穿过bulk的接口。一般不能写 \(T_\ext=T_1\oplus T_2\)，也不能把入射模乘截断函数后仍当作齐次解。}
+\source{Hu--Lu\cite{hu2008} §3式(6)--(16)构造的是下一页的有限横向端口。Fliss等\cite{fliss2015} §2.3、§5.2讨论Dirichlet表面态。以上lifting公式是本报告的算子重述。}
+
+\nextpage
+\section{Hu--Lu：先截横向，再做周期端口}
+\textbf{原算法动作：} 胞边界展开/配置 $\to$ 合并胞DtN $\to$ 超胞Bloch铅笔 $\to$ 中心边界匹配。节省胞内部未知量，不等于横向截断已经精确。
+
+\begin{center}
+\begin{tikzpicture}[x=.85cm,y=.8cm]
+ \fill[pale] (0,-1.5) rectangle (8,1.5);
+ \draw[orange,very thick] (0,-1.5)--(8,-1.5);
+ \draw[orange,very thick] (0,1.5)--(8,1.5);
+ \foreach \x in {0,1,...,8}{\draw[navy!30] (\x,-1.5)--(\x,1.5);}
+ \foreach \y in {-.75,.75}{\foreach \x in {.5,1.5,...,7.5}{\fill[navy!35] (\x,\y) circle(.1);}}
+ \draw[teal,line width=2pt] (0,0)--(8,0);
+ \fill[teal!15] (2,-1.5) rectangle (3,1.5);
+ \draw[navy,thick] (2,-1.5) rectangle (3,1.5);
+ \draw[arr] (2,-.35)--(1.35,-.35) node[below]{$d_0$};
+ \draw[arr] (3,.35)--(3.65,.35) node[above]{$d_1$};
+ \node[above] at (2,1.5){$g_0$};\node[above] at (3,1.5){$g_1$};
+ \draw[<->] (2,-2)--(3,-2) node[midway,below]{$a_j$};
+ \draw[<->] (8.4,-1.5)--(8.4,1.5) node[midway,right]{$2W$};
+ \node[smalltext,orange] at (5.7,2.0){人工零墙：$u=0$};
+ \draw[arr,teal] (5,-.25)--(6.7,-.25) node[midway,below]{$s_j$ 向外};
+ \node[smalltext] at (4,-2.7){无限臂仍向右延伸；有限的是横向宽度};
+\end{tikzpicture}
+\end{center}
+{\small 图2：本文取胞外法向导数 $d_0=-\partial_su|_0$、$d_1=\partial_su|_a$；原文式(6)两侧用同向导数，需转换符号。}
+
+离散前，超胞的两端映射与Bloch关系为
+\begin{equation}
+ \begin{bmatrix}d_0\\d_1\end{bmatrix}
+ =\begin{bmatrix}\Lambda_{00}^{W}&\Lambda_{01}^{W}\\
+                  \Lambda_{10}^{W}&\Lambda_{11}^{W}\end{bmatrix}
+ \begin{bmatrix}g_0\\g_1\end{bmatrix},\qquad
+ g_1=z g_0,\quad d_1=-zd_0.
+\end{equation}
+于是得到按统一法向重述的铅笔：
+\begin{equation}\label{eq:pencil}
+ [\Lambda_{01}^{W}z^2+(\Lambda_{00}^{W}+\Lambda_{11}^{W})z
+                  +\Lambda_{10}^{W}]g_0=0,\qquad z=e^{iqa_j}.
+\end{equation}
+出射选择：$|z|<1$，或 $|z|=1$ 且通量向外。对臂 $j$ 的 $N$ 个迹自由度，全体离散出射模给出 $\Phi_\out,\Psi_\out\in\C^{N\times N}$；$\Phi_\inn,\Psi_\inn\in\C^{N\times1}$ 只含给定传播入射列。当 $\Phi_\out$ 可逆时，
+\begin{equation}
+ T_{h,W}^{\out}=\Psi_\out\Phi_\out^{-1},\qquad
+ \partial_su=T_{h,W}^{\out}g+
+ (\Psi_\inn-T_{h,W}^{\out}\Phi_\inn)a_{j1}.
+\end{equation}
+若只保留部分模态，需另设投影匹配，不能直接使用该逆。合并胞时，公共边上 $g^{(1)}=g^{(2)}$、$d^{(1)}+d^{(2)}=0$。胞Dirichlet极点、模态完备性及条件数仍须核查。
+
+\takeaway{固定 $W$，$h\to0$ 首先逼近\textbf{零墙波导}的端口。远bulk边界也被置零。要接近真实开放模型，仍需控制外边界位置与端口近似。}
+\source{\cite{hu2008} §2式(2)--(5)：胞构造/拼装；§3式(6)--(9)：横向置零及合并；式(11)--(16)：Bloch端口；§5：弯角算例。式\eqref{eq:pencil}不是新算法。}
+
+\nextpage
+\section{Pissoort：消去bulk，保留缺陷网络}
+\textbf{精确外部对象二：背景逆。} 在完整体隙中，
+\begin{equation}
+ P_\bulk=-\Delta-\lambda\rho_\bulk,\qquad
+ R_\bulk=P_\bulk^{-1}=(A_\bulk-\lambda)^{-1}\rho_\bulk^{-1}.
+\end{equation}
+其核 $G_\bulk(x,y;\lambda)$ 含\textbf{无限晶体}，不是自由空间核加两面墙。令 $V=\lambda(\rho-\rho_\bulk)$，$w=u-v_a$，则 $P_\bulk w=F_a+Vw$。
+
+用有限大小的缺陷胞 $D_\alpha$，体源形式的消元为
+\begin{align}\label{eq:green}
+ U_\alpha&=U^0_\alpha+\sum_\beta K_{\alpha\beta}U_\beta,
+ &U^0_\alpha&=(R_\bulk F_a)|_{D_\alpha},\\[-1mm]
+ K_{\alpha\beta}U_\beta&=\left.R_\bulk[1_{D_\beta}VU_\beta]\right|_{D_\alpha},
+ &U_\alpha&=w|_{D_\alpha}\in L^2(D_\alpha).\notag
+\end{align}
+背景逆可按衰减块核延拓到均匀局部有界源；需保证相应块和收敛。导波序列一般不在 $\ell^2$。式\eqref{eq:green}\textbf{还必须附出射条件}，不能用普通 $\ell^2$ 逆对半无限臂写Schur补。
+
+\begin{center}
+\begin{tikzpicture}[x=.85cm,y=.6cm]
+ \fill[pale,rounded corners] (-5.2,-1.1) rectangle (3.8,3.2);
+ \node[smalltext,navy] at (2.25,2.5){无限bulk已进入核\\$G_\bulk(x,y;\lambda)$};
+ \foreach \x in {-5,-4,...,0}{\draw[teal,thick,fill=white] (\x,0) circle(.16);}
+ \foreach \y in {1,2,3}{\draw[teal,thick,fill=white] (0,\y) circle(.16);}
+ \draw[orange,dashed,thick] (-2.5,-.8)--(-2.5,.8);
+ \draw[orange,dashed,thick] (-.6,1.5)--(.6,1.5);
+ \draw[navy,thick] (-2,0) to[bend right=22] (0,1);
+ \draw[navy,dashed] (-4,0) to[bend left=28] (0,3);
+ \draw[navy,dashed] (-5,0) to[bend right=17] (0,1);
+ \node[smalltext] at (-3.9,-1.55){半无限周期尾};
+ \node[smalltext] at (1.7,-.45){有限结点未知量};
+ \node[smalltext,orange] at (-3.8,1.4){端口位置 $L$\\尾部用模态替换};
+ \node[smalltext,fill=white,inner sep=2pt] at (-3.2,3.5){虚线耦合小，但一般不为零};
+\end{tikzpicture}
+\end{center}
+{\small 图3：缺陷网络仍然无限。两臂之间通过背景核耦合；有限结点不意味着精确解有有限支撑。}
+
+\textbf{实际可计算机制：} 改用总场等效边界电流 $c_\beta$，角模截到 $|m|\le K$，得到 $\sum_\beta Z_{\alpha\beta}c_\beta=f_\alpha$。这里 $f$ 仅表示额外局部源；无源器件 $f=0$，入射另由半臂加入。直臂模式满足
+\begin{equation}\label{eq:blochz}
+ \mathcal Z(q)\phi=0,\qquad
+ \mathcal Z(q)=\sum_{r\in\mathbb Z}Z_re^{iqra_j}
+ \ \leadsto\ \sum_{|r|\le R}Z_re^{iqra_j}.
+\end{equation}
+2005算法在足够远的端口仅保留单传播模。$\phi_j^-,\phi_j^+$ 为单位通量入/出模的电流向量，$z_j^\pm$ 为其Bloch乘子。以端口胞 $n=0$ 为相位参考，
+\begin{equation}\label{eq:tailport}
+ c_{j,n}\simeq \phi_j^- a_{j1}(z_j^-)^n+\phi_j^+ b_{j1}(z_j^+)^n,\quad n\ge0,
+ \qquad H_{\alpha j}^{\pm}=\sum_{n\ge0}Z_{\alpha,(j,n)}\phi_j^\pm(z_j^\pm)^n .
+\end{equation}
+取有限缺陷集 $C$。测试其全部角模，并在\textbf{每个端口首胞增加零阶测试行}。帽号表示测试后的矩阵；得到 $M=(2K+1)|C|+2$ 阶系统：
+\vspace{1mm}
+\begin{equation}
+ [\,\widehat Z_C\ \widehat H^+\,]
+ \begin{bmatrix}c_C\\b\end{bmatrix}
+ =\widehat f-\widehat H^-a\in\C^M .
+\end{equation}
+未知量也是 $M$ 个；可解性仍须检查。耦合截断使尾和可计算，忽略倏逝尾及远耦合。移动端口后，输出须换回同一参考截面。
+
+\source{\cite{pissoort2005} §III-B式(24)--(27)：背景核预计算；§III-C式(30)--(34)：模式、端口贡献及闭合测试。\cite{pissoort2007} §III式(35)--(37)：角模与缺陷块。式\eqref{eq:green}为质量型重述；式\eqref{eq:tailport}为端口代入示意。本文按统一时间约定和通量选向，不直接移植原文Hankel辐射符号。}
+
+\nextpage
+\section{两个收敛箭头，不能只检查其中一个}
+令 $h\to0$ 表示\textbf{局部离散加密}（含角模/胞展开阶增加），$m$ 为外部近似参数组。端口相位、通量及连续通道一致配准后，比较
+\begin{equation}\label{eq:error}
+ S_{h,m}-S=(S_{h,m}-S_m)+(S_m-S).
+\end{equation}
+$S_m$ 指固定外部近似、尚未截断局部离散的问题；它未必对应另一种真实材料。须先确认该问题适定、通道数相同且可配准。两条路线一般有\textbf{不同} $S_m$，不能因都称“精确端口”就判相等。
+
+\begin{center}
+\begin{tikzpicture}[node distance=12mm and 18mm]
+ \node[blk] (num) {$S_{h,m}$\\局部离散 $+$ 外部近似};
+ \node[blk,right=of num] (wall) {$S_m$\\外部替代问题};
+ \node[blk,right=of wall] (true) {$S$\\真实开放问题};
+ \draw[arr,teal] (num)--node[above,font=\small]{$h\to0$}(wall);
+ \draw[arr,orange] (wall)--node[above,font=\small]{$m\to\infty$}(true);
+ \node[smalltext,below=7mm of num]{提高胞精度\\主要检查左箭头};
+ \node[smalltext,below=7mm of true]{还需外部误差及\\稳定性控制};
+\end{tikzpicture}
+\end{center}
+{\small 图4：箭头是待证明/核查的目标，不是本轮已证的收敛定理。两个离散结果一致也不能省略右箭头。}
+
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}p{22mm}XX@{}}
+\toprule
+ & 胞DtN / 横向超胞 & 背景Green / 缺陷网络\\
+\midrule
+局部 $h$ & 胞边界节点、展开阶 & 角模阶、局部散射块离散\\
+外部 $m$ & 横向宽度 $W$；bulk边界位置；若截模则有模态数 $J$ & 核预计算范围 $B$；耦合范围 $R$；端口距离 $L$；保留模式数 $J$\\
+丢弃项 & 墙外场；真实横向映射；未保留端口模 & 核误差；$|r|>R$ 的耦合；端口后倏逝项及跨臂余耦合\\
+原文证据 & 构造式与离散算例；未读到全空间可计算误差证书 & 核衰减及数值截断；单模端口有远场假设\\
+\bottomrule
+\end{tabularx}
+
+\subsection*{一个可审查的尾项，而不是“多算几排”}
+若\textbf{另已证明}同一块范数中 $\|Z_r\|\le Ce^{-\alpha|r|}$，则对\emph{实} $q$，
+\begin{equation}\label{eq:tail}
+ \left\|\mathcal Z(q)-\sum_{|r|\le R}Z_re^{iqra_j}\right\|
+ \le\frac{2Ce^{-\alpha(R+1)}}{1-e^{-\alpha}}.
+\end{equation}
+这是几何级数，不是新算法；$C,\alpha$ 仍须可靠获得。若求倏逝根 $q\in\C$，衰减率变为 $\alpha-a_j|\operatorname{Im}q|>0$。\textbf{实轴小尾不能自动控制全部复根或端口逆。}
+
+若倏逝尾按 $e^{-\kappa s}$ 衰减，端口距离需求含 $\kappa^{-1}$。本轮避开截止，但仍不能把未给出的正下界当作数值输入。人工零墙的表面谱也可能破坏稳定性\cite{fliss2015}；不是断言原文特定算例已出现该故障。
+
+\nextpage
+\section{能否真正去掉一个外部参数？}
+\textbf{先看Green核如何实际预计算。} Pissoort在均匀外介质中取 $(2B+1)^2$ 根完整晶体圆柱，逐个施加中心角阶Huygens源，求有限簇电流：
+\begin{equation}
+ \mathsf Z_{\rm cluster}^{(B,K)}I_n=E_n,\qquad
+ (Z_r^{(B,K)})_{:,n}=\mathsf D_K I_n(r),\qquad |n|\le K .
+\end{equation}
+$I_n(r)$ 为位移 $r$ 胞的电流块，$\mathsf D_K$ 为已知Bessel匹配因子。逐列收集得到缺陷耦合块。固定 $B$ 增加角模阶，仍在求有限簇响应；删去的是簇外圆柱。原文常将簇大小与耦合范围共记为 $N_b$，本文分别记 $B,R$。
+\source{\cite{pissoort2005} §III-B图5、式(24)--(27)：中心源、有限簇求解和核块提取。式(28)--(29)另处理外加线源。原文用簇外场足够小选择 $B$，此处不将其改写为已证误差率。}
+
+\textbf{可以改变表示；这种能力已有先例。} 对参考直臂，固定实轴向相位 $q$，在缺陷两侧用\emph{周期半空间}横向DtN，而非远处零墙：
+\begin{equation}
+ \partial_{n_\pm}v=T_\pm(q,\lambda)v
+ \quad\text{于固定缺陷边界 }t=\pm W_0.
+\end{equation}
+$T_\pm$ 由周期胞问题、传播算子/Riccati关系构造。可在连续导模问题中去掉任意padding宽度 $W$，但需近似 $T_\pm$，避开其Dirichlet极点；这不是只写一个未知无限矩阵的Schur补。
+\source{Fliss\cite{fliss2013} Theorems4.1、4.5、4.12：半带问题、精确导模归约与传播算子；Fliss等\cite{fliss2015} Theorems3.1、4.1：Robin半带适定性与有限域导模等价。实 $q$ 的直臂结论不等于复模、非平行弯角的完整散射误差定理。}
+
+这里 $n_\pm$ 从缺陷区指向上下bulk。对 $L^2$ 源，背景逆还有标准胞直积分表示：$\mathcal U$ 为幺正Floquet变换，$\mathbb B$ 为完整二维Brillouin区，$\dd\theta$ 取其归一化测度。胞算子 $A_\bulk(\theta)$ 采用相应准周期条件。
+\begin{equation}
+ (A_\bulk-\lambda)^{-1}
+ =\mathcal U^{-1}\!\int_{\mathbb B}^{\oplus}
+ (A_\bulk(\theta)-\lambda)^{-1}\dd\theta\,\mathcal U,
+ \quad\sup_\theta\|(A_\bulk(\theta)-\lambda)^{-1}\|\le\delta_\bulk^{-1}.
+\end{equation}
+这可替换有限背景晶体预计算，但引入胞离散、求积及源/迹处理。周期Green/Floquet归约已有\cite{coatleven2012}；不自动解决无限缺陷臂，也不能将标准组合另称新方向。
+
+\renewcommand{\refname}{最必要的六篇原文}
+{\small
+\begin{thebibliography}{6}
+\setlength{\itemsep}{3pt}\setlength{\parskip}{0pt}
+\bibitem{hu2008} Z. Hu, Y. Y. Lu. \emph{Efficient analysis of photonic crystal devices by Dirichlet-to-Neumann maps}. Optics Express 16 (2008),17383--17399. \href{https://doi.org/10.1364/OE.16.017383}{doi:10.1364/OE.16.017383}.
+\bibitem{pissoort2005} D. Pissoort, E. Michielssen, F. Olyslager, D. De Zutter. \emph{Fast Analysis of 2-D Electromagnetic Crystal Devices Using a Periodic Green Function Approach}. JLT 23 (2005),2294--2308. \href{https://doi.org/10.1109/JLT.2005.850029}{doi:10.1109/JLT.2005.850029}.
+\bibitem{pissoort2007} D. Pissoort, E. Michielssen, A. Grbic. \emph{An Electromagnetic Crystal Green Function Multiple Scattering Technique for Arbitrary Polarizations, Lattices, and Defects}. JLT 25 (2007),571--583. \href{https://doi.org/10.1109/JLT.2006.889364}{doi:10.1109/JLT.2006.889364}.
+\bibitem{fliss2013} S. Fliss. \emph{A Dirichlet-to-Neumann Approach for the Exact Computation of Guided Modes in Photonic Crystal Waveguides}. SIAM JSC 35 (2013),B438--B461. \href{https://arxiv.org/pdf/1202.4928v2}{arXiv:1202.4928v2}; \href{https://doi.org/10.1137/12086697X}{doi:10.1137/12086697X}.
+\bibitem{fliss2015} S. Fliss, D. Klindworth, K. Schmidt. \emph{Robin-to-Robin Transparent Boundary Conditions for the Computation of Guided Modes in Photonic Crystal Wave-Guides}. BIT 55 (2015),81--115. \href{https://doi.org/10.1007/s10543-014-0521-1}{doi:10.1007/s10543-014-0521-1}.
+\bibitem{coatleven2012} J. Coatléven. \emph{Helmholtz equation in periodic media with a line defect}. JCP 231 (2012),1675--1704. \href{https://doi.org/10.1016/j.jcp.2011.10.022}{doi:10.1016/j.jcp.2011.10.022}. 正吸收、直线参考缺陷；非本无损弯角定理。
+\end{thebibliography}}
+
+\nextpage
+\section{判断：表示确实不同，但尚无新课题}
+\takeaway{\textbf{本轮辨认了不同的计算对象，尚未提出新的数值机制。}\\
+\(S_{h,m}\) 的两个收敛箭头不同。背景Green能避免显式横向padding，精确横向DtN也能改变参考导模的截断方式；这些机制已有。}
+
+\subsection*{这次比较具体排除了什么？}
+\begin{enumerate}
+ \item \textbf{“把胞DtN接到弯角”不是新意。} Hu--Lu已有开放晶体器件算法；其横向零墙是明确的近似对象。
+ \item \textbf{“只保留缺陷未知量并消去无限bulk”不是新意。} Pissoort已有可计算的核预处理、局部散射块与端口构造，不是纸面Schur补。
+ \item \textbf{仅拼接现成误差界，不足以独立立项。} 给定算子误差与逆下界后，剩下的传播可能只是标准扰动。如何有效得到这些前提仍可能有价值；未读到完整证书也不等于旧算法失效。
+\end{enumerate}
+
+\subsection*{如果以后重开，先通过哪一个有限判别？}
+固定一种真实材料几何、远离截止的窗 $I$、同一通量归一化输出 $S_{11}$。先明确
+\begin{equation}
+ \mathcal E_h(m)=|S_{h,m;11}-S_{m;11}|,\qquad
+ \mathcal E_\ext(m)=|S_{m;11}-S_{11}|.
+\end{equation}
+某个新表示必须消除已有强基线无法控制的\textbf{具体误差机制}，或产生旧方法不能直接给出的可计算信息；不能只把 $m$ 取大，或把未知常数改名。
+
+可接受的第一步是一条小而明确的命题，例如某类核/端口的\emph{实际可算尾界及条件}。还须说明它为何超出式\eqref{eq:tail}与旧谱扰动的直接组合。若只有现成横向DtN、Bloch求积与标准逆扰动的组合，\textbf{停止独立立项，保留为求解器建设经验。}
+
+\subsection*{边界与证据状态}
+本轮没有数值实验，也未证明新的连续散射存在唯一性或端到端误差定理。式\eqref{eq:pencil}只作统一符号的代数重述；式\eqref{eq:tail}是带额外假设的初等尾界。工作窗适定性、全模态分离与具体稳定常数仍是前提。
+
+原文核读定位随页给出；公开全文链接和更广覆盖留在同目录 \texttt{open-crystal.md}、\texttt{landscape.md}。本报告重构两条已有路线，非整个散射领域的穷尽性判断。
+
+\vfill
+{\small\color{navy}\textbf{推荐状态：}零项正式新课题。\quad
+\textbf{保留价值：}先辨认所求算子，再决定哪一个外部误差值得研究。}
+\end{document}
