@@ -21,6 +21,15 @@ Usage limits can cut a session off at any moment. One past session spent 2 hours
 - Durable results go to their final location; scratch notes go to `research/tmp/` or `tmp/`.
 - Checkpoints are local writes only. Commit only when asked.
 
+## Delegating to Codex
+
+Claude manages research and can delegate work to a Codex thread that the user created in the Codex desktop app.
+
+- Send: `codex queue --thread <thread ID> --message "..."`, using the thread ID the user provides.
+- Read replies (read-only): `codex resume <thread ID>` opens an interactive TUI that a non-TTY shell cannot drive, and typing into it starts a new turn. Read the rollout file `~/.codex/sessions/YYYY/MM/DD/rollout-*-<thread ID>.jsonl` instead: replies are `response_item` messages, and `event_msg` `task_complete` ends a turn. Read the `turn_context` entries for the thread's actual model and effort.
+- The user creates every queue thread in the Codex desktop app and sets its model and effort. Never create a thread yourself (for example with `codex exec`, `codex resume <id> "<prompt>"`, or a new session) and never override model or effort with `-m`/`-c`. If you need a new thread, ask the user for it.
+- `~/.codex/` is read-only for Claude. Never write, edit, move, or delete anything there by hand. Only the normal changes made by `codex queue` and by Codex while it replies are allowed.
+
 ## Project summary
 
 MATLAB code and research on **2D periodic dielectric waveguides with $y$-periodicity**: Bloch modes, transmission eigenvalue problems (TEP), forced scattering, line-defect guided modes. The BIE route uses trace matching: Rayleigh expansions in homogeneous regions are coupled to Bloch-mode expansions in periodic half-leads; each lead-cell BIE is a Müller system with a quasi-periodic Green function from the augmented Method of Fundamental Solutions (MFS). The other route is FEM + DtN.
