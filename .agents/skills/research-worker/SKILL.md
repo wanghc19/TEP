@@ -60,8 +60,10 @@ Do not guess it and do not carry over a value from another project.
 
 Stop and report to the manager, without working around the problem, when:
 
-- a sandbox, permission, or tool failure blocks a step (give the exact
-  command and the full error, and wait for the user to check it);
+- a sandbox, permission, or tool failure still blocks a step after the one
+  escalated-permission retry in [experiments.md](references/experiments.md)
+  (give the exact command and the full error, and wait for the user to
+  check it);
 - a required input is missing, or the inputs contradict each other;
 - a run would exceed the budget or the storage limit;
 - the task, as written, would require modifying protected files.

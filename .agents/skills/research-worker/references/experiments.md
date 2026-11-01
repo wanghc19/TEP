@@ -35,10 +35,16 @@ protected directories. This file adds the working rules.
 
 ## Monitoring and limits
 
-- Monitor peak memory for runs that may approach the limit.
+- Launch every run through the repository's monitoring launcher. The
+  launcher samples memory and enforces the limits itself; do not poll
+  processes by hand.
+- If the sandbox blocks the launcher or the solver (for example process
+  listing or solver startup), rerun the same command once through the
+  tool's escalated-permission request, with a one-line justification. This
+  approved channel is the normal route, not a workaround.
+- If the escalation is denied, or the run still fails, do not try other
+  routes. Report the exact command and the full error and wait.
 - At the hard time or memory limit, stop the run, keep its log, and report.
-- If a sandbox, permission, or tool failure stops a run, do not work around
-  it. Report the exact command and the full error and wait.
 
 ## Reporting
 
