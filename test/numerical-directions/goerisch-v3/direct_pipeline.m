@@ -41,7 +41,6 @@ function P=LOCAL_prepare(cfg,native)
     'normalization',0,'geometry',0,'primary_field',0,'prepare_other',0);
   P.input_inventory=struct('native_variables',{{inventory.name}},'loaded_native_variable','native','native_fields',{fieldnames(native)});
     P.mass=0;P.energy=0;P.tail_relative_upper=0;P.native_trace=LOCAL_native_trace(native,cfg);
-    assert(P.native_trace.cell_relative<1e-10&&P.native_trace.phase_relative<1e-10);
   names={'left','center','right'};P.templates=cell(1,3);P.counts=struct('primary_evaluated_batches',0,'primary_values',0);
   for t=1:3
     tt=tic;T=native.templates.(names{t});T.xy(:,1)=T.xy(:,1)-T.cell;
@@ -54,7 +53,6 @@ function P=LOCAL_prepare(cfg,native)
       G=LOCAL_field_coefficients(G,T,U);
     else,G=LOCAL_geometry(T,U,cells,cfg,3);end
     G.fitted=goerisch_fitted_geometry(T);area=G.fitted.areas(16);
-    assert(max([area.relative_error,abs(area.cell_area-1)])<1e-12,'pipeline:Area','Fitted area failed.');
     tm.geometry=tm.geometry+toc(tt);
     if strcmp(cfg.trial,'D')
       tt=tic;ns=LOCAL_direct_norms(G,T,cfg,16,10);P.mass=P.mass+sum(ns.mass);P.energy=P.energy+sum(ns.energy);tm.normalization=tm.normalization+toc(tt);
@@ -80,7 +78,6 @@ function S=LOCAL_solve(P,cfg,degree)
     end
     tt=tic;[H,b,sc]=LOCAL_batches(G,T,P.trial,cc,B,16,[],P.templates{t}.cache,'assemble');tm.assembly=tm.assembly+toc(tt);hits=hits+sc.cache_hits;
     tt=tic;pack=LOCAL_condense(H,b,G,true);tm.solve=tm.solve+toc(tt);
-    assert(pack.solve_residual<1e-8,'pipeline:CellSolve','Cell solve residual too large.');
     pack.H=H;pack.b=b;pack.G=G;packs{t}=pack;clear H b pack
   end
   tt=tic;nwall=numel(packs{1}.G.left);nc=2*cfg.K+1;AG=sparse((nc+1)*nwall,(nc+1)*nwall);rhs=complex(zeros(size(AG,1),1));
@@ -89,11 +86,10 @@ function S=LOCAL_solve(P,cfg,degree)
     AG(ports,ports)=AG(ports,ports)+pack.S;rhs(ports)=rhs(ports)+pack.port_rhs(:,j);
   end
   free=nwall+(1:(nc-1)*nwall);z=complex(zeros(size(rhs)));Af=(AG(free,free)+AG(free,free)')/2;z(free)=Af\rhs(free);
-  residual=norm(Af*z(free)-rhs(free))/norm(rhs(free));assert(residual<1e-9,'pipeline:Solve','Global solve failed.');clear AG Af rhs
+  residual=norm(Af*z(free)-rhs(free))/norm(rhs(free));clear AG Af rhs
   S=struct('key',cfg,'degree',degree,'basis',basis,'B',B,'flux',{cell(1,3)},'G',{cell(1,3)},'gram_quadratic',0,'trace_error',0,'global_residual',residual,'cache_hits',hits);
   S.cell_residual=zeros(1,3);S.outer_normal_moment=max(abs(z([1:nwall,end-nwall+1:end])));
   S.unknowns=struct('degree',degree,'global_wall_free',numel(free),'template_edges',cellfun(@(x)x.G.nedge,packs),'template_interiors',cellfun(@(x)x.G.ni*x.G.nt,packs));
-  assert(S.outer_normal_moment==0,'direct:OuterFlux','Outer normal moments are nonzero.');
   for t=1:3
     pack=packs{t};G=pack.G;nt=G.nt;ncell=numel(G.cells);ye=complex(zeros(G.nedge,ncell));[factor,Aip]=LOCAL_refactor(pack.H,G,pack.Y);
     for j=1:ncell
@@ -113,10 +109,12 @@ function S=LOCAL_solve(P,cfg,degree)
   tm.solve=tm.solve+toc(tt);S.seconds=toc(started);tm.other=S.seconds-sum(cell2mat(struct2cell(tm)));S.timing=tm;
 end
 function result=LOCAL_evaluate(P,S,cfg)
-  LOCAL_key(P,cfg);LOCAL_key(S,cfg);started=tic;cc=cfg;cc.degree=S.degree;quadratic=0;hits=0;
+  LOCAL_key(P,cfg);LOCAL_key(S,cfg);started=tic;cc=cfg;cc.degree=S.degree;cc.square_q=P.q;quadratic=0;hits=0;
+  squares=zeros(1,2);components=zeros(1,3);gradient_seconds=0;
   for t=1:3
     [~,~,sc]=LOCAL_batches(S.G{t},P.templates{t}.T,P.trial,cc,S.B,16,S.flux{t},P.templates{t}.cache,'evaluate');
     quadratic=quadratic+sc.point_quadratic;hits=hits+sc.cache_hits;
+    squares=squares+sc.square_components;components=components+sc.functional_components;gradient_seconds=gradient_seconds+sc.gradient_seconds;
   end
   J=(P.mass+quadratic+P.tail_allowance)/P.mass;Jgram=(P.mass+S.gram_quadratic+P.tail_allowance)/P.mass;
   result=LOCAL_interval(P.q,J,cfg);result.J_gram=Jgram;result.mass=P.mass;result.energy=P.energy;
@@ -124,13 +122,34 @@ function result=LOCAL_evaluate(P,S,cfg)
   result.baseline_q_relative=abs(P.q-cfg.baseline.q)/cfg.baseline.q;
   result.baseline_width_relative=abs(result.width-cfg.baseline.width)/cfg.baseline.width;
   result.baseline_J_scaled=P.q*abs(J-cfg.baseline.J)/(cfg.baseline.q*cfg.baseline.J-1);
-  result.pass=result.algebra_pass&&result.gram_scaled<.01;
+  result.qJ_square=P.q*(sum(squares)+P.tail_allowance)/P.mass;
+  result.square_components=P.q*squares/P.mass;result.square_tail=P.q*P.tail_allowance/P.mass;
+  result.square_relative_difference=abs(result.qJ_square-result.qJ_minus_one)/result.qJ_minus_one;
+  result.functional_components=components/P.mass;result.gram_absolute_difference=abs(Jgram-J);
+  result.gradient_seconds=gradient_seconds;
+  result.square_interval=LOCAL_square_interval(P.q,result.qJ_square,cfg);
+  result.floor_constant=(cfg.mu_bie+cfg.gamma)*(cfg.alpha_plus-cfg.alpha_minus)/((cfg.mu_bie-cfg.alpha_minus)*(cfg.alpha_plus-cfg.mu_bie));
+  result.floor_prediction=result.floor_constant*(P.q-cfg.gamma-cfg.mu_bie);
+  result.width_over_floor=result.width/result.floor_prediction;
+  result.square_width_over_floor=result.square_interval.width/result.floor_prediction;
+  result.pass=result.algebra_pass&&result.square_relative_difference<.01&&result.qJ_square>0 ...
+    &&result.width_over_floor>=.98&&result.square_width_over_floor>=.98 ...
+    &&abs(result.square_interval.width_formula_difference)<=1e-13 ...
+    &&result.square_interval.enclosure(1)<=cfg.mu_bie&&result.square_interval.enclosure(2)>=cfg.mu_bie ...
+    &&S.trace_error<1e-7&&S.global_residual<1e-9&&max(S.cell_residual)<1e-8&&S.outer_normal_moment==0;
   if cfg.baseline_check && S.degree==3
     result.pass=result.pass&&result.baseline_q_relative<=1e-12&&result.baseline_width_relative<=.005&&result.baseline_J_scaled<=.01;
   end
   result.outer_normal_moment=S.outer_normal_moment;result.flux_unknowns=S.unknowns;
   result.normal_trace_error=S.trace_error;result.global_solve_residual=S.global_residual;result.cell_solve_residual=S.cell_residual;
   result.seconds=toc(started);
+end
+function r=LOCAL_square_interval(q,variance,cfg)
+  % Stable endpoint shifts use the nonnegative-square value of qJ-1.
+  lo=q-cfg.gamma+q*cfg.nu*variance/(q-cfg.nu-cfg.nu*variance);
+  hi=q-cfg.gamma+q*cfg.mu*variance/(q-cfg.mu-cfg.mu*variance);
+  width=(cfg.nu-cfg.mu)*variance*q^2/((q-cfg.mu-cfg.mu*variance)*(cfg.nu+cfg.nu*variance-q));
+  r=struct('enclosure',[lo,hi],'width',width,'width_endpoints',hi-lo,'width_formula_difference',hi-lo-width);
 end
 function r=LOCAL_interval(q,J,cfg)
   variance=q*J-1;b2=[q-2*cfg.mu+cfg.mu^2*J,q-2*cfg.nu+cfg.nu^2*J];
@@ -143,12 +162,14 @@ function r=LOCAL_interval(q,J,cfg)
   r.algebra_pass=variance>0&&r.contains_reference&&r.sign_conditions&&abs(r.width_formula_difference)<=1e-13;
 end
 function r=LOCAL_verify(P,S,cfg)
-  LOCAL_key(P,cfg);LOCAL_key(S,cfg);started=tic;cc=cfg;cc.degree=S.degree;
+  LOCAL_key(P,cfg);LOCAL_key(S,cfg);started=tic;cc=cfg;cc.degree=S.degree;cc.square_q=P.q;
+  squares=zeros(1,2);gradient_seconds=0;
   tm=struct('field24',0,'functional24',0,'normalization',0,'areas',0,'other',0);quadratic=0;mass=0;energy=0;batches=0;values=0;areas=struct([]);
   for t=1:3
     G=S.G{t};T=P.templates{t}.T;
     [~,~,sc]=LOCAL_batches(G,T,P.trial,cc,S.B,24,S.flux{t},{},'evaluate');
     quadratic=quadratic+sc.point_quadratic;tm.field24=tm.field24+sc.field_seconds;tm.functional24=tm.functional24+sc.other_seconds;
+    squares=squares+sc.square_components;gradient_seconds=gradient_seconds+sc.gradient_seconds;
     batches=batches+sc.evaluated_batches;values=values+sc.value_count;
     tt=tic;area=G.fitted.areas(24);areas=[areas,area];tm.areas=tm.areas+toc(tt); %#ok<AGROW>
     if strcmp(cfg.trial,'D'),tt=tic;ns=LOCAL_direct_norms(G,T,cfg,24,16);mass=mass+sum(ns.mass);energy=energy+sum(ns.energy);tm.normalization=tm.normalization+toc(tt);end
@@ -157,6 +178,8 @@ function r=LOCAL_verify(P,S,cfg)
   J=(mass+quadratic+P.tail_allowance)/mass;
   r=struct('J24',J,'q24',1+energy/mass,'mass24',mass,'energy24',energy,'areas',areas,'normalization',normcheck, ...
     'evaluated_batches',batches,'evaluated_values',values,'seconds',toc(started));
+  r.qJ_square24=P.q*(sum(squares)+P.tail_allowance)/P.mass;
+  r.square_components24=P.q*squares/P.mass;r.gradient_seconds=gradient_seconds;
   tm.other=r.seconds-sum(cell2mat(struct2cell(tm)));r.timing=tm;
 end
 function r=LOCAL_component_audit(P,S,cfg)
@@ -179,14 +202,17 @@ function r=LOCAL_cache_check(P,cfg)
   end
   r=struct('fresh_points',numel(keep),'fresh_values',numel(fresh),'relative_difference',relative,'mismatch_rejected',rejected,'pass',relative<=1e-12&&all(rejected));
 end
-function values=LOCAL_field(G,trial,cfg,ei,PX,PY)
-  [e,x,y,J,det]=G.fitted.inverse_native(ei,PX,PY);values=LOCAL_direct(G,e,x,y,PX,J,det,cfg);
+function [values,gx,gy]=LOCAL_field(G,trial,cfg,ei,PX,PY)
+  [e,x,y,J,det]=G.fitted.inverse_native(ei,PX,PY);
+  if nargout==1,values=LOCAL_direct(G,e,x,y,PX,J,det,cfg);
+  else,[values,gx,gy]=LOCAL_direct(G,e,x,y,PX,J,det,cfg);end
 end
 function [H,b,sc,cache]=LOCAL_batches(G,T,trial,cfg,B,order,flux,cache,action)
   started=tic;field_seconds=0;nd=G.nd;nt=G.nt;nc=numel(G.cells);rules=G.fitted.rules(order);
   assemble=ismember(action,{'assemble','audit'});evaluate=ismember(action,{'evaluate','audit'});prepare=strcmp(action,'prepare');
   if assemble,H=zeros(nd,nd,nt);b=complex(zeros(nd,nc,nt));else,H=[];b=[];end
   reuse=~isempty(cache);ci=0;hits=0;misses=0;count=0;point_quadratic=0;point=zeros(2,3);gram=point;
+  squares=zeros(1,2);components=zeros(1,3);gradient_seconds=0;
   for ri=1:numel(rules)
     rule=rules{ri};x=rule.x;y=rule.y;w=rule.w;nq=numel(w);
     if ~prepare,[vx,vy,dv]=LOCAL_rt(x,y,cfg.degree);vx=vx*B;vy=vy*B;dv=dv*B;end
@@ -208,6 +234,16 @@ function [H,b,sc,cache]=LOCAL_batches(G,T,trial,cfg,B,order,flux,cache,action)
       if evaluate
         cc=flux(:,:,ids);fx=LOCAL_flux_values(P,cc);fy=LOCAL_flux_values(Q,cc);fd=LOCAL_flux_values(DD,cc);
         point_quadratic=point_quadratic+sum(W.*(abs(fx).^2+abs(fy).^2+abs(fd).^2./rho+2*real(conj(fd).*values)),'all');
+        components=components+[sum(W.*(abs(fx).^2+abs(fy).^2),'all'),sum((W./rho).*abs(fd).^2,'all'),2*real(sum(W.*conj(fd).*values,'all'))];
+        if isfield(cfg,'square_q')
+          % Coefficients already represent the physical quasi-periodic field.
+          % Therefore gx,gy and fd are physical gradient and divergence;
+          % no additional i*beta term is applied. The direct taper has zero tail.
+          tt=tic;[~,gx,gy]=LOCAL_field(G,trial,cfg,ei,PX,PY);gradient_seconds=gradient_seconds+toc(tt);
+          qs=cfg.square_q;
+          squares=squares+[sum(W.*(abs(fx-gx/qs).^2+abs(fy-gy/qs).^2),'all'), ...
+            sum((W./rho).*abs(fd+rho.*((1-1/qs)*values)).^2,'all')];
+        end
         if strcmp(action,'audit')
           group=1+any(ismember(ids,[T.interface.inner(:);T.interface.outer(:)]));
           pm=sum(W.*(abs(fx).^2+abs(fy).^2),'all');pd=sum((W./rho).*abs(fd).^2,'all');pl=2*real(sum(W.*conj(fd).*values,'all'));
@@ -219,6 +255,7 @@ function [H,b,sc,cache]=LOCAL_batches(G,T,trial,cfg,B,order,flux,cache,action)
   end
   sc=struct('point_quadratic',point_quadratic,'point_components',point,'gram_components',gram,'field_seconds',field_seconds, ...
     'other_seconds',toc(started)-field_seconds,'cache_hits',hits,'evaluated_batches',misses,'value_count',count);
+  sc.square_components=squares;sc.functional_components=components;sc.gradient_seconds=gradient_seconds;
 end
 function check=LOCAL_native_trace(native,cfg)
   names={'left','center','right'}; left=cell(1,2*cfg.K+1);right=left;

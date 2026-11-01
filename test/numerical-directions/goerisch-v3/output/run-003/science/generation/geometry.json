@@ -1,0 +1,87 @@
+{
+  "status": "PASS",
+  "reason": "",
+  "failure_kind": "NONE",
+  "mesh_structural_checks_pass": true,
+  "structural_checks_completed": true,
+  "initial_clearance_deleted": 226,
+  "deletion_outcome": "no bad elements after 0 deletion rounds",
+  "flip_stage_entered": false,
+  "flip": {},
+  "repair_seconds": 0,
+  "repair_seconds_limit": 30,
+  "repair_rounds": {
+    "round": 0,
+    "deleted": 0,
+    "deleted_points": [],
+    "bad_elements": 0,
+    "worst_ratio": 1.1632785218806221,
+    "worst_det_min": 2.8717431409681405E-5,
+    "seconds": 0.34937775
+  },
+  "bad_elements": 0,
+  "checks": {
+    "pass": true,
+    "reason": "",
+    "interface_edges_found": true,
+    "constraints_found": true,
+    "interface_incidence_two": true,
+    "edge_incidence": true,
+    "positive_orientation": true,
+    "cell_coverage": true,
+    "cell_affine_area": [
+      0.99999999999991007,
+      0.99999999999991751,
+      0.99999999999991163
+    ],
+    "material_sides": true,
+    "interface_single_cell": true,
+    "top_bottom_pairing": true,
+    "wall_translation_pairing": true,
+    "vertices": 9759,
+    "triangles": 19132,
+    "p2_nodes": 38649,
+    "background_points": 6879,
+    "deletable_points": 6401
+  },
+  "det_min": 7.7316658184201727E-6,
+  "det_ratio_max": 1.1632785218806221,
+  "curved_elements": 1921,
+  "shape_quality": {
+    "min": 0.17680757069701561,
+    "p01": 0.24615912853277941,
+    "p05": 0.30099314075569578,
+    "median": 0.8660254037844386,
+    "histogram_edges": [
+      0,
+      0.1,
+      0.2,
+      0.30000000000000004,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9,
+      1
+    ],
+    "histogram": [
+      0,
+      22,
+      924,
+      1464,
+      1184,
+      966,
+      738,
+      568,
+      12590,
+      676
+    ]
+  },
+  "min_angle_degrees": {
+    "min": 5.9010894647919461,
+    "p01": 8.37114748880128,
+    "p05": 10.371364085892271,
+    "median": 44.99999999999978
+  }
+}

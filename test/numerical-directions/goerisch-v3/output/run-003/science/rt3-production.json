@@ -1,0 +1,107 @@
+{
+  "degree": 3,
+  "timing": {
+    "solve": 6.1359805833333336,
+    "functional": 9.5948772083333331,
+    "verification": 0
+  },
+  "solve_timing": {
+    "basis": 0.0041564166666666668,
+    "assembly": 2.5114361666666665,
+    "solve": 3.6180057916666666,
+    "other": 0.00093724999999977854
+  },
+  "solver": {
+    "global_residual": 1.1138434924746939E-15,
+    "cell_residual": [
+      1.1688858014689248E-12,
+      1.8009368080488571E-12,
+      1.1546002962489693E-12
+    ],
+    "trace_error": 8.2399035052341538E-14,
+    "outer_normal_moment": 0
+  },
+  "production": {
+    "q": 3.4287286707248676,
+    "J": 0.29165329083988195,
+    "qJ_minus_one": 2.1396173721655032E-10,
+    "gram_denominators": [
+      0.14014136275385036,
+      1.6194780855480833
+    ],
+    "kappa": [
+      1.4426144276039741,
+      -0.4243711998750635
+    ],
+    "enclosure": [
+      2.4287286689238,
+      2.4287286736199629
+    ],
+    "width": 4.69616480715903E-9,
+    "width_endpoints": 4.6961630140174293E-9,
+    "width_formula_difference": -1.7931416004424692E-15,
+    "contains_reference": true,
+    "sign_conditions": true,
+    "algebra_pass": true,
+    "J_gram": 0.29165329084208552,
+    "mass": 4.7230110180205722,
+    "energy": 11.470912271616008,
+    "gram_scaled": 0.035312135691723714,
+    "cache_hits": 408,
+    "baseline_q_relative": 1.6377669656447404E-7,
+    "baseline_width_relative": 0.99869510639869841,
+    "baseline_J_scaled": 0.00013394199056177808,
+    "qJ_square": 2.1395207172807198E-10,
+    "square_components": [
+      2.1055080114351351E-10,
+      3.4012705845584278E-12
+    ],
+    "square_tail": 0,
+    "square_relative_difference": 4.5173911018306572E-5,
+    "functional_components": [
+      0.20659164877970923,
+      0.501755060375444,
+      -1.4166934183152704
+    ],
+    "gram_absolute_difference": 2.2035706592760107E-12,
+    "gradient_seconds": 5.4972840416666671,
+    "square_interval": {
+      "enclosure": [
+        2.4287286689238803,
+        2.4287286736198332
+      ],
+      "width": 4.6959526630278367E-9,
+      "width_endpoints": 4.69595295982117E-9,
+      "width_formula_difference": 2.9679333353503484E-16
+    },
+    "floor_constant": 6.4013871738050128,
+    "floor_prediction": 4.4947816515304923E-9,
+    "width_over_floor": 1.0448037682898268,
+    "square_width_over_floor": 1.0447565704173516,
+    "pass": true,
+    "outer_normal_moment": 0,
+    "flux_unknowns": {
+      "degree": 3,
+      "global_wall_free": 4992,
+      "template_edges": [
+        38652,
+        38172,
+        38544
+      ],
+      "template_interiors": [
+        76920,
+        75960,
+        76704
+      ]
+    },
+    "normal_trace_error": 8.2399035052341538E-14,
+    "global_solve_residual": 1.1138434924746939E-15,
+    "cell_solve_residual": [
+      1.1688858014689248E-12,
+      1.8009368080488571E-12,
+      1.1546002962489693E-12
+    ],
+    "seconds": 9.594643125
+  },
+  "production_ready_seconds": 105.112910375
+}

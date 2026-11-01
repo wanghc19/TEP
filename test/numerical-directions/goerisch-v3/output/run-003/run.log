@@ -1,0 +1,12 @@
+WARNING: package sun.awt.X11 not in java.desktop
+WARNING: package sun.awt.X11 not in java.desktop
+STAGE assembly P3 primary: volume 1.62s band 0.20s checks 0.48s pass 1
+  chain P3-primary start k=1.558438079544167 index 1 theta -2.725e-06 gap 4.772e+00
+GENERATED P3: 23.38s, 5 root evaluations plus recovery, k=1.5584378944019319
+PREPARE left: 137 field batches, 5.96s
+PREPARE center: 136 field batches, 7.64s
+PREPARE right: 135 field batches, 11.43s
+PRODUCTION P3/RT2: q 3.4287286707248676 J 0.29165329089884617 width 9.1335672800431646e-09 square 4.1613603451971251e-10 Gram 0.044244
+VERIFY RT2: J24 0.29165329089884667 quad 4.11645e-06 square_quad 1.27265e-11 qchange 0 PASS 1
+PRODUCTION P3/RT3: q 3.4287286707248676 J 0.29165329083988195 width 4.6961648071590297e-09 square 2.1395207172807198e-10 Gram 0.0353121
+VERIFY RT3: J24 0.29165329083988173 quad 3.55826e-06 square_quad 1.02043e-12 qchange 0 PASS 1

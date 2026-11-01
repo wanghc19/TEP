@@ -1,0 +1,186 @@
+{
+  "degree": 2,
+  "timing": {
+    "solve": 3.647264875,
+    "functional": 9.5766629583333334,
+    "verification": 41.11763225
+  },
+  "solve_timing": {
+    "basis": 0.0213635,
+    "assembly": 1.6864328333333334,
+    "solve": 1.908920208333333,
+    "other": 0.027037458333333486
+  },
+  "solver": {
+    "global_residual": 1.053034636374176E-15,
+    "cell_residual": [
+      1.0744365269477644E-12,
+      1.7101877116504022E-12,
+      1.0586305106581957E-12
+    ],
+    "trace_error": 1.4586590879215569E-14,
+    "outer_normal_moment": 0
+  },
+  "reproduction": {
+    "reference": {
+      "q": 3.4287286707248676,
+      "J": 0.29165329089884617,
+      "width": 9.1335672800431646E-9
+    },
+    "q_relative": 0,
+    "J_relative": 0,
+    "width_relative": 0,
+    "q_absolute": 0,
+    "J_absolute": 0,
+    "width_absolute": 0,
+    "all_relative_below_1e12": true
+  },
+  "production": {
+    "q": 3.4287286707248676,
+    "J": 0.29165329089884617,
+    "qJ_minus_one": 4.161340161346061E-10,
+    "gram_denominators": [
+      0.14014136319509118,
+      1.6194780875215002
+    ],
+    "kappa": [
+      1.4426144219108685,
+      -0.4243711995685796
+    ],
+    "enclosure": [
+      2.4287286672219706,
+      2.4287286763555387
+    ],
+    "width": 9.1335672800431646E-9,
+    "width_endpoints": 9.1335681240423128E-9,
+    "width_formula_difference": 8.4399914820683758E-16,
+    "contains_reference": true,
+    "sign_conditions": true,
+    "algebra_pass": true,
+    "J_gram": 0.29165329090421593,
+    "mass": 4.7230110180205722,
+    "energy": 11.470912271616008,
+    "gram_scaled": 0.044244041610514671,
+    "cache_hits": 408,
+    "baseline_q_relative": 1.6377669656447404E-7,
+    "baseline_width_relative": 0.99746211344997593,
+    "baseline_J_scaled": 0.0013669351882207705,
+    "qJ_square": 4.1613603451971251E-10,
+    "square_components": [
+      4.0462686380682337E-10,
+      1.1509170712889224E-11
+    ],
+    "square_tail": 0,
+    "square_relative_difference": 4.8503247226857846E-6,
+    "functional_components": [
+      0.20659164880018566,
+      0.50175506029007522,
+      -1.4166934181914144
+    ],
+    "gram_absolute_difference": 5.3697601920532634E-12,
+    "gradient_seconds": 6.0073786249999976,
+    "square_interval": {
+      "enclosure": [
+        2.4287286672219541,
+        2.4287286763555653
+      ],
+      "width": 9.1336115808103755E-9,
+      "width_endpoints": 9.1336112006956682E-9,
+      "width_formula_difference": -3.8011470724190928E-16
+    },
+    "floor_constant": 6.4013871738050128,
+    "floor_prediction": 4.4947816515304923E-9,
+    "width_over_floor": 2.032038036137561,
+    "square_width_over_floor": 2.032047892181891,
+    "pass": true,
+    "outer_normal_moment": 0,
+    "flux_unknowns": {
+      "degree": 2,
+      "global_wall_free": 3744,
+      "template_edges": [
+        28989,
+        28629,
+        28908
+      ],
+      "template_interiors": [
+        38460,
+        37980,
+        38352
+      ]
+    },
+    "normal_trace_error": 1.4586590879215569E-14,
+    "global_solve_residual": 1.053034636374176E-15,
+    "cell_solve_residual": [
+      1.0744365269477644E-12,
+      1.7101877116504022E-12,
+      1.0586305106581957E-12
+    ],
+    "seconds": 9.5763003333333341
+  },
+  "production_ready_seconds": 48.246436875,
+  "verification": {
+    "J24": 0.29165329089884667,
+    "q24": 3.4287286707248676,
+    "mass24": 4.7230110180205616,
+    "energy24": 11.470912271615983,
+    "areas": [
+      {
+        "order": 24,
+        "inclusion_area": 0.12566370614359171,
+        "analytic_area": 0.12566370614359174,
+        "relative_error": 2.2087185287941088E-16,
+        "cell_area": 1.0000000000000131,
+        "minimum_jacobian": 7.93996151978607E-6
+      },
+      {
+        "order": 24,
+        "inclusion_area": 0.19415042599184906,
+        "analytic_area": 0.19415042599184923,
+        "relative_error": 8.5775476846373156E-16,
+        "cell_area": 1.000000000000012,
+        "minimum_jacobian": 1.0145334438165557E-5
+      },
+      {
+        "order": 24,
+        "inclusion_area": 0.12566370614359171,
+        "analytic_area": 0.12566370614359174,
+        "relative_error": 2.2087185287941088E-16,
+        "cell_area": 1.0000000000000138,
+        "minimum_jacobian": 7.7316658184203946E-6
+      }
+    ],
+    "normalization": {
+      "pass": true
+    },
+    "evaluated_batches": 408,
+    "evaluated_values": 9.9507456E+7,
+    "seconds": 41.116824291666667,
+    "qJ_square24": 4.1613603452500848E-10,
+    "square_components24": [
+      4.0462686380693292E-10,
+      1.1509170718075525E-11
+    ],
+    "gradient_seconds": 12.602916375,
+    "timing": {
+      "field24": 7.4983131249999992,
+      "functional24": 20.327171458333332,
+      "normalization": 12.551830333333335,
+      "areas": 0.73491400000000007,
+      "other": 0.0045953750000009563
+    },
+    "scaled_quadrature": 4.1164481045210228E-6,
+    "square_scaled_quadrature": 1.2726540683252469E-11,
+    "square24_relative_difference": 5.8162407684989079E-7,
+    "gram_scaled": 0.044244041610514671,
+    "quotient_relative_change": 0,
+    "quotient_change_over_width": 0,
+    "mass_relative_change": 2.2566411544956253E-15,
+    "energy_relative_change": 2.1680050516243719E-15,
+    "area_relative_max": 8.5775476846373156E-16,
+    "cell_area_max": 1.3766765505351941E-14,
+    "unchanged": true,
+    "pass": true
+  },
+  "pass": true,
+  "target_reached": true
+}

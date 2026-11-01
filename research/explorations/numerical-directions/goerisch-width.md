@@ -6,6 +6,7 @@
 
 - 已完成：引理 0、命题 1–3、推论 4 的陈述和证明；与实验数据的对照（第 5 节，不属于证明）。
 - 审查：证明审查线程已审（[[goerisch-width-review]]），0 个 blocker、0 个重要、0 个次要问题；Claude 另外更正了 (10.45) 的页码（第 372 页）。
+- 2026-11-01 补充：(H) 后加了一条说明，指出 $\alpha_\pm$ 可以取能带间隙的真子区间，并给出宽度随之变化的算例。它只解释 (H) 的适用范围，没有新的证明步骤，未送审查。
 - 未决：命题 3 的修正量 $R$ 只给出用谱分布表示的界，没有给出可由数值验证的界；谱隙端点的认证不在本文件范围内。
 
 ## 0. 设定与记号
@@ -15,6 +16,9 @@
 - $a(u,\varphi)=\int_B\nabla u\cdot\overline{\nabla\varphi}$，$b(u,\varphi)=\int_B\rho\,u\bar\varphi$，$\|u\|_\rho^2=b(u,u)$。取定 $\gamma>0$，$a_\gamma=a+\gamma b$。由 $1\le\rho\le\rho_{\max}$，$a_\gamma$ 是 $V$ 上与 $H^1$ 等价的内积。
 - $A$：$L^2_\rho(B)$（内积 $b$）中由闭形式 $a$（定义域 $V$）确定的非负自伴算子，即 $-\rho^{-1}\Delta$ 加准周期条件。$E(\cdot)$ 是它的谱测度。
 - 谱隙假设 **(H)**：$0\le\alpha_-<\alpha_+<\infty$，$\sigma(A)\cap(\alpha_-,\alpha_+)=\{\lambda\}$，$\lambda$ 是有限重特征值。记 $\mu=\alpha_-+\gamma$，$\nu=\alpha_++\gamma$，$\ell=\lambda+\gamma$。
+  - **说明（2026-11-01 补充）：$\alpha_\pm$ 不必是能带间隙的端点。** (H) 只要求 $(\alpha_-,\alpha_+)$ 中除 $\lambda$ 外没有谱点，它可以是能带间隙的真子区间。区间落在间隙内时，其中没有本质谱，$\lambda$ 是点谱；间隙中别处可以有其他特征值。下文的"谱隙"均指 (H) 中的这个区间 $(\alpha_-,\alpha_+)$，各结论对满足 (H) 的任意 $\alpha_\pm$ 成立；使用时另需 $\alpha_-<\theta<\alpha_+$（命题 2、3 的条件 $\mu<q<\nu$）。
+  - 代价是区间变宽。命题 3 的常数 $C=(\lambda+\gamma)(\alpha_+-\alpha_-)/((\lambda-\alpha_-)(\alpha_+-\lambda))$ 随 $\alpha_\pm$ 靠近 $\lambda$ 而增大，宽度约为 $C(\theta-\lambda)$。以 P3 试探函数（$\theta-\lambda\approx7.02\times10^{-10}$，$\gamma=1$）为例：取整个未认证间隙 $(1.3174^2,2.1875^2)$ 时 $C\approx6.40$，宽度约 $4.5\times10^{-9}$；取 $\lambda\pm0.3$ 时 $C\approx22.9$，宽度约 $1.6\times10^{-8}$；取 $\lambda\pm0.1$ 时 $C\approx68.6$，宽度约 $4.8\times10^{-8}$。
+  - 所以认证 (H) 只需证明 $\lambda$ 附近一段距离内没有其他谱点，并且这段区间不碰本质谱，不需要证明整个间隙只有一个特征值。本说明只是对 (H) 适用范围的解释，没有新的证明步骤，未送审查。
 - 试探函数 $v\in V$，$\|v\|_\rho=1$。记
   $$q=a_\gamma(v,v),\qquad\theta=q-\gamma=\frac{a(v,v)}{b(v,v)} .$$
 - 源解 $z\in V$：$a_\gamma(z,\varphi)=b(v,\varphi)$ 对一切 $\varphi\in V$ 成立，即 $z=(A+\gamma)^{-1}v$。记 $G=a_\gamma(z,z)$。

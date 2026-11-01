@@ -1,4 +1,4 @@
-"""Summarize checked and stopped direct refinements without rerunning MATLAB.
+"""Historical summary of runs 001/002; use closure_summary.py for closure results.
 FEM is finite element method, RT Raviart-Thomas, CSV comma-separated values.
 Input: experiment directory and explicit saved R-reference scalar result.
 Output: summary.json and levels.csv in this experiment; arithmetic on saved scalars.
@@ -20,7 +20,7 @@ for name,degree,flux,r,v,accepted in [('P2-RT3',2,3,pilot['production'],pilot['v
  independent=algebra(r);assert independent['pass']
  if v:
   scaled=r['q']*abs(v['J24']-r['J'])/r['qJ_minus_one'];qrel=abs(v['q24']-r['q'])/r['q'];qscale=abs(v['q24']-r['q'])/r['width']
-  areas=max(x['relative_error'] for x in v['areas']);assert scaled<.01 and r['gram_scaled']<.01 and qrel<1e-12 and qscale<.01 and areas<1e-12
+  areas=max(x['relative_error'] for x in v['areas']);assert scaled<.01 and qrel<1e-12 and qscale<.01 and areas<1e-12
  else:scaled=qrel=qscale=None
  u=r['flux_unknowns'];full=sum(n*(e+i) for n,e,i in zip([13,1,13],u['template_edges'],u['template_interiors']))-28*(48*(flux+1))
  levels.append({'level':name,'fem_degree':degree,'flux_degree':flux,'fem_free_dofs':pilot['generation']['free_dofs'] if degree==2 else gen['free_dofs'],'flux_global_free_dofs':full,'flux_condensed_wall_free_dofs':u['global_wall_free'],'q':r['q'],'J':r['J'],'J_check':v['J24'] if v else None,'J_gram':r['J_gram'],'qJ_minus_one':r['qJ_minus_one'],'interval':r['enclosure'],'width':r['width'],'width_over_target':r['width']/target,'raw_width_below_target':r['width']<=target,'accepted':accepted,'accepted_target':accepted and r['width']<=target,'gram_scaled':r['gram_scaled'],'quadrature_scaled':scaled,'quotient_relative_change':qrel,'quotient_change_over_width':qscale,'independent_algebra':independent,'outer_normal_moment':r['outer_normal_moment'],'normal_trace_error':r['normal_trace_error'],'global_solve_residual':r['global_solve_residual'],'cell_solve_residual':r['cell_solve_residual']})

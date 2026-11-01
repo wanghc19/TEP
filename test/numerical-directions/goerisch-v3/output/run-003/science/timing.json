@@ -1,0 +1,14 @@
+{
+  "stage": "RT3_verification",
+  "timing": {
+    "field_generation": 23.503752,
+    "preparation": 11.429684916666666,
+    "evaluator_check": 0.007663583333333333,
+    "cache_check": 0.015549791666666667,
+    "output": 0.038160458333333334,
+    "levels_total": 111.777415625,
+    "orchestration": 0.057921583333325088
+  },
+  "enclosing_seconds": 146.83014795833333,
+  "difference_seconds": 0
+}

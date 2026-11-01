@@ -1,0 +1,320 @@
+{
+  "degree": 3,
+  "mesh": {
+    "subdivisions": 48,
+    "interface_segments": 320
+  },
+  "field_generation_rule": {
+    "name": "primary",
+    "volume_order": 12,
+    "band_subsegments": 2,
+    "band_points": 8
+  },
+  "initial_frequency": 1.558438079544167,
+  "frequency": 1.5584378944019319,
+  "mu": 2.428728670707927,
+  "root": {
+    "name": "P3-primary",
+    "p": 3,
+    "rule": "primary",
+    "epsilon": 1E-10,
+    "status": "ROOT_FOUND",
+    "substatus": "",
+    "reason": "",
+    "initialization_source": "",
+    "k_init": 1.558438079544167,
+    "k": 1.5584378944019319,
+    "mu": 2.428728670707927,
+    "bracket_low": 1.5584378944016812,
+    "bracket_high": 1.5584378944019319,
+    "bracket_k_width": 2.5068835896036035E-13,
+    "bracket_mu_width": 7.8115292012626014E-13,
+    "theta": -4.2898140659220812E-13,
+    "theta_scaled": 1.3048901010233413E-16,
+    "branch_index": 1,
+    "qualified": true,
+    "center_residual": 6.80789542712951E-13,
+    "center_recovery_residual": 9.7119192764675869E-15,
+    "frequency_count": 5,
+    "cache_hits": 0,
+    "halvings": 0,
+    "slowest_eval_seconds": 2.95029125,
+    "root_seconds": 0,
+    "matlab_elapsed_at_completion": null,
+    "selection": {
+      "type": "smallest",
+      "nearest_indices": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "nearest_lambda": [
+        -2.7254939924640832E-6,
+        4.7720573071578576,
+        11.053786173621869,
+        11.160811131481021,
+        13.163316325176394
+      ],
+      "correlations": [],
+      "index": 1,
+      "gap": 4.77206003265185,
+      "gap_threshold": 3.2874906956153263E-5,
+      "reason": ""
+    },
+    "root": {
+      "initial_bracket": [
+        1.558436079544167,
+        1.558438079544167
+      ],
+      "iterations": 3,
+      "bisections": 0,
+      "branch_fallbacks": 0,
+      "theta_b": -4.2898140659220812E-13,
+      "theta_c": 1.0721343720137993E-12,
+      "k_b": 1.5584378944019319,
+      "k_c": 1.5584378944016812,
+      "zero_hits": []
+    },
+    "resolved": true,
+    "root_zero_start": false,
+    "resolution": {
+      "k_width_ok": true,
+      "mu_width_ok": true,
+      "theta_ok": true,
+      "residual_ok": true,
+      "strict_bracket": true
+    }
+  },
+  "root_frequency_evaluations": 5,
+  "recovery_evaluations": 1,
+  "free_dofs": [
+    28989,
+    28629,
+    28908
+  ],
+  "full_dofs": [
+    29134,
+    28774,
+    29053
+  ],
+  "wall_dofs": 144,
+  "triangles": [
+    6410,
+    6330,
+    6392
+  ],
+  "geometry_matches_coarse_max": [
+    0,
+    0,
+    0
+  ],
+  "basis_checks": {
+    "p": 3,
+    "local_dofs": 10,
+    "kronecker": 6.6613381477509392E-16,
+    "partition_of_unity": 8.8817841970012523E-16,
+    "gradient_sum": 1.7763568394002505E-15,
+    "reproduction": 8.8817841970012523E-16,
+    "derivative_fd_relative": 7.1904578622816813E-11,
+    "local_embedding": null,
+    "pass": true
+  },
+  "edge_checks": {
+    "parameters": [
+      0,
+      0.25,
+      0.5,
+      0.75,
+      1
+    ],
+    "tolerance": 1E-10,
+    "pass": true,
+    "templates": [
+      {
+        "template": "left",
+        "shared_edges": 9519,
+        "geometry_defect": 0,
+        "trace_defect": 0,
+        "pass": true
+      },
+      {
+        "template": "center",
+        "shared_edges": 9399,
+        "geometry_defect": 0,
+        "trace_defect": 0,
+        "pass": true
+      },
+      {
+        "template": "right",
+        "shared_edges": 9492,
+        "geometry_defect": 0,
+        "trace_defect": 0,
+        "pass": true
+      }
+    ]
+  },
+  "center_residual": 6.80789542712951E-13,
+  "center_recovery_residual": 9.7119192764675869E-15,
+  "lead_recovery_residual": [
+    [
+      1.7359953766696672E-14,
+      1.6860969178046606E-14,
+      1.7398059382769794E-14,
+      1.7087123661217149E-14,
+      1.6355035171814382E-14,
+      1.7399939212683658E-14,
+      1.633721436700457E-14,
+      1.7354635871715413E-14,
+      1.7348967638996966E-14,
+      1.6735836244902873E-14,
+      1.7151813407863741E-14,
+      1.6238171793264554E-14,
+      1.7447197873681341E-14
+    ],
+    [
+      1.8080150290536653E-14,
+      1.6955222518214135E-14,
+      1.7555643629490942E-14,
+      1.7726671626228619E-14,
+      1.6847872436032134E-14,
+      1.7829773739053359E-14,
+      1.7085578104532644E-14,
+      1.7103238837033815E-14,
+      1.80199589218961E-14,
+      1.662514523913173E-14,
+      1.7552521070243269E-14,
+      1.7538902883863445E-14,
+      1.6862723378300395E-14
+    ]
+  ],
+  "lead_phase_mismatch": [
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "matrix_checks": {
+    "pass": true,
+    "reason": "",
+    "rule": "primary",
+    "p": 3,
+    "seconds_volume": 1.620920875,
+    "seconds_band": 0.19627891666666664,
+    "seconds_checks": 0.48090166666666667,
+    "left": {
+      "area": 1.000000000000014,
+      "area_defect": 1.3988810110276972E-14,
+      "inclusion_area_h": 0.12566370596701318,
+      "inclusion_area_exact": 0.12566370614359176,
+      "inclusion_area_defect": -1.765785850871282E-10,
+      "band_constant": 2.8252558491802257E-9,
+      "band_constant_expected": 2.8252573613940513E-9,
+      "band_constant_defect": -1.5122138255619051E-15,
+      "band_signed_area": 1.7657849057376424E-10,
+      "dM_fro": 1.4299642696933608E-8,
+      "dM_relative_to_Mh": 4.0961197914985564E-7,
+      "stiffness_hermitian_defect": 6.3925134312286383E-17,
+      "mass_h_hermitian_defect": 4.4950369841361235E-19,
+      "band_hermitian_defect": 7.0172648804426478E-17,
+      "mass_chol_flag": 0,
+      "nnz_K": 491085,
+      "free_dofs": 28989,
+      "interior_dofs": 28701,
+      "symbolic_chol_nnz": 1.041242E+6,
+      "pass": true
+    },
+    "center": {
+      "area": 1.0000000000000133,
+      "area_defect": 1.3322676295501878E-14,
+      "inclusion_area_h": 0.19415042002455404,
+      "inclusion_area_exact": 0.19415042599184942,
+      "inclusion_area_defect": -5.9672953800493644E-9,
+      "band_constant": 1.7901884954583381E-8,
+      "band_constant_expected": 1.7901886140148093E-8,
+      "band_constant_defect": -1.185564712694185E-15,
+      "band_signed_area": 5.967294984861069E-9,
+      "dM_fro": 3.5603134227001549E-8,
+      "dM_relative_to_Mh": 3.0472962537695806E-6,
+      "stiffness_hermitian_defect": 6.33210715764499E-17,
+      "mass_h_hermitian_defect": 1.4279467226728689E-18,
+      "band_hermitian_defect": 7.30690793880194E-17,
+      "mass_chol_flag": 0,
+      "nnz_K": 484965,
+      "free_dofs": 28629,
+      "interior_dofs": 28341,
+      "symbolic_chol_nnz": 1.067258E+6,
+      "pass": true
+    },
+    "right": {
+      "area": 1.0000000000000138,
+      "area_defect": 1.3766765505351941E-14,
+      "inclusion_area_h": 0.1256637057270715,
+      "inclusion_area_exact": 0.12566370614359174,
+      "inclusion_area_defect": -4.1652023496929758E-10,
+      "band_constant": 6.6643223976281551E-9,
+      "band_constant_expected": 6.6643237595087612E-9,
+      "band_constant_defect": -1.36188060614408E-15,
+      "band_signed_area": 4.1652014985175369E-10,
+      "dM_fro": 2.3691825936956405E-8,
+      "dM_relative_to_Mh": 6.8382153268594336E-7,
+      "stiffness_hermitian_defect": 6.3659848547302608E-17,
+      "mass_h_hermitian_defect": 4.2327096524840756E-19,
+      "band_hermitian_defect": 7.7355820409587184E-17,
+      "mass_chol_flag": 0,
+      "nnz_K": 489708,
+      "free_dofs": 28908,
+      "interior_dofs": 28620,
+      "symbolic_chol_nnz": 1.027668E+6,
+      "pass": true
+    },
+    "wall_mass_hermitian_defect": 0
+  },
+  "root_ledger": {
+    "assembly_volume_primary": 1.620920875,
+    "assembly_band_primary": 0.19627891666666664,
+    "assembly_checks_primary": 0.480970625,
+    "lead_elimination": 10.253192166666665,
+    "qz_dtn": 2.260214833333333,
+    "center_small": 4.884376125,
+    "extension": 1.0572759999999999
+  },
+  "seconds": 23.383302791666665,
+  "timing": {
+    "input": 0.772489125,
+    "mesh": 0.53753891666666664,
+    "space_checks": 0.22722983333333333,
+    "location": 0.48168558333333333,
+    "assembly": 2.4087855,
+    "root": 14.675293708333333,
+    "recovery": 4.2421108333333333,
+    "other": 0.038169291666662275
+  }
+}

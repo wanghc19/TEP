@@ -1,0 +1,33 @@
+{
+  "returncode": 0,
+  "forecast_seconds": 300.0,
+  "prior_monitored_seconds": 133.399370916,
+  "wrapper_wall_seconds": 165.68553614616394,
+  "monitor": {
+    "returncode": 0,
+    "reason": "completed",
+    "wall_seconds": 165.651023458,
+    "peak_process_tree_rss_gib": 2.0416107177734375,
+    "peak_experiment_disk_mb": 62.197281,
+    "output_disk_mb": 0.062468
+  },
+  "cumulative_monitored_seconds": 299.050394374,
+  "wrapper_minus_monitor_seconds": 0.03451268816394304,
+  "status": "COMPLETE",
+  "startup_seconds": 8.651575326919556,
+  "function_seconds": 146.832637125,
+  "shutdown_seconds": 10.192278146743774,
+  "stage_timing": {
+    "field_generation": 23.503752,
+    "preparation": 11.429684916666666,
+    "evaluator_check": 0.007663583333333333,
+    "cache_check": 0.015549791666666667,
+    "output": 0.038160458333333334,
+    "levels_total": 111.777415625,
+    "orchestration": 0.05792158333332509
+  },
+  "final_output_seconds": 0.0024891666666633228,
+  "reconciled_wrapper_seconds": 165.67649059866332,
+  "reconciliation_error_seconds": -0.009045547500619477,
+  "timing_pass": true
+}

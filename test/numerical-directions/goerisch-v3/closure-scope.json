@@ -1,0 +1,15 @@
+{
+  "protected_tracked_paths_changed": [],
+  "run_001_002_tracked_changes": [],
+  "worktree_size_mb": 188.539735,
+  "experiment_size_mb": 0.448282,
+  "new_run_size_mb": 0.063763,
+  "new_runs": [
+    "run-003"
+  ],
+  "numerical_checks": "output/run-003/science/result.json",
+  "independent_scalar_checks": "closure-summary.json",
+  "python_source_parse": "pass",
+  "deletions": false,
+  "R_numerical_executions": 0
+}
