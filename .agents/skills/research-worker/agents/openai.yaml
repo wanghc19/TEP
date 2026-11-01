@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Worker"
+  short_description: "Scoped, checkable experiments, surveys, and proof reviews"
+  default_prompt: "Use $research-worker to carry out this delegated research task and report results the manager can check."

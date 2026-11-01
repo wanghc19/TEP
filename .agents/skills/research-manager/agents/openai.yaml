@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Manager"
+  short_description: "Plan, delegate, verify, and report research; resume from files"
+  default_prompt: "Use $research-manager to take over managing this research project from the manager log."
