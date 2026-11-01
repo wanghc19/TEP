@@ -1,14 +1,18 @@
-function result=goerisch_enclosure(input_dir,output_dir,degree,trial_kind)
+function result=goerisch_enclosure(input_dir,output_dir,degree,trial_kind,mode)
   % Goerisch enclosure: one-vector Lehmann-Goerisch ordinary arithmetic.
   % Input
   %   input_dir: read-only I9.6 (implementation experiment 9.6) run-03.
   %   output_dir: new directory; degree: Raviart-Thomas degree 1, 2, or 3.
   %   trial_kind: R (reconstructed) or D (direct tapered finite element field).
+  %   mode: 'quadratic' (default), 'diagnose' for a local excess split,
+  %     or 'fitted' for exact analytic interfaces and pointwise J evaluation.
   % Output
   %   result: scalar Gram entries, enclosure, checks, and timings in JSON.
   % Geometry/Piola conventions follow eq_temple_i95.m; oriented material
   % strips follow refine_i102.m. Trial assembly is copied in goerisch_trial.m.
   started=tic; maxNumCompThreads(2);
+  if nargin<5,mode='quadratic';end
+  assert(ismember(mode,{'quadratic','diagnose','fitted'}));
   assert(ismember(degree,1:3)&&ismember(trial_kind,{'R','D'}));
   assert(~isfolder(output_dir)); mkdir(output_dir);
   cfg=struct('degree',degree,'trial',trial_kind,'K',13,'gamma',1,'beta',.5, ...
@@ -16,16 +20,17 @@ function result=goerisch_enclosure(input_dir,output_dir,degree,trial_kind)
     'mu_bie',2.428728670022710,'mu0',2.428729247773311, ...
     'alpha_minus',1.3174^2,'alpha_plus',2.1875^2,'quadrature_fraction',.01);
   cfg.mu=cfg.alpha_minus+cfg.gamma; cfg.nu=cfg.alpha_plus+cfg.gamma;
+  cfg.mode=mode;
   LOCAL_json(fullfile(output_dir,'config.json'),cfg);
   if strcmp(trial_kind,'R')
     [norms,trial]=goerisch_trial(input_dir,fullfile(output_dir,'normalization'),'control');
     theta_check=abs(norms.theta-cfg.theta_reference)/cfg.theta_reference;
     assert(theta_check<1e-12,'goerisch:Theta','Copied reconstruction differs from reference.');
-    [tail0,tail_upper]=LOCAL_tail(trial,norms.denominator,cfg.K);
+    [tail0,tail_upper,tail_gradient]=LOCAL_tail(trial,norms.denominator,cfg.K);
     assert(tail_upper<1e-10,'goerisch:Tail','Chosen box is too short.');
     mass=norms.denominator; energy=norms.numerator_identity;
   else
-    norms=struct(); trial=[]; theta_check=NaN; tail0=0; tail_upper=0; mass=0; energy=0;
+    norms=struct(); trial=[]; theta_check=NaN; tail0=0; tail_upper=0; tail_gradient=0; mass=0; energy=0;
   end
   raw=load(fullfile(input_dir,'native.mat'),'native'); native=raw.native;clear raw
   native_trace=struct();
@@ -43,6 +48,14 @@ function result=goerisch_enclosure(input_dir,output_dir,degree,trial_kind)
     U=complex(zeros(size(T.xy,1),numel(cells)));
     for j=1:numel(cells),U(:,j)=native.cells([native.cells.index]==cells(j)).coef;end
     G=LOCAL_geometry(T,U,cells,cfg,degree);
+    area_check=struct();
+    if strcmp(mode,'fitted')
+      G.fitted=goerisch_fitted_geometry(T);
+      area_check.low=G.fitted.areas(cfg.orders(1));area_check.high=G.fitted.areas(cfg.orders(2));
+      assert(max([area_check.low.relative_error,area_check.high.relative_error, ...
+        abs(area_check.low.cell_area-1),abs(area_check.high.cell_area-1)])<1e-12, ...
+        'goerisch:Area','Fitted inclusion or cell area check failed.');
+    end
     fprintf('ASSEMBLE %s RT%d: %d triangles, %d edge unknowns, %d cells\n',names{t},degree,G.nt,G.nedge,numel(cells));
     [H,b,scalars]=LOCAL_forms(G,T,trial,cfg,Dinv,cfg.orders(1),cfg.band_orders(1));
     assembly=toc(timer); timer=tic;
@@ -53,7 +66,8 @@ function result=goerisch_enclosure(input_dir,output_dir,degree,trial_kind)
     item=struct('template',names{t},'triangles',G.nt,'edge_unknowns',G.nedge, ...
       'wall_unknowns',numel(G.left),'assembly_seconds',assembly,'condense_seconds',toc(timer), ...
       'band_area',scalars.band_area,'band_absolute_area',scalars.band_absolute_area, ...
-      'source_quadrature',scalars.source_quadrature,'basis_check',basischeck,'cell_solve_residual',pack.solve_residual);
+      'source_quadrature',scalars.source_quadrature,'area_check',area_check, ...
+      'basis_check',basischeck,'cell_solve_residual',pack.solve_residual);
     info=[info,item]; %#ok<AGROW>
     LOCAL_json(fullfile(output_dir,['template_',names{t},'.json']),item);
     fprintf('CONDENSE %s %.1fs, total %.1fs\n',names{t},item.condense_seconds,toc(started));
@@ -75,6 +89,8 @@ function result=goerisch_enclosure(input_dir,output_dir,degree,trial_kind)
   assert(global_residual<1e-9,'goerisch:Solve','Global flux solve failed.');
   global_seconds=toc(timer); clear AG Af rhs
   quadratic=0; quadratic_check=0; mass_check=0;energy_check=0; trace_error=0;
+  quadratic_gram=0;quadratic_check_gram=0;
+  q=1+energy/mass; diagnostic=struct();
   for t=1:3
     timer=tic; pack=packs{t}; G=pack.G; nb=G.nd; nt=G.nt; ncell=numel(G.cells);
     ye=complex(zeros(G.nedge,ncell));
@@ -88,13 +104,25 @@ function result=goerisch_enclosure(input_dir,output_dir,degree,trial_kind)
       ii=-reshape(pagemtimes(pack.Y,reshape(ee.',G.ne,1,nt)),G.ni,nt)-reshape(pack.r(:,j,:),G.ni,nt);
       local(:,j,:)=reshape([ee,reshape(ii,G.ni,nt).'].',nb,1,nt);
     end
-    quadratic=quadratic+LOCAL_quadratic(pack.H,pack.b,local);
+    gram=LOCAL_quadratic(pack.H,pack.b,local);quadratic_gram=quadratic_gram+gram;
+    if strcmp(mode,'fitted')
+      [~,~,sc0]=LOCAL_forms(G,pack.T,trial,cfg,Dinv,cfg.orders(1),cfg.band_orders(1),local,q);
+      quadratic=quadratic+sc0.point_quadratic;
+    else,quadratic=quadratic+gram;end
     trace_error=max(trace_error,LOCAL_trace(G,local,degree,Dinv));
-    [HC,bc,sc]=LOCAL_forms(G,pack.T,trial,cfg,Dinv,cfg.orders(2),cfg.band_orders(2));
-    quadratic_check=quadratic_check+LOCAL_quadratic(HC,bc,local);
+    diagnostic_flux=[];
+    if ismember(mode,{'diagnose','fitted'}),diagnostic_flux=local;end
+    [HC,bc,sc]=LOCAL_forms(G,pack.T,trial,cfg,Dinv,cfg.orders(2),cfg.band_orders(2),diagnostic_flux,q);
+    gram=LOCAL_quadratic(HC,bc,local);quadratic_check_gram=quadratic_check_gram+gram;
+    if strcmp(mode,'fitted'),quadratic_check=quadratic_check+sc.point_quadratic;
+    else,quadratic_check=quadratic_check+gram;end
     mass_check=mass_check+sum(sc.mass); energy_check=energy_check+sum(sc.energy);
     info(t).check_seconds=toc(timer);
     info(t).source_quadrature_check=sc.source_quadrature;
+    if strcmp(mode,'diagnose')
+      diagnostic.(names{t})=sc.diagnostic;
+      LOCAL_json(fullfile(output_dir,['diagnostic_',names{t},'.json']),sc.diagnostic);
+    end
     LOCAL_json(fullfile(output_dir,['template_',names{t},'.json']),info(t));
     fprintf('CHECK %s %.1fs, total %.1fs\n',names{t},toc(timer),toc(started));
     clear HC bc sc local ye pack
@@ -109,7 +137,30 @@ function result=goerisch_enclosure(input_dir,output_dir,degree,trial_kind)
   if strcmp(trial_kind,'R'),tail_allowance=16*norms.tail_norm;end
   J=(mass+quadratic+tail_allowance)/mass;
   Jcheck=(mass_check+quadratic_check+tail_allowance)/mass_check;
+  Jgram=(mass+quadratic_gram+tail_allowance)/mass;
+  Jcheck_gram=(mass_check+quadratic_check_gram+tail_allowance)/mass_check;
   qcheck=1+energy_check/mass_check; variance=q*J-1;
+  if strcmp(mode,'diagnose')
+    outside_mass=tail0;
+    if strcmp(trial_kind,'R')
+      for t=1:numel(norms.inclusions)
+        inc=norms.inclusions(t);outside_mass=outside_mass+(inc.rho-1)*sum(inc.mass_fine(abs(inc.cells)>cfg.K));
+      end
+      outside_mass=outside_mass+16*norms.tail_norm;
+    end
+    totals=zeros(1,6);
+    for t=1:3,totals=totals+diagnostic.(names{t}).totals;end
+    outside_defect=tail_gradient/q^2+(1-1/q)^2*outside_mass;
+    defect=totals(4)+totals(5)+outside_defect;
+    diagnostic.total=struct('straddling_raw',totals(1),'remaining_raw',totals(2),'strips_raw',totals(3), ...
+      'exterior_raw',outside_mass,'straddling_defect',totals(4),'remaining_defect',totals(5), ...
+      'strips_defect',totals(6),'exterior_defect',outside_defect, ...
+      'straddling_share',totals(4)/defect,'strips_share',totals(6)/defect, ...
+      'qJ_minus_one_from_squares',q*defect/mass,'qJ_minus_one_check',q*Jcheck-1, ...
+      'identity_relative_difference',abs(q*defect/mass-(q*Jcheck-1))/abs(q*Jcheck-1), ...
+      'J_direct',(totals(1)+totals(2)+outside_mass)/mass,'J_check',Jcheck);
+    LOCAL_json(fullfile(output_dir,'diagnostic.json'),diagnostic);
+  end
   b2=[q-2*cfg.mu+cfg.mu^2*J,q-2*cfg.nu+cfg.nu^2*J];
   kappa=[(1-cfg.mu*J)/b2(1),(1-cfg.nu*J)/b2(2)];
   lower=(q-cfg.nu)/(1-cfg.nu*J)-1;upper=(q-cfg.mu)/(1-cfg.mu*J)-1;
@@ -124,9 +175,10 @@ function result=goerisch_enclosure(input_dir,output_dir,degree,trial_kind)
     'width_formula_difference',(upper-lower)-width);
   result=struct('config',cfg,'q',q,'theta',q-1,'theta_minus_mu0',q-1-cfg.mu0, ...
     'mass',mass,'energy',energy,'mass_check',mass_check,'energy_check',energy_check, ...
-    'q_check',qcheck,'J',J,'J_check',Jcheck,'qJ_minus_one',variance,'kappa',kappa, ...
+    'q_check',qcheck,'J',J,'J_check',Jcheck,'J_gram',Jgram,'J_check_gram',Jcheck_gram, ...
+    'qJ_minus_one',variance,'kappa',kappa, ...
     'enclosure',[lower,upper],'width',width,'tail_relative_upper',tail_upper, ...
-    'checks',checks,'native_trace',native_trace,'templates',info,'global_solve_seconds',global_seconds,'wall_seconds',toc(started));
+    'checks',checks,'diagnostic',diagnostic,'native_trace',native_trace,'templates',info,'global_solve_seconds',global_seconds,'wall_seconds',toc(started));
   LOCAL_json(fullfile(output_dir,'result.json'),result); disp(result);
   assert(checks.variance_positive&&checks.contains_reference&&checks.sign_conditions, ...
     'goerisch:Enclosure','Invalid enclosure: inspect saved result.');
@@ -185,14 +237,22 @@ function G=LOCAL_geometry(T,U,cells,cfg,k)
     'edge_ids',ids,'signs',signs,'mid',mid,'top',top,'bot',bot,'edges',edges);
 end
 
-function [H,b,sc]=LOCAL_forms(G,T,trial,cfg,Dinv,order,band_order)
-  [x,y,w]=LOCAL_duffy(order);[vx,vy,dv]=LOCAL_rt(x,y,cfg.degree);
-  vx=vx*Dinv;vy=vy*Dinv;dv=dv*Dinv; nq=numel(w);nd=G.nd;nt=G.nt;nc=numel(G.cells);
+function [H,b,sc]=LOCAL_forms(G,T,trial,cfg,Dinv,order,band_order,flux,q)
+  if nargin<8,flux=[];q=NaN;end
+  evaluate=~isempty(flux);diagnostic=evaluate&&strcmp(cfg.mode,'diagnose');
+  fitted=isfield(G,'fitted');nd=G.nd;nt=G.nt;nc=numel(G.cells);
+  if fitted,rules=G.fitted.rules(order);
+  else,[x,y,w]=LOCAL_duffy(order);rules={struct('x',x,'y',y,'w',w,'ids',(1:nt)')};end
   H=zeros(nd,nd,nt);b=complex(zeros(nd,nc,nt));mass=zeros(1,nc);energy=mass;
-  for first=1:cfg.block:nt
-    ids=first:min(first+cfg.block-1,nt);nb=numel(ids);
+  raw=zeros(nt,nc);defect=raw;strips_raw=0;strips_defect=0;point_quadratic=0;
+  for ri=1:numel(rules)
+   rule=rules{ri};x=rule.x;y=rule.y;w=rule.w;nq=numel(w);
+   [vx,vy,dv]=LOCAL_rt(x,y,cfg.degree);vx=vx*Dinv;vy=vy*Dinv;dv=dv*Dinv;
+   for first=1:cfg.block:numel(rule.ids)
+    ids=rule.ids(first:min(first+cfg.block-1,numel(rule.ids)));nb=numel(ids);
     xx=repmat(x,nb,1);yy=repmat(y,nb,1);ei=repelem(ids(:),nq);
-    [PX,PY,J,det]=LOCAL_map(G.mx(ei,:),G.my(ei,:),xx,yy);
+    if fitted,[PX,PY,J,det]=G.fitted.map(ei,xx,yy);
+    else,[PX,PY,J,det]=LOCAL_map(G.mx(ei,:),G.my(ei,:),xx,yy);end
     vxx=repmat(vx,nb,1);vyy=repmat(vy,nb,1);dvv=repmat(dv,nb,1);
     px=(J(:,1).*vxx+J(:,2).*vyy)./det;py=(J(:,3).*vxx+J(:,4).*vyy)./det;
     W=repmat(w,nb,1).*det;rho=repelem(reshape(T.material(ids),[],1),nq);
@@ -202,21 +262,38 @@ function [H,b,sc]=LOCAL_forms(G,T,trial,cfg,Dinv,order,band_order)
     H(:,:,ids)=pagemtimes(P.*ww,'none',P,'transpose')+pagemtimes(Q.*ww,'none',Q,'transpose') ...
       +pagemtimes(DD.*reshape(W./rho,1,nq,nb),'none',DD,'transpose');
     if strcmp(cfg.trial,'R')
-      values=LOCAL_reconstructed(trial,PX,PY,G.cells);
+      if diagnostic,[values,gx,gy]=LOCAL_reconstructed(trial,PX,PY,G.cells);
+      else,values=LOCAL_reconstructed(trial,PX,PY,G.cells);end
     else
-      [values,gx,gy]=LOCAL_direct(G,ei,xx,yy,PX,J,det,cfg);
+      if fitted
+        [native_e,nx,ny,nJ,ndet]=G.fitted.inverse_native(ei,PX,PY);
+        [values,gx,gy]=LOCAL_direct(G,native_e,nx,ny,PX,nJ,ndet,cfg);
+      else,[values,gx,gy]=LOCAL_direct(G,ei,xx,yy,PX,J,det,cfg);end
       mass=mass+sum((W.*rho).*abs(values).^2,1);
       energy=energy+sum(W.*(abs(gx).^2+abs(gy).^2),1);
     end
     VV=permute(reshape(values,nq,nb,nc),[1,3,2]);
     b(:,:,ids)=pagemtimes(DD.*ww,VV);
+    if evaluate
+      fx=LOCAL_flux_values(P,flux(:,:,ids));fy=LOCAL_flux_values(Q,flux(:,:,ids));fd=LOCAL_flux_values(DD,flux(:,:,ids));
+      point_quadratic=point_quadratic+sum(W.*(abs(fx).^2+abs(fy).^2+abs(fd).^2./rho+2*real(conj(fd).*values)),'all');
+    end
+    if diagnostic
+      density=abs(fx).^2+abs(fy).^2+abs(fd+rho.*values).^2./rho;
+      gap=abs(fx-gx/q).^2+abs(fy-gy/q).^2+abs(fd+rho*(1-1/q).*values).^2./rho;
+      raw(ids,:)=reshape(sum(reshape(W.*density,nq,nb,nc),1),nb,nc);
+      defect(ids,:)=reshape(sum(reshape(W.*gap,nq,nb,nc),1),nb,nc);
+    end
+   end
   end
   source_info=struct();
+  if fitted,band=struct('w',[],'e',[],'min_barycentric',NaN);
+  else
   % Correct mesh material labels by an oriented strip to the true interface.
   band=LOCAL_band(G,T,band_order);
   for first=1:1024:numel(band.w)
     ids=first:min(first+1023,numel(band.w));ei=band.e(ids);xx=band.x(ids);yy=band.y(ids);
-    [PX,~,J,det]=LOCAL_map(G.mx(ei,:),G.my(ei,:),xx,yy);
+    [PX,PY,J,det]=LOCAL_map(G.mx(ei,:),G.my(ei,:),xx,yy);
     [~,~,div]=LOCAL_rt(xx,yy,cfg.degree);div=(div*Dinv)./det;
     ww=band.w(ids)*(1/T.rho_in-1);
     for j=1:nd
@@ -227,12 +304,71 @@ function [H,b,sc]=LOCAL_forms(G,T,trial,cfg,Dinv,order,band_order)
       end
     end
     if strcmp(cfg.trial,'D')
-      values=LOCAL_direct(G,ei,xx,yy,PX,J,det,cfg);
+      [values,gx,gy]=LOCAL_direct(G,ei,xx,yy,PX,J,det,cfg);
       mass=mass+sum((band.w(ids)*(T.rho_in-1)).*abs(values).^2,1);
     end
+    if diagnostic
+      if strcmp(cfg.trial,'R'),[values,gx,gy]=LOCAL_reconstructed(trial,PX,PY,G.cells);end
+      [vx,vy]=LOCAL_rt(xx,yy,cfg.degree);vx=vx*Dinv;vy=vy*Dinv;
+      px=(J(:,1).*vx+J(:,2).*vy)./det;py=(J(:,3).*vx+J(:,4).*vy)./det;
+      fx=LOCAL_point_flux(px,flux,ei);fy=LOCAL_point_flux(py,flux,ei);fd=LOCAL_point_flux(div,flux,ei);
+      raw_correction=abs(fd).^2*(1/T.rho_in-1)+abs(values).^2*(T.rho_in-1);
+      gap_correction=abs(fd).^2*(1/T.rho_in-1)+abs(values).^2*((T.rho_in-1)*(1-1/q)^2);
+      for c=1:nc
+        raw(:,c)=raw(:,c)+accumarray(ei,band.w(ids).*raw_correction(:,c),[nt,1]);
+        defect(:,c)=defect(:,c)+accumarray(ei,band.w(ids).*gap_correction(:,c),[nt,1]);
+      end
+      rho_true=ones(numel(ids),1);rho_true(band.w(ids)>0)=T.rho_in;
+      strips_raw=strips_raw+sum(abs(band.w(ids)).*(abs(fx).^2+abs(fy).^2+abs(fd+rho_true.*values).^2./rho_true),'all');
+      strips_defect=strips_defect+sum(abs(band.w(ids)).*(abs(fx-gx/q).^2+abs(fy-gy/q).^2+abs(fd+rho_true*(1-1/q).*values).^2./rho_true),'all');
+    end
+  end
   end
   sc=struct('mass',mass,'energy',energy,'band_area',sum(band.w),'band_absolute_area',sum(abs(band.w)), ...
-    'band_min_barycentric',band.min_barycentric,'source_quadrature',source_info);
+    'band_min_barycentric',band.min_barycentric,'source_quadrature',source_info,'point_quadratic',point_quadratic);
+  if fitted&&strcmp(cfg.trial,'D')
+    % Keep the physical native trial fixed. Its gradient jumps on native
+    % edges, so normalize on that mesh rather than across those jumps.
+    native_norms=LOCAL_direct_norms(G,T,cfg,order,band_order);
+    sc.mass=native_norms.mass;sc.energy=native_norms.energy;
+  end
+  if diagnostic
+    crossing=false(nt,1);crossing(unique(band.e))=true;
+    totals=[sum(raw(crossing,:),'all'),sum(raw(~crossing,:),'all'),strips_raw, ...
+      sum(defect(crossing,:),'all'),sum(defect(~crossing,:),'all'),strips_defect];
+    sc.diagnostic=struct('cells',G.cells,'straddling_triangles_per_cell',nnz(crossing), ...
+      'remaining_triangles_per_cell',nnz(~crossing),'totals',totals, ...
+      'columns',{{'straddling_raw','remaining_raw','strips_raw','straddling_defect','remaining_defect','strips_defect'}}, ...
+      'per_cell_straddling_defect',sum(defect(crossing,:),1),'per_cell_remaining_defect',sum(defect(~crossing,:),1));
+  end
+end
+
+function sc=LOCAL_direct_norms(G,T,cfg,order,band_order)
+  [x,y,w]=LOCAL_duffy(order);nq=numel(w);mass=zeros(1,numel(G.cells));energy=mass;
+  for first=1:cfg.block:G.nt
+    ids=first:min(first+cfg.block-1,G.nt);nb=numel(ids);ei=repelem(ids(:),nq);
+    xx=repmat(x,nb,1);yy=repmat(y,nb,1);
+    [PX,~,J,det]=LOCAL_map(G.mx(ei,:),G.my(ei,:),xx,yy);
+    [v,gx,gy]=LOCAL_direct(G,ei,xx,yy,PX,J,det,cfg);W=repmat(w,nb,1).*det;
+    rho=repelem(reshape(T.material(ids),[],1),nq);
+    mass=mass+sum((W.*rho).*abs(v).^2,1);energy=energy+sum(W.*(abs(gx).^2+abs(gy).^2),1);
+  end
+  band=LOCAL_band(G,T,band_order);
+  for first=1:1024:numel(band.w)
+    ids=first:min(first+1023,numel(band.w));ei=band.e(ids);xx=band.x(ids);yy=band.y(ids);
+    [PX,~,J,det]=LOCAL_map(G.mx(ei,:),G.my(ei,:),xx,yy);
+    v=LOCAL_direct(G,ei,xx,yy,PX,J,det,cfg);
+    mass=mass+sum((band.w(ids)*(T.rho_in-1)).*abs(v).^2,1);
+  end
+  sc=struct('mass',mass,'energy',energy);
+end
+
+function v=LOCAL_flux_values(P,c)
+  V=pagemtimes(P,'transpose',c,'none');v=reshape(permute(V,[1,3,2]),[],size(c,2));
+end
+function v=LOCAL_point_flux(P,c,ei)
+  v=complex(zeros(numel(ei),size(c,2)));
+  for j=1:size(c,2),v(:,j)=sum(P.*reshape(c(:,j,ei),size(c,1),[]).',2);end
 end
 
 function pack=LOCAL_condense(H,b,G)
@@ -261,9 +397,10 @@ function value=LOCAL_quadratic(H,b,c)
   value=real(sum(conj(c).*(Hc+2*b),'all'));
 end
 
-function values=LOCAL_reconstructed(trial,x,y,cells)
+function [values,gx,gy]=LOCAL_reconstructed(trial,x,y,cells)
   p=trial.parameters;C=trial.coefficients;N=p.N;nc=p.cells_per_side;
   m=(-p.M:p.M)';q=p.beta+2*pi*m;a=sqrt(p.s+q.^2);values=complex(zeros(numel(x),numel(cells)));
+  if nargout>1,gx=values;gy=values;end
   for first=1:256:numel(x)
     ids=first:min(first+255,numel(x));xx=x(ids);yy=y(ids);
     col=min(N,max(1,floor((xx+.5)*N)+1));z=xx-(-.5+(col-1)/N);
@@ -272,6 +409,10 @@ function values=LOCAL_reconstructed(trial,x,y,cells)
       gc=(cells(j)+nc)*N+col;
       modes=(C(:,gc,1)+C(:,gc,2).*z.')./a.^2+C(:,gc,3).*em+C(:,gc,4).*ep;
       values(ids,j)=sum(E.*modes,1).';
+      if nargout>1
+        dx=C(:,gc,2)./a.^2-a.*C(:,gc,3).*em+a.*C(:,gc,4).*ep;
+        gx(ids,j)=sum(E.*dx,1).';gy(ids,j)=sum((1i*q).*E.*modes,1).';
+      end
     end
   end
 end
@@ -385,13 +526,16 @@ function err=LOCAL_trace(G,c,k,Dinv)
   % All reconstructed coefficients are finite; external moments are zero by the port solve.
   assert(all(isfinite(c),'all')&&err<1e-7,'goerisch:Trace','Normal-trace basis check failed.');
 end
-function [outside,upper]=LOCAL_tail(t,mass,K)
+function [outside,upper,gradient]=LOCAL_tail(t,mass,K)
   C=t.coefficients;p=t.parameters;N=p.N;nc=p.cells_per_side;q=p.beta+2*pi*(-p.M:p.M)';a=sqrt(p.s+q.^2);
   [x,w]=LOCAL_gauss(12);outside=sum((abs(t.wl).^2+abs(t.wr).^2)./(2*a));
+  gradient=sum((a.^2+q.^2).*(abs(t.wl).^2+abs(t.wr).^2)./(2*a));
   cols=[1:(nc-K)*N,(nc+K+1)*N+1:size(C,2)];
   for j=1:numel(x)
     z=x(j)/N;v=(C(:,cols,1)+C(:,cols,2)*z)./a.^2+C(:,cols,3).*exp(-a*z)+C(:,cols,4).*exp(-a*(1/N-z));
     outside=outside+w(j)/N*sum(abs(v).^2,'all');
+    dv=C(:,cols,2)./a.^2-a.*C(:,cols,3).*exp(-a*z)+a.*C(:,cols,4).*exp(-a*(1/N-z));
+    gradient=gradient+w(j)/N*sum(abs(dv).^2+q.^2.*abs(v).^2,'all');
   end
   upper=17*outside/mass;
 end
