@@ -1,0 +1,15 @@
+WARNING: package sun.awt.X11 not in java.desktop
+WARNING: package sun.awt.X11 not in java.desktop
+STAGE assembly P3 primary: volume 1.59s band 0.19s checks 0.49s pass 1
+  chain P3-primary start k=1.558438079544167 index 1 theta -2.725e-06 gap 4.772e+00
+GENERATED P3: 23.09s, 5 root evaluations plus recovery, k=1.5584378944019319
+PREPARE left: 137 field batches, 6.04s
+PREPARE center: 136 field batches, 7.75s
+PREPARE right: 135 field batches, 11.70s
+PRODUCTION P3/RT2: q 3.4287286707248676 J 0.29165329089884617 width 9.1335672800431646e-09 ratio 0.04841996
+{Error using assert
+Required production check failed; saved production.json.
+
+Error in direct_benchmark (line 28)
+  assert(production.pass,'direct:ProductionCheck','Required production check failed; saved production.json.');
+} 

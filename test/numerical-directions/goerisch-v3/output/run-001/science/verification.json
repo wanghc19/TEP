@@ -1,0 +1,52 @@
+{
+  "J24": 0.29165329083347669,
+  "q24": 3.4287292322708143,
+  "mass24": 2.5896774251548162,
+  "energy24": 6.2896252646253155,
+  "areas": [
+    {
+      "order": 24,
+      "inclusion_area": 0.12566370614359171,
+      "analytic_area": 0.12566370614359174,
+      "relative_error": 2.2087185287941088E-16,
+      "cell_area": 1.0000000000000131,
+      "minimum_jacobian": 7.93996151978607E-6
+    },
+    {
+      "order": 24,
+      "inclusion_area": 0.19415042599184906,
+      "analytic_area": 0.19415042599184923,
+      "relative_error": 8.5775476846373156E-16,
+      "cell_area": 1.000000000000012,
+      "minimum_jacobian": 1.0145334438165557E-5
+    },
+    {
+      "order": 24,
+      "inclusion_area": 0.12566370614359171,
+      "analytic_area": 0.12566370614359174,
+      "relative_error": 2.2087185287941088E-16,
+      "cell_area": 1.0000000000000138,
+      "minimum_jacobian": 7.7316658184203946E-6
+    }
+  ],
+  "normalization": {
+    "pass": true
+  },
+  "evaluated_batches": 408,
+  "evaluated_values": 9.9507456E+7,
+  "seconds": 20.092931833333335,
+  "timing": {
+    "field24": 5.2153422916666665,
+    "functional24": 6.508829,
+    "normalization": 7.638664875,
+    "areas": 0.72602687500000007,
+    "other": 0.0040687916666684032
+  },
+  "scaled_quadrature": 2.321573330184999E-9,
+  "gram_scaled": 4.5084954072192679E-5,
+  "quotient_relative_change": 1.295200582391706E-16,
+  "quotient_change_over_width": 1.233962588912996E-10,
+  "area_relative_max": 8.5775476846373156E-16,
+  "cell_area_max": 1.3766765505351941E-14,
+  "pass": true
+}

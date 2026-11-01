@@ -1,0 +1,26 @@
+{
+  "returncode": 0,
+  "forecast_seconds": 150.0,
+  "prior_monitored_seconds": 0,
+  "wrapper_wall_seconds": 82.72373700141907,
+  "monitor": {
+    "returncode": 0,
+    "reason": "completed",
+    "wall_seconds": 82.640855041,
+    "peak_process_tree_rss_gib": 2.2076416015625,
+    "peak_experiment_disk_mb": 62.197281,
+    "output_disk_mb": 0.019136
+  },
+  "cumulative_monitored_seconds": 82.640855041,
+  "wrapper_minus_monitor_seconds": 0.0828819604190727,
+  "cold_production_seconds": 27.777026891708374,
+  "field_generation_seconds": 0,
+  "goerisch_production_seconds": 18.582472875,
+  "verification_seconds": 22.890505041666668,
+  "coarse_control_extra_seconds": 23.244791666666668,
+  "shutdown_seconds": 8.806389093399048,
+  "finalization_and_output_seconds": 0.0046251250000040045,
+  "reconciled_wrapper_seconds": 82.71493888252768,
+  "reconciliation_error_seconds": -0.008798118891391482,
+  "timing_pass": true
+}

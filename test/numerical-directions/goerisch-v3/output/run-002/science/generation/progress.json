@@ -1,0 +1,13 @@
+{
+  "utc": "2026-11-01T13:51:30.149564Z",
+  "matlab_elapsed": 18.918943125,
+  "phase": "root",
+  "chain": "P3-primary",
+  "p": 3,
+  "rule": "primary",
+  "bracket_width": 2.5068835896036035E-13,
+  "slowest_eval_seconds": 2.931487375,
+  "frequency_count": 5,
+  "all_roots_done": false,
+  "save_estimate_seconds": 60
+}

@@ -1,0 +1,257 @@
+{
+  "target": 1.8863227554484077e-07,
+  "target_reached_by_accepted_level": false,
+  "best_checked_level": "P2-RT3",
+  "nearest_measured_coarser_same_flux_level": "P2-RT2",
+  "stopping_reason": "P3/RT2 scaled Gram-pointwise difference 0.04424404161051467 exceeds 0.01; numerical work stopped before higher-order checks",
+  "levels": [
+    {
+      "level": "P2-RT3",
+      "fem_degree": 2,
+      "flux_degree": 3,
+      "fem_free_dofs": [
+        12916,
+        12756,
+        12880
+      ],
+      "flux_global_free_dofs": 3109416,
+      "flux_condensed_wall_free_dofs": 4992,
+      "q": 3.4287292322708147,
+      "J": 0.2916532908334766,
+      "J_check": 0.2916532908334767,
+      "J_gram": 0.29165329083563263,
+      "qJ_minus_one": 1.639687228216502e-07,
+      "interval": [
+        2.428727852029164,
+        2.4287314509163074
+      ],
+      "width": 3.598887144879028e-06,
+      "width_over_target": 19.078851349717812,
+      "raw_width_below_target": false,
+      "accepted": true,
+      "accepted_target": false,
+      "gram_scaled": 4.508495407219268e-05,
+      "quadrature_scaled": 2.321573330184999e-09,
+      "quotient_relative_change": 1.295200582391706e-16,
+      "quotient_change_over_width": 1.233962588912996e-10,
+      "independent_algebra": {
+        "lower": 2.428727852029164,
+        "upper": 2.4287314509163074,
+        "width_subtraction": 3.5988871434078362e-06,
+        "width_formula": 3.598887144879028e-06,
+        "width_difference": 1.4711916208117338e-15,
+        "stored_width_difference": 0.0,
+        "qJ_minus_one": 1.639687228216502e-07,
+        "positive_gram_denominators": [
+          0.14014192425186467,
+          1.6194786468796565
+        ],
+        "kappa": [
+          1.4426086476946527,
+          -0.4243710527598114
+        ],
+        "contains_reference": true,
+        "pass": true
+      },
+      "outer_normal_moment": 0,
+      "normal_trace_error": 8.239903505234154e-14,
+      "global_solve_residual": 1.2211549128166387e-15,
+      "cell_solve_residual": [
+        1.1793982227627644e-12,
+        1.825510825815533e-12,
+        1.1954363710572611e-12
+      ]
+    },
+    {
+      "level": "P2-RT2",
+      "fem_degree": 2,
+      "flux_degree": 2,
+      "fem_free_dofs": [
+        12916,
+        12756,
+        12880
+      ],
+      "flux_global_free_dofs": 1813794,
+      "flux_condensed_wall_free_dofs": 3744,
+      "q": 3.4287292322708147,
+      "J": 0.29165329089049985,
+      "J_check": 0.2916532908905003,
+      "J_gram": 0.2916532908958487,
+      "qJ_minus_one": 1.6416424020171405e-07,
+      "interval": [
+        2.4287278503833556,
+        2.4287314535618374
+      ],
+      "width": 3.603178482555301e-06,
+      "width_over_target": 19.101601102716753,
+      "raw_width_below_target": false,
+      "accepted": true,
+      "accepted_target": false,
+      "gram_scaled": 0.00011171554954796993,
+      "quadrature_scaled": 9.275233471540532e-09,
+      "quotient_relative_change": 1.295200582391706e-16,
+      "quotient_change_over_width": 1.2324929558724594e-10,
+      "independent_algebra": {
+        "lower": 2.4287278503833556,
+        "upper": 2.4287314535618374,
+        "width_subtraction": 3.6031784818035817e-06,
+        "width_formula": 3.603178482555301e-06,
+        "width_difference": 7.517192943150893e-16,
+        "stored_width_difference": 0.0,
+        "qJ_minus_one": 1.6416424020171405e-07,
+        "positive_gram_denominators": [
+          0.1401419246785811,
+          1.619478648788112
+        ],
+        "kappa": [
+          1.4426086421889877,
+          -0.4243710524634168
+        ],
+        "contains_reference": true,
+        "pass": true
+      },
+      "outer_normal_moment": 0,
+      "normal_trace_error": 1.458659087921557e-14,
+      "global_solve_residual": 9.12599247390856e-16,
+      "cell_solve_residual": [
+        1.0543948606684003e-12,
+        1.7414072718015735e-12,
+        1.1137497685464116e-12
+      ]
+    },
+    {
+      "level": "P3-RT2",
+      "fem_degree": 3,
+      "flux_degree": 2,
+      "fem_free_dofs": [
+        28989,
+        28629,
+        28908
+      ],
+      "flux_global_free_dofs": 1813794,
+      "flux_condensed_wall_free_dofs": 3744,
+      "q": 3.4287286707248676,
+      "J": 0.2916532908988462,
+      "J_check": null,
+      "J_gram": 0.29165329090421593,
+      "qJ_minus_one": 4.161340161346061e-10,
+      "interval": [
+        2.4287286672219706,
+        2.4287286763555387
+      ],
+      "width": 9.133567280043165e-09,
+      "width_over_target": 0.048419960230358224,
+      "raw_width_below_target": true,
+      "accepted": false,
+      "accepted_target": false,
+      "gram_scaled": 0.04424404161051467,
+      "quadrature_scaled": null,
+      "quotient_relative_change": null,
+      "quotient_change_over_width": null,
+      "independent_algebra": {
+        "lower": 2.4287286672219706,
+        "upper": 2.4287286763555387,
+        "width_subtraction": 9.133568124042313e-09,
+        "width_formula": 9.133567280043165e-09,
+        "width_difference": 8.439991482068376e-16,
+        "stored_width_difference": 0.0,
+        "qJ_minus_one": 4.161340161346061e-10,
+        "positive_gram_denominators": [
+          0.14014136319509118,
+          1.6194780875215002
+        ],
+        "kappa": [
+          1.4426144219108685,
+          -0.4243711995685796
+        ],
+        "contains_reference": true,
+        "pass": true
+      },
+      "outer_normal_moment": 0,
+      "normal_trace_error": 1.458659087921557e-14,
+      "global_solve_residual": 1.053034636374176e-15,
+      "cell_solve_residual": [
+        1.0744365269477644e-12,
+        1.7101877116504022e-12,
+        1.0586305106581957e-12
+      ]
+    }
+  ],
+  "pilot_timing": {
+    "production_seconds": 18.582472875,
+    "cold_production_seconds": 27.777026891708374,
+    "verification_seconds": 22.890505041666668,
+    "coarse_control_extra_seconds": 23.244791666666668
+  },
+  "failed_refinement_timing": {
+    "field_generation_function_seconds": 23.092678333333332,
+    "field_generation_breakdown": {
+      "input": 0.755556125,
+      "mesh": 0.51601625,
+      "space_checks": 0.21267,
+      "location": 0.45534158333333336,
+      "assembly": 2.3836054166666667,
+      "root": 14.570191958333334,
+      "recovery": 4.167102958333333,
+      "other": 0.03219404166666351
+    },
+    "goerisch_preparation_seconds_from_rounded_log": 11.7,
+    "functional_seconds": 1.9904777916666667,
+    "full_production_seconds": null,
+    "extra_verification_seconds": null,
+    "missing_timing_reason": "assertion preceded final report; no timing was reconstructed from wall-time subtraction"
+  },
+  "refined_evaluator_check": {
+    "degrees": [
+      3,
+      3,
+      3
+    ],
+    "points_per_template": 31,
+    "value_relative": [
+      4.904129643439198e-16,
+      4.893883872474731e-16,
+      4.57408252343324e-16
+    ],
+    "gradient_relative": [
+      2.328079865078247e-14,
+      6.048378659455005e-14,
+      1.8044274948039775e-14
+    ],
+    "tolerance": 1e-10,
+    "pass": true
+  },
+  "monitors": {
+    "run-001": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 82.640855041,
+      "peak_process_tree_rss_gib": 2.2076416015625,
+      "peak_experiment_disk_mb": 62.197281,
+      "output_disk_mb": 0.019136
+    },
+    "run-002": {
+      "returncode": 1,
+      "reason": "completed",
+      "wall_seconds": 50.758515875,
+      "peak_process_tree_rss_gib": 2.00408935546875,
+      "peak_experiment_disk_mb": 62.197281,
+      "output_disk_mb": 0.019967
+    }
+  },
+  "cumulative_monitored_seconds": 133.399370916,
+  "peak_rss_gib": 2.2076416015625,
+  "saved_R": {
+    "source": "/Users/whc/Documents/Work/dot-research/test/numerical-directions/goerisch-v2/output/run-003/science/result.json",
+    "width": 1.8863227554484077e-07,
+    "cold_postprocessing_seconds": 144.38294219970703,
+    "matlab_postprocessing_seconds": 136.4202515,
+    "verification_seconds": 289.26991495833335,
+    "source_generation_cost_included": false
+  },
+  "TODO": [
+    "Resolve the Gram versus pointwise functional check before accepting P3.",
+    "Then run withheld order-24 integration and quotient normalization checks on that flux.",
+    "Retain complete production-stage timing before the acceptance assertion; current failed-run timing is partial."
+  ]
+}

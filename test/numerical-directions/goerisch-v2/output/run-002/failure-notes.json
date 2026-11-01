@@ -1,0 +1,14 @@
+{
+  "kind": "operational inventory error before flux assembly",
+  "failed_run": "run-002",
+  "expression": "whos('-file',[f(1:end-4),'_corr.mat'])",
+  "assumption": "first source strip has a correction file",
+  "repair": "enumerate existing *_corr.mat files for the inventory; numerical loading already checks isfile",
+  "numerical_acceptance_failure": false,
+  "prior_checks": {
+    "norm_relative_difference": 4.441e-16,
+    "numerator_relative_difference": 3.813e-15
+  },
+  "source": "run.log",
+  "retained_error": "Could not find .../blocks/control/left_s0000_corr.mat."
+}

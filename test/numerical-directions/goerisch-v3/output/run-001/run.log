@@ -1,0 +1,7 @@
+WARNING: package sun.awt.X11 not in java.desktop
+WARNING: package sun.awt.X11 not in java.desktop
+PREPARE left: 137 field batches, 5.89s
+PREPARE center: 136 field batches, 6.92s
+PREPARE right: 135 field batches, 9.45s
+PRODUCTION P2/RT3: q 3.4287292322708147 J 0.29165329083347658 width 3.5988871448790278e-06 ratio 19.078851
+COMPLETE P2: production 18.582s, field 0.000s, verification 22.891s, target 0

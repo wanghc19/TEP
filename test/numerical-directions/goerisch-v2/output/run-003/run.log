@@ -1,0 +1,17 @@
+WARNING: package sun.awt.X11 not in java.desktop
+WARNING: package sun.awt.X11 not in java.desktop
+control assembly batch 1/9, elapsed 0.5 s
+control assembly batch 2/9, elapsed 0.9 s
+control assembly batch 3/9, elapsed 1.2 s
+control assembly batch 4/9, elapsed 1.6 s
+control assembly batch 5/9, elapsed 1.9 s
+control assembly batch 6/9, elapsed 2.3 s
+control assembly batch 7/9, elapsed 2.7 s
+control assembly batch 8/9, elapsed 3.0 s
+control assembly batch 9/9, elapsed 3.1 s
+norm relative difference 4.441e-16; numerator relative difference 3.813e-15
+PREPARE left: 137 field batches, 63.86s
+PREPARE center: 136 field batches, 74.51s
+PREPARE right: 135 field batches, 127.45s
+PRODUCTION q 3.4287286994656423 J 0.29165329083928782 width 1.8863227554484077e-07; baseline differences 0 5.167e-08 6.644e-08
+COMPLETE R cold production 144.383 s, verification 289.270 s, width 1.8863227554484077e-07

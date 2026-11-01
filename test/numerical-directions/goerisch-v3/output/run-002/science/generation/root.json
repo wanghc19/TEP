@@ -1,0 +1,74 @@
+{
+  "name": "P3-primary",
+  "p": 3,
+  "rule": "primary",
+  "epsilon": 1E-10,
+  "status": "ROOT_FOUND",
+  "substatus": "",
+  "reason": "",
+  "initialization_source": "",
+  "k_init": 1.558438079544167,
+  "k": 1.5584378944019319,
+  "mu": 2.428728670707927,
+  "bracket_low": 1.5584378944016812,
+  "bracket_high": 1.5584378944019319,
+  "bracket_k_width": 2.5068835896036035E-13,
+  "bracket_mu_width": 7.8115292012626014E-13,
+  "theta": -4.2898140659220812E-13,
+  "theta_scaled": 1.3048901010233413E-16,
+  "branch_index": 1,
+  "qualified": true,
+  "center_residual": 6.80789542712951E-13,
+  "center_recovery_residual": 9.7119192764675869E-15,
+  "frequency_count": 5,
+  "cache_hits": 0,
+  "halvings": 0,
+  "slowest_eval_seconds": 2.931487375,
+  "root_seconds": 0,
+  "matlab_elapsed_at_completion": null,
+  "selection": {
+    "type": "smallest",
+    "nearest_indices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "nearest_lambda": [
+      -2.7254939924640832E-6,
+      4.7720573071578576,
+      11.053786173621869,
+      11.160811131481021,
+      13.163316325176394
+    ],
+    "correlations": [],
+    "index": 1,
+    "gap": 4.77206003265185,
+    "gap_threshold": 3.2874906956153263E-5,
+    "reason": ""
+  },
+  "root": {
+    "initial_bracket": [
+      1.558436079544167,
+      1.558438079544167
+    ],
+    "iterations": 3,
+    "bisections": 0,
+    "branch_fallbacks": 0,
+    "theta_b": -4.2898140659220812E-13,
+    "theta_c": 1.0721343720137993E-12,
+    "k_b": 1.5584378944019319,
+    "k_c": 1.5584378944016812,
+    "zero_hits": []
+  },
+  "resolved": true,
+  "root_zero_start": false,
+  "resolution": {
+    "k_width_ok": true,
+    "mu_width_ok": true,
+    "theta_ok": true,
+    "residual_ok": true,
+    "strict_bracket": true
+  }
+}

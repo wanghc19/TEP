@@ -1,0 +1,25 @@
+{
+  "returncode": 0,
+  "wrapper_wall_seconds": 61.71522498130798,
+  "prior_monitored_seconds": 0,
+  "forecast_seconds": 180,
+  "monitor": {
+    "returncode": 0,
+    "reason": "completed",
+    "wall_seconds": 61.668301082999996,
+    "peak_process_tree_rss_gib": 2.146209716796875,
+    "peak_experiment_disk_mb": 62.197281,
+    "output_disk_mb": 0.014165
+  },
+  "wrapper_minus_monitor_seconds": 0.0469238983079876,
+  "cumulative_monitored_seconds": 61.668301082999996,
+  "cold_production_seconds": 28.46656107902527,
+  "additional_verification_seconds": 27.857526958333334,
+  "matlab_finalization_output_seconds": 0.0014805833333326746,
+  "function_postverification_orchestration_seconds": 0.0019585833333337632,
+  "startup_clock_timer_difference_seconds": 0.008440032277423626,
+  "shutdown_and_monitor_tail_seconds": 5.387287855148315,
+  "reconciled_wrapper_seconds": 61.70637502689616,
+  "reconciliation_error_seconds": -0.008849954411822125,
+  "reconciliation_pass": true
+}

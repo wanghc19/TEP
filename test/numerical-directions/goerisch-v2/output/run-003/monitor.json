@@ -1,0 +1,8 @@
+{
+  "returncode": 0,
+  "reason": "completed",
+  "wall_seconds": 441.713408166,
+  "peak_process_tree_rss_gib": 1.9953155517578125,
+  "peak_experiment_disk_mb": 62.197281,
+  "output_disk_mb": 0.028794
+}

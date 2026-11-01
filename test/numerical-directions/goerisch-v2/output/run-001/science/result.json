@@ -1,0 +1,362 @@
+{
+  "config": {
+    "input_dir": "/Users/whc/Documents/Work/epost/test/i9/dtn-bound-v1/output/attempt-1/run-03",
+    "trial": "D",
+    "level": "control",
+    "K": 13,
+    "gamma": 1,
+    "beta": 0.5,
+    "orders": [
+      16,
+      24
+    ],
+    "band_orders": [
+      10,
+      16
+    ],
+    "block": 48,
+    "theta_reference": 2.4287286994656418,
+    "mu_bie": 2.42872867002271,
+    "mu0": 2.4287292477733109,
+    "alpha_minus": 1.7355427599999997,
+    "alpha_plus": 4.78515625,
+    "quadrature_fraction": 0.01,
+    "geometry": "analytic_blend_r3_v1",
+    "source_resolution": [
+      256,
+      128,
+      16
+    ],
+    "material": [
+      1,
+      4,
+      17
+    ],
+    "shape": [
+      0.2,
+      0.12,
+      0.2,
+      1
+    ],
+    "threads": 2,
+    "basis": "stable",
+    "compact_condensation": true,
+    "mu": 2.7355427599999995,
+    "nu": 5.78515625,
+    "baseline": {
+      "q": 3.4287292322708147,
+      "J": 0.29165329083347674,
+      "width": 3.5988871546261752E-6
+    }
+  },
+  "production": {
+    "q": 3.4287292322708147,
+    "J": 0.29165329083347658,
+    "qJ_minus_one": 1.639687228216502E-7,
+    "gram_denominators": [
+      0.14014192425186467,
+      1.6194786468796565
+    ],
+    "kappa": [
+      1.4426086476946527,
+      -0.42437105275981141
+    ],
+    "enclosure": [
+      2.428727852029164,
+      2.4287314509163074
+    ],
+    "width": 3.5988871448790278E-6,
+    "width_endpoints": 3.5988871434078362E-6,
+    "width_formula_difference": -1.4711916208117338E-15,
+    "contains_reference": true,
+    "sign_conditions": true,
+    "algebra_pass": true,
+    "J_gram": 0.29165329083563263,
+    "mass": 2.5896774251548225,
+    "energy": 6.2896252646253323,
+    "gram_scaled": 4.5084954072192679E-5,
+    "cache_hits": 408,
+    "baseline_q_relative": 0,
+    "baseline_width_relative": 2.7083781574593629E-9,
+    "baseline_J_scaled": 3.4823599858459524E-9,
+    "theta_relative": 2.1937615880587226E-7,
+    "pass": true,
+    "normal_trace_error": 8.2399035052341538E-14,
+    "global_solve_residual": 1.2211549128166387E-15,
+    "cell_solve_residual": [
+      1.1793982227627644E-12,
+      1.8255108258155331E-12,
+      1.1954363710572611E-12
+    ],
+    "seconds": 2.8003257916666668
+  },
+  "verification": {
+    "J24": 0.29165329083347669,
+    "q24": 3.4287292322708143,
+    "mass24": 2.5896774251548162,
+    "energy24": 6.2896252646253155,
+    "areas": [
+      {
+        "order": 24,
+        "inclusion_area": 0.12566370614359171,
+        "analytic_area": 0.12566370614359174,
+        "relative_error": 2.2087185287941088E-16,
+        "cell_area": 1.0000000000000131,
+        "minimum_jacobian": 7.93996151978607E-6
+      },
+      {
+        "order": 24,
+        "inclusion_area": 0.19415042599184906,
+        "analytic_area": 0.19415042599184923,
+        "relative_error": 8.5775476846373156E-16,
+        "cell_area": 1.000000000000012,
+        "minimum_jacobian": 1.0145334438165557E-5
+      },
+      {
+        "order": 24,
+        "inclusion_area": 0.12566370614359171,
+        "analytic_area": 0.12566370614359174,
+        "relative_error": 2.2087185287941088E-16,
+        "cell_area": 1.0000000000000138,
+        "minimum_jacobian": 7.7316658184203946E-6
+      }
+    ],
+    "normalization": {
+      "pass": true
+    },
+    "evaluated_batches": 408,
+    "evaluated_values": 9.9507456E+7,
+    "seconds": 20.040768375,
+    "timing": {
+      "field24": 5.2437705,
+      "functional24": 6.6729884166666675,
+      "normalization": 7.4125074166666671,
+      "areas": 0.7067545833333333,
+      "other": 0.0047474583333304565
+    },
+    "scaled_quadrature": 2.321573330184999E-9,
+    "gram_scaled": 4.5084954072192679E-5,
+    "area_relative_max": 8.5775476846373156E-16,
+    "cell_area_error_max": 1.3766765505351941E-14,
+    "pass": true
+  },
+  "audit": {
+    "components": [
+      {
+        "point": [
+          [
+            0.18618376349030036,
+            0.27166057648192671,
+            -0.76702720056036622
+          ],
+          [
+            0.0069793726146794117,
+            0.01318033834058025,
+            -0.037214352116603837
+          ]
+        ],
+        "gram": [
+          [
+            0.18618376349030039,
+            0.27166057648284403,
+            -0.76702720056036622
+          ],
+          [
+            0.0069793726146794108,
+            0.013180338340485438,
+            -0.037214352116603872
+          ]
+        ],
+        "difference": [
+          [
+            2.7755575615628914E-17,
+            9.1732177409653559E-13,
+            0
+          ],
+          [
+            -8.6736173798840355E-19,
+            -9.4811311579512392E-14,
+            -3.4694469519536142E-17
+          ]
+        ]
+      },
+      {
+        "point": [
+          [
+            0.14231293762449909,
+            0.68658991134867087,
+            -1.9385701189048903
+          ],
+          [
+            0.005374148988718146,
+            0.039451975238185638,
+            -0.111391714142252
+          ]
+        ],
+        "gram": [
+          [
+            0.14231293762449909,
+            0.68658991134752689,
+            -1.9385701189048898
+          ],
+          [
+            0.0053741489887181434,
+            0.039451975238206378,
+            -0.11139171414225205
+          ]
+        ],
+        "difference": [
+          [
+            0,
+            -1.1439738045737613E-12,
+            4.4408920985006262E-16
+          ],
+          [
+            -2.6020852139652106E-18,
+            2.0740353878778706E-14,
+            -4.163336342344337E-17
+          ]
+        ]
+      },
+      {
+        "point": [
+          [
+            0.18621625009763124,
+            0.27224434284692095,
+            -0.76867545359665523
+          ],
+          [
+            0.0079392562427581612,
+            0.016256608583528454,
+            -0.045900124488886557
+          ]
+        ],
+        "gram": [
+          [
+            0.18621625009763126,
+            0.27224434285076643,
+            -0.76867545359665479
+          ],
+          [
+            0.00793925624275816,
+            0.016256608583695157,
+            -0.045900124488886522
+          ]
+        ],
+        "difference": [
+          [
+            2.7755575615628914E-17,
+            3.8454794903941547E-12,
+            4.4408920985006262E-16
+          ],
+          [
+            -1.7347234759768071E-18,
+            1.6670345659441921E-13,
+            3.4694469519536142E-17
+          ]
+        ]
+      }
+    ],
+    "cache_hits": 408,
+    "seconds": 5.0118092083333332
+  },
+  "cache_check": {
+    "fresh_points": 32,
+    "fresh_values": 416,
+    "relative_difference": 0,
+    "mismatch_rejected": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "pass": true
+  },
+  "unchanged": {
+    "q": true,
+    "J": true,
+    "interval": true,
+    "flux": true,
+    "trial": true,
+    "production_record": true
+  },
+  "input_inventory": {
+    "native_variables": [
+      "native"
+    ],
+    "loaded_native_variable": "native",
+    "native_fields": [
+      "identity",
+      "k",
+      "mu",
+      "qualified",
+      "templates",
+      "cells",
+      "summary",
+      "U0",
+      "scale",
+      "phase",
+      "recovery",
+      "qz",
+      "tails",
+      "curve_deviation",
+      "times"
+    ]
+  },
+  "normalization": {},
+  "counts": {
+    "primary_evaluated_batches": 408,
+    "primary_values": 4.4225536E+7,
+    "assembly_cache_hits": 408,
+    "functional_cache_hits": 408,
+    "audit_cache_hits": 408,
+    "recheck_cache_hits": 408,
+    "higher_evaluated_batches": 408,
+    "higher_values": 9.9507456E+7
+  },
+  "prepare_seconds": 9.1697091666666672,
+  "solve_seconds": 5.854436875,
+  "production_seconds": 17.886395916666668,
+  "verification_seconds": 27.857526958333334,
+  "production_timing": {
+    "native_input": 1.3936478333333333,
+    "source_input": 0,
+    "coefficient_build": 0,
+    "source_assembly_other": 0,
+    "normalization": 3.9558320416666666,
+    "geometry": 1.110374291666667,
+    "primary_field": 2.6944896249999997,
+    "prepare_other": 0.015365375000000014,
+    "basis": 0.026230583333333335,
+    "assembly": 2.2017710833333335,
+    "solve": 3.6250797083333333,
+    "solve_other": 0.0013554999999998429,
+    "functional": 2.8003257916666668,
+    "production_output": 0.016187125,
+    "orchestration": 0.04573695833333602
+  },
+  "verification_timing": {
+    "field24": 5.2437705,
+    "functional24": 6.6729884166666675,
+    "normalization": 7.4125074166666671,
+    "areas": 0.7067545833333333,
+    "other": 0.0047474583333304565,
+    "component_audit": 5.0118092083333332,
+    "cache_check": 0.021575541666666666,
+    "recheck_functional": 2.7748890416666665,
+    "immutability_comparison": 0.0043755416666666665,
+    "verification_output_and_orchestration": 0.0041092500000026178
+  },
+  "launch_epoch": 1.793536718766459E+9,
+  "entry_epoch": 1.7935367293381841E+9,
+  "ready_epoch": 1.79353674723302E+9,
+  "startup_to_entry_seconds": 10.571725130081177,
+  "cold_production_seconds": 28.466561079025269,
+  "cold_plus_verification_seconds": 56.324088037358607,
+  "production_timing_sum_error": 0,
+  "verification_timing_sum_error": 0,
+  "timing_pass": true,
+  "function_before_final_output_seconds": 45.745881458333336
+}

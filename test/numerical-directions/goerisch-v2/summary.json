@@ -1,0 +1,305 @@
+{
+  "measurement_boundary": "fresh MATLAB process; native FEM input and saved source blocks already exist; no filesystem cache flush",
+  "records": {
+    "D": {
+      "benchmark": {
+        "trial": "D",
+        "run": "test/numerical-directions/goerisch-v2/output/run-001",
+        "cold_production_seconds": 28.46656107902527,
+        "matlab_production_seconds": 17.886395916666668,
+        "additional_verification_seconds": 27.857526958333334,
+        "cold_production_plus_verification_seconds": 56.32408803735861,
+        "monitored_wall_seconds": 61.668301082999996,
+        "peak_rss_gib": 2.146209716796875,
+        "q": 3.4287292322708147,
+        "J": 0.2916532908334766,
+        "J24": 0.2916532908334767,
+        "J_gram": 0.29165329083563263,
+        "qJ_minus_one": 1.639687228216502e-07,
+        "lower": 2.428727852029164,
+        "upper": 2.4287314509163074,
+        "width": 3.598887144879028e-06
+      },
+      "independent_algebra": {
+        "lower": 2.428727852029164,
+        "upper": 2.4287314509163074,
+        "width_formula": 3.598887144879028e-06,
+        "width_endpoints": 3.5988871434078362e-06,
+        "endpoint_formula_error": 1.4711916208117338e-15,
+        "record_width_error": 0.0,
+        "record_endpoint_error": 0.0,
+        "qJ_minus_one": 1.639687228216502e-07,
+        "gram_denominators": [
+          0.14014192425186467,
+          1.6194786468796565
+        ],
+        "kappa": [
+          1.4426086476946527,
+          -0.4243710527598114
+        ],
+        "contains_reference": true,
+        "pass": true
+      },
+      "production_timing": {
+        "native_input": 1.3936478333333333,
+        "source_input": 0,
+        "coefficient_build": 0,
+        "source_assembly_other": 0,
+        "normalization": 3.9558320416666666,
+        "geometry": 1.110374291666667,
+        "primary_field": 2.6944896249999997,
+        "prepare_other": 0.015365375000000014,
+        "basis": 0.026230583333333335,
+        "assembly": 2.2017710833333335,
+        "solve": 3.6250797083333333,
+        "solve_other": 0.001355499999999843,
+        "functional": 2.800325791666667,
+        "production_output": 0.016187125,
+        "orchestration": 0.04573695833333602
+      },
+      "verification_timing": {
+        "field24": 5.2437705,
+        "functional24": 6.6729884166666675,
+        "normalization": 7.412507416666667,
+        "areas": 0.7067545833333333,
+        "other": 0.0047474583333304565,
+        "component_audit": 5.011809208333333,
+        "cache_check": 0.021575541666666666,
+        "recheck_functional": 2.7748890416666665,
+        "immutability_comparison": 0.0043755416666666665,
+        "verification_output_and_orchestration": 0.004109250000002618
+      },
+      "counts": {
+        "primary_evaluated_batches": 408,
+        "primary_values": 44225536.0,
+        "assembly_cache_hits": 408,
+        "functional_cache_hits": 408,
+        "audit_cache_hits": 408,
+        "recheck_cache_hits": 408,
+        "higher_evaluated_batches": 408,
+        "higher_values": 99507456.0
+      },
+      "cache_check": {
+        "fresh_points": 32,
+        "fresh_values": 416,
+        "relative_difference": 0,
+        "mismatch_rejected": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "pass": true
+      },
+      "unchanged": {
+        "q": true,
+        "J": true,
+        "interval": true,
+        "flux": true,
+        "trial": true,
+        "production_record": true
+      },
+      "baseline_q_relative": 0,
+      "baseline_width_relative": 2.708378157459363e-09,
+      "baseline_J_scaled": 3.4823599858459524e-09,
+      "quadrature_scaled": 2.321573330184999e-09,
+      "gram_scaled": 4.508495407219268e-05,
+      "startup_seconds": 10.571725130081177,
+      "wall_reconciliation": {
+        "returncode": 0,
+        "wrapper_wall_seconds": 61.71522498130798,
+        "prior_monitored_seconds": 0,
+        "forecast_seconds": 180,
+        "monitor": {
+          "returncode": 0,
+          "reason": "completed",
+          "wall_seconds": 61.668301082999996,
+          "peak_process_tree_rss_gib": 2.146209716796875,
+          "peak_experiment_disk_mb": 62.197281,
+          "output_disk_mb": 0.014165
+        },
+        "wrapper_minus_monitor_seconds": 0.0469238983079876,
+        "cumulative_monitored_seconds": 61.668301082999996,
+        "cold_production_seconds": 28.46656107902527,
+        "additional_verification_seconds": 27.857526958333334,
+        "matlab_finalization_output_seconds": 0.0014805833333326746,
+        "function_postverification_orchestration_seconds": 0.0019585833333337632,
+        "startup_clock_timer_difference_seconds": 0.008440032277423626,
+        "shutdown_and_monitor_tail_seconds": 5.387287855148315,
+        "reconciled_wrapper_seconds": 61.70637502689616,
+        "reconciliation_error_seconds": -0.008849954411822125,
+        "reconciliation_pass": true
+      }
+    },
+    "R": {
+      "benchmark": {
+        "trial": "R",
+        "run": "test/numerical-directions/goerisch-v2/output/run-003",
+        "cold_production_seconds": 144.38294219970703,
+        "matlab_production_seconds": 136.4202515,
+        "additional_verification_seconds": 289.26991495833335,
+        "cold_production_plus_verification_seconds": 433.6528571580404,
+        "monitored_wall_seconds": 441.713408166,
+        "peak_rss_gib": 1.9953155517578125,
+        "q": 3.4287286994656423,
+        "J": 0.2916532908392878,
+        "J24": 0.29165329084456976,
+        "J_gram": 0.2916532908414412,
+        "qJ_minus_one": 8.594265965555792e-09,
+        "lower": 2.4287286271215778,
+        "upper": 2.428728815753855,
+        "width": 1.8863227554484077e-07
+      },
+      "independent_algebra": {
+        "lower": 2.4287286271215778,
+        "upper": 2.428728815753855,
+        "width_formula": 1.8863227554484077e-07,
+        "width_endpoints": 1.8863227735366195e-07,
+        "endpoint_formula_error": 1.8088211770487844e-15,
+        "record_width_error": 0.0,
+        "record_endpoint_error": 0.0,
+        "qJ_minus_one": 8.594265965555792e-09,
+        "gram_denominators": [
+          0.14014139149017923,
+          1.6194781142689738
+        ],
+        "kappa": [
+          1.4426141318040187,
+          -0.42437119234686294
+        ],
+        "contains_reference": true,
+        "pass": true
+      },
+      "production_timing": {
+        "native_input": 1.4832522083333333,
+        "source_input": 0.3533904166666667,
+        "coefficient_build": 2.5772245833333334,
+        "source_assembly_other": 0.16570758333333346,
+        "normalization": 2.6573007916666667,
+        "geometry": 1.1702165833333458,
+        "primary_field": 119.02398937499999,
+        "prepare_other": 0.023249750000005065,
+        "basis": 0.02917375,
+        "assembly": 2.4351977083333334,
+        "solve": 3.70226225,
+        "solve_other": 0.0015651666666665065,
+        "functional": 2.7283591666666664,
+        "production_output": 0.008325666666666667,
+        "orchestration": 0.06103650000000016
+      },
+      "verification_timing": {
+        "field24": 264.2808140416668,
+        "functional24": 6.032988791666533,
+        "normalization": 10.311122333333334,
+        "areas": 0.798824875,
+        "other": 0.006405708333318216,
+        "component_audit": 5.093309958333333,
+        "cache_check": 0.024202958333333333,
+        "recheck_functional": 2.717684916666667,
+        "immutability_comparison": 0.000151875,
+        "verification_output_and_orchestration": 0.004409500000065236
+      },
+      "counts": {
+        "primary_evaluated_batches": 408,
+        "primary_values": 44225536.0,
+        "assembly_cache_hits": 408,
+        "functional_cache_hits": 408,
+        "audit_cache_hits": 408,
+        "recheck_cache_hits": 408,
+        "higher_evaluated_batches": 408,
+        "higher_values": 99507456.0
+      },
+      "cache_check": {
+        "fresh_points": 32,
+        "fresh_values": 416,
+        "relative_difference": 0,
+        "mismatch_rejected": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "pass": true
+      },
+      "unchanged": {
+        "q": true,
+        "J": true,
+        "interval": true,
+        "flux": true,
+        "trial": true,
+        "production_record": true
+      },
+      "baseline_q_relative": 0,
+      "baseline_width_relative": 5.167273669097816e-08,
+      "baseline_J_scaled": 6.643942180687185e-08,
+      "quadrature_scaled": 0.0021072590325607156,
+      "gram_scaled": 0.0008591059725183686,
+      "startup_seconds": 7.950122117996216,
+      "wall_reconciliation": {
+        "returncode": 0,
+        "wrapper_wall_seconds": 441.7582960128784,
+        "prior_monitored_seconds": 82.152311958,
+        "forecast_seconds": 600,
+        "monitor": {
+          "returncode": 0,
+          "reason": "completed",
+          "wall_seconds": 441.713408166,
+          "peak_process_tree_rss_gib": 1.9953155517578125,
+          "peak_experiment_disk_mb": 62.197281,
+          "output_disk_mb": 0.028794
+        },
+        "wrapper_minus_monitor_seconds": 0.044887846878395976,
+        "cumulative_monitored_seconds": 523.8657201240001,
+        "cold_production_seconds": 144.38294219970703,
+        "additional_verification_seconds": 289.26991495833335,
+        "matlab_finalization_output_seconds": 0.0017662500000028558,
+        "function_postverification_orchestration_seconds": 0.0029978333333247065,
+        "startup_clock_timer_difference_seconds": 0.012568581710809212,
+        "shutdown_and_monitor_tail_seconds": 8.097586154937744,
+        "reconciled_wrapper_seconds": 441.74263881460064,
+        "reconciliation_error_seconds": -0.015657198277779116,
+        "reconciliation_pass": true
+      }
+    }
+  },
+  "ratios": {
+    "width_D_over_R": 19.078851349717812,
+    "cold_production_R_over_D": 5.072019124434783,
+    "matlab_production_R_over_D": 7.627039686227826,
+    "verification_R_over_D": 10.38390505341684,
+    "cold_plus_verification_R_over_D": 7.699243294812113,
+    "monitored_wall_R_over_D": 7.162730291069531
+  },
+  "total_monitored_compute_seconds": 523.8657201240001,
+  "maximum_peak_rss_gib": 2.146209716796875,
+  "monitors": {
+    "output/run-001": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 61.668301082999996,
+      "peak_process_tree_rss_gib": 2.146209716796875,
+      "peak_experiment_disk_mb": 62.197281,
+      "output_disk_mb": 0.014165
+    },
+    "output/run-002": {
+      "returncode": 1,
+      "reason": "completed",
+      "wall_seconds": 20.484010875,
+      "peak_process_tree_rss_gib": 1.2216033935546875,
+      "peak_experiment_disk_mb": 62.197281,
+      "output_disk_mb": 0.002089
+    },
+    "output/run-003": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 441.713408166,
+      "peak_process_tree_rss_gib": 1.9953155517578125,
+      "peak_experiment_disk_mb": 62.197281,
+      "output_disk_mb": 0.028794
+    }
+  }
+}

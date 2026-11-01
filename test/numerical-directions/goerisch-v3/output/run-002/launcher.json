@@ -1,0 +1,16 @@
+{
+  "returncode": 1,
+  "forecast_seconds": 300.0,
+  "prior_monitored_seconds": 82.640855041,
+  "wrapper_wall_seconds": 50.791460275650024,
+  "monitor": {
+    "returncode": 1,
+    "reason": "completed",
+    "wall_seconds": 50.758515875,
+    "peak_process_tree_rss_gib": 2.00408935546875,
+    "peak_experiment_disk_mb": 62.197281,
+    "output_disk_mb": 0.019967
+  },
+  "cumulative_monitored_seconds": 133.399370916,
+  "wrapper_minus_monitor_seconds": 0.03294440065002391
+}

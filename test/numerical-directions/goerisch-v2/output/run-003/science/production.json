@@ -1,0 +1,41 @@
+{
+  "q": 3.4287286994656423,
+  "J": 0.29165329083928782,
+  "qJ_minus_one": 8.5942659655557918E-9,
+  "gram_denominators": [
+    0.14014139149017923,
+    1.6194781142689738
+  ],
+  "kappa": [
+    1.4426141318040187,
+    -0.42437119234686294
+  ],
+  "enclosure": [
+    2.4287286271215778,
+    2.4287288157538551
+  ],
+  "width": 1.8863227554484077E-7,
+  "width_endpoints": 1.8863227735366195E-7,
+  "width_formula_difference": 1.8088211770487844E-15,
+  "contains_reference": true,
+  "sign_conditions": true,
+  "algebra_pass": true,
+  "J_gram": 0.2916532908414412,
+  "mass": 2.5896785236423288,
+  "energy": 6.2896265527599375,
+  "gram_scaled": 0.00085910597251836855,
+  "cache_hits": 408,
+  "baseline_q_relative": 0,
+  "baseline_width_relative": 5.1672736690978162E-8,
+  "baseline_J_scaled": 6.6439421806871855E-8,
+  "theta_relative": 1.8284842187098508E-16,
+  "pass": true,
+  "normal_trace_error": 8.2399035052341538E-14,
+  "global_solve_residual": 9.4572016822131517E-16,
+  "cell_solve_residual": [
+    1.1401371083669529E-12,
+    1.8230986409016549E-12,
+    1.163586386422032E-12
+  ],
+  "seconds": 2.7283591666666664
+}

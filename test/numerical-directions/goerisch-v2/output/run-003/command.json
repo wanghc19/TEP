@@ -1,0 +1,10 @@
+{
+  "command": [
+    "/Applications/MATLAB_R2023b.app/bin/matlab",
+    "-batch",
+    "addpath('/Users/whc/Documents/Work/dot-research/test/numerical-directions/goerisch-v2'); pipeline_benchmark('/Users/whc/Documents/Work/epost/test/i9/dtn-bound-v1/output/attempt-1/run-03','/Users/whc/Documents/Work/dot-research/test/numerical-directions/goerisch-v2/output/run-003/science','R',1793536936.188627958);"
+  ],
+  "soft_seconds": 1717.847688042,
+  "hard_seconds": 2317.847688042,
+  "rss_limit_gib": 3
+}

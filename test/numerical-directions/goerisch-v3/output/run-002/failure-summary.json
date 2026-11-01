@@ -1,0 +1,459 @@
+{
+  "status": "STOPPED_REQUIRED_GRAM_CHECK",
+  "config_from_entrypoint": {
+    "input_dir": "/Users/whc/Documents/Work/epost/test/i9/dtn-bound-v1/output/attempt-1/run-03",
+    "trial": "D",
+    "level": "native-P3",
+    "K": 13,
+    "gamma": 1,
+    "beta": 0.5,
+    "orders": [
+      16,
+      24
+    ],
+    "band_orders": [
+      10,
+      16
+    ],
+    "block": 48,
+    "theta_reference": 2.428728699465642,
+    "mu_bie": 2.42872867002271,
+    "mu0": 2.428729247773311,
+    "alpha_minus": 1.7355427599999997,
+    "alpha_plus": 4.78515625,
+    "quadrature_fraction": 0.01,
+    "geometry": "analytic_blend_r3_v1",
+    "source_resolution": [
+      256,
+      128,
+      16
+    ],
+    "material": [
+      1,
+      4,
+      17
+    ],
+    "shape": [
+      0.2,
+      0.12,
+      0.2,
+      1
+    ],
+    "threads": 2,
+    "basis": "stable",
+    "compact_condensation": true,
+    "fem_degree": 3,
+    "baseline_check": false,
+    "target_width": 1.8863227554484077e-07,
+    "mu": 2.7355427599999995,
+    "nu": 5.78515625,
+    "baseline": {
+      "q": 3.4287292322708147,
+      "J": 0.2916532908334766,
+      "width": 3.598887144879028e-06
+    }
+  },
+  "field_generation": {
+    "degree": 3,
+    "mesh": {
+      "subdivisions": 48,
+      "interface_segments": 320
+    },
+    "field_generation_rule": {
+      "name": "primary",
+      "volume_order": 12,
+      "band_subsegments": 2,
+      "band_points": 8
+    },
+    "initial_frequency": 1.558438079544167,
+    "frequency": 1.558437894401932,
+    "mu": 2.428728670707927,
+    "root": {
+      "name": "P3-primary",
+      "p": 3,
+      "rule": "primary",
+      "epsilon": 1e-10,
+      "status": "ROOT_FOUND",
+      "substatus": "",
+      "reason": "",
+      "initialization_source": "",
+      "k_init": 1.558438079544167,
+      "k": 1.558437894401932,
+      "mu": 2.428728670707927,
+      "bracket_low": 1.5584378944016812,
+      "bracket_high": 1.558437894401932,
+      "bracket_k_width": 2.5068835896036035e-13,
+      "bracket_mu_width": 7.811529201262601e-13,
+      "theta": -4.289814065922081e-13,
+      "theta_scaled": 1.3048901010233413e-16,
+      "branch_index": 1,
+      "qualified": true,
+      "center_residual": 6.80789542712951e-13,
+      "center_recovery_residual": 9.711919276467587e-15,
+      "frequency_count": 5,
+      "cache_hits": 0,
+      "halvings": 0,
+      "slowest_eval_seconds": 2.931487375,
+      "root_seconds": 0,
+      "matlab_elapsed_at_completion": null,
+      "selection": {
+        "type": "smallest",
+        "nearest_indices": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "nearest_lambda": [
+          -2.7254939924640832e-06,
+          4.772057307157858,
+          11.05378617362187,
+          11.16081113148102,
+          13.163316325176394
+        ],
+        "correlations": [],
+        "index": 1,
+        "gap": 4.77206003265185,
+        "gap_threshold": 3.287490695615326e-05,
+        "reason": ""
+      },
+      "root": {
+        "initial_bracket": [
+          1.558436079544167,
+          1.558438079544167
+        ],
+        "iterations": 3,
+        "bisections": 0,
+        "branch_fallbacks": 0,
+        "theta_b": -4.289814065922081e-13,
+        "theta_c": 1.0721343720137993e-12,
+        "k_b": 1.558437894401932,
+        "k_c": 1.5584378944016812,
+        "zero_hits": []
+      },
+      "resolved": true,
+      "root_zero_start": false,
+      "resolution": {
+        "k_width_ok": true,
+        "mu_width_ok": true,
+        "theta_ok": true,
+        "residual_ok": true,
+        "strict_bracket": true
+      }
+    },
+    "root_frequency_evaluations": 5,
+    "recovery_evaluations": 1,
+    "free_dofs": [
+      28989,
+      28629,
+      28908
+    ],
+    "full_dofs": [
+      29134,
+      28774,
+      29053
+    ],
+    "wall_dofs": 144,
+    "triangles": [
+      6410,
+      6330,
+      6392
+    ],
+    "geometry_matches_coarse_max": [
+      0,
+      0,
+      0
+    ],
+    "basis_checks": {
+      "p": 3,
+      "local_dofs": 10,
+      "kronecker": 6.661338147750939e-16,
+      "partition_of_unity": 8.881784197001252e-16,
+      "gradient_sum": 1.7763568394002505e-15,
+      "reproduction": 8.881784197001252e-16,
+      "derivative_fd_relative": 7.190457862281681e-11,
+      "local_embedding": null,
+      "pass": true
+    },
+    "edge_checks": {
+      "parameters": [
+        0,
+        0.25,
+        0.5,
+        0.75,
+        1
+      ],
+      "tolerance": 1e-10,
+      "pass": true,
+      "templates": [
+        {
+          "template": "left",
+          "shared_edges": 9519,
+          "geometry_defect": 0,
+          "trace_defect": 0,
+          "pass": true
+        },
+        {
+          "template": "center",
+          "shared_edges": 9399,
+          "geometry_defect": 0,
+          "trace_defect": 0,
+          "pass": true
+        },
+        {
+          "template": "right",
+          "shared_edges": 9492,
+          "geometry_defect": 0,
+          "trace_defect": 0,
+          "pass": true
+        }
+      ]
+    },
+    "center_residual": 6.80789542712951e-13,
+    "center_recovery_residual": 9.711919276467587e-15,
+    "lead_recovery_residual": [
+      [
+        1.7359953766696672e-14,
+        1.6860969178046606e-14,
+        1.7398059382769794e-14,
+        1.708712366121715e-14,
+        1.6355035171814382e-14,
+        1.7399939212683658e-14,
+        1.633721436700457e-14,
+        1.7354635871715413e-14,
+        1.7348967638996966e-14,
+        1.6735836244902873e-14,
+        1.715181340786374e-14,
+        1.6238171793264554e-14,
+        1.744719787368134e-14
+      ],
+      [
+        1.8080150290536653e-14,
+        1.6955222518214135e-14,
+        1.7555643629490942e-14,
+        1.772667162622862e-14,
+        1.6847872436032134e-14,
+        1.782977373905336e-14,
+        1.7085578104532644e-14,
+        1.7103238837033815e-14,
+        1.80199589218961e-14,
+        1.662514523913173e-14,
+        1.755252107024327e-14,
+        1.7538902883863445e-14,
+        1.6862723378300395e-14
+      ]
+    ],
+    "lead_phase_mismatch": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "matrix_checks": {
+      "pass": true,
+      "reason": "",
+      "rule": "primary",
+      "p": 3,
+      "seconds_volume": 1.5920150416666665,
+      "seconds_band": 0.19161658333333334,
+      "seconds_checks": 0.49127645833333333,
+      "left": {
+        "area": 1.000000000000014,
+        "area_defect": 1.3988810110276972e-14,
+        "inclusion_area_h": 0.12566370596701318,
+        "inclusion_area_exact": 0.12566370614359176,
+        "inclusion_area_defect": -1.765785850871282e-10,
+        "band_constant": 2.8252558491802257e-09,
+        "band_constant_expected": 2.8252573613940513e-09,
+        "band_constant_defect": -1.5122138255619051e-15,
+        "band_signed_area": 1.7657849057376424e-10,
+        "dM_fro": 1.4299642696933608e-08,
+        "dM_relative_to_Mh": 4.0961197914985564e-07,
+        "stiffness_hermitian_defect": 6.392513431228638e-17,
+        "mass_h_hermitian_defect": 4.495036984136124e-19,
+        "band_hermitian_defect": 7.017264880442648e-17,
+        "mass_chol_flag": 0,
+        "nnz_K": 491085,
+        "free_dofs": 28989,
+        "interior_dofs": 28701,
+        "symbolic_chol_nnz": 1041242.0,
+        "pass": true
+      },
+      "center": {
+        "area": 1.0000000000000133,
+        "area_defect": 1.3322676295501878e-14,
+        "inclusion_area_h": 0.19415042002455404,
+        "inclusion_area_exact": 0.19415042599184942,
+        "inclusion_area_defect": -5.9672953800493644e-09,
+        "band_constant": 1.790188495458338e-08,
+        "band_constant_expected": 1.7901886140148093e-08,
+        "band_constant_defect": -1.185564712694185e-15,
+        "band_signed_area": 5.967294984861069e-09,
+        "dM_fro": 3.560313422700155e-08,
+        "dM_relative_to_Mh": 3.0472962537695806e-06,
+        "stiffness_hermitian_defect": 6.33210715764499e-17,
+        "mass_h_hermitian_defect": 1.427946722672869e-18,
+        "band_hermitian_defect": 7.30690793880194e-17,
+        "mass_chol_flag": 0,
+        "nnz_K": 484965,
+        "free_dofs": 28629,
+        "interior_dofs": 28341,
+        "symbolic_chol_nnz": 1067258.0,
+        "pass": true
+      },
+      "right": {
+        "area": 1.0000000000000138,
+        "area_defect": 1.3766765505351941e-14,
+        "inclusion_area_h": 0.1256637057270715,
+        "inclusion_area_exact": 0.12566370614359174,
+        "inclusion_area_defect": -4.165202349692976e-10,
+        "band_constant": 6.664322397628155e-09,
+        "band_constant_expected": 6.664323759508761e-09,
+        "band_constant_defect": -1.36188060614408e-15,
+        "band_signed_area": 4.165201498517537e-10,
+        "dM_fro": 2.3691825936956405e-08,
+        "dM_relative_to_Mh": 6.838215326859434e-07,
+        "stiffness_hermitian_defect": 6.365984854730261e-17,
+        "mass_h_hermitian_defect": 4.2327096524840756e-19,
+        "band_hermitian_defect": 7.735582040958718e-17,
+        "mass_chol_flag": 0,
+        "nnz_K": 489708,
+        "free_dofs": 28908,
+        "interior_dofs": 28620,
+        "symbolic_chol_nnz": 1027668.0,
+        "pass": true
+      },
+      "wall_mass_hermitian_defect": 0
+    },
+    "root_ledger": {
+      "assembly_volume_primary": 1.5920150416666665,
+      "assembly_band_primary": 0.19161658333333334,
+      "assembly_checks_primary": 0.4913472916666667,
+      "lead_elimination": 10.139146125,
+      "qz_dtn": 2.2521009166666666,
+      "center_small": 4.878178916666667,
+      "extension": 1.023239875
+    },
+    "seconds": 23.092678333333332,
+    "timing": {
+      "input": 0.755556125,
+      "mesh": 0.51601625,
+      "space_checks": 0.21267,
+      "location": 0.45534158333333336,
+      "assembly": 2.3836054166666667,
+      "root": 14.570191958333334,
+      "recovery": 4.167102958333333,
+      "other": 0.03219404166666351
+    }
+  },
+  "production": {
+    "q": 3.4287286707248676,
+    "J": 0.2916532908988462,
+    "qJ_minus_one": 4.161340161346061e-10,
+    "gram_denominators": [
+      0.14014136319509118,
+      1.6194780875215002
+    ],
+    "kappa": [
+      1.4426144219108685,
+      -0.4243711995685796
+    ],
+    "enclosure": [
+      2.4287286672219706,
+      2.4287286763555387
+    ],
+    "width": 9.133567280043165e-09,
+    "width_endpoints": 9.133568124042313e-09,
+    "width_formula_difference": 8.439991482068376e-16,
+    "contains_reference": true,
+    "sign_conditions": true,
+    "algebra_pass": true,
+    "J_gram": 0.29165329090421593,
+    "mass": 4.723011018020572,
+    "energy": 11.470912271616008,
+    "gram_scaled": 0.04424404161051467,
+    "cache_hits": 408,
+    "baseline_q_relative": 1.6377669656447404e-07,
+    "baseline_width_relative": 0.9974621134499759,
+    "baseline_J_scaled": 0.0013669351882207705,
+    "pass": false,
+    "outer_normal_moment": 0,
+    "flux_unknowns": {
+      "degree": 2,
+      "global_wall_free": 3744,
+      "template_edges": [
+        28989,
+        28629,
+        28908
+      ],
+      "template_interiors": [
+        38460,
+        37980,
+        38352
+      ]
+    },
+    "normal_trace_error": 1.458659087921557e-14,
+    "global_solve_residual": 1.053034636374176e-15,
+    "cell_solve_residual": [
+      1.0744365269477644e-12,
+      1.7101877116504022e-12,
+      1.0586305106581957e-12
+    ],
+    "seconds": 1.9904777916666667
+  },
+  "evaluator_check": {
+    "degrees": [
+      3,
+      3,
+      3
+    ],
+    "points_per_template": 31,
+    "value_relative": [
+      4.904129643439198e-16,
+      4.893883872474731e-16,
+      4.57408252343324e-16
+    ],
+    "gradient_relative": [
+      2.328079865078247e-14,
+      6.048378659455005e-14,
+      1.8044274948039775e-14
+    ],
+    "tolerance": 1e-10,
+    "pass": true
+  },
+  "reason": "scaled Gram-pointwise difference exceeds 0.01",
+  "threshold": 0.01,
+  "measured_scaled_difference": 0.04424404161051467,
+  "higher_order_verification": "not run after required numerical check failed",
+  "native_cell_phase_assertions": "passed before production; individual scalar values not retained",
+  "fitted_geometry_reference": "run-001/science/result.json:primary_areas; run-002 generation geometry matches coarse exactly",
+  "full_production_timing": "not retained before assertion",
+  "failure_log": "run.log"
+}

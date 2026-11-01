@@ -1,0 +1,55 @@
+{
+  "q": 3.4287286707248676,
+  "J": 0.29165329089884617,
+  "qJ_minus_one": 4.161340161346061E-10,
+  "gram_denominators": [
+    0.14014136319509118,
+    1.6194780875215002
+  ],
+  "kappa": [
+    1.4426144219108685,
+    -0.4243711995685796
+  ],
+  "enclosure": [
+    2.4287286672219706,
+    2.4287286763555387
+  ],
+  "width": 9.1335672800431646E-9,
+  "width_endpoints": 9.1335681240423128E-9,
+  "width_formula_difference": 8.4399914820683758E-16,
+  "contains_reference": true,
+  "sign_conditions": true,
+  "algebra_pass": true,
+  "J_gram": 0.29165329090421593,
+  "mass": 4.7230110180205722,
+  "energy": 11.470912271616008,
+  "gram_scaled": 0.044244041610514671,
+  "cache_hits": 408,
+  "baseline_q_relative": 1.6377669656447404E-7,
+  "baseline_width_relative": 0.99746211344997593,
+  "baseline_J_scaled": 0.0013669351882207705,
+  "pass": false,
+  "outer_normal_moment": 0,
+  "flux_unknowns": {
+    "degree": 2,
+    "global_wall_free": 3744,
+    "template_edges": [
+      28989,
+      28629,
+      28908
+    ],
+    "template_interiors": [
+      38460,
+      37980,
+      38352
+    ]
+  },
+  "normal_trace_error": 1.4586590879215569E-14,
+  "global_solve_residual": 1.053034636374176E-15,
+  "cell_solve_residual": [
+    1.0744365269477644E-12,
+    1.7101877116504022E-12,
+    1.0586305106581957E-12
+  ],
+  "seconds": 1.9904777916666667
+}

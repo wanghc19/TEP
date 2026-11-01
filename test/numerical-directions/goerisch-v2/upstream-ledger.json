@@ -1,0 +1,44 @@
+{
+  "source_result": "/Users/whc/Documents/Work/epost/test/i9/dtn-bound-v1/output/attempt-1/run-03/result.json",
+  "source_summary": "/Users/whc/Documents/Work/epost/test/i9/dtn-bound-v1/output/attempt-1/run-03/summary.json",
+  "historical_timing": {
+    "selftest": 2.5702100833333335,
+    "native_adapter": 2.550206375,
+    "pilot": 19.757188583333335,
+    "level_stageA": 74.86335554166666,
+    "level_engine": 121.50548520833333,
+    "level_aggregate": 18.90696129166667,
+    "level_correction": 6.1941888333333335,
+    "level_norms": 15.047749249999999,
+    "level_save": 6.789671041666667,
+    "figures": 4.871761833333333,
+    "save": 2.8813503333333332,
+    "attributed_seconds": 275.93812837499996,
+    "matlab_function_seconds": 276.35226066666667,
+    "matlab_unattributed_seconds": 0.4141322916667036
+  },
+  "historical_level_timing": {
+    "control": {
+      "stageA": 21.70797625,
+      "engine": 69.334875125,
+      "aggregate": 6.986335,
+      "correction": 2.0835454583333335,
+      "norms": 3.374569625,
+      "save": 1.9234729583333334,
+      "total": 105.48701870833334
+    },
+    "main": {
+      "stageA": 53.15537929166666,
+      "engine": 52.17061008333333,
+      "aggregate": 11.920626291666668,
+      "correction": 4.110643375,
+      "norms": 11.673179625,
+      "save": 4.866198083333333,
+      "total": 138.09401991666667
+    }
+  },
+  "historical_process_seconds": 302.5466795420216,
+  "current_generation_cost_included": false,
+  "native_root_search_generation_cost": "unmeasured",
+  "control_minimal_ordinary_source_generation_cost": "unmeasured; historical stage includes certification"
+}

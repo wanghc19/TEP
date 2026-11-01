@@ -1,0 +1,561 @@
+function varargout=goerisch_pipeline(action,varargin)
+  % Reusable Goerisch pipeline. RT means Raviart-Thomas; R reconstructed, D direct.
+  % Input
+  %   action: config, prepare, solve, evaluate, verify, audit, or cache_check.
+  %   config(input_dir,kind); prepare(cfg); solve(prepared,cfg,degree);
+  %   evaluate/verify/audit(prepared,solution,cfg); cache_check(prepared,cfg).
+  % Output
+  %   Prepared data and flux remain in memory. Reports contain only scalars.
+  %   All formulas/helpers copied from goerisch-v1/goerisch_flux_study.m.
+  switch action
+    case 'config',varargout{1}=LOCAL_config(varargin{:});
+    case 'prepare',varargout{1}=LOCAL_prepare(varargin{:});
+    case 'solve',varargout{1}=LOCAL_solve(varargin{:});
+    case 'evaluate',varargout{1}=LOCAL_evaluate(varargin{:});
+    case 'verify',varargout{1}=LOCAL_verify(varargin{:});
+    case 'audit',varargout{1}=LOCAL_component_audit(varargin{:});
+    case 'cache_check',varargout{1}=LOCAL_cache_check(varargin{:});
+    otherwise,error('pipeline:Action','Unknown stage.');
+  end
+end
+function cfg=LOCAL_config(input_dir,kind)
+  assert(ismember(kind,{'R','D'}));
+  cfg=struct('input_dir',char(input_dir),'trial',kind,'level','control','K',13,'gamma',1,'beta',.5, ...
+    'orders',[16,24],'band_orders',[10,16],'block',48,'theta_reference',2.428728699465642, ...
+    'mu_bie',2.428728670022710,'mu0',2.428729247773311,'alpha_minus',1.3174^2, ...
+    'alpha_plus',2.1875^2,'quadrature_fraction',.01,'geometry','analytic_blend_r3_v1', ...
+    'source_resolution',[256,128,16],'material',[1,4,17],'shape',[.2,.12,.20,1], ...
+    'threads',2,'basis','stable','compact_condensation',true);
+  cfg.mu=cfg.alpha_minus+1;cfg.nu=cfg.alpha_plus+1;
+  if strcmp(kind,'R'),cfg.baseline=struct('q',3.4287286994656423,'J',.29165329083928765,'width',1.8863226579769537e-7);
+  else,cfg.baseline=struct('q',3.4287292322708147,'J',.29165329083347674,'width',3.598887154626175e-6);end
+end
+function LOCAL_key(P,cfg)
+  assert(isequaln(P.key,cfg),'pipeline:CacheKey','Prepared geometry/phase/source/level/quadrature/trial key mismatch.');
+end
+function P=LOCAL_prepare(cfg)
+  started=tic;maxNumCompThreads(cfg.threads);P=struct('key',cfg,'trial',[],'norms',struct(),'tail_allowance',0);
+  tt=tic;inventory=whos('-file',fullfile(cfg.input_dir,'native.mat'));raw=load(fullfile(cfg.input_dir,'native.mat'),'native');native=raw.native;clear raw
+  tm=struct('native_input',toc(tt),'source_input',0,'coefficient_build',0,'source_assembly_other',0, ...
+    'normalization',0,'geometry',0,'primary_field',0,'prepare_other',0);
+  P.input_inventory=struct('native_variables',{{inventory.name}},'loaded_native_variable','native','native_fields',{fieldnames(native)});
+  if strcmp(cfg.trial,'R')
+    [P.norms,P.trial]=pipeline_reconstruction('prepare',cfg.input_dir);
+    r=P.norms.timing;tm.source_input=r.source_input;tm.coefficient_build=r.coefficient_build;
+    tm.source_assembly_other=r.source_assembly_other+r.other;tm.normalization=r.normalization;
+    P.mass=P.norms.denominator;P.energy=P.norms.numerator_identity;
+    assert(abs(P.norms.theta-cfg.theta_reference)/cfg.theta_reference<1e-12,'pipeline:Theta','R quotient differs.');
+    tt=tic;[~,P.tail_relative_upper]=LOCAL_tail(P.trial,P.mass,cfg.K);tm.normalization=tm.normalization+toc(tt);
+    assert(P.tail_relative_upper<1e-10);P.tail_allowance=16*P.norms.tail_norm;
+    files=dir(fullfile(cfg.input_dir,'blocks','control','left_s*.mat'));files=files(~contains({files.name},'_corr'));f=fullfile(files(1).folder,files(1).name);
+    inv=whos('-file',f);P.input_inventory.source_variables={inv.name};
+    corrections=dir(fullfile(cfg.input_dir,'blocks','control','*_corr.mat'));
+    if isempty(corrections),P.input_inventory.correction_variables={};
+    else,inv=whos('-file',fullfile(corrections(1).folder,corrections(1).name));P.input_inventory.correction_variables={inv.name};end
+    P.input_inventory.loaded_source_variables='F_b001 through F_b009, dF_b001 through dF_b009, cols';
+  else
+    P.mass=0;P.energy=0;P.tail_relative_upper=0;P.native_trace=LOCAL_native_trace(native,cfg);
+    assert(P.native_trace.cell_relative<1e-10&&P.native_trace.phase_relative<1e-10);
+  end
+  names={'left','center','right'};P.templates=cell(1,3);P.counts=struct('primary_evaluated_batches',0,'primary_values',0);
+  for t=1:3
+    tt=tic;T=native.templates.(names{t});T.xy(:,1)=T.xy(:,1)-T.cell;
+    cells=-cfg.K:-1;if t==2,cells=0;elseif t==3,cells=1:cfg.K;end
+    U=complex(zeros(size(T.xy,1),numel(cells)));
+    for j=1:numel(cells),U(:,j)=native.cells([native.cells.index]==cells(j)).coef;end
+    G=LOCAL_geometry(T,U,cells,cfg,3);G.fitted=goerisch_fitted_geometry(T);area=G.fitted.areas(16);
+    assert(max([area.relative_error,abs(area.cell_area-1)])<1e-12,'pipeline:Area','Fitted area failed.');
+    tm.geometry=tm.geometry+toc(tt);
+    if strcmp(cfg.trial,'D')
+      tt=tic;ns=LOCAL_direct_norms(G,T,cfg,16,10);P.mass=P.mass+sum(ns.mass);P.energy=P.energy+sum(ns.energy);tm.normalization=tm.normalization+toc(tt);
+    end
+    cc=cfg;cc.degree=3;[~,~,sc,cache]=LOCAL_batches(G,T,P.trial,cc,[],16,[],{},'prepare');
+    tm.primary_field=tm.primary_field+sc.field_seconds;tm.geometry=tm.geometry+sc.other_seconds;
+    P.templates{t}=struct('G',G,'T',T,'U',U,'cache',{cache},'area',area);
+    P.counts.primary_evaluated_batches=P.counts.primary_evaluated_batches+sc.evaluated_batches;
+    P.counts.primary_values=P.counts.primary_values+sc.value_count;
+    fprintf('PREPARE %s: %d field batches, %.2fs\n',names{t},sc.evaluated_batches,toc(started));
+  end
+  P.q=1+P.energy/P.mass;P.seconds=toc(started);tm.prepare_other=P.seconds-sum(cell2mat(struct2cell(tm)));P.timing=tm;
+end
+function S=LOCAL_solve(P,cfg,degree)
+  LOCAL_key(P,cfg);assert(ismember(degree,1:4));started=tic;cc=cfg;cc.degree=degree;
+  tt=tic;[B,~,basis]=LOCAL_study_basis(degree,'stable');tm=struct('basis',toc(tt),'assembly',0,'solve',0,'other',0);
+  packs=cell(1,3);hits=0;
+  for t=1:3
+    T=P.templates{t}.T;G=P.templates{t}.G;
+    if degree~=3,G=LOCAL_geometry(T,P.templates{t}.U,G.cells,cfg,degree);G.fitted=P.templates{t}.G.fitted;end
+    tt=tic;[H,b,sc]=LOCAL_batches(G,T,P.trial,cc,B,16,[],P.templates{t}.cache,'assemble');tm.assembly=tm.assembly+toc(tt);hits=hits+sc.cache_hits;
+    tt=tic;pack=LOCAL_condense(H,b,G,true);tm.solve=tm.solve+toc(tt);
+    assert(pack.solve_residual<1e-8,'pipeline:CellSolve','Cell solve residual too large.');
+    pack.H=H;pack.b=b;pack.G=G;packs{t}=pack;clear H b pack
+  end
+  tt=tic;nwall=numel(packs{1}.G.left);nc=2*cfg.K+1;AG=sparse((nc+1)*nwall,(nc+1)*nwall);rhs=complex(zeros(size(AG,1),1));
+  for c=-cfg.K:cfg.K
+    t=1+(c==0)+2*(c>0);pack=packs{t};j=find(pack.G.cells==c);ports=(c+cfg.K)*nwall+(1:2*nwall);
+    AG(ports,ports)=AG(ports,ports)+pack.S;rhs(ports)=rhs(ports)+pack.port_rhs(:,j);
+  end
+  free=nwall+(1:(nc-1)*nwall);z=complex(zeros(size(rhs)));Af=(AG(free,free)+AG(free,free)')/2;z(free)=Af\rhs(free);
+  residual=norm(Af*z(free)-rhs(free))/norm(rhs(free));assert(residual<1e-9,'pipeline:Solve','Global solve failed.');clear AG Af rhs
+  S=struct('key',cfg,'degree',degree,'basis',basis,'B',B,'flux',{cell(1,3)},'G',{cell(1,3)},'gram_quadratic',0,'trace_error',0,'global_residual',residual,'cache_hits',hits);
+  S.cell_residual=zeros(1,3);
+  for t=1:3
+    pack=packs{t};G=pack.G;nt=G.nt;ncell=numel(G.cells);ye=complex(zeros(G.nedge,ncell));[factor,Aip]=LOCAL_refactor(pack.H,G,pack.Y);
+    for j=1:ncell
+      ports=(G.cells(j)+cfg.K)*nwall+(1:2*nwall);ye(G.port,j)=z(ports);ye(G.inner,j)=pack.response(:,j)-factor\(Aip*z(ports));
+    end
+    clear factor Aip
+    local=complex(zeros(G.nd,ncell,nt));
+    for j=1:ncell
+      ee=G.phase.*reshape(ye(G.map(:),j),nt,G.ne);
+      ii=-reshape(pagemtimes(pack.Y,reshape(ee.',G.ne,1,nt)),G.ni,nt)-reshape(pack.r(:,j,:),G.ni,nt);
+      local(:,j,:)=reshape([ee,reshape(ii,G.ni,nt).'].',G.nd,1,nt);
+    end
+    S.gram_quadratic=S.gram_quadratic+LOCAL_quadratic(pack.H,pack.b,local);
+    S.trace_error=max(S.trace_error,LOCAL_trace(G,local,degree,B));S.flux{t}=local;S.G{t}=G;S.cell_residual(t)=pack.solve_residual;
+    packs{t}=[];clear local pack ye
+  end
+  tm.solve=tm.solve+toc(tt);S.seconds=toc(started);tm.other=S.seconds-sum(cell2mat(struct2cell(tm)));S.timing=tm;
+end
+function result=LOCAL_evaluate(P,S,cfg)
+  LOCAL_key(P,cfg);LOCAL_key(S,cfg);started=tic;cc=cfg;cc.degree=S.degree;quadratic=0;hits=0;
+  for t=1:3
+    [~,~,sc]=LOCAL_batches(S.G{t},P.templates{t}.T,P.trial,cc,S.B,16,S.flux{t},P.templates{t}.cache,'evaluate');
+    quadratic=quadratic+sc.point_quadratic;hits=hits+sc.cache_hits;
+  end
+  J=(P.mass+quadratic+P.tail_allowance)/P.mass;Jgram=(P.mass+S.gram_quadratic+P.tail_allowance)/P.mass;
+  result=LOCAL_interval(P.q,J,cfg);result.J_gram=Jgram;result.mass=P.mass;result.energy=P.energy;
+  result.gram_scaled=P.q*abs(Jgram-J)/(P.q*J-1);result.cache_hits=hits;
+  result.baseline_q_relative=abs(P.q-cfg.baseline.q)/cfg.baseline.q;
+  result.baseline_width_relative=abs(result.width-cfg.baseline.width)/cfg.baseline.width;
+  result.baseline_J_scaled=P.q*abs(J-cfg.baseline.J)/(cfg.baseline.q*cfg.baseline.J-1);
+  result.theta_relative=abs(P.q-1-cfg.theta_reference)/cfg.theta_reference;
+  result.pass=result.algebra_pass&&result.gram_scaled<.01;
+  if S.degree==3
+    result.pass=result.pass&&result.baseline_q_relative<=1e-12&&result.baseline_width_relative<=.005&&result.baseline_J_scaled<=.01;
+  end
+  if strcmp(cfg.trial,'R'),result.pass=result.pass&&result.theta_relative<1e-12;end
+  result.normal_trace_error=S.trace_error;result.global_solve_residual=S.global_residual;result.cell_solve_residual=S.cell_residual;
+  result.seconds=toc(started);
+end
+function r=LOCAL_interval(q,J,cfg)
+  variance=q*J-1;b2=[q-2*cfg.mu+cfg.mu^2*J,q-2*cfg.nu+cfg.nu^2*J];
+  kappa=[(1-cfg.mu*J)/b2(1),(1-cfg.nu*J)/b2(2)];
+  lower=(q-cfg.nu)/(1-cfg.nu*J)-cfg.gamma;upper=(q-cfg.mu)/(1-cfg.mu*J)-cfg.gamma;
+  width=(cfg.nu-cfg.mu)*variance/((1-cfg.mu*J)*(cfg.nu*J-1));
+  r=struct('q',q,'J',J,'qJ_minus_one',variance,'gram_denominators',b2,'kappa',kappa, ...
+    'enclosure',[lower,upper],'width',width,'width_endpoints',upper-lower,'width_formula_difference',upper-lower-width, ...
+    'contains_reference',lower<=cfg.mu_bie&&cfg.mu_bie<=upper,'sign_conditions',all(b2>0)&&kappa(1)>1/(cfg.nu-cfg.mu)&&kappa(2)<-1/(cfg.nu-cfg.mu));
+  r.algebra_pass=variance>0&&r.contains_reference&&r.sign_conditions&&abs(r.width_formula_difference)<=1e-13;
+end
+function r=LOCAL_verify(P,S,cfg)
+  LOCAL_key(P,cfg);LOCAL_key(S,cfg);started=tic;cc=cfg;cc.degree=S.degree;
+  tm=struct('field24',0,'functional24',0,'normalization',0,'areas',0,'other',0);quadratic=0;mass=0;energy=0;batches=0;values=0;areas=struct([]);
+  for t=1:3
+    G=S.G{t};T=P.templates{t}.T;
+    [~,~,sc]=LOCAL_batches(G,T,P.trial,cc,S.B,24,S.flux{t},{},'evaluate');
+    quadratic=quadratic+sc.point_quadratic;tm.field24=tm.field24+sc.field_seconds;tm.functional24=tm.functional24+sc.other_seconds;
+    batches=batches+sc.evaluated_batches;values=values+sc.value_count;
+    tt=tic;area=G.fitted.areas(24);areas=[areas,area];tm.areas=tm.areas+toc(tt); %#ok<AGROW>
+    if strcmp(cfg.trial,'D'),tt=tic;ns=LOCAL_direct_norms(G,T,cfg,24,16);mass=mass+sum(ns.mass);energy=energy+sum(ns.energy);tm.normalization=tm.normalization+toc(tt);end
+  end
+  normcheck=struct('pass',true);
+  if strcmp(cfg.trial,'R')
+    tt=tic;normcheck=pipeline_reconstruction('verify',P.trial,P.norms);tm.normalization=toc(tt);mass=P.mass;energy=P.energy;
+  end
+  J=(mass+quadratic+P.tail_allowance)/mass;
+  r=struct('J24',J,'q24',1+energy/mass,'mass24',mass,'energy24',energy,'areas',areas,'normalization',normcheck, ...
+    'evaluated_batches',batches,'evaluated_values',values,'seconds',toc(started));
+  tm.other=r.seconds-sum(cell2mat(struct2cell(tm)));r.timing=tm;
+end
+function r=LOCAL_component_audit(P,S,cfg)
+  LOCAL_key(P,cfg);LOCAL_key(S,cfg);started=tic;cc=cfg;cc.degree=S.degree;items=cell(1,3);hits=0;
+  for t=1:3
+    [~,~,sc]=LOCAL_batches(S.G{t},P.templates{t}.T,P.trial,cc,S.B,16,S.flux{t},P.templates{t}.cache,'audit');
+    items{t}=struct('point',sc.point_components,'gram',sc.gram_components,'difference',sc.gram_components-sc.point_components);hits=hits+sc.cache_hits;
+  end
+  r=struct('components',{items},'cache_hits',hits,'seconds',toc(started));
+end
+function r=LOCAL_cache_check(P,cfg)
+  LOCAL_key(P,cfg);T=P.templates{1};rule=T.G.fitted.rules(16);rule=rule{1};ids=rule.ids(1:min(cfg.block,numel(rule.ids)));nq=numel(rule.w);
+  ei=repelem(ids(:),nq);x=repmat(rule.x,numel(ids),1);y=repmat(rule.y,numel(ids),1);keep=1:min(32,numel(x));
+  [PX,PY]=T.G.fitted.map(ei(keep),x(keep),y(keep));fresh=LOCAL_field(T.G,P.trial,cfg,ei(keep),PX,PY);
+  old=T.cache{1}(keep,:);relative=norm(fresh-old,'fro')/norm(old,'fro');
+  variants={cfg,cfg,cfg,cfg,cfg,cfg};variants{1}.beta=.6;variants{2}.orders=[18,24];variants{3}.trial='invalid';
+  variants{4}.geometry='invalid';variants{5}.level='main';variants{6}.input_dir=[cfg.input_dir,'/changed'];rejected=false(1,numel(variants));
+  for j=1:numel(variants)
+    try,LOCAL_key(P,variants{j});catch err,rejected(j)=strcmp(err.identifier,'pipeline:CacheKey');end
+  end
+  r=struct('fresh_points',numel(keep),'fresh_values',numel(fresh),'relative_difference',relative,'mismatch_rejected',rejected,'pass',relative<=1e-12&&all(rejected));
+end
+function values=LOCAL_field(G,trial,cfg,ei,PX,PY)
+  if strcmp(cfg.trial,'R'),values=LOCAL_reconstructed(trial,PX,PY,G.cells);
+  else,[e,x,y,J,det]=G.fitted.inverse_native(ei,PX,PY);values=LOCAL_direct(G,e,x,y,PX,J,det,cfg);end
+end
+function [H,b,sc,cache]=LOCAL_batches(G,T,trial,cfg,B,order,flux,cache,action)
+  started=tic;field_seconds=0;nd=G.nd;nt=G.nt;nc=numel(G.cells);rules=G.fitted.rules(order);
+  assemble=ismember(action,{'assemble','audit'});evaluate=ismember(action,{'evaluate','audit'});prepare=strcmp(action,'prepare');
+  if assemble,H=zeros(nd,nd,nt);b=complex(zeros(nd,nc,nt));else,H=[];b=[];end
+  reuse=~isempty(cache);ci=0;hits=0;misses=0;count=0;point_quadratic=0;point=zeros(2,3);gram=point;
+  for ri=1:numel(rules)
+    rule=rules{ri};x=rule.x;y=rule.y;w=rule.w;nq=numel(w);
+    if ~prepare,[vx,vy,dv]=LOCAL_rt(x,y,cfg.degree);vx=vx*B;vy=vy*B;dv=dv*B;end
+    for first=1:cfg.block:numel(rule.ids)
+      ci=ci+1;ids=rule.ids(first:min(first+cfg.block-1,numel(rule.ids)));nb=numel(ids);
+      xx=repmat(x,nb,1);yy=repmat(y,nb,1);ei=repelem(ids(:),nq);[PX,PY,J,det]=G.fitted.map(ei,xx,yy);
+      if reuse,values=cache{ci};hits=hits+1;
+      else,tt=tic;values=LOCAL_field(G,trial,cfg,ei,PX,PY);field_seconds=field_seconds+toc(tt);misses=misses+1;count=count+numel(values);end
+      if prepare,cache{ci}=values;continue;end
+      vxx=repmat(vx,nb,1);vyy=repmat(vy,nb,1);dvv=repmat(dv,nb,1);
+      px=(J(:,1).*vxx+J(:,2).*vyy)./det;py=(J(:,3).*vxx+J(:,4).*vyy)./det;
+      W=repmat(w,nb,1).*det;rho=repelem(reshape(T.material(ids),[],1),nq);D=dvv./det;
+      P=permute(reshape(px,nq,nb,nd),[3,1,2]);Q=permute(reshape(py,nq,nb,nd),[3,1,2]);DD=permute(reshape(D,nq,nb,nd),[3,1,2]);ww=reshape(W,1,nq,nb);
+      if assemble
+        HM=pagemtimes(P.*ww,'none',P,'transpose')+pagemtimes(Q.*ww,'none',Q,'transpose');
+        HD=pagemtimes(DD.*reshape(W./rho,1,nq,nb),'none',DD,'transpose');H(:,:,ids)=HM+HD;
+        VV=permute(reshape(values,nq,nb,nc),[1,3,2]);bb=pagemtimes(DD.*ww,VV);b(:,:,ids)=bb;
+      end
+      if evaluate
+        cc=flux(:,:,ids);fx=LOCAL_flux_values(P,cc);fy=LOCAL_flux_values(Q,cc);fd=LOCAL_flux_values(DD,cc);
+        point_quadratic=point_quadratic+sum(W.*(abs(fx).^2+abs(fy).^2+abs(fd).^2./rho+2*real(conj(fd).*values)),'all');
+        if strcmp(action,'audit')
+          group=1+any(ismember(ids,[T.interface.inner(:);T.interface.outer(:)]));
+          pm=sum(W.*(abs(fx).^2+abs(fy).^2),'all');pd=sum((W./rho).*abs(fd).^2,'all');pl=2*real(sum(W.*conj(fd).*values,'all'));
+          gm=real(sum(conj(cc).*pagemtimes(HM,cc),'all'));gd=real(sum(conj(cc).*pagemtimes(HD,cc),'all'));gl=2*real(sum(conj(cc).*bb,'all'));
+          point(group,:)=point(group,:)+[pm,pd,pl];gram(group,:)=gram(group,:)+[gm,gd,gl];
+        end
+      end
+    end
+  end
+  sc=struct('point_quadratic',point_quadratic,'point_components',point,'gram_components',gram,'field_seconds',field_seconds, ...
+    'other_seconds',toc(started)-field_seconds,'cache_hits',hits,'evaluated_batches',misses,'value_count',count);
+end
+function check=LOCAL_native_trace(native,cfg)
+  names={'left','center','right'}; left=cell(1,2*cfg.K+1);right=left;
+  jump=0;phase_jump=0;scale=0;
+  for c=-cfg.K:cfg.K
+    t=1+(c==0)+2*(c>0);T=native.templates.(names{t});
+    xy=T.xy;xy(:,1)=xy(:,1)-T.cell;
+    u=native.cells([native.cells.index]==c).coef;scale=max(scale,max(abs(u)));
+    l=find(abs(xy(:,1)+.5)<1e-11);r=find(abs(xy(:,1)-.5)<1e-11);
+    [~,s]=sort(xy(l,2));l=l(s);[~,s]=sort(xy(r,2));r=r(s);
+    left{c+cfg.K+1}=u(l);right{c+cfg.K+1}=u(r);
+    b=find(abs(xy(:,2)+.5)<1e-11);a=find(abs(xy(:,2)-.5)<1e-11);
+    [~,s]=sort(xy(b,1));b=b(s);[~,s]=sort(xy(a,1));a=a(s);
+    phase_jump=max(phase_jump,max(abs(u(a)-exp(1i*cfg.beta)*u(b))));
+  end
+  for j=1:numel(left)-1,jump=max(jump,max(abs(right{j}-left{j+1})));end
+  check=struct('cell_absolute',jump,'phase_absolute',phase_jump,'scale',scale, ...
+    'cell_relative',jump/scale,'phase_relative',phase_jump/scale);
+end
+
+function G=LOCAL_geometry(T,U,cells,cfg,k)
+  tr=T.tri6(:,1:3); nt=size(tr,1); xy=T.xy;
+  [edges,~,ids]=unique(sort([tr(:,[1,2]);tr(:,[2,3]);tr(:,[3,1])],2),'rows');
+  ids=reshape(ids,nt,3); starts=[tr(:,1);tr(:,2);tr(:,3)]; ends=[tr(:,2);tr(:,3);tr(:,1)];
+  pa=xy(starts,:);pb=xy(ends,:);signs=ones(size(starts));
+  signs(pa(:,1)>pb(:,1)|(pa(:,1)==pb(:,1)&pa(:,2)>pb(:,2)))=-1;
+  signs=reshape(signs,nt,3); mid=(xy(edges(:,1),:)+xy(edges(:,2),:))/2;
+  top=find(abs(mid(:,2)-.5)<1e-11);bot=find(abs(mid(:,2)+.5)<1e-11);
+  [~,a]=sort(mid(top,1));top=top(a);[~,a]=sort(mid(bot,1));bot=bot(a);
+  assert(numel(top)==numel(bot)&&max(abs(mid(top,1)-mid(bot,1)))<1e-11);
+  master=(1:size(edges,1))';master(top)=bot;ph=ones(size(master));ph(top)=exp(1i*cfg.beta);
+  active=true(size(master));active(top)=false;pos=zeros(size(master));pos(active)=1:nnz(active);
+  nr=k+1; ne=3*nr;nd=(k+1)*(k+3);ni=nd-ne;
+  map=zeros(nt,ne);phase=complex(zeros(nt,ne));
+  for e=1:3
+    for m=0:k
+      l=(e-1)*nr+m+1;map(:,l)=nr*(pos(master(ids(:,e)))-1)+m+1;
+      phase(:,l)=signs(:,e).^(m+1).*ph(ids(:,e));
+    end
+  end
+  left=find(abs(mid(:,1)+.5)<1e-11);right=find(abs(mid(:,1)-.5)<1e-11);
+  [~,a]=sort(mid(left,2));left=left(a);[~,a]=sort(mid(right,2));right=right(a);
+  assert(numel(left)==numel(right)&&max(abs(mid(left,2)-mid(right,2)))<1e-11);
+  left=reshape((nr*(pos(left)-1)+(1:nr)).',[],1);right=reshape((nr*(pos(right)-1)+(1:nr)).',[],1);
+  nedge=nnz(active)*nr;port=[left;right];inner=setdiff((1:nedge)',port);
+  nodes=reshape(xy(T.tri6(:),:),nt,6,2);mx=LOCAL_poly(nodes(:,:,1));my=LOCAL_poly(nodes(:,:,2));
+  mu=complex(zeros(nt,6,numel(cells)));
+  for j=1:numel(cells),mu(:,:,j)=LOCAL_poly(reshape(U(T.tri6,j),nt,6));end
+  G=struct('nt',nt,'nd',nd,'ne',ne,'ni',ni,'mx',mx,'my',my,'mu',mu,'cells',cells, ...
+    'map',map,'phase',phase,'nedge',nedge,'left',left,'right',right,'port',port,'inner',inner, ...
+    'edge_ids',ids,'signs',signs,'mid',mid,'top',top,'bot',bot,'edges',edges);
+end
+
+function audit=LOCAL_audit(H,b,HC,bc,c,low,high,G,T)
+  curved=false(G.nt,1);curved([T.interface.inner(:);T.interface.outer(:)])=true;
+  change=struct([]);
+  for j=1:2
+    ids=find(curved==(j==2));h=H(:,:,ids);hc=HC(:,:,ids);bb=b(:,:,ids);cc=c(:,:,ids);
+    dh=hc-h;db=bc(:,:,ids)-bb;
+    change=[change,struct('matrix_relative_frobenius',norm(dh(:))/norm(h(:)), ...
+      'load_relative_frobenius',norm(db(:))/norm(bb(:)), ...
+      'matrix_quadratic_change',real(sum(conj(cc).*pagemtimes(dh,cc),'all')), ...
+      'load_functional_change',2*real(sum(conj(cc).*db,'all')))]; %#ok<AGROW>
+  end
+  residual=pagemtimes(H,c)+b;ii=G.ne+1:G.nd;
+  interior=residual(ii,:,:);rhs=b(ii,:,:);
+  audit=struct('row_labels',{{'unchanged_elements','curved_elements'}}, ...
+    'column_labels',{{'flux_mass','div_div','twice_load'}}, ...
+    'low_point',low.point_components,'low_gram',low.gram_components, ...
+    'high_point',high.point_components,'high_gram',high.gram_components, ...
+    'gram_minus_point_low',low.gram_components-low.point_components, ...
+    'gram_minus_point_high',high.gram_components-high.point_components, ...
+    'orders_comparison',change,'local_gradient_low',sqrt(low.gradient_square), ...
+    'local_gradient_high',sqrt(high.gradient_square), ...
+    'interior_equation_relative_residual',norm(interior(:))/norm(rhs(:)));
+end
+
+function sc=LOCAL_direct_norms(G,T,cfg,order,band_order)
+  [x,y,w]=LOCAL_duffy(order);nq=numel(w);mass=zeros(1,numel(G.cells));energy=mass;
+  for first=1:cfg.block:G.nt
+    ids=first:min(first+cfg.block-1,G.nt);nb=numel(ids);ei=repelem(ids(:),nq);
+    xx=repmat(x,nb,1);yy=repmat(y,nb,1);
+    [PX,~,J,det]=LOCAL_map(G.mx(ei,:),G.my(ei,:),xx,yy);
+    [v,gx,gy]=LOCAL_direct(G,ei,xx,yy,PX,J,det,cfg);W=repmat(w,nb,1).*det;
+    rho=repelem(reshape(T.material(ids),[],1),nq);
+    mass=mass+sum((W.*rho).*abs(v).^2,1);energy=energy+sum(W.*(abs(gx).^2+abs(gy).^2),1);
+  end
+  band=LOCAL_band(G,T,band_order);
+  for first=1:1024:numel(band.w)
+    ids=first:min(first+1023,numel(band.w));ei=band.e(ids);xx=band.x(ids);yy=band.y(ids);
+    [PX,~,J,det]=LOCAL_map(G.mx(ei,:),G.my(ei,:),xx,yy);
+    v=LOCAL_direct(G,ei,xx,yy,PX,J,det,cfg);
+    mass=mass+sum((band.w(ids)*(T.rho_in-1)).*abs(v).^2,1);
+  end
+  sc=struct('mass',mass,'energy',energy);
+end
+
+function v=LOCAL_flux_values(P,c)
+  V=pagemtimes(P,'transpose',c,'none');v=reshape(permute(V,[1,3,2]),[],size(c,2));
+end
+function v=LOCAL_point_flux(P,c,ei)
+  v=complex(zeros(numel(ei),size(c,2)));
+  for j=1:size(c,2),v(:,j)=sum(P.*reshape(c(:,j,ei),size(c,1),[]).',2);end
+end
+
+function pack=LOCAL_condense(H,b,G,compact)
+  ne=G.ne; ni=G.ni; nt=G.nt; nc=numel(G.cells); ee=1:ne;ii=ne+(1:ni);
+  Y=pagemldivide(H(ii,ii,:),H(ii,ee,:));r=pagemldivide(H(ii,ii,:),b(ii,:,:));
+  S=H(ee,ee,:)-pagemtimes(H(ee,ii,:),Y);d=b(ee,:,:)-pagemtimes(H(ee,ii,:),r);
+  ph=G.phase.';map=G.map.';
+  V=conj(reshape(ph,ne,1,nt)).*S.*reshape(ph,1,ne,nt);
+  I=repmat(reshape(map,ne,1,nt),1,ne,1);J=repmat(reshape(map,1,ne,nt),ne,1,1);
+  A=sparse(I(:),J(:),V(:),G.nedge,G.nedge);A=(A+A')/2;
+  rhs=complex(zeros(G.nedge,nc));
+  for j=1:nc
+    vals=-conj(ph).*reshape(d(:,j,:),ne,nt);
+    rhs(:,j)=accumarray(map(:),vals(:),[G.nedge,1]);
+  end
+  ip=G.inner;pp=G.port;Aii=A(ip,ip);Api=A(pp,ip);Aip=A(ip,pp);
+  dec=decomposition(Aii,'chol');response=dec\rhs(ip,:);
+  if compact
+    Sc=full(A(pp,pp));
+    for first=1:24:numel(pp)
+      cols=first:min(first+23,numel(pp));extension_block=dec\full(Aip(:,cols));
+      Sc(:,cols)=Sc(:,cols)-Api*extension_block;
+    end
+    extension=[];
+  else
+    extension=dec\full(Aip);Sc=A(pp,pp)-Api*extension;
+  end
+  solve_residual=norm(Aii*response-rhs(ip,:),'fro')/norm(rhs(ip,:),'fro');
+  Sc=(Sc+Sc')/2;
+  rp=rhs(pp,:)-Api*response;
+  pack=struct('Y',Y,'r',r,'S',Sc,'port_rhs',rp,'response',response,'extension',extension,'solve_residual',solve_residual);
+  % The compact case refactors one template at recovery, avoiding three
+  % retained factors and all dense cell-interior extension matrices.
+end
+
+function [factor,Aip]=LOCAL_refactor(H,G,Y)
+  ne=G.ne;nt=G.nt;ee=1:ne;ii=ne+1:G.nd;
+  S=H(ee,ee,:)-pagemtimes(H(ee,ii,:),Y);ph=G.phase.';map=G.map.';
+  V=conj(reshape(ph,ne,1,nt)).*S.*reshape(ph,1,ne,nt);
+  I=repmat(reshape(map,ne,1,nt),1,ne,1);J=repmat(reshape(map,1,ne,nt),ne,1,1);
+  A=sparse(I(:),J(:),V(:),G.nedge,G.nedge);A=(A+A')/2;
+  factor=decomposition(A(G.inner,G.inner),'chol');Aip=A(G.inner,G.port);
+end
+
+function value=LOCAL_quadratic(H,b,c)
+  Hc=pagemtimes(H,c);
+  value=real(sum(conj(c).*(Hc+2*b),'all'));
+end
+
+function [values,gx,gy]=LOCAL_reconstructed(trial,x,y,cells)
+  p=trial.parameters;C=trial.coefficients;N=p.N;nc=p.cells_per_side;
+  m=(-p.M:p.M)';q=p.beta+2*pi*m;a=sqrt(p.s+q.^2);values=complex(zeros(numel(x),numel(cells)));
+  if nargout>1,gx=values;gy=values;end
+  for first=1:256:numel(x)
+    ids=first:min(first+255,numel(x));xx=x(ids);yy=y(ids);
+    col=min(N,max(1,floor((xx+.5)*N)+1));z=xx-(-.5+(col-1)/N);
+    E=exp(1i*q*yy.');em=exp(-a*z.');ep=exp(-a*(1/N-z).');
+    for j=1:numel(cells)
+      gc=(cells(j)+nc)*N+col;
+      modes=(C(:,gc,1)+C(:,gc,2).*z.')./a.^2+C(:,gc,3).*em+C(:,gc,4).*ep;
+      values(ids,j)=sum(E.*modes,1).';
+      if nargout>1
+        dx=C(:,gc,2)./a.^2-a.*C(:,gc,3).*em+a.*C(:,gc,4).*ep;
+        gx(ids,j)=sum(E.*dx,1).';gy(ids,j)=sum((1i*q).*E.*modes,1).';
+      end
+    end
+  end
+end
+
+function [values,gx,gy]=LOCAL_direct(G,e,x,y,PX,J,det,cfg)
+  n=numel(x);nc=numel(G.cells);values=complex(zeros(n,nc));if nargout>1,gx=values;gy=values;end
+  B=[ones(n,1),x,y,x.^2,x.*y,y.^2];
+  for j=1:nc
+    c=G.mu(e,:,j);u=sum(B.*c,2);
+    if nargout>1
+      ux=c(:,2)+2*c(:,4).*x+c(:,5).*y;uy=c(:,3)+c(:,5).*x+2*c(:,6).*y;
+      dx=(J(:,4).*ux-J(:,3).*uy)./det;dy=(-J(:,2).*ux+J(:,1).*uy)./det;
+    end
+    X=PX+G.cells(j);t=max(0,min(1,(abs(X)-(cfg.K-1.5))/2));
+    chi=(1+cos(pi*t))/2;dchi=-(pi/4)*sin(pi*t).*sign(X);
+    values(:,j)=chi.*u;
+    if nargout>1,gx(:,j)=chi.*dx+dchi.*u;gy(:,j)=chi.*dy;end
+  end
+end
+
+function band=LOCAL_band(G,T,n)
+  % Oriented strip formula copied in algebra from refine_i102 LOCAL_band_locate.
+  [z,w]=LOCAL_gauss(n);[u,v]=ndgrid(z,z);[a,b]=ndgrid(w,w);u=u(:)';v=v(:)';wq=(a(:).*b(:))';
+  th=T.interface.theta(:);dt=T.interface.dtheta;ng=numel(th);
+  p0=LOCAL_curve(T,th);pm=LOCAL_curve(T,th+dt/2);p1=LOCAL_curve(T,th+dt);
+  [truep,trued]=LOCAL_curve(T,reshape(th+dt*u,[],1));trued=dt*trued;
+  sid=repmat((1:ng)',1,numel(u));sid=sid(:);uu=repmat(u,ng,1);uu=uu(:);vv=repmat(v,ng,1);vv=vv(:);
+  base=p0(sid,:).*((1-uu).*(1-2*uu))+pm(sid,:).*(4*uu.*(1-uu))+p1(sid,:).*(uu.*(2*uu-1));
+  db=p0(sid,:).*(4*uu-3)+pm(sid,:).*(4-8*uu)+p1(sid,:).*(4*uu-1);
+  d=truep-base;pt=base+vv.*d;tangent=db+vv.*(trued-db);
+  ww=repmat(wq,ng,1);ww=ww(:).*(d(:,1).*tangent(:,2)-d(:,2).*tangent(:,1));
+  owner=[T.interface.inner(sid),T.interface.outer(sid)];
+  best=-Inf(size(sid));elem=zeros(size(sid));xi=best;eta=best;
+  for j=1:2
+    e=owner(:,j);s=ones(numel(e),2)/3;
+    for it=1:9
+      [X,Y,J,det]=LOCAL_map(G.mx(e,:),G.my(e,:),s(:,1),s(:,2));
+      rx=X-pt(:,1);ry=Y-pt(:,2);
+      s=s-[(J(:,4).*rx-J(:,2).*ry)./det,(-J(:,3).*rx+J(:,1).*ry)./det];
+    end
+    bary=min([s,1-sum(s,2)],[],2);choose=bary>best;
+    elem(choose)=e(choose);xi(choose)=s(choose,1);eta(choose)=s(choose,2);best(choose)=bary(choose);
+  end
+  assert(min(best)>-1e-7,'goerisch:Band','A true-material strip point has no adjacent owner.');
+  band=struct('e',elem,'x',xi,'y',eta,'w',ww,'min_barycentric',min(best));
+end
+
+function [c,d]=LOCAL_curve(T,theta)
+  theta=theta(:);
+  if strcmp(T.name,'center')
+    c5=cos(5*theta);s5=sin(5*theta);
+    c=.2*[(1.5+.3*c5).*cos(theta),(1+.3*c5).*sin(theta)];
+    d=.2*[-1.5*s5.*cos(theta)-(1.5+.3*c5).*sin(theta),-1.5*s5.*sin(theta)+(1+.3*c5).*cos(theta)];
+  else
+    aa=.12;if strcmp(T.name,'right'),aa=.20;end
+    R=.2/sqrt(1+aa^2/2);r=R*(1+aa*cos(3*theta));dr=-3*aa*R*sin(3*theta);
+    c=[r.*cos(theta),r.*sin(theta)];d=[dr.*cos(theta)-r.*sin(theta),dr.*sin(theta)+r.*cos(theta)];
+  end
+end
+
+function [B,err,info]=LOCAL_study_basis(k,study)
+  if k<=3||strcmp(study,'audit')
+    [old,err]=LOCAL_dual(k);B=old;old_norm=norm(old,'fro');
+  else,old_norm=NaN;end
+  info=struct('kind','moment_dual','moment_basis_coefficient_norm',old_norm);
+  if strcmp(study,'audit'),return;end
+  % Reference vector L2 orthogonalization followed by a minimum-norm
+  % right inverse of the edge moments. Interior columns span their kernel.
+  % Edge moments, the RT space and Piola mapping remain unchanged.
+  nd=(k+1)*(k+3);ne=3*(k+1);[x,y,w]=LOCAL_duffy(k+5);[vx,vy]=LOCAL_rt(x,y,k);
+  [~,R]=qr([sqrt(w).*vx;sqrt(w).*vy],0);C=R\eye(nd);
+  [t,ww]=LOCAL_gauss(k+5);L=LOCAL_legendre(t,k);E=zeros(ne,nd);
+  for e=1:3
+    if e==1,x=t;y=0*t;n=[0,-1];elseif e==2,x=1-t;y=t;n=[1,1];else,x=0*t;y=1-t;n=[-1,0];end
+    [vx,vy]=LOCAL_rt(x,y,k);E((e-1)*(k+1)+(1:k+1),:)=L'*(ww.*(n(1)*vx+n(2)*vy));
+  end
+  [U,S,V]=svd(E*C);Z=[V(:,1:ne)*(diag(1./diag(S(:,1:ne)))*U'),V(:,ne+1:end)];B=C*Z;
+  err=norm(E*B-[eye(ne),zeros(ne,nd-ne)],'inf');assert(err<1e-8,'goerisch:Basis','Stable edge moments failed.');
+  info.kind='reference_L2_orthogonal';info.stable_coefficient_norm=norm(B,'fro');
+  info.edge_moment_error=err;info.reference_raw_condition=cond(R);info.edge_operator_condition=cond(E*C);
+end
+
+function [Dinv,err]=LOCAL_dual(k)
+  nd=(k+1)*(k+3);nr=k+1;D=zeros(nd);
+  [t,w]=LOCAL_gauss(k+4);L=LOCAL_legendre(t,k);
+  for e=1:3
+    if e==1,x=t;y=0*t;n=[0,-1];elseif e==2,x=1-t;y=t;n=[1,1];else,x=0*t;y=1-t;n=[-1,0];end
+    [vx,vy]=LOCAL_rt(x,y,k);D((e-1)*nr+(1:nr),:)=L'*(w.*(n(1)*vx+n(2)*vy));
+  end
+  [x,y,w]=LOCAL_duffy(k+4);[vx,vy]=LOCAL_rt(x,y,k);P=LOCAL_monomials(x,y,k-1);np=size(P,2);
+  D(3*nr+(1:np),:)=P'*(w.*vx);D(3*nr+np+(1:np),:)=P'*(w.*vy);
+  [a,b]=rat(D,1e-12);D=a./b;Dinv=D\eye(nd);err=norm(D*Dinv-eye(nd),'inf');
+  assert(err<1e-8,'goerisch:Basis','Reference duality failed.');
+end
+
+function [vx,vy,dv]=LOCAL_rt(x,y,k)
+  x=x(:);y=y(:);[P,Px,Py]=LOCAL_monomials(x,y,k);z=zeros(size(P));H=zeros(numel(x),k+1);
+  for j=0:k,H(:,j+1)=x.^(k-j).*y.^j;end
+  vx=[P,z,x.*H];vy=[z,P,y.*H];dv=[Px,Py,(k+2)*H];
+end
+function [P,Px,Py]=LOCAL_monomials(x,y,k)
+  x=x(:);y=y(:);n=(k+1)*(k+2)/2;P=zeros(numel(x),n);Px=P;Py=P;l=0;
+  for d=0:k
+    for j=0:d
+      l=l+1;a=d-j;b=j;P(:,l)=x.^a.*y.^b;
+      if a>0,Px(:,l)=a*x.^(a-1).*y.^b;end
+      if b>0,Py(:,l)=b*x.^a.*y.^(b-1);end
+    end
+  end
+end
+function L=LOCAL_legendre(t,k)
+  z=2*t-1;L=ones(numel(t),k+1);if k>0,L(:,2)=z;end
+  for j=2:k,L(:,j+1)=((2*j-1)*z.*L(:,j)-(j-1)*L(:,j-1))/j;end
+end
+function [X,Y,J,d]=LOCAL_map(mx,my,x,y)
+  B=[ones(size(x)),x,y,x.^2,x.*y,y.^2];X=sum(B.*mx,2);Y=sum(B.*my,2);
+  J=[mx(:,2)+2*mx(:,4).*x+mx(:,5).*y,mx(:,3)+mx(:,5).*x+2*mx(:,6).*y, ...
+    my(:,2)+2*my(:,4).*x+my(:,5).*y,my(:,3)+my(:,5).*x+2*my(:,6).*y];
+  d=J(:,1).*J(:,4)-J(:,2).*J(:,3);assert(all(d>0));
+end
+function c=LOCAL_poly(v)
+  % Verbatim coefficient convention of eq_temple_i95 LOCAL_poly.
+  c=[v(:,1),-3*v(:,1)-v(:,2)+4*v(:,4),-3*v(:,1)-v(:,3)+4*v(:,6), ...
+    2*v(:,1)+2*v(:,2)-4*v(:,4),4*v(:,1)-4*v(:,4)+4*v(:,5)-4*v(:,6), ...
+    2*v(:,1)+2*v(:,3)-4*v(:,6)];
+end
+function err=LOCAL_trace(G,c,k,Dinv)
+  % Moments already impose continuity; verify pointwise reference traces.
+  [t,~]=LOCAL_gauss(k+3);L=LOCAL_legendre(t,k);nr=k+1;err=0;
+  for e=1:3
+    if e==1,x=t;y=0*t;n=[0,-1];elseif e==2,x=1-t;y=t;n=[1,1];else,x=0*t;y=1-t;n=[-1,0];end
+    [vx,vy]=LOCAL_rt(x,y,k);B=(n(1)*vx+n(2)*vy)*Dinv;
+    exact=zeros(size(B));exact(:,(e-1)*nr+(1:nr))=L.*(2*(0:k)+1);
+    err=max(err,max(abs(B-exact),[],'all'));
+  end
+  % All reconstructed coefficients are finite; external moments are zero by the port solve.
+  assert(all(isfinite(c),'all')&&err<1e-7,'goerisch:Trace','Normal-trace basis check failed.');
+end
+function [outside,upper,gradient]=LOCAL_tail(t,mass,K)
+  C=t.coefficients;p=t.parameters;N=p.N;nc=p.cells_per_side;q=p.beta+2*pi*(-p.M:p.M)';a=sqrt(p.s+q.^2);
+  [x,w]=LOCAL_gauss(12);outside=sum((abs(t.wl).^2+abs(t.wr).^2)./(2*a));
+  gradient=sum((a.^2+q.^2).*(abs(t.wl).^2+abs(t.wr).^2)./(2*a));
+  cols=[1:(nc-K)*N,(nc+K+1)*N+1:size(C,2)];
+  for j=1:numel(x)
+    z=x(j)/N;v=(C(:,cols,1)+C(:,cols,2)*z)./a.^2+C(:,cols,3).*exp(-a*z)+C(:,cols,4).*exp(-a*(1/N-z));
+    outside=outside+w(j)/N*sum(abs(v).^2,'all');
+    dv=C(:,cols,2)./a.^2-a.*C(:,cols,3).*exp(-a*z)+a.*C(:,cols,4).*exp(-a*(1/N-z));
+    gradient=gradient+w(j)/N*sum(abs(dv).^2+q.^2.*abs(v).^2,'all');
+  end
+  upper=17*outside/mass;
+end
+function [x,y,w]=LOCAL_duffy(n)
+  [z,v]=LOCAL_gauss(n);[r,s]=ndgrid(z,z);[a,b]=ndgrid(v,v);x=r(:);y=(1-x).*s(:);w=a(:).*b(:).*(1-x);
+end
+function [x,w]=LOCAL_gauss(n)
+  j=(1:n-1)';b=j./sqrt(4*j.^2-1);[V,D]=eig(diag(b,1)+diag(b,-1));
+  [x,k]=sort(diag(D));x=(x+1)/2;w=V(1,k)'.^2;
+end
+function LOCAL_json(file,value)
+  f=fopen(file,'w');assert(f>=0);cleaner=onCleanup(@()fclose(f)); %#ok<NASGU>
+  fwrite(f,jsonencode(value,PrettyPrint=true),'char');
+end
