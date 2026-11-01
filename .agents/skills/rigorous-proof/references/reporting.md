@@ -1,63 +1,48 @@
 # Completion reporting
 
-Report at the end of every pass:
+Report at the end of every pass. Lead with the result; keep process narration
+out. Omit any field that is empty or does not apply to the selected mode;
+do not write "None" placeholders.
 
-1. selected task mode;
-2. source file and theorem number or name;
-3. target environment type and exact location;
-4. output file, if any;
-5. work completed in this pass;
-6. changes made outside the target environment, if authorized;
-7. every new environment, label, and resulting number;
-8. each reference used and exact result number;
-9. printed and PDF pages for verified book citations;
-10. references downloaded during this pass;
-11. references absent from the project-prescribed local literature location;
-12. steps still awaiting verification;
-13. remaining proof gaps; and
-14. preliminary or completed literature status.
+## Core fields (every mode)
 
-If the theorem was supplied only in conversation, write:
+```text
+Task mode:
+Target: <source file, theorem number or name, environment and location>
+Output file: <only if a file was written>
+Result: <proved / proved under listed conditions / findings: N blockers, N important, N minor>
+Remaining gaps: <proof gaps and conditional steps, each with location>
+Literature status: <one of the four status lines in literature-verification.md>
+```
+
+If the theorem was supplied only in conversation, write as the target:
 
 ```text
 Source file: not provided; the theorem was supplied by the user in the current conversation.
 ```
 
-For each missing reference, also give complete bibliographic information, a
-stable accessible URL, why it could not be downloaded, its suggested local
-literature filename, and the dependent proof steps.
-
-Add the mode-specific information:
-
-- **Review only**: each finding, location, effect, and minimum repair; confirm
-  that the proof file was not modified.
-- **In-place repair**: integrity-check result and every added or revised `P`,
-  `C`, `R`, and `U` block with location and purpose.
-- **Complete rewrite**: replaced environment, new proof strategy, confirmation
-  that no new proof file was created, and outside-environment diff result.
-- **Proof from scratch**: where the proof was written, or confirmation that no
-  proof file was written.
-
-Use this minimum structure:
+## Literature fields (when references were used or are missing)
 
 ```text
-Task mode:
-Proof status:
-Source file:
-Output file:
-Theorem number or name:
-Target environment and location:
-Work completed in this pass:
-Authorized changes outside the target environment:
-New environments, labels, and numbers:
-Original-text integrity check:
-Outside-environment diff check:
-Insertion blocks added or revised:
-Review-only findings:
-Verified references:
-Verified book pages:
+Verified references: <source, exact result number, printed and PDF pages for books>
 References downloaded in this pass:
-References missing locally:
-Steps awaiting literature verification:
-Remaining proof gaps:
+References missing locally: <full bibliographic data, stable URL, why not downloaded, suggested filename, dependent steps>
 ```
+
+Do not list standard results that need no citation.
+
+## Mode-specific fields
+
+- **Review only**: the findings, each with location, form, class, effect, and
+  repair for blockers and important caveats; then one line confirming that
+  the proof file was not modified.
+- **In-place repair**: integrity-check result; each added or revised `P`,
+  `C`, `R`, and `U` block with location and purpose.
+- **Complete rewrite**: replaced environment; new proof strategy in a few
+  lines; confirmation that no new proof file was created; outside-environment
+  diff result.
+- **Proof from scratch**: where the proof was written, or that it was returned
+  only in the conversation.
+
+When changes outside the target environment were authorized, also report each
+one with its new environment, label, and resulting number.

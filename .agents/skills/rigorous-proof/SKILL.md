@@ -23,6 +23,18 @@ edit authorization is unclear. Use **In-place repair** for requests to complete,
 fix, or fill gaps unless the user explicitly requests a rewrite. Use
 **Complete rewrite** only with explicit authorization.
 
+## Match rigor to the claim
+
+Apply the full workflow to statements the document presents as proved:
+theorems, lemmas, propositions, corollaries, and steps labelled as proved or
+as classical results. In drafts, sketches, and planning documents, review or
+prove only those statements. Expectations, estimates, conjectures, plans, and
+statements declared as assumptions are out of scope unless the user asks
+otherwise; do not raise findings about their lack of proof.
+
+Only a blocker (a stated result that is false or not proved as stated) stops
+the task. Record other concerns and continue.
+
 ## Constrain every file write
 
 Before any file write, identify the exact file, theorem or statement, insertion
@@ -76,8 +88,9 @@ For every cited theorem:
 4. Prove or cite every nontrivial implication from that conclusion to the
    current target.
 
-Omit further proof only for genuinely standard foundational results. If that
-classification is reasonably disputable, prove the step or cite it.
+Omit further proof only for standard foundational results, as listed in
+[literature-verification.md](references/literature-verification.md). If a
+reader in the field could reasonably dispute the step, prove it or cite it.
 
 Never present an uninspected literature claim as verified. Never apply a result
 with an unmet hypothesis. Mark unavailable-source dependencies as conditional

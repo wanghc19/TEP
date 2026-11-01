@@ -42,20 +42,47 @@ order and terminology, match each hypothesis to an established fact, and state
 its exact conclusion. If the proof needs a different conclusion, prove the
 bridge explicitly.
 
+## Results that need no citation
+
+Use without citation, and without a status label, results taught in a first
+graduate course and stated in their usual form, for example:
+
+- Cauchy–Schwarz, triangle, Hölder, Young, and Pythagoras in inner-product
+  and normed spaces;
+- orthogonal projections have norm at most one; best approximation in a
+  closed subspace is the orthogonal projection;
+- elementary calculus: monotonicity from the sign of the derivative, the
+  mean value theorem, integration by parts for smooth functions;
+- algebraic expansion of sesquilinear forms; elementary inequalities between
+  real numbers;
+- for a selfadjoint operator $L\ge c>0$: $\|L^{-1}\|\le c^{-1}$.
+
+Cite a source for named theorems with nontrivial hypotheses (spectral theorem,
+representation theorems for forms, trace and embedding theorems, Plancherel,
+sharp-constant inequalities) and for anything outside such a course. If a
+reader in the field would accept the step without a reference, do not ask for
+one.
+
 ## First pass with missing sources
 
 Do not stop the entire task merely because a source is unavailable. Mark each
 dependent step unverified, continue only conditionally, and identify the exact
 literature claim required. Do not guess result numbers or pages.
 
-Assign exactly one applicable first-pass status:
+Mark status per step, not per document. Only the steps that depend on an
+uninspected source carry the label "conditional on <source, result>"; all
+other steps are stated normally, without labels or qualifiers. If at least one
+step is conditional, assign exactly one applicable first-pass status in the
+completion report:
 
 ```text
 Preliminary proof; literature verification is incomplete.
 Preliminary review; literature verification is incomplete.
 ```
 
-Use the review status only in Review-only mode.
+Use the review status only in Review-only mode. Put the status in the
+completion report, not into the text of the proof or the reviewed document,
+and list the conditional steps next to it.
 
 ## Second pass
 
@@ -72,8 +99,9 @@ each new source:
 If the source differs from the preliminary assumption, revise the argument
 rather than merely changing the citation.
 
-Only after all citations and dependent inferences pass may the report use
-exactly one applicable completed status:
+If no step depends on an uninspected source, or once all such citations and
+dependent inferences pass, the report uses exactly one applicable completed
+status:
 
 ```text
 Proof literature verification completed.
