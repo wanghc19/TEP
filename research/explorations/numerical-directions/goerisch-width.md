@@ -7,6 +7,7 @@
 - 已完成：引理 0、命题 1–3、推论 4 的陈述和证明；与实验数据的对照（第 5 节，不属于证明）。
 - 审查：证明审查线程已审（[[goerisch-width-review]]），0 个 blocker、0 个重要、0 个次要问题；Claude 另外更正了 (10.45) 的页码（第 372 页）。
 - 2026-11-01 补充：(H) 后加了一条说明，指出 $\alpha_\pm$ 可以取能带间隙的真子区间，并给出宽度随之变化的算例。它只解释 (H) 的适用范围，没有新的证明步骤，未送审查。
+- 2026-11-01 新增命题 5（第 4b 节）：不依赖 (H) 的一阶区间。Claude 从零写出；证明审查线程第二轮审查（[[goerisch-width-review]] Round 2）结果为 0 个 blocker、0 个重要、0 个次要问题。
 - 未决：命题 3 的修正量 $R$ 只给出用谱分布表示的界，没有给出可由数值验证的界；谱隙端点的认证不在本文件范围内。
 
 ## 0. 设定与记号
@@ -157,6 +158,40 @@ $$C(\theta-\lambda)\Big(1-\frac{q}{\tau+\gamma}\Big)\frac{\lambda-\alpha_-}{\lam
 
 $C$ 只由谱隙端点、$\lambda$ 和 $\gamma$ 决定，与离散无关。
 
+## 4b. 命题 5：不依赖 (H) 的一阶区间（draft，2026-11-01，已审查）
+
+本节**不假设 (H)**，也不需要 $\alpha_\pm$、$\mu$、$\nu$ 或符号条件 (C)。只用第 0 节的设定：$v\in V$，$\|v\|_\rho=1$，$q=a_\gamma(v,v)$，$z=(A+\gamma)^{-1}v$，$G=a_\gamma(z,z)$。称 $\hat w\in X$ **容许**，若 $b_X(\hat w,T\varphi)=b(v,\varphi)$ 对一切 $\varphi\in V$ 成立；记 $J=b_X(\hat w,\hat w)$。命题 1 第 1–2 步没有用到 (H)，所以满足 (P1)–(P3) 的盒子截断通量给出容许的 $\hat w$，其 $J$ 就是命题 1 中的表达式。
+
+**命题 5.** 设 $\hat w$ 容许，$\delta:=qJ-1$。则 $\delta\ge0$，并且 $A$ 的谱与闭区间
+$$I_1=\Big[\,q\Big(1+\tfrac\delta2-\sqrt{\delta+\tfrac{\delta^2}4}\Big)-\gamma,\;\;q\Big(1+\tfrac\delta2+\sqrt{\delta+\tfrac{\delta^2}4}\Big)-\gamma\,\Big]$$
+相交：$\sigma(A)\cap I_1\neq\varnothing$。$I_1$ 的宽度为 $q\sqrt{\delta(4+\delta)}$。
+
+若另有区间 $(\beta_-,\beta_+)$ 满足 $(\beta_-,\beta_+)\cap\sigma_{\rm ess}(A)=\varnothing$ 且 $I_1\subset(\beta_-,\beta_+)$，则 $I_1$ 中至少有一个 $A$ 的有限重孤立特征值。
+
+**证明.**
+
+*第 1 步：$G\le J$，且 $1\le qG\le qJ$。* 由 $T$ 和 $b_X$ 的定义，$b_X(Tz,Tz)=a_\gamma(z,z)=G$。由容许性取 $\varphi=z$，再在 $z$ 的定义 $a_\gamma(z,\varphi)=b(v,\varphi)$ 中取 $\varphi=z$：
+$$b_X(\hat w,Tz)=b(v,z)=a_\gamma(z,z)=G .$$
+$b_X$ 是 $X$ 上半正定的 Hermitian 形式，Cauchy–Schwarz 不等式对它成立，所以 $G=|b_X(\hat w,Tz)|\le J^{1/2}G^{1/2}$，即 $G\le J$（$G=0$ 时显然）。又 $1=b(v,v)=a_\gamma(z,v)\le G^{1/2}q^{1/2}$（$a_\gamma$ 的 Cauchy–Schwarz），所以 $qG\ge1$。于是 $\delta=qJ-1\ge qG-1\ge0$。
+
+*第 2 步：谱表示。* 令 $m(\cdot)=b(E(\cdot)v,v)$。它是 Borel 概率测度，$m(\mathbb R\setminus\sigma(A))=0$，且 $\sigma(A)\subset[0,\infty)$。因为 $v\in V$ 属于 $A$ 的形式定义域，$\int t\,dm=a(v,v)<\infty$，所以 $q=\int(t+\gamma)\,dm$。由命题 3 证明第 1 步（那里没有用 (H)），$G=\int(t+\gamma)^{-1}dm$。
+
+*第 3 步：一个非负积分。* 对 $t\ge0$ 令 $f(t)=(t+\gamma-q)^2/(t+\gamma)\ge0$。展开平方：
+$$\int f\,dm=\int(t+\gamma)\,dm-2q\int dm+q^2\int\frac{dm}{t+\gamma}=q-2q+q^2G=q(qG-1).$$
+三个积分都有限（第 2 步，且 $(t+\gamma)^{-1}\le\gamma^{-1}$），所以展开合法。由第 1 步，$\int f\,dm\le q\delta$。
+
+*第 4 步：存在谱点。* 若对一切 $t\in\sigma(A)$ 都有 $f(t)>q\delta$，则 $f-q\delta$ 在 $m$-几乎处处为正，而 $m$ 是概率测度，所以 $\int(f-q\delta)\,dm>0$，与第 3 步矛盾。所以存在 $t^*\in\sigma(A)$ 使 $f(t^*)\le q\delta$。记 $\ell^*=t^*+\gamma>0$，则
+$$(\ell^*)^2-(2q+q\delta)\,\ell^*+q^2\le0 .$$
+这个二次式的判别式为 $(2q+q\delta)^2-4q^2=q^2\delta(4+\delta)\ge0$，两根为 $q\big(1+\tfrac\delta2\pm\sqrt{\delta+\tfrac{\delta^2}4}\big)$，所以 $\ell^*$ 在两根之间，即 $t^*\in I_1$。宽度为两根之差 $2q\sqrt{\delta+\delta^2/4}=q\sqrt{\delta(4+\delta)}$。
+
+*第 5 步：点谱。* 设 $t^*\in\sigma(A)\cap I_1\subset(\beta_-,\beta_+)$。因为 $(\beta_-,\beta_+)$ 不含本质谱，$t^*\in\sigma(A)\setminus\sigma_{\rm ess}(A)$。按自伴算子本质谱的标准定义，$\sigma(A)\setminus\sigma_{\rm ess}(A)$ 恰为离散谱，即有限重孤立特征值的集合。$\square$
+
+**注.**
+
+1. **与命题 1 的区别。** 命题 5 不需要 (H)，也不需要知道 $\lambda$ 附近其他谱点的位置；要说明区间里是点谱，只需认证一个不含本质谱、包住 $I_1$ 的区间。代价是区间宽度是一阶的：$\delta$ 很小时宽度约为 $2q\sqrt\delta$；而在 (H) 下，命题 1 的宽度约为 $C\,q\,\delta$（命题 3 加上 $J\approx G$）。
+2. **通量的作用。** 由第 1 步，精确通量 $\nabla z$（命题 2 第 3 项）给出最小的 $\delta=qG-1$，从而最窄的 $I_1$。若 (H) 成立且 $R$ 可以忽略，由命题 3 第 1 项，$qG-1\approx(\theta-\lambda)/\ell$，所以最窄的 $I_1$ 宽约 $2q\sqrt{(\theta-\lambda)/\ell}\approx2\sqrt{q(\theta-\lambda)}$，与试探函数的能量误差同阶。这一条是解释，不是命题。
+3. **数值例子（不属于证明）。** goerisch-v3 run-003 的 P3/RT3：$q=3.4287286707248676$，平方积分给出 $\delta=2.13952\times10^{-10}$，得 $I_1=[2.4286785187,\ 2.4287788235]$，宽 $1.003\times10^{-4}$，包含 $\mu_{\rm BIE}$。同一数据在 (H) 下（取整个未认证间隙）的命题 1 区间宽 $4.70\times10^{-9}$。
+
 ## 5. 与实验数据的对照（不属于证明）
 
 数据来自 `test/numerical-directions/goerisch-v1/` 的 run-017 至 run-022。$\lambda$ 用 $\mu_{\rm BIE}=2.428728670022710$ 代替，谱隙端点 $\alpha_-=1.3174^2$、$\alpha_+=2.1875^2$ 未认证，$\gamma=1$，全部为浮点计算。
@@ -169,6 +204,6 @@ $C$ 只由谱隙端点、$\lambda$ 和 $\gamma$ 决定，与离散无关。
 
 ## 6. 审查范围
 
-请审查：引理 0、命题 1、命题 2、命题 3、推论 4 的陈述与证明，以及对 Nakao2019 第 372–375 页 (10.45)–(10.54)、第 380 页引理 10.25、第 386–387 页定理 10.29 的引用是否准确、假设是否逐条满足。
+第二轮审查（2026-11-01）只审命题 5（第 4b 节）。第一轮审查范围：引理 0、命题 1、命题 2、命题 3、推论 4 的陈述与证明，以及对 Nakao2019 第 372–375 页 (10.45)–(10.54)、第 380 页引理 10.25、第 386–387 页定理 10.29 的引用是否准确、假设是否逐条满足。
 
 不在范围内：第 5 节的数值对照；谱隙假设 (H) 本身是否成立（端点认证）；实验代码与盒外尾项的实现；区间算术；新颖性与写作风格。

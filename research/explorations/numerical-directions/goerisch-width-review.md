@@ -75,3 +75,49 @@ The hypotheses of Theorem 10.29 were matched in source order:
 **Output file:**
 `research/explorations/numerical-directions/goerisch-width-review.md`.
 The reviewed proof file was not modified. Only this review file was written.
+
+## Round 2 (Proposition 5)
+
+**Result: 0 blockers, 0 important caveats, 0 minor caveats.**
+
+**Task mode:** Review only.
+**Target:** [[research/explorations/numerical-directions/goerisch-width]],
+section 4b, Proposition 5 and its proof, with the in-scope facts in
+remarks 1–2 (lines 161–192 of the reviewed version).
+
+| Item | Verdict | One line |
+|---|---|---|
+| Statement | correct | Admissibility gives the spectral intersection without (H); the additional essential-spectrum exclusion gives a finite-multiplicity isolated eigenvalue. |
+| Step 1 | correct | Both pairings used in Cauchy–Schwarz equal the displayed nonnegative real quantities, giving $G\le J$ and $1\le qG\le qJ$. |
+| Step 2 | correct | The normalized spectral measure is carried by $\sigma(A)$, and the form-domain assumption gives the finite first moment; the resolvent identity does not use (H). |
+| Step 3 | correct | All three expanded integrals are finite and their sum is $q(qG-1)\le q\delta$. |
+| Step 4 | correct | Strict positivity almost everywhere under a probability measure gives the contradiction, and the quadratic roots give the interval also when $\delta=0$. |
+| Step 5 | correct | For this self-adjoint operator, a spectral point outside the essential spectrum is an isolated eigenvalue of finite multiplicity. |
+| Remark 1 | correct | The small-$\delta$ width follows from $q\sqrt{\delta(4+\delta)}=2q\sqrt\delta\sqrt{1+\delta/4}$; the spectral conclusions match the statement. |
+| Remark 2, factual claim | correct | $Tz$ is admissible and attains $J=G$; for fixed $q>0$, the width increases with $\delta\ge0$. |
+
+### Objections
+
+No objections.
+
+### Dependencies and completion
+
+The reused Proposition 1 steps 1–2 use (P1)–(P3), the quasi-periodic
+trace condition, and the definitions of $T$ and $b_X$; they do not use
+(H). The reused first identity in Proposition 3 step 1 uses only
+$z=(A+\gamma)^{-1}v$ and the nonnegative self-adjoint operator's spectral
+representation. Thus both apply under the assumptions of Proposition 5.
+
+Sections 0–4 and their round-1 review were accepted inputs. For step 5,
+the essential-spectrum definition was checked in Nakao, Plum, and
+Watanabe (2019), cited above, printed p. 374 / PDF p. 380, in the
+unnumbered paragraph following (10.51): the essential spectrum consists
+of spectral accumulation points and eigenvalues of infinite
+multiplicity. This agrees with the definition used in Proposition 5.
+
+**Literature status:** Review literature verification completed.
+
+**Output file:**
+`research/explorations/numerical-directions/goerisch-width-review.md`,
+this appended section only. The round-1 text and the reviewed proof file
+were preserved unchanged.
