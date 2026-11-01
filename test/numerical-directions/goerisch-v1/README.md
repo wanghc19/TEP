@@ -322,3 +322,213 @@ The monitor's resource CSV contains only its header; it did not produce
 `monitor.json`. Wall time and peak process-tree RSS are therefore unavailable.
 The original attempt ended there. Authorized escalated run-002 completed
 preparation; all subsequent launches used that channel.
+
+## Step 3: RT3 plateau and reconstruction cost
+
+R stays near width `1.89e-7` after stabilizing RT3 and refining the RT2
+mesh. The optional RT4 result is `1.88602522e-07`. The large RT3 discrepancy
+comes from div-div cancellation in the moment basis. Correcting it greatly
+improves functional agreement while leaving the pointwise enclosure
+unchanged within quadrature uncertainty. Field evaluation dominates R's cost.
+
+### Localization and correction
+
+Run-016 reproduces run-015's pointwise J and width exactly. Separately
+evaluating the flux-mass, div-div and twice-load terms localizes the error
+as follows. Entries are Gram minus pointwise values before division by
+the trial mass `2.5896785236423288`.
+
+| Elements | Term | Order 16 difference | Order 24 difference |
+|---|---|---|---|
+| Unchanged | Flux mass | 3.99680e-15 | 5.40124e-14 |
+| Curved | Flux mass | 8.15320e-17 | 1.83881e-16 |
+| Unchanged | Div-div | 2.34903e-8 | -5.06036e-9 |
+| Curved | Div-div | 3.73385e-11 | -1.73938e-10 |
+| Unchanged | Twice load | -9.10383e-15 | 3.55271e-15 |
+| Curved | Twice load | -6.31439e-16 | 5.34295e-16 |
+
+The constant is the independently integrated trial mass in both formulas,
+so its difference is zero. More than 99% of the primary div-div discrepancy
+is on unchanged elements. The combined matrix evaluation has numerator
+difference `2.29379e-8`; separately contracting its components adds another
+roundoff difference, visible in the table. The normalized difference is
+`J_gram-J=8.85743e-9`.
+
+Between orders 16/24, relative Frobenius differences range from
+`1.57e-15` to `3.86e-15` for the matrix, and `1.75e-8` to `9.22e-7` for the
+load, across templates and the two element groups. The pointwise J changes
+by `5.26929e-12`. The condensed global residual is `1.06702e-15`; unreduced
+interior-equation residuals range from `2.71e-8` to `3.35e-8` in the old
+coordinates. The discrepancy between the two functional evaluations occurs
+for the same coefficient vector, independently of how it was obtained.
+Sources: [component records](output/run-016/science/result.json) and
+[arithmetic summary](output/run-022/study-summary.json).
+
+The fix preserves the RT space, edge moments and Piola map. A weighted QR
+factorization orthonormalizes the raw reference vector polynomials. A
+singular value decomposition of their edge-moment matrix supplies
+minimum-norm edge lifts and an orthonormal interior kernel. At RT3, the
+coefficient-matrix norm drops from `251521.82` to `3413.63`; the edge-moment
+error is `1.15e-13` ([basis data](output/run-018/science/result.json)).
+This addresses the observed cancellation without increasing quadrature.
+
+Re-solving R/RT3 gives `J=0.29165329083928765`, against the previous
+`0.29165329083925257`: a change of `3.51e-14`, compared with a
+`5.28e-12` quadrature change. The scaled Gram discrepancy drops from
+`353.377%` to `0.0871530%`. Thus the inaccurate matrix functional does not
+explain the observed width plateau.
+
+### Mesh control and fixed-solve results
+
+The refined mesh has 691,024 triangles, four children per original fitted
+triangle. Every child map is the parent map composed with an affine
+reference map. It preserves the exact interfaces, material labels, box,
+normal traces and transverse phase. RT2 is nested under this refinement.
+Flux quadrature orders 8/12 on children use the same point count as 16/24
+on parents. Area checks remain at 16/24. D's normalization remains on its
+native mesh with the original quadrature orders.
+
+Refined RT2 and coarse RT4 use blocked Schur-complement construction and
+refactor one template during recovery. This avoids dense extension
+matrices and retaining three sparse factors. The older enclosure entry
+point remains available unchanged; the new entry is `goerisch_flux_study`.
+
+| Mesh | Degree | R: qJ-1 | R: interval | R: width | R: wall | R: RSS | D: qJ-1 | D: interval | D: width | D: wall | D: RSS |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| Original fitted | RT3 | 8.59426552e-09 | [2.428728627121582, 2.428728815753848] | 1.88632266e-07 | 431.99 s | 2.562 GiB | 1.63968723e-07 | [2.428727852029159, 2.428731450916315] | 3.59888715e-06 | 75.40 s | 2.379 GiB |
+| Four children | RT2 | 8.59389204e-09 | [2.428728627124726, 2.428728815748794] | 1.88624068e-07 | 479.52 s | 2.327 GiB | 1.63970918e-07 | [2.428727852010681, 2.428731450946018] | 3.59893533e-06 | 82.85 s | 2.178 GiB |
+| Original fitted | RT4 | 8.59291038e-09 | [2.428728627132988, 2.428728815735512] | 1.88602522e-07 | 465.01 s | 2.204 GiB | 1.63967420e-07 | [2.428727852040129, 2.428731450898682] | 3.59885855e-06 | 93.94 s | 2.238 GiB |
+
+Sources are R runs 018/020/022 and D runs 017/019/021, each with
+`science/result.json` and `monitor.json`. The [scalar table](output/run-022/study-results.csv)
+and [comparison record](output/run-022/study-summary.json) collect them.
+
+### Checks
+
+1. All inclusion areas pass relative `1e-12`; the maximum error is `1.05790e-14`.
+   The maximum cell-area error is `9.22595e-14`. All R quotients equal
+   `2.4287286994656423`, with relative difference `1.82848e-16` from theta-v1.
+2. Every fixed row has positive qJ-1, both sign conditions, and an interval
+   containing `mu_BIE=2.428728670022710`. Every R width exceeds `7.67705e-8`.
+3. All nested comparisons pass. The refinement comparison uses RT2 on
+   both meshes; the degree comparison uses the original fitted mesh.
+   Each allowance is the sum of the two measured absolute quadrature changes.
+4. Pointwise quadrature passes `q*abs(J_check-J)/(qJ-1)<0.01` for all six
+   fixed rows. Its maximum scaled change is `0.285514%`.
+5. Assembled-versus-pointwise agreement passes
+   `q*abs(J_gram-J)/(qJ-1)<0.01` for all six fixed rows. Its maximum is `0.353387%`.
+   The old-basis run-016 audit deliberately measures the discrepancy being fixed.
+
+| Trial / runs compared | J decrease | Summed quadrature change | Check |
+|---|---|---|---|
+| D / 012 to 017 | 5.70229419e-11 | 2.77555756e-16 | pass |
+| R / 014 to 018 | 5.89363003e-11 | 1.05653264e-11 | pass |
+| D / 012 to 019 | 5.63827318e-11 | 6.66133815e-16 | pass |
+| R / 014 to 020 | 5.90452132e-11 | 1.24391608e-11 | pass |
+| D / 017 to 021 | 3.80084852e-13 | 1.66533454e-16 | pass |
+| R / 018 to 022 | 3.95183886e-13 | 1.05649378e-11 | pass |
+
+The last column in the following table is the new functional-agreement
+check. Refinement 0 denotes the original fitted mesh, and 1 its four-child
+refinement. Both percentages must be below 1%.
+
+| Run / trial / degree / refinement | J | J check | J Gram | Quadrature | Gram agreement |
+|---|---|---|---|---|---|
+| 018 / R / RT3 / 0 | 0.2916532908392876 | 0.2916532908445700 | 0.2916532908414722 | 0.210744% | 0.087153% |
+| 017 / D / RT3 / 0 | 0.2916532908334767 | 0.2916532908334767 | 0.2916532908357237 | 0% | 0.00469863% |
+| 020 / R / RT2 / 1 | 0.2916532908391787 | 0.2916532908463350 | 0.2916532908345222 | 0.285514% | 0.185784% |
+| 019 / D / RT2 / 1 | 0.2916532908341170 | 0.2916532908341166 | 0.2916532908294547 | 8.1254e-07% | 0.00974897% |
+| 022 / R / RT4 / 0 | 0.2916532908388925 | 0.2916532908441750 | 0.2916532908300360 | 0.210784% | 0.353387% |
+| 021 / D / RT4 / 0 | 0.2916532908330967 | 0.2916532908330968 | 0.2916532908242579 | 3.48239e-07% | 0.0184828% |
+
+### What R costs
+
+Each flux quadrature point set evaluates R once. Primary-order values are
+cached for the subsequent functional check, then released template by
+template. Each run contains one degree; no field cache is retained between
+runs. J needs trial values only. Its quotient reuses the Fourier energy
+identity from theta-v1, so pointwise trial gradients are unnecessary here.
+
+The timing categories below are disjoint. The primary check reuses cached
+values. The higher-order check column excludes field evaluation, already
+counted in the first timing column. Solve time includes condensation,
+the global solve and recovery. Other time includes geometry, input loading,
+bookkeeping and MATLAB startup.
+
+| R run / degree / refinement | Field values | Assembly | Solve | Primary check | Higher-order check | Normalization | Other/startup | Total wall |
+|---|---|---|---|---|---|---|---|---|
+| 018 / RT3 / 0 | 374.04 | 2.26 | 3.43 | 6.18 | 14.02 | 15.41 | 16.64 | 431.99 |
+| 020 / RT2 / 1 | 403.91 | 2.73 | 13.95 | 6.28 | 12.23 | 17.58 | 22.82 | 479.52 |
+| 022 / RT4 / 0 | 392.36 | 3.97 | 6.36 | 8.86 | 20.77 | 16.37 | 16.31 | 465.01 |
+
+All times are seconds, taken from the result's `timing` and
+`field_evaluation_detail` plus its monitor. For run-018, field evaluation
+splits into `114.23 s` at the primary order and `259.80 s` at the check
+order; all 408 primary batches are reused. Run-020 reuses 1,601 batches.
+The cache avoids repeating the measured primary-order field work. The
+main field-evaluation cost remains, so a cache across separate degree runs
+has not been included in these timings.
+
+At RT3, R's interval is 19.08 times narrower than D's,
+while its wall time is 5.73 times larger. Field evaluation
+accounts for 86.59% of R's wall time
+([cost ratios](output/run-022/study-summary.json)).
+
+### Meaning for the target
+
+The observed R plateau is near `qJ-1=8.6e-9`. Width `1e-7` requires
+`qJ-1=4.55610e-9` with these edges. Stabilization, one mesh refinement and
+RT4 leave the width near `1.89e-7`; the original `5.8e-7` target is met.
+The numerical results support a trial-dependent floor, while the exact
+minimum over all fluxes remains uncomputed.
+
+For the exact source functional
+$G=\langle v,(A+1)^{-1}v\rangle_\rho/\|v\|_\rho^2$,
+$$qJ-1=(qG-1)+q(J-G).$$
+The containment argument gives `qG-1 >= 3.49774e-9` and width at least
+`7.67705e-8`. Therefore `5.09641e-9` is an upper bound on the remaining
+flux contribution for the old RT3 row. The difference from the containment
+lower limit combines flux error and excess trial variance. An independently
+converged source solve would
+separate the two contributions, including the fixed-box flux restriction.
+These arithmetic constraints are recorded in
+[study-summary.json](output/run-022/study-summary.json).
+
+### Reproduction and run budgets
+
+The read-only input and MATLAB version are unchanged. All runs use two
+MATLAB computational threads and the unchanged monitor, with escalated
+permission, serial execution, 30 minutes soft, 40 minutes hard and 3 GiB
+RSS limits. The following estimates were written before each launch.
+
+| Run | Degree / trial / study / refinement | Estimated time / RSS |
+|---|---|---|
+| 016 | 3 / R / audit / 0 | 8–16 min / <2.9 GiB |
+| 017 | 3 / D / stable / 0 | 1–3 min / <2.7 GiB |
+| 018 | 3 / R / stable / 0 | 6–10 min / <2.9 GiB |
+| 019 | 2 / D / stable / 1 | 2–6 min / <2.6 GiB |
+| 020 | 2 / R / stable / 1 | 7–12 min / <2.9 GiB |
+| 021 | 4 / D / stable / 0 | 2–5 min / <2.6 GiB |
+| 022 | 4 / R / stable / 0 | 7–12 min / <2.9 GiB |
+
+Run-016 took `405.13 s` at `2.600 GiB`. The fixed runs' measured costs are
+in the results table. The refined D pilot used `2.178 GiB`, and the RT4 D
+pilot used `2.238 GiB`; adding the approximately `0.66 GiB` primary R cache
+supported their R forecasts. All seven runs completed within the limits.
+
+For example, run-018 is reproduced by:
+
+```sh
+python3 test/numerical-directions/diagnostics-v1/monitor.py \
+  /Users/whc/Documents/Work/dot-research/test/numerical-directions/goerisch-v1/output/run-018 \
+  "addpath('/Users/whc/Documents/Work/dot-research/test/numerical-directions/goerisch-v1'); goerisch_flux_study('/Users/whc/Documents/Work/epost/test/i9/dtn-bound-v1/output/attempt-1/run-03','/Users/whc/Documents/Work/dot-research/test/numerical-directions/goerisch-v1/output/run-018/science',3,'R','stable',0);"
+```
+
+Use a fresh output number, and substitute the arguments from the table.
+Every run retains its exact command in `command.json`. The postprocessor is:
+
+```sh
+python3 test/numerical-directions/goerisch-v1/summarize_flux_study.py \
+  /Users/whc/Documents/Work/dot-research/test/numerical-directions/goerisch-v1 \
+  /Users/whc/Documents/Work/dot-research/test/numerical-directions/goerisch-v1/output/run-022
+```
