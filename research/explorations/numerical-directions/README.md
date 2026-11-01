@@ -412,6 +412,47 @@ run-002 停下来，是因为我在提示词里把"Gram 二次型与逐点 $J$ �
 
 Gram 差在 RT2 时约 $5.4\times10^{-12}$，RT3 时约 $2.2\times10^{-12}$。同一通量空间下，P2 场和 P3 场的 Gram 差几乎相同，说明它由通量空间组装后的浮点误差决定，与试探函数无关。全部结果仍是普通浮点，谱隙端点也尚未认证。改动只在 `test/numerical-directions/goerisch-v3/` 内，尚未提交。
 
+## 第 4a 阶段：隔离假设 (H) 能否认证——查新（2026-11-02）
+
+Codex 的报告见 [[isolation-survey]]（英文）。方向已定为数值方法论文：用直接高阶 FEM + DtN 和 Lehmann–Goerisch 方法，为谱隙中的导模特征值给出保证区间。
+
+**结论：没有现成方法能直接认证我们模型的 (H)。** 相关的工具分成四类，各缺一块：
+
+| 类别 | 代表文献 | 能证明什么 | 用到我们问题上缺什么 |
+|---|---|---|---|
+| 包含型界（Lehmann、Goerisch、Zimmermann–Mertins、二阶相对谱） | Nakao 书第 10 章；Zimmermann–Mertins 1995；Levitin–Shargorodsky 2004；Boulton–Levitin 2007 | 某区间内**至少有**一个特征值 | 不能排除其他特征值。Nakao 书 Remark 10.11(g)（第 363 页）明确写了这一点 |
+| 比较问题与同伦法 | Nakao 书 §10.2.4、例 10.38；Behnke–Mertins–Plum–Wieners 2000 | 特征值计数和隔离，包括一个无限声学波导 | 只适用于本质谱下确界**以下**的特征值；我们的 $\lambda$ 下方有本质谱 |
+| 谱隙内排除 | Nagatou–Plum–Nakao 2012 | 内部谱隙中某些子区间**没有**特征值，已有计算机辅助实现 | 只做了一维 Schrödinger 算子；仍缺"候选区间内只有一个"的计数 |
+| 解析计数 | Brown–Hoang–Plum–(Radosz–)Wood 2014、2020 | 线缺陷在谱隙中产生的特征值**个数**，个数为 1 时即为 (H) | 要求缺陷"足够弱"且没有给出具体门槛，左右为同一周期背景，不能直接用于我们的固定几何 |
+
+另有超胞法（Cancès–Ehrlacher–Maday 2014）和耗散扰动法（Marletta–Scheichl 2012、Aljawi–Marletta 2023）。它们证明的是"网格足够细时重数正确"这类收敛结果，不能用来核验某一次具体计算。
+
+**推荐路线**（Codex 提出，尚无人做过，属于新工作）：
+1. 用 Hoang–Plum–Wieners 2009 的方法认证两侧 lead 的能带间隙，只需要一个包含隔离区间的窗口。他们的二维 Bloch 参数例子用了 52 小时；我们固定了横向相位，只剩一维 Bloch 参数，代价应小得多，但没有估算。
+2. 在这个窗口上，给出两侧 DtN 映射的可计算误差界，并排除半 lead 的 Dirichlet 极点。连续层面的 DtN 归约由 Fliss 2013 提供。
+3. 把计数变成端点上的惯性差：对中心区域上带 DtN 的二次型 $t_\lambda$，它对 $\lambda$ 的导数为负（等于中心场连同两侧衰减延拓的总加权质量的相反数）。所以 $(\alpha_-,\alpha_+)$ 中特征值的个数，等于 $t_\lambda$ 的负惯性指数从 $\alpha_-$ 到 $\alpha_+$ 的增量。这个计数定理需要我们自己证明。
+4. 在两个端点上分别认证负惯性指数：有限元块加补空间的正性界，再加上 DtN 误差。增量为 1，就证明了 (H)。
+5. 最后用已有的 Goerisch 通量计算给出窄区间。
+
+另一条路线是"折叠谱"：$(A-s)^2$ 把 $s$ 附近的特征值移到本质谱下方，再用下方的计数方法（Boulton–Levitin 2007，Remark 2.3）。缺点是要处理四阶算子，Codex 认为不如 DtN 路线。
+
+**两个附带问题：**
+- **命题 5 不是新结果。** 它等价于 Weinstein 定理（Nakao 书定理 10.6，第 356 页）应用于算子 $C^{1/2}-qC^{-1/2}$，$C=A+\gamma$。我核对了这个推导，已在 [[goerisch-width]] 命题 5 的注 3 中写明。
+- **方向 1 在已读文献中没有直接先例。** 最接近的是 Behnke–Mertins–Plum–Wieners 2000：FEM、RT 通量和严格包含都有，但处理的是本质谱下方的特征值。没有找到有人把"FEM 试探函数 + 计算的通量"用于周期波导**内部谱隙**中的线缺陷导模。
+
+**我核查了什么：** 打开本地原文核对了以下内容，都与报告一致：
+- Nakao 书定理 10.6（Weinstein）、Remark 10.11(g)、定理 10.31 的条件 $\Lambda_N<\nu\le\lambda_{N+1}$、例 10.38 的"至多一个特征值"和区间数值；
+- Brown 等 2020 定理 3 的假设（非负缺陷、带函数非退化、扰动"足够小"）；
+- Hoang–Plum–Wieners 2009 的 95 个覆盖球和 52 小时；
+- Boulton–Levitin 2007 Remark 2.3；
+- Cancès 等 2020 Remark 4.3。
+
+Nagatou–Plum–Nakao 2012、Zimmermann–Mertins 1995、Marletta 等人的文章不在本地，我没有核对。
+
+**未解决：**
+- Sekisaka–Nii 2016（一维计算机辅助验证，可能给出唯一性）、Watanabe 等 2014 的完整定理、Aceto–Ghelardoni–Marletta 2006，都没有拿到全文。前两篇可能影响"一维已有隔离认证"的判断，但不影响我们二维问题的结论。
+- 本轮没有下载文献。
+
 ## 下一步
 
 1. 已完成（2026-11-01）：P3 收尾，见第 3d 阶段收尾。待用户决定：是否把研究线改为"直接高阶 FEM + Goerisch"，并让 R 不再作为试探函数；改线前先查新（Plum 学派 Hoang–Plum–Wieners、Brown–Hoang–Plum–Wood，以及 Cancès 等人的工作）。
