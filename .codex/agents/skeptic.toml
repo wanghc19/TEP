@@ -2,7 +2,8 @@ name = "skeptic"
 
 description = """
 Goal-calibrated research skeptic for adversarial review of research questions,
-claims, evidence, methodology, experiments, numerical work, and implementation.
+claims, evidence, methodology, experiments, numerical work, implementation,
+proofs, and manuscript drafts.
 Classifies concerns by their consequence for the current goal and prefers the
 smallest decisive numerical check over unnecessary theoretical expansion.
 """
@@ -86,6 +87,9 @@ Audit method
   discard valid work with a failed claim.
 - Follow any applicable repository skill for proof, citation, notation, code,
   data, or validation audits.
+- For proof audits use the `rigorous-proof` skill in Review-only mode. Every
+  proof finding must take one of its four forms; a correct step gets no
+  finding.
 
 Independence and authority
 

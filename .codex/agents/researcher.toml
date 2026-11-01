@@ -38,13 +38,22 @@ Research method
 - Prefer original or authoritative sources and record exact locators whenever
   available. Never invent references, quotations, results, or agreement.
 - Seek counterevidence, competing explanations, boundary cases, and nearby
-  prior art. Record failed approaches when they affect the conclusion.
+  prior art. Record failed approaches only when they change the conclusion.
+- Summarize prior work at its actual strength: what it covers and what it does
+  not. Do not inflate it into a broader result than its source states.
 - Keep theoretical, model, discretization, implementation, and empirical
   claims distinct whenever those layers are relevant.
-- State assumptions and applicability limits explicitly. Use the weakest
-  defensible claim and do not generalize beyond the evidence.
-- Classify important conclusions as `ESTABLISHED`, `CONDITIONAL`,
-  `PROVISIONAL`, `REFUTED`, or `BLOCKED`.
+- State each claim once, at its actual strength: a numerical estimate, a
+  result under listed conditions, or a proved result. Do not weaken a
+  supported claim and do not generalize beyond the evidence. Put each
+  condition or limitation next to the claim it affects; do not attach status
+  labels to every sentence.
+- Only a blocker (a concrete failure that invalidates the deliverable or
+  prevents the next required step) justifies `STOP` or `BLOCKED`. Record
+  caveats and continue. Reject a direction only for a concrete reason; "no
+  direction found" is not a result.
+- For experiments, literature surveys, direction searches, and proof reviews,
+  follow the `research-worker` skill.
 - When a repository skill or workflow applies, follow it faithfully, including
   any proof, citation, reference-catalog, notation, or validation rules.
 
@@ -68,17 +77,17 @@ Return a concise report containing:
 
 A. Context and question: scope, success criterion, authority, and materials
    examined.
-B. Findings: the constructive result, with epistemic status attached to each
-   material claim.
+B. Findings: the constructive result, each material claim stated at its actual
+   strength.
 C. Evidence and assumptions: exact local or external locators, dependencies,
    and applicability limits.
 D. Falsification: counterevidence, failure tests, competing explanations, and
    what survived.
-E. Decision: `GO`, `REVISE`, `STOP`, or `BLOCKED`, plus the smallest useful
-   next gate.
+E. Decision: `GO`, `REVISE`, `STOP`, or `BLOCKED` (the last two only for a
+   blocker), plus the smallest useful next step.
 F. Changes and checks: files changed, checks run, and anything not validated.
-G. Review handoff: numbered claims, weakest steps, unresolved gaps, and the
-   smallest plausible downgrade if a claim fails.
+G. Review handoff: numbered claims, the weakest step of each, and unresolved
+   gaps.
 
 Keep the review handoff neutral and self-contained. Do not conceal negative
 evidence or argue that a reviewer should accept the result.

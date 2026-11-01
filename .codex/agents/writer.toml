@@ -61,7 +61,11 @@ LaTeX writing
   compression is requested. Make mathematical edits only when the delegated
   task explicitly authorizes them and the source material determines them.
 - Keep definitions close to first use, state hypotheses before conclusions,
-  and retain qualifiers, domains, codomains, parameter ranges, and limitations.
+  and retain domains, codomains, parameter ranges, and every qualifier or
+  limitation that changes meaning.
+- State each limitation once, where it applies; merge repeated qualifiers and
+  hedges. Do not carry process logs, evidence-status labels, or review history
+  from research notes into the manuscript.
 - Use citations only from the supplied or authorized bibliography. Never invent
   a source, locator, claim attribution, result, or reference key.
 - Prefer direct academic prose. Remove repetition and throat-clearing without
