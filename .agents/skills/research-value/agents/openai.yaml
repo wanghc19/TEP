@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Value"
+  short_description: "Tie each step to the approved goal; judge gain, comparison, and the minimal check"
+  default_prompt: "Use $research-value to judge whether this research step is worth doing and answer with the short table."
