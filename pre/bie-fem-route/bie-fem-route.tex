@@ -1,0 +1,476 @@
+% bie-fem-route.tex
+%
+% Purpose:
+%   Chinese beamer slides explaining why the BIE (boundary integral equation)
+%   route is kept only as a reference solution and is not continued as the
+%   reliable-enclosure route of direction 1, compared with direct high-order
+%   FEM (finite element method) + DtN (Dirichlet-to-Neumann) + Lehmann--Goerisch.
+%
+% Build:
+%   latexmk -xelatex bie-fem-route.tex
+%
+% Sources of every number: see README.md in this directory.
+
+\documentclass[aspectratio=169,11pt,fontset=fandol]{ctexbeamer}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usepackage[most]{tcolorbox}
+
+% ---------- Template: one accent color, plain white pages ----------
+\definecolor{ink}{HTML}{1F2933}
+\definecolor{accent}{HTML}{1F5A96}
+\definecolor{muted}{HTML}{6B7280}
+\definecolor{tint}{HTML}{EEF3F9}
+\definecolor{rule}{HTML}{D1D5DB}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{normal text}{fg=ink,bg=white}
+\setbeamercolor{structure}{fg=accent}
+\setbeamercolor{alerted text}{fg=accent}
+\setbeamerfont{alerted text}{series=\bfseries}
+\setbeamertemplate{itemize items}{\textcolor{accent}{\small$\blacktriangleright$}}
+\setbeamertemplate{itemize subitem}{\textcolor{muted}{--}}
+\setbeamertemplate{enumerate items}[default]
+
+\setbeamertemplate{frametitle}{%
+  \vspace*{0.6em}%
+  {\large\bfseries\color{ink}\insertframetitle}\par
+  \vspace*{0.25em}%
+  {\color{accent}\rule{2.2em}{1.6pt}}%
+  \vspace*{0.1em}}
+
+\setbeamertemplate{footline}{%
+  \hspace*{1.2em}{\scriptsize\color{muted}BIE 与 FEM 路线比较}%
+  \hfill{\scriptsize\color{muted}\insertframenumber/\inserttotalframenumber}%
+  \hspace*{1.2em}\vspace*{0.8em}}
+
+\setbeamertemplate{title page}{%
+  \vfill
+  {\Large\bfseries\color{ink}\inserttitle}\par\vspace{0.6em}
+  {\color{muted}\insertsubtitle}\par\vspace{0.8em}
+  {\color{accent}\rule{3em}{2pt}}\par\vspace{1.2em}
+  {\small\color{muted}\insertdate}
+  \vfill}
+
+% Key message box: tinted, accent bar on the left.
+\newtcolorbox{keybox}{enhanced,colback=tint,colframe=tint,boxrule=0pt,
+  sharp corners,left=0.8em,right=0.8em,top=0.45em,bottom=0.45em,
+  borderline west={2.5pt}{0pt}{accent}}
+\newcommand{\key}[1]{\begin{keybox}#1\end{keybox}}
+\newcommand{\aside}[1]{{\footnotesize\color{muted}#1}}
+\newcommand{\src}[1]{{\scriptsize\color{muted}来源：\texttt{#1}}}
+\newcommand{\yes}{\textcolor{accent}{\textbf{是}}}
+\newcommand{\no}{\textcolor{muted}{否}}
+
+\title{为什么不继续 BIE 可靠估计路线}
+\subtitle{内部谱隙导模特征值：BIE 与直接 FEM + Goerisch 的系统比较}
+\date{2026 年 11 月}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{结论}
+  \key{BIE 保留为\alert{独立参考解}，不再作为可靠估计区间的路线投入；
+    方向 1 的可靠估计区间改由\alert{直接高阶 FEM + DtN + Goerisch} 完成。}
+  \vspace{0.3em}
+  \centering\small
+  \begin{tabular}{lll}
+    \toprule
+    & BIE（I9.1 搜索 + I9.2 评价） & 直接 FEM + Goerisch \\
+    \midrule
+    输出 & 谱距离估计：$\mu_0\pm R$ & 含特征值的区间（需 (H)） \\
+    全宽（$\mu$） & $1.55\times10^{-9}$ & $4.70\times10^{-9}$ \\
+    截断误差可靠（初期目标） & \no & \no（求积、几何映射、(H)） \\
+    舍入误差可靠（后期） & \no & \no \\
+    从谱隙窗口起的时间 & 669.9\,s & 119.4\,s \\
+    \bottomrule
+  \end{tabular}
+  \raggedright
+  \vspace{0.4em}
+  \begin{itemize}
+    \item 两个结果\alert{都还不是}可靠估计区间；比较的是精度、到可靠的剩余工作、成本。
+    \item FEM 剩下的是求积、几何映射与 (H)；BIE 剩下的是一整套曲线界面分析，且已更慢。
+  \end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{目标：可靠估计区间}
+  \textbf{目标}：内部谱隙中线缺陷导模特征值 $\mu=k^2$ 的\alert{可靠估计区间}，全宽约 $5\times10^{-9}$。
+  区间至少含一个特征值；总目标\alert{不要求唯一性}。
+  \vspace{0.5em}
+
+  \textbf{"可靠"分两层}
+  \begin{itemize}
+    \item \textbf{截断误差意义下可靠}：所有离散、截断、求积、无限尾项误差都有单侧界，
+      在精确算术下结论成立。
+    \item \textbf{截断与舍入误差意义下都可靠}：再用区间运算控制浮点舍入，最终端点向外取整。
+  \end{itemize}
+  \vspace{0.3em}
+  \key{初期目标是\alert{第一层}（截断误差意义下可靠）；舍入误差留到后期用区间运算处理。
+    I6 v3（圆形介质，BIE）两层都已达到，全宽 $3.30\times10^{-7}$，说明第二层可以做到。}
+  \aside{本报告比较的两个结果，第一层都还没有达到（见"误差覆盖"页）。}
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{模型}
+  \begin{columns}[T]
+    \begin{column}{0.53\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=1.1]
+        \def\cm{0.199284} \def\cp{0.198030}
+        \begin{scope}
+          \clip (-2.75,-0.95) rectangle (2.75,0.95);
+          \foreach \j/\op in {-1/0.35,0/1,1/0.35} {
+            \begin{scope}[shift={(0,\j)}, opacity=\op]
+              \fill[accent!35,draw=accent,line width=0.4pt] plot[domain=0:360,samples=200,smooth]
+                ({0.2*(1.5+0.3*cos(5*\x))*cos(\x)},{0.2*(1+0.3*cos(5*\x))*sin(\x)}) -- cycle;
+              \foreach \c in {-1,-2} \fill[muted!45,draw=muted,line width=0.4pt]
+                plot[domain=0:360,samples=120,smooth]
+                ({\c+\cm*(1+0.12*cos(3*\x))*cos(\x)},{\cm*(1+0.12*cos(3*\x))*sin(\x)}) -- cycle;
+              \foreach \c in {1,2} \fill[muted!45,draw=muted,line width=0.4pt]
+                plot[domain=0:360,samples=120,smooth]
+                ({\c+\cp*(1+0.20*cos(3*\x))*cos(\x)},{\cp*(1+0.20*cos(3*\x))*sin(\x)}) -- cycle;
+            \end{scope}
+          }
+        \end{scope}
+        \foreach \x in {-2.5,-1.5,-0.5,0.5,1.5,2.5} \draw[rule,dashed] (\x,-0.95) -- (\x,0.95);
+        \draw[ink,line width=0.5pt] (-2.75,-0.5) -- (2.75,-0.5);
+        \draw[ink,line width=0.5pt] (-2.75,0.5) -- (2.75,0.5);
+        \node[font=\large,muted] at (-3.0,0) {$\cdots$};
+        \node[font=\large,muted] at (3.0,0) {$\cdots$};
+        \draw[<->,muted] (0.5,-1.08) -- node[below,font=\scriptsize]{$L=1$} (1.5,-1.08);
+        \node[font=\scriptsize,fill=white,inner sep=1pt] at (0,-0.4) {$\varepsilon=4$};
+        \node[font=\scriptsize,fill=white,inner sep=1pt] at (-1.5,-0.4) {$a_-=0.12$};
+        \node[font=\scriptsize,fill=white,inner sep=1pt] at (1.5,-0.4) {$a_+=0.20$};
+        \node[font=\scriptsize,muted] at (-1.5,1.12) {左引线};
+        \node[font=\scriptsize,muted] at (0,1.12) {中心};
+        \node[font=\scriptsize,muted] at (1.5,1.12) {右引线};
+        \draw[->,muted] (-2.6,-1.25) -- (-2.2,-1.25) node[right,font=\scriptsize]{$x$};
+        \draw[->,muted] (-2.6,-1.25) -- (-2.6,-0.95) node[above,font=\scriptsize]{$y$};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \footnotesize
+      \textbf{中心五瓣星形}（$\varepsilon=4$，面积 $0.0618\pi$）
+      \begin{align*}
+        x&=0.2\,(1.5+0.3\cos5t)\cos t\\
+        y&=0.2\,(1+0.3\cos5t)\sin t
+      \end{align*}
+      \textbf{引线三瓣形}（$\varepsilon=17$，面积 $0.04\pi$）
+      \[
+        r_\pm(t)=\frac{0.2\,(1+a_\pm\cos3t)}{\sqrt{1+a_\pm^2/2}}
+      \]
+      $(x,y)=(c,0)+r_\pm(t)(\cos t,\sin t)$；左侧 $c=-1,-2,\dots$ 用 $a_-=0.12$，
+      右侧 $c=1,2,\dots$ 用 $a_+=0.20$。
+
+      \vspace{0.4em}
+      \textbf{条件}：背景 $\varepsilon=1$；$y$ 方向周期 $d=1$，$u(x,y+1)=e^{\mathrm i\beta}u(x,y)$，$\beta=0.5$；
+      两侧引线向 $x\to\pm\infty$ 无限延伸。
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{输入：共同输入只有模型和谱隙窗口}
+  \centering\scriptsize
+  \begin{tabular}{p{0.15\textwidth}p{0.38\textwidth}p{0.38\textwidth}}
+    \toprule
+    & BIE & 直接 FEM + Goerisch \\
+    \midrule
+    \textbf{共同输入} & \multicolumn{2}{p{0.78\textwidth}}{上页模型；谱隙窗口 $k\in[1.451,\,2.249]$（上游 Bloch 分类给出，28.4\,s，双方都不计）} \\
+    \addlinespace
+    \textbf{方法参数}（无法对比） &
+      Rayleigh 阶 $M=48$；边界节点 中心 512 / 引线 256；
+      MFS 代理点 $4\times80$、配点每边 160、平面波 $\pm32$；
+      评价节点 768；每侧 40 胞元 + 外推尾项；FMM 容差 $10^{-12}$；
+      粗扫 + 细扫频率网格 &
+      P2 搜索：13 胞元截断，$h=1/12$，3 个移位 $\times$ 12 个 Ritz 对；
+      P3 网格 g48（每胞 48 等分）；引线消元 + QZ 得 DtN；
+      RT3 通量，通量域左右各 13 胞元；积分阶 16（核查 24） \\
+    \addlinespace
+    \textbf{额外谱输入} & 无 &
+      \alert{谱隙端点} $\alpha_-=1.3174^2$（17 点扫描，未认证）、
+      $\alpha_+=2.1875^2$（假设值）；\alert{(H)}。与谱隙窗口的区别见下页 \\
+    \bottomrule
+  \end{tabular}
+  \raggedright\vspace{0.3em}
+  \begin{itemize}\small
+    \item 方法参数是各自的分辨率设置，节点数与网格层级不能一一对应，所以只比较\alert{同一起点到输出}的总成本。
+  \end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{谱隙窗口与谱隙端点：不是同一个东西}
+  \centering
+  \begin{tikzpicture}[x=9cm,y=0.5cm,font=\scriptsize]
+    % k axis: x = k - 1.25
+    \draw[->,ink] (0,0) -- (1.23,0) node[right]{$k$};
+    \node[anchor=west,muted] at (0,5.4) {图中全部按 $k$ 画（$\mu=k^2$）};
+    \foreach \k in {1.3,1.5,1.7,1.9,2.1,2.3}{
+      \draw[ink] ({\k-1.25},0) -- ({\k-1.25},-0.15) node[below]{\k};}
+    % candidate
+    \draw[dashed,ink] ({1.5584-1.25},0) -- ({1.5584-1.25},4.0) node[above right=-2pt]{候选 $k_0=1.5584$};
+    % essential spectrum (lead bands)
+    \fill[muted!35] (0,0.6) rectangle ({1.3174-1.25},1.2);
+    \fill[muted!35] ({2.3808-1.25},0.6) rectangle (1.2,1.2);
+    \node[anchor=west] at (0.10,0.9) {引线能带（本质谱，数值扫描）};
+    \node[anchor=east,muted] at (1.12,0.9) {能带};
+    % search window
+    \fill[accent!30] ({1.451-1.25},1.8) rectangle ({2.249-1.25},2.4);
+    \node[anchor=west] at (0.322,2.1) {谱隙窗口 $[1.451,\,2.249]$：共同搜索范围};
+    % Goerisch endpoints
+    \fill[accent] ({1.3174-1.25},3.0) rectangle ({2.1875-1.25},3.6);
+    \node[white,anchor=west] at (0.322,3.3) {谱隙端点 $(\sqrt{\alpha_-},\sqrt{\alpha_+})$：只有 FEM 用};
+    \fill[pattern=north east lines,pattern color=muted] ({2.1875-1.25},3.0) rectangle ({2.249-1.25},3.6);
+    \node[anchor=south] at ({2.22-1.25},3.6) {右端未决趋势};
+  \end{tikzpicture}
+  \raggedright\vspace{0.3em}
+  \begin{itemize}\small
+    \item \textbf{谱隙窗口}：$k$ 单位的\alert{搜索范围}。上游在 33 个探索点上把两侧引线都分类为“间隙”，
+      两端是探索范围的端点，不是带边。两种方法都从这里开始。
+    \item \textbf{谱隙端点}：$\mu=k^2$ 单位，是 Goerisch 公式里 (H) 的\alert{隔离区间}：区间内只能有目标一个谱值。
+      $\alpha_-=1.3174^2$ 取自带边扫描；$\alpha_+=2.1875^2$ 是假设值，取小以避开 $[2.1875,2.249]$：搜索指标朝窗口右端下降，未定位。BIE 不用它。
+  \end{itemize}
+  \aside{注：$1.3174$ 略小于扫描所得右引线带边 $1.317414$，应向内取（如 $1.32$）；估计宽度增加不到 1\%。}
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{输出：两者交付的对象不同}
+  \textbf{BIE：谱距离估计}
+  \[
+    \operatorname{dist}(\mu_0,\sigma(A))\le R=\frac{2\mu_0\,C\varepsilon}{U-C\varepsilon}
+  \]
+  \begin{itemize}\small
+    \item $\varepsilon$：界面与墙上的跳跃范数；$U$：质量下界；$C$：几何常数。
+      三者都是可靠界时，$[\mu_0-R,\mu_0+R]$ 与谱相交；再排除本质谱才含特征值。\alert{不需要 (H)}。
+    \item 现状：三者都是普通数值评价，$R$ 只是\alert{估计}（记录状态 \texttt{UNCERTIFIED\_RNUM}）。
+  \end{itemize}
+  \vspace{0.3em}
+  \textbf{FEM + Goerisch：含特征值的区间}
+  \[
+    \lambda\in\bigl[E(\alpha_++\gamma),\,E(\alpha_-+\gamma)\bigr],\qquad
+    E(t)=\frac{q-t}{1-tJ}-\gamma
+  \]
+  \begin{itemize}\small
+    \item $q$：试探场的 Rayleigh 商；$J$：通量残差泛函。前提 (H)：$(\alpha_-,\alpha_+)$ 内恰有一个谱值。
+    \item 现状：$q,J$ 用普通浮点求积算出。不用 (H) 的版本只有 $1.00\times10^{-4}$。
+  \end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{误差覆盖：离可靠还差什么}
+  \centering\footnotesize
+  \begin{tabular}{lccc}
+    \toprule
+    误差项 & BIE I9.2（当前模型） & FEM + Goerisch & BIE I6 v3（圆形） \\
+    \midrule
+    无限引线 / 域截断 & 外推估计，无可靠上界 & \yes（试探场紧支撑） & \yes \\
+    界面 / 体积分求积 & \no & \no & \yes \\
+    核函数、FMM & \no & 不涉及 & \yes \\
+    几何（常数 / 映射） & \no & \no & \yes \\
+    质量下界 / 归一化 & \no & \no & \yes \\
+    谱假设 (H)、$\alpha_\pm$ & 不需要 & \no（未验证） & 不需要 \\
+    舍入（后期） & \no & \no & \yes（Arb 区间运算） \\
+    \bottomrule
+  \end{tabular}
+  \par\raggedright\vspace{0.2em}
+  \begin{itemize}\small
+    \item 候选不精确\alert{不算缺口}：两边都直接评价所给试探场（BIE 的跳跃、FEM 的 $q,J$），离散误差自动计入；缺的是把这些量可靠地算出。
+    \item FEM 在截断意义下缺的是\alert{多项式与曲边映射的求积、归一化和 (H)}。
+    \item BIE 缺的包括\alert{奇异核求积、无限尾项、核函数}；I7（椭圆）在这一步停下，
+      当前星形 + 三瓣形还没开始。
+  \end{itemize}
+  \src{numerical-directions/bie-fem-io-facts.md（误差覆盖表）}
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{误差覆盖各行对应的量（一）：BIE 谱距离估计}
+  \centering\small
+  $\displaystyle R=\frac{2\mu_0\,C\varepsilon}{U-C\varepsilon},\qquad
+    \varepsilon^2=E_n+E_v/d^2$
+  \par\vspace{0.4em}\scriptsize
+  \begin{tabular}{p{0.15\textwidth}p{0.33\textwidth}p{0.43\textwidth}}
+    \toprule
+    误差覆盖页的行 & 对应的量 & I9.2 现在怎么算 \\
+    \midrule
+    无限引线 & $\varepsilon$ 中两侧引线的胞元和 $\sum_{n\ge0}$，第 $n$ 胞元系数 $GP^nc$ &
+      前 40 胞元逐项；之后按比值 $r$ 外推为 第 41 项$/(1-r)$，\alert{无可靠上界}（I6 v3 用 $P_\pm$ 的收缩界包住） \\
+    界面 / 体积分求积 & $E_n,E_v$：材料界面和人工墙上法向导数、函数值跳跃的平方积分 &
+      每条曲线 768 节点；没有求积余项 \\
+    核函数、FMM & 试探场 $u$：准周期核、MFS、FMM 求值 &
+      FMM 请求容差 $10^{-12}$；误差没有传到 $R$ \\
+    几何 & $C$：迹常数，取决于最大曲率 $\kappa_*$ 和曲线邻域宽 $h$ &
+      曲线采样 4096/8192 点取最大曲率；采样最大值不是上界 \\
+    质量下界 & $U$：背景小圆盘内的 $\|u\|$，要求 $U>C\varepsilon$ &
+      $32\times64$ 点求积；未向下包住（I6 v3 用解析 Rayleigh Gram 给下界） \\
+    谱假设 & 不需要 (H) & 称"含特征值"还要排除本质谱 \\
+    舍入 & 全部量 & 普通浮点 \\
+    \bottomrule
+  \end{tabular}
+  \raggedright\vspace{0.3em}
+  \aside{候选不精确不单列：它直接表现为跳跃 $E_n,E_v$ 变大。}
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{误差覆盖各行对应的量（二）：FEM + Goerisch}
+  \centering\small
+  $\lambda\in\bigl[E(\alpha_++\gamma),E(\alpha_-+\gamma)\bigr],\ \
+    E(t)=\dfrac{q-t}{1-tJ}-\gamma,\ \
+    q=a_\gamma(v,v),\ \
+    J=\int_D|p|^2+\int_D\dfrac{|\operatorname{div}p+\rho v|^2}{\gamma\rho}$
+  \par\vspace{0.4em}\scriptsize
+  \begin{tabular}{p{0.15\textwidth}p{0.33\textwidth}p{0.43\textwidth}}
+    \toprule
+    误差覆盖页的行 & 对应的量 & 现在怎么算 \\
+    \midrule
+    域截断 & 试探场 $v=\chi u_h$ 与通量 $p$ 在盒 $D$（左右各 13 胞元）外为零 &
+      盒外积分恰为 0；截断的代价已计入 $q,J$ \\
+    求积 & $q$、$J$、$\|v\|_\rho$ 的体积分 &
+      曲边三角形上 16 阶 Gauss（核查 24），材料修正 10/16 阶；两阶比较不是余项界 \\
+    核函数、FMM & 不涉及（DtN 只用来生成 $v$） & — \\
+    几何 & 曲边映射的 Jacobian、Piola 因子；$\rho$ 跳跃的位置 &
+      场在二次几何网格上，材料按真实曲线修正；映射与反定位为浮点，未包住 \\
+    归一化 & $\|v\|_\rho=1$（$q,J$ 都依赖它） & 数值积分；没有一侧界 \\
+    谱假设 & $\alpha_\pm$ 进入端点；(H) 保证区间含 $\lambda$ &
+      $\alpha_-$ 取自 17 点扫描（略低于带边），$\alpha_+$ 为假设值；\alert{未验证} \\
+    舍入 & 全部量 & 普通浮点 \\
+    \bottomrule
+  \end{tabular}
+  \raggedright\vspace{0.3em}
+  \aside{通量 $p$ 不必是最优的：任何满足约束的 $p$ 都可用，求解不精确只会让 $J$ 变大、区间变宽。}
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{精度：同一量级，BIE 没有拉开差距的空间}
+  \centering
+  \begin{tabular}{lcc}
+    \toprule
+    & 全宽（$\mu$） & 性质 \\
+    \midrule
+    BIE（I9.2） & $1.55\times10^{-9}$ & 谱距离估计 \\
+    FEM P3/RT3 Goerisch & $4.70\times10^{-9}$ & 区间，需 (H) 与谱隙端点 \\
+    \bottomrule
+  \end{tabular}
+  \vspace{0.8em}
+  \raggedright
+  \begin{itemize}
+    \item BIE 只窄约 3 倍。补上可靠评价只会让界\alert{变宽}：可靠的误差量不小于真实值，而估计已接近真实值。
+    \item 按 BIE 的谱距离公式反推：要守住 $5\times10^{-9}$，跳跃范数须 $\lesssim 6.6\times10^{-12}$；
+      现有估计 $2.05\times10^{-12}$，余量约 \alert{3 倍}。
+  \end{itemize}
+  \key{BIE 做成可靠后最好的情形是与 FEM 持平，不会更好。}
+  \src{test/i9/estimate-v1, test/numerical-directions/fem-pipeline-v1}
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{成本：同一起点、同样的线程设置}
+  \centering
+  \begin{tikzpicture}[x=0.0145cm,y=1cm]
+    \node[anchor=east,font=\small] at (-6,0) {BIE};
+    \fill[accent] (0,-0.22) rectangle (553.9,0.22);
+    \fill[muted!55] (553.9,-0.22) rectangle (573.8,0.22);
+    \fill[muted!80] (573.8,-0.22) rectangle (669.9,0.22);
+    \node[anchor=west,font=\small] at (676,0) {\textbf{669.9\,s}\ \ 估计};
+    \node[font=\scriptsize,white] at (277,0) {候选搜索 553.9\,s};
+    \node[anchor=east,font=\small] at (-6,-0.9) {FEM};
+    \fill[accent] (0,-1.12) rectangle (34.8,-0.68);
+    \fill[muted!80] (34.8,-1.12) rectangle (63.6,-0.68);
+    \fill[muted!35] (63.6,-1.12) rectangle (100.8,-0.68);
+    \fill[muted!55] (100.8,-1.12) rectangle (119.4,-0.68);
+    \node[anchor=west,font=\small] at (126,-0.9) {\textbf{119.4\,s}\ \ 区间（含核查）};
+    \begin{scope}[shift={(0,-1.75)},font=\scriptsize]
+      \fill[accent] (0,-0.08) rectangle (14,0.08); \node[anchor=west] at (18,0) {搜索与求根};
+      \fill[muted!80] (150,-0.08) rectangle (164,0.08); \node[anchor=west] at (168,0) {评价 / Goerisch 区间};
+      \fill[muted!35] (390,-0.08) rectangle (404,0.08); \node[anchor=west] at (408,0) {24 阶核查};
+      \fill[muted!55] (530,-0.08) rectangle (544,0.08); \node[anchor=west] at (548,0) {配置、启动与输出};
+    \end{scope}
+  \end{tikzpicture}
+  \vspace{0.4em}
+  \raggedright
+  \begin{itemize}\small
+    \item 搜索与求根：BIE \alert{553.9\,s}（粗扫 39.9 + 细扫 508.2 + 确认 5.7），
+      FEM \alert{34.8\,s}（P2 宽窗搜索 2.5 + P3 DtN 求根与场 32.3）。FEM 是单个进程从窗口跑到区间。
+    \item \textbf{"11 线程"}：两边都设 MATLAB \texttt{maxNumCompThreads(11)} 与 \texttt{OMP\_NUM\_THREADS=11}。
+      两边都\alert{没有显式并行}（无 \texttt{parfor}），只用库内多线程：BIE 为稠密线性代数与 FMM，FEM 为稀疏求解与 QZ。
+    \item 同一台电脑、同一 MATLAB R2023b。峰值内存：FEM 2.04\,GiB，BIE 1.42\,GB。
+  \end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{BIE 不需要 (H)，为什么仍不够}
+  \begin{itemize}
+    \item \textbf{FEM 多用的输入}：谱隙端点 $\alpha_\pm$ 与 (H)。BIE 的谱距离公式两者都不用。
+    \item \textbf{但两条路线都要排除本质谱}：要说区间里是\alert{点谱}，都必须确认区间落在谱隙内，
+      即都要认证谱隙端点。这一块换成 BIE 也省不掉。
+    \item \textbf{处理 (H) 有更便宜的办法}：
+      \begin{itemize}
+        \item DtN 惯性计数定理：把 (H) 归结为两个端点矩阵的负特征值个数（已证明并审查）；
+        \item 不行时，把 (H) 列为明确前提，交付"在所列条件下成立"的区间；
+        \item 不用 (H) 的一阶区间仍有 $1.00\times10^{-4}$。
+      \end{itemize}
+    \item \textbf{BIE 的可靠评价本身也未知}：曲线界面上没有做成过。
+  \end{itemize}
+  \key{只有在"必须完全无条件，且 (H) 确认无法认证"时，才值得回头看 BIE。}
+  \src{numerical-directions/dtn-inertia-count.md, goerisch-width.md, l1-sketch.md}
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{BIE 保留的作用：独立参考解}
+  \begin{itemize}
+    \item BIE 与 FEM 是两种互相独立的离散，收敛到同一个数：
+  \end{itemize}
+  \centering
+  \begin{tabular}{lccc}
+    \toprule
+    FEM 网格 & g12 & g24 & g48 \\
+    \midrule
+    $|\mu_{\rm P4}-\mu_{\rm BIE}|$ & $1.5\times10^{-9}$ & $2.8\times10^{-11}$ & $1.7\times10^{-12}$ \\
+    \bottomrule
+  \end{tabular}
+  \vspace{0.6em}
+  \raggedright
+  \begin{itemize}
+    \item 用途：计算 FEM 区间的 effectivity（区间宽度 / 实际误差），检查区间是否含参考值。
+    \item 这个用途\alert{不需要}可靠上界，现有 BIE 结果已经够用。
+  \end{itemize}
+  \key{停掉的只是"把 BIE 做成可靠估计路线"，不是 BIE 本身。}
+  \src{numerical-directions/README.md}
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{这次比较的限制}
+  \begin{itemize}
+    \item \textbf{两边都不是可靠结果}：比较的是"到达同一量级数值结果"的成本，以及到可靠的剩余工作。
+    \item \textbf{FEM 多用了输入}：谱隙端点（下端未认证、上端为假设值）与 (H)。
+    \item \textbf{单一算例、单次计时}：一个模型、一个特征值。
+    \item \textbf{BIE 计时来自三个独立进程}：搜索复用了谱隙阶段的缓存，669.9\,s 只会偏低。
+    \item \textbf{内存}：FEM 峰值更高（2.04\,GiB 对 1.42\,GB）。
+    \item \textbf{适用范围}：FEM 能直接处理一般几何和变系数，BIE 要求分片常数介质；
+      这一点本项目没有专门算例。
+  \end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{下一步}
+  \begin{enumerate}
+    \item 两项低成本数值检查（只是数值证据）：
+      \begin{itemize}
+        \item 端点矩阵负特征值个数之差，预测为 1；
+        \item 表面态扫描，预测窗口内没有接近奇异的点。
+      \end{itemize}
+    \item 谱隙端点的认证：下端向内取到带边以上；上端还要先查清 $[2.1875,2.249]$ 的右端未决趋势。
+    \item FEM 区间在截断意义下可靠：给出 $q,J$ 的求积与几何映射误差的可靠界；舍入后期再用区间运算处理。
+    \item 计数定理中输入（端点 DtN 误差、投影常数）的可计算界；排除表面态仍是未解决问题。
+  \end{enumerate}
+  \vspace{0.4em}
+  \key{目标：约 $5\times10^{-9}$、截断误差意义下可靠的估计区间（舍入后期处理）；路线为直接 FEM + DtN + Goerisch。}
+\end{frame}
+
+\end{document}
