@@ -1,5 +1,11 @@
 # Eigenvalue a posteriori decision record
 
+## 2026-11-03 — The conditional theorem under (H) may stay the main statement
+
+- **Decision (user).** If certifying the isolation hypothesis (H) turns out to be expensive, the main stated result stays the interval that is reliable with respect to truncation errors under (H). The (H) certificate is then supporting evidence, reported with its own cost.
+- **Scope of (H).** (H) depends on the whole configuration: geometry, materials, window $[\alpha_-,\alpha_+]$ and the Bloch phase $\beta$. All parts (band gap, surface states, DtN, final count) must be redone for another $\beta$. It can be reused across meshes and interval refinements at fixed configuration.
+- **Evidence for the decision.** The cost of `test/numerical-directions/h-cert-v1/` (gates B1–B3), compared with the 718 s of qj-cert-v2. Checks and status: [[research/explorations/numerical-directions/h-cert-proof-check|h-cert-proof-check]], OP-ND-3 in [[research/projects/eig-apost/implementation/open-problems|open-problems]].
+
 ## 2026-11-03 — BIE is a reference only; the first target is a truncation-reliable FEM + DtN + Goerisch interval
 
 - **Route.** The BIE route is kept only as an independent numerical reference. The interval route is the direct high-order FEM + DtN field with a Lehmann–Goerisch ($N=1$) enclosure, studied in [[research/explorations/numerical-directions/README|numerical-directions]]. Reasons and evidence: [[research/explorations/numerical-directions/bie-route-status|bie-route-status]], [[research/explorations/numerical-directions/fem-search-provenance|fem-search-provenance]], [[research/explorations/numerical-directions/bie-fem-io-facts|bie-fem-io-facts]] and the slides `pre/bie-fem-route/`.
