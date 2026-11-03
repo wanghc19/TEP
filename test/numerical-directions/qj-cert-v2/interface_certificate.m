@@ -1,0 +1,96 @@
+function report=interface_certificate(P,S,cfg,v1,inventory,output_dir,scope)
+  % INTERFACE_CERTIFICATE Bound original-field fitted-interface residuals.
+  % Input
+  %   Rebuilt field/flux, fixed s and v1 bounds; scope is probe or full-template.
+  % Output
+  %   Smooth branch polynomial certificates plus retained-branch sliver bounds.
+  started=tic;rows=struct([]);tot0=0;toterr=0;totcorr=0;totbias=0;ncases=0;
+  for ti=1:3
+    names={'left','center','right'};name=names{ti};if startsWith(scope,'full-')&&~strcmp(scope,['full-',name]),continue,end
+    G=P.templates{ti}.G;T=P.templates{ti}.T;nc=numel(G.cells);ng=numel(T.interface.theta);
+    arcs=1:ng;if strcmp(scope,'probe'),arcs=[1,81,161,241];end
+    bvec=zeros(G.nt,nc,3);values=zeros(G.nt,nc);errors=values;panels=0;max_inv=0;min_margin=Inf;tt=tic;
+    for arc=arcs
+      for e=[T.interface.inner(arc),T.interface.outer(arc)]
+        [vv,ee,bb,st]=LOCAL_smooth(G,T,e,S.flux{ti}(:,:,e),S.B,P.q,[0,1,0,1],0,1e-13/(3*640));
+        values(e,:)=vv;errors(e,:)=ee;bvec(e,:,:)=reshape(bb,1,nc,3);panels=panels+st.count;max_inv=max(max_inv,st.max_inverse_error);min_margin=min(min_margin,st.min_margin);
+      end
+    end
+    fprintf('SMOOTH %s: %d arcs %d panels S0 %.17g error %.3g (%.2fs)\n',name,numel(arcs),panels,sum(values,'all'),sum(errors,'all'),toc(tt));
+    corrections=zeros(ng,1);taper_corrections=zeros(ng,1);mass_bias=zeros(ng,1);sliver_counts=zeros(ng,1);branch_margin=Inf;sliver_inv=0;
+    for arc=arcs
+      owners=[T.interface.inner(arc),T.interface.outer(arc)];bound=0;nbias=0;ntaper=0;np=0;
+      for j=0:3
+        [cc,st]=LOCAL_sliver(G,T,owners,arc,bvec,P.q,[0,1,j/4,(j+1)/4],0);
+        bound=bound+cc;nbias=nbias+st.mass_bias;ntaper=ntaper+st.taper_correction;np=np+st.count;branch_margin=min(branch_margin,st.min_margin);sliver_inv=max(sliver_inv,st.max_inverse_error);
+      end
+      corrections(arc)=bound;taper_corrections(arc)=ntaper;mass_bias(arc)=nbias;sliver_counts(arc)=np;
+      if mod(arc,40)==0||strcmp(scope,'probe'),fprintf('SLIVER %s arc %d upper %.3g panels %d (%.2fs)\n',name,arc,bound,np,toc(tt));end
+    end
+    item=struct('template',name,'arcs',numel(arcs),'smooth_value',sum(values,'all'),'smooth_remainder',sum(errors,'all'), ...
+      'correction_bound',sum(corrections),'mass_bias',sum(mass_bias),'upper',sum(values,'all')+sum(errors,'all')+sum(corrections), ...
+      'lower',max(0,sum(values,'all')-sum(errors,'all')-sum(corrections)), ...
+      'smooth_taper_value',sum(values(:,abs(G.cells)>=12),'all'),'smooth_taper_remainder',sum(errors(:,abs(G.cells)>=12),'all'),'taper_correction_bound',sum(taper_corrections),'smooth_panels',panels,'sliver_panels',sum(sliver_counts),'subdivided_arcs',sum(sliver_counts>1), ...
+      'retained_native_branches',2,'retained_fitted_branches',2,'max_inverse_error',max(max_inv,sliver_inv), ...
+      'min_selfmap_margin',min_margin,'min_actual_branch_margin',branch_margin,'seconds',toc(tt));
+    if isempty(rows),rows=item;else,rows(end+1)=item;end
+    writetable(table((1:ng).',corrections,mass_bias,sliver_counts,'VariableNames',{'arc','correction_bound','mass_bias','sliver_panels'}),fullfile(output_dir,[name,'-interface-arcs.csv']));
+    tot0=tot0+item.smooth_value;toterr=toterr+item.smooth_remainder;totcorr=totcorr+item.correction_bound;totbias=totbias+item.mass_bias;ncases=ncases+numel(arcs);
+    report=struct('mass_norm','component-modulus-bound','scope',scope,'templates',rows,'arcs',ncases,'smooth_value',tot0,'smooth_remainder',toterr,'correction_bound',totcorr, ...
+      'mass_bias',totbias,'S_interface_upper',tot0+toterr+totcorr,'S_interface_lower',max(0,tot0-toterr-totcorr),'seconds',toc(started));
+    LOCAL_json(fullfile(output_dir,'interface-progress.json'),report);
+  end
+  if strcmp(scope,'full')
+    ref16=0;ref24=0;for t=1:3,ref16=ref16+sum(inventory.templates(t).fitted(1,[2,3],1))-inventory.templates(t).fitted(1,3,1)+inventory.templates(t).fitted(1,3,2);ref24=ref24+inventory.templates(t).fitted(2,2,1)+inventory.templates(t).fitted(2,3,2);end
+    report.Q16=ref16;report.Q24=ref24;report.excess=report.S_interface_upper-ref16;
+    report.contains_Q16=report.S_interface_lower<=ref16&&ref16<=report.S_interface_upper;report.contains_Q24=report.S_interface_lower<=ref24&&ref24<=report.S_interface_upper;
+    report.S_upper=v1.S_smooth(2)+report.S_interface_upper;mc=mean(v1.M);radius=totbias+v1.mass_correction.integration_error+v1.mass_correction.voluntary_halfwidth+sum([v1.templates.M_taper_error]);report.M=[mc-radius,mc+radius];report.full_interval=four_corners(v1.E,report.M,report.S_upper,P.q,cfg);
+    report.full_interval.contains_mu_BIE=report.full_interval.pass&&report.full_interval.L<=2.428728670022710&&report.full_interval.U>=2.428728670022710;
+  end
+  LOCAL_json(fullfile(output_dir,'interface-certificate.json'),report);
+end
+function [v,er,b,st]=LOCAL_smooth(G,T,e,coef,B,s,box,depth,tol)
+  nc=numel(G.cells);v=zeros(1,nc);er=v;b=zeros(nc,3);st=struct('count',1,'max_inverse_error',0,'min_margin',Inf);split=false;why='';
+  try
+    C=interface_model(G,T,e,box,'fitted');st.max_inverse_error=C.inverse_error;st.min_margin=C.margin;
+    for j=1:nc,F=interface_fields(C,G,e,j,s);r=interface_residual(C,F,B*coef(:,j),T.material(e),s);v(j)=r.integral.value;er(j)=r.integral.error;b(j,:)=r.bounds;end
+    split=sum(er)>tol;why=sprintf('remainder %.3g > tolerance %.3g',sum(er),tol);
+  catch err
+    if startsWith(err.identifier,'iface:')||strcmp(err.identifier,'pm:Reciprocal'),split=true;why=[err.identifier,' ',err.message];else,rethrow(err),end
+  end
+  if split
+    assert(depth<3,'iface:SmoothBudget','%s e%d box %s: %s',T.name,e,mat2str(box),why);v(:)=0;er(:)=0;b(:)=0;st.count=0;st.max_inverse_error=0;st.min_margin=Inf;
+    xm=mean(box(1:2));ym=mean(box(3:4));boxes=[box(1),xm,box(3),ym;xm,box(2),box(3),ym;box(1),xm,ym,box(4);xm,box(2),ym,box(4)];
+    for k=1:4
+      [vv,ee,bb,z]=LOCAL_smooth(G,T,e,coef,B,s,boxes(k,:),depth+1,tol/4);v=v+vv;er=er+ee;b=max(b,bb);st.count=st.count+z.count;st.max_inverse_error=max(st.max_inverse_error,z.max_inverse_error);st.min_margin=min(st.min_margin,z.min_margin);
+    end
+  end
+end
+function [upper,st]=LOCAL_sliver(G,T,owners,arc,bvec,s,box,depth)
+  split=false;upper=0;st=struct('count',1,'max_inverse_error',0,'min_margin',Inf,'mass_bias',0,'taper_correction',0);
+  try
+    C1=interface_model(G,T,owners(1),box,'sliver');C2=interface_model(G,T,owners(2),box,'sliver');
+    st.max_inverse_error=max(C1.inverse_error,C2.inverse_error);st.min_margin=min(C1.actual_branch_margin,C2.actual_branch_margin);
+    cm=curve_model(T.name,T.interface.theta(arc),T.interface.dtheta,18);make=@(x)pm('make',x,0);z=pm('scale',C1.t,2);z.c(1)=z.c(1)-1;
+    d=pm('polyval',cm.d.c,z,make(0));d.e=d.e+cm.d.e;dp=pm('polyval',cm.dd.c,z,make(0));dp.e=dp.e+cm.dd.e;qp=pm('polyval',cm.dq.c,z,make(0));
+    tangent=pm('add',qp,pm('mul',C1.r,dp));jac=pm('imag',pm('mul',pm('conj',tangent),d));area=pm('norm',jac)*diff(box(1:2))*diff(box(3:4));
+    for j=1:numel(G.cells)
+      A=interface_fields(C1,G,owners(1),j,s);B=interface_fields(C2,G,owners(2),j,s);
+      Ve=pm('modulus',A.v);Le=max(hypot(pm('modulus',A.gx),pm('modulus',A.gy)),hypot(pm('modulus',B.gx),pm('modulus',B.gy)));D0=pm('modulus',d);D1=pm('modulus',dp);Q1=pm('modulus',qp);st.mass_bias=st.mass_bias+(T.rho_in-1)*diff(box(3:4))*(2*Ve*Le*D0^2*(Q1/2+D1/3)+Le^2*D0^3*(Q1/3+D1/4));
+      dx=pm('norm',pm('sub',A.gx,B.gx))/s;dy=pm('norm',pm('sub',A.gy,B.gy))/s;dv=pm('norm',pm('sub',A.v,B.v))*(1-1/s);
+      for e=owners
+        change=[dx,dy,sqrt(T.material(e))*dv];base=reshape(bvec(e,j,:),1,3);increment=area*sum(2*base.*change+change.^2);upper=upper+increment;if abs(G.cells(j))>=12,st.taper_correction=st.taper_correction+increment;end
+      end
+    end
+  catch err
+    if startsWith(err.identifier,'iface:')||strcmp(err.identifier,'pm:Reciprocal'),split=true;else,rethrow(err),end
+  end
+  if split
+    assert(depth<4,'iface:SliverBudget','Sliver inverse needs more than four u refinements');mid=mean(box(3:4));
+    [a,x]=LOCAL_sliver(G,T,owners,arc,bvec,s,[box(1:2),box(3),mid],depth+1);[b,y]=LOCAL_sliver(G,T,owners,arc,bvec,s,[box(1:2),mid,box(4)],depth+1);
+    upper=a+b;st.count=x.count+y.count;st.max_inverse_error=max(x.max_inverse_error,y.max_inverse_error);st.min_margin=min(x.min_margin,y.min_margin);st.mass_bias=x.mass_bias+y.mass_bias;st.taper_correction=x.taper_correction+y.taper_correction;
+  end
+end
+function LOCAL_json(path,x)
+  f=fopen(path,'w');assert(f>=0);cl=onCleanup(@()fclose(f));fwrite(f,jsonencode(x,PrettyPrint=true));
+end
