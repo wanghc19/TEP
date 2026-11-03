@@ -1,0 +1,64 @@
+{
+  "required": {
+    "projection_table": true,
+    "star_integrals": true,
+    "representatives": true,
+    "Hermitian_H": true,
+    "FE_sign_and_cutoff_stability": true,
+    "same_count": true
+  },
+  "additional": [
+    {
+      "Nx": 15,
+      "Ny": 8,
+      "volume_mass": [
+        0.0006166598508316519,
+        5.3422796082363094e-05,
+        9.033831634410661e-07
+      ],
+      "boundary_mass": [
+        0.000616659850831674,
+        5.342279608236309e-05,
+        9.033831634439274e-07
+      ],
+      "mass_relative_difference": [
+        3.586697640340206e-14,
+        1.2684217365911152e-16,
+        3.167408128400548e-12
+      ],
+      "analytic_M1_max_Frobenius_difference": 4.811833033671219e-14,
+      "representative_with_representative_error": 1.3221357883572558e-13,
+      "direct_pencil_eigenvalues": [
+        -0.8073329032196935,
+        0.49921802315505115,
+        2.3234008715660877,
+        3.2550978033348557
+      ],
+      "pass": true
+    },
+    {
+      "Nx": 31,
+      "Ny": 16,
+      "volume_mass": [
+        0.0005335004790544949,
+        4.251857234166854e-06,
+        2.554204189891384e-07
+      ],
+      "boundary_mass": [
+        0.0005335004790545037,
+        4.251857234166851e-06,
+        2.554204189429919e-07
+      ],
+      "mass_relative_difference": [
+        1.6461161595762197e-14,
+        7.968592552428683e-16,
+        1.8066885164358862e-10
+      ],
+      "analytic_M1_max_Frobenius_difference": 6.365179004474075e-14,
+      "representative_with_representative_error": 3.5680752712634244e-13,
+      "direct_pencil_eigenvalues": [],
+      "pass": false
+    }
+  ],
+  "direct_pencil_difference": 6.943334796005729e-13
+}

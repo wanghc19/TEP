@@ -1,0 +1,77 @@
+{
+  "lambda": 5.6169,
+  "window": [
+    1.7424,
+    5.6169
+  ],
+  "matrix_formula": "L_cert=I-Mq/c_W+B_left^H Lambda_left B_left+B_right^H Lambda_right B_right-epsilon I",
+  "Nx": 31,
+  "Ny": 16,
+  "dimension": 1122,
+  "C_h": 0.00994656885109917,
+  "c_W": 0.9976782510192369,
+  "mu": [
+    -0.8073341013463802,
+    0.49913524199884574,
+    2.3232519910997285,
+    3.2543189694702193
+  ],
+  "delta": 0.00232715204364847,
+  "L_cert_normalized_eigenvalues": [
+    -6.417135904356208,
+    0.36537368878193166,
+    0.718719702446741,
+    0.7755443461342268
+  ],
+  "negative_count": 1,
+  "gamma_2": 0.3653736908439648,
+  "verified_gamma_lower": 0.3653736907439648,
+  "epsilon": 2.0620331764508243e-09,
+  "safe_second_lower": 0.36537368868193165,
+  "error_matrix": {
+    "dimension": 1122,
+    "type": "epsilon times identity in the exact energy-orthonormal basis",
+    "norm": 2.0620331764508243e-09
+  },
+  "checks": {
+    "projection_table": true,
+    "star_integrals": true,
+    "representatives": true,
+    "Hermitian_H": true,
+    "FE_sign_and_cutoff_stability": true,
+    "same_count": true
+  },
+  "additional_relative_check_pass": false,
+  "additional_relative_difference": [
+    1.6461161595762197e-14,
+    7.968592552428683e-16,
+    1.8066885164358862e-10
+  ],
+  "additional_absolute_difference": [
+    8.782037597132586e-18,
+    3.3881317890172014e-21,
+    4.614651378509189e-17
+  ],
+  "additional_absolute_inside_operator_remainder": true,
+  "count_agrees_with_FE": true,
+  "cutoff_changes": {
+    "mu_2": -8.278115689974719e-05,
+    "T_low_first_two": [
+      -3.4163275691945216e-05,
+      -4.357867645954361e-05
+    ],
+    "L_center_first_two": [
+      0.056106813086374885,
+      0.005109741642794208
+    ]
+  },
+  "direct_small_pencil_difference": 6.943334796005729e-13,
+  "H_conclusion": "exactly one spectral point, simple eigenvalue, in (1.7424,5.6169)",
+  "premises": [
+    "periodic gap A and half-lead pole exclusion P from h-cert-v1",
+    "all-trace lower DtN matrices from h-dtn-v1",
+    "independent first-order spectral intersection from h-cert-problem.md Section 2",
+    "rounding excluded"
+  ],
+  "unbounded_integrals": []
+}

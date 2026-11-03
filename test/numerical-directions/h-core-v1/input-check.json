@@ -1,0 +1,16 @@
+[
+  {
+    "side": "left",
+    "port_x": -0.5,
+    "material_a": 0.12,
+    "convention_check": true,
+    "rounding_excluded": true
+  },
+  {
+    "side": "right",
+    "port_x": 0.5,
+    "material_a": 0.2,
+    "convention_check": true,
+    "rounding_excluded": true
+  }
+]

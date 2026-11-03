@@ -1,0 +1,35 @@
+{
+  "mode": "Proof from scratch",
+  "target": "README details: basis transform, analytic moments, and safe core lower matrix",
+  "result": "proved with rounding excluded under the listed upstream premises",
+  "literature_status": "Proof literature verification completed.",
+  "sources": [
+    "h-cert-proof.md Proposition D.1, Theorems S.1/S.2, equations (2.11),(5.4),(5.5),(6.7),(7.1)",
+    "h-cert-problem.md Section 2 independent first-order spectral intersection premise"
+  ],
+  "obligations": {
+    "true_curve_and_orientation": "core_curve.m and input-check.json",
+    "independent_basis": "core_space.m: positive 2x2 residual energy Grams",
+    "all_port_representatives": "k=-16,...,16 on both ports",
+    "quadrature_remainders": "explicit strip bound and entrywise-to-operator propagation",
+    "matrix_inertia": "LDL blocks and shifted LDL second-eigenvalue test",
+    "rounding": "excluded; interval arithmetic remains"
+  },
+  "checks": {
+    "projection_table": true,
+    "star_integrals": true,
+    "representatives": true,
+    "Hermitian_H": true,
+    "FE_sign_and_cutoff_stability": true,
+    "same_count": true
+  },
+  "additional_relative_check": {
+    "pass": false,
+    "absolute_inside_operator_remainder": true,
+    "values": [
+      1.6461161595762197e-14,
+      7.968592552428683e-16,
+      1.8066885164358862e-10
+    ]
+  }
+}

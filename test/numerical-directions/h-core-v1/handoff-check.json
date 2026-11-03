@@ -1,0 +1,8 @@
+{
+  "final_matrix_count": 1,
+  "safe_second_lower": 0.36537368868193165,
+  "all_six_required_checks": true,
+  "additional_relative_check_pass": false,
+  "additional_absolute_inside_operator_remainder": true,
+  "all_monitored_runs_completed": true
+}
