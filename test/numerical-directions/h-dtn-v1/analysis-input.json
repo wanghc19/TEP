@@ -1,0 +1,12 @@
+{
+  "constants": "/Users/whc/Documents/Work/dot-research/test/numerical-directions/h-dtn-v1/constants.json",
+  "coarse": [
+    "/Users/whc/Documents/Work/dot-research/test/numerical-directions/h-dtn-v1/output/run-009/science/result.json",
+    "/Users/whc/Documents/Work/dot-research/test/numerical-directions/h-dtn-v1/output/run-007/science/result.json"
+  ],
+  "fine": [
+    "/Users/whc/Documents/Work/dot-research/test/numerical-directions/h-dtn-v1/output/run-006/science/result.json",
+    "/Users/whc/Documents/Work/dot-research/test/numerical-directions/h-dtn-v1/output/run-008/science/result.json"
+  ],
+  "fe": "/Users/whc/Documents/Work/dot-research/test/numerical-directions/h-dtn-v1/output/run-011/science/fe-dtn.json"
+}

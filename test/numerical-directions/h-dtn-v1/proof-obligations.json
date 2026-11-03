@@ -1,0 +1,27 @@
+{
+  "mode": "from-scratch proof for the added integration and noncompact-trial bounds",
+  "result": "proved under the h-cert-v1 resolvent input, with rounding excluded",
+  "literature_status": "Proof literature verification completed.",
+  "governing_source": "h-cert-proof.md C.1/C.3",
+  "obligations": {
+    "integer_RT_traces": {
+      "passes": 72,
+      "integer_trace_check": true,
+      "interior_columns_zero_on_every_edge": true
+    },
+    "quadrature_remainders": "README analytic geometry and Gauss remainder derivation; dtn_bounds.m, dtn_integrate.m",
+    "infinite_series": "finite matrix power contraction plus explicit remainder; dtn_run.m LOCAL_sum",
+    "trace": "actual FE polynomial cancellation; dtn_trace_check.m",
+    "resolvent": "h-cert-v1 input",
+    "rounding": "excluded, TODO interval arithmetic"
+  },
+  "checks": {
+    "tail_table": true,
+    "exact_trace": true,
+    "overlap": true,
+    "FE_sanity": true,
+    "convergence": true,
+    "Hermitian_PSD": true
+  },
+  "literature": "No new external literature claim; coefficient and Gauss remainder bounds derived in README"
+}

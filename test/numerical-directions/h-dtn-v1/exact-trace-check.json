@@ -1,0 +1,5 @@
+{
+  "passes": 72,
+  "integer_trace_check": true,
+  "interior_columns_zero_on_every_edge": true
+}

@@ -1,0 +1,16 @@
+{
+  "left": {
+    "matrix_dimension": 33,
+    "assembly_max_difference": 0,
+    "Hermitian_max_absolute": 0,
+    "finite_entries": true,
+    "budget": true
+  },
+  "right": {
+    "matrix_dimension": 33,
+    "assembly_max_difference": 0,
+    "Hermitian_max_absolute": 0,
+    "finite_entries": true,
+    "budget": true
+  }
+}
