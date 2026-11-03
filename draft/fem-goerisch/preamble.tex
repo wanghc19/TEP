@@ -1,0 +1,47 @@
+% Preamble for lecture-notes.tex and paper.tex (load after \documentclass{ctexart}).
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{hyperref}
+
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,decorations.pathreplacing,calc}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black}
+\captionsetup{font=small,labelfont=bf}
+\setlength{\emergencystretch}{2em}
+\setlist{itemsep=2pt,topsep=4pt}
+
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\RR}{\mathbb R}
+\newcommand{\CC}{\mathbb C}
+\newcommand{\nut}{\widetilde\nu}
+\newcommand{\cell}{\mathcal C}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+\theoremstyle{definition}
+\newtheorem{assumption}[theorem]{假设}
+\newtheorem{example}{例}
+\newtheorem{definition}[theorem]{定义}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{注}
+
+% A shaded box for "key takeaway" paragraphs.
+\newenvironment{keypoint}{\par\medskip\noindent\begin{minipage}{\linewidth}\hrule\smallskip\noindent\textbf{要点：}}{\smallskip\hrule\end{minipage}\par\medskip}
+
+\newcommand{\Tr}{\mathcal T}
+\newcommand{\todo}[1]{\par\noindent\fbox{\parbox{0.95\linewidth}{\textbf{TODO：}#1}}\par}

@@ -1,0 +1,2087 @@
+% 周期线缺陷波导导模特征值的可靠区间：FEM--DtN 与 Lehmann--Goerisch 方法的详细讲义（中文）
+% 编译：latexmk -xelatex lecture-notes.tex
+% 状态：draft。进度见同目录 README.md。
+\documentclass[11pt,a4paper,fontset=fandol]{ctexart}
+\input{preamble}
+
+\title{周期线缺陷波导导模特征值的可靠区间\\[2pt]\large FEM--DtN 与 Lehmann--Goerisch 方法：一份带完整推导的讲义}
+\author{}
+\date{草稿，2026 年 11 月}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+对 $y$ 方向周期的二维介质线缺陷波导，固定 Bloch 相位，我们用有限元--DtN 方法计算导模候选，再用 Lehmann--Goerisch 不等式给出包含真特征值的区间。区间所需的两个积分量对全部截断误差（区域截断、曲边几何、求积余项）给出显式界；在算例中得到宽 $4.46\times10^{-9}$ 的区间，计算约 12 分钟，与边界积分方法相当。区间定理依赖一个隔离假设 (H)：窗口中没有别的谱。我们用约化形式的惯性计数把 (H) 化为四个有限检验——周期引线的带隙、半导波的表面态、DtN 形式的单侧界和芯区的负特征值计数——并给出每一步的完整证明；四步都已在算例上完成，所以 (H) 成立，上面的区间是可靠的包含区间。讲义中舍入误差未计入。
+\end{abstract}
+
+\tableofcontents
+
+% ======================================================================
+\section{这份讲义要回答什么问题}
+\label{sec:intro}
+\subsection{问题}
+
+在 $y$ 方向周期的二维介质波导中，左右两侧是两种不同的周期介质（“半导波”），中间是一个缺陷胞元（“芯区”）。固定 $y$ 方向的 Bloch 相位 $\beta$，如果某个频率落在两侧周期介质的公共带隙里，并且芯区能在这个频率束缚住一个沿 $x$ 方向指数衰减的场，这个场就是\emph{导模}，对应的 $\lambda=k^2$ 是一个孤立特征值。
+
+数值方法（有限元加 DtN 边界条件，或边界积分方法）能很快给出一个候选值 $\lambda_h$，但通常只附带一个误差\emph{估计}。本讲义要回答的问题是：
+\begin{quote}
+能否用有限元计算本身，给出一个\emph{保证}包含真特征值、而且窄到 $10^{-9}$ 量级的区间？代价有多大？
+\end{quote}
+
+\subsection{结论}
+
+对第~\ref{sec:model}~节的算例（$\beta=0.5$），
+\[
+\boxed{\lambda_*\in[2.4287286691978,\ 2.4287286736601]\quad(\text{宽 }4.46\times10^{-9})}\]\[k_*\in[1.5584378939,\ 1.5584378954].
+\]
+这个区间的含义需要说清楚：
+\begin{itemize}
+\item \emph{可靠的部分.} 区间由 Lehmann--Goerisch 不等式给出（第~\ref{sec:goerisch}~节）。它需要两个积分量 $q$、$J$，我们对所有积分的截断误差——有限区域截断、曲边几何、求积余项——都给出了显式的界，并按使区间变宽的方向计入（第~\ref{sec:fourcorner}~节）。
+\item \emph{前提.} 区间定理需要\emph{隔离假设} (H)：窗口 $(1.32^2,2.37^2)$ 中除目标特征值外没有别的谱。(H) 的证明拆成四步 (A)--(D)（第~\ref{sec:H}--\ref{sec:count}~节）：四步都已完成（舍入排除），所以 (H) 成立，这个区间是 $\lambda_*$ 的\emph{可靠包含区间}（舍入排除）；同时窗口 $[\alpha_-,\alpha_+)$ 中只有 $\lambda_*$ 这一个谱点，是单重特征值。
+\item \emph{舍入.} 所有有限维线性代数用浮点数完成，舍入误差没有计入（第~\ref{sec:limits}~节）。
+\end{itemize}
+不用 (H)，同一组数据也给出一个宽 $10^{-4}$ 的区间 $I_1$，它已经足以证明窗口中\emph{存在}一个导模（第~\ref{sec:goerisch}~节末尾，舍入排除）。
+
+边界积分方法的参考值 $2.428728670022710$ 落在区间内；它附带的误差估计是 $1.55\times10^{-9}$，但没有数学保证。在 (H) 之下，本方法用约 12 分钟得到上面的区间，边界积分方法用约 11 分钟（第~\ref{sec:results}~节）。
+
+\subsection{方法一览}
+
+\begin{enumerate}
+\item \emph{约化到芯区}（第~\ref{sec:dtn}~节）：用半导波的 DtN 形式把无限带上的特征值问题写成芯区上关于 $\lambda$ 的非线性问题。约化形式 $t_\lambda$ 关于 $\lambda$ 严格递减，这是后面计数的基础。
+\item \emph{Lehmann--Goerisch 区间}（第~\ref{sec:goerisch}~节）：给定试探场 $v$ 和一个通量 $p$，算出 $q=a_\gamma(v,v)$ 和互补能量 $J$；在 (H) 之下，区间宽度约为 $C_W(\theta-\lambda_*)$，与 Rayleigh 商误差同阶，即场误差的平方。
+\item \emph{试探场与通量}（第~\ref{sec:trial}~节）：$v$ 是 FEM--DtN 解乘一个截断函数，$p$ 是 $RT_3$ 空间中使 $J$ 最小的通量。
+\item \emph{可靠积分}（第~\ref{sec:fourcorner}~节）：把 $q$、$J$ 写成三个积分 $E$、$M$、$S$，给出每个的上下界，并证明区间端点只需在四个角上检查。
+\item \emph{证明 (H)}（第~\ref{sec:H}--\ref{sec:count}~节）：由计数定理，(H) 归结为“$\alpha_+$ 处 $t_{\alpha_+}$ 至多一个负特征值”，再拆成带隙、表面态、DtN 下界和芯区计数四个有限检验。
+\end{enumerate}
+
+\subsection{阅读路线}
+
+只想了解区间本身：读第~\ref{sec:model}、\ref{sec:goerisch}~节和第~\ref{sec:results}~节。关心怎样把浮点计算变成截断误差意义下可靠的界：再读第~\ref{sec:trial}、\ref{sec:fourcorner}~节。关心 (H)：第~\ref{sec:dtn}~节是基础，然后按第~\ref{sec:H}~节末尾的表格顺序读第~\ref{sec:band}--\ref{sec:count}~节。各节的证明都在文中给出，只把谱定理等标准事实当作已知（列在第~\ref{sec:limits}~节）。
+
+% ======================================================================
+\section{模型与记号}
+\label{sec:model}
+\subsection{几何与材料}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[x=1.55cm,y=1.55cm]
+  \foreach \x in {-3.5,-2.5,-1.5,1.5,2.5,3.5} {\draw[black!35,dashed] (\x,-0.5) -- (\x,0.5);}
+  \draw[black!35,dashed] (-3.9,-0.5) -- (3.9,-0.5);
+  \draw[black!35,dashed] (-3.9,0.5) -- (3.9,0.5);
+  \draw[black,very thick] (-0.5,-0.5) -- (-0.5,0.5);
+  \draw[black,very thick] (0.5,-0.5) -- (0.5,0.5);
+  \foreach \c in {-1,-2,-3} {
+    \draw[fill=blue!22,draw=black!70,line width=0.4pt]
+      plot[domain=0:360,samples=150,smooth cycle,variable=\t]
+      ({\c+0.2*(1+0.12*cos(3*\t))/sqrt(1.0072)*cos(\t)},{0.2*(1+0.12*cos(3*\t))/sqrt(1.0072)*sin(\t)});
+  }
+  \foreach \c in {1,2,3} {
+    \draw[fill=teal!22,draw=black!70,line width=0.4pt]
+      plot[domain=0:360,samples=150,smooth cycle,variable=\t]
+      ({\c+0.2*(1+0.2*cos(3*\t))/sqrt(1.02)*cos(\t)},{0.2*(1+0.2*cos(3*\t))/sqrt(1.02)*sin(\t)});
+  }
+  \draw[fill=orange!32,draw=black!70,line width=0.4pt]
+    plot[domain=0:360,samples=300,smooth cycle,variable=\t]
+    ({0.2*(1.5+0.3*cos(5*\t))*cos(\t)},{0.2*(1+0.3*cos(5*\t))*sin(\t)});
+  \node at (-4.15,0) {$\cdots$};
+  \node at (4.15,0) {$\cdots$};
+  \node[above] at (-0.5,0.5) {\small $\Gamma_-$};
+  \node[above] at (0.5,0.5) {\small $\Gamma_+$};
+  \node[below] at (-0.5,-0.62) {\footnotesize $x=-\tfrac12$};
+  \node[below] at (0.5,-0.62) {\footnotesize $x=\tfrac12$};
+  \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}] (4.45,-0.5) -- (4.45,0.5) node[midway,right] {\footnotesize 1};
+  \draw[decorate,decoration={brace,amplitude=5pt}] (-3.9,0.62) -- (-0.53,0.62)
+    node[midway,above=6pt] {\footnotesize $\Omega_-$：$a=0.12$，$\rho=17$};
+  \draw[decorate,decoration={brace,amplitude=5pt}] (-0.47,0.62) -- (0.47,0.62)
+    node[midway,above=6pt] {\footnotesize $D$：$\rho=4$};
+  \draw[decorate,decoration={brace,amplitude=5pt}] (0.53,0.62) -- (3.9,0.62)
+    node[midway,above=6pt] {\footnotesize $\Omega_+$：$a=0.20$，$\rho=17$};
+\end{tikzpicture}
+\caption{算例的几何（只画出 $y$ 方向的一个周期）。粗线 $\Gamma_\pm$ 是芯区 $D$ 与两个半导波 $\Omega_\pm$ 的交界面（端口）。夹杂中心在整数点 $x=n$，背景 $\rho=1$。}
+\label{fig:geometry}
+\end{figure}
+
+见图~\ref{fig:geometry}。记 $I=(-\tfrac12,\tfrac12)$，计算区域是水平带
+\[
+B=\RR\times I .
+\]
+带分成三块：
+\begin{itemize}
+\item \emph{芯区} $D=(-\tfrac12,\tfrac12)\times I$，里面有一个“星形”夹杂，边界为
+\[
+t\mapsto 0.2\bigl((1.5+0.3\cos5t)\cos t,\ (1+0.3\cos5t)\sin t\bigr),\qquad \rho=4 ;
+\]
+\item \emph{右半导波} $\Omega_+=(\tfrac12,\infty)\times I$：在每个 $x=n$（$n\ge1$）处有一个三叶形夹杂，
+\[
+t\mapsto (n,0)+R_a(1+a\cos3t)(\cos t,\sin t),\qquad R_a=\frac{0.2}{\sqrt{1+a^2/2}},\qquad a=0.20,\qquad\rho=17 ;
+\]
+\item \emph{左半导波} $\Omega_-=(-\infty,-\tfrac12)\times I$：同样的三叶形，中心在 $x=n\le-1$，但 $a=0.12$，$\rho=17$。
+\end{itemize}
+$R_a$ 的取法使每个三叶形的面积都等于 $\pi\cdot0.2^2$。夹杂以外 $\rho=1$。于是 $1\le\rho\le\rho_{\max}=17$。两个端口是
+\[
+\Gamma_\pm=\{\pm\tfrac12\}\times I .
+\]
+端口恰好落在胞元的墙上；每个夹杂离最近端口的距离大于 $\tfrac14$，所以在端口两侧宽 $\tfrac14$ 的“领口”中 $\rho\equiv1$。这一点在第~\ref{sec:surface}--\ref{sec:dtnbound}~节反复用到。
+
+左右两侧不对称（$a$ 不同），所以下文所有关于半导波的结论都要对两侧分别验证。
+
+\subsection{方程、Bloch 相位与弱形式}
+
+在 TM 偏振下，场 $u$ 满足
+\begin{equation}
+\label{eq:helmholtz}
+-\Delta u=\lambda\rho u ,
+\end{equation}
+其中 $\lambda=k^2$ 是谱参数，$k$ 是真空波数。我们始终用 $\lambda$，因为方程关于它是线性的；只在报告频率时换算成 $k=\sqrt\lambda$。
+
+结构在 $y$ 方向周期为 1。固定 Bloch 相位 $\beta$（本讲义的算例取 $\beta=0.5$），寻找满足准周期条件
+\begin{equation}
+\label{eq:qp}
+u(x,\tfrac12)=\ee^{\ii\beta}u(x,-\tfrac12)
+\end{equation}
+的解。准周期函数在 $y$ 方向可以展开成
+\begin{equation}
+\label{eq:fourier-y}
+u(x,y)=\sum_{k\in\mathbb Z}u_k(x)\,\ee^{\ii\beta_ky},\qquad \beta_k=\beta+2\pi k ,
+\end{equation}
+这在下文是基本工具。记 $\langle k\rangle=(1+\beta_k^2)^{1/2}\ge1$。
+
+\paragraph{函数空间与形式.} 记 $V=H^1_\beta(B)$ 为 $H^1(B)$ 中满足 \eqref{eq:qp}（迹意义）的函数。在 $V$ 上定义
+\[
+a(u,v)=\int_B\nabla u\cdot\overline{\nabla v},\qquad
+b(u,v)=\int_B\rho\,u\,\overline v,\qquad \|u\|_\rho^2=b(u,u).
+\]
+$a$ 是非负、闭的 Hermitian 形式，由它在加权空间 $L^2_\rho(B)$（内积 $b$）中确定一个非负自伴算子
+\[
+A=-\rho^{-1}\Delta\quad(\text{带准周期条件}) .
+\]
+$A$ 的特征值问题的弱形式是：求 $\lambda$ 和 $0\ne u\in V$，使
+\begin{equation}
+\label{eq:weak}
+a(u,v)=\lambda\,b(u,v)\qquad\forall v\in V .
+\end{equation}
+界面上 $u$ 与 $\partial_nu$ 连续、$\partial_yu$ 的准周期条件都是自然条件，已经包含在 \eqref{eq:weak} 中。
+
+\begin{remark}
+写成 $A=-\rho^{-1}\Delta$ 而不是 $-\Delta-\lambda\rho$ 的好处是：$A$ 在加权内积 $b$ 下自伴，于是可以用谱定理和谱测度。第~\ref{sec:goerisch}~节的全部论证都建立在这一点上。
+\end{remark}
+
+为了让形式正定，我们还取一个位移 $\gamma>0$（算例中 $\gamma=1$），记
+\[
+a_\gamma=a+\gamma b .
+\]
+因为 $1\le\rho\le17$，$a_\gamma(u,u)$ 与 $\|u\|_{H^1(B)}^2$ 等价，所以 $(V,a_\gamma)$ 是 Hilbert 空间；$A+\gamma$ 的谱是 $A$ 的谱向右平移 $\gamma$。
+
+\subsection{谱：能带、带隙与导模}
+
+先看一侧的完美周期介质：让右侧的胞元向左右两边都无限重复，得到全周期算子 $A^{\rm per}_+$；左侧同理得到 $A^{\rm per}_-$。由 Floquet--Bloch 理论，$A^{\rm per}_\pm$ 的谱是一些闭区间（能带）的并：对 $x$ 方向的 Bloch 相位 $\theta\in[-\pi,\pi]$，单胞上的特征值 $\lambda_1(\theta)\le\lambda_2(\theta)\le\cdots$ 连续依赖于 $\theta$，第 $j$ 条能带就是 $\lambda_j([-\pi,\pi])$。能带之间的空隙叫\emph{带隙}。
+
+整条波导的算子 $A$ 是左右两种周期介质在芯区“拼接”的结果。一个标准事实是，拼接只改变有界区域，不改变本质谱：
+\[
+\sigma_{\rm ess}(A)=\sigma(A^{\rm per}_-)\cup\sigma(A^{\rm per}_+).
+\]
+所以在两侧带隙的公共部分中，$A$ 只能有孤立的有限重特征值。对应的特征函数在 $|x|\to\infty$ 时指数衰减，这就是\emph{导模}。
+
+本算例中，第~\ref{sec:band}~节将证明：两侧周期介质在
+\[
+k\in[1.318,\ 2.375]\quad\text{即}\quad\lambda\in[1.318^2,\ 2.375^2]=[1.737124,\ 5.640625]
+\]
+中都没有谱。目标导模在 $k\approx1.55844$，即 $\lambda\approx2.42873$。
+
+\paragraph{窗口.} 下文固定一个窗口
+\begin{equation}
+\label{eq:window}
+\alpha_-=1.32^2=1.7424,\qquad \alpha_+=2.37^2=5.6169 .
+\end{equation}
+它严格包含在上面的带隙中，两端各留出一点余量。我们关心的问题是窗口里有几个特征值，以及目标特征值在哪里。
+
+\paragraph{隔离假设 (H).} 第~\ref{sec:goerisch}~节的区间定理需要下面的前提：
+\begin{assumption}[隔离假设 (H)]
+\label{ass:H}
+$0\le\alpha_-<\alpha_+$，并且 $\sigma(A)\cap(\alpha_-,\alpha_+)=\{\lambda_*\}$，其中 $\lambda_*$ 是 $A$ 的有限重特征值。
+\end{assumption}
+(H) 说的是：窗口里除了目标特征值，没有任何别的谱。它同时排除了三件事：窗口碰到能带（本质谱）；芯区还有别的导模；以及一个不太直观的可能，即半导波截面上的“表面态”造成的谱（第~\ref{sec:H}~节解释）。
+
+注意 (H) 依赖于 $\beta$：换一个 Bloch 相位，能带、带隙和导模都会移动，(H) 要重新验证。
+
+\paragraph{两条坐标约定.} 讨论单个半导波时，常用从端口指向内部的坐标 $s$：在 $\Omega_+$ 中 $s=x-\tfrac12$，在 $\Omega_-$ 中 $s=-\tfrac12-x$。这只是换个名字，不反射夹杂的形状。所有复内积都对第一个变量线性，对第二个变量共轭线性。
+
+% ======================================================================
+\section{把无限波导约化到中心胞元}
+\label{sec:dtn}
+导模是整条无限带上的特征函数。数值上，我们用 Dirichlet-to-Neumann（DtN）映射把两个半导波“折叠”到端口上，只在芯区 $D$ 上离散。这一节先在连续层面讲清楚这件事，它也是第~\ref{sec:H}~节计数定理的出发点；最后简述离散 DtN 的算法。
+
+\subsection{记号}
+
+对 $O\in\{D,\Omega_-,\Omega_+\}$，$H^1_\beta(O)$ 的定义与 $V$ 相同（上下边准周期）。记
+\[
+a_O(u,v)=\int_O\nabla u\cdot\overline{\nabla v},\qquad b_O(u,v)=\int_O\rho u\overline v,\qquad s^O_\lambda=a_O-\lambda b_O ,
+\]
+在整条带上记 $s_\lambda=a-\lambda b$。$H^1_{\beta,0}(\Omega_\pm)$ 是 $H^1_\beta(\Omega_\pm)$ 中在端口 $\Gamma_\pm$ 上迹为零的函数。
+
+\paragraph{端口迹.} 端口上的函数 $g(y)$ 按 \eqref{eq:fourier-y} 展开为 $g=\sum_kg_k\ee^{\ii\beta_ky}$，$g_k=\int_Ig\,\ee^{-\ii\beta_ky}\dd y$。迹空间及其范数是
+\[
+\Tr=\Bigl\{g:\ \|g\|_{1/2}^2:=\sum_k\langle k\rangle|g_k|^2<\infty\Bigr\}.
+\]
+$\tau_\pm u=u|_{\Gamma_\pm}$ 表示端口迹。
+
+\paragraph{一维化.} 下面的事实把带上的 $H^1$ 问题化成一族一维问题，以后反复使用：
+\begin{quote}
+(F) 对 $O=(x_1,x_2)\times I$（端点可以是 $\pm\infty$），$u\in H^1_\beta(O)$ 当且仅当 $u=\sum_ku_k(x)\ee^{\ii\beta_ky}$，每个 $u_k\in H^1(x_1,x_2)$，并且
+\[
+\sum_k\int_{x_1}^{x_2}\bigl(|u_k'|^2+\langle k\rangle^2|u_k|^2\bigr)\dd x=a_O(u,u)+\|u\|_{L^2(O)}^2<\infty .
+\]
+\end{quote}
+这只是 $y$ 方向的 Parseval 恒等式：$|\partial_yu|^2$ 对应 $\beta_k^2|u_k|^2$。
+
+\subsection{半导波的 Dirichlet 算子与假设 (P)}
+
+在 $L^2_\rho(\Omega_\pm)$ 中，由形式 $a_{\Omega_\pm}$（定义域 $H^1_{\beta,0}(\Omega_\pm)$）确定非负自伴算子 $A_\pm$：它就是半导波上的 $-\rho^{-1}\Delta$，在端口上取零 Dirichlet 条件。记 $R_\pm(\lambda)=(A_\pm-\lambda)^{-1}$。
+
+\begin{assumption}[假设 (P)]
+\label{ass:P}
+窗口 $\mathcal W=[\alpha_-,\alpha_+]$ 与 $\sigma(A_-)$、$\sigma(A_+)$ 都不相交。
+\end{assumption}
+
+(P) 包含两部分。第一，$\mathcal W$ 不碰能带：$A_\pm$ 的本质谱就是对应全周期介质的谱。第二，$\mathcal W$ 中没有 $A_\pm$ 的特征值。$A_\pm$ 的特征函数在端口上为零、在半导波内衰减，它是“在截线 $x=\pm\tfrac12$ 处切开后”半导波自己的束缚态，叫做\emph{表面态}。它不是原问题的谱，但它会让 DtN 映射在该 $\lambda$ 处出现极点。第~\ref{sec:band}~节处理第一部分，第~\ref{sec:surface}~节处理第二部分。
+
+记 $d_{\mathcal W}=\min_\pm\operatorname{dist}(\mathcal W,\sigma(A_\pm))>0$。
+
+\subsection{延拓算子与 DtN 形式}
+
+\begin{definition}
+对 $\lambda\in\mathcal W\cup\{-1\}$ 和 $g\in\Tr$，令 $E_\pm(\lambda)g$ 为满足
+\[
+w|_{\Gamma_\pm}=g,\qquad s^{\Omega_\pm}_\lambda(w,\varphi)=0\quad\forall\varphi\in H^1_{\beta,0}(\Omega_\pm)
+\]
+的唯一 $w\in H^1_\beta(\Omega_\pm)$。DtN 形式定义为
+\begin{equation}
+\label{eq:dtn-form}
+\Lambda_\pm(\lambda)(g,h)=s^{\Omega_\pm}_\lambda\bigl(E_\pm(\lambda)g,\,E_\pm(\lambda)h\bigr).
+\end{equation}
+\end{definition}
+
+$E_\pm(\lambda)g$ 就是半导波中以 $g$ 为边值、属于 $H^1$（因而在远处衰减）的解。对均匀介质中的衰减模 $\ee^{-\kappa s}\ee^{\ii\beta_ky}$，分部积分给出 $\Lambda=\kappa>0$；所以按这个符号约定，DtN 形式在高频上是正的。
+
+\begin{lemma}[延拓]
+\label{lem:extension}
+只写 $\Omega_+$，$\Omega_-$ 相同。设 (P) 成立，$\lambda\in\mathcal W\cup\{-1\}$。则
+\begin{enumerate}[label=(\alph*)]
+\item $E_+(\lambda)$ 有定义，是 $\Tr\to H^1_\beta(\Omega_+)$ 的有界线性映射；
+\item 对 $\lambda\in\mathcal W$，$E_+(\lambda)=E_+(-1)+(\lambda+1)R_+(\lambda)E_+(-1)$；
+\item $E_+(-1):\Tr\to L^2_\rho(\Omega_+)$ 是紧算子；
+\item 若 $w_h\in H^1_\beta(\Omega_+)$ 的迹为 $h$，则 $\Lambda_+(\lambda)(g,h)=s^{\Omega_+}_\lambda(E_+(\lambda)g,w_h)$。
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+用内向坐标 $s=x-\tfrac12$。
+
+\emph{第 1 步：显式提升.} 令 $E^0g=\sum_kg_k\ee^{\ii\beta_ky}\ee^{-\langle k\rangle s}$。由 (F)，
+\[
+\|E^0g\|_{H^1(\Omega_+)}^2=\sum_k|g_k|^2\int_0^\infty\bigl(\langle k\rangle^2+\beta_k^2+1\bigr)\ee^{-2\langle k\rangle s}\dd s=\|g\|_{1/2}^2,\qquad
+\|E^0g\|_{L^2(\Omega_+)}^2=\sum_k\frac{|g_k|^2}{2\langle k\rangle}.
+\]
+对 $\varphi\in H^1_{\beta,0}(\Omega_+)$ 逐模分部积分。记 $f_k=\ee^{-\langle k\rangle s}$，则 $f_k''=\langle k\rangle^2f_k$，且 $\varphi_k(0)=0$，所以
+\[
+\int_{\Omega_+}\bigl(\nabla E^0g\cdot\overline{\nabla\varphi}+E^0g\,\overline\varphi\bigr)=\sum_kg_k\int_0^\infty\bigl(f_k'\overline{\varphi_k'}+\langle k\rangle^2f_k\overline{\varphi_k}\bigr)\dd s=0 .
+\]
+因此 $s^{\Omega_+}_{-1}(E^0g,\varphi)=\int_{\Omega_+}(\rho-1)E^0g\,\overline\varphi$。
+
+\emph{第 2 步：唯一性.} 若 $d\in H^1_{\beta,0}(\Omega_+)$ 满足 $s^{\Omega_+}_\lambda(d,\varphi)=0$ 对一切 $\varphi\in H^1_{\beta,0}(\Omega_+)$ 成立，则 $a_{\Omega_+}(d,\varphi)=\lambda b_{\Omega_+}(d,\varphi)$。由形式与算子的对应（表示定理），$d\in D(A_+)$ 且 $A_+d=\lambda d$。$\lambda\notin\sigma(A_+)$（对 $\mathcal W$ 由 (P)，对 $-1$ 由 $A_+\ge0$），所以 $d=0$。
+
+\emph{第 3 步：$\lambda=-1$.} 令 $z=(A_++1)^{-1}[(1-\rho^{-1})E^0g]$，则 $z\in H^1_{\beta,0}(\Omega_+)$ 且 $s^{\Omega_+}_{-1}(z,\varphi)=b_{\Omega_+}((1-\rho^{-1})E^0g,\varphi)=\int(\rho-1)E^0g\,\overline\varphi$。与第 1 步相减知 $w=E^0g-z$ 满足定义，于是
+\[
+E_+(-1)=E^0-(A_++1)^{-1}(1-\rho^{-1})E^0 .
+\]
+$E^0$ 是等距，乘以 $1-\rho^{-1}$ 有界，$(A_++1)^{-1}$ 把 $L^2_\rho$ 有界地映入 $H^1$（因为 $\|z\|_{H^1}^2\le s_{-1}^{\Omega_+}(z,z)=b(f,z)\le\rho_{\max}^{1/2}\|f\|_\rho\|z\|_{H^1}$），所以 (a) 对 $\lambda=-1$ 成立。
+
+紧性：令 $P_N$ 为保留 $|k|\le N$ 的 Fourier 截断，$E^0P_N$ 有限秩，而
+\[
+\|E^0(I-P_N)g\|_{L^2}^2=\sum_{|k|>N}\frac{|g_k|^2}{2\langle k\rangle}\le\sup_{|k|>N}\frac1{2\langle k\rangle^2}\,\|g\|_{1/2}^2\to0 .
+\]
+所以 $E^0:\Tr\to L^2$ 紧，$E_+(-1)$ 是 $E^0$ 与有界算子的组合，也紧。这是 (c)。
+
+\emph{第 4 步：$\lambda\in\mathcal W$.} 令 $\zeta=(\lambda+1)R_+(\lambda)E_+(-1)g\in H^1_{\beta,0}(\Omega_+)$，则 $s^{\Omega_+}_\lambda(\zeta,\varphi)=(\lambda+1)b(E_+(-1)g,\varphi)$；而
+$s^{\Omega_+}_\lambda(E_+(-1)g,\varphi)=s^{\Omega_+}_{-1}(E_+(-1)g,\varphi)-(\lambda+1)b(E_+(-1)g,\varphi)=-(\lambda+1)b(E_+(-1)g,\varphi)$。两式相加为零，所以 $E_+(-1)g+\zeta$ 满足定义。由唯一性得 (b)。有界性由 $\|R_+(\lambda)\|\le d_{\mathcal W}^{-1}$ 和
+$a_{\Omega_+}(\zeta,\zeta)=\lambda\|\zeta\|_\rho^2+(\lambda+1)b(E_+(-1)g,\zeta)$ 得到。
+
+\emph{第 5 步：(d).} $w_h-E_+(\lambda)h\in H^1_{\beta,0}(\Omega_+)$，由定义 $s^{\Omega_+}_\lambda(E_+(\lambda)g,w_h-E_+(\lambda)h)=0$。
+\end{proof}
+
+(d) 说明 DtN 形式的第二个变量可以用任何具有正确迹的函数代替。这一点在第~\ref{sec:dtnbound}~节构造 DtN 的下界时是关键。
+
+\subsection{芯区上的约化形式}
+
+记 $\mathcal H=H^1_\beta(D)$。对 $u\in\mathcal H$，令 $U_\lambda u$ 为在 $D$ 上等于 $u$、在 $\Omega_\pm$ 上等于 $E_\pm(\lambda)\tau_\pm u$ 的函数。两块在端口上迹相同，所以 $U_\lambda u\in V$。定义\emph{约化形式}
+\begin{equation}
+\label{eq:reduced}
+t_\lambda(u,v)=s_\lambda(U_\lambda u,U_\lambda v)=a_D(u,v)-\lambda b_D(u,v)+\sum_\pm\Lambda_\pm(\lambda)(\tau_\pm u,\tau_\pm v).
+\end{equation}
+它只含芯区上的积分和两个端口上的 DtN 形式。
+
+\begin{lemma}[约化形式的基本恒等式]
+\label{lem:reduced-identity}
+设 (P) 成立，$\lambda,\mu\in\mathcal W\cup\{-1\}$，$u,v\in\mathcal H$。则
+\[
+t_\lambda(u,v)-t_\mu(u,v)=-(\lambda-\mu)\,b(U_\lambda u,U_\mu v).
+\]
+特别地，$\lambda\mapsto t_\lambda(u,u)$ 在 $\mathcal W$ 上可微，导数为 $-\|U_\lambda u\|_\rho^2\le-b_D(u,u)<0$（$u\ne0$）。
+\end{lemma}
+
+\begin{proof}
+$\Phi_0=U_\lambda v-U_\mu v$ 在 $D$ 上为零、在 $\Omega_\pm$ 上迹为零，所以由 $E_\pm(\lambda)$ 的定义 $s_\lambda(U_\lambda u,\Phi_0)=0$，从而
+\[
+t_\lambda(u,v)=s_\lambda(U_\lambda u,U_\mu v)=s_\mu(U_\lambda u,U_\mu v)-(\lambda-\mu)b(U_\lambda u,U_\mu v).
+\]
+同理 $U_\lambda u-U_\mu u$ 也是这样的函数，而 $s_\mu$ 对实 $\mu$ 是 Hermitian 的，所以
+$s_\mu(U_\lambda u,U_\mu v)=t_\mu(u,v)+\overline{s_\mu(U_\mu v,U_\lambda u-U_\mu u)}=t_\mu(u,v)$。这是恒等式。
+
+导数：由引理~\ref{lem:extension}(b) 与预解式恒等式，$\mu\to\lambda$ 时 $U_\mu\to U_\lambda$（算子范数），于是差商 $-b(U_\lambda u,U_\mu u)\to-\|U_\lambda u\|_\rho^2$。$U_\lambda u$ 在 $D$ 上等于 $u$，所以 $\|U_\lambda u\|_\rho^2\ge b_D(u,u)$。
+\end{proof}
+
+\begin{keypoint}
+约化形式 $t_\lambda$ 关于 $\lambda$ 严格递减。这就是第~\ref{sec:H}~节“数负特征值”能够数出特征值个数的原因：$\lambda$ 增大时，$t_\lambda$ 的特征值只会从正到负越过零，每越过一次，就对应 $A$ 的一个特征值。
+\end{keypoint}
+
+由同样的拆分可以验证：$u\ne0$ 满足 $t_\lambda(u,v)=0$（对一切 $v\in\mathcal H$）当且仅当 $U_\lambda u$ 是 $A$ 的特征函数（引理~\ref{lem:kernel}）。也就是说，原来整条带上的特征值问题等价于芯区上关于 $\lambda$ 非线性的问题“$t_\lambda$ 有非平凡核”。
+
+\subsection{离散 DtN}
+\label{sec:discrete-dtn}
+
+计算候选导模时，DtN 形式用有限元离散近似。这里只说要点。
+
+在一个引线胞元上用与芯区相同类型的有限元，把胞元内部自由度消去，得到关于胞元左右两面墙的 Schur 补
+\[
+S(\lambda)=\begin{pmatrix}S_{00}&S_{01}\\ S_{10}&S_{11}\end{pmatrix}.
+\]
+半导波的离散解在第 $j$ 面墙上的值记为 $\bm g_j$。相邻胞元在公共墙上的方程给出三项递推 $S_{10}\bm g_{j-1}+(S_{11}+S_{00})\bm g_j+S_{01}\bm g_{j+1}=0$。由周期性，衰减解满足 $\bm g_{j+1}=T\bm g_j$，传播矩阵 $T$ 满足二次矩阵方程
+\[
+S_{10}+(S_{11}+S_{00})T+S_{01}T^2=0 ,
+\]
+并取 $T$ 的谱全部在单位圆内的那个解。它由广义特征值问题的有序 QZ 分解得到：取模小于 1 的那一半特征向量张成的子空间。离散 DtN 矩阵是
+\[
+D(\lambda)=S_{00}+S_{01}T .
+\]
+芯区上的离散问题是：求 $\lambda$ 使
+\[
+F(\lambda)=K-\lambda M^\rho+W_-^{\mathsf H}D_-(\lambda)W_-+W_+^{\mathsf H}D_+(\lambda)W_+
+\]
+奇异，其中 $K$、$M^\rho$ 是芯区刚度和带权质量矩阵，$W_\pm$ 选出端口自由度。曲边界面上的质量矩阵用真实的 $\rho$ 积分（第~\ref{sec:trial}~节）。
+
+在本讲义的算例中，芯区与引线胞元都用每胞元 48 等分背景加 320 段解析界面的曲边三角网格（简称 g48），$P_3$ 元，左／中／右模板分别约有 $2.9\times10^4$ 个自由度。求得的根是 $k_h=1.5584378944018986$，即 $\lambda_h\approx2.42872867$。
+
+\begin{remark}
+离散 DtN 只用来\emph{产生}候选场；第~\ref{sec:goerisch}--\ref{sec:fourcorner}~节的区间对任何满足条件的试探场都成立，不要求它来自 DtN 求解，也不需要估计离散 DtN 的误差。只有第~\ref{sec:H}~节的计数才需要真 DtN 形式的单侧界，那里另行构造（第~\ref{sec:dtnbound}~节）。
+\end{remark}
+
+% ======================================================================
+\section{Lehmann--Goerisch 区间}
+\label{sec:goerisch}
+这一节是全文的核心：给一个试探函数 $v$ 和一个“通量” $p$，算出两个数 $q$、$J$，就得到包含 $\lambda_*$ 的区间。证明只用谱定理，几行就够。
+
+\subsection{设定：谱测度}
+
+取位移 $\gamma>0$，记 $C=A+\gamma$，它的谱在 $[\gamma,\infty)$ 中。取试探函数 $v\in V$，$\|v\|_\rho=1$，令
+\[
+q=a_\gamma(v,v),\qquad \theta=q-\gamma=\frac{a(v,v)}{b(v,v)} .
+\]
+$\theta$ 就是 $v$ 的 Rayleigh 商。再令 $z=C^{-1}v$，即 $z\in V$ 满足
+\begin{equation}
+\label{eq:z}
+a_\gamma(z,\varphi)=b(v,\varphi)\qquad\forall\varphi\in V ,
+\end{equation}
+并记 $G=a_\gamma(z,z)=b(v,z)$。
+
+设 $E(\cdot)$ 是 $A$ 的谱测度，$m(\cdot)=b(E(\cdot)v,v)$ 是 $v$ 的谱分布。它是 $[0,\infty)$ 上的概率测度，支集在 $\sigma(A)$ 中。由谱定理，
+\begin{equation}
+\label{eq:qG-spectral}
+q=\int(t+\gamma)\,\dd m(t),\qquad G=\int\frac{\dd m(t)}{t+\gamma}.
+\end{equation}
+第一式成立是因为 $v$ 在形式定义域 $V$ 中；第二式是 $G=b(C^{-1}v,v)$。
+
+\begin{remark}
+若 $v$ 恰好是特征函数，$m$ 是单点测度，$q\cdot G=1$。一般地，由 Cauchy--Schwarz，$1=b(v,v)=a_\gamma(z,v)\le G^{1/2}q^{1/2}$，即 $qG\ge1$。$qG-1$ 衡量 $v$ 的谱分布有多“分散”。
+\end{remark}
+
+$q$ 是可以直接计算的积分，$G$ 却需要求解 \eqref{eq:z}，无法精确得到。下面的想法是用一个可计算的上界 $J\ge G$ 代替 $G$。
+
+\subsection{互补能量：可计算的 $J\ge G$}
+
+\begin{definition}[容许通量]
+\label{def:admissible}
+设 $p\in L^2(B)^2$ 的分布散度 $\operatorname{div}p\in L^2(B)$，并且
+\begin{equation}
+\label{eq:green-p}
+\int_B\bigl(p\cdot\overline{\nabla\varphi}+(\operatorname{div}p)\,\overline\varphi\bigr)=0\qquad\forall\varphi\in V .
+\end{equation}
+称 $p$ 为\emph{容许通量}，并令
+\begin{equation}
+\label{eq:J}
+J=\int_B|p|^2+\frac1\gamma\int_B\frac{|\operatorname{div}p+\rho v|^2}{\rho}.
+\end{equation}
+\end{definition}
+
+条件 \eqref{eq:green-p} 是“分部积分没有边界项”：$p$ 在 $B$ 中法向分量连续，上下边上 $p_y$ 满足与 \eqref{eq:qp} 相同的准周期条件，并且在远处为零（例如支集有界）。精确通量 $p=\nabla z$ 满足它：由 \eqref{eq:z}，$-\Delta z+\gamma\rho z=\rho v$，于是 $\operatorname{div}\nabla z+\rho v=\gamma\rho z$，代入 \eqref{eq:J} 得 $J=\int|\nabla z|^2+\gamma\int\rho|z|^2=G$。
+
+\begin{lemma}[$J$ 是 $G$ 的上界]
+\label{lem:JG}
+对任何容许通量，$G\le J$。于是 $1\le qG\le qJ$。
+\end{lemma}
+
+\begin{proof}
+在 $X=L^2(B)^2\times L^2(B)$ 上定义半正定 Hermitian 形式
+\[
+\langle(p,r),(p',r')\rangle_X=\int_Bp\cdot\overline{p'}+\gamma\int_B\rho\,r\,\overline{r'} ,
+\]
+并令 $T\varphi=(\nabla\varphi,\varphi)$，$\hat w=\bigl(p,\,(\operatorname{div}p+\rho v)/(\gamma\rho)\bigr)$。则 $\langle\hat w,\hat w\rangle_X=J$，$\langle T\varphi,T\psi\rangle_X=a_\gamma(\varphi,\psi)$，并且由 \eqref{eq:green-p}，
+\[
+\langle\hat w,T\varphi\rangle_X=\int p\cdot\overline{\nabla\varphi}+\int(\operatorname{div}p+\rho v)\overline\varphi=b(v,\varphi)\qquad\forall\varphi\in V .
+\]
+取 $\varphi=z$：$\langle\hat w,Tz\rangle_X=b(v,z)=G$，而 $\langle Tz,Tz\rangle_X=G$。由 Cauchy--Schwarz，$G\le J^{1/2}G^{1/2}$，即 $G\le J$。
+\end{proof}
+
+\begin{remark}
+引理~\ref{lem:JG} 是经典的互补能量原理：$G=\min J$，最小值在精确通量 $\nabla z$ 处取到。要点是 $J$ 中\emph{没有}未知量：只需要 $v$、$p$ 和 $\rho$ 的积分。$J$ 与 $G$ 的差就是通量误差，$J-G=\langle\hat w-Tz,\hat w-Tz\rangle_X$（展开即得）。
+\end{remark}
+
+\subsection{区间定理}
+
+记 $t_-=\alpha_-+\gamma$，$t_+=\alpha_++\gamma$，$\ell=\lambda_*+\gamma$。
+
+\begin{theorem}[Lehmann--Goerisch 区间，$N=1$]
+\label{thm:goerisch}
+设 (H) 成立，$v\in V$，$\|v\|_\rho=1$，$p$ 是容许通量，$q,J$ 如上。若
+\begin{equation}
+\label{eq:goerisch-cond}
+q<t_+,\qquad t_-J<1 ,
+\end{equation}
+则
+\begin{equation}
+\label{eq:goerisch-interval}
+\frac{t_+-q}{t_+J-1}-\gamma\ \le\ \lambda_*\ \le\ \frac{q-t_-}{1-t_-J}-\gamma .
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+下面以 $s=t+\gamma$ 为积分变量，于是 \eqref{eq:qG-spectral} 写成 $q=\int s\,\dd m$，$G=\int s^{-1}\dd m$。由 (H)，$C$ 的谱包含在 $[\gamma,t_-]\cup\{\ell\}\cup[t_+,\infty)$ 中，所以 $m$ 只落在这三块上。
+
+\emph{上界.} 考虑 $f(s)=(s-\ell)(s-t_-)/s$。在 $s\le t_-$ 时两个因子都 $\le0$；在 $s=\ell$ 时为零；在 $s\ge t_+>\ell$ 时两个因子都为正。所以 $f\ge0$ 在 $C$ 的谱上成立，$\int f\,\dd m\ge0$。由 \eqref{eq:qG-spectral} 展开：
+\[
+0\le\int\Bigl(s-(\ell+t_-)+\frac{\ell t_-}{s}\Bigr)\dd m=q-\ell-t_-+\ell t_-G ,
+\]
+即 $\ell(1-t_-G)\le q-t_-$。由引理~\ref{lem:JG}，$1-t_-G\ge1-t_-J>0$；又 $q\ge1/J>t_-$，所以 $q-t_->0$，于是
+\[
+\ell\le\frac{q-t_-}{1-t_-G}\le\frac{q-t_-}{1-t_-J}.
+\]
+
+\emph{下界.} 考虑 $g(s)=(s-\ell)(s-t_+)/s$。在 $s\le t_-<\ell$ 时两个因子都为负；在 $s=\ell$ 时为零；在 $s\ge t_+$ 时两个因子都 $\ge0$。所以同样 $\int g\,\dd m\ge0$，即
+\[
+\ell(t_+G-1)\ge t_+-q .
+\]
+由 $qG\ge1$ 和 $q<t_+$，$t_+G>1$；又 $t_+J-1\ge t_+G-1>0$，$t_+-q>0$，于是
+\[
+\ell\ge\frac{t_+-q}{t_+G-1}\ge\frac{t_+-q}{t_+J-1}.
+\]
+两式都减去 $\gamma$ 即得 \eqref{eq:goerisch-interval}。
+\end{proof}
+
+\begin{remark}[这个证明在做什么]
+如果把 $J$ 换成 $G$，\eqref{eq:goerisch-interval} 就是 Temple 型的界：它用的是 $v$ 的谱分布的前两个“矩” $\int s\,\dd m$ 和 $\int s^{-1}\dd m$，以及“$\ell$ 两侧的空隙中没有谱”这一信息。Goerisch 的贡献是用可计算的 $J$ 代替不可计算的 $G$，而且代替的方向恰好使两端都变宽，不破坏包含关系。
+
+文献中 $N=1$ 的 Lehmann--Goerisch 定理通常还带一组符号条件，用来保证区间中\emph{存在}特征值。在 (H) 下存在性已经是前提，所以这里只需要 \eqref{eq:goerisch-cond}。后者比那组符号条件更弱：那组条件等价于 $t_-<q<t_+$ 且 $t_-t_+\delta<(q-t_-)(t_+-q)$（$\delta=qJ-1$），它蕴含 $t_-\delta<q-t_-$，而这正是 $t_-J<1$。数值上两者都有很大余量。
+\end{remark}
+
+\paragraph{稳定的端点公式.} 记 $\delta=qJ-1\ge0$。直接代数变形给出
+\begin{equation}
+\label{eq:endpoint-stable}
+\frac{q-t}{1-tJ}-\gamma=\theta+\frac{qt\delta}{q-t-t\delta},\qquad t\in\{t_-,t_+\}.
+\end{equation}
+数值上 $\delta\approx2\times10^{-10}$，而 $q$ 和 $J$ 都是 $O(1)$ 的数。若先算 $J$ 再算 $qJ-1$，会丢掉约 10 位有效数字。所以实际计算总是直接把 $\delta$ 写成一个非负积分（第~\ref{sec:trial}~节的 \eqref{eq:delta-S}），再代入 \eqref{eq:endpoint-stable}。
+
+\subsection{区间有多宽}
+
+两端相减得到宽度
+\begin{equation}
+\label{eq:width}
+W(J)=\frac{(t_+-t_-)(qJ-1)}{(1-t_-J)(t_+J-1)} .
+\end{equation}
+更直接的是看两个端点：上端点 $(q-t_-)/(1-t_-J)$ 随 $J$ 增大而增大，下端点 $(t_+-q)/(t_+J-1)$ 随 $J$ 增大而减小。所以 $J$ 越小，区间越窄，并且小 $J$ 的区间包含在大 $J$ 的区间中。由引理~\ref{lem:JG}，精确通量给出最窄的区间，宽度为 $W(G)$。
+
+$W(G)$ 有多大？由 \eqref{eq:qG-spectral}，
+\[
+1-\ell G=\int\frac{t-\lambda_*}{t+\gamma}\,\dd m=:R ,\qquad
+\ell(qG-1)=(\theta-\lambda_*)-qR .
+\]
+（第二式：$\ell(qG-1)=q(\ell G-1)+(q-\ell)$，而 $q-\ell=\theta-\lambda_*$。）代入 \eqref{eq:width} 得
+\begin{equation}
+\label{eq:width-exact}
+W(G)=\frac{(\alpha_+-\alpha_-)\,\ell\,\bigl[(\theta-\lambda_*)-qR\bigr]}{(\lambda_*-\alpha_-+t_-R)(\alpha_+-\lambda_*-t_+R)} .
+\end{equation}
+$R$ 是 $v$ 的误差在谱上的加权平均，与 $\theta-\lambda_*$ 同阶，并且当误差主要落在远高于窗口的谱分量上时，$qR\ll\theta-\lambda_*$。忽略 $R$，
+\begin{equation}
+\label{eq:width-asym}
+W(G)\approx C_W\,(\theta-\lambda_*),\qquad C_W=\frac{(\alpha_+-\alpha_-)(\lambda_*+\gamma)}{(\lambda_*-\alpha_-)(\alpha_+-\lambda_*)} .
+\end{equation}
+
+\begin{keypoint}
+区间宽度约等于 Rayleigh 商误差 $\theta-\lambda_*$ 的一个固定倍数 $C_W$。$C_W$ 只由窗口、$\lambda_*$ 和 $\gamma$ 决定。窗口越窄，$C_W$ 越大：用 (H) 的窗口越保守（离 $\lambda_*$ 越近），区间越宽。Rayleigh 商误差是场误差的平方，所以这是一个“二阶”区间。
+\end{keypoint}
+
+本算例中 $C_W=6.0712$，$P_3$ 场的 $\theta-\lambda_*\approx7.022\times10^{-10}$（这里用边界积分方法的参考值 $\lambda_{\rm BIE}=2.428728670022710$ 代替 $\lambda_*$），所以 \eqref{eq:width-asym} 预测宽度 $4.263\times10^{-9}$。实际区间宽 $4.462\times10^{-9}$，多出的约 $4.7\%$ 来自 $RT_3$ 通量与精确通量之差，即 $J-G$。
+
+\subsection{不用 (H) 的一阶区间}
+
+如果不知道窗口里有没有别的谱，还能说什么？
+
+\begin{proposition}[一阶区间]
+\label{prop:first-order}
+设 $v\in V$，$\|v\|_\rho=1$，$p$ 是容许通量，$\delta=qJ-1$。则 $A$ 的谱与闭区间
+\[
+I_1=\Bigl[\,q\Bigl(1+\tfrac\delta2-\sqrt{\delta+\tfrac{\delta^2}4}\Bigr)-\gamma,\ \ q\Bigl(1+\tfrac\delta2+\sqrt{\delta+\tfrac{\delta^2}4}\Bigr)-\gamma\,\Bigr]
+\]
+相交。$I_1$ 的宽度为 $q\sqrt{\delta(4+\delta)}\approx2q\sqrt\delta$。若 $I_1$ 包含在一个不含本质谱的区间中，则 $I_1$ 中至少有一个 $A$ 的有限重孤立特征值。
+\end{proposition}
+
+\begin{proof}
+令 $f(s)=(s-q)^2/s\ge0$。由 \eqref{eq:qG-spectral}，
+\[
+\int f\,\dd m=\int s\,\dd m-2q+q^2\int\frac{\dd m}{s}=q(qG-1)\le q\delta .
+\]
+若在 $C$ 的整个谱上都有 $f>q\delta$，则 $\int(f-q\delta)\dd m>0$（$m$ 是概率测度），矛盾。所以存在谱点 $s^*$ 使 $f(s^*)\le q\delta$，即 $(s^*)^2-(2+\delta)qs^*+q^2\le0$。这个二次式的两根是 $q(1+\tfrac\delta2\pm\sqrt{\delta+\delta^2/4})$，所以 $s^*-\gamma\in I_1$。最后一句：不在本质谱中的谱点就是有限重孤立特征值。
+\end{proof}
+
+这个命题其实是 Weinstein 型残差界的一个变形：对算子 $C^{1/2}-qC^{-1/2}$，$\|(C^{1/2}-qC^{-1/2})v\|_\rho^2=q(qG-1)$。它不需要 (H)，代价是宽度只是一阶的：$\sqrt\delta$ 而不是 $\delta$。
+
+本算例中，用第~\ref{sec:fourcorner}~节的可靠积分界代入，得
+\[
+I_1=[2.4286785151,\ 2.4287788271],\qquad\text{宽 }1.003\times10^{-4} .
+\]
+它包含在第~\ref{sec:band}~节证明的带隙 $[1.737124,5.640625]$ 中，所以（舍入误差排除的前提下）\emph{已经可以断言}：$I_1$ 中有一个导模特征值。(H) 的作用是把宽度从 $10^{-4}$ 缩小到 $4.5\times10^{-9}$。
+
+\begin{keypoint}
+两个区间的对比说明了 (H) 的价值：同一组 $q$、$J$，不加 (H) 时宽 $10^{-4}$，加上 (H) 后宽 $4.5\times10^{-9}$。代价是要证明 (H)，这是第~\ref{sec:H}--\ref{sec:count}~节的内容。
+\end{keypoint}
+
+% ======================================================================
+\section{试探场与通量：怎样得到 $q$ 和 $J$}
+\label{sec:trial}
+定理~\ref{thm:goerisch} 对\emph{任何} $v\in V$ 和任何容许通量都成立。这一节说明本算例中 $v$ 和 $p$ 怎样构造，以及怎样把 $q$、$J$ 写成适合可靠计算的形式。从这里开始取 $\gamma=1$。
+
+\subsection{试探场：截断的 FEM--DtN 解}
+
+\paragraph{场在哪里定义.} 第~\ref{sec:discrete-dtn}~节的 FEM--DtN 求解给出芯区上的 $P_3$ 场，以及两个端口上的迹。两侧半导波中的离散解由传播矩阵逐胞元给出：第 $n$ 个引线胞元两面墙上的值是 $T^{n-1}\bm g$ 和 $T^n\bm g$，胞元内部的值由该胞元的局部方程恢复。于是我们得到整条带上的一个连续分片 $P_3$ 函数 $u_h$，它在 $|x|\to\infty$ 时按 $T^n$ 指数衰减。
+
+\paragraph{截断.} Goerisch 区间需要支集有界的通量（条件 \eqref{eq:green-p} 在远处没有边界项）。最简单的办法是把场本身截断：取
+\[
+\chi(x)=\tfrac12\bigl(1+\cos(\pi\tau)\bigr),\qquad \tau=\min\Bigl(1,\max\Bigl(0,\frac{|x|-11.5}{2}\Bigr)\Bigr),
+\]
+即 $|x|\le11.5$ 时 $\chi=1$，$|x|\ge13.5$ 时 $\chi=0$，中间是余弦过渡。试探场是
+\[
+v=\chi\,u_h ,\qquad \operatorname{supp}v\subset\overline{D_X},\quad D_X=(-13.5,13.5)\times I .
+\]
+截断区共 27 个胞元（芯区加两侧各 13 个）。$\chi$ 是 $C^1$ 函数，$u_h$ 连续且分片光滑，所以 $v\in V$。截断带来的误差进入 $\theta-\lambda_*$。它很小：过渡区 $11.5<|x|<13.5$ 中 $v$ 的能量只有 $3.8\times10^{-9}$、质量只有 $7.3\times10^{-10}$（总能量约 11.47、总质量约 4.72）。
+
+\begin{remark}[为什么不需要 DtN 的精确性]
+$v$ 只要属于 $V$ 就行。离散 DtN 的误差、求根误差、截断误差都只让 $v$ 离真特征函数远一些，从而让 $\theta-\lambda_*$ 大一些、区间宽一些，但不会破坏包含关系。这是“后验区间”与“先验误差分析”的根本区别：我们不需要知道 $v$ 是怎么来的。
+\end{remark}
+
+\paragraph{两套几何.} 夹杂的边界是解析曲线。FEM 场所在的网格（下称\emph{原网格}）用二次曲边单元逼近界面，所以原网格的材料分布 $\rho_h$ 与真材料 $\rho$ 在界面附近一条极薄的“缝”上不同。$v$ 本身与材料无关，它是一个确定的 $H^1$ 函数；但 $q$ 和 $J$ 中的质量必须用\emph{真} $\rho$ 计算，否则区间对应的是另一个问题。这一点在第~\ref{sec:mass}~节处理。
+
+\subsection{通量：$RT_3$ 最小化}
+
+\paragraph{通量空间.} 在 $D_X$ 上另建一套\emph{拟合网格}：它的界面单元用解析曲线的精确参数化（曲边映射），所以每个单元内 $\rho$ 是常数。通量取拟合网格上的 Raviart--Thomas 空间 $RT_3$：参考单元上
+\[
+RT_3(\widehat K)=P_3(\widehat K)^2+\widehat{\bm x}\,P_3(\widehat K),
+\]
+经 Piola 变换 $p=\frac{1}{\det DF_K}DF_K\,\widehat p\circ F_K^{-1}$ 映到物理单元。Piola 变换保持法向通量，所以只要相邻单元在公共边上的法向通量密度一致，$p\in H(\operatorname{div})$。再要求：
+\begin{enumerate}
+\item 在 $x=\pm13.5$ 上 $p\cdot n=0$；
+\item 上下边配对：$p_y(x,\tfrac12)=\ee^{\ii\beta}p_y(x,-\tfrac12)$。
+\end{enumerate}
+把 $p$ 零延拓到 $B$ 上。
+
+\begin{lemma}[容许性]
+\label{lem:admissible}
+满足上述条件的 $p$ 是定义~\ref{def:admissible} 意义下的容许通量，并且 $J$ 中的积分只在 $D_X$ 上：
+\[
+J=\int_{D_X}|p|^2+\int_{D_X}\frac{|\operatorname{div}p+\rho v|^2}{\rho}\qquad(\gamma=1).
+\]
+\end{lemma}
+
+\begin{proof}
+对 $\varphi\in V$，在 $D_X$ 上用 Green 公式：
+$\int_{D_X}\bigl(p\cdot\overline{\nabla\varphi}+(\operatorname{div}p)\overline\varphi\bigr)=\int_{\partial D_X}(p\cdot n)\overline\varphi$。
+两条竖边上 $p\cdot n=0$。上下两边的贡献是
+\[
+\int_{-13.5}^{13.5}p_y(x,\tfrac12)\overline{\varphi(x,\tfrac12)}\,\dd x-\int_{-13.5}^{13.5}p_y(x,-\tfrac12)\overline{\varphi(x,-\tfrac12)}\,\dd x=0 ,
+\]
+因为第一个被积函数等于 $\ee^{\ii\beta}p_y(x,-\tfrac12)\cdot\ee^{-\ii\beta}\overline{\varphi(x,-\tfrac12)}$。所以 \eqref{eq:green-p} 成立。$v$ 在 $D_X$ 外为零，所以 $J$ 的积分区域只是 $D_X$。
+\end{proof}
+
+\paragraph{怎样求 $p$.} 在上述 $RT_3$ 空间中极小化 $J$（这是关于 $p$ 的二次泛函），得到离散的最优通量。$RT_3$ 的单元内部自由度和胞元内部自由度逐级消去，最后只解一个关于胞元墙上矩的小系统；周期模板的分解在胞元之间复用。
+
+只有\emph{约束}是精确的这件事要紧：法向连续、外边零法向、上下相位。极小化本身不精确没有关系，它只让 $J$ 略大。为了让约束在精确算术下严格成立，代码用整数系数的 $RT_3$ 基：边上的基函数的法向迹是 Legendre 多项式 $(2m+1)L_m$，内部基函数的法向迹恒为零；相邻单元共享同一组“主边系数”，上下边乘精确的相位因子 $\ee^{\ii\beta}$。这样法向连续由构造保证，不依赖于数值求解的精度。
+
+\subsection{不需要归一化的公式}
+
+代码中的 $v$、$p$ 没有归一化。记
+\begin{equation}
+\label{eq:EMS}
+E=\int_{D_X}|\nabla v|^2,\qquad M=\int_{D_X}\rho|v|^2,\qquad
+S(s)=\int_{D_X}\Bigl|p-\frac{\nabla v}{s}\Bigr|^2+\int_{D_X}\frac{\bigl|\operatorname{div}p+\rho(1-\frac1s)v\bigr|^2}{\rho},
+\end{equation}
+其中 $s>0$ 是一个\emph{事先固定}的数（实际取 $s$ 为 $q$ 的浮点值 $3.4287286707248672$）。
+
+\begin{lemma}[归一化与非负缺陷]
+\label{lem:normalization}
+设 $p$ 容许，$M>0$。对归一化后的 $v/\sqrt M$、$p/\sqrt M$，有
+\begin{equation}
+\label{eq:delta-S}
+q=1+\frac EM,\qquad J=\frac{S(s)}M+\frac2s-\frac q{s^2},\qquad
+\delta=qJ-1=\frac{qS(s)}M-\frac{(q-s)^2}{s^2}\le\frac{qS(s)}{M}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+沿用引理~\ref{lem:JG} 证明中的 $X$、$T$，令 $\hat w=(p,\operatorname{div}p/\rho+v)$（未归一化，$\gamma=1$）。由容许性，$\langle\hat w,Tv\rangle_X=b(v,v)=M$；又 $\langle Tv,Tv\rangle_X=E+M=qM$。展开
+\[
+S(s)=\Bigl\langle\hat w-\frac{Tv}s,\hat w-\frac{Tv}s\Bigr\rangle_X=\langle\hat w,\hat w\rangle_X-\frac{2M}{s}+\frac{qM}{s^2} .
+\]
+（交叉项是实数 $M$，所以复数情形也只出现 $2M/s$。）归一化后的 $J$ 是 $\langle\hat w,\hat w\rangle_X/M$，由此得 $J$ 的公式；乘以 $q$ 再配方得 $\delta$ 的公式。
+\end{proof}
+
+\begin{keypoint}
+$S(s)$ 是一个\emph{非负的小量的积分}：被积函数是两个小残差 $p-\nabla v/s$ 与 $\operatorname{div}p+\rho(1-1/s)v$ 的平方。本算例中 $S\approx2.95\times10^{-10}$。直接计算 $S$ 可以保住它的全部相对精度；若先算出 $J\approx0.29$ 再算 $qJ-1$，就要相减两个接近 1 的数，丢掉约 10 位。$s$ 不需要准确：任何 $s>0$ 都给出正确的 $J$，$s$ 选得差只会让上界 $qS/M$ 偏大。
+\end{keypoint}
+
+于是区间所需的只有三个量：$E$、$M$ 和 $S$（$s$ 是固定常数）。下一节给出它们的可靠界。
+
+% ======================================================================
+\section{截断误差意义下可靠的 $E$、$M$、$S$：四角证书}
+\label{sec:fourcorner}
+定理~\ref{thm:goerisch} 中的 $q$、$J$ 是积分。用普通求积公式算它们，得到的是近似值，区间端点因此也只是近似值。这一节说明怎样得到
+\begin{equation}
+\label{eq:EMS-bounds}
+E\in[E_-,E_+],\qquad M\in[M_-,M_+],\qquad 0\le S(s)\le S_+
+\end{equation}
+这样的\emph{可靠界}，以及怎样把它们组装成区间。
+
+\paragraph{“可靠”的含义.} 本节所有的界都在\emph{精确实数算术}下成立：求积误差、多项式逼近误差、几何逼近误差、级数截断误差全部有显式的界并计入结果；浮点舍入误差没有计入。所以我们称它们为“截断误差意义下可靠”的界。把舍入也纳入，需要把同样的计算改用区间算术执行，这是第~\ref{sec:limits}~节的后续工作。
+
+\subsection{四角定理}
+
+先注意：定理~\ref{thm:goerisch} 的证明只用到 $J\ge G$，而没有用到 $J$ 来自某个具体通量。所以其中的 $J$ 可以换成任何不小于 $G$ 的数。
+
+固定 $s>0$。对 $t\in\{t_-,t_+\}$ 定义 $(e,m)$ 的仿射函数
+\begin{equation}
+\label{eq:ND}
+N_t(e,m)=e+(1-t)m,\qquad
+D_t(e,m)=\Bigl(1-\frac{2t}{s}+\frac{t}{s^2}\Bigr)m+\frac{t}{s^2}e-tS_+ .
+\end{equation}
+在真值处，$N_t(E,M)=M(q-t)$，$D_t(E,M)=M(1-tJ_+)$，其中 $J_+=S_+/M+2/s-q/s^2\ge J$（由 \eqref{eq:delta-S}）。所以 $N_t/D_t$ 正是 \eqref{eq:goerisch-interval} 的端点表达式 $(q-t)/(1-tJ_+)$。
+
+\begin{theorem}[四角区间]
+\label{thm:four-corner}
+设 (H) 成立，$p$ 容许，\eqref{eq:EMS-bounds} 成立，$M_->0$。记 $\mathcal R=[E_-,E_+]\times[M_-,M_+]$。若在 $\mathcal R$ 的四个角 $c$ 上都有
+\begin{equation}
+\label{eq:corner-signs}
+D_{t_-}(c)>0,\qquad D_{t_+}(c)<0,
+\end{equation}
+并且 $1+E_+/M_-<t_+$，则
+\begin{equation}
+\label{eq:four-corner}
+\lambda_*\in[L,U],\qquad
+L=\min_{c}\frac{N_{t_+}(c)}{D_{t_+}(c)}-1,\qquad
+U=\max_{c}\frac{N_{t_-}(c)}{D_{t_-}(c)}-1 .
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+仿射函数在矩形上的值是它在四个角上的值的凸组合，所以 \eqref{eq:corner-signs} 在整个 $\mathcal R$ 上成立，特别是在真值 $(E,M)$ 处：$1-t_-J_+>0$。又 $q=1+E/M\le1+E_+/M_-<t_+$。对 $J_+\ge G$ 应用定理~\ref{thm:goerisch}（只用到 $J_+\ge G$），得
+\[
+\frac{N_{t_+}(E,M)}{D_{t_+}(E,M)}-1\le\lambda_*\le\frac{N_{t_-}(E,M)}{D_{t_-}(E,M)}-1 .
+\]
+最后，设 $x=\sum_i\theta_ic_i$ 是角点的凸组合，$N$、$D$ 仿射且 $D$ 在 $\mathcal R$ 上不变号，则
+\[
+\frac{N(x)}{D(x)}=\sum_i\frac{\theta_iD(c_i)}{D(x)}\cdot\frac{N(c_i)}{D(c_i)} ,
+\]
+权 $\theta_iD(c_i)/D(x)$ 非负且和为 1。所以 $N(x)/D(x)$ 夹在角点比值的最小值与最大值之间。
+\end{proof}
+
+\begin{remark}
+四角定理保留了 $E$、$M$、$S$ 之间的相关性。如果先由 $E$、$M$ 的界分别得出 $q$ 的区间，再与 $\delta$ 的区间“独立组合”，区间会变宽，而且端点关于 $q$ 不一定单调，处理起来更麻烦。四角定理只需在四个角上各算一次 \eqref{eq:endpoint-stable} 型的稳定公式：在角 $c=(e,m)$ 处令 $q_c=1+e/m$，$\delta_c=q_cS_+/m-(q_c-s)^2/s^2$，则 $N_t(c)/D_t(c)-1=q_c-1+q_ct\delta_c/(q_c-t-t\delta_c)$。
+\end{remark}
+
+剩下的任务是得到 \eqref{eq:EMS-bounds}，并让它们足够紧。要多紧？区间宽 $4.45\times10^{-9}$，端点对 $q$ 的导数约为 1，对 $\delta$ 的导数约为 $14$ 和 $-7$。若希望可靠界使宽度增加不超过 $1\%$，$E$、$M$ 的相对误差大约要小于 $2\times10^{-12}$，$S$ 的相对误差小于 $0.5\%$。前者接近双精度的极限，后者因为 $S$ 是小量的积分而容易做到，但前提是\emph{先形成小残差再平方}（引理~\ref{lem:square-last}）。
+
+\subsection{积分的可靠界：多项式模型}
+
+\paragraph{基本思想.} 在一个单元（或面板）上，把被积函数写成“多项式 $+$ 一致误差”：$f=P+e$，$|e|\le\varepsilon$。多项式可以精确积分，误差贡献不超过 $\varepsilon\times$面积：
+\begin{equation}
+\label{eq:poly-cert}
+\Bigl|\int_Cf-\int_CP\Bigr|\le|C|\,\varepsilon .
+\end{equation}
+困难在于怎样对一个由几何映射、倒数、三角函数复合而成的被积函数，\emph{构造}这样的 $(P,\varepsilon)$。下面的“多项式模型算术”给出一套可机械执行的规则。
+
+把面板映到 $z\in[-1,1]^2$（三角形单元则用参考三角形，单项式的模都不超过 1）。对多项式 $P=\sum_\alpha p_\alpha z^\alpha$，令
+\[
+\mathcal N(P)=\sum_\alpha|p_\alpha|\ \ge\ \sup|P| .
+\]
+
+\begin{lemma}[模型算术]
+\label{lem:model-arith}
+设 $f=P+e$，$|e|\le\varepsilon$；$g=Q+e'$，$|e'|\le\zeta$。则：
+\begin{enumerate}
+\item 加法：$f+g=(P+Q)+(e+e')$，误差 $\varepsilon+\zeta$；
+\item 乘法：$fg=PQ+\epsilon''$，$|\epsilon''|\le\mathcal N(P)\zeta+\mathcal N(Q)\varepsilon+\varepsilon\zeta$；
+\item 截断：从 $P$ 中删去一些项，误差增加被删项系数模之和；
+\item 正弦、余弦：若实值 $f$ 满足 $\mathcal N(P-a)\le\Delta$（$a$ 为实常数），则把 $\sin$、$\cos$ 在 $a$ 处 Taylor 展开到 $L$ 阶并代入 $P$，误差不超过 $\Delta^{L+1}/(L+1)!+\varepsilon$；
+\item 倒数：若实值 $f>0$，取 $d_0>0$ 使 $\mathcal N(P-d_0)\le\kappa d_0$，$0\le\kappa<1$，且 $a:=(1-\kappa)d_0-\varepsilon>0$，则
+\[
+\Bigl|\frac1f-\frac1{d_0}\sum_{j=0}^{L}\Bigl(1-\frac{P}{d_0}\Bigr)^j\Bigr|\le\frac{\kappa^{L+1}}{d_0(1-\kappa)}+\frac{\varepsilon}{a(1-\kappa)d_0} .
+\]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+1、3 显然（$|z^\alpha|\le1$）。2：展开 $(P+e)(Q+e')-PQ$。4：$\sin$、$\cos$ 的各阶导数模不超过 1，Taylor 余项给第一项；$f$ 与 $P$ 相差不超过 $\varepsilon$，而 $\sin$、$\cos$ 的 Lipschitz 常数为 1，给第二项。5：令 $r=1-P/d_0$，$|r|\le\kappa$，则 $1/P=d_0^{-1}\sum_{j\ge0}r^j$，截到 $L$ 阶的尾项不超过 $\kappa^{L+1}/(d_0(1-\kappa))$；又 $P\ge(1-\kappa)d_0$，$f\ge a$，所以 $|1/f-1/P|=|e|/(fP)\le\varepsilon/(a(1-\kappa)d_0)$。
+\end{proof}
+
+矩阵运算逐元素执行，行列式和伴随矩阵是有限多项式组合，所以单元上出现的所有表达式（Jacobian 的逆、Piola 变换、物理梯度）都能得到模型。单项式在三角形和正方形上的积分有闭式，最后由 \eqref{eq:poly-cert} 给出积分界。
+
+\begin{lemma}[先形成小残差，再平方]
+\label{lem:square-last}
+设残差分量 $R_i=P_i+e_i$，$|e_i|\le\varepsilon_i$，$b_i=\mathcal N(P_i)$；权 $w=P_w+e_w$，$|e_w|\le\varepsilon_w$，$0\le w\le w^+$。则 $P_f=P_w\sum_i|P_i|^2$ 逼近 $f=w\sum_i|R_i|^2$，误差
+\[
+|f-P_f|\le w^+\sum_i(2b_i\varepsilon_i+\varepsilon_i^2)+\varepsilon_w\sum_ib_i^2 .
+\]
+\end{lemma}
+
+\begin{proof}
+$\bigl||R_i|^2-|P_i|^2\bigr|\le2|P_i||e_i|+|e_i|^2$；乘以 $w$ 后求和，再加上把 $w$ 换成 $P_w$ 的误差。
+\end{proof}
+
+这个引理的要点在于\emph{顺序}：$S$ 的被积函数是 $|p-\nabla v/s|^2+\cdots$。若分别给 $\int|p|^2$、$\int|\nabla v|^2/s^2$ 和交叉项定界再相加，每一项的误差都与 $O(1)$ 的量成比例，最终的界比 $S\approx3\times10^{-10}$ 本身大得多。先在模型层面形成残差多项式 $P_i$（此时 $b_i$ 很小），再平方，误差就与小量 $b_i$ 成比例。
+
+\subsection{按单元类型给界}
+
+27 个胞元中的单元分成几类，各用最省的方法：
+\begin{enumerate}
+\item \emph{仿射单元，无截断}（约 7.8 万个）：映射是仿射的，$v$ 是多项式，$\nabla v$ 也是多项式。$E$、$M$、$S$ 的被积函数次数分别不超过 4、6、8，所用的 16 阶三角形求积公式对它们\emph{精确}，截断误差为零。注意要逐单元验证“仿射”：检查每条边中点节点是否严格等于两端点的算术平均，不用容差。
+\item \emph{二次几何单元，无截断}（约 6.9 万个）：Jacobian 是多项式，但物理梯度含 $1/\det DF$，被积函数是有理函数。用引理~\ref{lem:model-arith} 的倒数规则（几何级数，最高 10 阶，$\kappa\le0.0755$）建立模型，再积分。
+\item \emph{截断区单元}（约 2.6 万个）：多了 $\chi=\frac12(1+\cos\pi\tau)$。按物理坐标的原公式用余弦 Taylor 模型（12 阶）处理，不把 $\chi$ 当作常数。
+\item \emph{界面单元}：原网格与拟合网格在这里不一致，$M$ 需要真材料修正（第~\ref{sec:mass}~节），$S$ 需要处理“分支”（第~\ref{sec:interface}~节）。这是全部工作中最难、也最耗时的部分。
+\end{enumerate}
+所有单元还要通过几何检查：拟合映射与原映射之差的相对 Jacobian 范数 $\eta=\sup\|D(\widetilde F_K-F_K)(DF_K)^{-1}\|<1$（实测最大 $0.0077$），由此推出拟合网格是一个合法剖分、$\det D\widetilde F_K\ge(1-\eta)^2\det DF_K>0$。这一步也用多项式模型在整个单元上完成，而不是只在求积点上检查行列式。
+
+\subsection{真材料质量：带符号的同伦恒等式}
+\label{sec:mass}
+
+原网格上的质量 $M_h=\int\rho_h|v|^2$ 可以按上一小节精确地给界，但我们需要的是 $M=\int\rho|v|^2$。两者只在界面附近的薄缝中不同。
+
+\paragraph{恒等式.} 考虑一个夹杂。它的真边界是逆时针参数化的解析曲线 $c(u)$；原网格用分段二次曲线 $\pi(u)$（与 $c$ 用同一个参数）逼近它。令
+\[
+d(u)=c(u)-\pi(u),\qquad P(u,w)=\pi(u)+w\,d(u),\qquad (u,w)\in[0,2\pi)\times[0,1] .
+\]
+$w$ 从 0 到 1 时，$P(\cdot,w)$ 把原边界连续地推到真边界。
+
+\begin{lemma}[带符号的扫掠恒等式]
+\label{lem:sweep}
+对连续的分片 $C^1$ 函数 $\phi$，
+\[
+\int_{\text{真夹杂}}\phi-\int_{\text{原夹杂}}\phi=\int_0^{2\pi}\!\!\int_0^1\phi(P(u,w))\,\det\bigl(P_w,P_u\bigr)\,\dd w\,\dd u .
+\]
+\end{lemma}
+
+\begin{proof}
+取向量场 $F$ 使 $\operatorname{div}F=\phi$（例如 $F=(\int_0^x\phi(\xi,y)\dd\xi,\,0)$），并令 1-形式 $\omega=F_1\dd y-F_2\dd x$，则 $\dd\omega=\phi\,\dd x\wedge\dd y$。对逆时针的闭曲线 $\gamma$，由 Green 公式 $\oint_\gamma\omega=\int_{\text{内部}}\phi$。在柱面 $[0,2\pi)\times[0,1]$ 上把 $\omega$ 拉回并用 Stokes 公式：
+\[
+\iint P^*(\dd\omega)=\iint\phi(P)\det(P_u,P_w)\,\dd u\wedge\dd w=\oint_{\pi}\omega-\oint_{c}\omega
+\]
+（以 $\dd u\wedge\dd w$ 定向时，柱面在 $w=1$ 一端的边界沿 $-u$ 方向，在 $w=0$ 一端沿 $+u$ 方向）。右端等于 $\int_{\text{原夹杂}}\phi-\int_{\text{真夹杂}}\phi$。交换 $\det$ 的两列即得结论。
+\end{proof}
+
+用同心圆检验符号：$\pi$ 是半径 $r_0$ 的圆，$c$ 是半径 $r_1>r_0$ 的圆，则 $\det(P_w,P_u)=(r_1-r_0)r>0$，右端是圆环上的积分，与左端一致。
+
+\begin{remark}
+这个恒等式不要求薄缝“简单”：即使 $\pi$ 与 $c$ 交叉、扫掠区域有重叠，带符号的积分仍然精确。它把一个二维的“薄缝积分”变成参数矩形上的光滑积分，后者可以用多项式模型给界。推导中很容易把这个修正量的符号写反；用上面的同心圆检验可以避免这类错误。
+\end{remark}
+
+由于 $\rho-\rho_h=(\rho_{\rm in}-\rho_{\rm out})(\mathbf 1_{\text{真夹杂}}-\mathbf 1_{\text{原夹杂}})$，取 $\phi=|v|^2$ 得
+\[
+M=M_h+(\rho_{\rm in}-\rho_{\rm out})\int_0^{2\pi}\!\!\int_0^1|v(P(u,w))|^2\det(P_w,P_u)\,\dd w\,\dd u .
+\]
+
+\paragraph{便宜的界.} 修正量约 $3\times10^{-8}$，只需要它的绝对误差小于约 $10^{-11}$。把 $\phi(P(u,w))$ 在 $w=0$（原边界上，$v$ 的值是已知的三次边迹）处展开：
+\[
+\phi(P(u,w))=\phi(\pi(u))+r(u,w),\qquad |r|\le w\,|d(u)|\,\mathrm{Lip}_\phi(u),
+\]
+其中 $\mathrm{Lip}_\phi\le2V_uL_u$，$V_u$、$L_u$ 是 $|v|$、$|\nabla v|$ 在扫掠线段所经过的两个相邻原单元上的上界（$v$ 跨越原单元边时连续，所以分段的梯度界可以沿整条线段使用）。又 $\det(P_w,P_u)=\det(d,\pi')+w\det(d,d')$，对 $w$ 积分得
+\begin{gather*}
+\int_0^1\phi(P)\det(P_w,P_u)\,\dd w=\phi(\pi(u))\Bigl[\det(d,\pi')+\tfrac12\det(d,d')\Bigr]+\varrho(u),\\
+|\varrho(u)|\le2V_uL_u|d|\Bigl(\tfrac12|d||\pi'|+\tfrac13|d||d'|\Bigr).
+\end{gather*}
+第一项是一维积分，用多项式模型精确给界（记为 $C_0$）；第二项的积分记为 $B$。修正量 $\in C_0\pm B$。把 $u$ 区间细分，在每个子区间上用局部的 $V_u$、$L_u$，$B$ 迅速减小。
+
+本算例的总修正 $C_0\approx3.0175\times10^{-8}$，最终偏差界 $B=6.80\times10^{-12}$。
+
+\subsection{界面单元上的残差}
+\label{sec:interface}
+
+$S$ 在拟合网格上积分（$p$ 在那里定义，$\rho$ 在那里逐单元为常数），但 $v$ 是原网格上的分片多项式。一个拟合界面单元 $\widetilde K$ 与它对应的原单元 $K$ 大部分重合，但在界面附近有一条薄缝属于相邻的原单元 $K'$。所以在 $\widetilde K$ 上，$v$ 由两个不同的多项式“分支”拼成。
+
+\paragraph{第一步：主分支的光滑延拓.} 把 $K$ 上的多项式 $\widehat u_K\circ F_K^{-1}$ 光滑地延拓到整个 $\widetilde K$，在 $\widetilde K$ 上积分这个延拓场的残差。这需要逆映射 $F_K^{-1}\circ\widetilde F_K$ 的多项式模型：
+
+\begin{lemma}[逆映射的模型]
+\label{lem:inverse}
+设 $G$ 是参数面板 $C$ 上已知的物理映射，$F$ 是一个原单元的二次映射，$Y=y_0+[-R,R]^2$。若常矩阵 $B_0$ 满足
+\[
+\sup_{y\in Y}\|I-B_0DF(y)\|_\infty\le\kappa<1,\qquad
+\sup_{z\in C}\|B_0(F(y_0)-G(z))\|_\infty\le(1-\kappa)R ,
+\]
+则对每个 $z\in C$，$F(y)=G(z)$ 在 $Y$ 中恰有一个解 $y(z)$。若多项式 $Y_P(z)\in Y$ 满足 $\sup_C\|B_0(F(Y_P(z))-G(z))\|_\infty\le\varepsilon_F$，则 $\|y(z)-Y_P(z)\|_\infty\le\varepsilon_F/(1-\kappa)$。
+\end{lemma}
+
+\begin{proof}
+$T_z(y)=y-B_0(F(y)-G(z))$ 在凸集 $Y$ 上的 Lipschitz 常数不超过 $\kappa$。第二个条件保证 $T_z(Y)\subset Y$：$\|T_z(y)-y_0\|\le\|T_z(y)-T_z(y_0)\|+\|T_z(y_0)-y_0\|\le\kappa R+(1-\kappa)R$。由压缩映射原理，$T_z$ 在 $Y$ 中有唯一不动点，它就是 $F(y)=G(z)$ 的唯一解（$B_0$ 可逆）。最后，$\|y-Y_P\|\le\|T_z(y)-T_z(Y_P)\|+\|T_z(Y_P)-Y_P\|\le\kappa\|y-Y_P\|+\varepsilon_F$。
+\end{proof}
+
+逆映射的“猜测”$Y_P$ 可以用任何方法得到（例如 Taylor 展开或 Newton 迭代），可靠性完全由事后的缺陷检查保证。
+
+\paragraph{第二步：分支修正.} 真正的残差只在“$v$ 实际取另一个分支”的点上与延拓残差不同。这些点都落在第~\ref{sec:mass}~节的扫掠区域 $P([0,1]^2)$ 中。理由：把拟合修正乘以 $w\in[0,1]$ 得到一族映射 $\Psi_w$（由 $\eta<1$，每个 $\Psi_w$ 都是双 Lipschitz 双射），它们固定两单元并集的外边；一个点若不在扫掠像中，在 $w$ 从 0 变到 1 的过程中不可能穿过分隔两个单元的边，所以它的原单元归属与拟合单元归属一致。
+
+在扫掠区域上，设延拓残差为 $R$、两分支之差引起的残差变化为 $\Delta R$（在同一物理点上先相减，再取界），则
+\[
+\bigl||R+\Delta R|^2-|R|^2\bigr|=\Bigl|2\operatorname{Re}\sum_i\overline{R_i}\Delta R_i+\sum_i|\Delta R_i|^2\Bigr|\le\sum_i\bigl(2b_i\,d_i+d_i^2\bigr),
+\]
+其中 $b_i\ge|R_i|$，$d_i\ge|\Delta R_i|$。乘以扫掠面积的上界 $|C|\sup|\det(P_u,P_w)|$ 并对全部面板求和，得修正的绝对界 $\mathcal D$。为了不遗漏，代码保留两个原分支与两个拟合侧的全部组合，重叠部分重复计数（只会使界变大）。于是
+\[
+\max(0,\,S_0-\varepsilon_0-\mathcal D)\le S_{\rm int}\le S_0+\varepsilon_0+\mathcal D ,
+\]
+$S_0$、$\varepsilon_0$ 是第一步的模型积分及其余项。
+
+\begin{remark}
+这里同样体现了“先相减再取界”的原则：分支差 $\Delta R$ 很小（两个分支在原边界上相等，差别与缝宽成比例），直接对 $|R+\Delta R|^2$ 和 $|R|^2$ 分别取界则会失去这个小因子。早期版本用粗的梯度界估计分支差，所需的精度差了约 $3.4\times10^5$ 倍；改为同一物理点上的多项式分支差后，修正降到 $2.5\times10^{-14}$。
+\end{remark}
+
+\subsection{结果}
+
+本算例（$P_3$ 场、$RT_3$ 通量、$s=3.4287286707248672$）的界如下：
+
+\begin{center}
+\small
+\begin{tabular}{ll}
+\toprule
+量 & 可靠界（舍入排除） \\
+\midrule
+$E$ & $[11.470912271614043,\ 11.470912271618044]$ \\
+$M$ & $[4.7230110180143914,\ 4.7230110180281955]$ \\
+$S$：非界面单元 & $\le2.5978065\times10^{-10}$ \\
+$S$：界面单元 & $[3.4891721\times10^{-11},\ 3.4977344\times10^{-11}]$ \\
+$S_+$ & $2.9475799\times10^{-10}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+四角检查：在四个角上 $t_-J_+\approx0.79983<1$、$t_+J_+\approx1.92984>1$，$q\le3.4287286707285<t_+=6.6169$，余量都很大。由定理~\ref{thm:four-corner}，
+\begin{equation}
+\label{eq:main-interval}
+\boxed{\lambda_*\in[2.4287286691978,\ 2.4287286736601],\qquad\text{宽 }4.462\times10^{-9}.}
+\end{equation}
+换算成频率，$k_*\in[1.5584378939,\ 1.5584378954]$，相对宽度约 $9.2\times10^{-10}$。浮点计算（同一 $v$、$p$，16 阶求积）给出的宽度是 $4.454\times10^{-9}$，所以可靠积分界只让宽度增加了 $0.19\%$。边界积分方法的参考值 $\lambda_{\rm BIE}=2.428728670022710$ 在区间内。
+
+\paragraph{成本.} 在一台 11 线程的工作站上，一次完整运行（重新生成 $P_3$ 场和 $RT_3$ 通量，再做全部积分界）用时约 718 秒，峰值内存 2.02~GiB。其中界面单元的残差界占约 460 秒（左／中／右模板 161／119／181 秒），是主要开销。
+
+% ======================================================================
+\section{隔离假设 (H)：从惯性计数到有限检验}
+\label{sec:H}
+(H) 是关于整个无限带上算子的谱的断言。这一节把它化成有限的检验：在窗口端点 $\alpha_+$ 处数一个有限矩阵的负特征值。
+
+\subsection{惯性指数}
+
+对 $\mathcal H$ 上的有界 Hermitian 形式 $t$，记
+\begin{itemize}
+\item $n(t)$：使 $t$ 负定（$t(u,u)<0$，$u\ne0$）的子空间的最大维数；
+\item $z(t)=\dim\{u:\ t(u,v)=0\ \forall v\in\mathcal H\}$。
+\end{itemize}
+有限维时 $n(t)$ 就是 Hermitian 矩阵的负特征值个数（Sylvester 惯性律）。记 $n(\lambda)=n(t_\lambda)$，$z(\lambda)=z(t_\lambda)$，$t_\lambda$ 是 \eqref{eq:reduced} 的约化形式。
+
+\begin{theorem}[计数定理]
+\label{thm:count}
+设 (P) 成立。则
+\begin{enumerate}
+\item 对每个 $\lambda\in\mathcal W$，$n(\lambda)$、$z(\lambda)$ 有限，且 $z(\lambda)=\dim\ker(A-\lambda)$；
+\item $\sigma(A)\cap\mathcal W$ 是有限集，每一点都是 $A$ 的有限重特征值；
+\item $\displaystyle n(\alpha_+)-n(\alpha_-)=\sum_{\lambda\in[\alpha_-,\alpha_+)}\dim\ker(A-\lambda)$。
+\end{enumerate}
+\end{theorem}
+
+直观地说：$t_\lambda$ 关于 $\lambda$ 严格递减（引理~\ref{lem:reduced-identity}），它的“特征值”随 $\lambda$ 增大只会向下穿过零，每穿过一次就是 $A$ 的一个特征值。端点处的负指数之差就是穿越的次数。下面把这一直观严格化。
+
+\subsection{计数定理的证明}
+
+\begin{lemma}[端口迹不等式]
+\label{lem:trace}
+对 $u\in\mathcal H$，$\|\tau_\pm u\|_{1/2}^2\le\coth(1)\,\|u\|_1^2$，其中 $\|u\|_1^2=a_D(u,u)+\|u\|_{L^2(D)}^2$。
+\end{lemma}
+
+\begin{proof}
+一维不等式：对 $\kappa>0$、$f\in H^1(0,\ell)$，$\kappa|f(\ell)|^2\le\coth(\kappa\ell)\int_0^\ell(|f'|^2+\kappa^2|f|^2)$。令 $f_0=\cosh(\kappa x)/\cosh(\kappa\ell)$，则 $f_0''=\kappa^2f_0$，$f_0'(0)=0$，$\int_0^\ell(|f_0'|^2+\kappa^2|f_0|^2)=\kappa\tanh(\kappa\ell)$。写 $f=f(\ell)f_0+d$，$d(\ell)=0$，分部积分知交叉项为零，于是 $\int(|f'|^2+\kappa^2|f|^2)\ge|f(\ell)|^2\kappa\tanh(\kappa\ell)$。取 $\ell=1$（芯区宽度）、$\kappa=\langle k\rangle\ge1$，$\coth(\langle k\rangle)\le\coth1$，对 $k$ 求和并用 (F)。
+\end{proof}
+
+由引理~\ref{lem:extension}(a) 和引理~\ref{lem:trace}，$U_\lambda:\mathcal H\to V$ 有界。
+
+\begin{lemma}[约化形式的结构]
+\label{lem:structure}
+\begin{enumerate}
+\item $p:=t_{-1}$ 是 $\mathcal H$ 上与 $\|\cdot\|_1$ 等价的内积。
+\item $J:=U_{-1}:(\mathcal H,p)\to L^2_\rho(B)$ 是紧算子。
+\item 对 $\lambda\in\mathcal W$，$t_\lambda(u,v)=p((I-K(\lambda))u,v)$，其中 $K(\lambda)$ 紧且关于 $p$ 自伴；并且 $|t_\lambda(u,u)-t_\mu(u,u)|\le M_U^2|\lambda-\mu|\,p(u,u)$，$M_U=\sup_{\mathcal W}\|U_\lambda\|<\infty$。
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+1. $p(u,u)=a(U_{-1}u,U_{-1}u)+b(U_{-1}u,U_{-1}u)\ge a_D(u,u)+b_D(u,u)\ge\|u\|_1^2$；上界来自 $U_{-1}$ 有界。
+
+2. $Ju=(E_-(-1)\tau_-u,\,u,\,E_+(-1)\tau_+u)$。两端分量由引理~\ref{lem:trace} 与引理~\ref{lem:extension}(c) 是紧的。中间分量是嵌入 $\mathcal H\to L^2(D)$：Fourier 截断 $P_N$ 满足 $\|u-P_Nu\|_{L^2(D)}^2\le\sup_{|k|>N}\langle k\rangle^{-2}\|u\|_1^2\to0$，而 $P_N$ 的值域是有限个 $H^1(-\frac12,\frac12)$ 的直和，嵌入 $L^2$ 紧（一维 Rellich）。紧算子的范数极限仍紧。
+
+3. 由引理~\ref{lem:extension}(b)，$U_\lambda=(I+(\lambda+1)\tilde R(\lambda))U_{-1}$，$\tilde R(\lambda)=R_-(\lambda)\oplus0\oplus R_+(\lambda)$。在引理~\ref{lem:reduced-identity} 中取 $\mu=-1$：
+\[
+t_\lambda(u,v)=p(u,v)-(\lambda+1)\,b\bigl((I+(\lambda+1)\tilde R(\lambda))Ju,Jv\bigr)=p(u,v)-p(K(\lambda)u,v),
+\]
+$K(\lambda)=(\lambda+1)J^*(I+(\lambda+1)\tilde R(\lambda))J$ 紧。$t_\lambda$ Hermitian，所以 $K(\lambda)$ 关于 $p$ 自伴。Lipschitz 界由引理~\ref{lem:reduced-identity} 和 Cauchy--Schwarz 得到，$M_U\le(1+(|\lambda|+1)d_{\mathcal W}^{-1})\|J\|$。
+\end{proof}
+
+\begin{lemma}[核的对应]
+\label{lem:kernel}
+设 $\lambda\in\mathcal W$。$U_\lambda$ 是 $\{u:\ t_\lambda(u,\cdot)=0\}$ 到 $\ker(A-\lambda)$ 的双射。
+\end{lemma}
+
+\begin{proof}
+对 $\Phi\in V$，令 $\Phi_D=\Phi|_D$，则 $\Phi_0=\Phi-U_\lambda\Phi_D$ 在 $D$ 上为零、在 $\Omega_\pm$ 上迹为零，所以对任意 $u$，$s_\lambda(U_\lambda u,\Phi_0)=0$。
+
+若 $t_\lambda(u,\cdot)=0$，则 $s_\lambda(U_\lambda u,\Phi)=t_\lambda(u,\Phi_D)+0=0$ 对一切 $\Phi\in V$ 成立，即 $a(U_\lambda u,\Phi)=\lambda b(U_\lambda u,\Phi)$，由表示定理 $U_\lambda u\in\ker(A-\lambda)$。单射：$U_\lambda u$ 在 $D$ 上等于 $u$。满射：若 $AU=\lambda U$，取支集在 $\Omega_+$ 中、迹为零的测试函数知 $U|_{\Omega_+}$ 满足 $E_+(\lambda)$ 的定义，由唯一性 $U|_{\Omega_+}=E_+(\lambda)\tau_+(U|_D)$；$\Omega_-$ 同理。所以 $U=U_\lambda(U|_D)$，且 $t_\lambda(U|_D,v)=s_\lambda(U,U_\lambda v)=0$。
+\end{proof}
+
+\begin{lemma}[谱结构]
+\label{lem:spec-structure}
+设 $\lambda\in\mathcal W$。存在 $p$-正交分解 $\mathcal H=H_-\oplus H_0\oplus H_+$ 与 $c_\pm>0$，使 $H_0=\ker t_\lambda$，$\dim H_-<\infty$，$\dim H_0<\infty$，
+\[
+t_\lambda(u,u)\le-c_-p(u,u)\ (u\in H_-),\qquad t_\lambda(u,u)\ge c_+p(u,u)\ (u\in H_+).
+\]
+因此 $n(\lambda)=\dim H_-$，并且使 $t_\lambda\le0$ 的子空间的最大维数是 $n(\lambda)+z(\lambda)$。若 $z(\lambda)=0$，则 $I-K(\lambda)$ 有有界逆。
+\end{lemma}
+
+\begin{proof}
+$K=K(\lambda)$ 是紧自伴算子，非零特征值 $\kappa_j$ 实、有限重、只在 0 处聚集。令 $H_-$ 为 $\kappa_j>1$ 的特征空间之和，$H_0$ 为 $\kappa_j=1$ 的特征空间，$H_+$ 为其余部分的闭包。$\kappa_j\ge\frac12$ 的只有有限个，所以可取 $c_-=\min\{\kappa_j-1:\kappa_j>1\}$，$c_+=1-\max(\{\frac12\}\cup\{\kappa_j:\frac12\le\kappa_j<1\})$。不同块之间 $t_\lambda$ 的交叉项为零。若 $X$ 负定，则 $X\cap(H_0\oplus H_+)=\{0\}$，后者余维数为 $\dim H_-$，所以 $\dim X\le\dim H_-$。非正子空间同理。最后一句是 Fredholm 择一。
+\end{proof}
+
+\begin{lemma}[可逆点属于预解集]
+\label{lem:resolvent}
+若 $\lambda\in\mathcal W$，$z(\lambda)=0$，则 $\lambda\notin\sigma(A)$。
+\end{lemma}
+
+\begin{proof}
+由引理~\ref{lem:kernel}，$A-\lambda$ 单射。给定 $f\in L^2_\rho(B)$，令 $F$ 在 $\Omega_\pm$ 上等于 $R_\pm(\lambda)(f|_{\Omega_\pm})$、在 $D$ 上为零（它属于 $V$）。泛函 $v\mapsto b(f,U_\lambda v)-s_\lambda(F,U_\lambda v)$ 有界，由 Riesz 表示和引理~\ref{lem:spec-structure}，存在 $u$ 使 $t_\lambda(u,v)$ 等于它。令 $U=F+U_\lambda u$。对 $\Phi=U_\lambda\Phi_D+\Phi_0$ 逐项验证 $s_\lambda(U,\Phi)=b(f,\Phi)$，所以 $(A-\lambda)U=f$。$A-\lambda$ 是闭的双射，由闭图像定理其逆有界。
+\end{proof}
+
+\begin{proof}[定理~\ref{thm:count} 的证明]
+第 1 条由引理~\ref{lem:structure}、\ref{lem:kernel}、\ref{lem:spec-structure}。
+
+\emph{局部结构.} 固定 $\lambda_0\in\mathcal W$，记 $n_0=n(\lambda_0)$，$z_0=z(\lambda_0)$，$c_0=\min(c_-,c_+)$。设 $M_U^2|\lambda-\lambda_0|<c_0$。
+\begin{itemize}
+\item (i) $n(\lambda)\ge n_0$：在 $H_-(\lambda_0)$ 上 $t_\lambda(u,u)\le(-c_-+M_U^2|\lambda-\lambda_0|)p(u,u)<0$。
+\item (ii) $n(\lambda)+z(\lambda)\le n_0+z_0$：在 $H_+(\lambda_0)$ 上 $t_\lambda>0$，所以 $t_\lambda$ 的非正子空间与 $H_+(\lambda_0)$ 只交于零。
+\item (iii) 对 $\lambda_1<\lambda_2$，$n(\lambda_2)\ge n(\lambda_1)+z(\lambda_1)$：在 $X=H_-(\lambda_1)\oplus H_0(\lambda_1)$ 上 $t_{\lambda_1}\le0$，由引理~\ref{lem:reduced-identity}，$t_{\lambda_2}(u,u)\le t_{\lambda_1}(u,u)-(\lambda_2-\lambda_1)b_D(u,u)<0$。
+\end{itemize}
+对 $\lambda<\lambda_0$ 且足够近：由 (i) 和 (iii)，$n_0\ge n(\lambda)+z(\lambda)\ge n_0+z(\lambda)$，所以 $n(\lambda)=n_0$，$z(\lambda)=0$。对 $\lambda>\lambda_0$ 且足够近：由 (iii)，$n(\lambda)\ge n_0+z_0$；由 (ii)，$n(\lambda)+z(\lambda)\le n_0+z_0$。所以 $n(\lambda)=n_0+z_0$，$z(\lambda)=0$。
+
+因此 $\{z>0\}$ 在紧集 $\mathcal W$ 中没有聚点，是有限集。在这些点处由引理~\ref{lem:kernel}，$\lambda$ 是有限重特征值；其余点由引理~\ref{lem:resolvent} 不在谱中。这是第 2 条。$n$ 在相邻零点之间为常数，在每个零点处左侧等于该点的值、右侧增加 $z$。逐段相加得第 3 条。
+\end{proof}
+
+\subsection{只需要检查上端点}
+
+\begin{corollary}[(H) 的有限判据]
+\label{cor:H-criterion}
+设 (P) 成立，命题~\ref{prop:first-order} 的区间 $I_1\subset(\alpha_-,\alpha_+)$，并且 $n(\alpha_+)\le1$。则 $\sigma(A)\cap[\alpha_-,\alpha_+)=\{\lambda_*\}$，$\lambda_*\in I_1$ 是单重特征值。特别地 (H) 成立。
+\end{corollary}
+
+\begin{proof}
+由命题~\ref{prop:first-order}，$I_1$ 中有 $A$ 的谱点，由定理~\ref{thm:count} 第 2 条它是特征值，所以第 3 条的右端 $\ge1$。于是 $1\ge n(\alpha_+)\ge1+n(\alpha_-)\ge1$，从而 $n(\alpha_-)=0$，右端恰为 1：$[\alpha_-,\alpha_+)$ 中只有一个单重特征值。
+\end{proof}
+
+\begin{keypoint}
+下端点不需要任何计算。$n(\alpha_-)\ge0$ 是平凡的，$I_1$ 提供了“至少一个”，所以只要证明“至多一个”，即 $n(\alpha_+)\le1$。而 $n(\alpha_+)\le n(L)$ 只需要 $t_{\alpha_+}$ 的一个\emph{下界}矩阵 $L$。
+\end{keypoint}
+
+\subsection{要做哪几件事}
+
+推论~\ref{cor:H-criterion} 把 (H) 拆成下面几件事，每一件都是有限计算加上解析估计：
+
+\begin{center}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm}>{\raggedright\arraybackslash}p{6.6cm}>{\raggedright\arraybackslash}p{3.6cm}}
+\toprule
+部分 & 内容 & 所在 \\
+\midrule
+(A) 带隙 & 两侧全周期介质在窗口附近无谱；给出窗口到能带的距离 & 第~\ref{sec:band}~节 \\
+(B) 表面态 & 两个半导波的 Dirichlet 算子在窗口中无特征值；给出到其谱的距离 & 第~\ref{sec:surface}~节 \\
+(C) DtN 下界 & 在 $\alpha_+$ 处，用有限矩阵从下方界住两个真 DtN 形式 & 第~\ref{sec:dtnbound}~节 \\
+(D) 芯区计数 & 在 $\alpha_+$ 处构造 $t_{\alpha_+}$ 的有限下界矩阵并数负特征值 & 第~\ref{sec:count}~节 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+(A) 和 (B) 合起来就是 (P)。它们还给出半导波预解式的范数界 $\|R_\pm(\lambda)\|\le1/d_\pm$，这是 (C) 中误差常数的来源。(C) 依赖于 (A)、(B) 的常数；(D) 依赖于 (C) 的矩阵。
+
+\paragraph{计算量随要求增长.} 在 (H) 作为前提时，得到可靠区间的成本已经与边界积分方法相当（约 12 分钟）。验证 (H) 需要的计算更多：(A) 只是几百个 169 阶小矩阵的特征值计算，很便宜；(B) 需要两种材料、两个端点共 4 次运行，每次约 7.5 分钟；(C)、(D) 还要另外计算。这符合一般规律：结论越强，需要控制的误差来源越多。好在 (H) 只与几何、材料和 $\beta$ 有关，与试探场无关；同一配置下改进试探场或通量时，(H) 不必重新验证。换一个 $\beta$ 则必须重新验证。
+
+% ======================================================================
+\section{周期引线的带隙证书}
+\label{sec:band}
+这一节证明两侧的全周期介质在 $k\in[1.318,2.375]$ 中没有谱，并给出窗口到能带的距离。方法只用一个 169 维的平面波空间，加上对它的补空间的一次配方；不需要在单胞上做精细的有限元特征值计算，也不需要一个“参考特征值问题”。
+
+\subsection{单胞问题}
+
+固定一侧（$a=0.12$ 或 $a=0.20$），记单胞 $Y=(-\tfrac12,\tfrac12)\times I$，其中的三叶形夹杂为 $\mathcal O$，$\rho=1+16\cdot\mathbf 1_{\mathcal O}$。由 Floquet--Bloch 理论，
+\[
+\sigma(A^{\rm per})=\bigcup_{\theta\in[-\pi,\pi]}\sigma(A_\theta),
+\]
+其中 $A_\theta$ 是单胞上的 $-\rho^{-1}\Delta$，在 $y$ 方向保持 $\beta$-准周期、在 $x$ 方向取 $u(x+1,y)=\ee^{\ii\theta}u(x,y)$。$A_\theta$ 有紧预解式，特征值记为 $\lambda_1(\theta)\le\lambda_2(\theta)\le\cdots$（计重数）。
+
+写 $u=\ee^{\ii\theta x}w$，$w$ 在 $x$ 方向周期（“周期规范”）。于是所有 $\theta$ 共用同一个形式定义域，形式变成
+\[
+a_\theta(w,w)=\int_Y|(\nabla+\ii\theta e_x)w|^2,\qquad b(w,w)=\int_Y\rho|w|^2 .
+\]
+平面波
+\[
+\psi_{m,n}(x,y)=\ee^{2\pi\ii mx}\ee^{\ii\beta_ny},\qquad (m,n)\in\mathbb Z^2,
+\]
+是 $L^2(Y)$（不加权）的标准正交基，并且 $a_\theta$ 在这组基下是对角的：
+\[
+a_\theta(w,w)=\sum_{m,n}d_{m,n}(\theta)|w_{m,n}|^2,\qquad d_{m,n}(\theta)=(2\pi m+\theta)^2+\beta_n^2 .
+\]
+难处全部在质量 $b$ 上：$\rho$ 在夹杂边界上跳 17 倍，$b$ 在平面波基下是满矩阵，而且平面波展开收敛很慢。下面的定理说明，有限个平面波就足以\emph{数}特征值，只要把补空间老老实实地配方。
+
+对 Hermitian 形式 $h$，记 $N_<(h)$、$N_\le(h)$ 为使 $h<0$、$h\le0$ 的子空间的最大维数。由 min-max 原理，
+\[
+N_<(a_\theta-\lambda b)=\#\{j:\lambda_j(\theta)<\lambda\},\qquad N_\le(a_\theta-\lambda b)=\#\{j:\lambda_j(\theta)\le\lambda\}.
+\]
+
+\subsection{平面波空间与补空间的配方}
+
+取有限指标集 $\mathcal I$，$P$ 为到 $\operatorname{span}\{\psi_i:i\in\mathcal I\}$ 的 $L^2$ 正交投影，$\rho_{\max}=17$。定义
+\[
+\Lambda_{\mathcal I}(\theta)=\inf_{(m,n)\notin\mathcal I}d_{m,n}(\theta),
+\]
+以及 $\mathcal I\times\mathcal I$ 的矩阵（行指标 $i$，列指标 $j$）
+\[
+\bm K=\operatorname{diag}_{\mathcal I}d_{m,n}(\theta),\qquad
+\bm M_{ij}=\int_Y\rho\,\psi_j\overline{\psi_i},\qquad
+\bm M^{(2)}_{ij}=\int_Y\rho^2\psi_j\overline{\psi_i},
+\]
+\[
+\bm G=\bm M^{(2)}-\bm M^2,\qquad \bm T(\lambda,\theta)=\bm K-\lambda\bm M .
+\]
+$\bm G$ 是 $\{(I-P)(\rho\psi_j)\}_j$ 的 Gram 矩阵：$P(\rho\psi_j)=\sum_l\bm M_{lj}\psi_l$，所以
+$\langle(I-P)\rho\psi_j,(I-P)\rho\psi_i\rangle=\bm M^{(2)}_{ij}-\sum_l\bm M_{il}\bm M_{lj}$。特别地 $\bm G\succeq0$。
+
+\begin{theorem}[Fourier 补空间计数]
+\label{thm:fourier-count}
+设 $\lambda\ge0$，$c:=\Lambda_{\mathcal I}(\theta)-\lambda\rho_{\max}>0$。令
+\begin{equation}
+\label{eq:Tminus}
+\bm T^-(\lambda,\theta)=\bm T(\lambda,\theta)-\frac{\lambda^2}{c}\,\bm G .
+\end{equation}
+则
+\begin{equation}
+\label{eq:fourier-count}
+n(\bm T)\le\#\{j:\lambda_j(\theta)<\lambda\},\qquad
+\#\{j:\lambda_j(\theta)\le\lambda\}\le n(\bm T^-)+z(\bm T^-),
+\end{equation}
+其中 $n$、$z$ 是 Hermitian 矩阵的负特征值个数与零特征值个数。
+\end{theorem}
+
+\begin{proof}
+写 $w=v+r$，$v=Pw=\sum_{i\in\mathcal I}c_i\psi_i$，$r=(I-P)w$。$a_\theta$ 在平面波基下对角，所以 $a_\theta(w,w)=a_\theta(v,v)+a_\theta(r,r)$。质量有交叉项：
+\[
+b(w,w)=b(v,v)+2\operatorname{Re}\langle\rho v,r\rangle_0+\langle\rho r,r\rangle_0,\qquad
+\langle\rho v,r\rangle_0=\langle g,r\rangle_0,\quad g:=(I-P)(\rho v),
+\]
+因为 $r\perp\operatorname{ran}P$。补空间上 $a_\theta(r,r)\ge\Lambda_{\mathcal I}\|r\|_0^2$，$\langle\rho r,r\rangle_0\le\rho_{\max}\|r\|_0^2$，而 $\lambda\ge0$，所以
+\[
+(a_\theta-\lambda b)(w,w)\ge c^*\bm Tc-2\lambda\operatorname{Re}\langle g,r\rangle_0+c\|r\|_0^2 .
+\]
+对 $r$ 配方，并用 $\|g\|_0^2=c^*\bm Gc$：
+\begin{equation}
+\label{eq:fourier-square}
+(a_\theta-\lambda b)(w,w)\ge c^*\bm T^-c+c\,\Bigl\|r-\frac{\lambda}{c}g\Bigr\|_0^2 .
+\end{equation}
+
+左边的不等式：在平面波空间本身（$r=0$）上 $a_\theta-\lambda b$ 的矩阵就是 $\bm T$，$\bm T$ 的负特征空间给出 $a_\theta-\lambda b$ 的负子空间。
+
+右边的不等式：设 $X$ 是使 $a_\theta-\lambda b\le0$ 的子空间。若 $w\in X$、$Pw=0$，则由 \eqref{eq:fourier-square}（此时 $g=0$），$0\ge(a_\theta-\lambda b)(w,w)\ge c\|w\|_0^2$，故 $w=0$。所以 $w\mapsto c$ 在 $X$ 上单射，且在像空间上 $c^*\bm T^-c\le(a_\theta-\lambda b)(w,w)\le0$。$\bm T^-$ 在一个 $\dim X$ 维子空间上非正，由 min-max，$\dim X\le n(\bm T^-)+z(\bm T^-)$。
+\end{proof}
+
+\begin{remark}
+关键是保留矩阵 $\bm G$。如果把交叉项粗糙地用 $\|\rho v\|\le\rho_{\max}\|v\|$ 吸收，修正项会变成 $\lambda^2\rho_{\max}^2/c$ 乘单位阵，169 维的空间完全不够用。$\bm G$ 只量度 $\rho\psi_j$ 中\emph{落在补空间里}的部分，它对低频平面波很小。
+\end{remark}
+
+\paragraph{显式公式.} 取 $\mathcal I=\{|m|\le N_x,\ |n|\le N_y\}$。补空间的指标或者 $|m|>N_x$，或者 $|n|>N_y$；对 $|\theta|\le\pi$、$\beta=0.5$，分别取最小值得
+\begin{equation}
+\label{eq:Lambda-I}
+\Lambda_{\mathcal I}(\theta)=\min\Bigl\{\bigl(2\pi(N_x+1)-|\theta|\bigr)^2+0.25,\ \bigl(2\pi(N_y+1)-0.5\bigr)^2+\theta^2\Bigr\}.
+\end{equation}
+（第一项取 $m=\pm(N_x+1)$、$n=0$；第二项取 $n=-(N_y+1)$、$m=0$，此时 $|\beta_n|=2\pi(N_y+1)-0.5$ 最小。）
+
+由 $\rho=1+16\cdot\mathbf 1_{\mathcal O}$，$\rho^2=1+288\cdot\mathbf 1_{\mathcal O}$，记 $\bm B_{ij}=\int_{\mathcal O}\psi_j\overline{\psi_i}$，则
+\begin{equation}
+\label{eq:MBG}
+\bm M=I+16\bm B,\qquad \bm M^{(2)}=I+288\bm B,\qquad \bm G=256(\bm B-\bm B^2).
+\end{equation}
+$\bm B$ 是乘以指示函数在平面波空间上的压缩，$0\preceq\bm B\preceq I$。所以全部输入归结为夹杂的 Fourier 系数 $\int_{\mathcal O}\ee^{\ii\xi\cdot x}\dd x$。
+
+\subsection{Bloch 相位的 Lipschitz 模与面板检验}
+
+定理~\ref{thm:fourier-count} 只在单个 $\theta$ 处计数。要覆盖整个 $\theta\in[-\pi,\pi]$，需要知道特征值随 $\theta$ 变化有多快。
+
+\begin{lemma}[Lipschitz 模]
+\label{lem:lipschitz}
+对每个 $j$ 和 $\theta,\phi\in\RR$，$|\sqrt{\lambda_j(\theta)}-\sqrt{\lambda_j(\phi)}|\le|\theta-\phi|$。
+\end{lemma}
+
+\begin{proof}
+在周期规范下，对任意 $w\ne0$，由三角不等式
+\[
+\sqrt{a_\theta(w,w)}=\|(\nabla+\ii\theta e_x)w\|_0\le\|(\nabla+\ii\phi e_x)w\|_0+|\theta-\phi|\,\|w\|_0 .
+\]
+除以 $\sqrt{b(w,w)}$，并用 $\rho\ge1$ 即 $\|w\|_0\le\sqrt{b(w,w)}$：
+\[
+\sqrt{a_\theta(w,w)/b(w,w)}\le\sqrt{a_\phi(w,w)/b(w,w)}+|\theta-\phi| .
+\]
+两边在 $j$ 维子空间上取 $\max$、再对子空间取 $\min$（min-max 原理；定义域与 $\theta$ 无关），得 $\sqrt{\lambda_j(\theta)}\le\sqrt{\lambda_j(\phi)}+|\theta-\phi|$。交换 $\theta,\phi$。
+\end{proof}
+
+\paragraph{面板检验.} 设面板 $[\theta_i-r_i,\theta_i+r_i]$，阈值 $k_L>r_i$，$k_U>k_L$。在面板中心检查两件有限的事：
+\begin{align}
+&\lambda_{\min}\bigl(\bm T((k_L-r_i)^2,\theta_i)\bigr)<0, \label{eq:panel-low}\\
+&c\bigl((k_U+r_i)^2,\theta_i\bigr)>0,\qquad \lambda_2\bigl(\bm T^-((k_U+r_i)^2,\theta_i)\bigr)>0 . \label{eq:panel-up}
+\end{align}
+由 \eqref{eq:fourier-count}，\eqref{eq:panel-low} 给出 $\lambda_1(\theta_i)<(k_L-r_i)^2$；\eqref{eq:panel-up} 说明 $\bm T^-$ 至多一个非正特征值，所以至多一个 $\lambda_j(\theta_i)\le(k_U+r_i)^2$，即 $\lambda_2(\theta_i)>(k_U+r_i)^2$。再由引理~\ref{lem:lipschitz}，对面板中每个 $\theta$，
+\[
+\sqrt{\lambda_1(\theta)}<k_L,\qquad \sqrt{\lambda_2(\theta)}>k_U .
+\]
+如果面板覆盖了全部 $\theta$，就有 $\sup_\theta\lambda_1<k_L^2$、$\inf_\theta\lambda_2>k_U^2$：第一条能带在 $k_L^2$ 以下，其余能带在 $k_U^2$ 以上，$[k_L^2,k_U^2]$ 是带隙。注意这同时确定了带隙的\emph{序号}：它在第一、第二条能带之间，不需要事先知道下面有几条能带。
+
+\paragraph{$y$ 反射对称.} 三叶形 $R_a(1+a\cos3t)(\cos t,\sin t)$ 关于 $t\mapsto-t$ 对称，即 $\rho(x,-y)=\rho(x,y)$。映射 $(\mathcal Ru)(x,y)=\overline{u(x,-y)}$ 保持 $y$ 方向的 $\beta$-准周期（$\mathcal Ru(x,y+1)=\overline{\ee^{-\ii\beta}u(x,-y)}=\ee^{\ii\beta}\mathcal Ru(x,y)$），把 $x$ 方向的相位 $\theta$ 变成 $-\theta$，并保持 $a$、$b$。所以 $\lambda_j(\theta)=\lambda_j(-\theta)$，只需覆盖 $[0,\pi]$。这里没有用 $x$ 方向的对称性——三叶形没有这种对称。
+
+\subsection{夹杂 Fourier 系数的积分误差}
+
+$\bm B_{ij}$ 是 $b_\xi:=\int_{\mathcal O}\ee^{\ii\xi\cdot x}\dd x$ 在 $\xi=2\pi(m_j-m_i,\,n_j-n_i)$ 处的值（$\beta_{n_j}-\beta_{n_i}=2\pi(n_j-n_i)$）。$\xi=0$ 时 $b_0=|\mathcal O|=\pi R_a^2(1+a^2/2)=0.04\pi$，精确。$\xi\ne0$ 时，$\ee^{\ii\xi\cdot x}=\operatorname{div}\bigl(-\ii\xi\ee^{\ii\xi\cdot x}/|\xi|^2\bigr)$，散度定理（逆时针参数化 $c(t)$，$n\,\dd s=(c_y',-c_x')\dd t$）给出
+\begin{equation}
+\label{eq:bxi}
+b_\xi=-\frac{\ii}{|\xi|^2}\int_0^{2\pi}\ee^{\ii\xi\cdot c(t)}\bigl(\xi_xc_y'(t)-\xi_yc_x'(t)\bigr)\dd t .
+\end{equation}
+这是解析周期函数的积分，用梯形公式计算，误差可以显式控制。
+
+\begin{lemma}[周期梯形公式]
+\label{lem:trapezoid}
+设 $f$ 以 $2\pi$ 为周期，在带 $|\operatorname{Im}t|\le s$ 上解析且 $|f|\le\mathcal M$。则 $J$ 点梯形公式的误差不超过 $4\pi\mathcal M/(\ee^{sJ}-1)$。
+\end{lemma}
+
+\begin{proof}
+把 Fourier 系数 $\hat f_n=\frac1{2\pi}\int_0^{2\pi}f\ee^{-\ii nt}\dd t$ 的积分路径平移到 $\operatorname{Im}t=\mp s$（周期性使两侧竖边抵消），得 $|\hat f_n|\le\mathcal M\ee^{-s|n|}$。$J$ 点离散平均恰好等于 $\sum_{l\in\mathbb Z}\hat f_{lJ}$，而积分等于 $2\pi\hat f_0$，所以误差是 $2\pi\sum_{l\ne0}\hat f_{lJ}$，绝对值至多 $2\pi\cdot2\mathcal M\sum_{l\ge1}\ee^{-slJ}=4\pi\mathcal M/(\ee^{sJ}-1)$。
+\end{proof}
+
+三叶形写成三角多项式：
+\[
+c_x=R_a\Bigl[\cos t+\tfrac a2(\cos4t+\cos2t)\Bigr],\qquad c_y=R_a\Bigl[\sin t+\tfrac a2(\sin4t-\sin2t)\Bigr].
+\]
+在 $|\operatorname{Im}t|\le s$ 上用 $|\sin(t+\ii\sigma)|,|\cos(t+\ii\sigma)|\le\cosh\sigma$、$|\operatorname{Im}\sin(t+\ii\sigma)|,|\operatorname{Im}\cos(t+\ii\sigma)|\le\sinh|\sigma|$，得
+\begin{gather*}
+|\operatorname{Im}c_i|\le C_{\rm im}(s)=R_a\Bigl[\sinh s+\tfrac a2(\sinh4s+\sinh2s)\Bigr],\\
+|c_i'|\le C_1(s)=R_a\Bigl[\cosh s+\tfrac a2(4\cosh4s+2\cosh2s)\Bigr].
+\end{gather*}
+于是 \eqref{eq:bxi} 的被积函数连同前因子满足
+\[
+\mathcal M_\xi\le\frac{|\xi_x|+|\xi_y|}{|\xi|^2}\,C_1(s)\exp\bigl((|\xi_x|+|\xi_y|)C_{\rm im}(s)\bigr).
+\]
+对整数格点 $\xi=2\pi(d_1,d_2)\ne0$，$(|\xi_x|+|\xi_y|)/|\xi|^2\le1/(2\pi)$（因为 $|d|\le d^2$）。取 $N_x=N_y=6$，则 $|d_1|,|d_2|\le12$，$|\xi_x|+|\xi_y|\le48\pi$。取 $s=0.1$，对 $a\le0.2$、$R_a\le0.2$：$C_{\rm im}<0.033$，$C_1<0.33$，从而 $\mathcal M_\xi<\frac{0.33}{2\pi}\ee^{48\pi\cdot0.033}<8$。取 $J=2048$，每个系数的误差
+\[
+\epsilon_b=\frac{32\pi}{\ee^{204.8}-1}<1.15\times10^{-87}.
+\]
+
+\paragraph{矩阵误差的通用规则.} 若 $\bm H_0$ Hermitian，$|(\bm H-\bm H_0)_{ij}|\le e_{ij}$，$e_{ij}=e_{ji}\ge0$，则
+\begin{equation}
+\label{eq:rowsum}
+\|\bm H-\bm H_0\|_2\le\max_i\sum_je_{ij}=:\epsilon_{\bm H},\qquad \bm H_0-\epsilon_{\bm H}I\preceq\bm H\preceq\bm H_0+\epsilon_{\bm H}I .
+\end{equation}
+这是 $\|\bm E\|_2\le(\|\bm E\|_1\|\bm E\|_\infty)^{1/2}$ 的直接推论。下面几节把它简称为“行和规则”。
+
+指标集有 $d=169$ 个元素。记 $e_B=d\,\epsilon_b$，带波浪号的是求积得到的矩阵。由行和规则以及 $\|\bm B\|\le1$、$\|\tilde{\bm B}\|\le1+e_B$，
+\[
+\|\bm B-\tilde{\bm B}\|\le e_B,\qquad \|\bm M-\tilde{\bm M}\|\le16e_B,\qquad
+\|\bm G-\tilde{\bm G}\|\le256e_B(3+e_B),
+\]
+最后一式来自 $\bm B^2-\tilde{\bm B}^2=\bm B(\bm B-\tilde{\bm B})+(\bm B-\tilde{\bm B})\tilde{\bm B}$。因此检验时按安全方向修正：\eqref{eq:panel-low} 检验\emph{上界}矩阵 $\tilde{\bm T}+16\lambda e_BI$；\eqref{eq:panel-up} 检验\emph{下界}矩阵
+\[
+\tilde{\bm T}^--\Bigl[16\lambda e_B+\frac{\lambda^2}{c}\,256e_B(3+e_B)\Bigr]I .
+\]
+这样积分截断误差就全部进入了检验。修正量小于 $3\times10^{-83}$，在数值上可以忽略，但它在论证中是必要的。
+
+\subsection{结果}
+
+两侧材料各用 $|m|,|n|\le6$ 的 169 个平面波和 2048 个梯形点，取 $k_L=1.318$、$k_U=2.375$，在 $[0,\pi]$ 上自适应地二分面板：
+\begin{center}
+\small
+\begin{tabular}{lr}
+\toprule
+量 & 值 \\
+\midrule
+接受的面板数（两侧共用） & 118 \\
+最小／最大面板宽度 & $\pi/4096$ ／ $\pi/4$ \\
+\eqref{eq:panel-low} 的最小负余量（两侧） & $>1.3972\times10^{-4}$ \\
+\eqref{eq:panel-up} 的最小正余量（两侧） & $>7.5205\times10^{-3}$ \\
+补空间分母 $c$ 的最小值 & $>1572.32$ \\
+用到的最大上阈值 $(k_U+r_i)^2$ & $<7.66016$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+自适应二分后，小面板集中在 $\theta=\pi$ 附近。检验总共是 $2\times118\times2=472$ 个 169 阶 Hermitian 矩阵的特征值计算，成本很低。
+
+结论：在舍入误差以外（有限矩阵的特征值用浮点计算），
+\begin{equation}
+\label{eq:band-result}
+\sup_\theta\lambda_{1}(\theta)<1.318^2,\qquad \inf_\theta\lambda_{2}(\theta)>2.375^2,\qquad a\in\{0.12,\,0.20\}.
+\end{equation}
+两侧全周期算子到窗口内 $\lambda$ 的距离满足
+\begin{equation}
+\label{eq:dper}
+\operatorname{dist}(\lambda,\sigma(A^{\rm per}_\pm))\ge d_{\rm per}(\lambda):=\min\{\lambda-1.318^2,\ 2.375^2-\lambda\},
+\end{equation}
+\[
+d_{\rm per}(\alpha_-)=0.005276,\qquad d_{\rm per}(\alpha_+)=0.023725 .
+\]
+这是到\emph{全周期}谱的距离，还不是到半导波谱的距离；后者需要第~\ref{sec:surface}~节排除表面态。
+
+\begin{remark}
+窗口的下端 $k=1.32$ 离带边 $1.318$ 很近，$d_{\rm per}(\alpha_-)$ 只有 $5\times10^{-3}$。这不影响最终结论，因为推论~\ref{cor:H-criterion} 在下端点不需要任何计算；但它会让第~\ref{sec:surface}~节在 $\alpha_-$ 处的预解式界变大。
+\end{remark}
+
+% ======================================================================
+\section{表面态：全周期单层算子}
+\label{sec:surface}
+(P) 的第二部分是：两个半导波的 Dirichlet 算子 $A_\pm$ 在窗口中没有特征值。$A_\pm$ 定义在半无限区域上，不能直接计算。这一节的思路是：不去碰半导波本身，而是在\emph{全周期}介质上、在截线处放一个“单层源”，研究由此得到的边界算子 $\mathsf B_\lambda$。全周期介质的预解式由第~\ref{sec:band}~节控制，$\mathsf B_\lambda$ 是端口上的一个算子，它的核恰好对应截线两侧的表面态；而且 $\mathsf B_\lambda$ 关于 $\lambda$ 单调递增。于是只要在窗口下端点证明 $\mathsf B_{\alpha_-}$ 正定，整个窗口就没有表面态。
+
+\subsection{设定}
+
+固定一种材料（$a=0.12$ 或 $a=0.20$），把物理端口平移到 $x=0$：截线 $\{0\}\times I$ 落在胞元墙上，夹杂中心在半整数点，取向不变。全周期介质记 $\rho$，在截线两侧 $|x|<\tfrac14$ 内 $\rho\equiv1$（领口）。记 $V=H^1_\beta(B)$，
+\[
+s_\lambda(u,v)=a(u,v)-\lambda b(u,v),\qquad L_\lambda:V\to V^*,\quad\langle L_\lambda u,v\rangle=s_\lambda(u,v).
+\]
+设 $\lambda$ 在全周期谱的带隙中，$d_\lambda\le\operatorname{dist}(\lambda,\sigma(A^{\rm per}))$。由谱定理：
+\begin{itemize}
+\item 对 $L^2$ 源 $f$（不加权），$R_\lambda f:=(A^{\rm per}-\lambda)^{-1}(\rho^{-1}f)$ 满足
+\begin{equation}
+\label{eq:per-resolvent}
+\|R_\lambda f\|_\rho\le d_\lambda^{-1}\|f/\sqrt\rho\|_0,\qquad |\langle g,R_\lambda f\rangle_0|\le d_\lambda^{-1}\|g/\sqrt\rho\|_0\|f/\sqrt\rho\|_0 ;
+\end{equation}
+\item 在能量范数 $\|u\|_V^2=a(u,u)+b(u,u)$ 下，$\|L_\lambda^{-1}\|_{V^*\to V}\le K_\lambda:=1+(\lambda+1)/d_\lambda$，因为谱乘子是 $(t+1)/(t-\lambda)=1+(\lambda+1)/(t-\lambda)$。
+\end{itemize}
+截线两侧的 Dirichlet 算子记为 $A_{D,L}$（$x<0$）和 $A_{D,R}$（$x>0$）。物理问题需要的是 $a=0.12$ 的 $A_{D,L}$（即 $A_-$）和 $a=0.20$ 的 $A_{D,R}$（即 $A_+$）；下面的方法同时处理截线两侧。
+
+\subsection{单层算子}
+
+记 $\tau u=u(0,\cdot)$，$\mathsf Q=\operatorname{diag}(\langle k\rangle)$。
+
+\begin{lemma}[全线迹不等式]
+\label{lem:fullline-trace}
+$\displaystyle\sum_k\langle k\rangle|u_k(0)|^2\le\tfrac12\|u\|_{H^1(B)}^2$。
+\end{lemma}
+
+\begin{proof}
+对每个 Fourier 模，在半直线上 $|v(0)|^2=-\int_0^\infty(|v|^2)'\le2\int_0^\infty|v'||v|\le\langle k\rangle^{-1}\int_0^\infty(|v'|^2+\langle k\rangle^2|v|^2)$。两侧相加，再对 $k$ 求和并用 (F)。
+\end{proof}
+
+对 $c\in\ell^2$，截线上的单层源是泛函 $\langle\sigma_c,v\rangle=\sum_kc_k\langle k\rangle^{1/2}\overline{v_k(0)}$，由引理~\ref{lem:fullline-trace} 它属于 $V^*$。定义
+\begin{equation}
+\label{eq:single-layer}
+\mathsf T_\lambda c=L_\lambda^{-1}\sigma_c\in V,\qquad (\mathsf B_\lambda c)_k=\langle k\rangle^{1/2}(\mathsf T_\lambda c)_k(0).
+\end{equation}
+即 $w=\mathsf T_\lambda c$ 是 $s_\lambda(w,v)=\langle\sigma_c,v\rangle$（对一切 $v\in V$）的解，$\mathsf B_\lambda c$ 是它在截线上的迹（按 $\mathsf Q^{1/2}$ 归一）。取 $v=w$ 得
+\begin{equation}
+\label{eq:B-form}
+(\mathsf B_\lambda c,c)_{\ell^2}=s_\lambda(\mathsf T_\lambda c,\mathsf T_\lambda c),
+\end{equation}
+所以 $\mathsf B_\lambda$ 是 $\ell^2$ 上的有界自伴算子。注意定义只用到全周期预解式，即使半导波在 $\lambda$ 处有 Dirichlet 特征值也有意义。
+
+\paragraph{一个可以算的例子.} 若把 $L_\lambda$ 换成 $-\Delta+1$，第 $k$ 个单层解是 $\frac1{2\sqrt{\langle k\rangle}}\ee^{-\langle k\rangle|x|}\ee^{\ii\beta_ky}$（导数跳跃为 $\langle k\rangle^{1/2}$），迹乘 $\langle k\rangle^{1/2}$ 恰好是 $\tfrac12$。所以参考算子是 $\tfrac12I$，而 $\mathsf B_\lambda$ 与它只差一个紧算子（见引理~\ref{lem:B-structure}）。
+
+\begin{lemma}[核与表面态]
+\label{lem:B-kernel}
+设 $\lambda\notin\sigma(A^{\rm per})$。$c\mapsto\mathsf T_\lambda c$ 是 $\ker\mathsf B_\lambda$ 到 $\ker(A_{D,L}-\lambda)\oplus\ker(A_{D,R}-\lambda)$ 的同构（后者的元素在截线处粘合成 $V$ 中的函数）。
+\end{lemma}
+
+\begin{proof}
+若 $\mathsf B_\lambda c=0$，则 $w=\mathsf T_\lambda c$ 迹为零；对支集在开半带中的测试函数 $v$，$\langle\sigma_c,v\rangle=0$，所以 $w$ 在两侧分别是 Dirichlet 特征函数。若 $w=0$ 则 $\sigma_c=L_\lambda w=0$，从而 $c=0$。
+
+反之，设两侧的 Dirichlet 特征函数粘成 $w\in V$，$\tau w=0$。泛函 $\ell=L_\lambda w$ 在 $\ker\tau$ 上为零。迹映射有有界右逆 $g\mapsto\sum_kg_k\ee^{-\langle k\rangle|x|}\ee^{\ii\beta_ky}$，所以 $\ell$ 只依赖于 $\tau v$，并且是迹空间上的有界泛函：存在唯一 $c\in\ell^2$ 使 $\ell=\sigma_c$。于是 $w=\mathsf T_\lambda c$，$\mathsf B_\lambda c=\mathsf Q^{1/2}\tau w=0$。
+\end{proof}
+
+\begin{lemma}[结构与单调性]
+\label{lem:B-structure}
+设 $\lambda$ 在全周期谱的带隙中。
+\begin{enumerate}
+\item $\mathsf B_\lambda=\tfrac12I+$ 紧自伴算子；
+\item $\lambda\mapsto\mathsf B_\lambda$ 可微，$(\mathsf B_\lambda'c,c)=\|\mathsf T_\lambda c\|_\rho^2>0$（$c\ne0$）。
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+1. 记 $L_0=-\Delta+1$，$V_0=1+\lambda\rho$，则 $L_\lambda=L_0-V_0$。$T_0c=L_0^{-1}\sigma_c$ 的第 $k$ 列是 $\frac1{2\sqrt{\langle k\rangle}}\ee^{-\langle k\rangle|x|}\ee^{\ii\beta_ky}$，各列在 $L^2$ 中正交，范数 $1/(2\langle k\rangle)\to0$，所以 $T_0:\ell^2\to L^2$ 紧。两次使用预解式恒等式 $L_\lambda^{-1}=L_0^{-1}+L_0^{-1}V_0L_\lambda^{-1}$：
+\[
+\mathsf B_\lambda=\tfrac12I+T_0^*V_0T_0+(V_0T_0)^*R_\lambda(V_0T_0),
+\]
+后两项是紧自伴的。
+
+2. $\frac{\dd}{\dd\lambda}L_\lambda^{-1}=L_\lambda^{-1}\rho L_\lambda^{-1}$，代入 \eqref{eq:single-layer} 得 $(\mathsf B'_\lambda c,c)=b(\mathsf T_\lambda c,\mathsf T_\lambda c)$。$\sigma_c\ne0$ 时 $\mathsf T_\lambda c\ne0$。
+\end{proof}
+
+\begin{lemma}[半导波预解式的表示]
+\label{lem:half-resolvent}
+若 $\mathsf B_\lambda$ 可逆，则 $\lambda\notin\sigma(A_{D,L})\cup\sigma(A_{D,R})$，并且截断后的 Dirichlet 预解式是
+\begin{equation}
+\label{eq:half-resolvent}
+(A_{D,L}\oplus A_{D,R}-\lambda)^{-1}=(A^{\rm per}-\lambda)^{-1}-\mathsf T_\lambda\mathsf B_\lambda^{-1}\mathsf T_\lambda^{*},
+\end{equation}
+其中 $\mathsf T_\lambda^*$ 是 $\mathsf T_\lambda:\ell^2\to L^2_\rho$ 的伴随。
+\end{lemma}
+
+\begin{proof}
+给定 $f\in L^2_\rho$，令 $u=(A^{\rm per}-\lambda)^{-1}f$，$z=\mathsf Q^{1/2}\tau u$。先验证 $z=\mathsf T_\lambda^*f$：$(c,z)_{\ell^2}=s_\lambda(\mathsf T_\lambda c,u)=\overline{s_\lambda(u,\mathsf T_\lambda c)}=\overline{b(f,\mathsf T_\lambda c)}=b(\mathsf T_\lambda c,f)$。令 $u_D=u-\mathsf T_\lambda\mathsf B_\lambda^{-1}z$。它的迹（乘 $\mathsf Q^{1/2}$）是 $z-\mathsf B_\lambda\mathsf B_\lambda^{-1}z=0$；对迹为零的 $v$，$s_\lambda(u_D,v)=b(f,v)-\langle\sigma_{\mathsf B^{-1}z},v\rangle=b(f,v)$。所以 $u_D$ 在两侧解 Dirichlet 问题。唯一性：齐次解由引理~\ref{lem:B-kernel} 对应 $\ker\mathsf B_\lambda=\{0\}$。右端是有界算子，所以 $\lambda$ 属于预解集。
+\end{proof}
+
+\subsection{端点计数}
+
+\begin{theorem}[表面态的端点计数]
+\label{thm:surface-count}
+设 $[a,b]$ 包含在全周期谱的一个带隙中，$\mathsf B_a$、$\mathsf B_b$ 可逆。则
+\[
+n(\mathsf B_a)-n(\mathsf B_b)=\sum_{\lambda\in(a,b)}\bigl[\dim\ker(A_{D,L}-\lambda)+\dim\ker(A_{D,R}-\lambda)\bigr].
+\]
+特别地，若 $n(\mathsf B_a)=n(\mathsf B_b)$，则 $[a,b]$ 与 $\sigma(A_{D,L})$、$\sigma(A_{D,R})$ 都不相交。
+\end{theorem}
+
+\begin{proof}
+与定理~\ref{thm:count} 的证明相同，只是方向相反：由引理~\ref{lem:B-structure}，$\mathsf B_\lambda$ 是 $\tfrac12I$ 加紧算子，关于 $\lambda$ 严格递增。在零点 $\lambda_0$ 处，令 $F=\ker\mathsf B_{\lambda_0}$（有限维），在 $F^\perp$ 上的块在 $\lambda_0$ 附近可逆。$F$ 上的 Schur 补 $H(\lambda)$ 满足 $H(\lambda_0)=0$，$H'(\lambda_0)=P_F\mathsf B'_{\lambda_0}P_F>0$，所以 $H$ 在 $\lambda_0$ 左侧负定、右侧正定：负指数在 $\lambda_0$ 处恰好减少 $\dim F$，并且零点孤立。$[a,b]$ 紧、端点可逆，所以零点有限。相加并用引理~\ref{lem:B-kernel}。若两端负指数相等，则 $(a,b)$ 中没有零点，由引理~\ref{lem:half-resolvent}，每一点都在两个 Dirichlet 算子的预解集中。
+\end{proof}
+
+本算例中两端的负指数都是零，这时有更直接、也更强的结论。
+
+\begin{corollary}[下端点正定就够了]
+\label{cor:surface-monotone}
+设 $\mathsf B_a\succeq\gamma_aI$，$\gamma_a>0$。则对带隙中每个 $\mu\ge a$，$\mathsf B_\mu\succeq\gamma_aI$，所以 $\mu\notin\sigma(A_{D,L})\cup\sigma(A_{D,R})$。
+\end{corollary}
+
+\begin{proof}
+$\mathsf B_\mu-\mathsf B_a=\int_a^\mu\mathsf B'_t\,\dd t\succeq0$，再用引理~\ref{lem:half-resolvent}。
+\end{proof}
+
+由推论~\ref{cor:surface-monotone}，若在 $\alpha_-$ 处证明了 $\mathsf B_{\alpha_-}\succ0$，则 $[\alpha_-,2.375^2]$ 中没有表面态（$2.375^2$ 仍在全周期带隙中，见 \eqref{eq:band-result}）。因此物理半导波 $A_\pm$ 到 $\alpha_+$ 的距离至少是
+\begin{equation}
+\label{eq:dplus}
+d_+:=\min\{\alpha_+-\alpha_-,\ 2.375^2-\alpha_+\}=0.023725,
+\end{equation}
+它等于全周期距离 $d_{\rm per}(\alpha_+)$：排除表面态以后，半导波的谱不比全周期介质的谱离 $\alpha_+$ 更近。半导波上的形式逆界常数为
+\begin{equation}
+\label{eq:Kplus}
+K_+=1+\frac{\alpha_++1}{d_+}=279.899894626 .
+\end{equation}
+它是第~\ref{sec:dtnbound}~节的误差常数。在 $\alpha_+$ 处也算了 $\mathsf B_{\alpha_+}$，作为一致性检查：它的负指数同样是零，与定理~\ref{thm:surface-count} 一致。
+
+\subsection{怎样证明 $\mathsf B_\lambda$ 的惯性：低频块、尾项与 Schur 补}
+
+$\mathsf B_\lambda$ 是无穷矩阵。把截线上的 Fourier 指标分成低频 $|k|\le M$（投影 $\Pi_M$，$p=2M+1$ 个）和高频（$Q_M=I-\Pi_M$）。高频部分接近 $\tfrac12I$，用解析界控制；低频块是 $p\times p$ 矩阵，用试探场计算。
+
+\paragraph{一个更好的参考算子.} 对低频 $k=0$（唯一满足 $\beta_k^2\le\alpha_+$ 的指标）取 $\kappa_0=\langle0\rangle$，其余取 $\kappa_k=\sqrt{\beta_k^2-\lambda}$。令 $L_{\rm ref}=-\partial_x^2+\operatorname{diag}(\kappa_k^2)$（逐 $y$-模作用），则
+\[
+V_\lambda:=L_{\rm ref}-L_\lambda=\lambda(\rho-1)+(\lambda+1)\Pi_{\{0\}}\succeq0,
+\]
+其中 $\Pi_{\{0\}}$ 是到第 0 个 $y$-模的投影。参考单层解是
+\[
+T_k=\frac{\sqrt{\langle k\rangle}}{2\kappa_k}\ee^{-\kappa_k|x|}\ee^{\ii\beta_ky},\qquad D_0:=\operatorname{diag}\frac{\langle k\rangle}{2\kappa_k}\succeq\tfrac12I,
+\]
+两次使用预解式恒等式得到精确公式
+\begin{equation}
+\label{eq:B-exact}
+\mathsf B_\lambda=D_0+T^*V_\lambda T+(V_\lambda T)^*R_\lambda(V_\lambda T).
+\end{equation}
+这个参考算子好在：高频列在领口 $|x|<\tfrac14$ 以外衰减为 $\ee^{-\kappa_k/4}$，而 $V_\lambda$ 对高频只在夹杂上非零，夹杂在领口以外。
+
+\paragraph{尾项.} 令 $\ell=\tfrac14$，
+\[
+n_k=\frac{\sqrt{\langle k\rangle}}{2\kappa_k^{3/2}},\qquad a_M=\max_{|k|>M}n_k\ee^{-\ell\kappa_k},\qquad b_{\rm out}=\max_{|k|\le M}n_k\ee^{-\ell\kappa_k},
+\]
+\[
+v_c=16\lambda,\qquad v_w=16\lambda/\sqrt{17},\qquad c_P\ge\|\rho^{-1/2}V_\lambda T\Pi_M\|\quad(\text{例如 }c_P=v_wb_{\rm out}+(\lambda+1)n_0).
+\]
+$n_k\ee^{-\ell\kappa_k}$ 恰好是 $\|\mathbf 1_{\{|x|\ge\ell\}}T_k\|_0$（直接积分），并且在高频上随 $|\beta_k|$ 递减（对数导数为负），所以 $a_M$ 在 $k=-(M+1)$ 处取到。
+
+\begin{lemma}[尾项界]
+\label{lem:B-tail}
+记 $K=\mathsf B_\lambda-D_0$。则
+\[
+\|Q_MKQ_M\|\le h_M:=\Bigl(v_c+\frac{v_w^2}{d_\lambda}\Bigr)a_M^2,\qquad
+\|\Pi_MKQ_M\|\le x_M:=a_M\Bigl(v_cb_{\rm out}+\frac{c_Pv_w}{d_\lambda}\Bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+$T$ 的各列属于不同的 $y$-模，在 $L^2$ 中正交，所以 $\|\mathbf 1_{\{|x|\ge\ell\}}TQ_M\|=a_M$，$\|\mathbf 1_{\{|x|\ge\ell\}}T\Pi_M\|=b_{\rm out}$。对高频输入，$\Pi_{\{0\}}$ 项为零，$V_\lambda TQ_Mc=16\lambda\mathbf 1_{\mathcal O}TQ_Mc$，夹杂 $\mathcal O\subset\{|x|\ge\ell\}$。于是 $T^*V_\lambda T$ 的高—高块至多 $v_ca_M^2$，低—高块至多 $v_cb_{\rm out}a_M$（低频输入中的 $\Pi_{\{0\}}$ 分量与高频输出正交）。又 $\|\rho^{-1/2}V_\lambda TQ_M\|\le v_wa_M$（$(\rho-1)/\sqrt\rho$ 在夹杂上等于 $16/\sqrt{17}$）。对 \eqref{eq:B-exact} 的第三项用 \eqref{eq:per-resolvent}。
+\end{proof}
+
+\begin{theorem}[有限 Schur 检验]
+\label{thm:B-schur}
+设 $t_M:=\tfrac12-h_M>0$，并且低频块 $C=\Pi_M\mathsf B_\lambda\Pi_M$ 有 Hermitian 包围 $\hat C-E\preceq C\preceq\hat C+E$，$E\succeq0$。令
+\[
+C_-=\hat C-E-\frac{x_M^2}{t_M}I,\qquad C_+=\hat C+E .
+\]
+若 $C_\pm$ 非奇异且负指数同为 $m$，则 $\mathsf B_\lambda$ 可逆且 $n(\mathsf B_\lambda)=m$。若 $m=0$，则 $\mathsf B_\lambda\succeq c\,I$ 对某个 $c>0$，并且
+\[
+\|\mathsf B_\lambda^{-1}\|\le\frac{(1+x_M/t_M)^2}{\min(t_M,\gamma)},\qquad \gamma=\lambda_{\min}(C_-).
+\]
+\end{theorem}
+
+\begin{proof}
+高—高块 $H=Q_M\mathsf B_\lambda Q_M\succeq(\tfrac12-h_M)I=t_MI$（$D_0\succeq\frac12I$ 是对角的）。记 $X=\Pi_M\mathsf B_\lambda Q_M$，$\|X\|\le x_M$。块 Gauss 消元
+\[
+\mathsf B_\lambda=\begin{pmatrix}I&XH^{-1}\\0&I\end{pmatrix}\begin{pmatrix}S&0\\0&H\end{pmatrix}\begin{pmatrix}I&0\\H^{-1}X^*&I\end{pmatrix},\qquad S=C-XH^{-1}X^*,
+\]
+是有界可逆的合同变换，所以 $n(\mathsf B_\lambda)=n(S)$，且 $\mathsf B_\lambda$ 可逆当且仅当 $S$ 可逆。$0\preceq XH^{-1}X^*\preceq(x_M^2/t_M)I$，所以 $C_-\preceq S\preceq C_+$。按序特征值比较：$\lambda_m(S)\le\lambda_m(C_+)<0$，$\lambda_{m+1}(S)\ge\lambda_{m+1}(C_-)>0$。逆的范数：三角因子的逆范数至多 $1+x_M/t_M$。
+\end{proof}
+
+\subsection{低频块：二次残差恒等式}
+
+由 \eqref{eq:B-exact}，
+\[
+C=D_0|_{\Pi_M}+(T\Pi_M)^*V_\lambda(T\Pi_M)+F^*R_\lambda F,\qquad F_i=V_\lambda T_i\ (|i|\le M).
+\]
+前两项是显式积分。第三项含全周期预解式，用试探响应 $Z_i$ 代替真响应 $R_\lambda F_i$，误差是二次的：
+
+\begin{lemma}[二次残差恒等式]
+\label{lem:quad-residual}
+对任意 $Z_i\in V$，令 $r_i=F_i-L_\lambda Z_i\in V^*$，
+\[
+(J_Z)_{ij}=\langle F_j,Z_i\rangle_0+\overline{\langle F_i,Z_j\rangle_0}-s_\lambda(Z_j,Z_i).
+\]
+则对每个系数向量 $c$，$c^*(F^*R_\lambda F-J_Z)c=\langle r_c,L_\lambda^{-1}r_c\rangle$，$r_c=\sum_ic_ir_i$。
+\end{lemma}
+
+\begin{proof}
+令 $u=R_\lambda F_c$，$Z_c=\sum c_iZ_i$。则 $s_\lambda(u,v)=\langle F_c,v\rangle_0$，$s_\lambda(u-Z_c,v)=\langle r_c,v\rangle$，所以 $u-Z_c=L_\lambda^{-1}r_c$。展开
+$s_\lambda(u-Z_c,u-Z_c)=s_\lambda(u,u)-2\operatorname{Re}\langle F_c,Z_c\rangle_0+s_\lambda(Z_c,Z_c)$，并用 $s_\lambda(u,u)=c^*F^*R_\lambda Fc$。
+\end{proof}
+
+因此 $\hat C=D_0|_{\Pi_M}+(T\Pi_M)^*V_\lambda(T\Pi_M)+J_Z$，$E$ 取 $|\langle r_c,L_\lambda^{-1}r_c\rangle|$ 的一个上界矩阵。最简单的是 $|\langle r,L_\lambda^{-1}r\rangle|\le K_\lambda\|r\|_{V^*}^2$；下面用 Poisson 通量算出 $\|r\|_{V^*}$ 的上界。
+
+\paragraph{Bloch 胞上的实现.} 真响应 $R_\lambda F_i$ 在带边附近衰减很慢，在有限长的区域上逼近它很费。改用 Bloch 分解：全线上的量等于对 $x$ 方向相位 $\theta\in[-\pi,\pi]$ 的纤维量的平均，$\langle F,R_\lambda F\rangle=\frac1{2\pi}\int_{-\pi}^{\pi}\langle F_\theta,R_{\lambda,\theta}F_\theta\rangle_Y\dd\theta$。源 $F_i$ 是周期函数 $V_\lambda$ 乘 $\ee^{-\kappa_i|x|}\ee^{\ii\beta_iy}$，后者的 Bloch 纤维在 $x\in[0,1]$ 上是显式的几何级数
+\begin{equation}
+\label{eq:bloch-source}
+\sum_{n\in\mathbb Z}\ee^{-\ii n\theta}\ee^{-\kappa|x+n|}=\frac{\ee^{-\kappa x}}{1-\ee^{-\kappa-\ii\theta}}+\frac{\ee^{-\kappa(1-x)+\ii\theta}}{1-\ee^{-\kappa+\ii\theta}} .
+\end{equation}
+在每个纤维上，试探响应 $Z_{i,\theta}$ 取 $|m|,|n|\le N$ 的平面波 $\ee^{\ii(2\pi m+\theta)x}\ee^{\ii\beta_ny}$，它们自动满足两个方向的准周期条件。引理~\ref{lem:quad-residual} 在每个纤维上成立，对 $\theta$ 积分后就是全线的恒等式。
+
+\paragraph{残差的对偶范数：Poisson 通量.} 在纤维 $\theta$ 上，平面波 $\ee^{\ii(2\pi m+\theta)x}\ee^{\ii\beta_ny}$ 是 $-\Delta$ 的特征函数，特征值 $D_{mn}=(2\pi m+\theta)^2+\beta_n^2\ge\tfrac14>0$。令 $\psi=(-\Delta)^{-1}r$（纤维上的周期 Poisson 解）。对任意 $v$，$\langle r,v\rangle=\langle\nabla\psi,\nabla v\rangle_0$，所以
+\[
+\|r\|_{V^*}^2\le\|\nabla\psi\|_0^2=\sum_{m,n}\frac{|r_{mn}|^2}{D_{mn}} .
+\]
+保留 $|m|,|n|\le N$ 的部分精确计算（记为 $\delta$，$D_N=\operatorname{diag}D_{mn}$），其余用遗漏模态的下界 $D_{\rm tail}$（公式与 \eqref{eq:Lambda-I} 相同，在面板上取最坏的 $\theta$），记 $G_0=\int_Yr_j\overline{r_i}$：
+\[
+\|\nabla\psi\|^2\le c^*Hc,\qquad H=\delta^*D_N^{-1}\delta+\frac{G_0-\delta^*\delta}{D_{\rm tail}} .
+\]
+这比直接用 $\|r\|_0^2/d_\lambda$ 好得多：$r$ 在夹杂边界附近有很大的高频分量，而 $(-\Delta)^{-1}$ 把它们压低了 $D_{mn}$ 倍。在 $\alpha_-$ 处取 $E=K_\lambda\bar H$（$\bar H$ 是 $H$ 的相位平均）。
+
+在 $\alpha_+$ 处用更紧的二次形式：由 $L_\lambda\psi=r-\lambda\rho\psi$ 得 $L_\lambda^{-1}r=\psi+\lambda L_\lambda^{-1}(\rho\psi)$，于是
+\[
+\langle r,L_\lambda^{-1}r\rangle=\|\nabla\psi\|^2+\lambda\|\psi\|_\rho^2+\lambda^2\langle\rho\psi,R_\lambda(\rho\psi)\rangle_0,
+\]
+用 \eqref{eq:per-resolvent} 和 $\rho\le17$，
+\[
+|\langle r,L_\lambda^{-1}r\rangle|\le\|\nabla\psi\|^2+17\lambda(1+\lambda/d_\lambda)\|\psi\|_0^2,\qquad \|\psi\|_0^2\le c^*H^{(2)}c,
+\]
+$H^{(2)}=G_0/D_{\rm tail}^2+\delta^*(D_N^{-2}-D_{\rm tail}^{-2}I)\delta$。这里 $K_\lambda$ 这个大常数不再出现。
+
+\paragraph{相位积分.} 把 $[-\pi,\pi]$ 分成 $P$ 个面板，每个面板上在 6 个 Chebyshev--Lobatto 点求解有限的胞系统，把响应系数插值为 $\theta$ 的五次多项式。插值只是\emph{选择}试探场的方法；残差按实际的多项式试探场计算，不假定插值准确。被积的矩阵函数（$J_Z$、$H$、$H^{(2)}$ 等）在 $\theta$ 的复邻域中解析：它们由多项式系数、\eqref{eq:bloch-source} 的指数和分母、以及 $D_{mn}^{-1}$ 组成，而 $|\operatorname{Im}\theta|<\tfrac12$ 时 $D_{mn}$ 不为零（因为 $|\beta_n|\ge\tfrac12$）。用 Gauss 规则积分，误差由 Bernstein 椭圆上的上界控制：若解析函数在参数 $\varrho$ 的椭圆上范数不超过 $\mathcal M$，其 Chebyshev 系数至多 $2\mathcal M\varrho^{-j}$；$q$ 点 Gauss 规则对 $2q-1$ 次多项式精确，所以误差至多 $8\mathcal M\varrho^{-2q}/(1-\varrho^{-1})$。胞内的空间积分全部是指数函数在夹杂上的矩，用 \eqref{eq:bxi} 与引理~\ref{lem:trapezoid} 计算。这些余项都按安全方向加到 $E$ 上。
+
+\subsection{结果}
+
+两种材料、两个端点，都取边界截断 $M=10$（$p=21$）、胞内平面波 $N=26$、$P=64$ 个相位面板（五次多项式，40 点 Gauss 规则）、曲线 2560 个梯形点。
+
+\begin{center}
+\small
+\begin{tabular}{llcccc}
+\toprule
+材料 & $\lambda$ & $n(C_-)/n(C_+)$ & $\gamma=\lambda_{\min}(C_-)$ & $\|E\|$ & $x_M^2/t_M$ \\
+\midrule
+$a=0.12$ & $\alpha_-$ & $0/0$ & $0.0235558$ & $0.00789$ & $2.7\times10^{-12}$ \\
+$a=0.12$ & $\alpha_+$ & $0/0$ & $0.5004$ & $0.00238$ & $1.2\times10^{-11}$ \\
+$a=0.20$ & $\alpha_-$ & $0/0$ & $0.00428913$ & $0.0142$ & $2.7\times10^{-12}$ \\
+$a=0.20$ & $\alpha_+$ & $0/0$ & $0.5004$ & $0.00884$ & $1.2\times10^{-11}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+相位与曲线积分余项合计不超过 $10^{-11}$。$M=8$ 时惯性相同，尾项罚分大 100 倍以上；$N=18$ 与 $N=26$ 两个试探空间给出的 $\hat C$ 之差不超过两者误差之和。四次正式运行每次约 7.5 分钟，峰值内存不超过 1.72 GiB。
+
+结论（舍入误差排除）：两种材料在 $\alpha_-$ 处 $\mathsf B_{\alpha_-}\succ0$。由推论~\ref{cor:surface-monotone}，截线两侧在 $[\alpha_-,2.375^2]$ 中都没有表面态；结合第~\ref{sec:band}~节，(P) 成立，并且 $d_+=0.023725$、$K_+=279.899894626$。
+
+\begin{remark}
+$a=0.20$ 在 $\alpha_-$ 处的余量 $\gamma=0.0043$ 是全部检验中最小的。这与 $\alpha_-$ 离带边只有 $0.0053$ 一致：第一条能带在 $\alpha_-$ 下方，\eqref{eq:B-exact} 第三项中的谱乘子 $(t-\lambda)^{-1}$ 对这些 $t$ 是很大的负数，把 $\mathsf B_{\alpha_-}$ 的最小特征值往下拉。如果窗口下端更靠近带边，这一步会最先失败。
+\end{remark}
+
+\begin{remark}[两侧同时检验的代价]
+方法对截线两侧同时成立：$\mathsf B_\lambda$ 的核同时包含左侧和右侧的表面态。物理问题只需要 $a=0.12$ 的左侧和 $a=0.20$ 的右侧。三叶形没有 $x$ 方向的对称性，两侧不能互换，所以检验比需要的更强。本算例中更强的检验也通过了；如果某一侧有用不到的表面态，就需要改用只看一侧的方法，或者换一个截线位置。
+\end{remark}
+
+% ======================================================================
+\section{半导波 DtN 的单侧界}
+\label{sec:dtnbound}
+第~\ref{sec:count}~节要在 $\alpha_+$ 处数约化形式 $t_{\alpha_+}$ 的负特征值，而 $t_{\alpha_+}$ 含两个真 DtN 形式 $\Lambda_\pm(\alpha_+)$。真 DtN 形式算不出来，但可以从下方界住：$n(t_{\alpha_+})\le n(\text{下界})$。这一节构造一个有限 Hermitian 矩阵 $\hat\Lambda$，使对\emph{每一个}端口迹 $g$（不只是有限维空间里的迹），
+\[
+\Lambda_\pm(\alpha_+)(g,g)\ge\hat g^*\hat\Lambda\hat g,\qquad \hat g=(g_k)_{|k|\le M}.
+\]
+误差全部留在矩阵里，没有被丢掉的标量误差项。
+
+只写右侧 $\Omega_+$，用内向坐标 $s=x-\tfrac12\ge0$；左侧完全相同，但用它自己的材料和取向分别计算。省略下标 $+$ 和 $\lambda=\alpha_+$。
+
+\subsection{半导波上的形式逆}
+
+记 $V_0=H^1_{\beta,0}(\Omega)$（端口迹为零），能量内积 $e(u,v)=a_\Omega(u,v)+b_\Omega(u,v)$（质量带权 $\rho$），$s_\lambda=a_\Omega-\lambda b_\Omega$。在 $(V_0,e)$ 上定义有界算子 $\mathcal B_\lambda$：$e(\mathcal B_\lambda u,v)=s_\lambda(u,v)$。在 $A_+$ 的谱表示中，$\mathcal B_\lambda$ 是乘子 $(t-\lambda)/(t+1)$，它的逆是 $(t+1)/(t-\lambda)$。设 $A_+$ 在 $\lambda$ 上方的谱离 $\lambda$ 至少 $d_+$、下方的谱至少 $d_-$，逐点估计
+\[
+t>\lambda:\ \frac{t+1}{t-\lambda}=1+\frac{\lambda+1}{t-\lambda}\le1+\frac{\lambda+1}{d_+},\qquad
+0\le t<\lambda:\ \frac{t+1}{t-\lambda}=1-\frac{\lambda+1}{\lambda-t}\ge1-\frac{\lambda+1}{d_-},
+\]
+得
+\begin{equation}
+\label{eq:Kpm}
+-K_-I\preceq\mathcal B_\lambda^{-1}\preceq K_+I,\qquad K_+=1+\frac{\lambda+1}{d_+},\qquad K_-=\max\Bigl\{0,\frac{\lambda+1}{d_-}-1\Bigr\}.
+\end{equation}
+在 $\lambda=\alpha_+$：第~\ref{sec:surface}~节给出 $d_+=0.023725$，$K_+=279.899894626$；$[\alpha_-,2.375^2]$ 中没有谱，所以 $d_-\ge\alpha_+-\alpha_-=3.8745$，$K_-=0.70782$。
+
+\begin{remark}
+$K_+$ 很大，因为 $\alpha_+$ 离第二条能带只有 $0.0237$。这是下界中唯一的大常数。下面所有的构造都是为了让它乘上的残差足够小。
+\end{remark}
+
+\subsection{有限迹空间上的二次残差界}
+
+取迹 $g_1,\dots,g_m$，对每个 $g_i$ 取场 $u_i\in H^1_\beta(\Omega)$，迹为 $g_i$，以及通量 $p_i\in H(\operatorname{div},\Omega)$（具有 $\beta$-准周期，远处法向通量为零或在远处衰减）。端口上对 $p_i$ 没有任何要求，因为 $V_0$ 中的测试函数在端口上为零。定义残差
+\[
+r_{1,i}=\nabla u_i-p_i,\qquad r_{2,i}=\operatorname{div}p_i+\lambda\rho u_i ,
+\]
+和矩阵
+\begin{equation}
+\label{eq:QR}
+Q_{ij}=s_\lambda(u_j,u_i),\qquad R_{ij}=\int_\Omega r_{1,j}\cdot\overline{r_{1,i}}+\int_\Omega\frac{r_{2,j}\overline{r_{2,i}}}{\rho} .
+\end{equation}
+$R\succeq0$。若 $u_i$ 是真延拓 $E(\lambda)g_i$、$p_i=\nabla u_i$，则 $R=0$，$Q$ 就是 DtN 矩阵。
+
+\begin{theorem}[DtN 的双侧界]
+\label{thm:dtn-two-sided}
+对 $g_c=\sum_ic_ig_i$，
+\[
+c^*(Q-K_+R)c\le\Lambda(\lambda)(g_c,g_c)\le c^*(Q+K_-R)c .
+\]
+\end{theorem}
+
+\begin{proof}
+令 $u_c=\sum c_iu_i$，$w=E(\lambda)g_c$，$z=u_c-w\in V_0$。$w$ 与 $V_0$ 是 $s_\lambda$-正交的，所以
+\[
+s_\lambda(u_c,u_c)=s_\lambda(w,w)+s_\lambda(z,z),\qquad\text{即}\qquad \Lambda(g_c,g_c)=s_\lambda(u_c,u_c)-s_\lambda(z,z).
+\]
+对 $\varphi\in V_0$，$\ell(\varphi):=s_\lambda(u_c,\varphi)=s_\lambda(z,\varphi)$。设 $f$ 是 $\ell$ 在 $(V_0,e)$ 中的 Riesz 代表元，则 $\mathcal B_\lambda z=f$，$s_\lambda(z,z)=e(f,\mathcal B_\lambda^{-1}f)$，由 \eqref{eq:Kpm}，
+\[
+-K_-\|f\|_e^2\le s_\lambda(z,z)\le K_+\|f\|_e^2 .
+\]
+剩下的是估计 $\|f\|_e=\|\ell\|_{V_0^*}$。分部积分（$\varphi$ 在端口上为零，远处无通量）：
+\[
+\ell(\varphi)=\int(\nabla u_c-p_c)\cdot\overline{\nabla\varphi}+\int p_c\cdot\overline{\nabla\varphi}-\lambda\int\rho u_c\overline\varphi
+=\int r_{1,c}\cdot\overline{\nabla\varphi}-\int r_{2,c}\overline\varphi .
+\]
+由 Cauchy--Schwarz，$|\ell(\varphi)|\le\bigl(\|r_{1,c}\|^2+\|r_{2,c}/\sqrt\rho\|^2\bigr)^{1/2}\bigl(\|\nabla\varphi\|^2+\|\varphi\|_\rho^2\bigr)^{1/2}$，即 $\|f\|_e^2\le c^*Rc$。
+\end{proof}
+
+\begin{keypoint}
+误差是残差的\emph{平方}乘 $K_+$，不是两个大 DtN 能量之差。若残差范数是 $\varepsilon$，下界只损失 $K_+\varepsilon^2$。$K_+\approx280$ 时，要让损失不超过 $4\times10^{-4}$，残差范数只需约 $1.2\times10^{-3}$。
+\end{keypoint}
+
+关于场的支集：$u_i$、$p_i$ 不必有紧支集，只要 $u_i\in H^1(\Omega)$、$p_i\in H(\operatorname{div},\Omega)$。分部积分对紧支集的 $\varphi$ 成立，再由稠密性推广到 $V_0$；远处没有边界项，因为 $\varphi$ 和 $p_c$ 都只是平方可积，不需要任何点态衰减。
+
+\subsection{高频迹的提升}
+
+定理~\ref{thm:dtn-two-sided} 只管有限维迹空间。计数需要对\emph{所有}迹成立的下界。把 $g=g_L+h$ 分成低频 $g_L=\sum_{|k|\le M}g_k\ee^{\ii\beta_ky}$ 和高频 $h$。高频部分在领口中用显式函数提升；它的 DtN 能量是正的大量，可以吸收与低频的耦合。
+
+领口 $0<s<\tfrac14$ 中 $\rho=1$。取 $a+L=\tfrac14$（下面 $a=L=\tfrac18$），截断函数
+\[
+\chi(s)=\begin{cases}1,&0\le s\le a,\\ 1-3t^2+2t^3,\ t=(s-a)/L,&a<s<a+L,\\ 0,&s\ge a+L,\end{cases}\qquad |\chi'|\le\frac3{2L},\quad|\chi''|\le\frac6{L^2}.
+\]
+$\chi\in C^1$，分段 $C^2$。记 $\beta_*=\min_{|k|>M}|\beta_k|=2\pi(M+1)-0.5$，$\kappa_k=\sqrt{\beta_k^2-\lambda}$，$\kappa_*=\sqrt{\beta_*^2-\lambda}$（要求 $\beta_*^2>\lambda$）。定义提升与它的通量
+\[
+L_Hh=\sum_{|k|>M}h_k\,\chi(s)\ee^{-\kappa_ks}\ee^{\ii\beta_ky},\qquad p_H=\nabla L_Hh .
+\]
+它的方程残差只在 $J=(a,a+L)\times I$ 上非零：
+\[
+f_H:=(-\Delta-\lambda)L_Hh=\sum_{|k|>M}h_k\bigl(-\chi''+2\kappa_k\chi'\bigr)\ee^{-\kappa_ks}\ee^{\ii\beta_ky}.
+\]
+
+\begin{lemma}[高频提升]
+\label{lem:high-lift}
+$L_Hh$ 的迹为 $h$，并且
+\[
+s_\lambda(L_Hh,L_Hh)\ge a_H\|h\|_{1/2}^2,\qquad a_H=\sqrt{\frac{\beta_*^2-\lambda}{\beta_*^2+1}},
+\]
+\[
+\|f_H\|_0^2\le b_H^2\|h\|_{1/2}^2,\qquad b_H^2=\frac12\Bigl(\frac6{L^2\kappa_*}+\frac3L\Bigr)^2\ee^{-2a\kappa_*}.
+\]
+\end{lemma}
+
+\begin{proof}
+对 $l_k=\chi\ee^{-\kappa_ks}$，展开 $|l_k'|^2$ 并把交叉项 $-2\kappa_k\chi\chi'\ee^{-2\kappa_ks}=-\kappa_k(\chi^2)'\ee^{-2\kappa_ks}$ 分部积分（$\chi(0)=1$）：
+\[
+\int_0^\infty\bigl(|l_k'|^2+\kappa_k^2|l_k|^2\bigr)=\kappa_k+\int_0^\infty|\chi'|^2\ee^{-2\kappa_ks}\ge\kappa_k .
+\]
+在领口中 $\rho=1$，所以 $s_\lambda(L_Hh,L_Hh)=\sum_{|k|>M}|h_k|^2\int(|l_k'|^2+\kappa_k^2|l_k|^2)\ge\sum|h_k|^2\kappa_k$。而 $\kappa_k/\langle k\rangle=\sqrt{(\beta_k^2-\lambda)/(\beta_k^2+1)}$ 关于 $\beta_k^2$ 递增，最小值是 $a_H$。
+
+残差逐模计算：$(-\partial_s^2+\beta_k^2-\lambda)(\chi\ee^{-\kappa_ks})=(-\chi''+2\kappa_k\chi')\ee^{-\kappa_ks}$。在 $J$ 上 $|{-\chi''}+2\kappa_k\chi'|\le6/L^2+3\kappa_k/L$，$\int_a^{a+L}\ee^{-2\kappa_ks}\le\ee^{-2a\kappa_k}/(2\kappa_k)$。再用 $\langle k\rangle\ge\kappa_k$：
+\[
+\frac{\|(-\chi''+2\kappa_k\chi')\ee^{-\kappa_ks}\|^2}{\langle k\rangle}\le\frac12\Bigl(\frac6{L^2\kappa_k}+\frac3L\Bigr)^2\ee^{-2a\kappa_k},
+\]
+右边关于 $\kappa_k$ 递减。不同 $k$ 的模正交，求和即得。$\chi'$ 连续且在拼接点为零，所以 $\chi''$ 没有点质量，$\operatorname{div}p_H=-\lambda L_Hh-f_H\in L^2$。
+\end{proof}
+
+在 $\lambda=\alpha_+$、$a=L=\tfrac18$ 时：
+\begin{center}
+\small
+\begin{tabular}{rcc}
+\toprule
+$M$ & $b_H^2$ & $a_H$ \\
+\midrule
+8 & $3.96025\times10^{-4}$ & $0.9989466$ \\
+12 & $6.38711\times10^{-7}$ & $0.9994979$ \\
+16 & $1.09938\times10^{-9}$ & $0.9997073$ \\
+20 & $1.94910\times10^{-12}$ & $0.9998085$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+$M=16$ 时 $K_+b_H^2\approx3.1\times10^{-7}$，远小于 $a_H$。
+
+\subsection{对所有迹成立的下界矩阵}
+
+取低频迹 $g_i=\ee^{\ii\beta_iy}$（$|i|\le M$）的场 $u_i$、通量 $p_i$ 和 \eqref{eq:QR} 的 $Q$、$R$。在 $J$ 上定义组合场与它的 Gram 矩阵
+\[
+z_i=u_i+K_+r_{2,i},\qquad Z_{ij}=\int_Jz_j\overline{z_i}.
+\]
+
+\begin{theorem}[全迹下界]
+\label{thm:dtn-lower}
+设 $A_H:=a_H-K_+b_H^2>0$。令
+\begin{equation}
+\label{eq:Lambda-hat}
+\hat\Lambda=Q-K_+R-\frac{b_H^2}{A_H}Z .
+\end{equation}
+则对每个 $g\in\Tr$，$\Lambda(\lambda)(g,g)\ge\hat g^*\hat\Lambda\hat g$。
+\end{theorem}
+
+\begin{proof}
+写 $g=g_L+h$，$g_L=\sum c_ig_i$（即 $c=\hat g$），取 $u=u_c+L_Hh$、$p=p_c+p_H$。它们的迹是 $g$。定理~\ref{thm:dtn-two-sided} 的证明对这一个迹照样成立（那里没有用到有限维）。残差是 $r_1=r_{1,c}$，$r_2=r_{2,c}-f_H$，所以
+\[
+\Lambda(g,g)\ge s_\lambda(u,u)-K_+\Bigl[\|r_{1,c}\|^2+\|(r_{2,c}-f_H)/\sqrt\rho\|^2\Bigr].
+\]
+展开。交叉能量项由 Green 公式
+\[
+s_\lambda(u_c,L_Hh)=\int_Ju_c\overline{f_H},
+\]
+端口项为零：$u_c$ 的迹只含低频，$\partial_sL_Hh$ 在端口上只含高频，两者正交。$f_H$ 支集在 $J$ 上，那里 $\rho=1$。于是右端等于
+\[
+c^*(Q-K_+R)c+\bigl[s_\lambda(L_Hh,L_Hh)-K_+\|f_H\|^2\bigr]+2\operatorname{Re}\int_J(u_c+K_+r_{2,c})\overline{f_H}.
+\]
+记 $t=\|h\|_{1/2}$。由引理~\ref{lem:high-lift}，方括号 $\ge A_Ht^2$，最后一项 $\ge-2\sqrt{c^*Zc}\,b_Ht$。对 $t$ 配方：$A_Ht^2-2b_H\sqrt{c^*Zc}\,t\ge-(b_H^2/A_H)\,c^*Zc$。
+\end{proof}
+
+几点说明：
+\begin{itemize}
+\item 高频部分的正能量 $a_Ht^2$ 吸收了它和低频的耦合，所以下界中\emph{没有}关于 $\|h\|$ 的标量罚项。这一点对计数很重要：第~\ref{sec:count}~节的下界矩阵只需在有限维空间上计算。
+\item $Z$ 必须用组合场 $u_i+K_+r_{2,i}$ 计算，而不是分别估计两项：$K_+r_{2,i}$ 单独看可能不小，组合后有抵消。
+\item 有积分误差时按安全方向组装：$\hat\Lambda=Q_--K_+R_+-\dfrac{b_H^2}{a_H-K_+b_H^2}Z_+$，其中 $Q_-\preceq Q$、$R_+\succeq R$、$Z_+\succeq Z$。
+\item 上界 $Q+K_-R$ 不是计数所需，但它给出一个有用的检查：$Q+K_-R-\hat\Lambda=(K_++K_-)R+\frac{b_H^2}{A_H}Z$ 是真 DtN 形式所在区间的宽度。
+\end{itemize}
+
+\subsection{怎样构造低频场和通量}
+
+需要的是每个低频迹 $g_i$ 的一对 $(u_i,p_i)$，使残差 $R$ 足够小：目标是 $K_+r\lesssim4\times10^{-4}$，其中
+\[
+r=\|T_{\rm tr}^{-1/2}RT_{\rm tr}^{-1/2}\|,\qquad T_{\rm tr}=\operatorname{diag}(\langle k\rangle)_{|k|\le M}.
+\]
+（$T_{\rm tr}$ 缩放使 $r$ 与迹范数相容。）可行性：令 $w=E(\lambda)g_i$，$\chi_N$ 为光滑截断，则 $(\chi_Nw,\chi_N\nabla w)$ 的残差是 $w\nabla\chi_N$ 和 $\nabla\chi_N\cdot\nabla w$，随截断长度增大趋于零；再用协调有限元逼近这一对。所以任意小的残差都可以在有限步内达到。但这只证明可行，不给出需要多少个胞元：$\alpha_+$ 离带边只有 $0.0237$，真延拓可能衰减很慢。
+
+两种构造：
+\begin{enumerate}
+\item \emph{紧支集有限元.} 在有限个引线胞元上取 $u_i=\ell_i+w_i$（$\ell_i$ 是迹为 $g_i$ 的显式领口提升，$w_i$ 在端口和远端为零），$p_i$ 取 Raviart--Thomas 元、远端法向通量为零，最小化 \eqref{eq:QR} 中的残差。
+\item \emph{衰减 Floquet 模.} 周期引线在 $\lambda$ 处有衰减的 Floquet 解 $\ee^{\ii\theta s}\phi(s,y)$（$|\ee^{\ii\theta}|<1$，$\phi$ 周期）。在胞元上用平面波表示 $\phi$，它们在整个半带上解析，不需要在胞元墙上拼接；体积分和通量积分是单胞积分乘几何级数 $1/(1-\zeta_a\overline{\zeta_b})$。用有限个这样的模拟合端口迹。
+\end{enumerate}
+
+\subsection{实际采用的构造}
+
+实际计算没有用长的紧支集区域，也没有用平面波 Floquet 模，而是把两者结合起来：只在\emph{一个}引线胞上做有限元，再用离散传递矩阵把场接到整个半导波上。
+
+\paragraph{单胞场与传递矩阵.} 在一个引线胞 $[0,1]\times I$ 上取 $P_4$ 协调有限元（曲边单元贴合真夹杂边界），记近墙 $s=0$ 和远墙 $s=1$ 的节点迹为 $w_0$、$w_1$。在 $\lambda=\alpha_+$ 消去内部自由度，再取离散胞系统的衰减子空间（有序复 QZ 分解），得到传递矩阵 $P$：近墙迹为 $w$ 的离散调和场，远墙迹是 $Pw$。记 $U$ 为“近墙迹 $\mapsto$ 单胞场”的线性映射，它在近墙上取 $w$、远墙上取 $Pw$、内部取离散调和延拓。第 $n$ 个胞（$n=0,1,\dots$）上的场取为 $UP^nw$。相邻两个胞在公共墙上的节点值都是 $P^{n+1}w$，网格在墙上一致，所以拼起来的场在 $H^1_{\rm loc}$ 中。
+
+$P$ 只用来\emph{选}试探场。它是不是真半导波解的好近似，不影响下界的正确性：正确性只依赖下面在真几何上计算的残差矩阵 $R$。
+
+\paragraph{通量.} 每个胞上取 $RT_3$ 通量，内部自由度由最小化 \eqref{eq:QR} 的残差选出。墙上的法向矩用同一个线性关系定义：首胞远墙的法向矩映射 $N_0$ 与重复胞近墙映射 $N_b$ 满足 $N_0=N_bG$，重复胞远墙映射 $F_b=N_bP$。法向通量在墙上是三次多项式，四个矩相同就意味着法向通量相同，所以 $p\in H_{\rm loc}(\operatorname{div})$。$RT_3$ 参考基用整数系数写出，法向关系可以精确核对。
+
+\paragraph{无穷个胞的求和.} 体积分和残差积分都是单胞 Gram 矩阵 $H$ 沿 $P$ 的幂求和。
+
+\begin{lemma}[几何级数的尾项]
+\label{lem:transfer-tail}
+设 $\|P^L\|=\eta<1$，$H$ Hermitian，$S_L=\sum_{j=0}^{L-1}(P^j)^*HP^j$。则 $S_\infty=\sum_{j\ge0}(P^j)^*HP^j$ 收敛，且
+\[
+\|S_\infty-S_L\|\le\frac{\eta^2}{1-\eta^2}\|S_L\| .
+\]
+\end{lemma}
+
+\begin{proof}
+按长度 $L$ 分组：第 $m$ 组是 $(P^{mL})^*S_LP^{mL}$，范数至多 $\eta^{2m}\|S_L\|$，所以级数绝对收敛。又 $S_\infty-S_L=(P^L)^*S_\infty P^L$，取范数得 $\|S_\infty-S_L\|\le\eta^2(\|S_L\|+\|S_\infty-S_L\|)$，移项即可。
+\end{proof}
+
+用倍增计算 $S_L$ 和 $P^L$，取 $L=128$：左侧 $\|P^{128}\|\le6.0\times10^{-24}$，右侧 $\le6.5\times10^{-16}$。同一个引理用于 $H=I$，给出单胞积分误差沿无穷个胞累加时的放大因子（左 2.02，右 2.75）。由引理，$u$、$\nabla u$、$p$、$\operatorname{div}p$ 在整个半导波上平方可积，所以 $u\in H^1$、$p\in H(\operatorname{div})$，定理~\ref{thm:dtn-two-sided} 后面关于非紧支集场的说明适用。
+
+\paragraph{端口迹.} 低频迹分两类处理。
+\begin{itemize}
+\item $|k|\le5$（11 个）：有限元场 $u_{h,k}$ 的端口迹 $g_{h,k}$ 是分段多项式，不等于 $g_k$。加修正
+\[
+u_k=u_{h,k}+\chi_b(s)\,\ee^{-\tau s}\bigl(g_k-g_{h,k}\bigr),\qquad \chi_b(s)=1-3(s/b)^2+2(s/b)^3\ (0\le s\le b),\quad b=\tfrac18,
+\]
+$\chi_b=0$（$s>b$），$\tau=12N$，$N$ 是网格参数。因为 $\chi_b(0)=1$，端口迹\emph{逐点}等于 $g_k$；$\chi_b(b)=\chi_b'(b)=0$ 使修正属于 $H^1$。修正在 $\rho=1$ 的领口里。
+\item $6\le|k|\le16$（22 个）：直接用均匀介质的衰减场 $u_k=\ee^{-\kappa_ks}\ee^{\ii\beta_ky}$，$p_k=\nabla u_k$。这时 $r_{1,k}=0$，$r_{2,k}=\lambda(\rho-1)u_k$ 只在夹杂中非零，大小约 $\ee^{-\kappa_k\operatorname{dist}}$。
+\end{itemize}
+$Z$ 用组合场 $u+K_+r_2$ 在\emph{整个}半导波上的 Gram 矩阵代替 $J$ 上的 Gram 矩阵。前者 $\succeq$ 后者，代入 \eqref{eq:Lambda-hat} 只会让下界更低，仍然成立。
+
+\paragraph{积分包围.} 直边重复胞上的被积函数是多项式（各变量次数 $\le9$），16 点 Gauss 规则精确。曲边单元和首胞修正带上用 Bernstein 椭圆（参数 2）上的解析上界：若被积函数在椭圆上模不超过 $\mathcal M$，张量 Gauss 规则（每个方向 $q$ 点）的误差不超过 $32\mathcal M2^{-2q}$。曲边映射的复延拓、Jacobian 的上下界和材料标签的一致性逐单元核对。首胞之外高频列的能量、残差和组合场范数用显式指数界，低高交叉项用 Cauchy--Schwarz。所有余项按安全方向加入：$Q_-=Q-\varepsilon_QI$，$R_+=R+\varepsilon_RI$，$Z_+=Z+\varepsilon_ZI$，再按定理~\ref{thm:dtn-lower} 后面的说明组装 $\hat\Lambda$。没有剩下的浮点积分；只排除舍入。
+
+\subsection{结果}
+
+$M=16$（33 个迹），网格参数 $N=48$，$\tau=12N$。$r$ 和上下界之差都按 $T_{\rm tr}^{-1/2}$ 双侧缩放；最小特征值是未缩放矩阵的。
+
+\begin{center}
+\small
+\begin{tabular}{lccccc}
+\toprule
+侧 & $r$ & $K_+r$ & 上下界之差 & $\lambda_{\min}(Q)$ & $\lambda_{\min}(\hat\Lambda)$ \\
+\midrule
+左 & $3.8954\times10^{-8}$ & $1.0903\times10^{-5}$ & $1.0931\times10^{-5}$ & $0.411018879$ & $0.411018856$ \\
+右 & $3.8954\times10^{-8}$ & $1.0903\times10^{-5}$ & $1.0931\times10^{-5}$ & $0.337890502$ & $0.337890454$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+高频罚项 $\frac{b_H^2}{A_H}\|T_{\rm tr}^{-1/2}ZT_{\rm tr}^{-1/2}\|$ 约 $10^{-9}$（左 $7.3\times10^{-10}$，右 $1.1\times10^{-9}$）。积分余项 $\varepsilon_Q,\varepsilon_R\sim3\times10^{-14}$，$\varepsilon_Z\sim2\times10^{-12}$。罚项 $K_+r$ 比计划预算 $4\times10^{-4}$ 小约 37 倍。上下界之差几乎全部来自 $(K_++K_-)r$。
+
+两侧的 $r$ 相同到 7 位，这不是巧合：最大的残差方向在 $k=5$，来自端口迹的插值修正，位于 $\rho=1$ 的领口里，与材料无关。低频模的残差两侧确实不同。
+
+\paragraph{检查.}
+\begin{enumerate}
+\item 高频提升常数与上面的表一致（相对差 $\le1.6\times10^{-6}$）。
+\item 端口迹与 $g_k$ 的差 $\le9\times10^{-16}$。
+\item 换一套试探空间（$N=24$ 和 $N=48$；$\tau=8N$ 和 $12N$），两套的上下界互相包含：$\hat\Lambda_1\preceq Q_2+K_-R_2$、$\hat\Lambda_2\preceq Q_1+K_-R_1$，差的最小特征值约 $10^{-13}>0$。这个余量很小，因为两套空间在 $6\le|k|\le16$ 上用的是同一组精确场，那部分的余量只来自积分余项；所以这一项检查对高频部分不是独立的。
+\item 与第~\ref{sec:discrete-dtn}~节的浮点有限元 DtN 比较：全矩阵相对差 $9.1\times10^{-3}$，$|k|\le5$ 块 $6.5\times10^{-5}$，符合有限元离散的精度，说明几何、取向和归一化一致。
+\item 加密：$N=24$ 时 $r=8.63\times10^{-6}$，$K_+r=2.4\times10^{-3}$；$N=48$ 时下降到上表的值。从 $N=24$ 到 $N=48$，下界的变化是 $N=24$ 上下界之差的 0.99 倍，符合“两个区间都含真值”。
+\item Hermitian 误差 $\le1.3\times10^{-15}$；$R$ 的最小特征值 $\ge-4.5\times10^{-22}$（舍入量级，安全矩阵 $R_+$ 的对角余量 $2\times10^{-14}$ 覆盖它）。
+\end{enumerate}
+
+每侧 $N=48$ 一次运行约 700 秒，峰值内存 2.02~GiB；$N=24$ 约 250 秒。两侧的 $\hat\Lambda_\pm$ 是第~\ref{sec:count}~节的输入。
+
+% ======================================================================
+\section{芯区的最终计数}
+\label{sec:count}
+最后一步：在 $\lambda=\alpha_+$ 处，构造约化形式 $t_{\alpha_+}$ 的一个有限下界矩阵 $\bm L$，并检查 $n(\bm L)\le1$。由推论~\ref{cor:H-criterion}，这就完成 (H) 的证明。
+
+\subsection{思路}
+
+$t_\lambda$ 定义在无穷维的 $\mathcal H=H^1_\beta(D)$ 上。取有限维子空间 $V_h\subset\mathcal H$，写 $u=v+w$，$v\in V_h$，$w$ 在某个能量内积下与 $V_h$ 正交。$t_\lambda$ 在 $v$ 上的部分是有限矩阵；$w$ 带来三种耦合：
+\begin{enumerate}
+\item 端口迹：$\tau_\pm u=\tau_\pm v+\tau_\pm w$，DtN 下界把它们耦合在一起；
+\item 质量：$-\lambda b_D(u,u)$ 中的交叉项 $-2\lambda\operatorname{Re}b_D(v,w)$；
+\item $w$ 自身的质量 $-\lambda b_D(w,w)$，它是负的。
+\end{enumerate}
+第 1 项用“端口代表元”精确消掉，第 3 项用投影常数控制，第 2 项配方。这与第~\ref{sec:band}~节的思路相同：保留有限空间，补空间配方。
+
+\subsection{能量内积、端口代表元与投影常数}
+
+在芯区上取\emph{不加权}的能量内积 $e(u,v)=a_D(u,v)+\sigma(u,v)_{L^2(D)}$，$\sigma=1$。于是
+\[
+a_D(u,u)-\lambda b_D(u,u)=e(u,u)-\int_Dq|u|^2,\qquad q=\lambda\rho+\sigma,\quad q_{\max}=4\lambda+\sigma
+\]
+（芯区中 $\rho\le4$）。在 $\lambda=\alpha_+$，$q_{\max}=23.4676$。
+
+\paragraph{余弦--Fourier 基.} 在 $D$ 上，
+\[
+\psi_{m,k}(x,y)=c_m\cos\bigl(m\pi(x+\tfrac12)\bigr)\ee^{\ii\beta_ky},\qquad m\ge0,\ k\in\mathbb Z,\qquad c_0=1,\ c_m=\sqrt2\ (m>0),
+\]
+是 $L^2(D)$ 的标准正交基，并且对每个 $u\in\mathcal H$，
+\begin{equation}
+\label{eq:cos-parseval}
+\|u\|_0^2=\sum|u_{m,k}|^2,\qquad \|u\|_e^2=\sum a_{m,k}|u_{m,k}|^2,\qquad a_{m,k}=(m\pi)^2+\beta_k^2+\sigma .
+\end{equation}
+第二式的 $x$ 方向部分是：$H^1(0,1)$ 函数的导数按正弦级数展开，系数恰为余弦系数乘 $m\pi$（分部积分时余弦的导数在端点为零，不需要 $u$ 满足任何边界条件）。
+
+\begin{lemma}[投影常数]
+\label{lem:proj-const}
+若 $V_h\supset W:=\operatorname{span}\{\psi_{m,k}:0\le m\le N_x,\ |k|\le N_y\}$，则对每个 $w\perp_eV_h$，$\|w\|_0\le C_h\|w\|_e$，
+\[
+C_h=a_*^{-1/2},\qquad a_*=\sigma+\min\bigl\{((N_x+1)\pi)^2+0.25,\ (2\pi(N_y+1)-0.5)^2\bigr\}.
+\]
+\end{lemma}
+
+\begin{proof}
+$w\perp_e\psi_{m,k}$ 等价于 $a_{m,k}w_{m,k}=0$，所以 $w$ 的保留系数全为零。$\|w\|_0^2=\sum_{\notin}|w_{m,k}|^2\le a_*^{-1}\sum_{\notin}a_{m,k}|w_{m,k}|^2$。
+\end{proof}
+
+\paragraph{端口代表元.} 令 $\kappa_k=\sqrt{\beta_k^2+\sigma}$，
+\[
+\varrho_{+,k}=\frac{\cosh(\kappa_k(x+\frac12))}{\kappa_k\sinh\kappa_k}\ee^{\ii\beta_ky},\qquad
+\varrho_{-,k}=\frac{\cosh(\kappa_k(\frac12-x))}{\kappa_k\sinh\kappa_k}\ee^{\ii\beta_ky}.
+\]
+它们满足 $(-\Delta+\sigma)\varrho_{\pm,k}=0$，在自己的端口上法向导数为 $\ee^{\ii\beta_ky}$，在另一端口上为零。分部积分（上下边由准周期性抵消）得
+\begin{equation}
+\label{eq:port-rep}
+e(w,\varrho_{\pm,k})=\int_I w(\pm\tfrac12,y)\ee^{-\ii\beta_ky}\dd y=(\tau_\pm w)_k .
+\end{equation}
+所以若 $V_h$ 含 $\varrho_{\pm,k}$（$|k|\le M$），则每个 $w\perp_eV_h$ 的端口迹的低频系数\emph{精确为零}。
+
+\begin{remark}
+不加端口代表元也可以，但代价很大。只用余弦基时，$\varrho_{\pm,k}$ 的逼近误差是 $\|\varrho-P_W\varrho\|_e^2=2\sum_{m>N_x}((m\pi)^2+\beta_k^2+\sigma)^{-1}\approx2/(\pi^2N_x)$，衰减太慢，端口耦合会变成主要误差。加两族显式函数就把它完全消掉了。
+\end{remark}
+
+\subsection{配方下界}
+
+取 $V_h=W+\operatorname{span}\{\varrho_{\pm,k}:|k|\le M\}$（去掉线性相关），基 $\{\varphi_i\}$。定义矩阵
+\[
+\bm H_{ij}=e(\varphi_j,\varphi_i),\qquad \bm M^q_{ij}=\int_Dq\varphi_j\overline{\varphi_i},\qquad
+\bm T_{\rm low}=\bm H-\bm M^q+\sum_\pm\bm B_\pm^*\hat\Lambda_\pm\bm B_\pm ,
+\]
+其中 $\bm B_\pm$ 把系数向量映到端口迹的低频 Fourier 系数 $(\tau_\pm v)_k$，$|k|\le M$；$\hat\Lambda_\pm$ 是第~\ref{sec:dtnbound}~节的下界矩阵。设
+\[
+c_W:=1-q_{\max}C_h^2>0 .
+\]
+对每个基函数，令 $z_i\in\mathcal H$ 为质量泛函的 Riesz 代表元：$e(z_i,w)=\int_Dq\varphi_i\overline w$；记 $\bm G_{ij}=e((I-P_h)z_j,(I-P_h)z_i)$。
+
+\begin{theorem}[芯区下界]
+\label{thm:core-lower}
+若有限 Hermitian 矩阵 $\overline{\bm G}\succeq\bm G$，则
+\[
+n(t_{\alpha_+})\le n\Bigl(\bm T_{\rm low}-\frac{\overline{\bm G}}{c_W}\Bigr).
+\]
+特别地，取 $\overline{\bm G}=q_{\max}C_h^2\bm M^q$，得
+\begin{equation}
+\label{eq:L-scalar}
+n(t_{\alpha_+})\le n(\bm L),\qquad \bm L=\bm H-\frac{\bm M^q}{1-q_{\max}C_h^2}+\sum_\pm\bm B_\pm^*\hat\Lambda_\pm\bm B_\pm .
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+写 $u=v+w$，$v=P_hu=\sum c_i\varphi_i$，$w\perp_eV_h$。
+\begin{itemize}
+\item 能量：$e(u,u)=e(v,v)+e(w,w)$。
+\item 端口：由 \eqref{eq:port-rep}，$\tau_\pm u$ 与 $\tau_\pm v$ 的低频系数相同。定理~\ref{thm:dtn-lower} 对\emph{每个}迹成立，所以 $\Lambda_\pm(\tau_\pm u,\tau_\pm u)\ge(\bm B_\pm c)^*\hat\Lambda_\pm(\bm B_\pm c)$——$w$ 的高频迹不产生任何项。
+\item 质量：$\int q|u|^2=c^*\bm M^qc+2\operatorname{Re}\int qv\overline w+\int q|w|^2$，而 $\int q|w|^2\le q_{\max}C_h^2\|w\|_e^2$（引理~\ref{lem:proj-const}）。
+\end{itemize}
+合起来，
+\[
+t_{\alpha_+}(u,u)\ge c^*\bm T_{\rm low}c+c_W\|w\|_e^2-2\operatorname{Re}\int_Dqv\overline w .
+\]
+最后一项：$\int qv\overline w=e(z_v,w)=e((I-P_h)z_v,w)$，$z_v=\sum c_iz_i$，且 $\|(I-P_h)z_v\|_e^2=c^*\bm Gc$。配方：
+\[
+t_{\alpha_+}(u,u)\ge c^*\Bigl(\bm T_{\rm low}-\frac{\overline{\bm G}}{c_W}\Bigr)c+c_W\Bigl\|w-\frac{(I-P_h)z_v}{c_W}\Bigr\|_e^2 .
+\]
+若 $X$ 是 $t_{\alpha_+}$ 的负子空间，$u\in X$、$P_hu=0$ 则右端 $\ge c_W\|u\|_e^2$，所以 $u=0$：$P_h$ 在 $X$ 上单射，且有限矩阵在 $P_hX$ 上负定。这给出第一个不等式。
+
+标量版本：由加权 Cauchy--Schwarz，$|\int qv\overline w|^2\le(c^*\bm M^qc)\,q_{\max}C_h^2\|w\|_e^2$，即 $\bm G\preceq q_{\max}C_h^2\bm M^q$；代入并化简 $1+\frac{q_{\max}C_h^2}{1-q_{\max}C_h^2}=\frac1{1-q_{\max}C_h^2}$。
+\end{proof}
+
+\eqref{eq:L-scalar} 的含义很直观：补空间的影响等价于把芯区质量放大 $1/(1-q_{\max}C_h^2)$ 倍，没有自由参数，也没有端口罚项。
+
+\paragraph{更精细的质量耦合.} 若标量版本不够，可以用 $\rho$ 的真实空间分布。取有限个余弦--Fourier 模 $\psi_\ell$，使遗漏模都有 $a_\ell\ge a_*$，令 $\bm F_{\ell i}=\int q\varphi_i\overline{\psi_\ell}$、$\bm M^{q^2}_{ij}=\int q^2\varphi_j\overline{\varphi_i}$。$z_i$ 的余弦系数是 $\bm F_{\ell i}/a_\ell$，所以
+\[
+\overline{\bm G}=\bm F^*\operatorname{diag}(a_\ell^{-1})\bm F+\frac1{a_*}\bigl(\bm M^{q^2}-\bm F^*\bm F\bigr)-\bm M^q\bm H^{-1}\bm M^q\ \succeq\ \bm G ,
+\]
+最后一项是 $P_hz_i$ 的能量 Gram。
+
+\subsection{参数与规模}
+
+在 $\lambda=\alpha_+$：
+\begin{center}
+\small
+\begin{tabular}{ccccc}
+\toprule
+$(N_x,N_y)$ & 余弦--Fourier 基维数 & $C_h$ & $q_{\max}C_h^2$ & 质量放大 $-1$ \\
+\midrule
+$(15,8)$ & 272 & $0.0198895$ & $0.00928$ & $0.00937$ \\
+$(31,16)$ & 1056 & $0.00994657$ & $0.00232$ & $0.00233$ \\
+$(47,24)$ & 2352 & $0.00663127$ & $0.00103$ & $0.00103$ \\
+$(63,32)$ & 4160 & $0.00497352$ & $0.00058$ & $0.00058$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+例如 $(47,24)$、$M=16$：基维数 2352，加上至多 $2\times33=66$ 个端口代表元，下界矩阵阶数至多 2418。质量放大约 $0.1\%$。
+
+\begin{remark}
+这个检验用的空间与第~\ref{sec:trial}~节求候选场的有限元空间无关。计数只需要 $t_{\alpha_+}$ 在\emph{某个}空间上的下界，选一个积分全部显式、投影常数显式的谱空间最方便。代价是曲边夹杂上的质量矩阵 $\bm M^q$ 要对余弦--Fourier 函数在星形区域上积分，这可以用第~\ref{sec:band}~节同样的散度定理和梯形公式完成。
+\end{remark}
+
+\paragraph{为什么预期能通过.} 在 $\alpha_+$ 处，窗口里只有目标特征值 $\lambda_*\approx2.43$，所以 $n(t_{\alpha_+})=1$ 是预期的真值。下界矩阵 $\bm L$ 的第二个特征值必须保持正；它与真值的差由三部分组成：质量放大（约 $0.1\%$ 乘质量）、DtN 下界的损失 $K_+r$ 与 $(b_H^2/A_H)\|Z\|$、以及谱空间本身的逼近误差。三者都可以通过加密逐步减小，但 $t_{\alpha_+}$ 的第二个特征值有多大要算了才知道。
+
+\subsection{结果}
+
+\paragraph{空间.} 取 $(N_x,N_y)=(31,16)$、$M=16$：1056 个余弦--Fourier 模，加上两个端口各 33 个、共 66 个端口代表元 $\varrho_{\pm,k}$（$|k|\le16$），维数 1122。端口代表元与余弦基近乎线性相关（逼近误差约 $2/(\pi^2N_x)$），直接用会使 $\bm H$ 病态，所以先做基变换：
+\begin{enumerate}
+\item 每个 $\varrho_{\pm,k}$ 减去它在余弦--Fourier 模上的 $e$-投影。投影只涉及同一个 $k$ 的模，系数由 \eqref{eq:port-rep} 精确给出：$e(\psi_{m,k},\varrho_{\pm,k})=(\tau_\pm\psi_{m,k})_k$。
+\item 对每个 $k$，两个剩余部分的 $2\times2$ Gram 矩阵有闭式表达（由 $e(\varrho_{\pm,k},\varrho_{\pm,k})$、$e(\varrho_{+,k},\varrho_{-,k})$ 减去投影部分），最小特征值在全部 $k$ 上为 $0.00496>0$，所以 1122 个函数线性无关。
+\item 对这些 $2\times2$ 块做 Cholesky 分解，得到 $e$-正交基。在新基下 $\bm H=I$，端口迹矩阵 $\bm B_\pm$ 也有闭式。
+\end{enumerate}
+由引理~\ref{lem:proj-const}，
+\[
+a_*=1+(32\pi)^2+0.25=10107.7249,\qquad C_h=0.00994657,\]\[c_W=1-q_{\max}C_h^2=0.99767825,\qquad\delta_h=0.00232715 .
+\]
+（$a_*$ 中 $y$ 方向的候选 $(34\pi-0.5)^2\approx11302$ 更大。）
+
+\paragraph{质量矩阵与积分包围.} 在 $\alpha_+$ 处，芯区中 $\rho=1+3\cdot\mathbf 1_{\mathcal O_*}$（$\mathcal O_*$ 是星形夹杂），所以
+\[
+q=\lambda\rho+\sigma=(\lambda+1)+3\lambda\,\mathbf 1_{\mathcal O_*},\qquad\bm M^q=(\lambda+1)\bm M_1+3\lambda\bm M^{*},
+\]
+其中 $\bm M_1$ 是整个芯区上的 $L^2$ Gram 矩阵，有闭式；$\bm M^*$ 是星形区域上的 Gram 矩阵。余弦与 $\cosh$ 都是指数函数之和，所以 $\bm M^*$ 的每个元素都是若干个 $\int_{\mathcal O_*}\ee^{\xi\cdot x}\dd x$（$\xi\in\mathbb C^2$）之和。与第~\ref{sec:band}~节相同，用散度定理把它化为边界曲线上的解析周期积分（取分母 $\xi_x$、$\xi_y$ 中非零且较大的一个），再用引理~\ref{lem:trapezoid}：带宽 $s=0.1$，$J=512$ 个梯形点，共 89199 个矩。原始基下逐元误差 $e_{ij}$ 的行和最大为 $2.35\times10^{-13}$。基变换矩阵 $\bm P$ 满足 $\|\bm P\|_2^2\le\|\bm P\|_1\|\bm P\|_\infty$，所以
+\[
+\|\bm P^*(\bm M^*-\tilde{\bm M}^*)\bm P\|\le\|\bm P\|_1\|\bm P\|_\infty\max_i\sum_je_{ij}\le1.22\times10^{-10},
+\]
+从而 $\bm L\succeq\tilde{\bm L}-\varepsilon I$，$\varepsilon=3\lambda\cdot1.22\times10^{-10}/c_W=2.06\times10^{-9}$。这里 $\tilde{\bm L}$ 是用计算出的 $\tilde{\bm M}^*$ 组装的矩阵。积分点加倍时矩的变化为 $9.8\times10^{-15}$，与余项界一致。
+
+\paragraph{计数.} 矩阵束 $(\bm T_{\rm low}-\bm M^q,\bm M^q)$ 的前四个特征值为
+\[
+\mu_1=-0.807334,\qquad\mu_2=0.499135,\qquad\mu_3=2.323252,\qquad\mu_4=3.254319 .
+\]
+$\mu_2$ 比 $\delta_h=0.00233$ 大两个数量级，所以标量版本 \eqref{eq:L-scalar} 已经足够，不需要更紧的 $\overline{\bm G}$。$\tilde{\bm L}$ 的前两个特征值为 $-6.41713590$ 与 $0.36537369$。判断惯性时不依赖特征值求解器：对 $\tilde{\bm L}-\varepsilon I$ 作 $LDL^*$ 分解，由 Sylvester 惯性定律，负特征值个数等于块对角因子 $D$ 的负特征值个数，结果为 1；再对 $\tilde{\bm L}-\gamma I$（$\gamma=0.3653736907$）作同样的分解，负特征值个数仍为 1。由 $\bm L\succeq\tilde{\bm L}-\varepsilon I$ 与 min-max，
+\[
+n(\bm L)\le1,\qquad\lambda_2(\bm L)\ge\gamma-\varepsilon\ge0.365373688>0\qquad(\text{舍入排除}).
+\]
+
+\paragraph{对照.} 较小的空间 $(N_x,N_y)=(15,8)$（维数 338）也给出 $n=1$，第二特征值 $0.360264$，$\mu_2$ 只变化 $8.3\times10^{-5}$，说明结果对截断不敏感。浮点 $P_3$ 有限元--DtN 离散在 $\alpha_+$ 处的负特征值个数也是 1。另外，同一个星形区域上的质量用体积分与边界积分两种方式计算，三项的绝对差不超过 $4.6\times10^{-17}$，落在上面的余项界之内。
+
+\paragraph{成本.} 三次运行（主空间、小空间、独立检查）每次 13--18 秒，峰值内存不超过 0.92~GiB。
+
+\subsection{(H) 的完整证明链}
+
+\begin{theorem}[(H) 的有限证书]
+\label{thm:H-final}
+设
+\begin{enumerate}
+\item 两侧全周期介质满足 \eqref{eq:band-result}（第~\ref{sec:band}~节）；
+\item 两种材料在 $\alpha_-$ 处 $\mathsf B_{\alpha_-}\succ0$（第~\ref{sec:surface}~节），从而 (P) 成立，$K_+=279.9$；
+\item 一阶区间 $I_1\subset(\alpha_-,\alpha_+)$（命题~\ref{prop:first-order}）；
+\item 两个半导波在 $\alpha_+$ 处的全迹下界矩阵 $\hat\Lambda_\pm$（定理~\ref{thm:dtn-lower}，要求 $A_H>0$）；
+\item 芯区空间含余弦--Fourier 基与端口代表元，$c_W>0$，且 $n(\bm L)\le1$。
+\end{enumerate}
+则 $\sigma(A)\cap[\alpha_-,\alpha_+)=\{\lambda_*\}$，$\lambda_*\in I_1$ 是单重特征值，(H) 成立。
+\end{theorem}
+
+\begin{proof}
+由 1、2 得 (P)；由 4、5 和定理~\ref{thm:core-lower}，$n(t_{\alpha_+})\le n(\bm L)\le1$；再由 3 和推论~\ref{cor:H-criterion}。
+\end{proof}
+
+五条都已完成（舍入误差排除），所以 (H) 成立。
+
+% ======================================================================
+\section{数值结果与计算成本}
+\label{sec:results}
+\subsection{结果总表}
+
+算例：$\beta=0.5$，窗口 $[\alpha_-,\alpha_+]=[1.32^2,2.37^2]$，$\gamma=1$。
+
+\begin{center}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{5.8cm}>{\raggedright\arraybackslash}p{3.4cm}}
+\toprule
+量 & 值 & 前提 \\
+\midrule
+FEM--DtN 候选 & $\lambda_h=2.42872867\ldots$，$k_h=1.5584378944019$ & 无（只是候选） \\
+一阶区间 $I_1$（命题~\ref{prop:first-order}） & $[2.4286785151,\ 2.4287788271]$，宽 $1.003\times10^{-4}$ & 舍入排除 \\
+Lehmann--Goerisch 区间，浮点积分 & 宽 $4.454\times10^{-9}$ & (H)；积分误差未计 \\
+Lehmann--Goerisch 区间，可靠积分 \eqref{eq:main-interval} & $[2.4287286691978,\ 2.4287286736601]$，宽 $4.462\times10^{-9}$ & 舍入排除（(H) 已证，定理~\ref{thm:H-final}） \\
+BIE 参考值 & $2.428728670022710$，误差估计 $1.55\times10^{-9}$ & 无保证 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+BIE 参考值落在可靠区间内，离下端约 $8.2\times10^{-10}$、离上端约 $3.6\times10^{-9}$。试探场的 Rayleigh 商 $\theta=q-\gamma=2.4287286707$ 比 BIE 参考值大 $7.0\times10^{-10}$；按 \eqref{eq:width-asym}，宽度应约为 $C_W(\theta-\lambda_*)=4.26\times10^{-9}$，实际为 $4.46\times10^{-9}$，多出部分来自通量误差。
+
+\subsection{计算成本}
+
+全部在同一台工作站上、11 个线程。
+
+\begin{center}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{6.4cm}rr}
+\toprule
+计算 & 时间 & 峰值内存 \\
+\midrule
+FEM--DtN 求根 + $RT_3$ 通量 + Goerisch 区间（浮点积分，含检查） & 119 秒 & 2.04~GiB \\
+同上，全部积分换成可靠界（第~\ref{sec:fourcorner}~节） & 718 秒 & 2.02~GiB \\
+BIE 参考值与误差估计 & 670 秒 & — \\
+\midrule
+(A) 带隙：472 个 169 阶特征值问题 & 很小 & — \\
+(B) 表面态：4 次端点运行 & 每次约 450 秒 & $\le1.72$~GiB \\
+(C) 端点 DtN 下界：每侧一次 $N=48$ 运行 & 约 700 秒 & 2.02~GiB \\
+(D) 芯区计数：1122 维，每次运行 & 13--18 秒 & $\le0.92$~GiB \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+浮点 FEM 流程中，$P_3$ 模板组装与求根约 32 秒，$RT_3$ 通量约 7 秒，其余主要是积分和检查。可靠积分版本的大头是界面单元上的残差界（约 460 秒），见第~\ref{sec:interface}~节。
+
+\subsection{怎样看这些数字}
+
+\begin{itemize}
+\item 区间本身：FEM--DtN 加 Lehmann--Goerisch 用与 BIE 相当的时间（12 分钟对 11 分钟）给出一个截断误差意义下可靠的区间。BIE 给出的是更小的误差估计（$1.55\times10^{-9}$），但没有数学保证。
+\item 区间宽度 $4.46\times10^{-9}$ 由试探场的质量决定：$W\approx C_W(\theta-\lambda_*)$。要更窄的区间，需要更好的 $v$（加密网格或提高阶数），而不是更好的积分。
+\item (H) 只依赖几何、材料、$\beta$ 和窗口，不依赖试探场。同一配置下改进 $v$、$p$ 时，(H) 的证明不必重做；换一个 $\beta$ 则要重做 (A)--(D)。
+\item 不想证明 (H) 时，$I_1$ 仍然是一个可靠的结论（舍入排除），只是宽 $10^{-4}$。
+\end{itemize}
+
+% ======================================================================
+\section{局限与后续}
+\label{sec:limits}
+\subsection{舍入误差}
+
+本讲义中“可靠”的意思是：所有\emph{截断}误差——无限区域的截断、Fourier 尾项、Bloch 相位的覆盖、积分公式的余项、曲边几何——都有显式的数学界，并按安全方向计入。但有限维的线性代数（矩阵特征值、线性方程组、内积求和）以及多项式模型的系数运算都用双精度浮点数完成，舍入误差没有计入。
+
+要把这些结论变成完整意义上的可靠上界，需要：
+\begin{itemize}
+\item 第~\ref{sec:fourcorner}~节：$E$、$M$、$S$ 的逐单元界用区间算术计算，最后的四角检查也用区间算术；
+\item 第~\ref{sec:band}、\ref{sec:surface}~节：每个面板和端点的符号检验，用验证过的特征值包围（例如由近似特征分解与残差范数给出的 Weyl 型界）；
+\item 第~\ref{sec:dtnbound}、\ref{sec:count}~节：有限矩阵 $\hat\Lambda_\pm$、$\bm L$ 的组装和惯性。
+\end{itemize}
+从目前的余量看，这些检验离临界值都很远（例如四角检查的余量是 $O(1)$，带隙面板的最小余量是 $1.4\times10^{-4}$），预计不会改变结论，但这只是预期，不是证明。
+
+\subsection{尚未完成的部分}
+
+\begin{itemize}
+\item (A)--(D) 都已完成（舍入排除），(H) 成立。验证 (H) 的总成本主要在 (B)、(C)：(D) 只需十几秒。
+\item 只做了 $\beta=0.5$ 一个 Bloch 相位。
+\item 表面态检验同时覆盖截线两侧，比需要的更强；若某一侧有与物理问题无关的表面态，需要改为只看一侧。
+\end{itemize}
+
+\subsection{用到的标准事实}
+
+讲义中以下事实作为已知使用，没有给出证明：自伴算子的谱定理与 min-max 原理；有界形式的表示定理；Floquet--Bloch 分解 $\sigma(A^{\rm per})=\bigcup_\theta\sigma(A_\theta)$；拼接不改变本质谱；Fredholm 择一；Sobolev 迹定理与一维 Rellich 定理；Chebyshev 插值在 Bernstein 椭圆上的系数估计；Raviart--Thomas 元的协调性。
+
+\end{document}
