@@ -510,3 +510,4 @@ Codex（sol 线程）的记录见 `test/numerical-directions/gap-ends-v1/README.
 6. 路线决定（2026-11-03，用户）：BIE 只作参考解；初期目标是截断误差意义下可靠的估计区间（全宽约 $5\times10^{-9}$），舍入误差后期用区间运算处理；两条路线计时在同一台机器上运行。理由见 [[bie-route-status]]、[[fem-search-provenance]]、[[bie-fem-io-facts]] 和幻灯片 `pre/bie-fem-route/`。已记入 eig-apost 的 DECISIONS、STATUS，问题记为 open-problems 的 OP-ND-1 至 OP-ND-3。
 7. 已完成（2026-11-03）：谱隙端点与 (H) 的浮点检查，见上文"第 5a 阶段"。
 8. 下一步候选：给 $q$、$J$ 的求积、曲边映射和归一化加上截断误差意义下可靠的一侧界，送审稿线程。
+   - 进展（2026-11-03）：问题写成 [[qj-bounds-problem]]，由 ChatGPT Pro 给出证明 [[qj-bounds-proof]]，复核见 [[qj-bounds-proof-check]]。数学部分未发现错误；核心是四角证书（定理 6.1），由 $E,M$ 区间和 $S_+$ 直接给出区间。代码的质量修正符号正确。通量法向连续在精确算术下有约 $10^{-13}$ 的偏差，需要精确对偶基或修补。数值区间还要靠实现算出，下一步是规划实现实验。
