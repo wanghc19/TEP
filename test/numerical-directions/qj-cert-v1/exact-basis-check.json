@@ -1,0 +1,8 @@
+{
+  "dimension": 24,
+  "integer_coefficients": true,
+  "maximum_coefficient": 69552,
+  "trace_polynomial_checks": 72,
+  "duality_entries_checked": 432,
+  "pass": true
+}
