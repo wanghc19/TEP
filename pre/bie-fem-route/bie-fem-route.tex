@@ -86,10 +86,10 @@
     & BIE（I9.1 搜索 + I9.2 评价） & 直接 FEM + Goerisch \\
     \midrule
     输出 & 谱距离估计：$\mu_0\pm R$ & 含特征值的区间（需 (H)） \\
-    全宽（$\mu$） & $1.55\times10^{-9}$ & $4.70\times10^{-9}$ \\
+    全宽（$\mu$） & $1.55\times10^{-9}$ & $4.45\times10^{-9}$ \\
     截断误差可靠（初期目标） & \no & \no（求积、几何映射、(H)） \\
     舍入误差可靠（后期） & \no & \no \\
-    从谱隙窗口起的时间 & 669.9\,s & 119.4\,s \\
+    从谱隙窗口起的时间 & 669.9\,s & 125.2\,s \\
     \bottomrule
   \end{tabular}
   \raggedright
@@ -196,8 +196,8 @@
       RT3 通量，通量域左右各 13 胞元；积分阶 16（核查 24） \\
     \addlinespace
     \textbf{额外谱输入} & 无 &
-      \alert{谱隙端点} $\alpha_-=1.3174^2$（17 点扫描，未认证）、
-      $\alpha_+=2.1875^2$（假设值）；\alert{(H)}。与谱隙窗口的区别见下页 \\
+      \alert{谱隙端点} $\alpha_-=1.32^2$（取在扫描带边以内）、
+      $\alpha_+=2.37^2$（右端补搜无导模后取）；\alert{(H)}。都未认证；与谱隙窗口的区别见下页 \\
     \bottomrule
   \end{tabular}
   \raggedright\vspace{0.3em}
@@ -226,19 +226,19 @@
     \fill[accent!30] ({1.451-1.25},1.8) rectangle ({2.249-1.25},2.4);
     \node[anchor=west] at (0.322,2.1) {谱隙窗口 $[1.451,\,2.249]$：共同搜索范围};
     % Goerisch endpoints
-    \fill[accent] ({1.3174-1.25},3.0) rectangle ({2.1875-1.25},3.6);
+    \fill[accent] ({1.32-1.25},3.0) rectangle ({2.37-1.25},3.6);
     \node[white,anchor=west] at (0.322,3.3) {谱隙端点 $(\sqrt{\alpha_-},\sqrt{\alpha_+})$：只有 FEM 用};
-    \fill[pattern=north east lines,pattern color=muted] ({2.1875-1.25},3.0) rectangle ({2.249-1.25},3.6);
-    \node[anchor=south] at ({2.22-1.25},3.6) {右端未决趋势};
+    \fill[pattern=north east lines,pattern color=ink] ({2.1875-1.25},4.2) rectangle ({2.38-1.25},4.8);
+    \node[anchor=south] at ({2.284-1.25},4.8) {右端补搜：无导模};
   \end{tikzpicture}
   \raggedright\vspace{0.3em}
   \begin{itemize}\small
     \item \textbf{谱隙窗口}：$k$ 单位的\alert{搜索范围}。上游在 33 个探索点上把两侧引线都分类为“间隙”，
       两端是探索范围的端点，不是带边。两种方法都从这里开始。
     \item \textbf{谱隙端点}：$\mu=k^2$ 单位，是 Goerisch 公式里 (H) 的\alert{隔离区间}：区间内只能有目标一个谱值。
-      $\alpha_-=1.3174^2$ 取自带边扫描；$\alpha_+=2.1875^2$ 是假设值，取小以避开 $[2.1875,2.249]$：搜索指标朝窗口右端下降，未定位。BIE 不用它。
+      取 $\alpha_-=1.32^2$、$\alpha_+=2.37^2$，都在采样带边以内。BIE 不用它。
+    \item \textbf{右端补搜}：$[2.1875,2.38]$ 内没有导模，原来的“右端未决趋势”不是导模（浮点检查）。
   \end{itemize}
-  \aside{注：$1.3174$ 略小于扫描所得右引线带边 $1.317414$，应向内取（如 $1.32$）；估计宽度增加不到 1\%。}
 \end{frame}
 
 % ------------------------------------------------------------------
@@ -276,7 +276,7 @@
     核函数、FMM & \no & 不涉及 & \yes \\
     几何（常数 / 映射） & \no & \no & \yes \\
     质量下界 / 归一化 & \no & \no & \yes \\
-    谱假设 (H)、$\alpha_\pm$ & 不需要 & \no（未验证） & 不需要 \\
+    谱假设 (H)、$\alpha_\pm$ & 不需要 & \no（浮点检查通过） & 不需要 \\
     舍入（后期） & \no & \no & \yes（Arb 区间运算） \\
     \bottomrule
   \end{tabular}
@@ -339,7 +339,7 @@
       场在二次几何网格上，材料按真实曲线修正；映射与反定位为浮点，未包住 \\
     归一化 & $\|v\|_\rho=1$（$q,J$ 都依赖它） & 数值积分；没有一侧界 \\
     谱假设 & $\alpha_\pm$ 进入端点；(H) 保证区间含 $\lambda$ &
-      $\alpha_-$ 取自 17 点扫描（略低于带边），$\alpha_+$ 为假设值；\alert{未验证} \\
+      $\alpha_\pm=1.32^2,\,2.37^2$；浮点检查通过，\alert{未认证} \\
     舍入 & 全部量 & 普通浮点 \\
     \bottomrule
   \end{tabular}
@@ -355,7 +355,7 @@
     & 全宽（$\mu$） & 性质 \\
     \midrule
     BIE（I9.2） & $1.55\times10^{-9}$ & 谱距离估计 \\
-    FEM P3/RT3 Goerisch & $4.70\times10^{-9}$ & 区间，需 (H) 与谱隙端点 \\
+    FEM P3/RT3 Goerisch & $4.45\times10^{-9}$ & 区间，需 (H) 与谱隙端点 \\
     \bottomrule
   \end{tabular}
   \vspace{0.8em}
@@ -366,7 +366,7 @@
       现有估计 $2.05\times10^{-12}$，余量约 \alert{3 倍}。
   \end{itemize}
   \key{BIE 做成可靠后最好的情形是与 FEM 持平，不会更好。}
-  \src{test/i9/estimate-v1, test/numerical-directions/fem-pipeline-v1}
+  \src{test/i9/estimate-v1, test/numerical-directions/fem-pipeline-v1, gap-ends-v1}
 \end{frame}
 
 % ------------------------------------------------------------------
@@ -384,7 +384,8 @@
     \fill[muted!80] (34.8,-1.12) rectangle (63.6,-0.68);
     \fill[muted!35] (63.6,-1.12) rectangle (100.8,-0.68);
     \fill[muted!55] (100.8,-1.12) rectangle (119.4,-0.68);
-    \node[anchor=west,font=\small] at (126,-0.9) {\textbf{119.4\,s}\ \ 区间（含核查）};
+    \fill[accent] (119.4,-1.12) rectangle (125.2,-0.68);
+    \node[anchor=west,font=\small] at (132,-0.9) {\textbf{125.2\,s}\ \ 区间（含核查）};
     \begin{scope}[shift={(0,-1.75)},font=\scriptsize]
       \fill[accent] (0,-0.08) rectangle (14,0.08); \node[anchor=west] at (18,0) {搜索与求根};
       \fill[muted!80] (150,-0.08) rectangle (164,0.08); \node[anchor=west] at (168,0) {评价 / Goerisch 区间};
@@ -396,7 +397,7 @@
   \raggedright
   \begin{itemize}\small
     \item 搜索与求根：BIE \alert{553.9\,s}（粗扫 39.9 + 细扫 508.2 + 确认 5.7），
-      FEM \alert{34.8\,s}（P2 宽窗搜索 2.5 + P3 DtN 求根与场 32.3）。FEM 是单个进程从窗口跑到区间。
+      FEM \alert{40.6\,s}（P2 宽窗搜索 2.5 + P3 DtN 求根与场 32.3 + 右端补搜 5.8）。补搜定出 $\alpha_+$，是另一个进程（同机、同线程）；其余是单个进程从窗口跑到区间。
     \item \textbf{"11 线程"}：两边都设 MATLAB \texttt{maxNumCompThreads(11)} 与 \texttt{OMP\_NUM\_THREADS=11}。
       两边都\alert{没有显式并行}（无 \texttt{parfor}），只用库内多线程：BIE 为稠密线性代数与 FMM，FEM 为稀疏求解与 QZ。
     \item 同一台电脑、同一 MATLAB R2023b。峰值内存：FEM 2.04\,GiB，BIE 1.42\,GB。
@@ -411,7 +412,7 @@
       即都要认证谱隙端点。这一块换成 BIE 也省不掉。
     \item \textbf{处理 (H) 有更便宜的办法}：
       \begin{itemize}
-        \item DtN 惯性计数定理：把 (H) 归结为两个端点矩阵的负特征值个数（已证明并审查）；
+        \item DtN 惯性计数定理：把 (H) 归结为两个端点矩阵的负特征值个数（已证明并审查）；浮点检查得差为 1，与预测一致；
         \item 不行时，把 (H) 列为明确前提，交付"在所列条件下成立"的区间；
         \item 不用 (H) 的一阶区间仍有 $1.00\times10^{-4}$。
       \end{itemize}
@@ -448,7 +449,7 @@
 \begin{frame}{这次比较的限制}
   \begin{itemize}
     \item \textbf{两边都不是可靠结果}：比较的是"到达同一量级数值结果"的成本，以及到可靠的剩余工作。
-    \item \textbf{FEM 多用了输入}：谱隙端点（下端未认证、上端为假设值）与 (H)。
+    \item \textbf{FEM 多用了输入}：谱隙端点与 (H)；已做浮点检查，未认证。
     \item \textbf{单一算例、单次计时}：一个模型、一个特征值。
     \item \textbf{BIE 计时来自三个独立进程}：搜索复用了谱隙阶段的缓存，669.9\,s 只会偏低。
     \item \textbf{内存}：FEM 峰值更高（2.04\,GiB 对 1.42\,GB）。
@@ -460,14 +461,13 @@
 % ------------------------------------------------------------------
 \begin{frame}{下一步}
   \begin{enumerate}
-    \item 两项低成本数值检查（只是数值证据）：
+    \item 已完成（浮点检查，不是认证）：
       \begin{itemize}
-        \item 端点矩阵负特征值个数之差，预测为 1；
-        \item 表面态扫描，预测窗口内没有接近奇异的点。
+        \item 右端 $[2.1875,2.38]$ 补搜无导模；谱隙端点改为 $1.32^2$、$2.37^2$，区间宽 $4.45\times10^{-9}$，仍含 BIE 参考值；
+        \item 端点矩阵负特征值个数之差为 1，与预测一致；表面态扫描未见 DtN 极点。
       \end{itemize}
-    \item 谱隙端点的认证：下端向内取到带边以上；上端还要先查清 $[2.1875,2.249]$ 的右端未决趋势。
-    \item FEM 区间在截断意义下可靠：给出 $q,J$ 的求积与几何映射误差的可靠界；舍入后期再用区间运算处理。
-    \item 计数定理中输入（端点 DtN 误差、投影常数）的可计算界；排除表面态仍是未解决问题。
+    \item FEM 区间在截断意义下可靠：给出 $q,J$ 的求积、几何映射与归一化误差的可靠界；舍入后期再用区间运算处理。
+    \item 谱隙端点与 (H) 的认证：带边、计数定理中的端点 DtN 误差与投影常数；排除表面态仍是未解决问题。
   \end{enumerate}
   \vspace{0.4em}
   \key{目标：约 $5\times10^{-9}$、截断误差意义下可靠的估计区间（舍入后期处理）；路线为直接 FEM + DtN + Goerisch。}
