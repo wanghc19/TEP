@@ -1,0 +1,76 @@
+{
+  "task_mode": "Proof from scratch",
+  "target": "README.md: Poisson and integration details, B3 monotonicity paragraph",
+  "result": "Proved under the supplied periodic-gap certificate, excluding rounding",
+  "literature_status": "Proof literature verification completed.",
+  "verified_references": [
+    "h-cert-proof.md (2.16)-(2.18): periodic gap input",
+    "h-cert-proof.md (3.1): weighted full-periodic inverse",
+    "h-cert-proof.md (3.19)-(3.21): stationary action and residual identity",
+    "h-cert-proof.md (3.9): positive derivative",
+    "h-cert-proof.md (3.24): decoupled Dirichlet resolvent",
+    "h-cert-proof.md (2.11)-(2.12): analytic-curve trapezoid remainder"
+  ],
+  "new_deductions": [
+    "Poisson H-minus-one residual bound",
+    "Second Poisson resolvent identity and squared-inverse Gram",
+    "Positive Gauss rule plus Chebyshev truncation error for polynomial response trials",
+    "Propagation of analytic-curve moment errors",
+    "Zero negative inertia extends pole freedom to the known upper periodic-gap endpoint"
+  ],
+  "conditions": [
+    {
+      "material": 0.12,
+      "lambda": 1.7424,
+      "phase_strip": 0.03681553890925539,
+      "inverse_D_bound": 4.021804355573289,
+      "A_lower": 2831,
+      "A_upper": 154807304.2080492,
+      "A_times_curve_error_upper": 2.876238846968315e-91,
+      "D_tail_lower": 27723.968762660006,
+      "analytic_strip_valid": true,
+      "propagation_valid": true
+    },
+    {
+      "material": 0.12,
+      "lambda": 5.6169,
+      "phase_strip": 0.03681553890925539,
+      "inverse_D_bound": 4.021804355573289,
+      "A_lower": 2831,
+      "A_upper": 155349958.78579724,
+      "A_times_curve_error_upper": 2.88632108556157e-91,
+      "D_tail_lower": 27723.968762660006,
+      "analytic_strip_valid": true,
+      "propagation_valid": true
+    },
+    {
+      "material": 0.2,
+      "lambda": 1.7424,
+      "phase_strip": 0.03681553890925539,
+      "inverse_D_bound": 4.021804355573289,
+      "A_lower": 2831,
+      "A_upper": 154812142.97719797,
+      "A_times_curve_error_upper": 1.152390562067476e-89,
+      "D_tail_lower": 27723.968762660006,
+      "analytic_strip_valid": true,
+      "propagation_valid": true
+    },
+    {
+      "material": 0.2,
+      "lambda": 5.6169,
+      "phase_strip": 0.03681553890925539,
+      "inverse_D_bound": 4.021804355573289,
+      "A_lower": 2831,
+      "A_upper": 155368857.07037854,
+      "A_times_curve_error_upper": 1.1565346301903862e-89,
+      "D_tail_lower": 27723.968762660006,
+      "analytic_strip_valid": true,
+      "propagation_valid": true
+    }
+  ],
+  "remaining_scope": [
+    "rounding",
+    "gates C and D",
+    "final core count"
+  ]
+}

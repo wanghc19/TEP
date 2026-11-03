@@ -1,0 +1,15 @@
+{
+  "main": [
+    "test/numerical-directions/h-cert-v1/output/run-009/science/result.json",
+    "test/numerical-directions/h-cert-v1/output/run-010/science/result.json",
+    "test/numerical-directions/h-cert-v1/output/run-007/science/result.json",
+    "test/numerical-directions/h-cert-v1/output/run-011/science/result.json"
+  ],
+  "trial": [
+    "test/numerical-directions/h-cert-v1/output/run-002/science/result.json",
+    "test/numerical-directions/h-cert-v1/output/run-012/science/result.json",
+    "test/numerical-directions/h-cert-v1/output/run-003/science/result.json",
+    "test/numerical-directions/h-cert-v1/output/run-013/science/result.json"
+  ],
+  "tail": "test/numerical-directions/h-cert-v1/tail-constants.json"
+}
