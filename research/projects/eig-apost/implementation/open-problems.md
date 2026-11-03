@@ -117,6 +117,20 @@ validation 与 reliable enclosure/gap/upper-bound research；其后的参数、m
 | OP-CI3-2 | `BLOCKER` | I5.1h 已把 continuous residual numerator 的 analytic-ideal 层收紧到 $9.3745260644300025\,10^{-6}$，但 $\Delta_{\mathrm{sf}}$、$\Delta_{\mathrm{fp}}$ 仍未闭合；full-$p=6$ material-value tail 还缺 order-six regular-image Ewald row-ball/tail certificate。I4.2 另需 field-norm lower bound、continuous projected-gap containment 和预注册 absolute/gap-relative resolution。 | 条件性 two-band numerator 可用于方法诊断，但仍不能称为 certified residual dual-norm upper bound，更不能推出可靠区间、gap 内存在性或分辨率级 eigenvalue upper bound。 | 先闭合有限特殊函数/浮点评价误差；若继续收紧 analytic ideal tail，则补齐 order-six regular-image Ewald derivative and ratio-tail certificate。之后才与同一 trial 的 field lower bound 和 projected-gap contract 组合。 | `OPEN` |
 | OP-CI4-1 | `IMPORTANT CAVEAT` | 单一参数/单一 mode 可能不足以说明可推广性。独立 truth/reference effectivity 已迁移至未来 I4.1；本行仅保留第二参数、第二 mode、MATLAB parity 和跨模型稳健性。 | 限制推广范围，但不阻止第一 candidate 的 empirical-cap/effectivity 或 I4.2 上界可行性 verdict。 | 第一案例和 I3 跑通后，按论文 claim 选择最小扩展；不得提前形成正式 project-I4 blocker。 | `SCHEDULED` |
 
+## Numerical-directions: FEM + DtN + Goerisch interval
+
+2026-11-03 起的区间路线（见 [[research/projects/eig-apost/DECISIONS|DECISIONS]] 2026-11-03 条，
+工作记录在 [[research/explorations/numerical-directions/README|numerical-directions]]）。当前区间
+宽 $4.70\times10^{-9}$（`test/numerical-directions/fem-pipeline-v1/`），使用 $\alpha_-=1.3174^2$、
+$\alpha_+=2.1875^2$ 和隔离假设 (H)。2026-11-03 起改用 $\alpha_-=1.32^2$、$\alpha_+=2.37^2$，宽 $4.454\times10^{-9}$（`test/numerical-directions/gap-ends-v1/`）。
+
+| ID | Category | Open problem | Blocking scope | Cheapest next check | Status |
+|---|---|---|---|---|---|
+| OP-ND-1 | `IMPORTANT CAVEAT` | 谱隙下端 $\alpha_-=1.3174^2$ 低于右引线 17 点扫描的下带边 $k=1.317414080243$（stage1-findings 第 136–143 行），当前区间所用的 $(\alpha_-,\alpha_+)$ 触到数值带。 | 不改变候选；宽度只增 0.77%。 | 已处理（`test/numerical-directions/gap-ends-v1/`）：改用 $\alpha_-=1.32^2$，向内留 $\Delta k=0.0026$；带边本身仍是采样值，认证归 OP-ND-3。 | `RESOLVED` |
+| OP-ND-2 | `IMPORTANT CAVEAT` | 谱隙上端 $\alpha_+=2.1875^2$ 是假设值：I9.1 在 $k\in[2.1875,2.249]$ 得到 `BOUNDARY_UNRESOLVED`，$[2.249,2.38]$ 从未搜索。 | 若该段有其他导模，(H) 在更宽区间上不成立。 | 已处理（gap-ends-v1）：P2 搜索 9 个移位在 $[2.1875,2.38]$ 无 Ritz 值（有限区域谱在 1.5585 与 2.4100 之间为空），P3 DtN 负指标在 $[1.32,2.38]$ 只在 1.55–1.56 跳一次；取 $\alpha_+=2.37^2$，距采样上带边 $\Delta k=0.0108$，区间宽 $4.454\times10^{-9}$。都是浮点证据，认证归 OP-ND-3。 | `RESOLVED` |
+| OP-ND-3 | `BLOCKER` | (H) 及其计数前提 (P)（截线 Dirichlet 半导波无谱、排除表面态）、两端带边、端点 DtN 误差、投影常数 $C_h$（$L_h$ 补空间界）、$q$/$J$ 的求积、曲边映射与归一化，都还没有可靠的一侧界。 | 阻止把区间称为截断误差意义下可靠；不阻止后续数值工作。 | 浮点检查已做（gap-ends-v1）：P2、P3 端点负指标差都为 1；表面态扫描 171 点、步长 $\Delta k\le0.01$，$\sigma_{\min}(Z_0)\ge0.739$，未见极点，但可能漏掉窄于步长的极点。下一步：给 $q$、$J$ 的截断误差加一侧界并送审。 | `OPEN` |
+| OP-ND-4 | `MINOR CAVEAT` | gap-ends-v1 的端点零点距离按未缩放的 $\|T_h\|_1$ 给出（相对值约 $2\times10^{-6}$），量纲上受 $h^2$ 质量尺度影响，不能直接当作惯性计数的稳健余量。 | 不影响当前计数结论；影响以后用区间运算认证惯性时的余量估计。 | 认证惯性时改用相对 $M^\rho$ 的广义特征值距离（如 $T_h v=\sigma M^\rho v$ 的最小 $|\sigma|$）。 | `SCHEDULED` |
+
 ## Historical implementation stages
 
 以下 I0--I4 标题、问题 ID 和实验语义均沿用旧路线编号，供归档材料稳定引用；它们不覆盖

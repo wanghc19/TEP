@@ -1,5 +1,12 @@
 # Eigenvalue a posteriori decision record
 
+## 2026-11-03 — BIE is a reference only; the first target is a truncation-reliable FEM + DtN + Goerisch interval
+
+- **Route.** The BIE route is kept only as an independent numerical reference. The interval route is the direct high-order FEM + DtN field with a Lehmann–Goerisch ($N=1$) enclosure, studied in [[research/explorations/numerical-directions/README|numerical-directions]]. Reasons and evidence: [[research/explorations/numerical-directions/bie-route-status|bie-route-status]], [[research/explorations/numerical-directions/fem-search-provenance|fem-search-provenance]], [[research/explorations/numerical-directions/bie-fem-io-facts|bie-fem-io-facts]] and the slides `pre/bie-fem-route/`.
+- **First target.** An estimate interval of full width about $5\times10^{-9}$ that is reliable with respect to truncation errors (discretization, quadrature, geometry mapping, normalization, DtN truncation). Rounding errors are handled later by interval arithmetic and are not covered by this first target.
+- **Cost comparison.** BIE and FEM timings are compared from the same gap window, in one process each, on the same machine (11 threads); see `test/numerical-directions/fem-pipeline-v1/`.
+- **Current limits.** The present FEM interval ($4.70\times10^{-9}$) is an ordinary floating-point evaluation under the isolation assumption (H) with assumed gap endpoints $\alpha_\pm$; it is not yet reliable in either sense. Open items: OP-ND-1 to OP-ND-3 in [[research/projects/eig-apost/implementation/open-problems|open-problems]].
+
 ## 2026-10-28 — Compare three solve discretizations in I10.2
 
 - Use background/interface resolutions 12/80, 24/160 and 48/320; enrich the center and both leads through P2/P3/P4 separately on each mesh. Keep the physical model, true-material assembly, evaluation budgets and saturation factor fixed.
