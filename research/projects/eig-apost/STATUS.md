@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-- **2026-11-04 FEM 线暂停，转回 BIE。** 用户与导师商定；见 [[research/projects/fem-goerisch/DECISIONS|fem-goerisch DECISIONS]]。BIE 第 1 步同场评价先导 [[research/explorations/numerical-directions/bie-eval-pilot|bie-eval-pilot]]（sol，经理核查）：I9.2 的 $10^{-9}$ 级估计不是评价误差造成的，四种评价全宽 $1.23$–$1.55\times10^{-9}$；仍是浮点估计。
+- **2026-11-04 FEM 线暂停，转回 BIE。** 用户与导师商定；见 [[research/projects/fem-goerisch/DECISIONS|fem-goerisch DECISIONS]]。BIE 第 1 步同场评价先导 [[research/explorations/numerical-directions/bie-eval-pilot|bie-eval-pilot]]（sol，经理核查）：I9.2 的 $10^{-9}$ 级估计不是评价误差造成的，四种评价全宽 $1.23$–$1.55\times10^{-9}$；仍是浮点估计。查新 [[research/explorations/numerical-directions/bie-novelty|bie-novelty]]：完整组合未见先例，包含原理与严格小残差计算都有先例，卖点在本模型上的可靠连续残差与常数。
 
 - **2026-11-04 新项目 fem-goerisch。** FEM + DtN + Goerisch 区间方法独立成 [[research/projects/fem-goerisch/README|fem-goerisch]]，参数化与稳健性工作在那里进行；代码放在 `test/fem-goerisch/`。
 
