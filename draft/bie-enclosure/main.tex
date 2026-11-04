@@ -1,0 +1,85 @@
+% !TeX program = xelatex
+% Chinese paper draft for the BIE spectral-distance bound (sections 1--5 and
+% appendix A). Section 6 (numerical results) is a placeholder. Copied on
+% 2026-11-04 from draft/tmp/bie-theory-rewrite/ and revised for two
+% different leads, the augmented-MFS field, and the new trace constants.
+\documentclass[UTF8,11pt,fleqn,fontset=none]{ctexart}
+
+\setCJKmainfont{Songti SC}
+\setCJKsansfont{PingFang SC}
+\setCJKmonofont{PingFang SC}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{stmaryrd}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,decorations.pathreplacing,patterns}
+\usepackage{hyperref}
+
+\renewcommand{\Im}{\mathrm{Im}}
+\renewcommand{\Re}{\mathrm{Re}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\jump}[1]{\llbracket #1\rrbracket}
+\newcommand{\QP}{\mathrm{QP}}
+\newcommand{\rin}{\rho_{\min}}
+\newcommand{\rax}{\rho_{\max}}
+% Marks text revised after the ChatGPT Pro report
+% (research/projects/bie-enclosure/theory/reliable-bound.md). The report's
+% results passed review (reliable-bound-review.md); the draft wording has not
+% been reviewed yet.
+\newcommand{\pending}[1]{\textcolor{blue}{\textbf{[新改]}~#1。}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{lemma}[theorem]{引理}
+\theoremstyle{definition}
+\newtheorem{assumption}[theorem]{假设}
+\newtheorem{definition}[theorem]{定义}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{注}
+
+\numberwithin{equation}{section}
+
+\title{周期线缺陷波导特征值的边界积分计算与谱距离估计\\
+  \large（理论部分重写稿）}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\input{s-introduction}
+
+\input{s-modelproblem}
+
+\input{s-reduction}
+
+\input{s-discretization}
+
+\input{s-error}
+
+\input{s-results}
+
+\input{a-cellrep}
+
+\clearpage
+\bibliographystyle{unsrt}
+\bibliography{../../ref/reference}
+
+\end{document}

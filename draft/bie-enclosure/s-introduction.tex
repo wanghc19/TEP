@@ -1,0 +1,108 @@
+\section{引言}
+\label{sec:introduction}
+
+在二维光子晶体中引入一条线缺陷，会破坏垂直于缺陷方向的周期性，但保留沿缺陷方向的
+周期性。当频率落在背景晶体的谱隙中时，这样的缺陷可能支持沿缺陷传播、而在横向指数
+局域的电磁波，即\emph{导模}\cite{JoannopoulosJohnsonWinnMeade2008}。固定沿缺陷方向的
+Bloch 波数 $\beta$ 后，导模对应于一个无界条带上自伴算子 $A(\beta)$ 位于本质谱隙中的
+特征值\cite{Fliss2013}。这既不是完整周期介质的能带计算，也不是均匀开放波导的截面
+特征值问题：特征值是由缺陷诱导、嵌在无界周期背景中的离散谱。
+
+\paragraph{计算上的两个困难.}
+第一个困难是横向无界。超胞方法把条带截断为有限宽度并施加周期条件，其模型误差随导模
+局域程度变差而迅速增大\cite{Fliss2013,KlindworthSchmidtFliss2014}。Joly、Li 与 Fliss
+用单胞问题构造半无限周期波导的精确边界条件\cite{JolyLiFliss2006}；Fliss 据此把导模
+问题等价地约化到缺陷附近的有界区域，代价是得到一个关于频率非线性的特征值问题
+\cite{Fliss2013}。这一框架已有高阶有限元实现、Robin-to-Robin 变体和色散曲线追踪
+\cite{KlindworthSchmidtFliss2014,FlissKlindworthSchmidt2015,Klindworth2015}；基于单胞
+DtN 映射的约化也被用于光子晶体波导和缺陷模的计算
+\cite{HuangLuLi2007,LiLu2007,YuanLu2007}。
+
+第二个困难是可靠性。对分片常数介质，边界积分方法只需离散材料界面，并可借助准周期
+Green 函数自动满足纵向准周期条件，因而能以很少的未知量达到高阶精度
+\cite{Linton1998,BarnettGreengard2010,Kress1991,HaoBarnettMartinssonYoung2014}。但在
+非线性特征值问题中，离散矩阵近乎奇异只说明某个有限维方程近似可解
+\cite{GuettelTisseur2017}；它并不直接给出连续算子特征值的误差，更不能证明连续谱点的
+存在。有限元框架中已有针对光子晶体特征值的后验估计
+\cite{Giani2013,EngstromGianiGrubisic2016}；Barnett、Hassell 与 Tacy 则表明，对有界
+光滑区域上的 Neumann 问题，试验函数的边界不相容量可以直接控制到最近谱点的距离
+\cite{BarnettHassellTacy2018}。本文的问题横向无界、含尖锐材料界面，且离散场在半波导中
+由传播关系逐胞元生成，这些结果都不能直接套用。
+
+\paragraph{本文的工作.}
+本文研究两侧为周期介质（左右可以不同）、中心为局部缺陷的二维条带波导。介质采用分片
+常数系数，每个周期胞元恰含一个单连通介质柱，中心胞元可以含一个形状不同的介质柱，也可以为空。主要
+内容如下。
+\begin{enumerate}
+  \item \emph{以 Cauchy 数据为主线的中心约化}（第~\ref{sec:reduction}~节）。把半波导
+    的全部有限能量解在人工界面上的 Cauchy 数据收集为一个子空间，证明导模等价于中心胞元
+    中 Cauchy 数据落在两个子空间中的非零解。这一表述不要求半波导 Dirichlet 问题唯一
+    可解，DtN 形式只是其子空间为图像时的特例。
+  \item \emph{边界积分与端口 Rayleigh 展开的离散}（第~\ref{sec:discretization}~节）。
+    周期胞元用准周期层势和传输边界积分方程离散，并在端口用 Rayleigh 振幅表示，得到
+    单胞散射矩阵；有序 QZ 分解给出衰减子空间与胞元传播矩阵。中心胞元的场由层势与均匀
+    背景 Rayleigh 波表示，最终得到一个以 Cauchy 数据匹配形式写出的离散非线性特征值
+    问题，用于定位候选 $\widehat k$。
+  \item \emph{谱距离定理}（第~\ref{sec:error}~节）。用候选系数和连续核在整个条带上构造
+    一个分片场，它逐片精确满足 Helmholtz 方程，只在材料界面和人工竖直界面上留有跳跃。
+    利用正移位预解式的全界面迹估计和 Green 恒等式，证明
+    $\operatorname{dist}(\widehat k^2,\sigma(A(\beta)))$ 受这些跳跃的加权 $L^2$ 范数
+    控制。这一结论关于整个谱成立，不需要预先验证本质谱隙。
+  \item \emph{可计算的界}（第~\ref{sec:error}~节）。说明如何计算材料界面与人工界面上的
+    跳跃积分，如何用传播矩阵的收缩性控制无穷多个周期胞元的贡献，以及如何把各输入
+    替换为单侧可靠界。
+\end{enumerate}
+
+\paragraph{本文不声称的内容.}
+谱距离界只说明以 $\widehat k^2$ 为中心、给定半径的区间与 $\sigma(A(\beta))$ 相交。
+只有另行证明该区间落在本质谱隙内，才能把其中的谱点解释为离散导模特征值；本文不据此
+声称特征值唯一、编号已知或谱隙本身已被证明。离散方法的先验收敛性也不在本文讨论范围
+之内：定理只作用于一个给定的候选和重构场，与候选是如何得到的无关。
+
+\paragraph{结构.}
+第~\ref{sec:modelproblem}~节给出模型和算子表述；第~\ref{sec:reduction}~节给出连续的
+中心约化；第~\ref{sec:discretization}~节给出离散与候选计算；第~\ref{sec:error}~节构造
+重构场并证明谱距离界；第~\ref{sec:results}~节给出数值结果；附录~\ref{app:center-cell}
+证明中心胞元表示定理。
+
+\paragraph{记号.}
+表~\ref{tab:notation} 列出全文的主要记号。复数内积对第二个变量取共轭；
+$\lVert\cdot\rVert$ 无下标时指 $\mathcal H$ 范数或矩阵 $2$-范数，由上下文确定。
+
+\begin{longtable}{p{0.27\textwidth}p{0.66\textwidth}}
+  \caption{主要记号}\label{tab:notation}\\
+  \toprule
+  记号 & 含义\\
+  \midrule
+  \endfirsthead
+  \toprule
+  记号 & 含义\\
+  \midrule
+  \endhead
+  \bottomrule
+  \endfoot
+  $\beta$, $d$, $L_\pm$ & $y$ 方向 Bloch 波数与周期；左右引线的 $x$ 方向周期\\
+  $k$, $\mu=k^2$ & 波数与谱参数；候选记为 $\widehat k$\\
+  $\rho$, $\rho_{\mathrm e}$, $\rin,\rax$ & 分片常数系数，背景值，正的上下界\\
+  $B$, $I_d$ & 条带 $\RR\times I_d$，$I_d=(-d/2,d/2)$\\
+  $A(\beta)$, $\mathcal H$ & 条带上的自伴算子及加权空间 $L^2(B,\rho\,\dd x\,\dd y)$\\
+  $\mathcal C_0$, $\mathcal C_{j,\pm}$ & 中心胞元，第 $j$ 个左/右周期胞元（$j\geq0$）\\
+  $\Gamma_\pm$, $x_\pm$, $\nu_\pm$ & 中心与半波导的人工界面 $\{x_\pm\}\times I_d$，
+    $x_\pm=\pm L_0/2$，指向半波导的法向 $\pm e_x$\\
+  $\Omega_0$, $\Omega_{j,\pm}$ & 中心与周期胞元中的介质柱\\
+  $\mathcal G_\pm(k)$ & 半波导有限能量解在 $\Gamma_\pm$ 上的 Cauchy 数据空间\\
+  $\psi_m$, $\beta_m$, $\gamma_m$, $K$ & 端口 Fourier 基，横向与纵向波数，通道数
+    $K=2M+1$\\
+  $(a,b)$ & 锚定在某个端口的右行、左行 Rayleigh 振幅\\
+  $\tau$, $\omega$, $\eta$ & 双层势密度、单层势密度、$\eta=(\tau;-\omega)$\\
+  $S,D,D',T$ & 单层、双层、伴随双层、超奇异边界积分算子\\
+  $(\mathsf E_{\mathrm L},\mathsf E_{\mathrm R})$ & 单胞传播矩阵对\\
+  $\mathsf Z_\pm$, $\mathsf P_\pm$ & 衰减子空间的振幅基，胞元传播矩阵\\
+  $\mathsf V_\pm$ & 离散 Cauchy 数据基\\
+  $\xi$, $c_\pm$ & 中心离散未知量，半波导衰减坐标\\
+  $\mathsf M(k)$ & 中心离散非线性特征值问题的矩阵函数\\
+  $\widehat u$ & 由候选构造的原始场\\
+  $\jump{\widehat u}_\Gamma$, $\jump{\partial_\nu\widehat u}_\Gamma$ &
+    界面上的值跳跃与法向导数跳跃\\
+  $\varepsilon_{\partial,\ell_*}$, $U$, $C$ & 界面缺陷，场范数，迹常数\\
+\end{longtable}

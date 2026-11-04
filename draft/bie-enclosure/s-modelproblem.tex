@@ -1,0 +1,240 @@
+\section{模型问题}
+\label{sec:modelproblem}
+
+\subsection{带线缺陷的分片常数周期介质}
+
+\pending{左右引线不同（2026-11-04 修改）}
+左右两侧是两块可能不同的二维光子晶体。对 $s\in\{-,+\}$，系数 $\rho_s$ 沿 $x$、$y$
+方向分别以 $L_s>0$ 和 $d>0$ 为周期：
+\begin{align}
+  \rho_s(x+jL_s,y+md)&=\rho_s(x,y),
+  \qquad j,m\in\ZZ,\quad s\in\{-,+\}.
+  \label{eq:periodic-background}
+\end{align}
+两侧共享 $y$ 周期 $d$，但 $L_-$ 与 $L_+$ 可以不同。本文假定 $\rho_\pm$ 分片常数：在同一个
+均匀背景 $\rho_{\mathrm e}>0$ 中，每个周期胞元恰含一个单连通、边界为 $C^2$ 的介质柱，
+柱内系数为正常数 $\rho_{\pm,\mathrm c}$；左右介质柱的形状和系数可以不同。
+
+此外假定 $x_\pm$ 的位置使下一节的每个周期胞元窗口都完整包含一个介质柱，且介质柱的
+闭包与胞元边界不相交（包括上、下边界）；中心介质柱同样不与中心胞元边界相交。记
+$\Upsilon$ 为全部介质柱边界的并集，即全部材料界面。
+
+\subsection{导模与条带问题}
+
+令 $B:=\RR\times I_d$，$I_d:=(-d/2,d/2)$，$\beta\in[-\pi/d,\pi/d)$。波数 $k>0$ 处的
+\emph{导模}是方程
+\begin{align}
+  -\Delta w&=k^2\rho w\qquad\text{在 }\RR^2
+  \label{eq:full-plane-wave-equation}
+\end{align}
+的非零分布解，并具有形式 $w(x,y)=v(x,y)\ee^{\ii\beta y}$，其中 $v$ 关于 $y$ 以 $d$ 为
+周期且 $v|_B\in H^1(B)$\cite[(2.2)]{Fliss2013}。条件 $v|_B\in H^1(B)$ 包含了横向的
+平方可积性，即导模的横向局域性。由于 $\rho$ 分片常数，分布意义下的
+式~\eqref{eq:full-plane-wave-equation} 等价于：在每个均匀子区域内逐点成立，且在每条
+材料界面上值和法向导数连续，
+\begin{align}
+  w^{\mathrm{in}}&=w^{\mathrm{out}},
+  &\partial_\nu w^{\mathrm{in}}&=\partial_\nu w^{\mathrm{out}}
+  \qquad\text{在 }\Upsilon.
+  \label{eq:transmission-conditions}
+\end{align}
+
+记条带上、下边界为 $\Sigma^{\uparrow}=\RR\times\{d/2\}$、
+$\Sigma^{\downarrow}=\RR\times\{-d/2\}$，并令
+\begin{align}
+  H^1_\beta(B)
+  :=\bigl\{u\in H^1(B):
+  u|_{\Sigma^{\uparrow}}=\ee^{\ii\beta d}u|_{\Sigma^{\downarrow}}\bigr\}.
+  \label{eq:quasiperiodic-space}
+\end{align}
+对 $u=w|_B$，导模问题等价于\cite[(2.4)]{Fliss2013}：求 $k>0$ 与
+$u\in H^1_\beta(B)\setminus\{0\}$，使得
+\begin{align}
+  -\Delta u&=k^2\rho u\quad\text{在 }B,
+  &\partial_yu|_{\Sigma^{\uparrow}}
+  &=\ee^{\ii\beta d}\partial_yu|_{\Sigma^{\downarrow}}.
+  \label{eq:guided-mode-strip-problem}
+\end{align}
+
+\subsection{算子表述与谱}
+
+取加权空间 $\mathcal H:=L^2(B,\rho\,\dd x\,\dd y)$，并按 Fliss\cite[第~3~节]{Fliss2013}
+定义
+\begin{align}
+  A(\beta)u&:=-\rho^{-1}\Delta u,
+  &D(A(\beta))
+  &:=\Bigl\{u\in H^1_\beta(B):\Delta u\in L^2(B),\
+    \partial_yu|_{\Sigma^{\uparrow}}=\ee^{\ii\beta d}\partial_yu|_{\Sigma^{\downarrow}}
+  \Bigr\}.
+  \label{eq:fixed-beta-operator}
+\end{align}
+$\Delta u$ 按分布理解。对分片光滑的 $u\in H^1(B)$，$\Delta u\in L^2(B)$ 恰好排除了界面
+上的分布源，即恰好施加了传输条件~\eqref{eq:transmission-conditions}；因此传输条件已经
+包含在 $D(A(\beta))$ 中。$A(\beta)$ 在 $\mathcal H$ 中非负自伴（由下文的闭二次型定义；左右相同时见\cite[命题~3.1]{Fliss2013}），
+且对 $u\in D(A(\beta))$ 有 $(A(\beta)u,u)_{\mathcal H}=\lVert\nabla u\rVert_{L^2(B)}^2$。
+固定 $\beta$ 的导模问题即
+\begin{align}
+  \text{求 }k^2>0\text{ 及 }u\in D(A(\beta))\setminus\{0\},
+  \qquad A(\beta)u=k^2u.
+  \label{eq:beta-formulation}
+\end{align}
+
+\pending{本小节其余部分按两条引线重写（2026-11-04）}
+对 $s\in\{-,+\}$，把 $\rho$ 换成 $\rho_s$（即用第 $s$ 侧的晶体填满整个条带）得到无缺陷
+的周期算子 $A_s(\beta):=-\rho_s^{-1}\Delta$，作用于 $\mathcal H_s:=L^2(B,\rho_s\,\dd x\,\dd y)$，
+定义域与 $A(\beta)$ 相同。对 $\theta\in[-\pi/L_s,\pi/L_s)$，记 $A_s(\beta,\theta)$ 为周期
+胞元 $(0,L_s)\times I_d$ 上的 Bloch 算子：同一微分表达式，在 $x$ 方向施加相位
+$\ee^{\ii\theta L_s}$、在 $y$ 方向施加相位 $\ee^{\ii\beta d}$ 的准周期条件（值与法向导数）。
+它自伴、有紧预解式，记其特征值为 $\lambda_{s,1}(\theta)\leq\lambda_{s,2}(\theta)\leq\cdots$
+（按重数计）。
+
+三个算子都由同一个闭二次型 $a[u,v]=\int_B\nabla u\cdot\overline{\nabla v}$，
+$D(a)=H^1_\beta(B)$，分别在 $\mathcal H$、$\mathcal H_\pm$ 中定义；$\rho$ 只出现在质量项
+中，因此由 $\Delta u=-\rho A(\beta)u\in L^2(B)$ 和准周期圆柱上的 Fourier 分析得到
+\begin{align}
+  D(A(\beta))=D(A_\pm(\beta))=H^2_\beta(B),
+  \label{eq:operator-domain-h2}
+\end{align}
+其中 $H^2_\beta(B)$ 表示值与 $\partial_y$ 的上下迹都满足相位 $\ee^{\ii\beta d}$ 的 $H^2$
+函数；图范数与 $H^2$ 范数等价。特别地，$D(A(\beta))$ 中的函数在材料界面两侧没有任何
+跳跃，第~\ref{sec:error}~节的迹估计正是建立在这一点上。
+
+\begin{proposition}[两条引线时的本质谱]
+  \label{prop:essential-spectrum}
+  对每个 $\beta\in\RR$，
+  \begin{align}
+    \sigma_{\mathrm{ess}}(A(\beta))
+    =\sigma(A_-(\beta))\cup\sigma(A_+(\beta)),\qquad
+    \sigma(A_s(\beta))
+    =\bigcup_{n\geq1}\ \bigcup_{\theta\in[-\pi/L_s,\pi/L_s]}\{\lambda_{s,n}(\theta)\}.
+    \label{eq:essential-spectrum}
+  \end{align}
+\end{proposition}
+
+左右相同时这就是 Fliss 的命题~3.1\cite{Fliss2013}。Fliss 的注~2.1(2) 指出方法可推广到
+左右不同的引线，但没有写出本质谱的公式；下面给出证明。
+
+\begin{proof}
+  第二个等式是 $x$ 方向的 Floquet--Bloch 分解：$A_s(\beta)$ 酉等价于纤维
+  $A_s(\beta,\theta)$ 的直积分；每条能带 $\lambda_{s,n}$ 连续（见式~\eqref{eq:band-lipschitz}），
+  且 $\inf_\theta\lambda_{s,n}(\theta)\to\infty$，故能带并在有界能量范围内局部有限且闭。
+
+  ($\subset$) 取实数 $\lambda\notin\sigma(A_-)\cup\sigma(A_+)$，记
+  $R_\pm:=(A_\pm-\lambda)^{-1}$、$R_0:=(A+1)^{-1}$。取只依赖 $x$ 的实光滑函数
+  $\chi_-,\chi_0,\chi_+$，使 $\chi_-^2+\chi_0^2+\chi_+^2=1$，$\chi_0$ 紧支撑，$\chi_\pm$
+  及其导数的支撑分别位于 $\mathcal W_\pm$ 内。各加权 $L^2$ 范数等价，故
+  \[
+    Q:=\chi_-R_-\chi_-+\chi_0R_0\chi_0+\chi_+R_+\chi_+:\ \mathcal H\to D(A)
+  \]
+  有界。在 $\chi_\pm$ 的支撑上 $\rho=\rho_\pm$，故 $(A-\lambda)\chi_\pm R_\pm\chi_\pm
+  =\chi_\pm^2+[A,\chi_\pm]R_\pm\chi_\pm$，同理处理 $\chi_0$ 项，得
+  $(A-\lambda)Q=I+K$，其中 $K$ 是 $[A,\chi]R\chi$ 型算子与
+  $-(\lambda+1)\chi_0R_0\chi_0$ 的有限和，$[A,\chi]v=-\rho^{-1}(2\chi'\partial_xv+\chi''v)$。
+  每一项都经过一个有界 $x$ 窗口上的紧嵌入 $H^2\hookrightarrow H^1$ 或 $H^2\hookrightarrow L^2$，
+  故 $K$ 紧。于是 $A-\lambda$ 有有界右拟逆，值域闭且余维有限；由自伴性其核也有限维，
+  $A-\lambda$ 为 Fredholm 算子，$\lambda\notin\sigma_{\mathrm{ess}}(A)$。
+
+  ($\supset$) 取 $\lambda=\lambda_{s,n}(\theta)$ 及相应的非零 Bloch 函数 $w$（$x$ 方向
+  $\theta$ 准周期、$y$ 方向 $\beta$ 准周期，局部 $H^2$）。取非零 $\eta\in C_c^\infty(\RR)$，令
+  \[
+    u_N(x,y):=c_N\,\eta\Bigl(\frac{x-X_N}{NL_s}\Bigr)w(x,y),
+  \]
+  其中 $X_N$ 使支撑落在 $\mathcal W_s$ 中并趋于该侧无穷远，$c_N$ 使
+  $\lVert u_N\rVert_{\mathcal H}=1$。由周期性 $c_N=O(N^{-1/2})$；在支撑上 $\rho=\rho_s$，
+  残量只来自 $\eta'$、$\eta''$，故 $\lVert(A-\lambda)u_N\rVert_{\mathcal H}=O(N^{-1})$，
+  且 $u_N\rightharpoonup0$。由 Weyl 判据，$\lambda\in\sigma_{\mathrm{ess}}(A)$。
+\end{proof}
+
+\pending{谱底端点（原稿把 $0$ 留在本质谱中，2026-11-04 修改）}
+固定 $\beta$ 时，记 $b_\beta:=\min_{m\in\ZZ}\lvert\beta+2\pi m/d\rvert$。由 $y$ 方向的
+Fourier 展开 $\lVert\nabla u\rVert^2\geq\lVert\partial_yu\rVert^2\geq b_\beta^2\lVert u\rVert_{L^2(B)}^2$
+及 $\rho\leq\rax$，
+\begin{align}
+  A(\beta)\geq\lambda_0:=\frac{b_\beta^2}{\rax},\qquad A_\pm(\beta)\geq\lambda_0 .
+  \label{eq:spectral-bottom}
+\end{align}
+本文算例中 $\beta=0.5$、$d=1$、$\rax=17$，故 $\lambda_0=0.25/17$。$\beta\notin2\pi\ZZ/d$
+时 $0\notin\sigma(A(\beta))$，所以不能把本质谱写成 $[0,\infty)$ 去掉若干开区间。
+
+本文在两条引线的公共谱隙中寻找导模。
+
+\begin{assumption}[公共谱隙]
+  \label{ass:gap}
+  固定 $\beta$，选定开区间 $G_\beta=(g_-,g_+)$，$0<g_-<g_+<\infty$，使
+  $G_\beta\cap\bigl(\sigma(A_-(\beta))\cup\sigma(A_+(\beta))\bigr)=\varnothing$。
+\end{assumption}
+
+\begin{proposition}[谱隙中的离散谱]
+  \label{prop:discrete-spectrum-in-gap}
+  在假设~\ref{ass:gap} 下，$\sigma(A(\beta))\cap G_\beta$ 只由有限重的孤立特征值组成，
+  它们只可能在 $g_\pm$ 处聚集；相应特征函数在 $|x|\to\infty$ 时指数衰减。
+\end{proposition}
+
+\begin{proof}
+  由命题~\ref{prop:essential-spectrum}，$G_\beta$ 中没有本质谱；自伴算子的非本质谱点是
+  孤立有限重特征值，紧子区间内只能有有限个。左右相同时指数衰减是 Fliss 的
+  定理~3.5\cite{Fliss2013}。一般情形只证右侧：设 $Au=\lambda u$，$\lambda\in G_\beta$，
+  $g:=\operatorname{dist}(\lambda,\sigma(A_+))>0$。取只依赖 $x$ 的截断 $\eta$，在
+  $\mathcal W_+$ 内由 $0$ 过渡到 $1$，则 $w=\eta u$ 满足 $(A_+-\lambda)w=f$，
+  $f=-\rho_+^{-1}(2\eta'\partial_xu+\eta''u)$ 的 $x$ 支撑有界。对有界、斜率
+  $\lvert h'\rvert\leq\alpha$、$\lvert h''\rvert\leq\alpha/\ell$ 的权 $h(x)$，
+  $\ee^{h}(A_+-\lambda)\ee^{-h}=A_+-\lambda+\rho_+^{-1}(2h'\partial_x+h''-h'^2)$。由谱定理
+  $\lVert(A_+-\lambda)^{-1}\rVert\leq g^{-1}$、
+  $\lVert A_+^{1/2}(A_+-\lambda)^{-1}\rVert^2\leq g^{-1}+\lambda g^{-2}$，扰动项相对于
+  $(A_+-\lambda)^{-1}$ 的范数不超过
+  \begin{align}
+    q(\alpha):=\frac{2\alpha\sqrt{\lambda+g}}{\sqrt{\rin}\,g}
+    +\frac{\alpha^2+\alpha/\ell}{\rin\,g}.
+    \label{eq:decay-condition}
+  \end{align}
+  $q(\alpha)<1$ 时 Neumann 级数给出 $\lVert\ee^{h}w\rVert_{\mathcal H_+}\leq
+  \lVert f\rVert_{\mathcal H_+}/(g(1-q))$，且界与 $h$ 的远端截断无关；令截断趋于无穷，
+  得 $\ee^{\alpha x}u\in H^2$ 于右侧远处。左侧同理。
+\end{proof}
+
+命题~\ref{prop:discrete-spectrum-in-gap} 不保证 $\sigma(A(\beta))\cap G_\beta$ 非空。
+后文的离散计算只在 $k^2\in G_\beta$ 中搜索候选；第~\ref{sec:error}~节的谱距离定理则
+关于整个 $\sigma(A(\beta))$ 成立，谱隙只在把谱点解释为离散导模特征值时才用到。
+
+\subsection{带隙证书}
+\label{subsec:gap-certificate}
+
+\pending{新增（2026-11-04）}
+要把谱距离区间 $[\mu-R,\mu+R]$ 解释为离散特征值，需要它落在公共谱隙内。只在有限个
+$\theta$ 上算能带不够；下面的 Lipschitz 界把有限网格上的包络推广到整个 Brillouin 区。
+
+\begin{lemma}[能带平方根的 Lipschitz 界]
+  \label{lem:band-lipschitz}
+  设 $\rho_s\geq\rho_{\min,s}>0$，则对所有 $n$ 与 $\theta,\theta'$，
+  \begin{align}
+    \Bigl\lvert\sqrt{\lambda_{s,n}(\theta)}-\sqrt{\lambda_{s,n}(\theta')}\Bigr\rvert
+    \leq\frac{\lvert\theta-\theta'\rvert}{\sqrt{\rho_{\min,s}}}.
+    \label{eq:band-lipschitz}
+  \end{align}
+\end{lemma}
+
+\begin{proof}
+  作规范变换 $v=\ee^{-\ii\theta x}u$ 后，纤维的二次型为
+  $a_\theta[v]=\lVert(\partial_x+\ii\theta)v\rVert^2+\lVert\partial_yv\rVert^2$，型域与
+  $\theta$ 无关。三角不等式给出
+  $\lvert a_\theta[v]^{1/2}-a_{\theta'}[v]^{1/2}\rvert\leq\lvert\theta-\theta'\rvert\,\lVert v\rVert_{L^2}
+  \leq\lvert\theta-\theta'\rvert\,\lVert v\rVert_{\mathcal H_s}/\sqrt{\rho_{\min,s}}$。
+  对 Rayleigh 商的平方根取最小最大即得结论。
+\end{proof}
+
+设网格 $\{\theta_i\}$ 以覆盖半径 $h_s$ 覆盖 Brillouin 区，且在每个网格点有可靠的包络
+$\ell_{n,i}\leq\lambda_{s,n}(\theta_i)\leq u_{n,i}$。对选定的带序号 $n_s$，令
+\begin{align}
+  \overline a_s:=\Bigl(\max_i\sqrt{u_{n_s,i}}+\frac{h_s}{\sqrt{\rho_{\min,s}}}\Bigr)^2,\qquad
+  \underline b_s:=\Bigl(\max\Bigl\{0,\ \min_i\sqrt{\max\{0,\ell_{n_s+1,i}\}}-\frac{h_s}{\sqrt{\rho_{\min,s}}}\Bigr\}\Bigr)^2 .
+  \label{eq:gap-certificate}
+\end{align}
+纤维算子非负，所以把负的下界换成 $0$ 仍是下界。由引理~\ref{lem:band-lipschitz}，$\overline a_s\geq\sup_\theta\lambda_{s,n_s}$、
+$\underline b_s\leq\inf_\theta\lambda_{s,n_s+1}$。若
+\begin{align}
+  \max(\overline a_-,\overline a_+)<\mu-R\quad\text{且}\quad
+  \mu+R<\min(\underline b_-,\underline b_+),
+  \label{eq:gap-condition}
+\end{align}
+则 $[\mu-R,\mu+R]$ 包含在一个公共谱隙中。下方能带需要上界，上方能带需要下界；只有
+Ritz 上界不能给出 $\underline b_s$。

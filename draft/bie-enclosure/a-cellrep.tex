@@ -1,0 +1,62 @@
+\clearpage
+\appendix
+
+\section{中心胞元表示定理的证明}
+\label{app:center-cell}
+
+\begin{proof}[定理~\ref{thm:center-cell-representation} 的证明]
+  \emph{Rayleigh 系数。}由于 $\Omega_0$ 的闭包含于 $\mathcal C_0$ 内部，在 $\Gamma_-$ 与
+  $\Omega_0$ 之间、$\Omega_0$ 与 $\Gamma_+$ 之间各有一条背景竖直带，$u$ 在其中按
+  Rayleigh 波展开。把 $u$ 与 $\partial_xu$ 在 $\Gamma_\pm$ 上的迹投影到 $\psi_m$，每个
+  模态的两个振幅由矩阵 $\bigl[\begin{smallmatrix}1&1\\ \ii\gamma_m&-\ii\gamma_m
+  \end{smallmatrix}\bigr]$ 唯一确定（$\gamma_m\ne0$）。取左带中的右行振幅为
+  $a^-_{0,m}$（锚定在 $x_-$）、右带中的左行振幅为 $b^+_{0,m}$（锚定在 $x_+$），由此得到
+  $u_{\mathrm{hom}}$，系数列唯一。若 $\Omega_0=\varnothing$，整个 $\mathcal C_0$ 是一条
+  背景带，$u=u_{\mathrm{hom}}$，结论成立。以下设 $\Omega_0\ne\varnothing$。
+
+  \emph{辅助问题。}在 $\partial\Omega_0$ 上，上标 $+$、$-$ 分别表示从柱外、柱内取迹，
+  $\nu$ 由内指向外。令
+  \begin{align*}
+    w^+&:=u-u_{\mathrm{hom}}\quad\text{于 }\mathcal C_0\setminus\overline{\Omega_0},
+    &w^-&:=u\quad\text{于 }\Omega_0.
+  \end{align*}
+  按构造，$w^+$ 在 $\Gamma_-$ 处只有左行分量、在 $\Gamma_+$ 处只有右行分量，即在两个
+  端口都是出射的。考虑交换内外波数的全平面问题：在 $\Omega_0$ 内用
+  $\kappa_{\mathrm e}$，在 $\RR^2\setminus\overline{\Omega_0}$ 内用 $\kappa_{\mathrm c}$
+  并满足 Sommerfeld 出射条件，界面跳跃取为
+  \begin{align*}
+    v^+-v^-&=-w^+-w^-,
+    &\partial_\nu v^+-\partial_\nu v^-&=-\partial_\nu w^+-\partial_\nu w^-.
+  \end{align*}
+  由假设它有唯一解 $v$。定义
+  \begin{align*}
+    \tau&:=w^+-v^-=-w^--v^+,
+    &\omega&:=-\partial_\nu w^++\partial_\nu v^-=\partial_\nu w^-+\partial_\nu v^+,
+  \end{align*}
+  两种写法的相等分别来自上面两个跳跃条件。
+
+  \emph{内部表示。}对 $\mathbf z\in\Omega_0$，$w^-$ 的内部 Green 表示给出
+  $\mathcal S^{(\kappa_{\mathrm c})}[\partial_\nu w^-]-\mathcal D^{(\kappa_{\mathrm c})}[w^-]=w^-$；
+  $v^+$ 是 $\kappa_{\mathrm c}$ 的出射外部解，其外部 Green 公式在柱内给出
+  $\mathcal S^{(\kappa_{\mathrm c})}[\partial_\nu v^+]-\mathcal D^{(\kappa_{\mathrm c})}[v^+]=0$。
+  代入 $\tau,\omega$ 的第二种写法并相加，得
+  $\mathcal S^{(\kappa_{\mathrm c})}[\omega]+\mathcal D^{(\kappa_{\mathrm c})}[\tau]=w^-$。
+
+  \emph{外部表示。}在 $\mathcal C_0\setminus\overline{\Omega_0}$ 上对 $w^+$ 与
+  $G^{(\kappa_{\mathrm e})}_\QP(\mathbf z,\cdot)$ 用 Green 第二恒等式：顶、底边界的贡献
+  因准周期相位相消；在两个端口上，$w^+$ 与 $G_\QP(\mathbf z,\cdot)$ 按模态都是同向出射
+  的，逐模 Wronskian 为零，贡献也相消。因此
+  $-\mathcal S^{(\kappa_{\mathrm e})}_\QP[\partial_\nu w^+]
+  +\mathcal D^{(\kappa_{\mathrm e})}_\QP[w^+]=w^+$。另一方面，$v^-$ 在 $\Omega_0$ 内是
+  $\kappa_{\mathrm e}$ 的解，而对柱外的 $\mathbf z$，$G_\QP(\mathbf z,\cdot)$ 在
+  $\Omega_0$ 内光滑（$\mathbf z$ 的 $y$ 向像点都不在 $\Omega_0$ 中），故
+  $\mathcal S^{(\kappa_{\mathrm e})}_\QP[\partial_\nu v^-]
+  -\mathcal D^{(\kappa_{\mathrm e})}_\QP[v^-]=0$。代入 $\tau,\omega$ 的第一种写法并相加，
+  得 $\mathcal S^{(\kappa_{\mathrm e})}_\QP[\omega]+\mathcal D^{(\kappa_{\mathrm e})}_\QP[\tau]
+  =w^+$。加回 $u_{\mathrm{hom}}$ 即得外部表示。
+
+  \emph{唯一性。}若两组表示给出同一个场，则其差表示零场。由第一段的端口系数提取，
+  Rayleigh 系数之差为零。余下的层势之差在柱内外分别为零；由跳跃关系，交换内外区域后
+  得到的互补层势场以 $-\tau$、$\omega$ 为共同的 Dirichlet 与 Neumann 迹，且满足齐次
+  互补系统。在定理末尾的零核条件下互补场为零，再由跳跃关系得 $\tau=\omega=0$。
+\end{proof}

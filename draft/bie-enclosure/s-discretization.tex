@@ -1,0 +1,430 @@
+\section{离散化与候选计算}
+\label{sec:discretization}
+
+本节把命题~\ref{prop:center-reduction} 离散为一个有限维的非线性特征值问题。思路与连续
+情形平行：周期胞元用边界积分方程离散，并在端口用 Rayleigh 振幅表示，得到单胞散射
+矩阵；有序 QZ 分解给出离散的衰减子空间，即 $\mathcal G_\pm(k)$ 的近似；中心胞元的场
+用层势与均匀背景 Rayleigh 波表示；最后要求中心场的 Cauchy 数据落在离散衰减子空间中。
+所得矩阵函数的近奇异点给出候选 $\widehat k$，它们只是第~\ref{sec:error}~节谱距离估计
+的输入，本节不对其精度作任何断言。以下固定 $\beta$，只考虑
+$k\in(\sqrt{g_-},\sqrt{g_+})$。
+
+% --------------------------------------------------------------------
+\subsection{端口 Fourier 基与 Rayleigh 波}
+\label{subsec:rayleigh}
+
+令
+\begin{align}
+  \beta_m&:=\beta+\frac{2\pi m}{d},
+  &\psi_m(y)&:=d^{-1/2}\ee^{\ii\beta_my},
+  &m&\in\ZZ.
+  \label{eq:port-fourier-basis}
+\end{align}
+$\{\psi_m\}$ 是 $L^2(I_d)$ 中满足 $\beta$-准周期条件的正交归一基。数值计算截断到
+$|m|\leq M$，通道数 $K:=2M+1$；截断系数向量按零延拓理解。记
+$\kappa_{\mathrm e}:=k\sqrt{\rho_{\mathrm e}}$，并取
+\begin{align}
+  \gamma_m(k)&:=\sqrt{\kappa_{\mathrm e}^2-\beta_m^2},
+  &\Im\gamma_m&\geq0,
+  &\gamma_m&\geq0\ \text{当其为实数时},
+  &\boldsymbol\gamma&:=\operatorname{diag}(\gamma_{-M},\ldots,\gamma_M).
+  \label{eq:rayleigh-gamma}
+\end{align}
+
+\begin{assumption}[非 Wood 异常]
+  \label{ass:no-wood}
+  对所有 $m\in\ZZ$，$\gamma_m(k)\ne0$。
+\end{assumption}
+
+在此假设下准周期 Green 函数有定义（见第~\ref{subsec:layer-potentials}~小节）；
+$\gamma_m=0$ 对应空胞元的共振，此时准周期 Green 函数发散\cite{BarnettGreengard2010}。
+
+在背景介质的竖直带 $(x_1,x_2)\times I_d$ 中，满足 $y$ 向准周期条件的 Helmholtz 解可按
+Rayleigh 波展开。取锚点 $x_p$，记右行与左行 Rayleigh 波
+\begin{align}
+  r_m^{x_p}(x,y)&:=\ee^{\ii\gamma_m(x-x_p)}\psi_m(y),
+  &l_m^{x_p}(x,y)&:=\ee^{-\ii\gamma_m(x-x_p)}\psi_m(y),
+  \label{eq:rayleigh-waves}
+\end{align}
+则 $u=\sum_m(a_mr_m^{x_p}+b_ml_m^{x_p})$；称 $(a,b)$ 为锚定在 $x_p$ 的\emph{右行、左行
+振幅}。对传播模态（$\gamma_m$ 实）这是行波方向；对凋落模态，右行波向 $x\to+\infty$
+衰减，左行波向 $x\to-\infty$ 衰减。锚点平移距离 $\ell$ 时，振幅乘以
+\begin{align}
+  \mathsf E(\ell)&:=\operatorname{diag}\bigl(\ee^{\ii\gamma_m\ell}\bigr)_{|m|\leq M}:
+  \label{eq:anchor-shift}
+\end{align}
+锚定在 $x_p$、振幅为 $a$ 的右行波，在 $x_p+\ell$ 处的振幅为 $\mathsf E(\ell)a$；锚定在
+$x_p+\ell$、振幅为 $b$ 的左行波，在 $x_p$ 处的振幅为 $\mathsf E(\ell)b$。
+
+在 $x=x_p$ 处，$u$ 的值迹与 $\partial_x$ 迹的 Fourier 系数分别为 $a+b$ 与
+$\ii\boldsymbol\gamma(a-b)$。若端口法向为 $\pm e_x$，则振幅到 Cauchy 数据系数（值，法向
+导数）的映射为
+\begin{align}
+  \mathsf C_\pm
+  &:=\begin{bmatrix}I&I\\ \pm\ii\boldsymbol\gamma&\mp\ii\boldsymbol\gamma\end{bmatrix}
+  \in\CC^{2K\times2K}.
+  \label{eq:amplitude-to-cauchy}
+\end{align}
+由假设~\ref{ass:no-wood}，$\mathsf C_\pm$ 可逆。值系数与法向导数系数分别自然地以
+$H^{1/2}$ 与 $H^{-1/2}$ 权重 $(1+\beta_m^2)^{\pm1/4}$ 衡量；后文的行列权重即按此选取。
+
+% --------------------------------------------------------------------
+\subsection{介质柱上的层势与传输方程}
+\label{subsec:layer-potentials}
+
+对波数 $\kappa$，记自由空间 Green 函数
+$G^{(\kappa)}(\mathbf z,\mathbf z')=\frac{\ii}{4}H_0^{(1)}(\kappa|\mathbf z-\mathbf z'|)$，
+以及 $y$ 方向相位为 $\ee^{\ii\beta d}$ 的准周期 Green 函数 $G^{(\kappa)}_\QP$。后者在
+$x\ne x'$ 时有谱表示\cite{Linton1998}
+\begin{align}
+  G^{(\kappa)}_\QP(\mathbf z,\mathbf z')
+  &=\frac{\ii}{2d}\sum_{m\in\ZZ}\frac{1}{\gamma_m}
+    \ee^{\ii\gamma_m|x-x'|+\ii\beta_m(y-y')},
+  \label{eq:qp-green-spectral}
+\end{align}
+其中 $\gamma_m$ 用 $\kappa$ 计算；靠近源点时需用格点和或 Ewald 型方法求值
+\cite{Linton1998}。
+
+\pending{实现中的准周期 Green 函数（2026-11-04 新增）}
+本文的实现不直接求和式~\eqref{eq:qp-green-spectral}，而是用增广基本解方法（augmented
+MFS）近似 $G^{(\kappa)}_\QP$：取自由空间 Green 函数的近邻周期像，加上胞元外的代理点源与
+上下两侧的平面波，系数由在胞元上下边界上施加准周期条件的最小二乘拟合确定
+\cite{BarnettGreengard2010,ChoBarnett2015}。所得核在胞元内仍精确满足 Helmholtz 方程，但
+准周期条件只近似成立。第~\ref{sec:error}~节把这一实际表示本身定义为候选场，把上下接缝
+上的准周期失配当作一类界面跳跃计入残差，因此不需要估计核与 $G^{(\kappa)}_\QP$ 之差。
+
+设 $\Omega$ 为某个胞元中的介质柱，边界 $\partial\Omega$ 为 $C^2$ 闭曲线，$\nu$ 为由内
+指向外的单位法向，柱内波数 $\kappa_{\mathrm c}=k\sqrt{\rho_{\mathrm c}}$，其中 $\rho_{\mathrm c}$
+是该柱的系数（左右引线柱为 $\rho_{\pm,\mathrm c}$，中心柱为 $\rho_{0,\mathrm c}$）。在胞元中以
+\begin{align}
+  u&=
+  \begin{cases}
+    \mathcal S^{(\kappa_{\mathrm e})}_\QP[\omega]
+      +\mathcal D^{(\kappa_{\mathrm e})}_\QP[\tau]+u_{\mathrm b},
+    &\text{胞元中 }\Omega\text{ 之外},\\
+    \mathcal S^{(\kappa_{\mathrm c})}[\omega]+\mathcal D^{(\kappa_{\mathrm c})}[\tau],
+    &\Omega\text{ 内},
+  \end{cases}
+  \label{eq:cell-layer-representation}
+\end{align}
+表示场，其中 $\mathcal S[\omega]=\int_{\partial\Omega}G\,\omega\,\dd s'$、
+$\mathcal D[\tau]=\int_{\partial\Omega}\partial_{\nu'}G\,\tau\,\dd s'$ 为单层势与双层势，
+$u_{\mathrm b}$ 是一个有限的背景 Rayleigh 场。记 $S,D,D',T$ 为相应的边界积分算子
+（单层、双层、伴随双层与超奇异算子）。由跳跃关系\cite{Kress1991,ColtonKress1983}，
+$u$ 在 $\partial\Omega$ 上外侧与内侧的值和法向导数之差为
+\begin{align}
+  \mathscr J_k[\eta;u_{\mathrm b}]
+  &:=
+  \begin{bmatrix}
+    u^{\mathrm{out}}-u^{\mathrm{in}}\\
+    \partial_\nu u^{\mathrm{out}}-\partial_\nu u^{\mathrm{in}}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    I+D^{(\kappa_{\mathrm e})}_\QP-D^{(\kappa_{\mathrm c})}
+    &-S^{(\kappa_{\mathrm e})}_\QP+S^{(\kappa_{\mathrm c})}\\
+    T^{(\kappa_{\mathrm e})}_\QP-T^{(\kappa_{\mathrm c})}
+    &I-D'^{(\kappa_{\mathrm e})}_\QP+D'^{(\kappa_{\mathrm c})}
+  \end{bmatrix}
+  \begin{bmatrix}\tau\\-\omega\end{bmatrix}
+  \notag\\
+  &\phantom{:=}{}+\begin{bmatrix}u_{\mathrm b}\\ \partial_\nu u_{\mathrm b}\end{bmatrix}_{\partial\Omega},
+  \label{eq:interface-jump-operator}
+\end{align}
+其中 $\eta:=(\tau;-\omega)$。传输条件~\eqref{eq:transmission-conditions} 等价于
+$\mathscr J_k[\eta;u_{\mathrm b}]=0$。这是传输问题的第二类边界积分方程
+\cite{DominguezLyonTurc2016}：算子差 $S^{(\kappa_{\mathrm e})}_\QP-S^{(\kappa_{\mathrm c})}$
+等的核只有对数奇性；特别地，$T^{(\kappa_{\mathrm e})}-T^{(\kappa_{\mathrm c})}$ 中的
+超奇异部分相消，而 $G^{(\kappa)}_\QP-G^{(\kappa)}$ 在胞元内光滑。对某些频率这类方程可能
+出现伪准共振\cite{HiptmairMoiolaSpence2022}，这是方程本身的病态而非物理共振，在候选
+检查中须加以区分。
+
+\paragraph{Nystr\"om 离散.}
+以 $\boldsymbol r(t)$，$t\in[0,1)$，参数化 $\partial\Omega$，在均匀网格
+$t_r=r/N_\eta$ 上用 Kress 的对数核分裂求积离散上述算子差
+\cite{Kress1991,HaoBarnettMartinssonYoung2014}，网格步长统记为 $h$。仍用同一字母表示
+所得矩阵，并记 $n:=2N_\eta$ 为密度未知量的个数。
+
+\paragraph{层势的 Rayleigh 系数.}
+设 $x=x_p$ 是与 $\partial\Omega$ 不相交的竖直线。由式~\eqref{eq:qp-green-spectral}，
+若 $\partial\Omega$ 全在 $x_p$ 左侧，则层势
+$\mathcal S^{(\kappa_{\mathrm e})}_\QP[\omega]+\mathcal D^{(\kappa_{\mathrm e})}_\QP[\tau]$
+在 $x\geq x_p$ 处是纯右行场，锚定在 $x_p$ 的振幅为
+\begin{align}
+  \phi_m^{\rightarrow}
+  &=\int_{\partial\Omega}\bigl(g_m^{\rightarrow}\omega
+    +\partial_{\nu'}g_m^{\rightarrow}\,\tau\bigr)\dd s',
+  &g_m^{\rightarrow}(\mathbf z')
+  &:=\frac{\ii}{2\sqrt d\,\gamma_m}
+    \ee^{-\ii\beta_my'+\ii\gamma_m(x_p-x')},
+  \label{eq:rayleigh-coefficient-right}
+\end{align}
+且 $\partial_{\nu'}g_m^{\rightarrow}=-\ii(\gamma_m\nu_x+\beta_m\nu_y)g_m^{\rightarrow}$。若
+$\partial\Omega$ 全在 $x_p$ 右侧，则在 $x\leq x_p$ 处是纯左行场，振幅 $\phi_m^{\leftarrow}$
+由同一公式给出，只需把核换成
+$g_m^{\leftarrow}(\mathbf z'):=\frac{\ii}{2\sqrt d\,\gamma_m}
+\ee^{-\ii\beta_my'+\ii\gamma_m(x'-x_p)}$，此时
+$\partial_{\nu'}g_m^{\leftarrow}=\ii(\gamma_m\nu_x-\beta_m\nu_y)g_m^{\leftarrow}$。用
+Nystr\"om 节点 $\mathbf z_j$、法向 $\nu_j$ 和求积权 $w_j$ 离散，得到作用于 $\eta$ 的
+提取矩阵
+\begin{align}
+  \mathsf F^{\rightarrow}_{x_p},\ \mathsf F^{\leftarrow}_{x_p}
+  &:=\Bigl[\bigl(w_j\partial_{\nu_j}g_m^{\rightarrow/\leftarrow}(\mathbf z_j)\bigr)_{m,j}
+    \quad\bigl(-w_jg_m^{\rightarrow/\leftarrow}(\mathbf z_j)\bigr)_{m,j}\Bigr]
+  \in\CC^{K\times n}.
+  \label{eq:farfield-extractors}
+\end{align}
+它们由谱表示与求积直接组装，而不是先在端口上采样再作 FFT。
+
+% --------------------------------------------------------------------
+\subsection{周期胞元：散射矩阵与衰减子空间}
+\label{subsec:lead-cells}
+
+\paragraph{单胞散射矩阵.}
+考虑右侧基本胞元 $\mathcal C_+$，左、右端口为 $x_{\mathrm L}=x_+$、
+$x_{\mathrm R}=x_++L_+$。给定入射振幅 $a_{\mathrm L},b_{\mathrm R}\in\CC^K$，令
+\begin{align}
+  u_{\mathrm b}
+  &:=\sum_{|m|\leq M}\bigl(a_{\mathrm L,m}r_m^{x_{\mathrm L}}
+    +b_{\mathrm R,m}l_m^{x_{\mathrm R}}\bigr),
+  \label{eq:cell-incident}
+\end{align}
+即从左端口右行入射、从右端口左行入射。求解离散传输方程
+$\mathscr J_k[\eta;u_{\mathrm b}]=0$（$\partial\Omega=\partial\Omega_+$），设其唯一可解，
+解记为 $\eta=\mathsf B_+(a_{\mathrm L};b_{\mathrm R})$。层势在左端口为左行、在右端口为
+右行，故出射振幅为
+\begin{align}
+  b_{\mathrm L}
+  &=\mathsf E(L)b_{\mathrm R}+\mathsf F^{\leftarrow}_{x_{\mathrm L}}\eta,
+  &a_{\mathrm R}
+  &=\mathsf E(L)a_{\mathrm L}+\mathsf F^{\rightarrow}_{x_{\mathrm R}}\eta.
+  \label{eq:cell-outgoing}
+\end{align}
+代入 $\eta=\mathsf B_+(a_{\mathrm L};b_{\mathrm R})$ 即得单胞散射矩阵
+\begin{align}
+  \begin{bmatrix}b_{\mathrm L}\\ a_{\mathrm R}\end{bmatrix}
+  &=
+  \begin{bmatrix}R_{\mathrm L}&T_{\mathrm{RL}}\\ T_{\mathrm{LR}}&R_{\mathrm R}\end{bmatrix}
+  \begin{bmatrix}a_{\mathrm L}\\ b_{\mathrm R}\end{bmatrix},
+  \qquad R_{\mathrm L},T_{\mathrm{RL}},T_{\mathrm{LR}},R_{\mathrm R}\in\CC^{K\times K}.
+  \label{eq:one-cell-scattering}
+\end{align}
+左侧基本胞元 $\mathcal C_-$（端口 $x_--L_-$ 与 $x_-$）用其自身的介质柱 $\Omega_-$、
+系数 $\rho_{-,\mathrm c}$ 和宽度 $L_-$ 同样处理；左右两侧的散射矩阵一般不同。以边界积分构造单胞端口映射的做法见\cite{YuanLuAntoine2008,HuangLuLi2007}。
+
+\paragraph{传播矩阵对.}
+记端口状态 $z_{\mathrm L}=(a_{\mathrm L};b_{\mathrm L})$、
+$z_{\mathrm R}=(a_{\mathrm R};b_{\mathrm R})\in\CC^{2K}$。式~\eqref{eq:one-cell-scattering}
+等价于
+\begin{align}
+  \mathsf E_{\mathrm L}z_{\mathrm L}&=\mathsf E_{\mathrm R}z_{\mathrm R},
+  &\mathsf E_{\mathrm L}
+  &:=\begin{bmatrix}-R_{\mathrm L}&I\\ T_{\mathrm{LR}}&0\end{bmatrix},
+  &\mathsf E_{\mathrm R}
+  &:=\begin{bmatrix}0&T_{\mathrm{RL}}\\ I&-R_{\mathrm R}\end{bmatrix}.
+  \label{eq:one-cell-pencil}
+\end{align}
+在半波导中，第 $j$ 个胞元的右端口与第 $j+1$ 个胞元的左端口是同一条界面，振幅锚定于此。
+Floquet 解满足 $z_{\mathrm R}=\lambda z_{\mathrm L}$，于是
+\begin{align}
+  \mathsf E_{\mathrm L}z&=\lambda\,\mathsf E_{\mathrm R}z,
+  \label{eq:one-cell-gep}
+\end{align}
+$\lambda=\ee^{\ii\theta L_\pm}$ 是平移一个周期的 Floquet 乘子，而不是特征值 $k^2$。在谱隙中
+没有 $|\lambda|=1$ 的乘子；连续问题中乘子按 $(\lambda,1/\lambda)$ 成对出现
+\cite[定理~6.1]{JolyLiFliss2006}，离散问题中应有 $K$ 个乘子在单位圆内、$K$ 个在外。
+
+\paragraph{衰减子空间与传播矩阵.}
+对右侧矩阵对作有序 QZ 分解
+\begin{align*}
+  \mathsf Q\,\mathsf E_{\mathrm L}\mathsf Z&=\mathsf U_{\mathrm L},
+  &\mathsf Q\,\mathsf E_{\mathrm R}\mathsf Z&=\mathsf U_{\mathrm R},
+\end{align*}
+$\mathsf Q,\mathsf Z$ 酉，$\mathsf U_{\mathrm L},\mathsf U_{\mathrm R}$ 上三角，且满足
+$|\lambda|<1$ 的 $K$ 个广义特征值排在前面。取 $\mathsf Z_+$ 为 $\mathsf Z$ 的前 $K$ 列，
+按 $K+K$ 分块，$\mathsf Q\mathsf E_{\mathrm L}\mathsf Z_+=(\mathsf U_{\mathrm L,11};0)$、
+$\mathsf Q\mathsf E_{\mathrm R}\mathsf Z_+=(\mathsf U_{\mathrm R,11};0)$。所选特征值有限，
+故 $\mathsf U_{\mathrm R,11}$ 的对角元非零而可逆。令
+\begin{align}
+  \mathsf P_+&:=\mathsf U_{\mathrm R,11}^{-1}\mathsf U_{\mathrm L,11},
+  &\mathsf E_{\mathrm L}\mathsf Z_+&=\mathsf E_{\mathrm R}\mathsf Z_+\mathsf P_+.
+  \label{eq:propagation-plus}
+\end{align}
+$\mathsf P_+$ 的特征值恰为所选的 $\lambda$，谱半径小于一。因此，若某胞元左端口状态为
+$\mathsf Z_+c$，则 $z_j:=\mathsf Z_+\mathsf P_+^jc$ 满足
+$\mathsf E_{\mathrm L}z_j=\mathsf E_{\mathrm R}z_{j+1}$，$j\geq0$：它们是相继胞元的
+一组相容端口状态，并随 $j$ 几何衰减。左侧对矩阵对
+$(\mathsf E_{\mathrm R},\mathsf E_{\mathrm L})$（用 $\mathcal C_-$ 的矩阵）作有序 QZ
+分解，选取 $|\zeta|<1$ 的簇（$\zeta=1/\lambda$），同理得到 $\mathsf Z_-$ 与谱半径小于一的
+$\mathsf P_-$，满足
+\begin{align}
+  \mathsf E_{\mathrm R}\mathsf Z_-&=\mathsf E_{\mathrm L}\mathsf Z_-\mathsf P_-;
+  \label{eq:propagation-minus}
+\end{align}
+若某胞元右端口状态为 $\mathsf Z_-c$，则 $\mathsf Z_-\mathsf P_-^jc$ 依次是向左各胞元的
+右端口状态。
+
+这里使用整个广义 Schur 子空间而非逐个特征向量，以保留重根和非正规耦合。更换子空间的
+基 $\mathsf Z_\pm\mapsto\mathsf Z_\pm G$ 只使 $\mathsf P_\pm\mapsto G^{-1}\mathsf P_\pm G$、
+坐标 $c\mapsto G^{-1}c$，不改变所表示的状态。若矩阵对不正则、所选簇的维数不是 $K$，
+或簇与单位圆分离不足，则该参数处的半波导离散不可用，不应逐点改选特征向量来掩盖。
+
+关系~\eqref{eq:one-cell-pencil} 一般不能由 $z_{\mathrm L}$ 唯一确定
+$z_{\mathrm R}$。式~\eqref{eq:propagation-plus} 并不声称这种唯一性，它只是在所有相容
+延拓中选出衰减的那一族，这正是连续问题中 $\mathcal V_\pm(k)$ 所描述的解。
+
+\paragraph{离散 Cauchy 数据空间.}
+$\mathsf Z_+c$ 是 $\Gamma_+$ 处的振幅，$\mathsf Z_-c$ 是 $\Gamma_-$ 处的振幅。按
+$\nu_\pm=\pm e_x$ 换算为 Cauchy 数据系数，
+\begin{align}
+  \mathsf V_\pm&:=\mathsf C_\pm\mathsf Z_\pm
+  =\begin{bmatrix}\mathsf V_{\mathrm D,\pm}\\ \mathsf V_{\mathrm N,\pm}\end{bmatrix}
+  \in\CC^{2K\times K},
+  &\mathcal G^h_\pm(k)&:=\operatorname{range}\mathsf V_\pm.
+  \label{eq:discrete-cauchy-space}
+\end{align}
+$\mathcal G^h_\pm(k)$ 是 $\mathcal G_\pm(k)$ 在 $|m|\leq M$ 的 Fourier 系数中的离散近似。
+
+% --------------------------------------------------------------------
+\subsection{中心胞元}
+\label{subsec:center-cell}
+
+\begin{theorem}[中心胞元的表示]
+  \label{thm:center-cell-representation}
+  设假设~\ref{ass:no-wood} 成立，$\Omega_0$ 为空或是严格含于 $\mathcal C_0$ 的单连通
+  $C^2$ 区域，并设交换内外波数后的全平面 outgoing 传输问题对任意界面跳跃数据唯一可解。
+  若 $u\in\mathcal U_0(k)$ 在各均匀子区域内直至边界属于 $H^2$，则存在密度
+  $\tau\in H^{1/2}(\partial\Omega_0)$、$\omega\in H^{-1/2}(\partial\Omega_0)$ 及唯一的
+  Rayleigh 系数列 $(a^-_{0,m})_{m\in\ZZ}$、$(b^+_{0,m})_{m\in\ZZ}$，使 $u$ 具有
+  形式~\eqref{eq:cell-layer-representation}（$\Omega=\Omega_0$），其中背景场为
+  \begin{align}
+    u_{\mathrm{hom}}
+    &=\sum_{m\in\ZZ}\bigl(a^-_{0,m}r_m^{x_-}+b^+_{0,m}l_m^{x_+}\bigr),
+    \label{eq:center-homogeneous-field}
+  \end{align}
+  级数在 $H^1(\mathcal C_0)$ 中收敛。$\Omega_0=\varnothing$ 时只保留 $u_{\mathrm{hom}}$。
+  若交换内外区域后的齐次互补层势系统只有零解，则密度也唯一。
+\end{theorem}
+
+证明见附录~\ref{app:center-cell}。$u_{\mathrm{hom}}$ 是从两侧端口入射的部分：$a^-_0$
+是在 $\Gamma_-$ 处右行进入中心胞元的振幅，$b^+_0$ 是在 $\Gamma_+$ 处左行进入的振幅；
+层势部分在两个端口都是出射的。即使 $\Omega_0=\varnothing$，$u_{\mathrm{hom}}$ 也可能非零，
+因此准周期层势本身不足以表示中心场。
+
+\paragraph{离散未知量与材料界面方程.}
+把密度离散、Rayleigh 级数截断到 $|m|\leq M$ 后，记
+\begin{align}
+  \xi&:=\begin{bmatrix}\eta\\ a^-_0\\ b^+_0\end{bmatrix}\in\CC^{n+2K},
+  &\eta&=\begin{bmatrix}\tau\\-\omega\end{bmatrix}\in\CC^n,
+  \label{eq:center-unknown}
+\end{align}
+$\Omega_0=\varnothing$ 时 $n=0$。离散传输方程
+$\mathscr J_k[\eta;u_{\mathrm{hom}}]=0$ 写成 $J(k)\xi=0$，其中
+\begin{align}
+  J(k)&:=\bigl[\,J_\eta(k)\ \ \mathsf H_-(k)\ \ \mathsf H_+(k)\,\bigr]
+  \in\CC^{n\times(n+2K)},
+  \label{eq:center-interface-matrix}
+\end{align}
+$J_\eta(k)$ 是式~\eqref{eq:interface-jump-operator} 中 $2\times2$ 算子块的
+Nystr\"om 矩阵，$\mathsf H_\pm$ 是两组背景 Rayleigh 波在 $\partial\Omega_0$ 节点上的值与
+法向导数：对 $|m|\leq M$，
+\begin{align}
+  (\mathsf H_-)_{jm}
+  &=\begin{bmatrix}1\\ \ii(\gamma_m\nu_{x,j}+\beta_m\nu_{y,j})\end{bmatrix}
+    r_m^{x_-}(\mathbf z_j),
+  &(\mathsf H_+)_{jm}
+  &=\begin{bmatrix}1\\ \ii(-\gamma_m\nu_{x,j}+\beta_m\nu_{y,j})\end{bmatrix}
+    l_m^{x_+}(\mathbf z_j).
+  \label{eq:center-rayleigh-traces}
+\end{align}
+$J(k)\xi=0$ 只在离散节点上施加值跳跃与法向导数跳跃为零；由有限系数和连续核得到的场的
+实际连续跳跃并不因此为零，第~\ref{sec:error}~节将重新评价它们。
+
+\paragraph{中心场的端口数据.}
+在 $\Gamma_+$ 处，中心场的右行部分来自层势与传播了 $L_0$ 的 $a^-_0$，左行部分是
+$b^+_0$；在 $\Gamma_-$ 处对称。因此锚定在 $\Gamma_\pm$ 的振幅为
+\begin{align}
+  \mathsf Y_-\xi
+  &:=\begin{bmatrix}a^-_0\\ \mathsf F^{\leftarrow}_{x_-}\eta+\mathsf E(L_0)b^+_0\end{bmatrix},
+  &\mathsf Y_+\xi
+  &:=\begin{bmatrix}\mathsf F^{\rightarrow}_{x_+}\eta+\mathsf E(L_0)a^-_0\\ b^+_0\end{bmatrix},
+  \label{eq:center-port-amplitudes}
+\end{align}
+相应的 Cauchy 数据系数为
+\begin{align}
+  \Pi_\pm&:=\mathsf C_\pm\mathsf Y_\pm
+  =\begin{bmatrix}\Pi_{\mathrm D,\pm}\\ \Pi_{\mathrm N,\pm}\end{bmatrix}
+  \in\CC^{2K\times(n+2K)}.
+  \label{eq:center-cauchy-extraction}
+\end{align}
+
+% --------------------------------------------------------------------
+\subsection{离散非线性特征值问题与候选}
+\label{subsec:discrete-nep}
+
+命题~\ref{prop:center-reduction} 要求中心场满足材料界面传输条件，且其 Cauchy 数据落在
+$\mathcal G_\pm(k)$ 中。其离散形式是：存在 $c_\pm\in\CC^K$，使
+$J(k)\xi=0$ 且 $\Pi_\pm\xi=\mathsf V_\pm c_\pm$。记
+\begin{align}
+  \mathsf M(k)
+  \begin{bmatrix}\xi\\ c_-\\ c_+\end{bmatrix}
+  &:=
+  \begin{bmatrix}
+    J(k)\xi\\
+    \Pi_-\xi-\mathsf V_-c_-\\
+    \Pi_+\xi-\mathsf V_+c_+
+  \end{bmatrix},
+  &\mathsf M(k)&\in\CC^{(n+4K)\times(n+4K)},
+  \label{eq:discrete-nep}
+\end{align}
+离散非线性特征值问题为：求 $k$ 使 $\mathsf M(k)$ 奇异。由于 $\mathsf C_\pm$ 可逆，
+$\Pi_\pm\xi=\mathsf V_\pm c_\pm$ 等价于振幅匹配 $\mathsf Y_\pm\xi=\mathsf Z_\pm c_\pm$；
+两种写法只差一个行缩放。
+
+\paragraph{DtN 降维形式.}
+若 $\mathsf V_{\mathrm D,\pm}$ 在加权坐标中可安全求逆，且 Dirichlet 投影与
+$\mathcal G^h_\pm(k)$ 有足够的横截余量，则可定义离散 DtN 矩阵
+$\widetilde\Lambda_\pm:=\mathsf V_{\mathrm N,\pm}\mathsf V_{\mathrm D,\pm}^{-1}$，从
+式~\eqref{eq:discrete-nep} 消去 $c_\pm=\mathsf V_{\mathrm D,\pm}^{-1}\Pi_{\mathrm D,\pm}\xi$，
+得到 $(n+2K)$ 阶的
+\begin{align}
+  \mathsf M_{\mathrm{DtN}}(k)\xi
+  &:=
+  \begin{bmatrix}
+    J(k)\xi\\
+    \Pi_{\mathrm N,-}\xi-\widetilde\Lambda_-\Pi_{\mathrm D,-}\xi\\
+    \Pi_{\mathrm N,+}\xi-\widetilde\Lambda_+\Pi_{\mathrm D,+}\xi
+  \end{bmatrix}.
+  \label{eq:discrete-dtn-nep}
+\end{align}
+此时两者的核一一对应。仅凭 $\mathsf V_{\mathrm D,\pm}$ 的条件数不足以判断安全：条件数
+不大的 $\mathsf V_{\mathrm D,\pm}$ 仍可能对应近乎竖直的 Cauchy 数据空间。离散 Dirichlet
+坐标失效对应于连续情形的 Dirichlet 例外值（第~\ref{subsec:dtn-form}~小节）；此时只用
+$\mathsf M(k)$。本文默认使用 $\mathsf M(k)$。\footnote{%
+  Notes：是否需要在正文中保留离散 DtN 形式仍待定。保留它的理由是与 Fliss 的连续
+  DtN 约化直接对应；去掉它则可以省掉安全性判别。}
+
+\paragraph{候选定位.}
+取可逆的行列权重 $W_r(k)$、$W_c(k)$，以平衡材料界面方程、值系数与法向导数系数以及
+各类未知量的尺度，令
+\begin{align}
+  s(k)&:=\frac{\sigma_{\min}\bigl(W_r(k)\mathsf M(k)W_c(k)\bigr)}
+             {\sigma_{\max}\bigl(W_r(k)\mathsf M(k)W_c(k)\bigr)}.
+  \label{eq:candidate-score}
+\end{align}
+先在 $(\sqrt{g_-},\sqrt{g_+})$ 上粗扫，再在孤立低谷附近按固定规则逐层加密，得到候选
+$\widehat k$。权重不改变精确核，但改变奇异值尺度；因此候选还应通过 QZ 簇分离、所选簇
+维数、未加权残量以及相邻离散层 $(h,M)$ 之间一致性等检查，以排除伪准共振等离散伪影。
+关于非线性特征值问题的一般数值方法见\cite{GuettelTisseur2017}。
+
+\paragraph{候选输出.}
+在 $\widehat k$ 处，$\mathsf M(\widehat k)$ 一般并不奇异。取
+$W_r\mathsf M(\widehat k)W_c$ 最小奇异值对应的单位右奇异向量 $\widehat y$，令
+\begin{align}
+  \begin{bmatrix}\xi\\ c_-\\ c_+\end{bmatrix}&:=W_c\widehat y.
+  \label{eq:candidate-vector}
+\end{align}
+它只确定到一个非零复数倍。候选 $\widehat k$ 连同 $(\xi,c_-,c_+)$、离散参数 $(h,M)$、
+传播矩阵 $\mathsf P_\pm$ 与基 $\mathsf Z_\pm$，构成第~\ref{sec:error}~节的全部输入。
+小的 $s(\widehat k)$ 只说明离散方程近似可解，并不给出 $\widehat k^2$ 与
+$\sigma(A(\beta))$ 的距离。

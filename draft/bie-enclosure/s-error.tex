@@ -1,0 +1,949 @@
+\section{基于预解式的谱距离估计}
+\label{sec:error}
+
+本节以第~\ref{sec:discretization}~节交付的候选为输入，估计
+\begin{align}
+  \mu&:=\widehat k^2
+  \label{eq:candidate-mu}
+\end{align}
+到 $\sigma(A(\beta))$ 的距离。论证分三步：
+\begin{enumerate}
+  \item 用候选系数和实际使用的有限核表示在整个条带 $B$ 上构造分片场 $\widehat u$。它在
+    每个均匀材料分片内精确满足 Helmholtz 方程，但在材料界面、人工竖直界面和条带上下
+    接缝上留有小的跳跃，因而 $\widehat u\notin D(A(\beta))$
+    （第~\ref{subsec:raw-field}~小节）。\pending{接缝跳跃为新增（2026-11-04）}
+  \item 把全部跳跃汇总为界面缺陷 $\varepsilon_{\partial,\ell_*}$，并记
+    $U:=\lVert\widehat u\rVert_{\mathcal H}$（第~\ref{subsec:jumps}~小节）。
+  \item 借助正移位预解式的迹估计和 Green 恒等式证明
+    $\operatorname{dist}(\mu,\sigma(A(\beta)))\leq2\mu Q/(U-Q)$，其中
+    $Q=C\varepsilon_{\partial,\ell_*}$，$C$ 只依赖几何、材料系数与 $\mu$
+    （第~\ref{subsec:trace}、\ref{subsec:spectral-distance}~小节）。
+\end{enumerate}
+定理只使用 $\widehat u$ 的几条性质：它不要求离散方程有精确零解，不要求 $\widehat u$ 是
+某个问题的唯一解，也不需要求解预解式方程。候选算法的全部细节只通过
+$\varepsilon_{\partial,\ell_*}$ 和 $U$ 进入结论。第~\ref{subsec:computation}~小节说明这
+两个量的计算，第~\ref{subsec:certified}~小节说明如何得到可靠上界。
+
+% ====================================================================
+\subsection{原始场}
+\label{subsec:raw-field}
+
+\paragraph{定义参数与评价参数.}
+本节始终区分两类参数。\emph{定义参数}是 Nystr\"om 网格 $h$（即密度样本数 $N_\eta$）、
+Rayleigh 截断 $M$ 以及候选系数~\eqref{eq:candidate-vector}；它们一经固定，$\widehat u$
+就是一个确定的函数。\emph{评价参数}是材料界面上的目标求积节点数 $N_q$、人工界面上的
+模态截断 $M_{\mathrm{ev}}\geq M$、显式累加的胞元数 $N_{\mathrm{cell}}$ 以及核函数的
+评价精度；它们只决定 $\varepsilon_{\partial,\ell_*}$ 和 $U$ 算得多准，不改变
+$\widehat u$。候选向量的复数倍固定一次，后面所有量都由同一个场计算；由于
+$\varepsilon_{\partial,\ell_*}$ 与 $U$ 都关于这个倍数一次齐次，最终的界与归一化无关。
+
+\paragraph{连续密度.}
+对每条材料曲线，候选计算在均匀网格 $t_r=r/N_\eta$ 上给出偶数个密度样本
+$\{\eta_r\}_{r=0}^{N_\eta-1}$（$\tau$ 与 $-\omega$ 两个分量分别处理）。由离散 Fourier
+变换定义
+\begin{align}
+  \eta_m
+  &:=\frac1{N_\eta}\sum_{r=0}^{N_\eta-1}\eta_r
+    \exp\!\left(-\frac{2\pi\ii mr}{N_\eta}\right),
+  \qquad
+  -\frac{N_\eta}{2}\leq m\leq\frac{N_\eta}{2}-1,
+  \label{eq:exact-density-dft}
+\end{align}
+并令 $\eta(t):=\sum_m\eta_m\ee^{2\pi\ii mt}$，它在网格点上插值原样本。$\widehat u$ 中的
+层势一律理解为这一三角多项式密度与精确核的连续积分。
+
+不能直接把 Nystr\"om 求积和当作场：形如 $\sum_rw_rG(\mathbf z,\mathbf z_r)\omega_r$ 的
+离散和虽然逐片满足 Helmholtz 方程，却在每个节点处带有点源和偶极子奇性。
+\pending{说法更正（2026-11-04）}点源的对数奇性仍局部平方可积，偶极子的 $1/r$ 奇性
+一般不平方可积；两者都不属于直到所在界面的 $H^2$，下面的定理无从应用。连续密度给出的场在界面两侧具有正常的单侧迹，
+由跳跃关系~\eqref{eq:interface-jump-operator} 给出；其中的局部项要求在任意界面点取得
+密度值，三角插值正好提供这些值。
+
+\paragraph{中心胞元中的场.}
+在 $\mathcal C_0$ 中，$\widehat u$ 由式~\eqref{eq:cell-layer-representation}
+（$\Omega=\Omega_0$，$u_{\mathrm b}=u_{\mathrm{hom}}$）定义，其中 $\tau,\omega$ 为上述
+连续密度，$u_{\mathrm{hom}}$ 只含 $|m|\leq M$ 的项、振幅为 $a^-_0,b^+_0$，全部波数用
+$k=\widehat k$ 计算。
+
+\paragraph{实际核表示.}
+\pending{场的定义改为实际的增广 MFS 表示（2026-11-04 新增）}
+实现中背景区域的准周期核由增广 MFS 近似（第~\ref{subsec:layer-potentials}~小节），
+因此本文把实际使用的有限表示本身定义为场。在每个参考胞元 $\mathcal C$ 的背景区域中令
+\begin{align}
+  \widehat u
+  &=u_{\mathrm{near}}
+    +\sum_{q=1}^{N_p}\alpha_q\,G^{(\kappa_{\mathrm e})}(\cdot,\mathbf p_q)
+    +\sum_{q=1}^{N_w}b_q\,\ee^{\ii\boldsymbol\zeta_q\cdot\mathbf z}
+    +u_{\mathrm b},
+  \qquad\kappa_{\mathrm e}=\widehat k\sqrt{\rho_{\mathrm e}},
+  \label{eq:mfs-field}
+\end{align}
+其中 $u_{\mathrm{near}}$ 是本胞元曲线及其有限个近邻 $y$ 周期像上的\emph{连续}单层与
+双层势，$\mathbf p_q$ 是代理点，$\boldsymbol\zeta_q\cdot\boldsymbol\zeta_q=\kappa_{\mathrm e}^2$，
+$\alpha_q,b_q$ 是固定的有限复系数，$u_{\mathrm b}$ 是有限 Rayleigh 场；介质柱内仍是
+波数 $\kappa_{\mathrm c}$ 的连续层势。系数线性依赖于胞元的端口状态，左右两侧各用自己的
+几何、$L_\pm$ 与 $\mathsf P_\pm$。要求：(i) 本胞元以外的源曲线和全部代理点与该胞元的
+闭包有正距离；(ii) 所有背景项都用同一波数 $\kappa_{\mathrm e}$。保存的浮点系数视为精确
+的有理数；最小二乘拟合、QZ 分解与求解器是否准确不是定理的前提，其效果全部由该场的界面
+跳跃衡量。若把代理源系数与密度、求积权的乘积先求和得到 $\alpha_q$，所得场一般与
+“连续源依赖的 MFS 系数再精确积分”的场不同，界面跳跃必须对同一个场计算。
+
+\paragraph{周期胞元中的场.}
+对右侧基本胞元，给定入射振幅 $(a_{\mathrm L},b_{\mathrm R})$，取第~\ref{subsec:lead-cells}~
+小节中的密度 $\mathsf B_+(a_{\mathrm L};b_{\mathrm R})$，按式~\eqref{eq:exact-density-dft}
+化为连续密度，并以式~\eqref{eq:cell-layer-representation}（$u_{\mathrm b}$ 为
+式~\eqref{eq:cell-incident}）定义胞元场 $u_+^{\mathrm{cell}}[a_{\mathrm L},b_{\mathrm R}]$；
+它线性依赖于入射振幅。左侧同样定义 $u_-^{\mathrm{cell}}$。对 $v\in\CC^K$，把
+$\mathsf Z_\pm v$ 写成 $(a_\pm(v);b_\pm(v))$，并令
+\begin{align}
+  u_+[v]&:=u_+^{\mathrm{cell}}\bigl[a_+(v),\,b_+(\mathsf P_+v)\bigr]\ \text{于 }\mathcal C_+,
+  &u_-[v]&:=u_-^{\mathrm{cell}}\bigl[a_-(\mathsf P_-v),\,b_-(v)\bigr]\ \text{于 }\mathcal C_-.
+  \label{eq:lead-cell-field}
+\end{align}
+在 $u_+[v]$ 中 $v$ 是左端口状态的坐标、$\mathsf P_+v$ 是右端口状态的坐标；$u_-[v]$ 中
+$v$ 是右端口状态的坐标、$\mathsf P_-v$ 是左端口状态的坐标。由几何与端口锚定的平移
+不变性，在 $\mathcal C_{j,\pm}$ 上令
+\begin{align}
+  \widehat u(\mathbf z\pm jL_\pm e_x)
+  &:=u_\pm\bigl[\mathsf P_\pm^jc_\pm\bigr](\mathbf z),
+  \qquad\mathbf z\in\mathcal C_\pm,\ j\geq0.
+  \label{eq:half-guide-raw-field}
+\end{align}
+
+这一构造在 $|m|\leq M$ 的模态上自洽。以右侧为例，记
+$z_j:=\mathsf Z_+\mathsf P_+^jc_+=(a_j;b_j)$。由式~\eqref{eq:propagation-plus}，
+$\mathsf E_{\mathrm L}z_j=\mathsf E_{\mathrm R}z_{j+1}$，即
+$b_j=R_{\mathrm L}a_j+T_{\mathrm{RL}}b_{j+1}$、
+$a_{j+1}=T_{\mathrm{LR}}a_j+R_{\mathrm R}b_{j+1}$。与
+式~\eqref{eq:cell-outgoing}--\eqref{eq:one-cell-scattering} 比较可知，第 $j$ 个胞元以
+$(a_j,b_{j+1})$ 入射时，其出射振幅恰为 $b_j$ 与 $a_{j+1}$。因此共享端口两侧的场在
+$|m|\leq M$ 上都具有振幅 $(a_{j+1},b_{j+1})$；而 $\mathsf M(\widehat k)$ 的端口行块使
+中心场与 $z_0$ 在 $\Gamma_+$ 上近似匹配。剩余的不匹配来自 $|m|>M$ 的模态、连续密度与
+离散密度的差别，以及 $\sigma_{\min}\ne0$。由于 $\mathsf P_\pm$ 的谱半径小于一，
+$\widehat u$ 向两侧逐胞元几何衰减。
+
+\paragraph{原始场的性质.}
+称 $\widehat u$ 为\emph{原始场}。它满足：
+\begin{enumerate}
+  \item[(P1)] 在每个均匀材料分片内，
+    \begin{align}
+      (-\Delta-\mu\rho)\widehat u&=0,
+      \label{eq:raw-piecewise-pde}
+    \end{align}
+    因为所用的核与 Rayleigh 波都是精确的 Helmholtz 解；
+  \item[(P2)] \pending{原稿要求精确准周期，2026-11-04 删去}不要求 $\beta$-准周期条件
+    精确成立；上下接缝上的失配作为界面跳跃计入 $\varepsilon_{\partial,\ell_*}$
+    （第~\ref{subsec:jumps}~小节）；
+  \item[(P3)] 在每个分片内直至其边界局部属于 $H^2$（命题~\ref{prop:piecewise-h2}），
+    从而逐片 Green 恒等式与普通法向迹有意义；
+  \item[(P4)] $\widehat u\in\mathcal H$，这由传播衰减保证，并在
+    第~\ref{subsec:mass}~小节核验。
+\end{enumerate}
+但 $\widehat u\notin H^1_\beta(B)$，因为界面上的值跳跃一般不为零。
+
+\begin{proposition}[逐片 $H^2$ 正则性]
+  \label{prop:piecewise-h2}
+  \pending{新增（2026-11-04）}设每条材料界面是正则、嵌入的解析闭曲线，与胞元边界有
+  正距离，密度是三角多项式，且表示~\eqref{eq:mfs-field} 满足条件 (i)(ii)。则
+  $\widehat u$ 在每个材料分片内直至边界局部属于 $H^2$，并在人工界面与接缝的每一侧有
+  普通的值迹与法向迹。
+\end{proposition}
+
+\begin{proof}
+  远处的像、代理源和平面波在闭分片附近光滑，只需考虑一条曲线 $\Gamma$ 上的
+  $v=\mathcal S^{(\kappa)}[\omega]+\mathcal D^{(\kappa)}[\tau]$。它局部平方可积，且在分布
+  意义下 $(\Delta+\kappa^2)v=-\omega\delta_\Gamma+\operatorname{div}(\tau\nu\delta_\Gamma)$。
+  在 $\Gamma$ 的法向坐标中取 $w$：内侧为零，外侧为 $(\tau(s)-t\omega(s))\chi(t)$，$\chi$
+  为光滑截断。$w$ 的值跳跃为 $\tau$、法向跳跃为 $-\omega$，故
+  $(\Delta+\kappa^2)w=F-\omega\delta_\Gamma+\operatorname{div}(\tau\nu\delta_\Gamma)$，
+  $F\in L^2_{\mathrm{loc}}$。于是 $(\Delta+\kappa^2)(v-w)=-F$，由常系数椭圆方程的内部
+  正则性 $v-w\in H^2_{\mathrm{loc}}$，而 $w$ 在每侧直至 $\Gamma$ 光滑。人工界面与接缝附近
+  的单侧胞元公式可以向外光滑延拓，故不存在角点正则性问题。
+\end{proof}
+
+% ====================================================================
+\subsection{界面跳跃与两个输入量}
+\label{subsec:jumps}
+
+\paragraph{分片与界面族.}
+条带被分为下列有界均匀材料分片：$\mathcal C_0\setminus\overline{\Omega_0}$ 与 $\Omega_0$
+（若非空），以及各 $\mathcal C_{j,\pm}\setminus\overline{\Omega_{j,\pm}}$ 与
+$\Omega_{j,\pm}$。分片的边界由材料界面、人工竖直界面和条带上下边界的线段组成。
+\pending{接缝作为第三类界面（2026-11-04 修改）}把条带看作准周期圆柱：上边界
+$\Sigma^\uparrow$ 与下边界 $\Sigma^\downarrow$ 粘合成一条接缝，$y>d/2$ 一侧的场用
+$\ee^{\ii\beta d}\widehat u(x,y-d)$ 表示。对每个胞元 $\mathcal C$（$\mathcal C_0$ 或
+$\mathcal C_{j,\pm}$），记 $\Sigma_{\mathcal C}$ 为其 $x$ 区间上的接缝段。定义互不相交的
+界面族
+\begin{align}
+  \mathscr E
+  &:=\mathscr E_{\mathrm{mat}}\mathbin{\dot\cup}\mathscr E_{\mathrm{art}}
+    \mathbin{\dot\cup}\mathscr E_\Sigma,
+  &\mathscr E_{\mathrm{mat}}
+  &:=\{\partial\Omega_0\}\cup\{\partial\Omega_{j,\pm}\}_{j\geq0},
+  \notag\\
+  \mathscr E_{\mathrm{art}}
+  &:=\{\Gamma_-,\Gamma_+\}\cup\{\Gamma_{j,\pm}\}_{j\geq0},
+  &\mathscr E_\Sigma
+  &:=\{\Sigma_{\mathcal C_0}\}\cup\{\Sigma_{\mathcal C_{j,\pm}}\}_{j\geq0},
+  \label{eq:interface-family}
+\end{align}
+$\Omega_0=\varnothing$ 时省略 $\partial\Omega_0$。每条共享曲线恰好计一次；每个接缝段的
+上、下两边只配成一条接缝。若场精确准周期，接缝上的跳跃为零，就回到原稿的设定。
+
+\paragraph{定向与跳跃.}
+在每条 $\Gamma\in\mathscr E$ 上指定侧 $1$、侧 $2$，并取由侧 $1$ 指向侧 $2$ 的单位法向
+$\nu_\Gamma$：材料界面上侧 $1$ 为介质柱内部；人工界面上侧 $1$ 为较靠近中心的胞元，
+$\nu_\Gamma$ 指向相应无穷远（在 $\Gamma_\pm$ 上即 $\nu_\pm$）；接缝上侧 $1$ 为
+$y<d/2$ 一侧，$\nu_\Sigma=e_y$。定义
+\begin{align}
+  \jump{\widehat u}_\Gamma
+  &:=\widehat u^{(2)}|_\Gamma-\widehat u^{(1)}|_\Gamma,
+  &\jump{\partial_\nu\widehat u}_\Gamma
+  &:=\partial_{\nu_\Gamma}\widehat u^{(1)}|_\Gamma
+    -\partial_{\nu_\Gamma}\widehat u^{(2)}|_\Gamma.
+  \label{eq:raw-interface-jumps}
+\end{align}
+两者的符号约定不同，是为了使后面 Green 恒等式中的两项都带正号。在接缝上，记
+$q:=\ee^{\ii\beta d}$，式~\eqref{eq:raw-interface-jumps} 即
+\begin{align}
+  \jump{\widehat u}_\Sigma(x)&=q\,\widehat u(x,-d/2)-\widehat u(x,d/2),
+  &\jump{\partial_\nu\widehat u}_\Sigma(x)
+  &=\partial_y\widehat u(x,d/2)-q\,\partial_y\widehat u(x,-d/2).
+  \label{eq:seam-jumps}
+\end{align}在材料界面上，
+$\jump{\widehat u}_\Gamma$ 与 $-\jump{\partial_\nu\widehat u}_\Gamma$ 恰是
+式~\eqref{eq:interface-jump-operator} 的两个分量（$\partial\Omega_0$ 上取
+$u_{\mathrm b}=u_{\mathrm{hom}}$，周期胞元中取入射场），其中的算子是作用于连续密度的
+连续边界积分算子。因此 $J(\widehat k)\xi\approx0$ 只表示跳跃在 Nystr\"om 节点上近似为零。
+类似地，$\mathsf M(\widehat k)$ 的端口行块近似就是 $\Gamma_\pm$ 上 $|m|\leq M$ 模态的
+跳跃系数。
+
+\paragraph{两个输入量.}
+值跳跃与法向导数跳跃的量纲相差一个长度。取任意固定的参考长度 $\ell_*>0$，定义
+\begin{align}
+  \varepsilon_{\partial,\ell_*}^2
+  &:=\sum_{\Gamma\in\mathscr E}
+  \left(
+    \lVert\jump{\partial_\nu\widehat u}_\Gamma\rVert_{L^2(\Gamma)}^2
+    +\ell_*^{-2}\lVert\jump{\widehat u}_\Gamma\rVert_{L^2(\Gamma)}^2
+  \right),
+  &U&:=\lVert\widehat u\rVert_{\mathcal H}.
+  \label{eq:boundary-defect-norm}
+\end{align}
+与矩阵残量相比，$\varepsilon_{\partial,\ell_*}$ 还计入了材料曲线上节点之间的跳跃、
+$|m|>M$ 的模态、接缝上的准周期失配，以及半波导中全部材料、人工界面与接缝。小的 $\sigma_{\min}$ 只是
+$\varepsilon_{\partial,\ell_*}$ 小的部分证据，后面的定理只使用后者。
+
+% ====================================================================
+\subsection{正移位预解式的全界面迹估计}
+\label{subsec:trace}
+
+本小节要用迹不等式把每条界面上的 $L^2$ 范数控制到条带上的体积分。做法是：在每条界面
+两侧取一条等宽的“领子”，沿法向逐条线段使用一维迹不等式，再对整条界面积分。下面先说明
+需要的几何量，再给出估计。
+
+\paragraph{法向坐标与邻域.}
+假定 $\mathscr E$ 局部有限，每条材料界面是简单闭合 $C^2$ 曲线，人工界面是准周期圆柱上
+的竖直闭曲线。对 $\Gamma\in\mathscr E$ 取弧长参数 $\boldsymbol r_\Gamma(s)$，
+$\nu_\Gamma(s)$ 为第~\ref{subsec:jumps}~小节规定的单位法向（由侧 $1$ 指向侧 $2$）。令
+\begin{align}
+  \boldsymbol\Phi_\Gamma(s,t)
+  &:=\boldsymbol r_\Gamma(s)+t\nu_\Gamma(s),
+  \qquad|t|<\delta_{\mathrm{col}},
+  &\mathcal N_\Gamma
+  &:=\boldsymbol\Phi_\Gamma\bigl(\Gamma\times(-\delta_{\mathrm{col}},\delta_{\mathrm{col}})\bigr).
+  \label{eq:interface-normal-neighborhood}
+\end{align}
+$(s,t)$ 是界面附近的\emph{法向坐标}：$s$ 是沿界面的位置，$t$ 是沿法向的带符号距离，
+$t>0$ 在侧 $2$。$\mathcal N_\Gamma$ 是界面两侧宽度各为 $\delta_{\mathrm{col}}$ 的领子
+（图~\ref{fig:collar}）。要求 $\boldsymbol\Phi_\Gamma$ 是单射，即 $\mathcal N_\Gamma$ 中
+每个点都有唯一的法向坐标；这样，对一个关于 $(s,t)$ 的积分就可以换成 $\mathcal N_\Gamma$
+上的面积分。人工界面是直线段，$\boldsymbol\Phi_\Gamma(s,t)=(x_\Gamma+t,s)$，领子就是
+竖直带 $(x_\Gamma-\delta_{\mathrm{col}},x_\Gamma+\delta_{\mathrm{col}})\times I_d$。
+\pending{接缝领子（2026-11-04 新增）}接缝段 $\Sigma_{\mathcal C}$ 的领子是准周期圆柱上的
+水平带 $\{|y-d/2|<\delta_\Sigma\}$，$0<\delta_\Sigma<d/2$。领子只用于辅助场 $z\in H^2_\beta(B)$
+（式~\eqref{eq:operator-domain-h2}），不用于不连续的 $\widehat u$，所以领子可以穿过材料
+界面；同理，任何领子都可以穿过其他界面，只是覆盖重数要相应计算。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.15, every node/.style={font=\small},
+      >={Latex[length=2mm]}]
+    \def\a{1.9}\def\b{1.1}\def\d{0.32}
+    \pgfmathdeclarefunction{NN}{1}{%
+      \pgfmathparse{sqrt((\b*cos(#1))^2+(\a*sin(#1))^2)}}
+    % collar and inclusion
+    \fill[gray!22] plot[domain=0:360, samples=144, smooth cycle]
+      ({(\a+\d*\b/NN(\x))*cos(\x)}, {(\b+\d*\a/NN(\x))*sin(\x)});
+    \fill[blue!7] plot[domain=0:360, samples=144, smooth cycle]
+      ({(\a-\d*\b/NN(\x))*cos(\x)}, {(\b-\d*\a/NN(\x))*sin(\x)});
+    \draw[dashed, black!55] plot[domain=0:360, samples=144, smooth cycle]
+      ({(\a+\d*\b/NN(\x))*cos(\x)}, {(\b+\d*\a/NN(\x))*sin(\x)});
+    \draw[dashed, black!55] plot[domain=0:360, samples=144, smooth cycle]
+      ({(\a-\d*\b/NN(\x))*cos(\x)}, {(\b-\d*\a/NN(\x))*sin(\x)});
+    \draw[thick, blue!60!black] (0,0) ellipse ({\a} and {\b});
+    \node at (-0.2,-0.05) {$\Omega$（侧 $1$）};
+    \node at (-2.75,-1.2) {侧 $2$};
+    \node[blue!60!black] at (-1.25,-1.15) {$\Gamma=\partial\Omega$};
+    \node at (1.95,-1.25) {$\mathcal N_\Gamma$};
+    \draw[->, black!60] (1.75,-1.12) -- (1.45,-0.82);
+    % normal coordinates at theta0
+    \pgfmathsetmacro{\th}{58}
+    \pgfmathsetmacro{\Nn}{NN(\th)}
+    \pgfmathsetmacro{\nx}{\b*cos(\th)/\Nn}
+    \pgfmathsetmacro{\ny}{\a*sin(\th)/\Nn}
+    \pgfmathsetmacro{\px}{\a*cos(\th)}
+    \pgfmathsetmacro{\py}{\b*sin(\th)}
+    \coordinate (P) at (\px,\py);
+    \draw[red!70!black, line width=1.3pt]
+      ($(P)-\d*(\nx,\ny)$) -- ($(P)+\d*(\nx,\ny)$);
+    \draw[->, thick] (P) -- ++({0.85*\nx},{0.85*\ny})
+      node[above right=-1pt] {$\nu_\Gamma(s)$};
+    \draw[->, thick] (P) -- ++({-0.8*\ny},{0.8*\nx})
+      node[left] {$\boldsymbol r_\Gamma'(s)$};
+    \fill (P) circle (1.3pt);
+    \node (rl) at (0.35,0.42) {$\boldsymbol r_\Gamma(s)$};
+    \draw[black!50] (rl.north east) -- (P);
+    \fill[red!70!black] ($(P)+0.6*\d*(\nx,\ny)$) circle (1.3pt);
+    \node[red!70!black, anchor=west] (pl) at (2.3,1.45) {$\boldsymbol\Phi_\Gamma(s,t)$};
+    \draw[red!50!black] (pl.west) -- ($(P)+0.6*\d*(\nx,\ny)$);
+    \draw[<->, black!70] ($(P)+\d*(\nx,\ny)+(0.4*\ny,-0.4*\nx)$)
+      -- ($(P)-\d*(\nx,\ny)+(0.4*\ny,-0.4*\nx)$)
+      node[midway, right] {$2\delta_{\mathrm{col}}$};
+    \node at (0,-1.95) {(a) 材料界面};
+    % artificial interface
+    \begin{scope}[xshift=5.3cm]
+      \fill[gray!22] (-\d,-1.4) rectangle (\d,1.4);
+      \draw[dashed, black!55] (-\d,-1.4) -- (-\d,1.4);
+      \draw[dashed, black!55] (\d,-1.4) -- (\d,1.4);
+      \draw[thick, red!70!black] (0,-1.4) -- (0,1.4);
+      \draw[thick] (-1.3,1.4) -- (1.3,1.4);
+      \draw[thick] (-1.3,-1.4) -- (1.3,-1.4);
+      \node[red!70!black, above] at (0,1.4) {$\Gamma=\{x_\Gamma\}\times I_d$};
+      \draw[red!70!black, line width=1.3pt] (-\d,0.35) -- (\d,0.35);
+      \fill (0,0.35) circle (1.3pt);
+      \draw[->, thick] (0,0.35) -- (0.85,0.35) node[right] {$\nu_\Gamma$};
+      \node at (-0.85,-0.45) {侧 $1$};
+      \node at (0.85,-0.45) {侧 $2$};
+      \node at (0.85,-0.95) {$\kappa_\Gamma\equiv0$};
+      \node at (0,-1.95) {(b) 人工界面};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{法向坐标与领子 $\mathcal N_\Gamma$（灰色）。界面上每点 $\boldsymbol r_\Gamma(s)$
+    沿法向伸出一条长 $2\delta_{\mathrm{col}}$ 的线段（红），参数 $t$ 是线段上的带符号
+    距离。全部线段铺满 $\mathcal N_\Gamma$；单射要求这些线段互不相交。一维迹不等式就作用在
+    每一条这样的线段上。}
+  \label{fig:collar}
+\end{figure}
+
+\paragraph{曲率与 Jacobian.}
+记 $\kappa_\Gamma(s)$ 为相对于 $\nu_\Gamma$ 的带符号曲率，即
+$\boldsymbol r_\Gamma''(s)=\kappa_\Gamma(s)\nu_\Gamma(s)$：界面向 $\nu_\Gamma$ 一侧弯曲时
+$\kappa_\Gamma>0$。对外法向的凸介质柱，$\kappa_\Gamma=-1/(\text{曲率半径})<0$；人工界面
+$\kappa_\Gamma\equiv0$。由 Frenet 公式 $\nu_\Gamma'=-\kappa_\Gamma\boldsymbol r_\Gamma'$，
+\begin{align}
+  \partial_s\boldsymbol\Phi_\Gamma
+  &=\bigl(1-t\kappa_\Gamma(s)\bigr)\boldsymbol r_\Gamma'(s),
+  &\partial_t\boldsymbol\Phi_\Gamma&=\nu_\Gamma(s),
+  &\dd A&=\bigl|1-t\kappa_\Gamma(s)\bigr|\,\dd s\,\dd t.
+  \label{eq:collar-jacobian}
+\end{align}
+因子 $1-t\kappa_\Gamma$ 就是 Jacobian：它是平行曲线 $\{t=\text{常数}\}$ 相对 $\Gamma$ 的
+长度伸缩比（图~\ref{fig:curvature}）。在凹的一侧平行曲线变短，到 $t=1/\kappa_\Gamma$，即
+曲率中心处，相邻法线交于一点，Jacobian 为零，法向坐标失效。因此领子半宽必须小于最小曲率
+半径。设 $\lvert\kappa_\Gamma\rvert\leq\kappa_*$，要求
+\begin{align}
+  \vartheta_{\mathrm{col}}&:=1-\delta_{\mathrm{col}}\kappa_*>0,
+  &1-t\kappa_\Gamma(s)&\geq\vartheta_{\mathrm{col}}
+  \quad(|t|<\delta_{\mathrm{col}}).
+  \label{eq:collar-jacobian-lower-bound}
+\end{align}
+$\vartheta_{\mathrm{col}}$ 是领子内 Jacobian 的下界，它给出
+$\dd s\,\dd t\leq\vartheta_{\mathrm{col}}^{-1}\dd A$：把法向坐标中的积分换回面积分时，
+最多放大 $\vartheta_{\mathrm{col}}^{-1}$ 倍。条件 $\delta_{\mathrm{col}}\kappa_*<1$ 只
+排除\emph{局部}的法线相交；同一曲线上弧长相距很远、空间上却很近的两段（细颈）仍可能使
+领子自交，这需另行检验。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.0, every node/.style={font=\small},
+      >={Latex[length=2mm]}]
+    \def\R{2.6}\def\d{0.7}
+    % collar sector
+    \fill[gray!22] (40:\R+\d) arc (40:140:\R+\d) -- (140:\R-\d) arc (140:40:\R-\d) -- cycle;
+    \fill[orange!35] (84:\R+\d) arc (84:96:\R+\d) -- (96:\R-\d) arc (96:84:\R-\d) -- cycle;
+    \draw[dashed, black!55] (40:\R+\d) arc (40:140:\R+\d);
+    \draw[dashed, black!55] (40:\R-\d) arc (40:140:\R-\d);
+    \draw[thick, blue!60!black] (35:\R) arc (35:145:\R);
+    % normals converging to the centre of curvature
+    \foreach \p in {50,65,80,100,115,130}
+      \draw[black!35, densely dotted] (\p:\R+\d) -- (0,0);
+    \fill (0,0) circle (1.5pt);
+    \node[below] at (0,0) {曲率中心：$t=1/\kappa_\Gamma$，Jacobian $=0$};
+    % labels
+    \node[blue!60!black, right] at (35:\R) {$\Gamma$（$t=0$）};
+    \node[right] at (40:\R+\d) {$t=-\delta_{\mathrm{col}}$};
+    \node[below right] at (40:\R-\d) {$t=\delta_{\mathrm{col}}$};
+    \draw[->, thick] (62:\R) -- (62:\R-0.6) node[right] {$\nu_\Gamma$};
+    \draw[decorate, decoration={brace, amplitude=3pt, mirror}, black!70]
+      (84:\R+\d+0.06) -- (96:\R+\d+0.06)
+      node[midway, above=3pt] {$(1+\delta_{\mathrm{col}}\kappa_\Gamma)\,\dd s$};
+    \draw[decorate, decoration={brace, amplitude=3pt}, black!70]
+      (84:\R-\d-0.06) -- (96:\R-\d-0.06)
+      node[midway, below=3pt, fill=white, inner sep=1pt] {$(1-\delta_{\mathrm{col}}\kappa_\Gamma)\,\dd s$};
+    \draw[orange!70!black, line width=1.2pt] (84:\R) arc (84:96:\R);
+    \node[orange!70!black] at (97.5:\R+0.25) {$\dd s$};
+    \draw[<->, black!60] (145:\R) -- (0,0) node[pos=0.5, above left=-1pt] {$1/\kappa_\Gamma$};
+  \end{tikzpicture}
+  \caption{曲率与 Jacobian。这里 $\nu_\Gamma$ 指向曲率中心，$\kappa_\Gamma>0$。
+    界面上长 $\dd s$ 的一段沿法线平移到 $t$ 处，长度变为 $(1-t\kappa_\Gamma)\dd s$；
+    阴影小块的面积为 $(1-t\kappa_\Gamma)\,\dd s\,\dd t$。法线在曲率中心汇聚，故必须
+    $\delta_{\mathrm{col}}<1/\kappa_*$，$\vartheta_{\mathrm{col}}=1-\delta_{\mathrm{col}}\kappa_*$
+    是领子内长度缩短的最坏比例。}
+  \label{fig:curvature}
+\end{figure}
+
+\paragraph{覆盖重数.}
+不同界面的领子可能重叠：介质柱靠近胞元边界时，它的领子会与人工界面的竖直带相交
+（图~\ref{fig:overlap}）。设任一点至多属于 $N_{\mathrm{ov}}$ 个领子。对各条界面分别作
+估计再求和时，每块面积至多被计入 $N_{\mathrm{ov}}$ 次。
+\pending{条件更正（2026-11-04）}两个领子不相交，要求两条界面之间的距离大于两个半宽
+之和；因此 $N_{\mathrm{ov}}=1$ 要求介质柱到胞元边界的距离大于 $2\delta_{\mathrm{col}}$，
+并对其他介质柱、全部周期副本作同样检查。领子沿 $y$ 方向跨过条带上、下边界时按
+准周期圆柱理解。竖直领子与接缝领子必然在墙端交叠，若把接缝与其他界面放在同一族中，
+一般须取 $N_{\mathrm{ov}}=2$；命题~\ref{prop:grouped-trace-bound} 的分组形式避免了这一损失。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.15, every node/.style={font=\small}]
+    \foreach \panel/\d/\lab in {0/0.12/{(a) $\delta_{\mathrm{col}}$ 较小：$N_{\mathrm{ov}}=1$},
+                                1/0.30/{(b) $\delta_{\mathrm{col}}$ 较大：$N_{\mathrm{ov}}=2$}} {
+      \begin{scope}[xshift=\panel*6.2cm]
+        \fill[gray!6] (-0.6,-1) rectangle (3.6,1);
+        % collars of artificial interfaces
+        \foreach \x in {0,3} \fill[gray!25] (\x-\d,-1) rectangle (\x+\d,1);
+        % collar of the inclusion
+        \fill[gray!25] (2.25,0) circle ({0.45+\d});
+        \fill[blue!12] (2.25,0) circle ({max(0.45-\d,0.01)});
+        \begin{scope}
+          \clip (2.25,0) circle ({0.45+\d});
+          \fill[pattern=north east lines, pattern color=red!70!black] (3-\d,-1) rectangle (3+\d,1);
+        \end{scope}
+        \draw[thick, blue!60!black] (2.25,0) circle (0.45);
+        \draw[dashed, black!50] (2.25,0) circle ({0.45+\d});
+        \foreach \x in {0,3} {
+          \draw[thick, red!70!black] (\x,-1) -- (\x,1);
+          \draw[dashed, black!50] (\x-\d,-1) -- (\x-\d,1);
+          \draw[dashed, black!50] (\x+\d,-1) -- (\x+\d,1);
+        }
+        \draw[thick] (-0.6,1) -- (3.6,1);
+        \draw[thick] (-0.6,-1) -- (3.6,-1);
+        \node[blue!60!black] at (2.25,0) {$\Omega_{j,+}$};
+        \node[red!70!black, above] at (0,1) {$\Gamma_{j-1,+}$};
+        \node[red!70!black, above] at (3,1) {$\Gamma_{j,+}$};
+        \node at (1.1,0) {$\mathcal C_{j,+}$};
+        \node at (1.5,-1.4) {\lab};
+      \end{scope}
+    }
+  \end{tikzpicture}
+  \caption{覆盖重数。灰色为各界面的领子。(b) 中介质柱的领子与右侧人工界面的竖直带
+    重叠（红色斜线），该区域的点同时属于两个领子，$N_{\mathrm{ov}}=2$。上、下边界不在
+    $\mathscr E$ 中，没有领子。}
+  \label{fig:overlap}
+\end{figure}
+
+\paragraph{常数 $C_0$、$C_1$ 的来源.}
+固定 $s$，把一维迹不等式（见下面的证明）用于 $g(t)=v(\boldsymbol\Phi_\Gamma(s,t))$，即
+图~\ref{fig:collar} 中的一条红色线段，再对 $s$ 积分，由
+式~\eqref{eq:collar-jacobian-lower-bound} 得
+\begin{align*}
+  \lVert v\rVert_{L^2(\Gamma)}^2
+  \leq\frac1{\delta_{\mathrm{col}}}\iint|g|^2\,\dd s\,\dd t
+    +\frac{\delta_{\mathrm{col}}}2\iint|\partial_tg|^2\,\dd s\,\dd t
+  \leq\frac{1}{\vartheta_{\mathrm{col}}\delta_{\mathrm{col}}}
+    \int_{\mathcal N_\Gamma}|v|^2
+    +\frac{\delta_{\mathrm{col}}}{2\vartheta_{\mathrm{col}}}
+    \int_{\mathcal N_\Gamma}|\nabla v|^2.
+\end{align*}
+对全部界面求和，再乘以覆盖重数，就得到
+\begin{align}
+  C_0&:=\frac{N_{\mathrm{ov}}}{\vartheta_{\mathrm{col}}\delta_{\mathrm{col}}},
+  &C_1&:=\frac{N_{\mathrm{ov}}\delta_{\mathrm{col}}}{2\vartheta_{\mathrm{col}}}.
+  \label{eq:trace-geometry-constants}
+\end{align}
+$C_0$ 衡量“线段上的平均值”，随领子变宽而减小；$C_1$ 衡量“沿线段的变化”，随领子变宽而
+增大。$\delta_{\mathrm{col}}$ 的选取受最小曲率半径（通过 $\vartheta_{\mathrm{col}}$）和
+界面间距（通过 $N_{\mathrm{ov}}$）限制。这些条件不由单连通性自动保证；计算可靠上界时须
+验证邻域单射、不同界面及其周期副本之间的分离，以及覆盖重数。
+
+\begin{proposition}[全界面正移位迹估计]
+  \label{prop:positive-shift-trace-bound}
+  在上述几何条件下，对每个 $v\in D(A(\beta))$ 与 $\mu>0$，
+  \begin{align}
+    T_{\ell_*}(v)^2
+    &:=\sum_{\Gamma\in\mathscr E}
+    \left(
+      \lVert v|_\Gamma\rVert_{L^2(\Gamma)}^2
+      +\ell_*^2\lVert\partial_{\nu_\Gamma}v|_\Gamma\rVert_{L^2(\Gamma)}^2
+    \right)
+    \leq C_{\mathrm{tr}}^2\lVert(A(\beta)+\mu)v\rVert_{\mathcal H}^2,
+    \label{eq:positive-shift-trace-bound}\\
+    C_{\mathrm{tr}}^2
+    &:=\frac{C_0}{\rin\mu^2}+\frac{C_1+\ell_*^2C_0}{4\mu}+\ell_*^2C_1\rax.
+    \label{eq:trace-constant}
+  \end{align}
+\end{proposition}
+
+\begin{proof}
+  \emph{全局 $H^2$ 正则性。}把 $v$ 以相位 $\ee^{\ii\beta d}$ 沿 $y$ 延拓，在 $y$ 方向按
+  $\psi_m$、在 $x$ 方向按 Fourier 变换展开。$v\in H^1(B)$ 且 $\Delta v\in L^2(B)$，
+  由 Parseval 等式
+  $\sum_m\int_{\RR}(\xi^2+\beta_m^2)^2|\widehat v_m(\xi)|^2\,\dd\xi<\infty$，故
+  $v\in H^2(B)$ 且 $\lVert D^2v\rVert_{L^2(B)}=\lVert\Delta v\rVert_{L^2(B)}$。
+
+  \emph{体范数估计。}令 $f=(A(\beta)+\mu)v$。由谱定理及
+  $\sup_{\lambda\geq0}(\lambda+\mu)^{-2}=\mu^{-2}$、
+  $\sup_{\lambda\geq0}\lambda(\lambda+\mu)^{-2}=(4\mu)^{-1}$、
+  $\sup_{\lambda\geq0}\lambda(\lambda+\mu)^{-1}\leq1$，
+  \begin{align*}
+    \lVert v\rVert_{L^2(B)}^2&\leq\frac{\lVert f\rVert_{\mathcal H}^2}{\rin\mu^2},
+    &\lVert\nabla v\rVert_{L^2(B)}^2&=(A(\beta)v,v)_{\mathcal H}
+      \leq\frac{\lVert f\rVert_{\mathcal H}^2}{4\mu},
+    &\lVert D^2v\rVert_{L^2(B)}^2&\leq\rax\lVert f\rVert_{\mathcal H}^2,
+  \end{align*}
+  最后一式用到 $\Delta v=-\rho A(\beta)v$，故
+  $\lVert\Delta v\rVert_{L^2}^2\leq\rax\lVert A(\beta)v\rVert_{\mathcal H}^2$。
+
+  \emph{一维迹不等式。}对 $g\in H^1(-\delta,\delta)$，$\delta=\delta_{\mathrm{col}}$，由
+  $g(0)=g(t)-\int_0^tg'$ 得 $|g(0)|^2\leq2|g(t)|^2+2|t|\,\bigl|\int_0^t|g'|^2\bigr|$，
+  对 $t$ 取平均即得
+  $|g(0)|^2\leq\delta^{-1}\int_{-\delta}^{\delta}|g|^2+\frac{\delta}{2}\int_{-\delta}^{\delta}|g'|^2$。
+
+  \emph{求和。}沿式~\eqref{eq:interface-normal-neighborhood} 的法线对 $g=v$ 与
+  $g=\partial_{\nu_\Gamma(s)}v$（$|g'|\leq|D^2v|$）使用上式，对 $s$ 积分，利用面积元
+  下界~\eqref{eq:collar-jacobian-lower-bound}，对任意有限界面子族求和并使用覆盖重数，得
+  \begin{align*}
+    \sum_\Gamma\lVert v|_\Gamma\rVert_{L^2(\Gamma)}^2
+    &\leq C_0\lVert v\rVert_{L^2(B)}^2+C_1\lVert\nabla v\rVert_{L^2(B)}^2,\\
+    \sum_\Gamma\lVert\partial_{\nu_\Gamma}v|_\Gamma\rVert_{L^2(\Gamma)}^2
+    &\leq C_0\lVert\nabla v\rVert_{L^2(B)}^2+C_1\lVert D^2v\rVert_{L^2(B)}^2.
+  \end{align*}
+  取极限并代入体范数估计即得结论。
+\end{proof}
+
+\pending{新增：保留 Jacobian 的迹界、联合谱乘子与分组（2026-11-04）}
+命题~\ref{prop:positive-shift-trace-bound} 有两处浪费：换元时用 Jacobian 的最坏下界
+$\vartheta_{\mathrm{col}}$，以及对三个体范数分别取上确界后相加。下面的命题去掉这两处，
+并允许不同界面组使用不同的领子。
+
+\begin{proposition}[分组迹估计]
+  \label{prop:grouped-trace-bound}
+  把 $\mathscr E$ 分成有限个组 $\mathscr E_g$（例如中心材料曲线、左右引线材料曲线、人工
+  竖直界面、接缝；同一条曲线也可按弧长分段）。对每组设：法向领子半宽为 $\delta_g$ 且
+  法向映射单射，$\lvert\kappa_\Gamma\rvert\leq\kappa_g$，$h_g:=\delta_g\kappa_g<1$，组内
+  覆盖重数至多 $N_g$。令
+  \begin{align}
+    \tau_g&:=\frac{\delta_g}{6}+\frac{\delta_gh_g^2}{40(1-h_g^2)},
+    &D_{0,g}&:=\frac{N_g(1+\eta_g)}{2\delta_g},
+    &D_{1,g}&:=N_g(1+\eta_g^{-1})\tau_g,
+    \label{eq:jacobian-trace-constants}
+  \end{align}
+  其中 $\eta_g>0$ 任取。则对 $v\in D(A(\beta))$，
+  \begin{align}
+    \sum_{\Gamma\in\mathscr E_g}\lVert v\rVert_{L^2(\Gamma)}^2
+    &\leq D_{0,g}\lVert v\rVert_{L^2(B)}^2+D_{1,g}\lVert\nabla v\rVert_{L^2(B)}^2,
+    \notag\\
+    \sum_{\Gamma\in\mathscr E_g}\lVert\partial_{\nu_\Gamma}v\rVert_{L^2(\Gamma)}^2
+    &\leq D_{0,g}\lVert\nabla v\rVert_{L^2(B)}^2+D_{1,g}\lVert D^2v\rVert_{L^2(B)}^2 .
+    \label{eq:jacobian-trace-bound}
+  \end{align}
+  令 $p_g(\lambda):=a_g+b_g\lambda+c_g\lambda^2$，$a_g:=D_{0,g}/\rin$，
+  $b_g:=D_{1,g}+\ell_g^2D_{0,g}$，$c_g:=\ell_g^2D_{1,g}\rax$，以及
+  \begin{align}
+    C_g^2&:=\sup_{\lambda\geq\lambda_0}\frac{p_g(\lambda)}{(\lambda+\mu)^2},
+    \label{eq:joint-multiplier-constant}
+  \end{align}
+  $\lambda_0$ 如式~\eqref{eq:spectral-bottom}（取 $\lambda_0=0$ 也成立）。则
+  $T_g(v)^2:=\sum_{\Gamma\in\mathscr E_g}(\lVert v\rVert_{L^2(\Gamma)}^2
+  +\ell_g^2\lVert\partial_{\nu_\Gamma}v\rVert_{L^2(\Gamma)}^2)
+  \leq C_g^2\lVert(A(\beta)+\mu)v\rVert_{\mathcal H}^2$。
+\end{proposition}
+
+\begin{proof}
+  固定一条法线，令 $w(t)=1-\kappa t$、$\delta=\delta_g$。由
+  $g(t)-g(0)=\int_0^tg'$ 对 $w(t)\,\dd t$ 取平均（$\int_{-\delta}^{\delta}w=2\delta$），
+  交换积分次序得 $g(0)=\frac1{2\delta}\int w g+\int K_\kappa g'$，其中
+  \[
+    \lvert K_\kappa(t)\rvert=
+    \begin{cases}
+      \bigl(\delta-t-\kappa(\delta^2-t^2)/2\bigr)/(2\delta),&0<t<\delta,\\
+      \bigl(\delta+t-\kappa(t^2-\delta^2)/2\bigr)/(2\delta),&-\delta<t<0.
+    \end{cases}
+  \]
+  加权 Cauchy--Schwarz 给出
+  $\lvert g(0)\rvert\leq(2\delta)^{-1/2}(\int w\lvert g\rvert^2)^{1/2}
+  +T_\kappa^{1/2}(\int w\lvert g'\rvert^2)^{1/2}$，
+  $T_\kappa:=\int_{-\delta}^{\delta}\lvert K_\kappa\rvert^2/w$。令 $h=\kappa\delta$，直接计算得
+  $T_\kappa=\frac\delta6+\frac{\delta h^2}{8}\int_0^1\frac{(1-x)^4}{1-h^2x^2}\,\dd x\leq\tau_g$。
+  再用 $(a+b)^2\leq(1+\eta)a^2+(1+\eta^{-1})b^2$ 并对弧长积分；$w\,\dd s\,\dd t$ 正是
+  面积元，组内求和只乘 $N_g$。对 $g=v\circ\boldsymbol\Phi_\Gamma$ 与
+  $g=\nu_\Gamma\cdot\nabla v\circ\boldsymbol\Phi_\Gamma$（$\lvert g'\rvert\leq\lvert D^2v\rvert$）
+  分别使用，得式~\eqref{eq:jacobian-trace-bound}。最后，由谱定理、
+  $\lVert v\rVert_{L^2}^2\leq\rin^{-1}\lVert v\rVert_{\mathcal H}^2$、
+  $\lVert\nabla v\rVert^2=(A v,v)_{\mathcal H}$ 与
+  $\lVert D^2v\rVert^2=\lVert\Delta v\rVert^2\leq\rax\lVert Av\rVert_{\mathcal H}^2$，
+  $T_g(v)^2\leq\int p_g(\lambda)\,\dd\lVert E_\lambda v\rVert^2$，而
+  $\lVert(A+\mu)v\rVert^2=\int(\lambda+\mu)^2\,\dd\lVert E_\lambda v\rVert^2$，谱测度支撑于
+  $[\lambda_0,\infty)$。
+\end{proof}
+
+式~\eqref{eq:joint-multiplier-constant} 的上确界不需要扫描：只需比较 $\lambda=\lambda_0$、
+$\lambda\to\infty$（值 $c_g$）以及驻点 $\lambda_*=(2a_g-b_g\mu)/(2c_g\mu-b_g)$（若
+$\lambda_*\geq\lambda_0$）。各组可以选不同的 $\ell_g$。不同组的领子即使重叠也不需要跨组
+的重数，因为各组分别由同一个全局体范数控制。
+
+后文简记
+\begin{align}
+  \varepsilon_g^2&:=\sum_{\Gamma\in\mathscr E_g}
+  \left(\lVert\jump{\partial_\nu\widehat u}_\Gamma\rVert_{L^2(\Gamma)}^2
+    +\ell_g^{-2}\lVert\jump{\widehat u}_\Gamma\rVert_{L^2(\Gamma)}^2\right),
+  &Q&:=\sum_g C_g\varepsilon_g .
+  \label{eq:trace-defect-product}
+\end{align}
+只取一组、$C_g=C_{\mathrm{tr}}$ 时即 $Q=C\varepsilon_{\partial,\ell_*}$。$C_g$ 只依赖
+$\mu$、$\rin$、$\rax$、$\ell_g$ 与几何量，不是由候选残量拟合的量。
+
+% ====================================================================
+\subsection{谱距离定理}
+\label{subsec:spectral-distance}
+
+\begin{theorem}[原始界面缺陷的谱距离界]
+  \label{thm:spectral-distance}
+  设界面族（含接缝）满足命题~\ref{prop:positive-shift-trace-bound} 或
+  命题~\ref{prop:grouped-trace-bound} 的几何条件，$\mu>0$，$Q$ 如
+  式~\eqref{eq:trace-defect-product}。设非零场 $\widehat u$ 满足 (P1)--(P4)，且
+  $\varepsilon_{\partial,\ell_*}<\infty$。若
+  \begin{align}
+    Q&<U,
+    \label{eq:positive-denominator}
+  \end{align}
+  则
+  \begin{align}
+    \operatorname{dist}\bigl(\mu,\sigma(A(\beta))\bigr)
+    &\leq\frac{2\mu Q}{U-Q}.
+    \label{eq:spectral-distance-bound}
+  \end{align}
+  这是到整个谱的距离上界，不需要预先知道本质谱或谱隙。
+\end{theorem}
+
+\begin{proof}
+  若 $\mu\in\sigma(A(\beta))$，结论显然。以下设
+  $\delta:=\operatorname{dist}(\mu,\sigma(A(\beta)))>0$，并只为证明引入辅助场
+  \begin{align}
+    z&:=(A(\beta)-\mu)^{-1}\widehat u\in D(A(\beta)),
+    \label{eq:auxiliary-resolvent-field}
+  \end{align}
+  计算中不需要求解它。证明中简写 $u=\widehat u$。思路是：以 $z$ 为 Green 恒等式的测试
+  场，把 $U^2$ 写成跳跃与 $z$ 的迹的配对，再用命题~\ref{prop:positive-shift-trace-bound}
+  控制 $z$ 的迹。
+
+  \smallskip\noindent\textbf{第一步：逐片恒等式。}
+  在每个均匀分片内 $\Delta u=-\mu\rho u$，而由 $(A(\beta)-\mu)z=u$ 得
+  $-\Delta z-\mu\rho z=\rho u$。$\mu,\rho$ 为实数，取共轭后乘以 $u$ 并代入前式，得
+  $\rho|u|^2=\overline z\,\Delta u-u\,\Delta\overline z$。这里只用到 $u$ 的逐片方程。
+  对有界分片 $D$ 及其外法向 $\nu_D$，Green 第二恒等式给出
+  \begin{align*}
+    \int_D\rho|u|^2
+    =\int_{\partial D}\bigl(\overline z\,\partial_{\nu_D}u-u\,\partial_{\nu_D}\overline z\bigr)\dd s.
+  \end{align*}
+
+  \smallskip\noindent\textbf{第二步：合并共享界面。}
+  在 $\Gamma\in\mathscr E$ 上，侧 $1$ 的外法向为 $\nu_\Gamma$，侧 $2$ 的为 $-\nu_\Gamma$。
+  由命题~\ref{prop:positive-shift-trace-bound} 证明中的正则性，$z\in H^2(B)$，其值迹
+  与法向迹在两侧相同。两侧边界被积函数相加得
+  \begin{align*}
+    \bigl(\overline z\,\partial_{\nu_\Gamma}u^{(1)}-u^{(1)}\partial_{\nu_\Gamma}\overline z\bigr)
+    -\bigl(\overline z\,\partial_{\nu_\Gamma}u^{(2)}-u^{(2)}\partial_{\nu_\Gamma}\overline z\bigr)
+    =\jump{\partial_\nu u}_\Gamma\overline z+\jump{u}_\Gamma\partial_{\nu_\Gamma}\overline z.
+  \end{align*}
+  \pending{接缝项（2026-11-04 修改）}接缝也按这种方式合并：$z$ 精确准周期，按
+  $y>d/2$ 一侧的准周期延拓，其值迹与法向迹在接缝两侧相同，而 $u$ 的两侧值由
+  式~\eqref{eq:seam-jumps} 给出。直接代入上、下边界的外法向可验证，两条边界项之和恰为
+  $\int_{\Sigma_{\mathcal C}}(\jump{\partial_\nu u}_\Sigma\overline z
+  +\jump{u}_\Sigma\partial_y\overline z)\,\dd x$，与其他界面的形式相同。原稿假定 $u$
+  精确准周期时，这一项为零。
+
+  \smallskip\noindent\textbf{第三步：截断。}
+  取实值 $\chi_R\in C_c^\infty(\RR)$，$0\leq\chi_R\leq1$，在 $|x|\leq R$ 上为 $1$，在
+  $|x|\geq2R$ 上为 $0$，$\lVert\chi_R'\rVert_\infty=O(R^{-1})$，
+  $\lVert\chi_R''\rVert_\infty=O(R^{-2})$。把前两步中的 $z$ 换成 $\chi_Rz$，只需对有限
+  个分片求和，最外侧竖直边界没有贡献；接缝上 $\partial_{\nu_\Sigma}\chi_R=\partial_y\chi_R=0$。由
+  $\Delta(\chi_R\overline z)=\chi_R\Delta\overline z+2\chi_R'\partial_x\overline z
+  +\chi_R''\overline z$ 及
+  $\partial_{\nu_\Gamma}(\chi_R\overline z)=\chi_R\partial_{\nu_\Gamma}\overline z
+  +(\partial_{\nu_\Gamma}\chi_R)\overline z$，
+  \begin{align*}
+    \int_B\chi_R\rho|u|^2
+    ={}&\sum_{\Gamma\in\mathscr E}\int_\Gamma\chi_R\bigl(\jump{\partial_\nu u}_\Gamma\overline z
+      +\jump{u}_\Gamma\partial_{\nu_\Gamma}\overline z\bigr)\dd s\\
+    &+\underbrace{\int_Bu\bigl(2\chi_R'\partial_x\overline z+\chi_R''\overline z\bigr)}_{=:I_R}
+    +\underbrace{\sum_{\Gamma\in\mathscr E}\int_\Gamma
+      \jump{u}_\Gamma(\partial_{\nu_\Gamma}\chi_R)\overline z\,\dd s}_{=:J_R}.
+  \end{align*}
+
+  \smallskip\noindent\textbf{第四步：令 $R\to\infty$。}
+  由 $u\in L^2(B)$ 与 $z\in H^2(B)$，$I_R\to0$。由 Cauchy--Schwarz 不等式，
+  $|J_R|\leq\lVert\chi_R'\rVert_\infty\,\ell_*\varepsilon_{\partial,\ell_*}T_{\ell_*}(z)\to0$，
+  其中 $T_{\ell_*}(z)\leq C\lVert(A(\beta)+\mu)z\rVert_{\mathcal H}<\infty$ 由
+  命题~\ref{prop:positive-shift-trace-bound} 保证；这正是该命题在去掉截断时的作用。
+  主界面项满足
+  \begin{align}
+    \sum_{\Gamma\in\mathscr E}\int_\Gamma
+      \bigl(|\jump{\partial_\nu u}_\Gamma|\,|z|+|\jump{u}_\Gamma|\,|\partial_{\nu_\Gamma}z|\bigr)\dd s
+    \leq\varepsilon_{\partial,\ell_*}T_{\ell_*}(z)<\infty,
+    \label{eq:weighted-cauchy-schwarz}
+  \end{align}
+  故可由支配收敛取极限；左端同理趋于 $U^2$。于是
+  \begin{align}
+    U^2&=\sum_{\Gamma\in\mathscr E}\int_\Gamma
+      \bigl(\jump{\partial_\nu u}_\Gamma\overline z
+        +\jump{u}_\Gamma\partial_{\nu_\Gamma}\overline z\bigr)\dd s.
+    \label{eq:raw-green-identity}
+  \end{align}
+
+  \smallskip\noindent\textbf{第五步：预解式估计。}
+  由谱定理 $\lVert(A(\beta)-\mu)^{-1}\rVert=\delta^{-1}$，故
+  $\lVert z\rVert_{\mathcal H}\leq U/\delta$；又 $(A(\beta)+\mu)z=u+2\mu z$，所以
+  $\lVert(A(\beta)+\mu)z\rVert_{\mathcal H}\leq(1+2\mu/\delta)U$。由
+  式~\eqref{eq:raw-green-identity}、\eqref{eq:weighted-cauchy-schwarz} 与
+  命题~\ref{prop:positive-shift-trace-bound}，
+  \begin{align*}
+    U^2\leq\varepsilon_{\partial,\ell_*}T_{\ell_*}(z)
+    \leq Q\Bigl(1+\frac{2\mu}{\delta}\Bigr)U.
+  \end{align*}
+  除以 $U$ 并利用 $U-Q>0$ 得 $\delta(U-Q)\leq2\mu Q$。分组时把
+  式~\eqref{eq:weighted-cauchy-schwarz} 逐组写成 $\sum_g\varepsilon_gT_g(z)$，再用
+  命题~\ref{prop:grouped-trace-bound}，得到同样的不等式，其中 $Q=\sum_gC_g\varepsilon_g$。
+\end{proof}
+
+界的右端关于 $\widehat u$ 的倍数不变；当 $\varepsilon_{\partial,\ell_*}\to0$ 时，它以
+$2\mu C\varepsilon_{\partial,\ell_*}/U$ 线性趋于零。定理对每个 $\ell_*>0$ 都成立，
+$\ell_*$ 可用来平衡两类跳跃。
+
+\begin{remark}[体缺陷]
+  若使用不精确满足 (P1) 的分片场，令 $r=(-\Delta-\mu\rho)\widehat u$、
+  $\varepsilon_{\mathrm{vol}}:=\lVert\rho^{-1}r\rVert_{\mathcal H}$，则第一步多出
+  $\int_Br\overline z$，其绝对值不超过 $\varepsilon_{\mathrm{vol}}U/\delta$，同一证明给出
+  $\operatorname{dist}(\mu,\sigma(A(\beta)))\leq(2\mu Q+\varepsilon_{\mathrm{vol}})/(U-Q)$。
+  本文的原始场体缺陷为零。
+\end{remark}
+
+% ====================================================================
+\subsection{界面缺陷与场范数的计算}
+\label{subsec:computation}
+
+$\varepsilon_{\partial,\ell_*}^2$ 是对无穷多条界面的求和。下面依次说明单条材料界面与
+单条人工界面上的积分，再用传播矩阵把无穷求和化为有限计算加可控尾项。
+
+\subsubsection{材料界面}
+
+设 $\Gamma=\partial\Omega$ 参数化为 $\boldsymbol r(t)$，$t\in[0,1)$。在目标点
+$\mathbf z_q=\boldsymbol r(t_q)$，$t_q=q/N_q$，处按式~\eqref{eq:interface-jump-operator}
+计算两类量：
+\begin{itemize}
+  \item 局部项 $\tau(t_q)$、$\omega(t_q)$：由三角插值~\eqref{eq:exact-density-dft}
+    直接求值；
+  \item 积分项：取 $N_q\geq N_\eta$，把密度零填充插值到 $N_q$ 点网格（三角多项式次数
+    小于 $N_\eta/2$，插值精确），再用 Kress 核分裂求积。由
+    第~\ref{subsec:layer-potentials}~小节，四个算子差的核至多对数奇异，无须超奇异求积。
+\end{itemize}
+背景场 $u_{\mathrm b}$ 及其法向导数直接求值。得到 $\jump{\widehat u}_\Gamma(\mathbf z_q)$
+与 $\jump{\partial_\nu\widehat u}_\Gamma(\mathbf z_q)$ 后，用周期梯形公式
+\begin{align}
+  \int_\Gamma\bigl(|\jump{\partial_\nu\widehat u}_\Gamma|^2
+    +\ell_*^{-2}|\jump{\widehat u}_\Gamma|^2\bigr)\dd s
+  \approx\frac1{N_q}\sum_{q=0}^{N_q-1}
+  \bigl(|\jump{\partial_\nu\widehat u}_\Gamma(\mathbf z_q)|^2
+    +\ell_*^{-2}|\jump{\widehat u}_\Gamma(\mathbf z_q)|^2\bigr)|\boldsymbol r'(t_q)|.
+  \label{eq:material-jump-quadrature}
+\end{align}
+这里有两层求积：内层评价层势在目标点的值，外层计算 $L^2$ 范数。$N_q$ 可以远大于
+$N_\eta$ 而不改变密度。
+
+\subsubsection{人工界面}
+
+\pending{本小节的模态尾界对实际场不成立（2026-11-04）}下面的模态计算与尾界
+式~\eqref{eq:artificial-tail-bound} 用到精确准周期 Green 函数的 Rayleigh 结构：层势的
+法向系数等于值系数乘 $\pm\ii\gamma_m$，高阶模态按 $\ee^{-|\gamma_m|\delta_\Gamma}$ 衰减。
+对增广 MFS 场这两点都不成立：跳跃函数一般不满足端点准周期匹配，其 Fourier 系数通常只有
+$1/|m|$ 的尾。Parseval 等式~\eqref{eq:artificial-jump-parseval} 对实际跳跃仍成立，但
+尾项须改用实际跳跃的端点差与导数界，或者直接在墙段上对跳跃函数作带误差界的分段求积。
+本文的实现采用后者；以下原文保留，只适用于精确准周期场。
+
+设 $\Gamma=\{x_\Gamma\}\times I_d$。每侧的场在 $\Gamma$ 附近由 Rayleigh 波与该侧胞元的
+准周期层势组成，层势源全在 $\Gamma$ 的同一侧。按 $\psi_m$ 展开每侧场的值迹与
+$\partial_x$ 迹：Rayleigh 波直接给出振幅；层势的振幅由
+式~\eqref{eq:rayleigh-coefficient-right} 的连续形式给出（$x_p=x_\Gamma$），其值系数为
+$\phi_m$，$\partial_x$ 系数为 $\pm\ii\gamma_m\phi_m$（源在左侧取正）。两侧相减并按
+$\nu_\Gamma$ 取法向导数，得到 $\jump{\widehat u}_{\Gamma,m}$ 与
+$\jump{\partial_\nu\widehat u}_{\Gamma,m}$。由于 $\{\psi_m\}$ 正交归一，
+\begin{align}
+  \int_\Gamma\bigl(|\jump{\partial_\nu\widehat u}_\Gamma|^2
+    +\ell_*^{-2}|\jump{\widehat u}_\Gamma|^2\bigr)\dd s
+  &=\sum_{m\in\ZZ}\bigl(|\jump{\partial_\nu\widehat u}_{\Gamma,m}|^2
+    +\ell_*^{-2}|\jump{\widehat u}_{\Gamma,m}|^2\bigr).
+  \label{eq:artificial-jump-parseval}
+\end{align}
+
+只显式计算 $|m|\leq M_{\mathrm{ev}}$ 的项，其余项不能直接设为零。取
+$M_{\mathrm{ev}}\geq M$ 足够大，使 $|m|>M_{\mathrm{ev}}$ 时 $\beta_m^2>\kappa_{\mathrm e}^2$，
+于是 $\gamma_m=\ii|\gamma_m|$，且这些模态只有层势贡献。记 $\delta_\Gamma>0$ 为 $\Gamma$ 与
+两侧源曲线之间的最小水平距离。由 $|g_m|\leq\ee^{-|\gamma_m|\delta_\Gamma}/(2\sqrt d|\gamma_m|)$
+与 $|\partial_{\nu'}g_m|\leq(|\gamma_m|^2+\beta_m^2)^{1/2}|g_m|$，每侧的振幅满足
+\begin{align}
+  |\phi_m|
+  &\leq\Phi_m
+  :=\frac{\ee^{-|\gamma_m|\delta_\Gamma}}{2\sqrt d\,|\gamma_m|}
+  \Bigl(\lVert\omega\rVert_{L^1}+(|\gamma_m|^2+\beta_m^2)^{1/2}\lVert\tau\rVert_{L^1}\Bigr),
+  \notag\\
+  \sum_{|m|>M_{\mathrm{ev}}}
+  \bigl(|\jump{\partial_\nu\widehat u}_{\Gamma,m}|^2+\ell_*^{-2}|\jump{\widehat u}_{\Gamma,m}|^2\bigr)
+  &\leq2\sum_{|m|>M_{\mathrm{ev}}}(|\gamma_m|^2+\ell_*^{-2})
+  \bigl((\Phi_m^{(1)})^2+(\Phi_m^{(2)})^2\bigr),
+  \label{eq:artificial-tail-bound}
+\end{align}
+上标表示两侧，$L^1$ 范数取在相应源曲线上，不超过三角系数绝对值之和乘以曲线长度。
+由于 $|\gamma_m|\geq|\beta_m|-\kappa_{\mathrm e}$ 线性增长，右端各项按
+$\exp(-4\pi|m|\delta_\Gamma/d)$ 乘多项式因子衰减，可用几何级数写出闭式上界。
+
+\subsubsection{半波导的无穷求和}
+
+由式~\eqref{eq:half-guide-raw-field} 的平移结构，$\partial\Omega_{j,\pm}$ 与
+$\Gamma_{j,\pm}$ 上的跳跃只依赖状态 $\mathsf P_\pm^jc_\pm$。对 $v\in\CC^K$，定义
+$b_\pm(v)$ 为两项之和：$u_\pm[v]$ 在 $\partial\Omega_\pm$ 上的跳跃积分，以及共享端口
+$\Gamma_{0,\pm}$ 上的跳跃积分（侧 $1$ 为 $u_\pm[v]$，侧 $2$ 为平移一个周期的
+$u_\pm[\mathsf P_\pm v]$），均按式~\eqref{eq:boundary-defect-norm} 的权重计量。记 $b_0$
+为 $\partial\Omega_0$（若存在）及 $\Gamma_-$、$\Gamma_+$ 上的跳跃积分之和，后两者分别
+比较中心场与 $u_-[c_-]$、$u_+[c_+]$。于是
+\begin{align}
+  \varepsilon_{\partial,\ell_*}^2
+  &=b_0+\sum_{\pm}\sum_{j=0}^{\infty}b_\pm(\mathsf P_\pm^jc_\pm).
+  \label{eq:full-propagation-boundary-sum}
+\end{align}
+每条共享端口归属于较靠近中心的胞元，没有重复计数。全部跳跃线性依赖于状态，故
+$b_\pm(v)=\lVert\mathcal L_\pm v\rVert^2$，$\mathcal L_\pm$ 是从 $\CC^K$ 到相应加权
+$L^2$ 空间的线性映射；计算中不需要组装 Gram 矩阵。
+
+有限部分从 $v=c_\pm$ 开始，重复计算 $b_\pm(v)$ 并更新 $v\leftarrow\mathsf P_\pm v$，共
+$N_{\mathrm{cell}}$ 次。尾项不能仅以末项很小为由丢弃。令 $\boldsymbol e_s$ 为 $\CC^K$
+的标准基，则
+\begin{align*}
+  b_\pm(v)\leq\lVert\mathcal L_\pm\rVert_{\mathrm{HS}}^2\lVert v\rVert_2^2
+  =\Theta_\pm\lVert v\rVert_2^2,
+  \qquad\Theta_\pm:=\sum_{s=1}^Kb_\pm(\boldsymbol e_s),
+\end{align*}
+$\Theta_\pm$ 只需对 $K$ 个基向量各调用一次同一评价过程。设已验证某正整数 $p$ 使
+$\lVert\mathsf P_\pm^p\rVert_2\leq r_\pm<1$。把 $j=N_{\mathrm{cell}}+ip+l$
+（$0\leq l<p$）代入并使用
+$\lVert\mathsf P^{ip+l}w\rVert_2\leq\lVert\mathsf P^l\rVert_2r^i\lVert w\rVert_2$，得
+\begin{align}
+  \sum_{j=N_{\mathrm{cell}}}^{\infty}b_\pm(\mathsf P_\pm^jc_\pm)
+  &\leq\frac{\Theta_\pm\sum_{l=0}^{p-1}\lVert\mathsf P_\pm^l\rVert_2^2}{1-r_\pm^2}
+  \bigl\lVert\mathsf P_\pm^{N_{\mathrm{cell}}}c_\pm\bigr\rVert_2^2.
+  \label{eq:boundary-propagation-tail}
+\end{align}
+若 $\lVert\mathsf P_\pm\rVert_2<1$，取 $p=1$。$\mathsf P_\pm$ 一般不正规，即使谱半径
+小于一，$\lVert\mathsf P_\pm\rVert_2$ 也可能大于一，此时须取 $p>1$。整个计算保留完整的
+$\mathsf P_\pm$，不假定传播方向正交或逐模独立。
+
+\subsubsection{场范数}
+\label{subsec:mass}
+
+同样由平移结构，
+\begin{align}
+  U^2&=\int_{\mathcal C_0}\rho|\widehat u|^2
+    +\sum_{\pm}\sum_{j=0}^{\infty}m_\pm(\mathsf P_\pm^jc_\pm),
+  &m_\pm(v)&:=\int_{\mathcal C_\pm}\rho|u_\pm[v]|^2.
+  \label{eq:mass-propagation-sum}
+\end{align}
+把 $b_\pm$ 换成 $m_\pm$，式~\eqref{eq:boundary-propagation-tail} 的论证同样适用，这就
+核验了 (P4)。定理只需要 $U$ 的下界：对任意可测子集 $D\subset B$，
+\begin{align}
+  \Bigl(\int_D\rho|\widehat u|^2\Bigr)^{1/2}&\leq U.
+  \label{eq:mass-lower-bound}
+\end{align}
+\pending{圆盘下界（2026-11-04 新增）}最便宜的选择是均匀分片内的圆盘。设闭圆盘
+$\overline{D_r(\mathbf c)}$ 含于系数为常数 $\rho_b$ 的一个分片内部，
+$\kappa_b=\sqrt{\mu\rho_b}$。圆周平均 $m(s)=\frac1{2\pi}\int_0^{2\pi}\widehat u(\mathbf c+s\ee^{\ii\phi})\,\dd\phi$
+满足径向 Helmholtz 方程且 $m(0)=\widehat u(\mathbf c)$，故 $m(s)=J_0(\kappa_bs)\widehat u(\mathbf c)$。
+由 Cauchy--Schwarz，圆周上的平方积分至少为 $2\pi s\lvert m(s)\rvert^2$，对 $s$ 积分得
+\begin{align}
+  \int_{D_r(\mathbf c)}\rho|\widehat u|^2
+  \geq\rho_b\pi r^2\bigl[J_0(\kappa_br)^2+J_1(\kappa_br)^2\bigr]\,\lvert\widehat u(\mathbf c)\rvert^2 .
+  \label{eq:disk-mass-lower-bound}
+\end{align}
+互不相交的若干圆盘可以相加；也可用圆盘上的 Fourier--Bessel 系数得到更强的下界。
+可选 $D$ 为中心胞元或若干相邻胞元中去掉界面细邻域后的区域。在这样的 $D$ 上层势被积
+函数光滑，用原始 $N_\eta$ 个节点的梯形公式即可准确评价场值，不需要近奇异求积。$D$ 应
+包含场的主要质量，否则下界过小会使条件~\eqref{eq:positive-denominator} 失效。
+
+\subsubsection{计算流程}
+
+\begin{enumerate}
+  \item 由式~\eqref{eq:candidate-vector} 得到 $(\xi,c_-,c_+)$，并固定其倍数；
+  \item 计算 $b_0$；
+  \item 对两侧累加 $j<N_{\mathrm{cell}}$ 的 $b_\pm(\mathsf P_\pm^jc_\pm)$，计算
+    $\Theta_\pm$、$r_\pm$ 并加上尾项~\eqref{eq:boundary-propagation-tail}，开平方得
+    $\varepsilon_{\partial,\ell_*}$；
+  \item 由式~\eqref{eq:mass-lower-bound} 计算 $U$ 的下界；
+  \item 由式~\eqref{eq:trace-constant} 或分组常数~\eqref{eq:joint-multiplier-constant}
+    计算 $C$ 或 $C_g$，按式~\eqref{eq:trace-defect-product} 置 $Q$，
+    检查 $Q<U$，代入式~\eqref{eq:spectral-distance-bound}。
+\end{enumerate}
+作数值估计时，逐步增加 $N_q$、$M_{\mathrm{ev}}$ 与 $N_{\mathrm{cell}}$，直到界面积分、
+模态尾项与传播尾项的变化都低于预先选定的容差。这样得到的是谱距离的数值估计；加密
+稳定性不能代替可靠误差界。
+
+% ====================================================================
+\subsection{可靠上界与谱的解释}
+\label{subsec:certified}
+
+若要得到可靠上界，须为定理的三个输入建立单侧界：
+\begin{align}
+  C&\leq\overline C,
+  &\varepsilon_{\partial,\ell_*}&\leq\overline\varepsilon_\partial,
+  &0<\underline U&\leq U,
+  &\underline D&:=\underline U-\overline C\,\overline\varepsilon_\partial>0.
+  \label{eq:certified-inputs}
+\end{align}
+三者必须来自同一候选、同一倍数与同一组密度：
+\begin{itemize}
+  \item $\overline C$：对 $\mu$、$\rin$、$\rax$、$\ell_*$ 与
+    式~\eqref{eq:trace-geometry-constants} 或式~\eqref{eq:jacobian-trace-constants} 的几何量
+    向外舍入，几何条件（领子单射、曲率界、组内覆盖重数）逐项验证；
+  \item $\overline\varepsilon_\partial$：\pending{2026-11-04 修改}对式~\eqref{eq:mfs-field}
+    定义的同一个场，计入内层 Kress 求积误差、外层求积误差、快速多极方法等加速求和的
+    截断误差（名义容差不是界）、特殊函数求值误差，人工界面与接缝上直接求积的误差，以及
+    传播尾项~\eqref{eq:boundary-propagation-tail} 中 $\Theta_\pm$、$r_\pm$、
+    $\lVert\mathsf P_\pm^l\rVert_2$、$\lVert\mathsf P_\pm^{N_{\mathrm{cell}}}c_\pm\rVert_2$
+    的上界；舍入可以只给估计，此时结论是“截断误差意义下可靠”；
+  \item $\underline U$：式~\eqref{eq:mass-lower-bound} 中积分的下界，计入求积与舍入
+    误差；用圆盘下界~\eqref{eq:disk-mass-lower-bound} 时只需中心点值的可靠下界。
+\end{itemize}
+由定理~\ref{thm:spectral-distance} 立即得到
+\begin{align}
+  R_{\mathrm{spec}}
+  &:=\frac{2\mu\overline C\,\overline\varepsilon_\partial}{\underline D},
+  &\operatorname{dist}\bigl(\mu,\sigma(A(\beta))\bigr)&\leq R_{\mathrm{spec}}.
+  \label{eq:certified-spectral-distance}
+\end{align}
+若 $\underline D\leq0$，公式不给出有限的界。$R_{\mathrm{spec}}$ 是到谱的距离上界，不是
+残量范数。因此向外舍入的区间
+\begin{align}
+  I_{\mathrm{spec}}&:=[\mu-R_{\mathrm{spec}},\mu+R_{\mathrm{spec}}]
+  \label{eq:certified-spectral-interval}
+\end{align}
+必与 $\sigma(A(\beta))$ 相交。这不识别最近谱点的编号或重数，也不保证区间内只有一个
+谱点。若另行证明 $I_{\mathrm{spec}}$ 含于某个与 $\sigma_{\mathrm{ess}}(A(\beta))$ 不交的
+开区间（例如由第~\ref{subsec:gap-certificate}~小节的带隙证书~\eqref{eq:gap-condition}），则由命题~\ref{prop:discrete-spectrum-in-gap}，$I_{\mathrm{spec}}$ 中至少有一个
+孤立、有限重的特征值，即一个导模。
