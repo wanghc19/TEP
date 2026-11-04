@@ -58,9 +58,16 @@ research/**/checkpoints/
 
 # Local experiment outputs (already tracked files remain tracked)
 test/**/output/
-/test/i8/fmm-v1/vendor/fmm2d/
 test/i4/femref-a1/diagnostics/
 test/i4/femref-a1/watchdog/
+
+# Vendored third-party dependencies (see vendor/README.md); the old
+# experiment-local paths are symlinks into vendor/
+/vendor/*
+!/vendor/README.md
+/test/i8/fmm-v1/vendor/fmm2d
+/test/i6/resolvent-v3/vendor
+/test/spectral-counting/gap-v1/vendor
 
 # Reference library: track only the catalog and BibTeX index
 ref/**
