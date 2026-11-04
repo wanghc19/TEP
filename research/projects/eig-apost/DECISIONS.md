@@ -1,5 +1,11 @@
 # Eigenvalue a posteriori decision record
 
+## 2026-11-04 — Rounding is handled by a rounding error estimate, not by ball arithmetic
+
+- **Decision (user).** The four-corner interval and (H) stay reliable with respect to truncation errors ("舍入排除"). Rounding is covered by a 舍入误差估计: standard backward-error facts and condition numbers give, for every sign or inertia decision and every printed bound, an estimated rounding effect to compare with its margin. This is an estimate, not a reliable bound. A full interval-arithmetic recomputation is only needed for a computer-assisted-proof claim and is not planned.
+- **Reason.** Full rounding coverage costs much more work than it changes: all margins are far from the estimated rounding effect.
+- **Result.** Stage 8b, [[research/explorations/numerical-directions/rounding-estimate|rounding-estimate]]: every sign and inertia decision has margin at least about 400 times its estimate; the main interval endpoints move by about $10^{-11}$ (0.20% / 0.23% of the width). Printed digits beyond the estimate were removed from the draft ((C) table, (D) shift now 0.36). Ledger: OP-ND-5.
+
 ## 2026-11-03 — The conditional theorem under (H) may stay the main statement
 
 - **Decision (user).** If certifying the isolation hypothesis (H) turns out to be expensive, the main stated result stays the interval that is reliable with respect to truncation errors under (H). The (H) certificate is then supporting evidence, reported with its own cost.

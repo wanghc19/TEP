@@ -111,6 +111,7 @@
 | `ref_data/books/Colton1983 (CH3).pdf` | *Integral Equation Methods in Scattering Theory*, Chapter 3 | David Colton; Rainer Kress | 2013 重印；原版 1983 | 散射积分方程 | 本地文件是第 3 章节选；为层势与散射积分方程提供经典依据 | `ColtonKress1983` |
 | `ref_data/books/Folland1999.pdf` | *Real Analysis: Modern Techniques and Their Applications*, 2nd ed. | Gerald B. Folland | 1999 | 测度、Fourier 分析 | 定理 8.20（p.248）三角函数系完备、定理 8.29（p.252）Plancherel；L1 雏形 4.5 节引用 | `Folland1999` |
 | `ref_data/books/Hardy1934.pdf` | *Inequalities* | G. H. Hardy; J. E. Littlewood; G. Pólya | 1934（第一版） | 经典不等式 | §7.7 定理 258（p.185）Wirtinger 不等式；L1 雏形 4.5 节引用 | `HardyLittlewoodPolya1934` |
+| `ref_data/books/Higham2002.pdf` | *Accuracy and Stability of Numerical Algorithms*, 2nd ed. | Nicholas J. Higham | 2002 | 浮点舍入误差分析 | 引理 3.1（p.63）$\gamma_n$、式 (3.5)（p.63）内积误差、§4.2（pp.81–82）求和误差、定理 10.3（p.197）Cholesky 后向误差、定理 11.3（p.218）块 $LDL^T$ 后向误差（均按实矩阵陈述，复 Hermitian 情形常数相应放大）；舍入误差估计引用 | `Higham2002` |
 | `ref_data/books/Isakov2017.pdf` | *Inverse Problems for Partial Differential Equations*, 3rd ed. | Victor Isakov | 2017 | 反问题、唯一延拓、稳定性 | 为项目证明中使用的 Cauchy 唯一性与定量估计提供来源 | `Isakov2017` |
 | `ref_data/books/Joannopoulos2011.pdf` | *Photonic Crystals: Molding the Flow of Light*, 2nd ed. | John D. Joannopoulos; Steven G. Johnson; Joshua N. Winn; Robert D. Meade | 2008 | 光子晶体物理与能带 | 提供周期介质、缺陷和导模的物理背景；文件名年份与版本版权页不一致 | `JoannopoulosJohnsonWinnMeade2008` |
 | `ref_data/books/Kato1995.pdf` | *Perturbation Theory for Linear Operators*, 2nd ed. | Tosio Kato | 1995 | 闭算子、谱与扰动理论 | 是项目算子谱、解析族和特征值扰动的理论基础 | `Kato1995` |
