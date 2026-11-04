@@ -43,7 +43,7 @@
 \maketitle
 
 \begin{abstract}
-对 $y$ 方向周期、左右两侧为不同周期介质的二维介质线缺陷波导，固定 Bloch 相位 $\beta$，我们给出一种由有限元计算产生导模特征值包含区间的方法。试探场取截断的有限元--DtN 解，通量取 Raviart--Thomas 空间中的互补能量极小元；在隔离假设 (H)（窗口中除目标特征值外没有别的谱）下，Lehmann--Goerisch 不等式给出宽度与 Rayleigh 商误差同阶的区间。区间所需的三个积分对区域截断、曲边几何和求积余项都有显式的界，并按使区间变宽的方向计入。利用 DtN 约化形式关于谱参数的单调性，我们把 (H) 化为窗口上端点处的一个负特征值计数，并进一步拆成四个有限检验：两侧周期介质的带隙、半导波截面的表面态、DtN 形式的单侧下界和芯区计数。在 $\beta=0.5$ 的算例中，我们得到宽 $4.46\times10^{-9}$ 的区间 $[2.4287286691978,\,2.4287286736601]$，计算约 12 分钟，与边界积分方法的耗时相当；不用 (H) 时同一组数据给出宽 $1.0\times10^{-4}$ 的区间并已证明导模存在。四个检验都已完成，因此 (H) 成立，窄区间是可靠的包含区间；验证 (H) 的四个检验中芯区计数只需十几秒。所有结果都不计浮点舍入误差。
+对 $y$ 方向周期、左右两侧为不同周期介质的二维介质线缺陷波导，固定 Bloch 相位 $\beta$，我们给出一种由有限元计算产生导模特征值包含区间的方法。试探场取截断的有限元--DtN 解，通量取 Raviart--Thomas 空间中的互补能量极小元；在隔离假设 (H)（窗口中除目标特征值外没有别的谱）下，Lehmann--Goerisch 不等式给出宽度与 Rayleigh 商误差同阶的区间。区间所需的三个积分对区域截断、曲边几何和求积余项都有显式的界，并按使区间变宽的方向计入。利用 DtN 约化形式关于谱参数的单调性，我们把 (H) 化为窗口上端点处的一个负特征值计数，并进一步拆成四个有限检验：两侧周期介质的带隙、半导波截面的表面态、DtN 形式的单侧下界和芯区计数。在 $\beta=0.5$ 的算例中，我们得到宽 $4.46\times10^{-9}$ 的区间 $[2.4287286691977,\,2.4287286736602]$，计算约 12 分钟，与边界积分方法的耗时相当；不用 (H) 时同一组数据给出宽 $1.0\times10^{-4}$ 的区间并已证明导模存在。四个检验都已完成，因此 (H) 成立，窄区间是可靠的包含区间；验证 (H) 的四个检验中芯区计数只需十几秒。所有结果都不计浮点舍入误差。
 \end{abstract}
 
 \section{引言}
@@ -56,14 +56,14 @@
 
 \subsection*{相关工作}
 
-特征值的可靠包含有很长的历史。Temple 不等式 \cite{Temple1928} 用 Rayleigh 商与残差给出二阶精度的界；Lehmann--Goerisch 方法 \cite{NakaoPlumWatanabe2019} 用可计算的互补量代替不可计算的残差范数，是计算机辅助证明中常用的特征值包含工具。对有界区域，基于平衡通量的后验界可以处理重根与特征值簇 \cite{CancesDussonMadayStammVohralik2020}，非协调元可以直接给出可靠下界 \cite{CarstensenGedicke2014}，谱 Galerkin 方法也有相应的下界 \cite{Liu2026Spectral}。这些方法都要求谱在所关心区间之外分离，并通常依赖紧预解式；在无限波导中，本质谱紧挨着带隙，需要另作处理。
+特征值的可靠包含有很长的历史。Temple 不等式 \cite{Temple1928} 用 Rayleigh 商与残差给出二阶精度的界；Lehmann--Goerisch 方法 \cite{NakaoPlumWatanabe2019} 用可计算的互补量代替不可计算的残差范数，是计算机辅助证明中常用的特征值包含工具。对有界区域，基于平衡通量的后验界可以处理重根与特征值簇 \cite{CancesDussonMadayStammVohralik2020}，非协调元可以直接给出可靠下界 \cite{CarstensenGedicke2014}，谱 Galerkin 方法也有相应的下界 \cite{Liu2026Spectral}。其中特征值簇的包含要求目标簇与其余谱分离；这些方法都针对有界区域，依赖紧预解式。在无限波导中，本质谱紧挨着带隙，需要另作处理。
 
 对无限区域与周期结构，Behnke 等 \cite{BehnkeMertinsPlumWieners2000} 用区域分解和 Dirichlet／Neumann 比较给出声学波导的特征值包含；Hoang、Plum 与 Wieners \cite{HoangPlumWieners2009} 用计算机辅助证明给出光子带隙；Brown 等 \cite{BrownHoangPlumWood2009} 用 $H^{-1}$ 残差与 Weinstein 型界包围线缺陷引入的谱点，并在 \cite{BrownHoangPlumWood2015} 中证明弱缺陷导模的存在。带隙中特征值的数值逼近还可参见 \cite{BoultonLevitin2007,AljawiMarletta2023}。线缺陷问题的 DtN 理论见 \cite{JolyLiFliss2006,Coatleven2012,Fliss2013,FlissJolyLescarret2021}。
 
 \subsection*{本文的贡献}
 
 \begin{enumerate}
-\item \emph{二阶包含区间.} 在 (H) 下，以截断的 FEM--DtN 场为试探函数、$RT_3$ 通量为互补场，Lehmann--Goerisch 不等式给出宽度约为 $C_W(\theta-\lambda_*)$ 的区间，其中 $\theta$ 是试探场的 Rayleigh 商，$C_W$ 只由窗口决定（第~\ref{sec:goerisch}~节）。我们给出只用谱测度的简短证明，条件比文献中的符号条件弱。
+\item \emph{二阶包含区间.} 在 (H) 下，以截断的 FEM--DtN 场为试探函数、$RT_3$ 通量为互补场，Lehmann--Goerisch 不等式给出包含区间；当试探场的误差主要落在远高于窗口的谱分量上时，宽度约为 $C_W(\theta-\lambda_*)$，其中 $\theta$ 是试探场的 Rayleigh 商，$C_W$ 只由窗口决定（第~\ref{sec:goerisch}~节）。我们给出只用谱测度的简短证明，条件比文献中的符号条件弱。
 \item \emph{截断误差意义下可靠的积分.} 区间只依赖三个积分 $E,M,S$。我们用多项式模型算术、真材料质量的扫掠恒等式和“先形成小残差再平方”的原则给出它们的显式上下界，并证明区间端点只需在四个角上检验（第~\ref{sec:cert}~节）。
 \item \emph{隔离假设的有限判据.} DtN 约化形式 $t_\lambda$ 关于 $\lambda$ 严格递减。由此，窗口中特征值的个数等于端点处负特征值个数之差；只要下端点没有负方向，(H) 就归结为“$t_{\alpha_+}$ 至多一个负特征值”（第~\ref{sec:count-crit}~小节）。这个命题再拆成带隙、表面态、DtN 下界和芯区计数四个有限检验，在本文算例中全部完成（第~\ref{sec:H}、\ref{sec:endpoint}~节）。
 \item \emph{算例.} 在 $\beta=0.5$ 的非对称算例中，得到宽 $4.46\times10^{-9}$ 的区间，耗时与边界积分方法相当（第~\ref{sec:results}~节）。
@@ -121,7 +121,7 @@ $\Omega_\pm$ 中每个整数点 $x=n$（$\pm n\ge1$）处有一个三叶形夹�
 \[
 t\mapsto(n,0)+R_a(1+a\cos3t)(\cos t,\sin t),\qquad R_a=\frac{0.2}{\sqrt{1+a^2/2}},\qquad\rho=17,
 \]
-右侧 $a=0.20$，左侧 $a=0.12$（图~\ref{fig:geometry}）。其余部分 $\rho=1$，于是 $1\le\rho\le17$。每个夹杂离最近端口的距离大于 $\tfrac14$，所以端口两侧宽 $\tfrac14$ 的领口中 $\rho\equiv1$。两侧不对称，下文关于半导波的结论都对两侧分别验证。
+右侧 $a=0.20$，左侧 $a=0.12$（图~\ref{fig:geometry}）。其余部分 $\rho=1$，于是 $1\le\rho\le17$。半导波的夹杂中心在整数点、外接半径小于 $0.24$，离墙的距离大于 $\tfrac14$，所以每个端口在半导波一侧宽 $\tfrac14$ 的领口中 $\rho\equiv1$；纯周期介质中任一条墙两侧宽 $\tfrac14$ 的带中也有 $\rho\equiv1$。芯区一侧没有这一性质：中心夹杂离右端口只有 $0.14$。两侧不对称，下文关于半导波的结论都对两侧分别验证。
 
 在 TM 偏振下场满足 $-\Delta u=\lambda\rho u$，$\lambda=k^2$。固定 Bloch 相位 $\beta$（算例中 $\beta=0.5$），要求 $u(x,\tfrac12)=\ee^{\ii\beta}u(x,-\tfrac12)$，于是
 \begin{equation}
@@ -148,7 +148,7 @@ $a$ 在 $L^2_\rho(B)$（内积 $b$）中确定非负自伴算子 $A=-\rho^{-1}\D
 $\sigma(A)\cap(\alpha_-,\alpha_+)=\{\lambda_*\}$，$\lambda_*$ 是 $A$ 的有限重特征值。
 \end{assumption}
 
-(H) 同时排除窗口碰到能带、芯区有别的导模，以及下文所说表面态引起的问题。它依赖于 $\beta$。
+(H) 排除窗口碰到能带和芯区有别的导模；它依赖于 $\beta$。下文所说的表面态是切开后半导波算子的特征值，(H) 并不排除它，由假设 (P) 处理。
 
 \subsection{DtN 约化}
 
@@ -159,7 +159,7 @@ $\sigma(A)\cap(\alpha_-,\alpha_+)=\{\lambda_*\}$，$\lambda_*$ 是 $A$ 的有限
 $\mathcal W\cap\sigma(A_\pm)=\emptyset$。
 \end{assumption}
 
-(P) 有两部分：$\mathcal W$ 不碰 $A_\pm$ 的本质谱（即两侧的能带），以及 $\mathcal W$ 中没有 $A_\pm$ 的特征值。后者是在端口处切开后半导波自己的束缚态，称为\emph{表面态}；它不是 $A$ 的谱，但会使 DtN 映射出现极点。
+(P) 有两部分：$\mathcal W$ 不碰 $A_\pm$ 的本质谱（即两侧的能带），以及 $\mathcal W$ 中没有 $A_\pm$ 的特征值。后者是在端口处切开后半导波自己的束缚态，称为\emph{表面态}；它属于另一个谱问题，不一定是 $A$ 的谱点，但会使 DtN 映射出现极点。
 
 \begin{definition}
 设 (P) 成立，$\lambda\in\mathcal W\cup\{-1\}$，$g\in\Tr$。$E_\pm(\lambda)g$ 是满足 $\tau_\pm w=g$、$s^{\Omega_\pm}_\lambda(w,\varphi)=0$（$\forall\varphi\in H^1_{\beta,0}(\Omega_\pm)$）的唯一 $w\in H^1_\beta(\Omega_\pm)$；DtN 形式为 $\Lambda_\pm(\lambda)(g,h)=s^{\Omega_\pm}_\lambda(E_\pm(\lambda)g,E_\pm(\lambda)h)$。
@@ -278,7 +278,7 @@ W(J)=\frac{(t_+-t_-)(qJ-1)}{(1-t_-J)(t_+J-1)},
 W(G)=\frac{(\alpha_+-\alpha_-)\,\ell\,[(\theta-\lambda_*)-qR]}{(\lambda_*-\alpha_-+t_-R)(\alpha_+-\lambda_*-t_+R)}\approx C_W(\theta-\lambda_*),\qquad
 C_W=\frac{(\alpha_+-\alpha_-)(\lambda_*+\gamma)}{(\lambda_*-\alpha_-)(\alpha_+-\lambda_*)} .
 \]
-近似在 $qR\ll\theta-\lambda_*$ 时成立，即试探场的误差主要落在远离窗口的谱分量上。所以区间宽度是 Rayleigh 商误差（场误差的平方）的固定倍数，窗口越靠近 $\lambda_*$，$C_W$ 越大。算例中 $C_W=6.0712$，以边界积分参考值代替 $\lambda_*$ 得 $\theta-\lambda_*\approx7.022\times10^{-10}$，预测宽度 $4.263\times10^{-9}$；实际宽度 $4.462\times10^{-9}$，多出的约 $4.7\%$ 来自 $J-G$。
+近似在 $|qR|\ll\theta-\lambda_*$ 时成立，例如试探场的误差主要落在远高于窗口的谱分量上；这时区间宽度约为 Rayleigh 商误差（场误差的平方）的 $C_W$ 倍，窗口越靠近 $\lambda_*$，$C_W$ 越大。这个近似不是无条件的：对窗口内部的特征值，$\theta-\lambda_*$ 可以为零甚至为负，而 $W(G)>0$。算例中 $C_W=6.0712$，以边界积分参考值代替 $\lambda_*$ 得 $\theta-\lambda_*\approx7.022\times10^{-10}$，预测宽度 $4.263\times10^{-9}$；实际宽度 $4.462\times10^{-9}$，多出约 $4.7\%$。参考值没有数学保证，$R$ 也没有界，所以这个差只作诊断，不归于单一来源。
 
 \subsection{不用 (H) 的一阶区间}
 
@@ -297,7 +297,7 @@ $\int(s-q)^2s^{-1}\dd m=q(qG-1)\le q\delta$，所以存在谱点 $s^*$ 使 $(s^*
 
 这是 Weinstein 型界的一个变形（\cite{BrownHoangPlumWood2009} 用 Weinstein 定理包围线缺陷谱点），宽度约 $2q\sqrt\delta$，只有一阶。算例中
 \[
-I_1=[2.4286785151,\ 2.4287788271]\qquad(\text{宽 }1.003\times10^{-4}),
+I_1=[2.4286785150,\ 2.4287788272]\qquad(\text{宽 }1.003\times10^{-4}),
 \]
 它包含在第~\ref{sec:band}~小节证明的带隙中，所以在舍入误差排除的前提下，$I_1$ 中存在导模特征值。(H) 的作用是把宽度从 $10^{-4}$ 缩小到 $4.5\times10^{-9}$。
 
@@ -311,7 +311,7 @@ I_1=[2.4286785151,\ 2.4287788271]\qquad(\text{宽 }1.003\times10^{-4}),
 \[
 v=\chi u_h,\qquad\operatorname{supp}v\subset\overline{D_X},\qquad D_X=(-13.5,13.5)\times I .
 \]
-截断区共 27 个胞元。过渡区 $11.5<|x|<13.5$ 中 $v$ 的能量只有 $3.8\times10^{-9}$、质量 $7.3\times10^{-10}$。离散 DtN 误差、求根误差和截断误差都只让 $\theta-\lambda_*$ 变大，不破坏包含关系。
+截断区共 27 个胞元。过渡区 $11.5<|x|<13.5$ 中 $v$ 的能量只有 $3.8\times10^{-9}$、质量 $7.3\times10^{-10}$。离散 DtN 误差、求根误差和截断误差只影响试探场的质量，从而影响区间宽度，不破坏包含关系：定理只要求 $v$ 容许。
 
 $v$ 所在的网格（\emph{原网格}）用分段二次曲边逼近解析界面，所以原网格的材料 $\rho_h$ 与真材料 $\rho$ 在界面附近的薄缝上不同。$v$ 本身是确定的 $H^1$ 函数，但 $q$、$J$ 中的质量必须用真 $\rho$ 计算（第~\ref{sec:mass}~小节）。
 
@@ -374,14 +374,14 @@ N_t(e,m)=e+(1-t)m,\qquad D_t(e,m)=\Bigl(1-\frac{2t}s+\frac t{s^2}\Bigr)m+\frac t
 
 \begin{lemma}
 \label{lem:model-arith}
-设 $f=P+e$，$|e|\le\varepsilon$；$g=Q+e'$，$|e'|\le\zeta$。则 $fg=PQ+e''$，$|e''|\le\mathcal N(P)\zeta+\mathcal N(Q)\varepsilon+\varepsilon\zeta$。若实值 $f$ 满足 $\mathcal N(P-a)\le\Delta$，则 $\sin f$、$\cos f$ 在 $a$ 处展开到 $L$ 阶的模型误差不超过 $\Delta^{L+1}/(L+1)!+\varepsilon$。若实值 $f>0$，$\mathcal N(P-d_0)\le\kappa d_0$（$\kappa<1$）且 $a:=(1-\kappa)d_0-\varepsilon>0$，则
+设 $f=P+e$，$|e|\le\varepsilon$；$g=Q+e'$，$|e'|\le\zeta$。则 $fg=PQ+e''$，$|e''|\le\mathcal N(P)\zeta+\mathcal N(Q)\varepsilon+\varepsilon\zeta$。若 $f$ 与 $P$ 都是实值（从而 $e$ 也是），$a$ 为实数，且 $\mathcal N(P-a)\le\Delta$，则 $\sin f$、$\cos f$ 在 $a$ 处展开到 $L$ 阶的模型误差不超过 $\Delta^{L+1}/(L+1)!+\varepsilon$。若实值 $f>0$，$\mathcal N(P-d_0)\le\kappa d_0$（$\kappa<1$）且 $a:=(1-\kappa)d_0-\varepsilon>0$，则
 \[
 \Bigl|\frac1f-\frac1{d_0}\sum_{j=0}^L\Bigl(1-\frac P{d_0}\Bigr)^j\Bigr|\le\frac{\kappa^{L+1}}{d_0(1-\kappa)}+\frac{\varepsilon}{a(1-\kappa)d_0}.
 \]
 \end{lemma}
 
 \begin{proof}
-乘法直接展开。正弦、余弦的各阶导数模不超过 1，Lipschitz 常数为 1。倒数：$1/P=d_0^{-1}\sum_{j\ge0}(1-P/d_0)^j$ 的尾项给第一项，$|1/f-1/P|=|e|/(fP)$ 给第二项。
+乘法直接展开。正弦、余弦在实轴上的各阶导数模不超过 1，Lipschitz 常数为 1；这里用到 $P$、$f$ 取实值。倒数：$1/P=d_0^{-1}\sum_{j\ge0}(1-P/d_0)^j$ 的尾项给第一项，$|1/f-1/P|=|e|/(fP)$ 给第二项。
 \end{proof}
 
 \begin{lemma}
@@ -428,7 +428,7 @@ $S$ 在拟合网格上积分，而 $v$ 是原网格上的分片多项式，所�
 $T_z(y)=y-B_0(F(y)-G(z))$ 是 $Y$ 到自身的压缩，Lipschitz 常数 $\kappa$。
 \end{proof}
 
-第二步，分支修正。真残差与延拓残差只在 $v$ 取另一分支的点上不同，这些点都落在扫掠区域 $P([0,1]^2)$ 中：把拟合修正乘以 $w\in[0,1]$ 得到一族由 $\eta<1$ 保证的双 Lipschitz 映射，它们固定两单元并集的外边，不在扫掠像中的点在同伦过程中不会越过两单元的公共边。在扫掠区域上，设延拓残差为 $R$，分支差引起的变化为 $\Delta R$（在同一物理点上先相减再取界），则 $||R+\Delta R|^2-|R|^2|\le\sum_i(2b_id_i+d_i^2)$，$b_i\ge|R_i|$，$d_i\ge|\Delta R_i|$。乘以扫掠面积的上界并求和得修正界 $\mathcal D$，于是 $S_{\rm int}\in[\max(0,S_0-\varepsilon_0-\mathcal D),\,S_0+\varepsilon_0+\mathcal D]$。这里同样先相减再取界：分支差与缝宽成比例，算例中修正降到 $2.5\times10^{-14}$。
+第二步，分支修正。真残差与延拓残差只在 $v$ 取另一分支的点上不同，这些点都落在扫掠区域 $P([0,1]^2)$ 中：把拟合修正乘以 $w\in[0,1]$ 得到一族由 $\eta<1$ 保证的双 Lipschitz 映射，它们固定两单元并集的外边，不在扫掠像中的点在同伦过程中不会越过两单元的公共边。在扫掠区域上，设延拓残差为 $R$，分支差引起的变化为 $\Delta R$（在同一物理点上先相减再取界），则 $||R+\Delta R|^2-|R|^2|\le\sum_i(2b_id_i+d_i^2)$，$b_i\ge|R_i|$，$d_i\ge|\Delta R_i|$。乘以扫掠面积的上界并求和得修正界 $\mathcal D$，于是 $S_{\rm int}\in[\max(0,S_0-\varepsilon_0-\mathcal D),\,S_0+\varepsilon_0+\mathcal D]$。这里同样先相减再取界：值分支的差与缝宽成比例；梯度分支在公共边上可以有法向跳跃，其差不一定小，直接用同一物理点上的多项式分支差模型取界。算例中修正降到 $2.5\times10^{-14}$。
 
 \subsection{结果}
 
@@ -442,15 +442,15 @@ $T_z(y)=y-B_0(F(y)-G(z))$ 是 $Y$ 到自身的压缩，Lipschitz 常数 $\kappa$
 $E$ & $[11.470912271614043,\ 11.470912271618044]$ \\
 $M$ & $[4.7230110180143914,\ 4.7230110180281955]$ \\
 $S$：非界面单元 & $\le2.5978065\times10^{-10}$ \\
-$S$：界面单元 & $[3.4891721\times10^{-11},\ 3.4977344\times10^{-11}]$ \\
-$S_+$ & $2.9475799\times10^{-10}$ \\
+$S$：界面单元 & $[3.4891720\times10^{-11},\ 3.4977345\times10^{-11}]$ \\
+$S_+$ & $2.9475800\times10^{-10}$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 四个角上 $t_-J_+\approx0.79983<1$，$t_+J_+\approx1.92984>1$，$q\le3.4287286707285<t_+=6.6169$。由定理~\ref{thm:four-corner}，在 (H) 下
 \begin{equation}
 \label{eq:main-interval}
-\lambda_*\in[2.4287286691978,\ 2.4287286736601],\qquad k_*\in[1.5584378939,\ 1.5584378954].
+\lambda_*\in[2.4287286691977,\ 2.4287286736602],\qquad k_*\in[1.5584378939,\ 1.5584378954].
 \end{equation}
 同一 $v,p$ 的浮点积分给出宽度 $4.454\times10^{-9}$，可靠积分界只让宽度增加 $0.19\%$。
 
@@ -556,7 +556,7 @@ $|\sqrt{\lambda_j(\theta)}-\sqrt{\lambda_j(\phi)}|\le|\theta-\phi|$。
 $\|(\nabla+\ii\theta e_x)w\|_0\le\|(\nabla+\ii\phi e_x)w\|_0+|\theta-\phi|\|w\|_0$，除以 $b(w,w)^{1/2}\ge\|w\|_0$ 后用 min-max（定义域与 $\theta$ 无关）。
 \end{proof}
 
-对面板 $[\theta_i-r_i,\theta_i+r_i]$ 与阈值 $k_L<k_U$，若在中心
+对面板 $[\theta_i-r_i,\theta_i+r_i]$ 与阈值 $0\le r_i<k_L<k_U$，若在中心
 \[
 \lambda_{\min}\bigl(\bm T((k_L-r_i)^2,\theta_i)\bigr)<0,\qquad c\bigl((k_U+r_i)^2,\theta_i\bigr)>0,\quad\lambda_2\bigl(\bm T^-((k_U+r_i)^2,\theta_i)\bigr)>0,
 \]
@@ -625,7 +625,7 @@ $\|(\nabla+\ii\theta e_x)w\|_0\le\|(\nabla+\ii\phi e_x)w\|_0+|\theta-\phi|\|w\|_
 对 $\mu\in[a,b]$，$\mathsf B_\mu-\mathsf B_a=\int_a^\mu\mathsf B'_t\,\dd t\succeq0$，再用引理~\ref{lem:B}(c)。
 \end{proof}
 
-一般情形下，与定理~\ref{thm:count} 相同的论证给出 $n(\mathsf B_a)-n(\mathsf B_b)$ 等于 $(a,b)$ 中两侧 Dirichlet 特征值的总重数；本算例中只需要推论~\ref{cor:surface}。于是只要 $\mathsf B_{\alpha_-}\succ0$，$[\alpha_-,2.375^2]$ 中就没有表面态，$A_\pm$ 到 $\alpha_+$ 的距离至少 $d_+=\min\{\alpha_+-\alpha_-,2.375^2-\alpha_+\}=0.023725$。
+一般情形下（$[a,b]$ 包含在全周期谱的一个带隙中，且 $\mathsf B_a$、$\mathsf B_b$ 可逆），与定理~\ref{thm:count} 相同的论证给出 $n(\mathsf B_a)-n(\mathsf B_b)$ 等于 $(a,b)$ 中两侧 Dirichlet 特征值的总重数；本算例中只需要推论~\ref{cor:surface}。于是只要 $\mathsf B_{\alpha_-}\succ0$，$[\alpha_-,2.375^2]$ 中就没有表面态，$A_\pm$ 到 $\alpha_+$ 的距离至少 $d_+=\min\{\alpha_+-\alpha_-,2.375^2-\alpha_+\}=0.023725$。
 
 \subsubsection{惯性的有限检验}
 
@@ -667,16 +667,16 @@ $u=R_\lambda F_c$ 与 $Z_c$ 之差为 $L_\lambda^{-1}r_c$，展开 $s_\lambda(u-
 \toprule
 材料 & $\lambda$ & $n(C_-)/n(C_+)$ & $\lambda_{\min}(C_-)$ & $\|E\|$ & $x_M^2/t_M$ \\
 \midrule
-$a=0.12$ & $\alpha_-$ & $0/0$ & $0.0235558$ & $0.00789$ & $2.7\times10^{-12}$ \\
-$a=0.12$ & $\alpha_+$ & $0/0$ & $0.5004$ & $0.00238$ & $1.2\times10^{-11}$ \\
-$a=0.20$ & $\alpha_-$ & $0/0$ & $0.00428913$ & $0.0142$ & $2.7\times10^{-12}$ \\
-$a=0.20$ & $\alpha_+$ & $0/0$ & $0.5004$ & $0.00884$ & $1.2\times10^{-11}$ \\
+$a=0.12$ & $\alpha_-$ & $0/0$ & $0.0235557$ & $0.00790$ & $2.8\times10^{-12}$ \\
+$a=0.12$ & $\alpha_+$ & $0/0$ & $0.5004$ & $0.00238$ & $1.3\times10^{-11}$ \\
+$a=0.20$ & $\alpha_-$ & $0/0$ & $0.00428912$ & $0.0142$ & $2.8\times10^{-12}$ \\
+$a=0.20$ & $\alpha_+$ & $0/0$ & $0.5004$ & $0.00885$ & $1.3\times10^{-11}$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 相位与曲线积分余项合计不超过 $10^{-11}$。于是（舍入排除）两种材料都有 $\mathsf B_{\alpha_-}\succ0$，截线两侧在 $[\alpha_-,2.375^2]$ 中没有表面态，(P) 成立；$\alpha_+$ 处的检验作为一致性检查也通过。半导波上的形式逆常数为
 \[
-K_+=1+\frac{\alpha_++1}{d_+}=279.899894626 .
+K_+=1+\frac{\alpha_++1}{d_+}\le279.899894626 .
 \]
 $a=0.20$ 在 $\alpha_-$ 处的余量 $0.0043$ 是全部检验中最小的，这与 $\alpha_-$ 离带边只有 $0.0053$ 一致。检验同时覆盖截线两侧，比物理问题需要的更强；三叶形没有 $x$ 方向的对称性，所以两侧不能互换。每次运行约 7.5 分钟，峰值内存不超过 1.72~GiB。
 
@@ -699,7 +699,7 @@ $a=0.20$ 在 $\alpha_-$ 处的余量 $0.0043$ 是全部检验中最小的，这�
 \label{eq:Kpm}
 -K_-I\preceq\mathcal B_\lambda^{-1}\preceq K_+I,\qquad K_+=1+\frac{\lambda+1}{d_+},\qquad K_-=\max\Bigl\{0,\frac{\lambda+1}{d_-}-1\Bigr\}.
 \end{equation}
-在 $\alpha_+$ 处，由第~\ref{sec:surface}~小节 $K_+=279.899894626$，由 $d_-\ge\alpha_+-\alpha_-$ 得 $K_-=0.70782$。
+在 $\alpha_+$ 处，由第~\ref{sec:surface}~小节 $K_+\le279.899894626$，由 $d_-\ge\alpha_+-\alpha_-$ 得 $K_-\le0.70782$。
 
 对迹 $g_1,\dots,g_m$，取场 $u_i\in H^1_\beta(\Omega)$（迹为 $g_i$）与通量 $p_i\in H(\operatorname{div},\Omega)$（$\beta$-准周期，端口上无要求），残差 $r_{1,i}=\nabla u_i-p_i$，$r_{2,i}=\operatorname{div}p_i+\lambda\rho u_i$，并令
 \begin{equation}
@@ -734,7 +734,7 @@ a_H=\sqrt{\frac{\beta_*^2-\lambda}{\beta_*^2+1}},\qquad b_H^2=\frac12\Bigl(\frac
 逐模分部积分，$\int_0^\infty(|l_k'|^2+\kappa_k^2|l_k|^2)=\kappa_k+\int|\chi'|^2\ee^{-2\kappa_ks}\ge\kappa_k$，$l_k=\chi\ee^{-\kappa_ks}$；领口中 $\rho=1$，再用 $\kappa_k/\langle k\rangle$ 关于 $\beta_k^2$ 递增。残差逐模为 $(-\chi''+2\kappa_k\chi')\ee^{-\kappa_ks}$，用 $|\chi'|\le3/(2L)$、$|\chi''|\le6/L^2$ 与 $\langle k\rangle\ge\kappa_k$。
 \end{proof}
 
-在 $\alpha_+$、$M=16$ 时 $b_H^2=1.09938\times10^{-9}$，$a_H=0.9997073$。对低频迹 $g_i=\ee^{\ii\beta_iy}$（$|i|\le M$），令 $z_i=u_i+K_+r_{2,i}$，$Z_{ij}=\int_Jz_j\overline{z_i}$。
+在 $\alpha_+$、$M=16$ 时 $b_H^2\le1.09939\times10^{-9}$，$a_H\ge0.9997072$。对低频迹 $g_i=\ee^{\ii\beta_iy}$（$|i|\le M$），令 $z_i=u_i+K_+r_{2,i}$，$Z_{ij}=\int_Jz_j\overline{z_i}$。
 
 \begin{theorem}
 \label{thm:dtn-lower}
@@ -753,7 +753,7 @@ a_H=\sqrt{\frac{\beta_*^2-\lambda}{\beta_*^2+1}},\qquad b_H^2=\frac12\Bigl(\frac
 
 \subsubsection{单胞场与传递矩阵}
 
-只在一个引线胞 $[0,1]\times I$ 上用 $P_4$ 协调有限元（曲边单元贴合真夹杂）。在 $\alpha_+$ 消去内部自由度，取离散胞系统的衰减子空间（有序复 QZ 分解），得到传递矩阵 $P$：近墙迹为 $w$ 的离散调和场的远墙迹为 $Pw$。记 $U$ 为近墙迹到单胞场的映射，第 $n$ 个胞上的场取为 $UP^nw$；相邻胞在公共墙上的节点值都是 $P^{n+1}w$，所以场在 $H^1_{\rm loc}$ 中。每个胞上取 $RT_3$ 通量，墙上法向矩满足 $N_0=N_bG$、$F_b=N_bP$，所以 $p\in H_{\rm loc}(\operatorname{div})$。$P$ 只用来选取试探场，下界的正确性只依赖在真几何上计算的残差矩阵。
+只在一个引线胞 $[0,1]\times I$ 上用 $P_4$ 协调有限元（曲边单元贴合真夹杂）。在 $\alpha_+$ 消去内部自由度，取离散胞系统的衰减子空间（有序复 QZ 分解），得到传递矩阵 $P$：近墙迹为 $w$ 的离散调和场的远墙迹为 $Pw$。记 $U$ 为近墙迹到单胞场的映射，第 $n$ 个胞上的场取为 $UP^nw$；相邻胞在公共墙上的节点值都是 $P^{n+1}w$，所以场在 $H^1_{\rm loc}$ 中。首胞的输入是端口的低频 Fourier 迹 $g=(g_k)_{|k|\le5}$，$w=Gg$，$G$ 把 11 个低频 Fourier 迹映到墙上节点值；第 $n\ge1$ 个胞的场写成 $UPw_n$，$w_n=P^{n-1}w$。每个胞上取 $RT_3$ 通量。记 $N_0$ 为首胞远墙法向矩关于 $g$ 的映射，$N_b$、$F_b$ 为重复胞近墙、远墙法向矩关于 $w_n$ 的映射；构造强制 $N_0=N_bG$（首胞与第 1 个胞）和 $F_b=N_bP$（第 $n$ 与第 $n+1$ 个胞），所以 $p\in H_{\rm loc}(\operatorname{div})$。$P$ 只用来选取试探场，下界的正确性只依赖在真几何上计算的残差矩阵。
 
 \begin{lemma}
 \label{lem:transfer-tail}
@@ -764,7 +764,7 @@ a_H=\sqrt{\frac{\beta_*^2-\lambda}{\beta_*^2+1}},\qquad b_H^2=\frac12\Bigl(\frac
 $S_\infty-S_L=(P^L)^*S_\infty P^L$，取范数并移项。
 \end{proof}
 
-取 $L=128$（倍增计算）：左侧 $\|P^{128}\|\le6.0\times10^{-24}$，右侧 $\le6.5\times10^{-16}$。对 $H=I$ 应用同一引理得到单胞积分误差沿无穷个胞的放大因子（左 2.02，右 2.75）。
+取 $L=128$（倍增计算）：左侧 $\|P^{128}\|\le6.0\times10^{-24}$，右侧 $\le6.5\times10^{-16}$。对 $H=I$ 应用同一引理得到单胞积分误差沿无穷个胞的放大因子（左 2.03，右 2.75）。
 
 端口迹：对 $|k|\le5$，有限元场的迹 $g_{h,k}$ 是分段多项式，加修正 $u_k=u_{h,k}+\chi_b(s)\ee^{-\tau s}(g_k-g_{h,k})$（$\chi_b$ 为 $[0,\frac18]$ 上的三次截断，$\tau=12N$），使迹逐点等于 $g_k$；对 $6\le|k|\le16$ 直接用均匀介质的衰减场 $\ee^{-\kappa_ks}\ee^{\ii\beta_ky}$，此时 $r_1=0$，$r_2=\lambda(\rho-1)u_k$ 只在夹杂中非零。$Z$ 用整个半导波上的 Gram 矩阵代替 $J$ 上的，这只会让下界更低。直边胞上被积函数是多项式，Gauss 规则精确；曲边单元与修正带上用 Bernstein 椭圆（参数 2）上的解析上界，张量 Gauss 规则的误差不超过 $32\mathcal M2^{-2q}$。首胞之外高频列的贡献用显式指数界，低高交叉项用 Cauchy--Schwarz。所有余项按安全方向计入。
 
@@ -777,8 +777,8 @@ $M=16$（33 个迹），网格参数 $N=48$。记 $r=\|T_{\rm tr}^{-1/2}RT_{\rm 
 \toprule
 侧 & $r$ & $K_+r$ & 上下界之差 & $\lambda_{\min}(Q)$ & $\lambda_{\min}(\hat\Lambda)$ \\
 \midrule
-左 & $3.8954\times10^{-8}$ & $1.0903\times10^{-5}$ & $1.0931\times10^{-5}$ & $0.411018879$ & $0.411018856$ \\
-右 & $3.8954\times10^{-8}$ & $1.0903\times10^{-5}$ & $1.0931\times10^{-5}$ & $0.337890502$ & $0.337890454$ \\
+左 & $3.8955\times10^{-8}$ & $1.0904\times10^{-5}$ & $1.0930\times10^{-5}$ & $0.411018878$ & $0.411018855$ \\
+右 & $3.8955\times10^{-8}$ & $1.0904\times10^{-5}$ & $1.0930\times10^{-5}$ & $0.337890502$ & $0.337890454$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -836,16 +836,16 @@ t_{\alpha_+}(u,u)\ge c^*\bm T_{\rm low}c+c_W\|w\|_e^2-2\operatorname{Re}e((I-P_h
 若 $X$ 是 $t_{\alpha_+}$ 的负子空间，则 $P_h$ 在 $X$ 上单射，且有限矩阵在 $P_hX$ 上负定。标量版本来自加权 Cauchy--Schwarz：$\bm G\preceq q_{\max}C_h^2\bm M^q$。
 \end{proof}
 
-\eqref{eq:L-scalar} 说的是：补空间的影响等价于把芯区质量放大 $1/(1-q_{\max}C_h^2)$ 倍，没有自由参数，也没有端口罚项。由于 $\bm M^q\succ0$，$n(\bm L)\le1$ 当且仅当矩阵束 $(\bm T_{\rm low}-\bm M^q,\,\bm M^q)$ 的第二个特征值 $\mu_2$ 大于 $\delta_h=q_{\max}C_h^2/(1-q_{\max}C_h^2)$。在 $\alpha_+$ 处：
+\eqref{eq:L-scalar} 说的是：补空间的影响等价于把芯区质量放大 $1/(1-q_{\max}C_h^2)$ 倍，没有自由参数，也没有端口罚项。由于 $\bm L=\bm T_{\rm low}-\delta_h\bm M^q$，$\delta_h=q_{\max}C_h^2/(1-q_{\max}C_h^2)$，且 $\bm M^q\succ0$，$n(\bm L)\le1$ 当且仅当矩阵束 $(\bm T_{\rm low},\,\bm M^q)$ 的第二个特征值 $\mu_2\ge\delta_h$。在 $\alpha_+$ 处：
 \begin{center}
 \small
 \begin{tabular}{ccccc}
 \toprule
 $(N_x,N_y)$ & 余弦--Fourier 基维数 & $C_h$ & $q_{\max}C_h^2$ & $\delta_h$ \\
 \midrule
-$(31,16)$ & 1056 & $0.00994657$ & $0.00232$ & $0.00233$ \\
-$(47,24)$ & 2352 & $0.00663127$ & $0.00103$ & $0.00103$ \\
-$(63,32)$ & 4160 & $0.00497352$ & $0.00058$ & $0.00058$ \\
+$(31,16)$ & 1056 & $0.00994657$ & $0.002322$ & $0.002328$ \\
+$(47,24)$ & 2352 & $0.00663128$ & $0.001032$ & $0.001034$ \\
+$(63,32)$ & 4160 & $0.00497352$ & $0.0005805$ & $0.0005809$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -855,16 +855,16 @@ $(63,32)$ & 4160 & $0.00497352$ & $0.00058$ & $0.00058$ \\
 
 取 $(N_x,N_y)=(31,16)$、$M=16$：1056 个余弦--Fourier 模加两端共 66 个端口代表元，维数 1122。端口代表元先减去它在余弦--Fourier 模上的 $e$-投影；剩余部分按 $k$ 分成 $2\times2$ 块，其 Gram 矩阵的最小特征值为 $0.00496$，所以 1122 个函数线性无关。再用 Cholesky 分解作 $e$-正交化，使 $\bm H=I$。此时
 \[
-a_*=10107.7249,\qquad C_h=0.00994657,\qquad c_W=0.99767825,\qquad\delta_h=0.00232715 .
+a_*=10107.7249,\qquad C_h=0.00994657,\qquad c_W=0.99767825,\qquad\delta_h\le0.00232716 .
 \]
 
-\emph{质量矩阵.} 在 $\alpha_+$ 处 $q=(\lambda+1)+3\lambda\mathbf 1_{\mathcal O_*}$，$\mathcal O_*$ 为芯区星形夹杂。第一部分在余弦--Fourier 基与端口代表元上都有闭式积分。第二部分的每个元素都是星形区域上若干个 $\ee^{\xi\cdot x}$（$\xi$ 可为复数）之和的积分；由散度定理化为边界上的周期积分，再用引理~\ref{lem:trapezoid}（$s=0.1$，$J=512$）给出误差界，共 89199 个矩。原始基下逐元误差的行和不超过 $2.35\times10^{-13}$。设 $\bm P$ 为正交化矩阵，则 $\|\bm P^*\bm E\bm P\|\le\|\bm P\|_1\|\bm P\|_\infty\max_i\sum_j|\bm E_{ij}|$，所以正交基下 $\|\bm M^{q}-\tilde{\bm M}^{q}\|\le3\lambda\cdot1.22\times10^{-10}$，从而
+\emph{质量矩阵.} 在 $\alpha_+$ 处 $q=(\lambda+1)+3\lambda\mathbf 1_{\mathcal O_*}$，$\mathcal O_*$ 为芯区星形夹杂。第一部分在余弦--Fourier 基与端口代表元上都有闭式积分。第二部分的每个元素都是星形区域上若干个 $\ee^{\xi\cdot x}$（$\xi$ 可为复数）之和的积分；由散度定理化为边界上的周期积分，再用引理~\ref{lem:trapezoid}（$s=0.1$，$J=512$）给出误差界，共 89199 个矩。原始基下逐元误差的行和不超过 $2.35\times10^{-13}$。设 $\bm P$ 为正交化矩阵，则 $\|\bm P^*\bm E\bm P\|\le\|\bm P\|_1\|\bm P\|_\infty\max_i\sum_j|\bm E_{ij}|$，所以正交基下 $\|\bm M^{q}-\tilde{\bm M}^{q}\|\le3\lambda\cdot1.2209\times10^{-10}$，从而
 \[
-\bm L\succeq\tilde{\bm L}-\varepsilon I,\qquad\varepsilon=\frac{3\lambda\cdot1.22\times10^{-10}}{c_W}=2.06\times10^{-9},
+\bm L\succeq\tilde{\bm L}-\varepsilon I,\qquad\varepsilon=\frac{3\lambda\cdot1.2209\times10^{-10}}{c_W}\le2.0621\times10^{-9},
 \]
 其中 $\tilde{\bm L}$ 是用计算出的质量矩阵组装的矩阵。
 
-\emph{计数.} 矩阵束的前两个特征值为 $\mu_1=-0.80733$、$\mu_2=0.499135$，$\mu_2$ 比 $\delta_h=0.00233$ 大两个数量级。$\tilde{\bm L}$ 的前两个特征值为 $-6.41713590$ 与 $0.365373691$。对 $\tilde{\bm L}-\varepsilon I$ 作 $LDL^*$ 分解，由 Sylvester 惯性定律它恰有一个负特征值；对 $\tilde{\bm L}-0.3653736907\,I$ 作同样的分解，也恰有一个负特征值。所以（舍入排除）
+\emph{计数.} 矩阵束 $(\bm T_{\rm low},\bm M^q)$ 的前两个特征值为 $\mu_1=-0.80733$、$\mu_2=0.499135$，$\mu_2$ 比 $\delta_h=0.00233$ 大两个数量级。$\tilde{\bm L}$ 的前两个特征值为 $-6.41713590$ 与 $0.365373691$。对 $\tilde{\bm L}-\varepsilon I$ 作 $LDL^*$ 分解，由 Sylvester 惯性定律它恰有一个负特征值；对 $\tilde{\bm L}-0.3653736907\,I$ 作同样的分解，也恰有一个负特征值。所以（舍入排除）
 \[
 n(\bm L)=1,\qquad\lambda_2(\bm L)\ge0.3653736907-\varepsilon\ge0.365373688>0 .
 \]
@@ -897,15 +897,15 @@ n(\bm L)=1,\qquad\lambda_2(\bm L)\ge0.3653736907-\varepsilon\ge0.365373688>0 .
 量 & 值 & 前提 \\
 \midrule
 FEM--DtN 候选 & $k_h=1.5584378944019$ & 无保证 \\
-一阶区间 $I_1$ & $[2.4286785151,\ 2.4287788271]$，宽 $1.003\times10^{-4}$ & 舍入排除 \\
+一阶区间 $I_1$ & $[2.4286785150,\ 2.4287788272]$，宽 $1.003\times10^{-4}$ & 舍入排除 \\
 Lehmann--Goerisch，浮点积分 & 宽 $4.454\times10^{-9}$ & (H)；积分误差未计 \\
-Lehmann--Goerisch，可靠积分 & $[2.4287286691978,\ 2.4287286736601]$，宽 $4.462\times10^{-9}$ & 舍入排除（(H) 已证） \\
+Lehmann--Goerisch，可靠积分 & $[2.4287286691977,\ 2.4287286736602]$，宽 $4.462\times10^{-9}$ & 舍入排除（(H) 已证） \\
 边界积分参考值 & $2.428728670022710$，误差估计 $1.55\times10^{-9}$ & 无保证 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-边界积分参考值落在可靠区间内，离下端约 $8.2\times10^{-10}$、离上端约 $3.6\times10^{-9}$。试探场的 Rayleigh 商比参考值大 $7.0\times10^{-10}$，按 $W\approx C_W(\theta-\lambda_*)$ 预测宽度 $4.26\times10^{-9}$，实际 $4.46\times10^{-9}$，多出部分来自通量误差。要更窄的区间需要更好的试探场，而不是更好的积分。
+边界积分参考值落在可靠区间内，离下端约 $8.2\times10^{-10}$、离上端约 $3.6\times10^{-9}$。试探场的 Rayleigh 商比参考值大 $7.0\times10^{-10}$，按 $W\approx C_W(\theta-\lambda_*)$ 预测宽度 $4.26\times10^{-9}$，实际 $4.46\times10^{-9}$。参考值没有数学保证，多出的约 $4.7\%$ 只作诊断，不归于单一来源。要更窄的区间需要更好的试探场，而不是更好的积分。
 
 \subsection{成本}
 
@@ -934,7 +934,7 @@ FEM--DtN 求根、$RT_3$ 通量与区间（浮点积分） & 119 秒 & 2.04~GiB 
 
 \subsection{结论与局限}
 \label{sec:conclusion}
-我们给出了由有限元计算产生线缺陷波导导模特征值包含区间的完整流程：截断的 FEM--DtN 场和 $RT_3$ 通量进入 Lehmann--Goerisch 不等式，区间宽度是 Rayleigh 商误差的固定倍数；三个积分的截断误差全部有显式的界；隔离假设 (H) 由约化形式的单调性化为端点计数，再拆成四个有限检验。
+我们给出了由有限元计算产生线缺陷波导导模特征值包含区间的完整流程：截断的 FEM--DtN 场和 $RT_3$ 通量进入 Lehmann--Goerisch 不等式，算例中区间宽度约为 Rayleigh 商误差的 $C_W$ 倍；三个积分的截断误差全部有显式的界；隔离假设 (H) 由约化形式的单调性化为端点计数，再拆成四个有限检验。
 
 结论的状态需要说清楚。
 \begin{itemize}
