@@ -17,12 +17,18 @@
   - 接合墙下降来自源求积，3072 源仍未收敛。
   - 新 blocker OP-BE-6：MFS 核的回卷切换线在胞元内部，单核跳跃约 $10^{-12}$，现有 $\varepsilon$ 未计入；接缝跳跃因回卷只是舍入量。
 
+- 切换线缺陷（OP-BE-6，2026-11-04）：
+  - 理论：[[research/projects/bie-enclosure/theory/switch-line|switch-line]] 的命题 S 与 S′ 都已审查，0 个 blocker。审查记录见 [[research/projects/bie-enclosure/theory/switch-line-kress-review|switch-line-kress-review]] 和 [[research/projects/bie-enclosure/theory/switch-line-sprime-review|switch-line-sprime-review]]。同一轮审查细审了 T3.1、T3.2、T3.3、T3.4a，全部正确；但可靠求积要在切换参数处分段。
+  - 数值（switch-v1，经理已核对）：命题 S 给 $Q_{\rm sw}=1.41\times10^{-9}$，(B0) 不成立；命题 S′ 给 $6.21\times10^{-11}$（线段项 $2.23\times10^{-11}$，端点项 $3.98\times10^{-11}$）。(B0) 余量：单盘 0.96，不够；12 盘 10.6，成立。
+  - 结论：质量下界必须用多圆盘或星内大圆盘；整体余量约 10 倍。
+
 ## 进行中
 
+- 理论线程（2026-11-04 新开，只写定理证明）：把命题 S、S′ 写成一份完整证明 `theory/switch-line-proof.md`，并尝试收紧端点项。
 - 草稿 `draft/bie-enclosure/`：第 1–5 节已按报告改完，改动处蓝色标注，待全文送审。
 
 ## 主要风险
 
 - 可靠的 $\varepsilon$ 在 $10^{-12}$ 量级，需要约 12 位抵消；外层包络界可能太松，可能要用 Taylor 面板加直接求和（先导中直接求和 768 点 360 秒）。
 - 接合墙法向跳跃随源节点仍在下降（OP-BE-3）。
-- MFS 核回卷切换线的缺陷（OP-BE-6）可能吃掉一部分余量；可能要换以胞元为界的核。
+- 余量只剩约 10 倍（12 盘），端点项占切换线项的 64%。可靠评价时的包络放大必须控制在这个范围内；不够时再考虑换以胞元为界的核。
