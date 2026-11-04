@@ -1,0 +1,26 @@
+{
+  "target": "frozen exported Hermitian double L_cert, with its full imaginary part covered by a max-entry bound",
+  "dimension": 1122,
+  "precision_bits": 128,
+  "threads": 11,
+  "gamma_shift_rational": "36537/100000",
+  "published_gamma_rational": "36536998/100000000",
+  "residual_F_upper": "[3.71034344133405587224059826979e-15 +/- 2.65e-45]",
+  "inverse_inf_upper": "[2260.44363280262339792155097424 +/- 2.71e-27]",
+  "inverse_one_upper": "[1481.53665235764606701187257555 +/- 1.62e-27]",
+  "residual_condition_upper": "[1.24256808045110658236576724738e-8 +/- 3.08e-38]",
+  "rank_one_corrected_positive_lower": "[2.98602825358550623221378102973e-7 +/- 1.69e-37]",
+  "imaginary_operator_upper": "[1.57099376276909008653216969301e-8 +/- 2.63e-38]",
+  "second_eigenvalue_ball_lower_expression": "[0.365369984290062372309099134678 +/- 3.04e-31]",
+  "negative_Rayleigh_upper": "[-6.41713588864627596440600742919 +/- 7.66e-31]",
+  "strict_tests": {
+    "residual_times_inverse_norms_lt_one": true,
+    "positive_corrected_lower": true,
+    "negative_direction": true,
+    "published_gamma_below_full_bound": true
+  },
+  "negative_count": 1,
+  "matrix_product_seconds": 0.6573297919821925,
+  "seconds": 2.074821416987106,
+  "preceding_assembly_certified": false
+}

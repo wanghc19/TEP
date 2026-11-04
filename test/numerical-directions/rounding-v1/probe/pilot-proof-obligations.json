@@ -1,0 +1,20 @@
+{
+  "mode": "Proof from scratch",
+  "target": "probe/README.md E3 details and the fixed exported Hermitian matrix family",
+  "result": "proved: negative inertia 1 and lambda_2 >= 36536998/100000000",
+  "literature_status": "Proof literature verification completed.",
+  "assumptions": [
+    "scipy v7 read preserves exported doubles, checked by the smoke test",
+    "the real part and exact max-absolute imaginary entry enclose the exported Hermitian matrix",
+    "Arb outward ball arithmetic"
+  ],
+  "strict_tests": {
+    "residual_times_inverse_norms_lt_one": true,
+    "positive_corrected_lower": true,
+    "negative_direction": true,
+    "published_gamma_below_full_bound": true
+  },
+  "remaining_gaps": [
+    "the upstream admissibility, geometry, assembly and scalar handoffs listed in the inventory are not certified by this pilot"
+  ]
+}

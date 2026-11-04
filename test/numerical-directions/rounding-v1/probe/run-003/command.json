@@ -1,0 +1,10 @@
+{
+  "command": [
+    "/Applications/MATLAB_R2023b.app/bin/matlab",
+    "-batch",
+    "status=system('/Users/whc/opt/miniconda3/condabin/conda run -n octave python -I /Users/whc/Documents/Work/dot-research/test/numerical-directions/rounding-v1/probe/pilot_verify.py --mat /Users/whc/Documents/Work/dot-research/test/numerical-directions/rounding-v1/probe/run-002/science/pilot.mat --output /Users/whc/Documents/Work/dot-research/test/numerical-directions/rounding-v1/probe/run-003/science');assert(status==0,'pilot:Python','Arb verification failed.');"
+  ],
+  "soft_seconds": 1800,
+  "hard_seconds": 2400,
+  "rss_limit_gib": 3
+}

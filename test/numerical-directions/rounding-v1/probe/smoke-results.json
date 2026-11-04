@@ -1,0 +1,21 @@
+{
+  "versions": {
+    "python_flint": "0.9.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  },
+  "checks": {
+    "real_bits": true,
+    "complex_real_bits": true,
+    "complex_imag_bits": true,
+    "float_to_arb_exact": true,
+    "transcendental_enclosure": true
+  },
+  "precision_bits": 128,
+  "matrix_20_product_seconds": 0.0006845410098321736,
+  "arb_methods": [
+    "eig",
+    "inv",
+    "solve"
+  ]
+}
