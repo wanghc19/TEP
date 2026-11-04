@@ -8,7 +8,11 @@
 
 ## 进行中
 
-- 无。
+- 无。FEM 线暂停（见 [[research/projects/fem-goerisch/DECISIONS|DECISIONS]] 2026-11-04 条）。
+
+## 第 2a 步：常规流程首版（2026-11-04，astra 完成，经理核查）
+
+[[research/projects/fem-goerisch/implementation/pipeline-v1|pipeline-v1]]：`test/fem-goerisch/pipeline-v1/` 复现现有算例，原设置的 $E,M,S_+$ 与四角端点和 qj-cert-v2 逐位相同，$I_1=[2.4286785150,\,2.4287788272]$ 与论文一致；快设置端到端实测 393 秒、2.31 GiB，宽 $4.554\times10^{-9}$。支持范围只有芯区 $\rho$（要求 $\rho_{\rm center}>1$）；(H) 浮点检查（2b）和换参数试跑（2c）未做。
 
 ## 代码清单（2026-11-04，astra 完成，经理核查）
 
@@ -16,7 +20,4 @@
 
 ## 下一步
 
-- (H) 分两种算法交付（[[research/projects/fem-goerisch/DECISIONS|DECISIONS]] 2026-11-04 条）：常规计算用浮点检查，另交付严格验证算法。
-- 设计 (H) 的浮点检查及其余量指标（OP-FG-4）。
-- 决定参数化的范围（建议先做“只改芯区材料、同一窗口单模”）。
-- 稳健性参数族的设计：用户决定暂不开始（2026-11-04）。
+- FEM 线暂停。若恢复：2b（(H) 浮点检查，OP-FG-4）、2c（一个 $\rho_{\rm center}$ 试跑）、严格验证提速（OP-FG-5）。

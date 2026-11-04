@@ -16,3 +16,14 @@
 ## 2026-11-04 目录分类（用户）
 
 顶层只放 README、STATUS、DECISIONS、open-problems；其余文件按类型放进 `theory/`、`implementation/`、`literature/`，规则见 README 的"约定"。`code-inventory.md` 已移入 `implementation/`。
+
+## 2026-11-04 test 目录与运行预算（用户）
+
+- `test/fem-goerisch/pipeline-vN/` 放代码，按实现版本编号；换例子只是新的 `run-NNN`，不复制代码。改几何所需的统一曲线对象留给 `pipeline-v2`。
+- 一类例子一个研究目录（如 `defect-strength-v1/`），只放参数、驱动、输出和报告，代码路径显式传入。
+- 引线证书 (A)(B)(C) 以后放在 `leads-v1/`，按"引线 + $\beta$ + 窗口"存放，供各研究复用；只在严格验证时建立。
+- 运行预算按例子计：每个例子是一个结果，各自 30 分钟软限、40 分钟硬限；一族例子串行运行，在研究 README 中报告总时间。
+
+## 2026-11-04 FEM 线暂停（用户）
+
+用户与导师商定：FEM 学习成本大，不是课题组方向，主要精力转回 BIE 路线；若最终不能说明 BIE 优于 FEM，课题可能更换。FEM 草稿 `draft/fem-goerisch/` 保留，用户会继续阅读。第 2a 步（pipeline-v1）已完成，作为 FEM 线的收尾；2b、2c 不再派发。BIE 方向的第一步是同场独立评价先导（I9.2 估计能否承受评价误差）。
