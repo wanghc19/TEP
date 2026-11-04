@@ -1,8 +1,10 @@
 # Eigenvalue a posteriori error status
 
-更新日期：2026-11-03。
+更新日期：2026-11-04。
 
 ## 当前状态
+
+- **2026-11-04 新项目 fem-goerisch。** FEM + DtN + Goerisch 区间方法独立成 [[research/projects/fem-goerisch/README|fem-goerisch]]，参数化与稳健性工作在那里进行；代码放在 `test/fem-goerisch/`。
 
 - **2026-11-04 加速探针（第 9a 阶段）。** [[research/explorations/numerical-directions/accel-probe|accel-probe]]（astra，经理核查）：只放宽界面 $S$ 证书的现有精度参数，可靠积分时间估计由 698 秒降为约 389 秒，宽度为 $4.554\times10^{-9}$（比主结果宽 2.07%）。用户决定到此为止；结果记入 `draft/fem-goerisch/` 的成本一节。主结果区间不变。
 
