@@ -75,6 +75,10 @@ FEM = finite element method（有限元法）；DtN = Dirichlet-to-Neumann；Goe
 - 打印位数：DtN 表的 $r$、$K_+r$、上下界之差改为 2–3 位，两个 $\lambda_{\min}$ 改为 4 位，删去"两侧 $r$ 相同到 7 位"；芯区计数的移位由 0.3653736907（枢轴 $1.1\times10^{-10}$）改为 0.36（h-core 复制代码 run-007 中已算：恰 1 个负特征值，最小枢轴 0.0059），结论写成 $\lambda_2(\bm L)\ge0.36$；$\tilde{\bm L}$ 的特征值改为 7 位。
 - 主区间端点、$E$、$M$、$I_1$ 的显示位数不变（截断误差意义下的数字），新节说明它们哪些位超出舍入误差估计。
 
+## 加速探针（2026-11-04）
+
+依据：`research/explorations/numerical-directions/accel-probe.md`（第 9a 阶段，经理核查）。论文"成本"小节与讲义"计算成本"小节各加一段"较松的精度设置"：界面时间 161／119／181 → 68／18／67 秒，可靠积分总时间估计约 390 秒（未端到端重跑），宽度 $4.554\times10^{-9}$（多 2.1%）。主结果不变。两个文件都已重新编译。
+
 ## 素材来源（只供写作者核对，讲义正文不引用）
 
 - 区间定理与宽度：`research/explorations/numerical-directions/goerisch-width.md`
