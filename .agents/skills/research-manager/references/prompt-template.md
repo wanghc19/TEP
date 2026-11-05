@@ -42,7 +42,10 @@ results table, checks, cost, meaning for the goal.>
 
 Writing rules: plain, direct English; at most one "Main risk:" line per
 item; no evidence-level labels, timestamps, hashes, or git/storage
-narration. Do not spawn reviewer or skeptic agents.
+narration.
+
+Subagents: <"Do not spawn subagents." | the exploration rule below,
+filled in>.
 
 Final reply, at most 8 lines: <the numbers or verdicts>, one line per check,
 anything unresolved.
@@ -60,3 +63,23 @@ anything unresolved.
   combinations of existing methods count, no "no direction found".
 - For a literature task, list the specific groups or papers to check, and
   restate the no-inflation rule.
+- Always write the `Subagents:` line; a thread that is not told may carry
+  over an earlier setting.
+  - Explicit task (a stated proposition, a proof, a proof review, an
+    experiment with a fixed design): "Do not spawn subagents."
+  - Exploration task (find or compare possible methods): "You may spawn at
+    most 3 subagents, each with reasoning effort `high` (state it when
+    spawning; otherwise they inherit yours), one candidate each. Subagents
+    may write code and run small checks, but only in `<scratch>/<task>/`;
+    when an experiment is running on the same machine, each check uses one
+    process and about one CPU-minute. Each returns: predicted gain (error
+    and time), the conditions it needs, proof status (idea / draft /
+    checked), and the smallest decisive check. Their proofs are drafts: you
+    check every step before it enters the deliverable, and mark anything
+    unchecked `unverified`. Only you write the deliverable." Add a time box
+    for the exploration phase (about 45 minutes), after which the main
+    thread chooses one candidate and completes it.
+  - Experiment threads: no subagents unless the user approves a specific
+    exception.
+  - Give an exploration task one clear goal; list candidates as suggestions,
+    not "as many as possible".

@@ -53,8 +53,12 @@ Do not guess it and do not carry over a value from another project.
   changed and why in one or two lines.
 - If the prompt has a time limit, stop at the limit: write what you have,
   mark unfinished parts `TODO`, and report.
-- Do not commit unless the prompt says so. Do not spawn reviewer or skeptic
-  sub-agents unless the prompt says so.
+- Do not commit unless the prompt says so.
+- Spawn sub-agents only as the prompt's `Subagents:` line allows; if the
+  prompt says nothing, spawn none. When allowed, respect its count, set the
+  stated reasoning effort explicitly when spawning, give each one candidate,
+  keep their files in the named scratch folder, and check every step of
+  their proofs yourself before anything enters the deliverable.
 
 ## Stop and report
 
