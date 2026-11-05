@@ -113,6 +113,7 @@
   - 这是在报告所列条件下的可靠上界；A 证书的舍入条件已由 bandrel-v1 补齐。
   - 引线差异（OP-BE-7）：右引线实测，来自双精度法向跳跃的抵消噪声；左侧按同机制推断。
   - 已测阶段合计 19.8 分钟（拼接记录，非冷启动端到端）：候选搜索 10.7、五组残差 8.6、其余约 0.5 分钟。
+- 正式搜索改用行列式求根（detsearch-v1，sol，浮点，经理已核对，见 [[research/projects/bie-enclosure/implementation/detsearch-v1|detsearch-v1]]）：11 线程科学进程 158 秒（I9 为 643 秒），match 38 次（I9 为 213 次）；候选 1.558437894182088，与 I9 差 $2.9\times10^{-15}$；未触发回退，强制回退也得同一候选。下游要用新 $\widehat k$ 重跑。
 - 带隙证书 A 计入舍入（bandrel-v1，astra，经理已核对，见 [[research/projects/bie-enclosure/implementation/bandrel-v1|bandrel-v1]]）：两侧 118 面板共 472 项符号检查全部以 Arb 通过（单进程 77 秒）。最终区间的 (T1.5) 现在包含舍入，enclosure-v1 区间不需任何数值前提，是报告所列理论条件下的可靠上界。
 - 搜索加速可行性（detscan-v1，sol，浮点，经理已核对，见 [[research/projects/bie-enclosure/implementation/detscan-v1|detscan-v1]]）：
   - $\det A_{\rm def}(k)$ 在 I9 窗口 $[1.451,2.249]$ 上可插值：64 阶 Chebyshev 系数降到 $10^{-14}$ 平台，节点处无极点（rcond 最小 0.038）。
@@ -121,7 +122,8 @@
 
 ## 进行中
 
-- 正式搜索改用行列式求根（detsearch-v1，sol，进行中；用户 2026-11-05 决定）。
+- 草稿重组（建议已给用户）：第 5 节只留定义—定理—用法，迹常数几何与证明移附录 B，$\varepsilon_g$／$U$／带隙矩阵检查的截断与舍入控制合为附录 C；第 2 节带隙证书改成 A 的实际方法。
+- 下一步：用新搜索做一次冷启动全流程实测（搜索→重建→B 拟合→五组残差→$C_g$→装配→带隙检查）。
 
 - 草稿：胞元核、按场拟合、实际状态列和 cellrel-v1 的数值已写入 `draft/bie-enclosure/`（第 4、5 节补段，第 6 节初稿，2026-11-05），等用户检查。
 

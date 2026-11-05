@@ -17,4 +17,8 @@ FMM 是 fast multipole method（快速多极方法），MFS 是 method of fundam
 `cellrel-v1` 是 cell kernel reliable evaluation version 1，胞元核 B 的中心整曲线可靠残差与引线实际状态列先导。
 `grouprel-v1` 是 group reliable evaluation version 1，胞元核 B 的五组可靠残差与一次完整并行运行。
 `enclosure-v1` 是 final reliable eigenvalue enclosure version 1，最终可靠特征值包围：迹常数移植、向外舍入装配与引线浮点差异诊断。
+
 `detscan-v1` 是 Fredholm determinant scan version 1，匹配矩阵行列式的 Boyd／Chebyshev 求根可行性实验。
+`bandrel-v1` 是 band certificate reliable（带隙证书舍入包含），两引线472项有限符号测试。
+
+`detsearch-v1` 是 determinant root search version 1，带隙分类、行列式定位、抛光与 sigma_min 确认的独立生产搜索。
