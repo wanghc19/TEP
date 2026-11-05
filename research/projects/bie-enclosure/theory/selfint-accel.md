@@ -4,6 +4,7 @@
 
 - done：A--D 的条件、完整误差证明、两面板数值代入、成本比较和推荐均已写出。
 - next：实验线程在同一两面板验收实目标插值的完整误差账目与时间。
+- 审查：[[research/projects/bie-enclosure/theory/selfint-accel-review|selfint-accel-review]] 为 0/0/0，A1--A3、B、C、D1--D3 均通过；A2 与 `matrel-v1` 实现的 Kress 权一致。
 - open：新完整面板、其他目标的域证书及粗代理目标网格尚未验证；秒数为预测。
 
 `selfint` 指 self-interaction（自作用），`accel` 指 acceleration（加速）。BIE 指 boundary integral equation（边界积分方程）；FEM 指 finite element method（有限元方法）；MFS 指 method of fundamental solutions（基本解方法）；CM 指 compressed source moments（源矩压缩）；DFT 指 discrete Fourier transform（离散 Fourier 变换）；Arb、Acb 分别指实、复球算术。本文采用 Proof from scratch 模式；设计和成本明确写为预测。只使用项目中已经给出的内部结果，并完整证明新增误差界。
