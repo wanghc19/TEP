@@ -22,3 +22,4 @@ FMM 是 fast multipole method（快速多极方法），MFS 是 method of fundam
 `bandrel-v1` 是 band certificate reliable（带隙证书舍入包含），两引线472项有限符号测试。
 
 `detsearch-v1` 是 determinant root search version 1，带隙分类、行列式定位、抛光与 sigma_min 确认的独立生产搜索。
+`pipeline-v1` 是 full BIE pipeline version 1，从带隙探索到包含舍入的最终区间的完整冷启动流程。
