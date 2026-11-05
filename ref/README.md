@@ -107,6 +107,7 @@
 | `ref_data/Temple1928.pdf` | *The Theory of Rayleigh's Principle as Applied to Continuous Systems* | G. Temple | 1928 | Rayleigh 商、Temple 下界 | Temple 下界的原始文献；L1 雏形 4.5 节引用 | `Temple1928` |
 | `ref_data/Xi2024.pdf` | *Analysis of a Finite Element DtN Method for Scattering Resonances of Sound Hard Obstacles* | Yingxia Xi; Bo Gong; Jiguang Sun | 2024 | 散射共振、DtN 截断、非线性特征值 | 给出 DtN Fourier 截断与 FEM 离散下 holomorphic NEP 的特征值收敛估计 | `XiGongSun2024` |
 | `ref_data/Zhang2026.pdf` | *Least-Squares Finite Element Methods with Weakly Imposed Boundary Conditions: Norm and Error Equivalences, Over-Penalization, and Fully Discontinuous Discretizations* | Shun Zhang | 2026 预印本 | 弱边界最小二乘、后处理 | 区分值/通量迹范数；唯一性和非显式常数限制本征问题应用 | `Zhang2026` |
+| `ref_data/Zhao2015.pdf` | *Robust and Efficient Solution of the Drum Problem via Nyström Approximation of the Fredholm Determinant* | Lin Zhao; Alex Barnett | 2015 | Fredholm 行列式、Boyd 解析求根、Chebyshev 插值、外部共振 | 用 Nyström 矩阵行列式的解析求根代替最小奇异值扫描；本地为 arXiv:1406.5252v3 预印本，正式版 SIAM J. Numer. Anal. 53(4) | `ZhaoBarnett2015` |
 
 ## 专著与理论基础
 
