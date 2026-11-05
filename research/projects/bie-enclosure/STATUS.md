@@ -38,7 +38,7 @@
   - 可靠 $\overline Q_{\rm sw}\le4.85\times10^{-11}$，是浮点值的 1.14 倍。两条引线 $p=1$ 即收缩（$r\le0.387$）。
   - 全流程 148 秒、1.35 GiB；一次含 320 个代理的 Arb 核求值平均 0.024 秒。
   - 混合余量（$Q_{\rm grp}$ 与质量仍是浮点）：单盘 1.21、12 盘 13.3。
-- 可靠评价设计（理论线程，[[research/projects/bie-enclosure/theory/reliable-eval-design|reliable-eval-design]]，待审查）：
+- 可靠评价设计（理论线程，[[research/projects/bie-enclosure/theory/reliable-eval-design|reliable-eval-design]]；审查 [[research/projects/bie-enclosure/theory/reliable-eval-design-review|reliable-eval-design-review]] 为 0 个 blocker、0 个 important、1 个 minor，逐步列出检查，用时约 9 分钟；唯一的 minor 是可选停止深度 (RE25) 的推导写错了理由，公式本身成立，已改）：
   - 命题 G：本几何中三条材料曲线的源、目标高度差都小于 $d/2$，材料自作用没有回卷切换（经理已运行 §7.1 的有理检查）。这更正了 srcsplit-v1 后“材料组也会碰到切换参数”的推测。
   - 定理 S、R、O、M：分支面板 Gauss 求积、断点定位、目标正则性和目标 Taylor 模型的误差界；命题 CM：源矩压缩。
   - 定理 D：质量下界。八个柱内盘可以直接用 T3.6（目标 $\underline U\ge1.20$）；背景盘要加分支固定的辅助场。
@@ -47,7 +47,6 @@
 
 ## 进行中
 
-- 审查线程：审查 reliable-eval-design。
 - astra：中心材料曲线组合残差的可靠先导（`test/bie-bound/matrel-v1/`），实测误差膨胀和单价，外推全流程耗时；附带八个柱内盘的可靠质量下界。
 
 - 草稿 `draft/bie-enclosure/`：第 1–5 节已按报告改完，改动处蓝色标注，待全文送审。

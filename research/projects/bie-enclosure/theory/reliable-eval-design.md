@@ -3,7 +3,8 @@
 进度：
 
 - done：材料几何、源求积、目标模型、修正质量、引线尾及源矩压缩证明；成本与有限有理检查。
-- next：独立线程审查；实验线程先认证中心材料曲线的组合残差模型并测量其成本。
+- 审查：[[research/projects/bie-enclosure/theory/reliable-eval-design-review|reliable-eval-design-review]] 为 0/0/1，RE-1 已在 (RE25) 处修正。
+- next：实验线程先认证中心材料曲线的组合残差模型并测量其成本。
 - open：没有待补的解析证明；实际复域、几何、质量、分组残差和高阶系数耗时尚待认证。
 
 本文只评价 [[research/projects/bie-enclosure/theory/switch-line-proof|switch-line-proof]] 定义的固定场及分支通量。BIE 指 boundary integral equation（边界积分方程），MFS 指 method of fundamental solutions（基本解方法），FEM 指 finite element method（有限元方法），Arb 指球算术库。新误差界采用 Proof from scratch 模式；设计和成本预测与已证明不等式分别说明。只使用已提供的内部结果，不新增参考文献。以下 $J_0,J_1$ 为定理 SW 的分支值、通量跳跃，省略上标 $\mathrm{br}$；第一类 Bessel 函数另写作 $\mathrm J_n$。
@@ -432,7 +433,13 @@ N\ge
 \frac{\log\bigl(B_LC_*/(\epsilon\sqrt{1-r_*^2})\bigr)}{|\log r_*|}.
 \tag{RE25}
 $$
-负的右端取零并向上取整。这个式子由 (RE24) 的逐步收缩特例解出。将原记录约 $0.38$ 的状态衰减仅作预测时，即使 $B_L$ 粗到 $10^4$，约四十余个胞元也可能足够；实际 $N$ 只由可靠 (RE24) 决定。
+负的右端取零并向上取整；$B_LC_*=0$ 时从 $N=0$ 起尾为零，$r_*=0$ 时从 $N=1$ 起尾为零，这两种情形在取对数前单独处理。这个式子直接对状态估计求和得到（审查 RE-1 修正：状态界不蕴含 $\|\mathsf P\|_2\le r_*$，不能说成 (RE24) 取 $p=1$ 的特例）：
+$$
+\left(\sum_{j=N}^{\infty}\|\mathsf L\mathsf P^jc\|_Y^2\right)^{1/2}
+\le B_LC_*\left(\sum_{j=N}^{\infty}r_*^{2j}\right)^{1/2}
+=\frac{B_LC_*r_*^N}{\sqrt{1-r_*^2}}.
+$$
+将原记录约 $0.38$ 的状态衰减仅作预测时，即使 $B_L$ 粗到 $10^4$，约四十余个胞元也可能足够；实际 $N$ 只由可靠 (RE24) 决定。
 
 有限胞元部分也应共享参考核：同一目标／源几何的核及 Taylor 系数只算一次，再作用于各 $\mathsf P^jc$ 的密度。多状态的矩阵收缩有额外代数成本，但不能再把它记成 $N$ 次代理特殊函数调用。中心接合墙比较实际中心场与第一引线胞元，另计一次；每面内部墙仍只进入一个墙残差。
 
@@ -513,7 +520,8 @@ $a_0,a_1$ 由 $H_0,H_1$ 得到。有限幂级数代入源、目标几何可生�
 
 定义一个单位为：在实的非奇异点，以 $128$ 位 Arb 计算一个分支的核值和一阶梯度，包含全部 $320$ 个代理与自由空间项。`switch-rel-v1` 报告该单位的平均时间
 $$
-\tau_A=0.02409875\ {m s}.
+\tau_A=0.02409875\ {
+m s}.
 \tag{RE29}
 $$
 这是一个已测点的平均价，不是所有复球和所有精度下的时间上界。Hessian 可由相同的径向初值和 (RE28) 生成；高阶混合系数、复杂复域包络及更高精度均须折算实际耗时。
