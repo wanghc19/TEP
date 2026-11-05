@@ -1,0 +1,278 @@
+{
+  "status": "WHOLE_CURVE_BOUND",
+  "epsilon_upper": 1.2653478002962938e-12,
+  "floating_reference": "1.2611637248633255e-12",
+  "ratio_to_floating": 1.0033176306537215,
+  "statistics": {
+    "L": {
+      "min": 40,
+      "median": 40,
+      "p90": 40,
+      "max": 43
+    },
+    "e_self": {
+      "min": 2.247280162970253e-18,
+      "median": 3.9707391764551215e-18,
+      "p90": 1.2168223989705745e-17,
+      "max": 2.122156925712206e-17
+    },
+    "e_I": {
+      "min": 1.1799457322153707e-15,
+      "median": 2.413685048518748e-15,
+      "p90": 3.7709203950669886e-15,
+      "max": 5.91867739939817e-15
+    },
+    "epsilon_upper": {
+      "min": 1.2588884128917124e-15,
+      "median": 2.538498940018092e-14,
+      "p90": 1.312561325960445e-13,
+      "max": 4.193866326174653e-13
+    },
+    "total_seconds": {
+      "min": 22.878339208022226,
+      "median": 24.859747792012058,
+      "p90": 26.13946895796107,
+      "max": 30.642679957963992
+    }
+  },
+  "exceptions": {
+    "41": [
+      10,
+      27,
+      92,
+      93,
+      94,
+      97,
+      98,
+      99,
+      164,
+      181
+    ],
+    "42": [
+      6,
+      95,
+      96,
+      185
+    ],
+    "43": [
+      89,
+      102
+    ]
+  },
+  "smaller_Rt": [],
+  "splits": [],
+  "high_self_error": [],
+  "coverage": "exact dyadic partition of [0,192], corresponding to [0,2*pi]",
+  "relative_norm_check_max": 1.2145050110689353e-34,
+  "control_difference_max": 1.6158398300678017e-31,
+  "large_chord_min": 1.3813482293864777e-05,
+  "small_chord_min": 8.205496360193307e-05,
+  "measurements": {
+    "W": 8,
+    "full_wall": 613.006834667,
+    "aggregation_wall": 1.10967475,
+    "delivered_curve_wall": 614.116509417,
+    "full_CPU": 4526.490199999999,
+    "aggregation_CPU": 0.359118,
+    "delivered_curve_CPU": 4526.849318,
+    "peak_gib": 1.7105865478515625,
+    "cache_range": [
+      4.796279500005767,
+      4.896024958987255
+    ],
+    "panel_rate_range": [
+      0.03956146594132726,
+      0.04010945251236572
+    ],
+    "load_before": [
+      4.57568359375,
+      4.56103515625,
+      3.95166015625
+    ],
+    "load_after": [
+      11.7646484375,
+      12.4169921875,
+      9.13916015625
+    ],
+    "total_stage_monitor_wall": 708.686872417
+  },
+  "cost": {
+    "W": 8,
+    "monitor_wall_seconds": 613.006834667,
+    "python_queue_wall_seconds": 611.7609480839456,
+    "total_python_cpu_seconds": 4526.490199999999,
+    "summed_worker_cpu_seconds": 4524.745144,
+    "baseline_192_times_19_8_over_W": 475.20000000000005,
+    "reference_parallel_efficiency": 0.7751952721018845,
+    "cpu_utilization": 0.923009733337414,
+    "worker_seconds_to_wall": 0.1258397405015282,
+    "worker_distribution": [
+      {
+        "pid": 92732,
+        "panels": 24,
+        "cache_seconds": 4.815907457959838,
+        "process_seconds": 611.1808253750205,
+        "cpu_seconds": 567.759709,
+        "self_peak_rss_gib": 0.2191009521484375,
+        "panels_per_active_second": 0.039580126242202474
+      },
+      {
+        "pid": 92728,
+        "panels": 24,
+        "cache_seconds": 4.820397415955085,
+        "process_seconds": 611.4713247499894,
+        "cpu_seconds": 568.1934219999999,
+        "self_peak_rss_gib": 0.2180938720703125,
+        "panels_per_active_second": 0.03956146594132726
+      },
+      {
+        "pid": 92729,
+        "panels": 24,
+        "cache_seconds": 4.896024958987255,
+        "process_seconds": 611.4938458750257,
+        "cpu_seconds": 567.8335020000001,
+        "self_peak_rss_gib": 0.21881103515625,
+        "panels_per_active_second": 0.039564929468023806
+      },
+      {
+        "pid": 92733,
+        "panels": 24,
+        "cache_seconds": 4.873996249982156,
+        "process_seconds": 603.2366887499811,
+        "cpu_seconds": 559.927155,
+        "self_peak_rss_gib": 0.22283935546875,
+        "panels_per_active_second": 0.04010945251236572
+      },
+      {
+        "pid": 92734,
+        "panels": 24,
+        "cache_seconds": 4.843213249987457,
+        "process_seconds": 611.362050249998,
+        "cpu_seconds": 567.650982,
+        "self_peak_rss_gib": 0.2216033935546875,
+        "panels_per_active_second": 0.03957008181099507
+      },
+      {
+        "pid": 92735,
+        "panels": 24,
+        "cache_seconds": 4.874710833013523,
+        "process_seconds": 608.0080941250199,
+        "cpu_seconds": 564.5094789999999,
+        "self_peak_rss_gib": 0.21551513671875,
+        "panels_per_active_second": 0.03979219301210596
+      },
+      {
+        "pid": 92730,
+        "panels": 24,
+        "cache_seconds": 4.852417582995258,
+        "process_seconds": 611.4925977499806,
+        "cpu_seconds": 568.0834600000001,
+        "self_peak_rss_gib": 0.217132568359375,
+        "panels_per_active_second": 0.03956216680766793
+      },
+      {
+        "pid": 92731,
+        "panels": 24,
+        "cache_seconds": 4.796279500005767,
+        "process_seconds": 603.9605287499726,
+        "cpu_seconds": 560.787435,
+        "self_peak_rss_gib": 0.2208251953125,
+        "panels_per_active_second": 0.04005579443373528
+      }
+    ],
+    "observed_cache_seconds_mean": 4.846618406110792,
+    "center_measured_wall": 614.116509417,
+    "aggregation_wall_seconds": 1.10967475,
+    "aggregation_cpu_seconds": 0.359118,
+    "center_model": {
+      "name": "center",
+      "targets": 192,
+      "sources": 160,
+      "mixed_worker_seconds": 4048.337433940382,
+      "envelope_worker_seconds": 240.26249086344617,
+      "contraction_worker_seconds": 12.126983713184018,
+      "self_worker_seconds": 357.6840124632581,
+      "control_worker_seconds": 122.28621911641676,
+      "other_worker_seconds": 51.85936886508716,
+      "cache_worker_seconds": 38.77294724888634,
+      "worker_seconds": 4871.329456210661,
+      "wall_prediction_seconds": 613.0068346670001
+    },
+    "extrapolated_other_groups": [
+      {
+        "name": "left material",
+        "targets": 64,
+        "sources": 64,
+        "mixed_worker_seconds": 539.7783245253843,
+        "envelope_worker_seconds": 32.03499878179282,
+        "contraction_worker_seconds": 1.616931161757869,
+        "self_worker_seconds": 119.22800415441937,
+        "control_worker_seconds": 40.76207303880559,
+        "other_worker_seconds": 17.286456288362388,
+        "cache_worker_seconds": 15.509178899554536,
+        "worker_seconds": 766.2159668500769,
+        "wall_prediction_seconds": 96.42041843654123
+      },
+      {
+        "name": "right material",
+        "targets": 64,
+        "sources": 64,
+        "mixed_worker_seconds": 539.7783245253843,
+        "envelope_worker_seconds": 32.03499878179282,
+        "contraction_worker_seconds": 1.616931161757869,
+        "self_worker_seconds": 119.22800415441937,
+        "control_worker_seconds": 40.76207303880559,
+        "other_worker_seconds": 17.286456288362388,
+        "cache_worker_seconds": 15.509178899554536,
+        "worker_seconds": 766.2159668500769,
+        "wall_prediction_seconds": 96.42041843654123
+      },
+      {
+        "name": "six walls",
+        "targets": 96,
+        "sources": 32,
+        "mixed_worker_seconds": 404.8337433940382,
+        "envelope_worker_seconds": 24.026249086344617,
+        "contraction_worker_seconds": 1.2126983713184019,
+        "self_worker_seconds": 0.0,
+        "control_worker_seconds": 0.0,
+        "other_worker_seconds": 25.92968443254358,
+        "cache_worker_seconds": 46.52753669866361,
+        "worker_seconds": 502.5299119829084,
+        "wall_prediction_seconds": 63.23823371818501
+      }
+    ],
+    "shared_serial_seconds": {
+      "switch_once": 148.463619,
+      "mass": 20.990072375,
+      "extra_disk_selection_and_export": 13.744545916666672
+    },
+    "full_pipeline_wall_minutes": 17.578140630693344,
+    "unmeasured": "Other-template domain feasibility and local prices, lead-state algebra, wall subdivisions, grouped tails, C_g and band-gap certificate. The full pipeline has not been run.",
+    "historical_design_counts_status": "64 central targets have no certified domain; they are not used for the main projection"
+  },
+  "reproduction": [
+    {
+      "panel": 0,
+      "required_results_exact": {
+        "polynomial": true,
+        "V": true,
+        "terms": true,
+        "e_upper": true,
+        "epsilon_panel_upper": true
+      },
+      "internal_coefficient_radius_max_absolute_difference": 5.206619527050998e-54
+    },
+    {
+      "panel": 1,
+      "required_results_exact": {
+        "polynomial": true,
+        "V": true,
+        "terms": true,
+        "e_upper": true,
+        "epsilon_panel_upper": true
+      },
+      "internal_coefficient_radius_max_absolute_difference": 7.592188971761712e-65
+    }
+  ]
+}

@@ -10,3 +10,4 @@ FMM 是 fast multipole method（快速多极方法），MFS 是 method of fundam
 `switch-rel-v1` 是 reliable switch-line bound version 1，以 Arb 球算术包住回卷核切换项、连续源积分及引线传播尾。
 `matrel-v1` 是 material reliable pilot version 1，中心材料曲线残差的可靠评价与成本先导。
 `selfint-v1` 是 self-interaction version 1，实 Chebyshev 自作用与源缓存的可靠先导。
+`central-rel-v1` 是 central material reliable bound version 1，整条中心材料曲线的可靠残差与并行成本。
