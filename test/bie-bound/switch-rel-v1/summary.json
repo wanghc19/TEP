@@ -1,0 +1,212 @@
+{
+  "final_run": "test/bie-bound/switch-rel-v1/output/run-010",
+  "final_bounds": {
+    "Q_line_upper": 2.6181329810584237e-11,
+    "Q_end_upper": 2.2303899987601712e-11,
+    "Q_switch_upper": 4.848522979818595e-11,
+    "crude_switch_upper": 5.522657922949495e-10,
+    "ratio_to_floating_upper": 1.1360440250341468,
+    "mixed_Q_upper": 5.2494045234185947e-11,
+    "mixed_margin_lower": [
+      "[1.2100633455970133386891069978337085581 +/- 1.78e-38]",
+      "[13.309029564843256299728081316578356126 +/- 4.96e-37]"
+    ]
+  },
+  "pipeline": {
+    "status": "COMPLETE",
+    "matlab_monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 18.707594209,
+      "peak_process_tree_rss_gib": 1.3508148193359375,
+      "peak_experiment_disk_mb": 21.82945,
+      "output_disk_mb": 9.923598,
+      "peak_by_part_gib": {
+        "startup": 1.3508148193359375
+      }
+    },
+    "arb_monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 129.754408708,
+      "peak_process_tree_rss_gib": 0.2306060791015625,
+      "peak_experiment_disk_mb": 23.666664,
+      "output_disk_mb": 1.837869,
+      "peak_by_part_gib": {
+        "startup": 0.0003204345703125,
+        "kernel": 0.1378631591796875,
+        "kernel-table": 0.1523895263671875,
+        "source-center": 0.1571807861328125,
+        "source-negative": 0.2137451171875,
+        "prepare-positive": 0.2305908203125,
+        "source-positive": 0.2306060791015625
+      }
+    },
+    "wall_seconds": 148.4636185,
+    "peak_process_tree_rss_gib": 1.3508148193359375
+  },
+  "all_monitors": [
+    {
+      "path": "output/run-001/monitor.json",
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 1.160742667,
+      "peak_process_tree_rss_gib": 0.0004730224609375,
+      "peak_experiment_disk_mb": 0.007529,
+      "output_disk_mb": 0.001393,
+      "peak_by_part_gib": {
+        "startup": 0.0004730224609375
+      }
+    },
+    {
+      "path": "output/run-002/monitor.json",
+      "returncode": 1,
+      "reason": "completed",
+      "wall_seconds": 18.540828833,
+      "peak_process_tree_rss_gib": 1.37060546875,
+      "peak_experiment_disk_mb": 0.066381,
+      "output_disk_mb": 0.001314,
+      "peak_by_part_gib": {
+        "startup": 1.37060546875
+      }
+    },
+    {
+      "path": "output/run-003/monitor.json",
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 13.080155583,
+      "peak_process_tree_rss_gib": 1.4109344482421875,
+      "peak_experiment_disk_mb": 9.992387,
+      "output_disk_mb": 9.923417,
+      "peak_by_part_gib": {
+        "startup": 1.4109344482421875
+      }
+    },
+    {
+      "path": "output/run-004/monitor.json",
+      "returncode": 1,
+      "reason": "completed",
+      "wall_seconds": 1.098991416,
+      "peak_process_tree_rss_gib": 0.003021240234375,
+      "peak_experiment_disk_mb": 9.999019,
+      "output_disk_mb": 0.002082,
+      "peak_by_part_gib": {
+        "startup": 0.003021240234375
+      }
+    },
+    {
+      "path": "output/run-005/monitor.json",
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 3.293571958,
+      "peak_process_tree_rss_gib": 0.132598876953125,
+      "peak_experiment_disk_mb": 10.00168,
+      "output_disk_mb": 0.031503,
+      "peak_by_part_gib": {
+        "startup": 0.003021240234375,
+        "kernel": 0.132598876953125
+      }
+    },
+    {
+      "path": "output/run-006/monitor.json",
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 120.819998583,
+      "peak_process_tree_rss_gib": 0.1362457275390625,
+      "peak_experiment_disk_mb": 10.0372,
+      "output_disk_mb": 1.81892,
+      "peak_by_part_gib": {
+        "startup": 0.0024871826171875,
+        "kernel": 0.1362457275390625
+      }
+    },
+    {
+      "path": "output/run-007/monitor.json",
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 5.436387957999999,
+      "peak_process_tree_rss_gib": 0.2138824462890625,
+      "peak_experiment_disk_mb": 11.868001,
+      "output_disk_mb": 0.008607,
+      "peak_by_part_gib": {
+        "startup": 0.00030517578125,
+        "prepare-negative": 0.1960296630859375,
+        "source-negative": 0.1984100341796875,
+        "prepare-positive": 0.2133331298828125,
+        "source-positive": 0.2138824462890625
+      }
+    },
+    {
+      "path": "output/run-008/monitor.json",
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 3.2701607079999997,
+      "peak_process_tree_rss_gib": 0.208740234375,
+      "peak_experiment_disk_mb": 11.876982,
+      "output_disk_mb": 0.008577,
+      "peak_by_part_gib": {
+        "startup": 0.0029754638671875,
+        "prepare-negative": 0.2062835693359375,
+        "prepare-positive": 0.208740234375
+      }
+    },
+    {
+      "path": "output/run-009/monitor.json",
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 7.60405625,
+      "peak_process_tree_rss_gib": 0.2254791259765625,
+      "peak_experiment_disk_mb": 11.897815,
+      "output_disk_mb": 0.018653,
+      "peak_by_part_gib": {
+        "startup": 0.0025787353515625,
+        "independent-kernel-check": 0.1561126708984375,
+        "prepare-negative": 0.212799072265625,
+        "source-negative": 0.2139892578125,
+        "source-positive": 0.2254791259765625
+      }
+    },
+    {
+      "path": "output/run-010/arb/monitor.json",
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 129.754408708,
+      "peak_process_tree_rss_gib": 0.2306060791015625,
+      "peak_experiment_disk_mb": 23.666664,
+      "output_disk_mb": 1.837869,
+      "peak_by_part_gib": {
+        "startup": 0.0003204345703125,
+        "kernel": 0.1378631591796875,
+        "kernel-table": 0.1523895263671875,
+        "source-center": 0.1571807861328125,
+        "source-negative": 0.2137451171875,
+        "prepare-positive": 0.2305908203125,
+        "source-positive": 0.2306060791015625
+      }
+    },
+    {
+      "path": "output/run-010/matlab/monitor.json",
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 18.707594209,
+      "peak_process_tree_rss_gib": 1.3508148193359375,
+      "peak_experiment_disk_mb": 21.82945,
+      "output_disk_mb": 9.923598,
+      "peak_by_part_gib": {
+        "startup": 1.3508148193359375
+      }
+    }
+  ],
+  "total_monitored_seconds": 322.766896873,
+  "all_runs_peak_rss_gib": 1.4109344482421875,
+  "unit_two_branch_kernel_seconds": 0.048197500000242144,
+  "unit_one_branch_kernel_mean_seconds": 0.024098750000121072,
+  "field_build_seconds": 3.501431875,
+  "export_total_seconds": 4.263093541666667,
+  "kernel_seconds": 121.24517545796698,
+  "kernel_hankels": 3370500,
+  "source_and_checks_seconds": 7.112392958020791,
+  "all_arb_hankels": 3378204,
+  "finite_prefix_and_contraction_prepare_seconds": 0.7716870830045082,
+  "source_integral_seconds": 5.43720383301843
+}
