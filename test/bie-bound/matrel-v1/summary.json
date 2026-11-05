@@ -1,0 +1,49 @@
+{
+  "result_run": "run-001",
+  "floating_full": {
+    "nodes": 1536,
+    "value_squared": 3.4944351435328047e-29,
+    "normal_squared": 1.5904989965597023e-24,
+    "epsilon": 1.2611637248633255e-12,
+    "seconds": 22.140562166666665
+  },
+  "partial": {
+    "rows": [
+      {
+        "panel": 0,
+        "V_GL": "[1.542195086474052255393667765607210232e-30 +/- 4.29e-67]",
+        "relative_V_check": 4.5667546816251856e-35,
+        "floating_epsilon": 1.9367178087157522e-15,
+        "reliable_epsilon": 2.3130708514611003e-15,
+        "max_signed_sample_difference": 1.3308431200659024e-14,
+        "ratio": 1.1943251830760568
+      },
+      {
+        "panel": 1,
+        "V_GL": "[1.993813600649392845597176467913886848e-30 +/- 3.53e-67]",
+        "relative_V_check": 5.354208809178038e-35,
+        "floating_epsilon": 1.4992125662886446e-15,
+        "reliable_epsilon": 4.058851715733874e-15,
+        "max_signed_sample_difference": 7.664120261469699e-15,
+        "ratio": 2.707322368422851
+      }
+    ],
+    "partial_upper": 4.67167785856375e-15,
+    "floating_partial": 2.4491864342092313e-15,
+    "ratio": 1.9074406885942492,
+    "fraction_of_parameter_period": "2/192",
+    "full_curve_status": "PARTIAL"
+  },
+  "unit_seconds": 0.02409875,
+  "chi_t": 1.8890347010162398,
+  "chi_ts_isolated": 4.2209917531317895,
+  "chi_ts_all_accepted_pairs": 4.354954279336855,
+  "U_lower": "[1.2358712087405880078771371466910214927 +/- 2.21e-38]",
+  "scenarios_minutes": {
+    "design_counts": 126.14976330098601,
+    "measured_center_counts": 245.36333545355345
+  },
+  "whole_center_minutes": 157.840941601526,
+  "total_monitored_seconds": 650.179553165,
+  "maximum_rss_gib": 1.5312957763671875
+}

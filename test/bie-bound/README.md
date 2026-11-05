@@ -8,3 +8,4 @@ FMM 是 fast multipole method（快速多极方法），MFS 是 method of fundam
 `switch-v1` 是 MFS wrap switch-line defect version 1，回卷切换线缺陷与加入该项后的浮点预算。
 `srcsplit-v1` 是 source-split quadrature version 1，源分支断点分段求积与接合墙残差诊断。
 `switch-rel-v1` 是 reliable switch-line bound version 1，以 Arb 球算术包住回卷核切换项、连续源积分及引线传播尾。
+`matrel-v1` 是 material reliable pilot version 1，中心材料曲线残差的可靠评价与成本先导。
