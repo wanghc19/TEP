@@ -1,9 +1,10 @@
 # 状态
 
-更新日期：2026-11-05。
+更新日期：2026-11-06。
 
 ## 已完成
 
+- 冷启动完整流程（pipeline-v1，astra，经理已核对，见 [[research/projects/bie-enclosure/implementation/pipeline-v1|pipeline-v1]] 末节）：从空目录一次跑完带隙分类、行列式求根、密度重建、B 拟合、五组可靠残差、八盘质量、$C_g$、装配与 472 项含舍入带隙检查。候选 $\widehat k=1.558437894182088$；可靠区间 $k\in[1.5584378941776960,\,1.5584378941864800]$，全宽 $2.738\times10^{-11}$，为 FEM 的 1/163；区间内至少有一个孤立有限重特征值（不声称唯一）。端到端 827 秒（13.8 分钟）、峰值 1.84 GiB；FEM 完整 66.8 分钟，去掉唯一性部分 12.5 分钟。粗节点 256/128/128 全宽 $4.27\times10^{-6}$。这是论文第 6 节的数值例子。
 - 固定场浮点评价先导与查新（见 README 链接）。
 - ChatGPT Pro 报告 [[research/projects/bie-enclosure/theory/reliable-bound|reliable-bound]]，经理核对了：Fliss 2013 Remark 2.1(2) 允许左右引线不同（读了本地 PDF）；T1.1 的参数逆与 Weyl 序列论证；T2.3 接缝 Green 公式的符号；T4.2 保留 Jacobian 的迹引理（$T_\kappa$ 公式数值复现）与 T4.3 联合乘子；$C=9.571/7.668/4.695$ 与墙上 $C=1.0356$ 数值复现；圆盘平均值恒等式。未细查：T3.2 Kress 界、T3.4a 源簇 Taylor 树、T1.3 衰减、T2.2 正则性。
 - 粗估（浮点，非可靠）：接缝跳跃平方约 $4.4\times10^{-27}$，只占 $\varepsilon^2$ 的 0.1%；按分组迹常数 $Q\approx7.7\times10^{-12}$（原 $1.97\times10^{-11}$），$W\approx6.1\times10^{-10}$。已被下面的 budget-v1 取代；接缝量其实只是舍入量（见 OP-BE-6）。
