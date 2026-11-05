@@ -67,6 +67,11 @@ anything unresolved.
   over an earlier setting.
   - Explicit task (a stated proposition, a proof, a proof review, an
     experiment with a fixed design): "Do not spawn subagents."
+  - Default for every task, exploration included: "Do not spawn
+    subagents." (user rule, 2026-11-05: subagents only when necessary).
+    Use the exploration rule below only when the candidates are clearly
+    independent and too many for one thread in the time box; say why in the
+    log.
   - Exploration task (find or compare possible methods): "You may spawn at
     most 3 subagents, each with reasoning effort `high` (state it when
     spawning; otherwise they inherit yours), one candidate each. Subagents
