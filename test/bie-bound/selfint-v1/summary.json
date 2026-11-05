@@ -1,0 +1,454 @@
+{
+  "accepted_panels": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "cache_reuse_counts": [
+    {
+      "source_jets": 160,
+      "source_moments": 160,
+      "kress_source_points": 1152
+    },
+    {
+      "source_jets": 160,
+      "source_moments": 160,
+      "kress_source_points": 1152
+    },
+    {
+      "source_jets": 160,
+      "source_moments": 160,
+      "kress_source_points": 1152
+    },
+    {
+      "source_jets": 160,
+      "source_moments": 160,
+      "kress_source_points": 1152
+    },
+    {
+      "source_jets": 160,
+      "source_moments": 160,
+      "kress_source_points": 1152
+    },
+    {
+      "source_jets": 160,
+      "source_moments": 160,
+      "kress_source_points": 1152
+    }
+  ],
+  "cache_vs_uncached": [
+    {
+      "panel": 0,
+      "exact_fields_equal": {
+        "polynomial": true,
+        "V": true,
+        "terms": true,
+        "e_upper": true,
+        "epsilon_panel_upper": true,
+        "scaled_coefficient_radii": true
+      }
+    },
+    {
+      "panel": 1,
+      "exact_fields_equal": {
+        "polynomial": true,
+        "V": true,
+        "terms": true,
+        "e_upper": true,
+        "epsilon_panel_upper": true,
+        "scaled_coefficient_radii": true
+      }
+    }
+  ],
+  "warm_production_seconds": 19.75975734180538,
+  "warm_with_controls_seconds": 20.262005866598336,
+  "completed_panel_cpu_seconds": 119.26001300000001,
+  "failed_panel": {
+    "N": 1152,
+    "L": 40,
+    "node_bits": 128,
+    "conversion_bits": 192,
+    "large_domain": {
+      "tiles": 162,
+      "min_real_chord_square": "[3.27862628799333503319975562424363359916152703228598726076e-5 +/- 6.43e-63]",
+      "min_real_speed_square": "[0.000454655845069565658346702490076287477390977152625555803510 +/- 3.03e-62]",
+      "H_A": 8532.85855261806,
+      "H_B": 3991146945.8483915
+    },
+    "small_domain": {
+      "tiles": 184,
+      "min_real_chord_square": "[0.0172376780268581254585512906428862986350999727425058566796 +/- 7.52e-61]",
+      "min_real_speed_square": "[0.00121611409382328505634665301572492887538355775561915898641 +/- 7.04e-61]",
+      "H_A": 407.2753892234361,
+      "H_B": 12088.61460428538
+    },
+    "M_self": 3991896921.3035765,
+    "ellipse_semimajor_upper": 0.03863359021341615,
+    "source_SI5": 3.615041709878815e-19,
+    "e_node": 1.8993416024814327e-35,
+    "interpolation_remainder": 1.5271553859024069e-16,
+    "e_conv": 1.7025602231756068e-41,
+    "e_self": 1.5592865794465148e-16,
+    "times": {
+      "domains": 0.03289779199985787,
+      "source_grid": 0.00018579099560156465,
+      "node_sums": 1.41980000003241,
+      "conversion": 0.0036212499835528433
+    },
+    "self_seconds": 1.45775716699427,
+    "gates": {
+      "node_radius": true,
+      "conversion": true,
+      "self_error": false
+    }
+  },
+  "unassigned_cache_startup_io_failure_seconds": 6.849635834048286,
+  "measured_monitor": {
+    "returncode": 1,
+    "reason": "completed",
+    "wall_seconds": 129.634540667,
+    "peak_process_tree_rss_gib": 0.268890380859375,
+    "peak_experiment_disk_mb": 12.404401,
+    "output_disk_mb": 1.752534,
+    "peak_by_part_gib": {
+      "startup": 0.268890380859375
+    }
+  },
+  "prices": {
+    "per_pair": {
+      "mixed": 0.10768228110347991,
+      "envelopes": 0.00510063179055578,
+      "contraction": 0.00031560340044961777
+    },
+    "self_per_target": 1.4752787665929645,
+    "controls_per_target": 0.5011897581862286,
+    "other_per_target": 0.1897747347014956
+  },
+  "shared": {
+    "switch_once": 148.463619,
+    "mass": 20.990072375,
+    "extra_disk_selection_and_export": 13.744545916666672
+  },
+  "scenarios": {
+    "historical_design_counts": {
+      "groups": [
+        {
+          "name": "center",
+          "targets": 64,
+          "sources": 64,
+          "pairs": 4096,
+          "setup_allowance": 6.849635834048286,
+          "mixed": 441.0666233998537,
+          "envelopes": 20.892187814116475,
+          "contraction": 1.2927115282416344,
+          "self_interaction": 94.41784106194973,
+          "controls": 32.07614452391863,
+          "other_target_work": 12.14558302089572,
+          "serial_seconds": 608.7407271830242
+        },
+        {
+          "name": "left material",
+          "targets": 64,
+          "sources": 64,
+          "pairs": 4096,
+          "setup_allowance": 6.849635834048286,
+          "mixed": 441.0666233998537,
+          "envelopes": 20.892187814116475,
+          "contraction": 1.2927115282416344,
+          "self_interaction": 94.41784106194973,
+          "controls": 32.07614452391863,
+          "other_target_work": 12.14558302089572,
+          "serial_seconds": 608.7407271830242
+        },
+        {
+          "name": "right material",
+          "targets": 64,
+          "sources": 64,
+          "pairs": 4096,
+          "setup_allowance": 6.849635834048286,
+          "mixed": 441.0666233998537,
+          "envelopes": 20.892187814116475,
+          "contraction": 1.2927115282416344,
+          "self_interaction": 94.41784106194973,
+          "controls": 32.07614452391863,
+          "other_target_work": 12.14558302089572,
+          "serial_seconds": 608.7407271830242
+        },
+        {
+          "name": "six walls",
+          "targets": 96,
+          "sources": 32,
+          "pairs": 3072,
+          "setup_allowance": 41.097815004289714,
+          "mixed": 330.7999675498903,
+          "envelopes": 15.669140860587357,
+          "contraction": 0.9695336461812258,
+          "self_interaction": 0.0,
+          "controls": 0.0,
+          "other_target_work": 18.218374531343578,
+          "serial_seconds": 406.75483159229213
+        }
+      ],
+      "serial_minutes": 40.269587507217196
+    },
+    "measured_center_counts": {
+      "groups": [
+        {
+          "name": "center",
+          "targets": 192,
+          "sources": 160,
+          "pairs": 30720,
+          "setup_allowance": 6.849635834048286,
+          "mixed": 3307.999675498903,
+          "envelopes": 156.69140860587356,
+          "contraction": 9.695336461812257,
+          "self_interaction": 283.2535231858492,
+          "controls": 96.22843357175589,
+          "other_target_work": 36.436749062687156,
+          "serial_seconds": 3897.1547622209296
+        },
+        {
+          "name": "left material",
+          "targets": 64,
+          "sources": 64,
+          "pairs": 4096,
+          "setup_allowance": 6.849635834048286,
+          "mixed": 441.0666233998537,
+          "envelopes": 20.892187814116475,
+          "contraction": 1.2927115282416344,
+          "self_interaction": 94.41784106194973,
+          "controls": 32.07614452391863,
+          "other_target_work": 12.14558302089572,
+          "serial_seconds": 608.7407271830242
+        },
+        {
+          "name": "right material",
+          "targets": 64,
+          "sources": 64,
+          "pairs": 4096,
+          "setup_allowance": 6.849635834048286,
+          "mixed": 441.0666233998537,
+          "envelopes": 20.892187814116475,
+          "contraction": 1.2927115282416344,
+          "self_interaction": 94.41784106194973,
+          "controls": 32.07614452391863,
+          "other_target_work": 12.14558302089572,
+          "serial_seconds": 608.7407271830242
+        },
+        {
+          "name": "six walls",
+          "targets": 96,
+          "sources": 32,
+          "pairs": 3072,
+          "setup_allowance": 41.097815004289714,
+          "mixed": 330.7999675498903,
+          "envelopes": 15.669140860587357,
+          "contraction": 0.9695336461812258,
+          "self_interaction": 0.0,
+          "controls": 0.0,
+          "other_target_work": 18.218374531343578,
+          "serial_seconds": 406.75483159229213
+        }
+      ],
+      "serial_minutes": 95.07648809118227
+    }
+  },
+  "parallel_status": "NOT RUN: panel 6 exceeded the required SI8 error gate; experiment stopped",
+  "cache_build_time_status": "Timer was not flushed before the assertion; only cache+startup+IO+failure remainder is available",
+  "validity": "Conditional cost extrapolation only: remaining panels and other geometries must satisfy their own error/domain gates. Current fixed setting fails panel 6. Wall subdivision, lead-state algebra, group tails, trace constants and gap certification are unmeasured.",
+  "center_192": {
+    "name": "center",
+    "targets": 192,
+    "sources": 160,
+    "pairs": 30720,
+    "setup_allowance": 6.849635834048286,
+    "mixed": 3307.999675498903,
+    "envelopes": 156.69140860587356,
+    "contraction": 9.695336461812257,
+    "self_interaction": 283.2535231858492,
+    "controls": 96.22843357175589,
+    "other_target_work": 36.436749062687156,
+    "serial_seconds": 3897.1547622209296
+  },
+  "all_monitored_seconds": 182.314919749,
+  "peak_gib": 0.268890380859375,
+  "decisive": [
+    {
+      "panel": 0,
+      "self_record": {
+        "N": 1152,
+        "L": 40,
+        "node_bits": 128,
+        "conversion_bits": 192,
+        "large_domain": {
+          "tiles": 162,
+          "min_real_chord_square": "[0.0157112600324756586034512283729774766166696033936497947374 +/- 1.57e-59]",
+          "min_real_speed_square": "[0.000454655845069565658346702490076287477390977152625555803510 +/- 3.03e-62]",
+          "H_A": 3375.0101630386216,
+          "H_B": 335834.46696682344
+        },
+        "small_domain": {
+          "tiles": 184,
+          "min_real_chord_square": "[0.0385630015966563879967585517476504478795527203673120807612 +/- 3.69e-59]",
+          "min_real_speed_square": "[0.00121611409382328505634665301572492887538355775561915898641 +/- 7.04e-61]",
+          "H_A": 293.8888455479887,
+          "H_B": 7238.449898506459
+        },
+        "M_self": 632473.0163663209,
+        "ellipse_semimajor_upper": 0.03863359021341615,
+        "source_SI5": 2.6086045531743524e-19,
+        "e_node": 4.217653028967641e-36,
+        "interpolation_remainder": 2.4196130121174396e-20,
+        "e_conv": 2.0023923725185877e-41,
+        "e_self": 2.342774572772005e-18,
+        "times": {
+          "domains": 0.037383540999144316,
+          "source_grid": 0.010265499993693084,
+          "node_sums": 1.4378896660055034,
+          "conversion": 0.004355499986559153
+        },
+        "self_seconds": 1.4940866670222022,
+        "gates": {
+          "node_radius": true,
+          "conversion": true,
+          "self_error": true
+        }
+      },
+      "terms": {
+        "self_SI8": 2.342774572772005e-18,
+        "CM_truncation": 2.0052176006377226e-15,
+        "moment_radii": 6.502562289888539e-34,
+        "coefficient_balls": 6.657995878850471e-36,
+        "other_target_tail": 7.55378260828657e-18,
+        "moving_cut": 0.0
+      },
+      "V": "[1.5421950864740522546622127984042716e-30 +/- 4.62e-65]",
+      "e_upper": 2.015114157818781e-15,
+      "epsilon_panel_upper": 1.6063862583760499e-15,
+      "times": {
+        "moments": 0.5568557869992219,
+        "geometry": 3.648323170025833,
+        "mixed": 16.616497993993107,
+        "envelopes": 0.7821209204848856,
+        "contraction": 0.047717549838125706
+      },
+      "seconds": 23.276352792046964,
+      "control": {
+        "points": [
+          {
+            "x": "[-0.700000000000000000000000000000000000000000000000000000000 +/- 6.38e-59]",
+            "difference_upper": 5.46253688940524e-33,
+            "allowance_upper": 2.342774572772005e-18,
+            "passed": true
+          },
+          {
+            "x": "0",
+            "difference_upper": 2.912461562186782e-34,
+            "allowance_upper": 2.342774572772005e-18,
+            "passed": true
+          },
+          {
+            "x": "[0.700000000000000000000000000000000000000000000000000000000 +/- 6.38e-59]",
+            "difference_upper": 6.719715081531185e-33,
+            "allowance_upper": 2.342774572772005e-18,
+            "passed": true
+          }
+        ],
+        "seconds": 0.4977251249947585,
+        "N": 3072,
+        "bits": 192
+      },
+      "total_seconds_with_controls": 23.77512425003806
+    },
+    {
+      "panel": 1,
+      "self_record": {
+        "N": 1152,
+        "L": 40,
+        "node_bits": 128,
+        "conversion_bits": 192,
+        "large_domain": {
+          "tiles": 162,
+          "min_real_chord_square": "[0.0110245637805612365861039427828533725136595468131967945210 +/- 2.58e-59]",
+          "min_real_speed_square": "[0.000454655845069565658346702490076287477390977152625555803510 +/- 3.03e-62]",
+          "H_A": 9926.47629561012,
+          "H_B": 1013240.1640507216
+        },
+        "small_domain": {
+          "tiles": 184,
+          "min_real_chord_square": "[0.0342929204309252977393855409718268637113583187001619841320 +/- 3.50e-59]",
+          "min_real_speed_square": "[0.00121611409382328505634665301572492887538355775561915898641 +/- 7.04e-61]",
+          "H_A": 404.6092726325609,
+          "H_B": 10318.299244099
+        },
+        "M_self": 1885704.360225821,
+        "ellipse_semimajor_upper": 0.03863359021341615,
+        "source_SI5": 3.5913768311887687e-19,
+        "e_node": 5.263319995820381e-36,
+        "interpolation_remainder": 7.214022873611957e-20,
+        "e_conv": 1.9805230490288848e-41,
+        "e_self": 3.264225778880976e-18,
+        "times": {
+          "domains": 0.032597500015981495,
+          "source_grid": 0.009286333981435746,
+          "node_sums": 1.4228135000448674,
+          "conversion": 0.0038001249777153134
+        },
+        "self_seconds": 1.469762875000015,
+        "gates": {
+          "node_radius": true,
+          "conversion": true,
+          "self_error": true
+        }
+      },
+      "terms": {
+        "self_SI8": 3.264225778880976e-18,
+        "CM_truncation": 2.5693790300332226e-15,
+        "moment_radii": 8.339664626537032e-34,
+        "coefficient_balls": 7.589312800725925e-36,
+        "other_target_tail": 9.655354821667254e-18,
+        "moving_cut": 0.0
+      },
+      "V": "[1.9938136006493928470554535993350892e-30 +/- 2.77e-65]",
+      "e_upper": 2.582298610633771e-15,
+      "epsilon_panel_upper": 1.879163274481881e-15,
+      "times": {
+        "moments": 0.5399190320749767,
+        "geometry": 3.6678858730592765,
+        "mixed": 16.851970581221394,
+        "envelopes": 0.7939071636064909,
+        "contraction": 0.04786212294129655
+      },
+      "seconds": 23.50461558299139,
+      "control": {
+        "points": [
+          {
+            "x": "[-0.700000000000000000000000000000000000000000000000000000000 +/- 6.38e-59]",
+            "difference_upper": 6.642667438543968e-33,
+            "allowance_upper": 3.264225778880976e-18,
+            "passed": true
+          },
+          {
+            "x": "0",
+            "difference_upper": 2.8557923514165687e-34,
+            "allowance_upper": 3.264225778880976e-18,
+            "passed": true
+          },
+          {
+            "x": "[0.700000000000000000000000000000000000000000000000000000000 +/- 6.38e-59]",
+            "difference_upper": 7.910660524621012e-33,
+            "allowance_upper": 3.264225778880976e-18,
+            "passed": true
+          }
+        ],
+        "seconds": 0.5098337500239722,
+        "N": 3072,
+        "bits": 192
+      },
+      "total_seconds_with_controls": 24.015515375009272
+    }
+  ]
+}
