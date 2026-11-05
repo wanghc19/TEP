@@ -15,3 +15,4 @@ FMM 是 fast multipole method（快速多极方法），MFS 是 method of fundam
 `proxyagg-v1` 是 proxy source aggregation version 1，全局代理源汇总与实节点插值的两面板可靠先导。
 `cellfit-v1` 是 cell kernel field fit version 1，逐核／逐场代理拟合的五组浮点预算与可靠先导。
 `cellrel-v1` 是 cell kernel reliable evaluation version 1，胞元核 B 的中心整曲线可靠残差与引线实际状态列先导。
+`grouprel-v1` 是 group reliable evaluation version 1，胞元核 B 的五组可靠残差与一次完整并行运行。
