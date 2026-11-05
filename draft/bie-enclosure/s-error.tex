@@ -88,6 +88,37 @@ $\alpha_q,b_q$ 是固定的有限复系数，$u_{\mathrm b}$ 是有限 Rayleigh 
 跳跃衡量。若把代理源系数与密度、求积权的乘积先求和得到 $\alpha_q$，所得场一般与
 “连续源依赖的 MFS 系数再精确积分”的场不同，界面跳跃必须对同一个场计算。
 
+\paragraph{本文采用的表示：胞元核与按场拟合.}
+\pending{具体选择（2026-11-05 新增）}记 $q:=\ee^{\ii\beta d}$。式~\eqref{eq:mfs-field} 中取
+\begin{align}
+  u_{\mathrm{near}}
+  &=\sum_{m=-1}^{1}q^m\bigl(\mathcal S^{(\kappa_{\mathrm e})}[\omega]
+    +\mathcal D^{(\kappa_{\mathrm e})}[\tau]\bigr)(\cdot-m\,d\,e_y),
+  \label{eq:cell-kernel-near}
+\end{align}
+即本胞元曲线及其上下两个周期像上的连续层势，权重为准周期相位；不作源点与目标点之差的
+回卷，因此胞元内没有切换线。代理点 $\mathbf p_q$（$N_p=480$）固定在矩形
+$\{|x|=1.45\}\cup\{|y|=1.35\}$ 上，每边 $120$ 个；不加平面波（$N_w=0$）。在当前几何中，
+上下两个像与闭胞元的距离至少 $0.24$，代理点至少 $0.85$，满足条件 (i)。
+
+系数 $\alpha=(\alpha_q)$ 对整个场拟合，而不是对核拟合：在接缝所在直线 $y=\pm d/2$ 的
+线段 $|x|\leq1.1$ 上取 $240$ 对配点，要求
+$u_{\mathrm{near}}+\sum_q\alpha_qG^{(\kappa_{\mathrm e})}(\cdot,\mathbf p_q)$ 的值与
+$\partial_y$ 满足准周期关系；在辅助直线 $x=\pm1.1$ 上再各取 $240$ 个配点，要求散射部分与
+出射 Rayleigh 波（$|m|\leq32$）匹配，以排除胞元内的齐次解。由
+式~\eqref{eq:cell-kernel-near} 的相消，接缝条件的右端只含 $q^{-1}$ 与 $q^2$ 两项像。辅助
+出射振幅只是拟合中的未知量，不进入场。所得 $1440\times610$ 系统按列缩放后用相对截断
+$10^{-14}$ 的奇异值分解求解。系统矩阵只依赖 $\kappa_{\mathrm e}$、$\beta$ 与几何，因此一次
+分解同时处理中心胞元的一个右端与两侧引线各 $97$ 个状态列：中心取 $\alpha=\alpha_0$，第
+$j$ 个引线胞元取 $\alpha=\mathsf C_\pm\mathsf P_\pm^jc_\pm$，$\mathsf C_\pm\in\CC^{480\times97}$
+固定，满足“系数线性依赖于端口状态”的要求。
+
+这种表示即文献~\cite{BarnettGreengard2010} 的“近像层势加辅助源”结构。该文把辅助系数与
+密度联立求解；本文的密度沿用第~\ref{sec:discretization}~节的候选，只在事后拟合
+$\alpha$。按命题~\ref{prop:piecewise-h2} 与第~\ref{subsec:spectral-distance}~小节的定理，
+场无须满足任何离散方程，拟合与密度之间的不一致全部反映在界面跳跃中。若改用求解时的
+回卷核作为场，胞元内的切换线会带来一类额外的体缺陷，不在本节定理的覆盖范围内。
+
 \paragraph{周期胞元中的场.}
 对右侧基本胞元，给定入射振幅 $(a_{\mathrm L},b_{\mathrm R})$，取第~\ref{subsec:lead-cells}~
 小节中的密度 $\mathsf B_+(a_{\mathrm L};b_{\mathrm R})$，按式~\eqref{eq:exact-density-dft}
@@ -856,6 +887,14 @@ $\lVert\mathsf P^{ip+l}w\rVert_2\leq\lVert\mathsf P^l\rVert_2r^i\lVert w\rVert_2
 小于一，$\lVert\mathsf P_\pm\rVert_2$ 也可能大于一，此时须取 $p>1$。整个计算保留完整的
 $\mathsf P_\pm$，不假定传播方向正交或逐模独立。
 
+\pending{尾项常数的另一取法（2026-11-05 新增）}式~\eqref{eq:boundary-propagation-tail} 只用到
+$b_\pm(v)\leq\Theta_\pm\lVert v\rVert_2^2$，$\Theta_\pm$ 可换成 $\lVert\mathcal L_\pm\rVert^2$
+的任意上界。按定义计算 $\Theta_\pm$ 要对全部 $K$ 个基向量各算一遍跳跃，每个目标都要带
+$K$ 列（左右端口合计时为 $2K$ 列），在实现中是主要开销。本文改用解析包络：点源行范数、
+近像层势与自作用对数核的上界，给出较粗但无需逐列评价的常数 $B_\pm\geq\lVert\mathcal L_\pm\rVert$。
+有限部分只对实际出现的状态 $\mathsf P_\pm^jc_\pm$（$j<N_{\mathrm{cell}}$）计算，由线性性
+与逐列计算的结果相同；尾项较粗，由略增大的 $N_{\mathrm{cell}}$ 补偿。
+
 \subsubsection{场范数}
 \label{subsec:mass}
 
@@ -887,6 +926,50 @@ $\kappa_b=\sqrt{\mu\rho_b}$。圆周平均 $m(s)=\frac1{2\pi}\int_0^{2\pi}\wideh
 函数光滑，用原始 $N_\eta$ 个节点的梯形公式即可准确评价场值，不需要近奇异求积。$D$ 应
 包含场的主要质量，否则下界过小会使条件~\eqref{eq:positive-denominator} 失效。
 
+\subsubsection{可靠评价}
+\label{subsec:reliable-evaluation}
+
+\pending{新增（2026-11-05），证明待补入附录}上面的周期梯形公式只给估计。可靠上界按目标
+面板计算。把一条界面的参数区间分成面板 $I$，记加权跳跃向量
+\begin{align*}
+  f(t):=|\boldsymbol r'(t)|^{1/2}\bigl(\jump{\partial_\nu\widehat u}_\Gamma,\ 
+  \ell_*^{-1}\jump{\widehat u}_\Gamma\bigr)(\boldsymbol r(t)).
+\end{align*}
+若多项式向量 $P_I$ 满足 $\sup_{t\in I}|f(t)-P_I(t)|\leq e_I$，则
+\begin{align}
+  \lVert f\rVert_{L^2(I)}
+  &\leq\sqrt{V_I}+\sqrt{|I|}\,e_I,
+  &V_I&:=\int_I|P_I|^2\,\dd t,
+  \label{eq:panel-defect-bound}
+\end{align}
+$V_I$ 是多项式的精确积分。各面板的平方上界相加再开方，就是该界面的可靠上界。$P_I$ 取在
+$L=48$ 个实 Chebyshev 节点上的插值；若 $f$ 在 Bernstein 椭圆 $E_\varrho$ 上的解析延拓满足
+$|f|\leq M_I$，则
+\begin{align}
+  e_I\leq\frac{4M_I\varrho^{1-L}}{\varrho-1}
+  +\sqrt{2L-1}\,e_{\mathrm{node}}+e_{\mathrm{conv}},
+  \label{eq:chebyshev-panel-error}
+\end{align}
+$e_{\mathrm{node}}$ 是节点值的误差上界，$e_{\mathrm{conv}}$ 是变换到多项式系数的误差。保留
+$P_I$ 中各部分的符号再求 $V_I$，可保留材料跳跃中约十二位的相消。节点值分三部分：
+\begin{itemize}
+  \item 本曲线自身的层势（$m=0$）：用 Kress 核分裂在实节点上求值，求积误差由解析延拓域上
+    的包络给出；
+  \item 光滑部分：上下两个像与代理点源。对固定中心 $\mathbf x_\nu$、半径 $R$ 内的
+    Helmholtz 解 $Y$，令 $z,w$ 为复化坐标，$\lambda=\kappa_{\mathrm e}^2/4$，
+    $\Phi_m(\xi)=\sum_{j\geq0}m!\,\xi^j/[j!\,(m+j)!]$，则
+    $Y=a_0\Phi_0(-\lambda zw)+\sum_{m\geq1}[a_m^+(z/R)^m+a_m^-(w/R)^m]\Phi_m(-\lambda zw)$。
+    截到 $M$ 阶，在 $|z|=|w|\leq a<R$ 处尾项不超过
+    $\ee^{\lambda a^2}\,2B\theta^{M+1}/(1-\theta)$，$\theta=a/R$，$B$ 为 $Y$ 在双圆盘上的界。
+    代理点源只需一个以原点为心、$R=1.1$ 的展开，不涉及源积分；两个近像对材料目标用原点、
+    $R=0.6$ 的展开，对人工界面与接缝用各段中点的展开。近像的源积分通过源面板矩计算，
+    截断误差另计；
+  \item 局部项（连续密度值与背景波）：有限和，按 Taylor 余项计入。
+\end{itemize}
+全部运算用球算术并向外舍入，因此所得上界包含舍入误差。对半波导，式~\eqref{eq:panel-defect-bound}
+对每个实际状态逐一应用，再按式~\eqref{eq:boundary-propagation-tail}（以解析包络代替
+$\Theta_\pm$）加尾项。
+
 \subsubsection{计算流程}
 
 \begin{enumerate}
@@ -894,7 +977,8 @@ $\kappa_b=\sqrt{\mu\rho_b}$。圆周平均 $m(s)=\frac1{2\pi}\int_0^{2\pi}\wideh
   \item 计算 $b_0$；
   \item 对两侧累加 $j<N_{\mathrm{cell}}$ 的 $b_\pm(\mathsf P_\pm^jc_\pm)$，计算
     $\Theta_\pm$、$r_\pm$ 并加上尾项~\eqref{eq:boundary-propagation-tail}，开平方得
-    $\varepsilon_{\partial,\ell_*}$；
+    $\varepsilon_{\partial,\ell_*}$；\pending{2026-11-05}只对实际出现的状态
+    $\mathsf P_\pm^jc_\pm$ 计算，不必建立全部端口列的映射；尾项也可用解析包络代替 $\Theta_\pm$；
   \item 由式~\eqref{eq:mass-lower-bound} 计算 $U$ 的下界；
   \item 由式~\eqref{eq:trace-constant} 或分组常数~\eqref{eq:joint-multiplier-constant}
     计算 $C$ 或 $C_g$，按式~\eqref{eq:trace-defect-product} 置 $Q$，
@@ -926,7 +1010,7 @@ $\kappa_b=\sqrt{\mu\rho_b}$。圆周平均 $m(s)=\frac1{2\pi}\int_0^{2\pi}\wideh
     截断误差（名义容差不是界）、特殊函数求值误差，人工界面与接缝上直接求积的误差，以及
     传播尾项~\eqref{eq:boundary-propagation-tail} 中 $\Theta_\pm$、$r_\pm$、
     $\lVert\mathsf P_\pm^l\rVert_2$、$\lVert\mathsf P_\pm^{N_{\mathrm{cell}}}c_\pm\rVert_2$
-    的上界；舍入可以只给估计，此时结论是“截断误差意义下可靠”；
+    的上界；舍入可以只给估计，此时结论是“截断误差意义下可靠”；\pending{2026-11-05}本文的实现（第~\ref{subsec:reliable-evaluation}~小节）用球算术，舍入也已计入；
   \item $\underline U$：式~\eqref{eq:mass-lower-bound} 中积分的下界，计入求积与舍入
     误差；用圆盘下界~\eqref{eq:disk-mass-lower-bound} 时只需中心点值的可靠下界。
 \end{itemize}
