@@ -1,0 +1,353 @@
+% Supplement: rounding-inclusive computation.
+% Source: draft/bie-enclosure/a-reliable.tex (clean version), Sections C.1--C.6.
+\section{Rounding-inclusive computation}\label{sm:reliable}
+This section describes how the inputs in \cref{tab:inputs} are computed. All
+bounds refer to the same field and the same $\widehat k$.
+
+\subsection{Principles}\label{sm:principles}
+\emph{Saved data are exact numbers.} The candidate $\widehat k$, density samples,
+proxy coefficients and propagation matrices are stored as binary64 numbers and
+treated as exact binary rationals; the field of \cref{sec:field} built from them
+is the field to which \cref{thm:distance} is applied. Geometry parameters
+determine the target operator; the target geometry is defined by the saved
+binary64 parameters (\cref{sec:results}). The defects and the mass bound are
+computed for this geometry; the gap test and the trace constants are computed for
+parameter balls that contain both the binary64 and the decimal values. The
+number $\pi$, the phase $q$, the wavenumbers $\widehat k\rho^{1/2}$, the Rayleigh
+exponents $\gamma_m$ and special functions are evaluated from exact formulas.
+Rounding in the stored field data therefore needs no estimate: it changes which
+field is tested, and the theorem holds for every fixed field.
+
+\emph{Floating point proposes, ball arithmetic decides.} Floating point is used
+only for proposals: the candidate, fit coefficients, panel splits, trial vectors
+and subspaces. Every decision (error bound, sign, definiteness, inequality) is
+made in real or complex ball arithmetic \cite{Johansson2017}, where a ball
+$[m\pm r]$ contains the exact value and every operation rounds outward. The
+accuracy of the floating-point results affects only the tightness of the bounds.
+
+\emph{Sum with signs first.} An interface jump is a difference of two quantities
+of order one. Approximations of the parts are therefore added with their signs,
+and only the error radii are added in absolute value; for Taylor or Chebyshev
+models the coefficients are combined before the polynomial is integrated. Printed
+decimal endpoints are rounded outward.
+
+\subsection{Interface defects}\label{sm:reliable-eps}
+Every interface is split into panels, and on each panel a polynomial $P_I$ and an
+error $e_I\ge\sup_I\|f-P_I\|$ for the weighted jump vector $f$ of \eqref{eq:panel}
+are computed. In this section the curve parameter has period $2\pi$, panels are
+$I=[c-h,c+h]$, and vectors and matrices carry the Euclidean and Frobenius norms,
+so the bounds hold verbatim for scalar jumps and for matrices mapping lead states
+to jumps.
+
+\begin{lemma}[Chebyshev interpolation with node errors]\label{sm:lem-cheb}
+Let $f$ be holomorphic near the closed Bernstein ellipse $E_\varrho$ ($\varrho>1$)
+with foci at the ends of $I$, and $\sup_{E_\varrho}\|f\|\le M_I$. Let
+$t_l=c+h\cos\frac{(2l+1)\pi}{2L}$, $0\le l<L$, and let $v_l$ satisfy
+$\|v_l-f(t_l)\|\le e_{\mathrm{node}}$. Compute the coefficients of the degree $L-1$
+interpolant of the $v_l$ in ball arithmetic, take their midpoints as $P_I$, and let
+$e_{\mathrm{conv}}$ be the sum of the radii. Then
+\begin{equation}\label{sm:eq-cheb}
+  \sup_{t\in I}\|f(t)-P_I(t)\|\le\frac{4M_I\varrho^{1-L}}{\varrho-1}
+  +\sqrt{2L-1}\,e_{\mathrm{node}}+e_{\mathrm{conv}} .
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+With $t=c+h(w+w^{-1})/2$, the Cauchy formula on $|w|=\varrho$ gives Chebyshev
+coefficients $\|a_k\|\le2M_I\varrho^{-k}$, $k\ge1$. At the $L$ roots, each $T_k$
+with $k\ge L$ coincides with $\pm T_j$, $j<L$, or with zero, so for exact node
+values the interpolation error is at most $2\sum_{k\ge L}2M_I\varrho^{-k}$. The
+discrete cosine coefficients $d_j$ of the node errors satisfy
+$\|d_0\|^2+\frac12\sum_{j\ge1}\|d_j\|^2=L^{-1}\sum_l\|e_l\|^2\le e_{\mathrm{node}}^2$,
+and $|T_j|\le1$ with Cauchy--Schwarz bounds their interpolant by
+$(2L-1)^{1/2}e_{\mathrm{node}}$. The exact coefficients lie in the computed balls
+and the basis functions are bounded by one on $I$, which gives $e_{\mathrm{conv}}$.
+\end{proof}
+
+Fixing the node midpoints before interpolation propagates node errors once,
+through $\sqrt{2L-1}$; transforming balls directly would amplify the radii. Keeping
+the signs of all parts in $P_I$ retains the cancellation of about twelve digits in
+the material jumps. Node values have three parts: the self-interaction of the
+curve's own layer potentials (Kress splitting, \cref{sm:lem-self,sm:lem-kress});
+the smooth part, namely the two near images and the proxies, by regular expansions
+(\cref{sm:lem-regular}); and local terms, namely continuous density values and
+background waves (\cref{sm:lem-local}).
+
+\begin{lemma}[regular Helmholtz expansion]\label{sm:lem-regular}
+For a real center $\mathbf x_\nu$ let $z=(x-x_\nu)+\ii(y-y_\nu)$ and
+$w=(x-x_\nu)-\ii(y-y_\nu)$, complexified as independent variables,
+$\lambda=\kappa^2/4$, and $\Phi_m(\xi)=\sum_{j\ge0}m!\,\xi^j/(j!\,(m+j)!)$. Let $Y$ be
+holomorphic near the bidisk $|z|,|w|\le R$, with each component solving
+$4\partial_z\partial_wY+\kappa^2Y=0$ and $\|Y\|\le B$. Then
+\[
+  Y=a_0\Phi_0(-\lambda zw)+\sum_{m\ge1}\bigl[a_m^+(z/R)^m+a_m^-(w/R)^m\bigr]\Phi_m(-\lambda zw),
+\]
+with $\|a_m^\pm\|\le B$. If the series is cut at order $M$ and the coefficients are
+replaced by computed values with errors $\epsilon_0,\epsilon_m^\pm$, then on real
+targets with $|z|=|w|\le a<R$, $\theta=a/R$, the error is at most
+\[
+  \ee^{\lambda a^2}\Bigl[\frac{2B\theta^{M+1}}{1-\theta}+\epsilon_0
+  +\sum_{m=1}^M\theta^m(\epsilon_m^++\epsilon_m^-)\Bigr].
+\]
+Taking $Y=(V,\partial_xV,\partial_yV)$ bounds values and gradients together.
+\end{lemma}
+
+\begin{proof}
+Writing $Y=\sum C_{ab}z^aw^b$, the equation gives
+$C_{a+1,b+1}=-\lambda C_{ab}/((a+1)(b+1))$, so each diagonal is determined by a pure
+derivative; summing along diagonals gives the expansion, and the Cauchy formula
+gives $\|a_m^\pm\|\le B$. Since $m!/(m+j)!\le1$, $|\Phi_m(-\lambda zw)|\le
+\ee^{\lambda a^2}$; sum the two geometric tails.
+\end{proof}
+
+The proxies need one expansion about the origin with $R=1.1$. The near images use
+$R=0.6$ about the origin for material targets and the panel midpoints for walls and
+seams; their coefficients are source integrals, computed from source-panel moments.
+On source panels $S_s=[c_s-h_s,c_s+h_s]$ let the kernel (including the source
+Jacobian and the Müller signs) be holomorphic and bounded by $M_{\nu s}$ on the
+bidisk times $|s-c_s|\le R_s$, $q_s=h_s/R_s<1$, and $D_s\ge\int_{S_s}\|\eta\|$.
+Truncating the kernel at degree $n_s$ in $s$ and using the normalized moments
+$\int_{S_s}((s-c_s)/h_s)^j\eta\,\dd s$ with errors $d_{s,j}$ gives an error at most
+\begin{equation}\label{sm:eq-moment}
+  E_\nu=\sum_sM_{\nu s}\Bigl[D_s\frac{q_s^{n_s+1}}{1-q_s}+\sum_{j\le n_s}q_s^jd_{s,j}\Bigr]
+\end{equation}
+on the bidisk, with $B=\sum_sM_{\nu s}D_s$. The truncated expansion still solves the
+Helmholtz equation term by term, so $E_\nu(1+2\sum_{m\le M}\theta^m)$ is added to the
+error above. The series of $\Phi_m$ is truncated with a geometric bound on the
+remainder.
+
+\begin{lemma}[envelope of the fundamental solution]\label{sm:lem-green}
+Let $G(q)=\frac\ii4H_0^{(1)}(\kappa\sqrt q)$ as a function of the squared distance
+$q$, $b_0=\kappa^2/4$, $C_0=\frac14+(|\log(\kappa/2)|+\gamma_{\mathrm E})/(2\pi)$. On a
+complex domain with $q_-\le|q|\le Q$ and a branch with $|\log q|\le L_q$, let
+$\mathcal G_j=b_0^j\ee^{b_0Q}(L_q/(4\pi)+C_0+(j+b_0Q)/(2\pi))$. Then
+\[
+  |G|\le\mathcal G_0=:g_0,\quad
+  |G'|\le\mathcal G_1+\frac{\ee^{b_0Q}}{4\pi q_-}=:g_1,\quad
+  |G''|\le\mathcal G_2+\frac{\ee^{b_0Q}}{4\pi}\Bigl(\frac{2b_0}{q_-}+\frac1{q_-^2}\Bigr)=:g_2 ,
+\]
+and for displacements $\|\boldsymbol d\|\le D$, $\|\nabla G\|\le2Dg_1$ and
+$\|\nabla^2G\|\le2g_1+4D^2g_2$.
+\end{lemma}
+
+\begin{proof}
+From the series of $Y_0$,
+\[
+  G(q)=-\frac{\log q}{4\pi}J(q)+\Bigl[\frac\ii4-\frac{\log(\kappa/2)+\gamma_{\mathrm E}}{2\pi}\Bigr]J(q)
+  +\frac1{2\pi}\sum_{m\ge1}\frac{(-1)^mH_m(b_0q)^m}{(m!)^2},
+\]
+with $J(q)=\sum_{m\ge0}(-b_0q)^m/(m!)^2$ and harmonic numbers $H_m\le m$. Bound term by term;
+$\nabla G=2G'\boldsymbol d$ and $\nabla^2G=2G'I+4G''\boldsymbol d\boldsymbol d^{\top}$.
+\end{proof}
+
+For source disks at distance $d_-\le d\le d_+$ from the target center, source
+displacement $\delta$ and radius $R$ with $R+\delta<d_-$, take
+$q_-=(d_--R-\delta)^2$, $Q=(d_++R+\delta)^2$ and
+$L_q=\max\{|\log d_-^2|,|\log d_+^2|\}-2\log(1-(R+\delta)/d_-)$; the logarithm is the
+real value at the center plus two convergent $\log(1+u)$ series, on the branch of
+the real kernel. If the source speed is at most $V_s$ and the normal at most $N_s$,
+then with $D=d_++R+\delta$ a group of point sources with coefficients $c_j$ gives
+\begin{equation}\label{sm:eq-kernel}
+  M_{\nu s}\le V_s\sum_j|c_j|\bigl[g_0+2(N_s+1)Dg_1+N_s(2g_1+4D^2g_2)\bigr].
+\end{equation}
+
+\begin{lemma}[local terms]\label{sm:lem-local}
+A background wave $b\exp(\ii\phi(t))$ with $\phi=\pm\gamma(x(t)-x_a)+\beta y(t)$ has
+value and gradient bounded on the complex target domain by
+\[
+  |b|\exp\bigl(\sup\Re(\ii\phi)\bigr)\bigl(1+|\gamma|^2+\beta^2\bigr)^{1/2},
+\]
+and a Fourier density
+$\sum\eta_m\ee^{\ii mt}$ is bounded on a target disk of radius $R_t$ by
+$\sum\|\eta_m\|\ee^{|m|R_t}$. Multiplying by the bound of the weight and summing gives
+$M_{\mathrm{loc}}$. For Taylor truncation at degree $p_{\mathrm{loc}}$ and $h<R_t$,
+\[
+  e_{\mathrm{loc}}\le M_{\mathrm{loc}}\frac{(h/R_t)^{p_{\mathrm{loc}}+1}}{1-h/R_t}
+  +e_{\mathrm{loc,fin}},
+\]
+where $e_{\mathrm{loc,fin}}$ is the radius of the finite coefficients.
+\end{lemma}
+
+The proof is the Cauchy coefficient bound $M_{\mathrm{loc}}R_t^{-k}$. On a center
+panel, $e_I=e_{\mathrm{self}}+e_{\mathrm{loc}}+e_{\mathrm{sm}}+e_{\mathrm{comb}}$, where
+$e_{\mathrm{sm}}$ is \eqref{sm:eq-cheb} for the smooth part ($L=48$, $\varrho=4.5$)
+with expansion tails and node radii in $e_{\mathrm{node}}$, and $e_{\mathrm{comb}}$ is
+the radius dropped when the three coefficient vectors are added and rounded to
+midpoints. The coefficients of $P_I$ are then exact binary64 numbers, and
+$V_I=\int_I\|P_I\|^2$ is computed from exact monomial integrals in ball arithmetic
+and checked by Gauss--Legendre quadrature. The weight $|\boldsymbol r'|^{1/2}$ and
+the factor $1/|\boldsymbol r'|$ in the normal derivative are continued as $s^{1/4}$
+and $s^{-1/2}$ of $s(t)=x'(t)^2+y'(t)^2$ on the principal branch, after checking
+$\Re s\ge\underline s>0$ on every complex strip used.
+
+\emph{Self-interaction.} In the normal jump on a rod, the two hypersingular parts
+cancel analytically in the Müller difference kernel. The remaining self term is
+\begin{equation}\label{sm:eq-self}
+  F(t)=\frac1{2\pi}\int_0^{2\pi}\Bigl\{A(t,s)\log\Bigl(4\sin^2\frac{t-s}2\Bigr)+B(t,s)\Bigr\}\,\dd s,
+\end{equation}
+where $A,B$ contain the density, Jacobians and weights. Let $A,B$ be holomorphic for
+targets in $T$ and sources in $|\Im s|\le a$, with $\|A\|\le H_A$, $\|B\|\le H_B$;
+before use we check in complex balls that the squared speed and the chord quotient
+in the logarithm have positive real part, so all branches agree with the real
+kernel. For complex targets \eqref{sm:eq-self} means its Fourier continuation
+$F(t)=-\sum_{m\ne0}\widehat A_m(t)\ee^{\ii mt}/|m|+\widehat B_0(t)$, and shifting the
+contour gives $\|\widehat A_m(t)\|\le H_A\ee^{-a|m|}$.
+
+\begin{lemma}[target envelope]\label{sm:lem-self}
+If $T$ contains the disk $|t-c|\le R_t<a$, then $\|F\|\le2H_A/(\ee^{a-R_t}-1)+H_B$ there.
+\end{lemma}
+
+This follows from $|\ee^{\ii mt}|\le\ee^{|m|R_t}$. If $h(\varrho+\varrho^{-1})/2<R_t$,
+it serves as $M_I$ in \cref{sm:lem-cheb}. Node values use Kress quadrature with
+$N=2n$ equispaced sources: the trigonometric interpolant of $A(t,\cdot)$ (Nyquist
+mode split evenly) is convolved exactly with the logarithm, and $B$ uses the
+trapezoidal rule.
+
+\begin{lemma}[Kress error at real targets]\label{sm:lem-kress}
+Let $k_N(m)$ be the absolute value of the representative of $m$ modulo $N$ in
+$[-n,n]$, $w_N(m)=1/k_N(m)$ if $k_N(m)>0$ and $0$ otherwise. Then the Kress error
+is at most
+\[
+  e_{\mathrm{Kress}}\le2H_A\Bigl[\frac{\ee^{-an}}{n(1-\ee^{-a})}
+  +\frac{\ee^{-an}}{1-\ee^{-aN}}\sum_{j=0}^{N-1}\ee^{-aj}w_N(n+j)\Bigr]
+  +\frac{2H_B}{\ee^{aN}-1}.
+\]
+\end{lemma}
+
+\begin{proof}
+Modes $|m|<n$ are reproduced exactly. A mode $|m|\ge n$ contributes at most
+$\|\widehat A_m\|/|m|$ to the exact convolution and, aliased to $k_N(m)$, at most
+$w_N(m)\|\widehat A_m\|$ to the quadrature. Sum over $m\ge n$ on both sides, using
+$1/m\le1/n$ in the first part and the period $N$ of $w_N$ in the second. The
+trapezoidal error is from \cite[Thm.~3.2]{TrefethenWeideman2014}.
+\end{proof}
+
+With node balls of maximal radius $e_{\mathrm{rad}}$ at $L$ roots,
+\cref{sm:lem-cheb} gives
+$e_{\mathrm{self}}\le4M_{\mathrm{self}}\varrho^{1-L}/(\varrho-1)+\sqrt{2L-1}(e_{\mathrm{Kress}}
++e_{\mathrm{rad}})+e_{\mathrm{conv}}$. On the center curve $N=1152$, the envelope uses
+$R_t=0.04$, $a=0.0625$, the Kress error $a=0.08$, and $L$ is increased from $40$
+until the interpolation remainder is below $2\times10^{-17}$ (basis change at $192$
+bits). Lead curves use $R_t=0.12$, $a=0.16$.
+
+\emph{Lead cells.} On a lead panel the jump depends linearly on the state,
+$f_{I,j}=F_I(t)v_j$ with $v_j=\mathsf P^jc$. For $j<N_{\mathrm{cell}}$ we build
+$P_{I,j}$ and $e_{I,j}$ for each actual state and use
+$\sum_j\|f_{I,j}\|^2_{L^2(I)}\le\sum_j(V_{I,j}^{1/2}+|I|^{1/2}e_{I,j})^2$. The tail
+\eqref{eq:tail} uses $\Theta_\pm=B_\pm^2$ with analytic envelopes per group and side
+(for unit states)
+\begin{gather*}
+  B_{\mathrm{mat}}=\sqrt{2\pi}\bigl[(S_{\mathrm{self}}+S_{\mathrm{loc}}+wS_{\mathrm{near}})
+  \|\mathsf G\|+wS_{\mathrm{pt}}\bigr],\\
+  B_{\mathrm{wall}}=(1+r)S_{\mathrm{face}},\qquad B_{\mathrm{seam}}=2S_{\mathrm{face}},
+\end{gather*}
+$S_{\mathrm{face}}=(S_{\mathrm{ord}}+S_{\mathrm{inc}})\|\mathsf G\|+S_{\mathrm{pt}}$. Here
+$\mathsf G$ maps states to density coefficients; $S_{\mathrm{near}}$, $S_{\mathrm{ord}}$
+and $S_{\mathrm{pt}}$ bound the near-image potentials at material targets, the
+ordinary potentials (three images) at walls and seams, and the $480$ point sources,
+all through \eqref{sm:eq-kernel}; $S_{\mathrm{self}}$ is the maximum of
+\cref{sm:lem-self} over the $64$ panels ($a=0.16$, $h=\pi/64$); $S_{\mathrm{loc}}$
+and $S_{\mathrm{inc}}$ bound the local and incident Rayleigh terms, the latter by
+$(\sum_{|m|\le48}2(1+|\gamma_m|^2+\beta_m^2)/d)^{1/2}$; and
+$w=\overline v^{1/2}\max\{1,\overline v/\underline s^{1/2}\}$ comes from the weight
+($w<1$ is verified). The factor $\sqrt{2\pi}$ turns pointwise bounds into $L^2$
+bounds; a wall involves $v_j$ and $\mathsf Pv_j$, a seam two traces. These envelopes
+are much cruder than the actual defects (\cref{sm:tab-tails}) but enter only the
+tail. For each group and side we take the smallest $N_{\mathrm{cell}}$ with tail at
+most $10^{-6}$ times the lower bound of the finite part, and check the decay with
+$N_{\mathrm{cell}}+10$.
+
+\emph{Assembly.} Walls between the center and the first lead cell combine the
+polynomials of both sides; interior walls use two consecutive states; each seam pair
+combines top, bottom and phase once. Then
+\begin{equation}\label{sm:eq-eps}
+  \overline\varepsilon_g^{\,2}=\sum_{(I,j)\in\mathscr P_g}\bigl(V_{I,j}^{1/2}+|I|^{1/2}e_{I,j}\bigr)^2
+  +\overline T_g ,
+\end{equation}
+where $\mathscr P_g$ contains all (panel, state) pairs of the group (one state for
+center panels) and $\overline T_g$ is the sum of the two tail bounds; the square
+root is rounded up to binary64.
+
+\subsection{Mass lower bound}\label{sm:reliable-mass}
+Take disjoint closed disks, each inside one homogeneous piece. For each disk we
+check in ball arithmetic: (i) its distance to all interfaces exceeds $r$, and the
+center is on the right side (along a path); (ii) the disks are pairwise disjoint;
+(iii) a value $\widetilde u(\mathbf c)$ with $|\widehat u(\mathbf c)-\widetilde
+u(\mathbf c)|\le e_{\mathbf c}$, by Gauss quadrature with an analytic error bound
+(the integrands are smooth because $\mathbf c$ is far from the curves). By
+\eqref{eq:disk},
+\[
+  \underline U^{\,2}=\sum\rho_b\pi r^2\bigl[J_0(\kappa_br)^2+J_1(\kappa_br)^2\bigr]
+  \max\{0,|\widetilde u(\mathbf c)|-e_{\mathbf c}\}^2\le U^2 ,
+\]
+with lower ends of the Bessel balls. Two or three digits suffice, since
+$\overline Q$ is eleven orders of magnitude smaller than $\underline U$.
+
+\subsection{Trace constants}\label{sm:reliable-cg}
+The conditions of \cref{prop:trace} are checked from the analytic curve
+parametrizations, not from node samples.
+
+\emph{Injectivity.} If a closed curve has winding number one about the origin,
+$|\boldsymbol r'|>0$, $\boldsymbol r\times\boldsymbol r'>0$, the signed distance
+$\boldsymbol r\times\boldsymbol r'/|\boldsymbol r'|$ from the origin to every tangent
+line is at least $H>\delta$, and $\delta\kappa_*<1$, then $\boldsymbol r+t\nu$ is
+injective for $|t|\le\delta$: the polar angle is strictly monotone along each offset
+curve, and at fixed angle the distance to the origin is strictly monotone in $t$.
+
+\emph{Curvature.} On parameter intervals $[c-h,c+h]$ we bound
+$\sup|\kappa|\le|\kappa(c)|+h\sup|\kappa'|$ in ball arithmetic and bisect failing
+intervals up to sixteen levels; the leaves cover the full period. This also gives a
+lower bound for the speed.
+
+\emph{Overlap.} If a curve lies in $|x|\le X$, $|y|\le Y$, the collars of all its
+lattice translates $(jL,kd)$ are disjoint when $L>2X+2\delta$ and $d>2Y+2\delta$, so
+$N_g=1$; the half guides are subfamilies of the full lattice. Walls need $2\delta<L$,
+seams $2\delta<d$. Seams form their own group, so their collars may overlap the wall
+collars without increasing $N_g$.
+
+\emph{Supremum.} The numerator of the derivative of
+$F(\lambda)=p_g(\lambda)/(\lambda+\mu)^2$ is linear, so $\sup_{\lambda\ge\lambda_0}F$ is
+the maximum of $F(\lambda_0)$, $c_g$ and $F(\lambda_*)$ with
+$\lambda_*=(2a_g-b_g\mu)/(2c_g\mu-b_g)$ if $\lambda_*\ge\lambda_0$. If ball arithmetic
+cannot exclude $2c_g\mu=b_g$, $F$ is monotone and the supremum is
+$\max\{F(\lambda_0),c_g\}$. The parameters $\delta_g,\eta_g$ need not be optimal.
+
+\subsection{Matrix tests for the common gap}\label{sm:band-tests}
+\emph{Quadrature for the matrix entries.} With wave vectors $\xi_i$ of $\psi_i$,
+$(B_{\mathcal I})_{ij}=b_{\xi_j-\xi_i}/(L_sd)$, where
+$b_\xi=\int_{\Omega_s}\ee^{\ii\xi\cdot\mathbf z}\,\dd\mathbf z$; $b_0=|\Omega_s|$ and, for
+$\xi\ne0$, by the divergence theorem,
+\[
+  b_\xi=-\frac{\ii}{|\xi|^2}\int_0^{2\pi}\ee^{\ii\xi\cdot\boldsymbol c(t)}
+  \bigl(\xi_xc_y'(t)-\xi_yc_x'(t)\bigr)\,\dd t .
+\]
+For the trigonometric curves used here the integrand is entire and $2\pi$-periodic;
+if it is bounded by $\mathcal M$ on $|\Im t|\le\varsigma$, the $J$-point trapezoidal
+error is at most $4\pi\mathcal M/(\ee^{\varsigma J}-1)$. (A general $C^2$ curve needs
+a separate analytic continuation.) An entrywise error $\epsilon_b$ gives
+$\|B-\widetilde B\|\le e_B:=|\mathcal I|\epsilon_b$, hence
+$\|M-\widetilde M\|\le|\delta_s|e_B$ and $\|G-\widetilde G\|\le\delta_s^2e_B(3+e_B)$. The
+lower test uses $\widetilde T+\lambda|\delta_s|e_BI$, the upper test
+$\widetilde T^--[\lambda|\delta_s|e_B+\lambda^2\delta_s^2e_B(3+e_B)/c_{\mathcal I}]I$.
+
+\emph{Signs of finite matrices.} For $n_s=1$ two decisions are needed. Lower test: a
+binary64 trial vector $x$ with $x^*Hx<0$ in ball arithmetic gives $n(H)\ge1$. Upper
+test: take all floating-point eigenvectors of $H$ except the lowest as the columns
+of an exact matrix $W$, compute $C=W^*HW$ and $D=W^*W$ in ball arithmetic, and verify
+$C\succeq gI$, $0\prec D\preceq dI$ with $g>0$ by Hermitian row-sum bounds. By
+Courant--Fischer, $\lambda_2(H)\ge\min_z z^*Cz/z^*Dz\ge g/d>0$, so $n(H)\le1$. The
+eigenvectors only select the subspace. As an independent check, ball LDL$^*$
+factorizations on some panels have pivot balls that exclude zero. Panel endpoints
+are integer multiples of $\pi/(L_sN)$, and integer comparisons check that they cover
+$[0,\pi/L_s]$ (with reflection symmetry) or $[-\pi/L_s,\pi/L_s]$.
+
+\subsection{Assembly}\label{sm:assembly}
+$\mu$ is the square of the binary64 $\widehat k$ in ball arithmetic. With the published
+decimal upper bounds $\overline C_g$ and the rounded-up binary64 values
+$\overline\varepsilon_g$ read as exact numbers, we compute
+$\overline Q=\sum_g\overline C_g\overline\varepsilon_g$, $\underline D=\underline U-
+\overline Q$ (which must be positive) and $R_{\mathrm{spec}}=2\mu\overline Q/\underline D$,
+take upper ends, and round the interval endpoints outward. Condition
+\eqref{eq:gap-condition} is checked as $\mu-R_{\mathrm{spec}}-\overline a_s>0$ and
+$\underline b_s-\mu-R_{\mathrm{spec}}>0$. The assembly is repeated independently in
+exact rational arithmetic, and the printed radii and endpoints must agree.

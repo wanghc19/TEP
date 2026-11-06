@@ -1,0 +1,312 @@
+% Section 5. Budget 6 pages.
+% Source: draft/bie-enclosure/s-error.tex (clean version).
+\section{A spectral-distance bound for piecewise Helmholtz fields}\label{sec:bound}
+
+Let $\mu:=\widehat k^2$. From the candidate we build a field $\widehat u$ on the
+whole strip that solves the Helmholtz equation exactly in every homogeneous
+piece but jumps across rod boundaries, artificial walls and the top/bottom
+seam. We then prove $\operatorname{dist}(\mu,\sigma(A(\beta)))\le2\mu Q/(U-Q)$,
+where $U=\|\widehat u\|_{\mathcal H}$ and $Q=\sum_gC_g\varepsilon_g$ combines
+grouped jump norms $\varepsilon_g$ with trace constants $C_g$ that depend only on
+the geometry, the coefficients and $\mu$. Nothing about how the candidate was
+computed enters except through $\varepsilon_g$ and $U$.
+
+\subsection{The trial field}\label{sec:field}
+We separate \emph{definition parameters} (the density grid, the Rayleigh
+truncation $M$, the candidate coefficients) from \emph{evaluation parameters}
+(target quadrature, number of explicitly summed cells, evaluation precision).
+Once the former are fixed, $\widehat u$ is a definite function; the latter only
+affect how accurately $\varepsilon_g$ and $U$ are bounded. Both quantities are
+homogeneous of degree one in the scaling of the candidate vector, so the bound
+does not depend on its normalization.
+
+\emph{Continuous densities.} On each rod boundary, parametrized by
+$\boldsymbol r(t)$, $t\in[0,1)$, the $N_\eta$ density samples define the
+trigonometric interpolant $\eta(t)=\sum_{m=-N_\eta/2}^{N_\eta/2-1}\eta_m
+\ee^{2\pi\ii mt}$ through their discrete Fourier transform. All layer potentials
+in $\widehat u$ are exact integrals of these trigonometric densities. The
+Nystr\"om sums themselves are not used as a field: they carry point and dipole
+singularities at the nodes and are not $H^2$ up to the interface.
+
+\emph{Background representation.} In the background of each reference cell
+$\mathcal C$ the field is
+\begin{equation}\label{eq:mfs-field}
+  \widehat u=\sum_{n=-1}^{1}\ee^{\ii\beta nd}\bigl(\mathcal S^{(\kappa_{\mathrm e})}[\omega]
+  +\mathcal D^{(\kappa_{\mathrm e})}[\tau]\bigr)(\cdot-nd\,e_y)
+  +\sum_{i=1}^{N_p}\alpha_iG^{(\kappa_{\mathrm e})}(\cdot,\mathbf p_i)+u_{\mathrm b},
+\end{equation}
+that is, the near-image split \eqref{eq:near-image} with the smooth correction
+replaced by $N_p$ fixed proxy sources $\mathbf p_i$ outside the cell. Inside the
+rod it is the free-space potential with $\kappa_{\mathrm c}$ as in
+\eqref{eq:cell-rep}. We require that the image curves and the proxies have
+positive distance from the closed cell and that all background terms use the
+same $\kappa_{\mathrm e}$. The coefficients $\alpha$ are fitted to the whole field
+after the densities are known: quasi-periodicity of value and $\partial_y$ at
+collocation points on the seam lines, plus matching to outgoing Rayleigh waves
+on two auxiliary vertical lines to exclude homogeneous solutions. The system
+depends only on $\kappa_{\mathrm e}$, $\beta$ and the geometry, so one
+factorization serves the center field and all lead states; for lead cells
+$\alpha=\mathsf X_\pm v$ depends linearly on the state $v$. This is the
+structure of \cite{BarnettGreengard2010}, except that the densities are not
+re-solved together with $\alpha$. Saved floating-point coefficients are
+treated as exact numbers; the accuracy of the fit, of the QZ decomposition, and
+of the solver is not a hypothesis of the theorem, since every mismatch appears
+in the jumps of this field.
+
+\emph{Center and lead cells.} In $\mathcal C_0$, $\widehat u$ is
+\eqref{eq:mfs-field} with $u_{\mathrm b}=u_{\mathrm{hom}}$ truncated to
+$|m|\le M$ and $k=\widehat k$. In the right cell, incident amplitudes
+$(a_{\mathrm L},b_{\mathrm R})$ give a density and hence a cell field
+$u^{\mathrm{cell}}_+[a_{\mathrm L},b_{\mathrm R}]$, linear in the amplitudes.
+Writing $\mathsf Z_+v=(a_+(v);b_+(v))$, set
+$u_+[v]=u^{\mathrm{cell}}_+[a_+(v),b_+(\mathsf P_+v)]$ (left port state $v$,
+right port state $\mathsf P_+v$), similarly $u_-[v]$, and
+\begin{equation}\label{eq:lead-field}
+  \widehat u(\mathbf z\pm jL_\pm e_x)=u_\pm[\mathsf P_\pm^jc_\pm](\mathbf z),
+  \qquad\mathbf z\in\mathcal C_{0,\pm},\ j\ge0 .
+\end{equation}
+In exact arithmetic, \eqref{eq:propagation} makes neighboring cells agree on
+the modes $|m|\le M$; the saved $\mathsf Z_\pm,\mathsf P_\pm$ satisfy this only
+approximately, and the remaining mismatch, together with the modes $|m|>M$ and
+the discrete residuals, appears as jumps on the shared walls.
+
+The resulting \emph{trial field} satisfies:
+(P1) $(-\Delta-\mu\rho)\widehat u=0$ exactly in every homogeneous piece;
+(P2) the seam mismatch is treated as an interface jump;
+(P3) $\widehat u$ is $H^2$ up to the boundary of each piece and has ordinary
+one-sided traces on walls and seams (\cref{sm:proof-piecewise-h2});
+(P4) $\widehat u\in\mathcal H$, which follows from the decay of $\mathsf P_\pm^j$ and
+is checked in \cref{sec:computation}.
+It is not in $H^1_\beta(B)$.
+
+\subsection{Jumps and grouped defects}\label{sec:jumps}
+The interfaces are the rod boundaries $\mathscr E_{\mathrm{mat}}$, the walls
+$\mathscr E_{\mathrm{art}}=\{\Gamma_\pm,\Gamma_{j,\pm}\}$, and the seam segments
+$\mathscr E_\Sigma$ of the cells, where the top and bottom edges of a cell are
+glued (the field above $y=d/2$ is $\ee^{\ii\beta d}\widehat u(x,y-d)$). Each
+shared curve is counted once. On $\Gamma$ choose side $1$ (the rod interior;
+the cell nearer the center; $y<d/2$) and the normal $\nu_\Gamma$ from side $1$
+to side $2$, and set
+\begin{equation}\label{eq:jumps}
+  \jump{\widehat u}_\Gamma=\widehat u^{(2)}-\widehat u^{(1)},\qquad
+  \jump{\partial_\nu\widehat u}_\Gamma=\partial_{\nu_\Gamma}\widehat u^{(1)}
+  -\partial_{\nu_\Gamma}\widehat u^{(2)} .
+\end{equation}
+On a seam this reads $\jump{\widehat u}_\Sigma=\ee^{\ii\beta d}\widehat u(x,-d/2)-\widehat u(x,d/2)$
+and $\jump{\partial_\nu\widehat u}_\Sigma=\partial_y\widehat u(x,d/2)-\ee^{\ii\beta d}
+\partial_y\widehat u(x,-d/2)$. On a rod boundary $\Gamma=\partial\Omega$ write the
+outside field as $\mathcal S^{(\kappa_{\mathrm e})}[\omega]+\mathcal D^{(\kappa_{\mathrm e})}[\tau]+h$,
+where $h$ (two images, proxies, $u_{\mathrm b}$) is smooth near $\Gamma$. The jump
+relations give the \emph{actual} jumps
+\begin{equation}\label{eq:actual-jumps}
+\begin{aligned}
+  \jump{\widehat u}_\Gamma&=\bigl(I+D^{(\kappa_{\mathrm e})}-D^{(\kappa_{\mathrm c})}\bigr)\tau
+  +\bigl(S^{(\kappa_{\mathrm e})}-S^{(\kappa_{\mathrm c})}\bigr)\omega+h|_\Gamma,\\
+  -\jump{\partial_\nu\widehat u}_\Gamma&=\bigl(T^{(\kappa_{\mathrm e})}-T^{(\kappa_{\mathrm c})}\bigr)\tau
+  +\bigl(-I+D'^{(\kappa_{\mathrm e})}-D'^{(\kappa_{\mathrm c})}\bigr)\omega+\partial_\nu h|_\Gamma,
+\end{aligned}
+\end{equation}
+with free-space operators on $\Gamma$ acting on the continuous densities. They
+coincide with \eqref{eq:jump-operator} only if the proxy part of $h$ equals the
+exact smooth correction; the difference is the fitting error, which stays in the
+jumps. The reliable evaluation uses \eqref{eq:actual-jumps}.
+
+We split the interfaces into finitely many groups $\mathscr E_g$; below there are
+five: center rod, left rods, right rods, walls, seams. With a reference length
+$\ell_g>0$ per group,
+\begin{equation}\label{eq:defect}
+  \varepsilon_g^2=\sum_{\Gamma\in\mathscr E_g}\Bigl(\|\jump{\partial_\nu\widehat u}_\Gamma\|^2_{L^2(\Gamma)}
+  +\ell_g^{-2}\|\jump{\widehat u}_\Gamma\|^2_{L^2(\Gamma)}\Bigr),\qquad
+  U=\|\widehat u\|_{\mathcal H}.
+\end{equation}
+Unlike a matrix residual, $\varepsilon_g$ includes the jumps between nodes, the
+modes $|m|>M$, the seam mismatch, and all cells of both half guides.
+
+\subsection{Grouped trace estimate}\label{sec:trace}
+For each group take collars of half-width $\delta_g$ on both sides of every
+interface: the normal map $(s,t)\mapsto\boldsymbol r_\Gamma(s)+t\nu_\Gamma(s)$,
+$|t|<\delta_g$, is injective, the curvature satisfies $|\kappa_\Gamma|\le\kappa_g$
+with $h_g=\delta_g\kappa_g<1$, and each point lies in at most $N_g$ collars of the
+group. Collars are used only for functions in $D(A(\beta))=H^2_\beta(B)$, so they
+may cross other interfaces, and collars of different groups may overlap.
+
+\begin{proposition}[grouped trace estimate]\label{prop:trace}
+Under these conditions let, for any $\eta_g>0$,
+\[
+  \tau_g=\frac{\delta_g}{6}+\frac{\delta_gh_g^2}{40(1-h_g^2)},\qquad
+  D_{0,g}=\frac{N_g(1+\eta_g)}{2\delta_g},\qquad
+  D_{1,g}=N_g(1+\eta_g^{-1})\tau_g .
+\]
+Then for $v\in D(A(\beta))$, with norms on $L^2(B)$ and
+$\|D^2v\|^2=\|v_{xx}\|^2+2\|v_{xy}\|^2+\|v_{yy}\|^2$,
+\begin{gather*}
+  \sum_{\Gamma\in\mathscr E_g}\|v\|^2_{L^2(\Gamma)}\le D_{0,g}\|v\|^2+D_{1,g}\|\nabla v\|^2,\\
+  \sum_{\Gamma\in\mathscr E_g}\|\partial_{\nu_\Gamma}v\|^2_{L^2(\Gamma)}\le D_{0,g}\|\nabla v\|^2
+  +D_{1,g}\|D^2v\|^2 .
+\end{gather*}
+With $p_g(\lambda)=a_g+b_g\lambda+c_g\lambda^2$, $a_g=D_{0,g}/\rin$,
+$b_g=D_{1,g}+\ell_g^2D_{0,g}$, $c_g=\ell_g^2D_{1,g}\rax$, and
+\begin{equation}\label{eq:Cg}
+  C_g^2=\sup_{\lambda\ge\lambda_0}\frac{p_g(\lambda)}{(\lambda+\mu)^2},
+\end{equation}
+the trace quantity
+\[
+  T_g(v)^2=\sum_{\Gamma\in\mathscr E_g}\bigl(\|v\|^2_{L^2(\Gamma)}
+  +\ell_g^2\|\partial_{\nu_\Gamma}v\|^2_{L^2(\Gamma)}\bigr)
+  \quad\text{satisfies}\quad T_g(v)\le C_g\|(A(\beta)+\mu)v\|_{\mathcal H}.
+\]
+\end{proposition}
+
+The proof (\cref{sm:proof-trace}) applies a weighted one-dimensional trace
+inequality on each normal segment, integrates with the Jacobian $1-t\kappa_\Gamma$,
+and uses $\|D^2v\|_{L^2(B)}=\|\Delta v\|_{L^2(B)}$ on the quasi-periodic strip
+(\cref{sm:global-h2}); the spectral theorem then turns
+$\|v\|$, $\|\nabla v\|$, $\|\Delta v\|$ into the multiplier $p_g$. The supremum in
+\eqref{eq:Cg} is attained at $\lambda_0$, at infinity (value $c_g$), or at the
+stationary point $(2a_g-b_g\mu)/(2c_g\mu-b_g)$; if $2c_g\mu=b_g$ only the
+endpoints matter. Write
+\begin{equation}\label{eq:Q}
+  Q=\sum_gC_g\varepsilon_g .
+\end{equation}
+
+\subsection{The spectral-distance theorem}\label{sec:theorem}
+\begin{theorem}[spectral distance from interface defects]\label{thm:distance}
+Assume the collar conditions of \cref{prop:trace}, $\mu>0$, and a nonzero field
+$\widehat u$ with (P1)--(P4) and all $\varepsilon_g<\infty$. If $Q<U$, then
+\[
+  \operatorname{dist}\bigl(\mu,\sigma(A(\beta))\bigr)\le\frac{2\mu Q}{U-Q}.
+\]
+\end{theorem}
+
+\begin{proof}
+If $\mu\in\sigma(A(\beta))$ there is nothing to prove; let
+$\delta=\operatorname{dist}(\mu,\sigma(A(\beta)))>0$ and, for the proof only,
+$z=(A(\beta)-\mu)^{-1}\widehat u\in H^2_\beta(B)$. Write $u=\widehat u$.
+
+\emph{Piecewise identity.} In each piece $\Delta u=-\mu\rho u$ and
+$-\Delta z-\mu\rho z=\rho u$; since $\mu,\rho$ are real,
+$\rho|u|^2=\overline z\Delta u-u\Delta\overline z$, and Green's second identity on
+a bounded piece $D$ gives $\int_D\rho|u|^2=\int_{\partial D}(\overline z\,
+\partial_{\nu_D}u-u\,\partial_{\nu_D}\overline z)\,\dd s$.
+
+\emph{Shared interfaces.} Since $z\in H^2_\beta(B)$, its traces agree from both
+sides of every interface, including the seam after quasi-periodic extension.
+Adding the contributions of the two sides with outward normals $\pm\nu_\Gamma$
+gives the integrand $\jump{\partial_\nu u}_\Gamma\overline z+\jump{u}_\Gamma
+\partial_{\nu_\Gamma}\overline z$ on every $\Gamma\in\mathscr E$.
+
+\emph{Truncation.} Let $\chi_X(x)$ be a smooth cutoff equal to $1$ for
+$|x|\le X$ and $0$ for $|x|\ge2X$, with $\|\chi_X'\|_\infty=O(X^{-1})$ and
+$\|\chi_X''\|_\infty=O(X^{-2})$. Replacing $z$ by $\chi_Xz$ involves finitely many
+pieces and yields
+\begin{multline*}
+  \int_B\chi_X\rho|u|^2=\sum_{\Gamma}\int_\Gamma\chi_X\bigl(\jump{\partial_\nu u}_\Gamma\overline z
+  +\jump{u}_\Gamma\partial_{\nu_\Gamma}\overline z\bigr)
+  +\int_Bu\bigl(2\chi_X'\partial_x\overline z+\chi_X''\overline z\bigr)\\
+  +\sum_\Gamma\int_\Gamma\jump{u}_\Gamma(\partial_{\nu_\Gamma}\chi_X)\overline z .
+\end{multline*}
+By weighted Cauchy--Schwarz and \cref{prop:trace},
+\begin{equation}\label{eq:cs}
+\begin{aligned}
+  \sum_{\Gamma\in\mathscr E_g}\int_\Gamma\bigl(|\jump{\partial_\nu u}_\Gamma||z|
+  +|\jump{u}_\Gamma||\partial_{\nu_\Gamma}z|\bigr)
+  &\le\varepsilon_gT_g(z)\\
+  &\le\varepsilon_gC_g\|(A(\beta)+\mu)z\|_{\mathcal H}<\infty .
+\end{aligned}
+\end{equation}
+Hence the second term tends to zero ($u\in L^2$, $z\in H^2$), the third is at
+most $\|\chi_X'\|_\infty\sum_g\ell_g\varepsilon_gT_g(z)\to0$, and dominated
+convergence in the first gives
+\[
+  U^2=\sum_\Gamma\int_\Gamma\bigl(\jump{\partial_\nu u}_\Gamma\overline z+\jump{u}_\Gamma
+  \partial_{\nu_\Gamma}\overline z\bigr)\,\dd s .
+\]
+
+\emph{Resolvent bound.} $\|z\|\le U/\delta$ and $(A+\mu)z=u+2\mu z$ give
+$\|(A+\mu)z\|\le(1+2\mu/\delta)U$, so by \eqref{eq:cs}
+$U^2\le Q(1+2\mu/\delta)U$. Since $U>Q$, $\delta(U-Q)\le2\mu Q$.
+\end{proof}
+
+The bound is independent of the scaling of $\widehat u$ and tends to zero
+linearly as $\varepsilon_g\to0$. It holds for the whole spectrum, with no gap
+hypothesis. A field with a volume residual $r=(-\Delta-\mu\rho)\widehat u$ adds
+$\|\rho^{-1}r\|_{\mathcal H}$ to the numerator; ours has none.
+
+\subsection{Computing the inputs}\label{sec:computation}
+\emph{Half-guide sums.} By \eqref{eq:lead-field}, the jumps on
+$\partial\Omega_{j,\pm}$, on the wall $\Gamma_{j,\pm}$ shared with the next cell,
+and on the seam of $\mathcal C_{j,\pm}$ depend only on the state
+$\mathsf P_\pm^jc_\pm$. Let $b_{g,\pm}(v)=\|\mathcal L_{g,\pm}v\|^2$ be the
+group-$g$ part of these jump integrals for the state $v$, with $\mathcal L_{g,\pm}$
+linear, and $b_{g,0}$ the group-$g$ part for the center cell (its rod, $\Gamma_\pm$
+against $u_\pm[c_\pm]$, its seam). Then
+\begin{equation}\label{eq:lead-sum}
+  \varepsilon_g^2=b_{g,0}+\sum_\pm\sum_{j\ge0}b_{g,\pm}(\mathsf P_\pm^jc_\pm).
+\end{equation}
+The first $N_{\mathrm{cell}}$ terms (chosen per group and side) are evaluated
+by iterating $v\leftarrow\mathsf P_\pm v$. If $b_{g,\pm}(v)\le\Theta_{g,\pm}\|v\|^2$ and
+$\|\mathsf P_\pm^p\|_2\le r_\pm<1$ for some $p\ge1$, the tail satisfies
+\begin{equation}\label{eq:tail}
+  \sum_{j\ge N_{\mathrm{cell}}}b_{g,\pm}(\mathsf P_\pm^jc_\pm)
+  \le\frac{\Theta_{g,\pm}\sum_{l<p}\|\mathsf P_\pm^l\|_2^2}{1-r_\pm^2}
+  \bigl\|\mathsf P_\pm^{N_{\mathrm{cell}}}c_\pm\bigr\|_2^2 .
+\end{equation}
+The full nonnormal $\mathsf P_\pm$ is kept; $p>1$ is needed when
+$\|\mathsf P_\pm\|_2\ge1$ although the spectral radius is below one. We bound
+$\Theta_{g,\pm}$ by analytic envelopes of the kernels (\cref{sm:reliable-eps})
+rather than by evaluating $K$ columns, and compensate the crude constant by a
+slightly larger $N_{\mathrm{cell}}$.
+
+\emph{Mass lower bound.} The same structure gives $U^2$ as a convergent sum, which
+verifies (P4); the theorem needs only $U\ge(\int_D\rho|\widehat u|^2)^{1/2}$ for
+any $D\subset B$. For a disk $D_r(\mathbf c)$ inside a piece with constant
+$\rho_b$ and $\kappa_b=(\mu\rho_b)^{1/2}$, the circular mean of $\widehat u$ is
+$J_0(\kappa_bs)\widehat u(\mathbf c)$, and Cauchy--Schwarz on circles gives
+\begin{equation}\label{eq:disk}
+  \int_{D_r(\mathbf c)}\rho|\widehat u|^2\ge\rho_b\pi r^2
+  \bigl[J_0(\kappa_br)^2+J_1(\kappa_br)^2\bigr]|\widehat u(\mathbf c)|^2 ,
+\end{equation}
+so disjoint disks need only point values of the field.
+
+\emph{Reliable evaluation.} Split each interface into parameter panels $I$ and let
+$f(t)=|\boldsymbol r'(t)|^{1/2}(\jump{\partial_\nu\widehat u},
+\ell_g^{-1}\jump{\widehat u})(\boldsymbol r(t))$. If a polynomial vector $P_I$
+satisfies $\sup_I|f-P_I|\le e_I$, then
+\begin{equation}\label{eq:panel}
+  \|f\|_{L^2(I)}\le V_I^{1/2}+|I|^{1/2}e_I,\qquad V_I=\int_I|P_I|^2\,\dd t .
+\end{equation}
+We take $P_I$ as a Chebyshev interpolant, bound $e_I$ by an analytic envelope on
+a Bernstein ellipse plus the node-value errors, and compute node values and $V_I$
+in ball arithmetic \cite{Johansson2017}. The two one-sided fields are of order
+one and their difference of order $10^{-12}$; ball arithmetic at 128 bits keeps
+the cancellation inside the radii. The ingredients are listed in
+\cref{tab:inputs}; all of them are computed for the same field, with all
+rounding included.
+
+\begin{table}[tbhp]
+\caption{Inputs of the reliable bound and where their computation is described.}
+\label{tab:inputs}
+\centering\small
+\begin{tabular}{lp{0.42\textwidth}l}
+\toprule
+Input & Content & Details\\
+\midrule
+$\overline\varepsilon_g$ & panel bounds \eqref{eq:panel}, self-interaction, local terms, tails \eqref{eq:tail} & \cref{sm:reliable-eps}\\
+$\underline U$ & disk bounds \eqref{eq:disk} at certified point values & \cref{sm:reliable-mass}\\
+$\overline C_g$ & collar checks and the supremum \eqref{eq:Cg} & \cref{sm:reliable-cg}\\
+$\overline a_s,\underline b_s$ & inertia tests \eqref{eq:panel-tests} & \cref{sm:band-tests}\\
+$R_{\mathrm{spec}}$, $I_k$ & scalar assembly, outward rounding & \cref{sm:assembly}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{Assembly and interpretation.} With $\underline D=\underline U-\sum_g
+\overline C_g\overline\varepsilon_g>0$, \cref{thm:distance} gives
+$\operatorname{dist}(\mu,\sigma(A(\beta)))\le R_{\mathrm{spec}}:=2\mu\sum_g
+\overline C_g\overline\varepsilon_g/\underline D$; thus
+$I_{\mathrm{spec}}=[\mu-R_{\mathrm{spec}},\mu+R_{\mathrm{spec}}]$ meets the
+spectrum, and $I_k=[(\max\{0,\mu-R_{\mathrm{spec}}\})^{1/2},(\mu+R_{\mathrm{spec}})^{1/2}]$
+contains the corresponding wavenumber. If in addition \eqref{eq:gap-condition}
+holds, \cref{prop:discrete} shows that $I_{\mathrm{spec}}$ contains at least
+one isolated eigenvalue of finite multiplicity, that is, a guided mode. We do not
+claim that it is the only one, nor its index or multiplicity.

@@ -1,0 +1,88 @@
+% Section 1. Budget 1.75 pages including title and abstract.
+% Source: draft/bie-enclosure/s-introduction.tex (clean version).
+\section{Introduction}\label{sec:intro}
+A line defect in a two-dimensional photonic crystal breaks the periodicity
+across the defect but keeps it along the defect. At frequencies in a band gap
+of the surrounding crystal, the defect may support waves that propagate along
+it and decay exponentially across it, the \emph{guided modes}
+\cite{JoannopoulosJohnsonWinnMeade2008}. For a fixed Bloch wavenumber $\beta$
+along the defect they are eigenvalues of a self-adjoint operator $A(\beta)$ on
+an unbounded strip, located in a gap of its essential spectrum
+\cite{Fliss2013}.
+
+Two difficulties arise. The first is that the strip is unbounded across the
+defect. Supercell methods truncate it with periodic conditions and incur a
+model error that grows as the mode becomes less localized
+\cite{Fliss2013,KlindworthSchmidtFliss2014}. Joly, Li, and Fliss constructed
+exact boundary conditions for periodic half guides from cell problems
+\cite{JolyLiFliss2006}, and Fliss used them to reduce the guided-mode problem to
+a bounded neighborhood of the defect, at the price of a nonlinear eigenvalue
+problem \cite{Fliss2013}; high-order finite element versions, Robin-to-Robin
+variants, and dispersion-curve tracing followed
+\cite{KlindworthSchmidtFliss2014,FlissKlindworthSchmidt2015,Klindworth2015}, and
+related cell-DtN reductions are used in \cite{HuangLuLi2007,YuanLu2007}. The
+second difficulty is reliability. For piecewise constant media, boundary
+integral equations discretize only the interfaces and, with quasi-periodic Green
+functions, reach high order with few unknowns
+\cite{Linton1998,BarnettGreengard2010,HaoBarnettMartinssonYoung2014}. A nearly
+singular matrix in a nonlinear eigenvalue problem, however, only shows that a
+finite-dimensional equation is nearly solvable \cite{GuettelTisseur2017}; it
+neither bounds the distance to the spectrum of the continuous operator nor
+proves that a spectral point exists.
+
+\emph{Related enclosure methods.} Bounding eigenvalues by the boundary defect of
+trial fields that solve the equation exactly is the classical method of
+particular solutions \cite{MolerPayne1968,BetckeTrefethen2005}. Descloux and
+Tolley extended it to domain decomposition, with local exact solutions and an
+eigenvalue error controlled by the mismatch of values and gradients between
+subdomains \cite{DesclouxTolley1983} (see also \cite[Lem.~2.1]{Betcke2007});
+this is the closest structure to ours. Barnett, Hassell, and Tacy bounded the
+distance to the spectrum by boundary residuals for Neumann and Dirichlet
+problems \cite{BarnettHassell2011,BarnettHassellTacy2018}. Dahne and Salvy
+computed candidates by any means and then bounded the residual and the interior
+norm with interval arithmetic and Taylor models \cite{DahneSalvy2020}; we
+separate search and reliable evaluation in the same way. Temple, Kato--Temple,
+and Lehmann--Goerisch bounds \cite{Temple1928,NakaoPlumWatanabe2019} require
+trial functions in the domain of the operator or its form, which our
+piecewise field is not. These methods do handle essential spectrum
+\cite{ZimmermannMertins1995,DaviesPlum2004}, infinite waveguides
+\cite{BehnkeMertinsPlumWieners2000}, and photonic-crystal line defects
+\cite{BrownHoangPlumWood2009,HoangPlumWieners2009}; the finite element comparison
+in \cref{sec:ex1} is of this type. All the particular-solution results above
+concern bounded domains. Here the strip is unbounded, the discrete field is
+generated cell by cell in the half guides, and besides the material interfaces
+there are infinitely many artificial walls and seams.
+
+\emph{Contributions.} We consider a strip with periodic media on both sides
+(possibly different) and a local defect in a center cell, with piecewise
+constant coefficients and one rod per cell.
+\begin{itemize}
+\item A reduction to the center cell in terms of Cauchy data spaces of the half
+  guides (\cref{sec:reduction}), valid without unique solvability of the
+  half-guide Dirichlet problem.
+\item A boundary integral discretization with port Rayleigh amplitudes, cell
+  scattering matrices, decaying subspaces from an ordered QZ decomposition, and a
+  port-reduced matrix $\mathsf A(k)$ whose determinant is searched by Chebyshev
+  interpolation (\cref{sec:discretization}).
+\item A spectral-distance theorem for piecewise Helmholtz fields
+  (\cref{thm:distance}): $\operatorname{dist}(\widehat k^2,\sigma(A(\beta)))$ is
+  bounded by grouped interface jumps $\varepsilon_g$, weighted by trace constants
+  $C_g$ that are explicit in the geometry. It holds for the whole spectrum.
+\item A rounding-inclusive evaluation of all inputs: jump integrals on panels
+  with Chebyshev error bounds in ball arithmetic, sums over infinitely many cells
+  through the propagation matrix, mass lower bounds on disks, and a
+  finite-dimensional test for the common gap (\cref{sec:gap-test}).
+\item Examples (\cref{sec:results}): a star-shaped defect with a $\mu$-interval
+  of width $2.74\times10^{-11}$ in $14$ minutes, an empty defect with
+  $L_-\ne L_+$ and no reflection symmetry, and guided modes approaching a gap
+  edge, where the lead contraction rate rises to $0.80$ and the width stays below
+  $10^{-11}$.
+\end{itemize}
+Near-image splitting, proxy representations
+\cite{BarnettGreengard2010,BarnettGreengard2011,ChoBarnett2015}, and reductions
+that avoid Dirichlet exceptional values \cite{FlissKlindworthSchmidt2015} are
+known and not claimed as new. We do not claim that the eigenvalue in the
+interval is unique, nor its index or multiplicity, and we do not study a priori
+convergence: the theorem applies to a given candidate and field, however they
+were obtained. Proofs and the details of the reliable evaluation are in the
+supplementary materials.

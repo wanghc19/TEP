@@ -1,0 +1,3 @@
+# latexmk settings: find the SIAM class in vendor/ without copying it.
+ensure_path('TEXINPUTS', '../../vendor/siamart_251216//');
+$pdf_mode = 1;

@@ -1,0 +1,68 @@
+% Section 3. Budget 1.25 pages.
+% Source: draft/bie-enclosure/s-reduction.tex (clean version).
+\section{Reduction to the center cell}\label{sec:reduction}
+
+Fix $\beta$. The center cell and the $j$th left and right periodic cells
+($j\ge0$) are
+\[
+  \mathcal C_0=(x_-,x_+)\times I_d,\quad
+  \mathcal C_{j,+}=\mathcal C_{0,+}+jL_+e_x,\quad
+  \mathcal C_{j,-}=\mathcal C_{0,-}-jL_-e_x,
+\]
+with $\mathcal C_{0,+}=(x_+,x_++L_+)\times I_d$ and
+$\mathcal C_{0,-}=(x_--L_-,x_-)\times I_d$; $B_\pm$ denotes the open half
+strip formed by the cells on side $\pm$. The rods are $\Omega_0\subset\mathcal C_0$
+(possibly empty) and $\Omega_{j,\pm}=\Omega_\pm\pm jL_\pm e_x$. The artificial
+interfaces are $\Gamma_\pm=\{x_\pm\}\times I_d$ with normal $\nu_\pm=\pm e_x$,
+pointing into $B_\pm$, and the walls $\Gamma_{j,\pm}=\{x_\pm\pm(j+1)L_\pm\}\times
+I_d$ between consecutive cells. All normal derivatives on $\Gamma_\pm$ are taken
+along $\nu_\pm$, from whichever side the function lives on.
+
+For $O\in\{\mathcal C_0,B_-,B_+\}$ let $H^1_\beta(O)$ carry the quasi-periodic
+condition in $y$, let $H^{1/2}_\beta(\Gamma_\pm)$ be its trace space and
+$H^{-1/2}_\beta(\Gamma_\pm)$ the dual. For $u$ with $\Delta u\in L^2(O)$ and
+quasi-periodic $\partial_yu$, the Cauchy data map
+$\mathscr T_\pm u=(u|_{\Gamma_\pm},\partial_{\nu_\pm}u|_{\Gamma_\pm})$ is
+defined weakly by Green's formula. The local solution spaces are
+\begin{align*}
+  \mathcal U_0(k)&=\{u\in H^1_\beta(\mathcal C_0):-\Delta u=k^2\rho u
+  \text{ in }\mathcal C_0,\ \partial_yu\ \beta\text{-quasi-periodic}\},\\
+  \mathcal V_\pm(k)&=\{v\in H^1_\beta(B_\pm):-\Delta v=k^2\rho_\pm v
+  \text{ in }B_\pm,\ \partial_yv\ \beta\text{-quasi-periodic}\},
+\end{align*}
+with the equations in the distributional sense (so the rod transmission
+conditions are included) and no condition on $\Gamma_\pm$. Functions in
+$\mathcal V_\pm(k)$ have finite energy along the half strip. The
+\emph{Cauchy data space} of the half guide is
+$\mathcal G_\pm(k):=\mathscr T_\pm\mathcal V_\pm(k)$.
+
+\begin{lemma}[unique continuation from Cauchy data]\label{lem:uc}
+If $v\in\mathcal V_\pm(k)$ and $\mathscr T_\pm v=0$, then $v=0$.
+\end{lemma}
+
+\begin{proposition}[center reduction]\label{prop:reduction}
+For fixed $\beta$ and $k>0$ let
+$\mathcal U_0^{\mathcal G}(k)=\{u_0\in\mathcal U_0(k):\mathscr T_\pm u_0\in
+\mathcal G_\pm(k)\}$. The restriction $u\mapsto u|_{\mathcal C_0}$ is a linear
+bijection from $\ker(A(\beta)-k^2)$ onto $\mathcal U_0^{\mathcal G}(k)$.
+\end{proposition}
+
+The proofs are in \cref{sm:proof-reduction}: extending $v$ by zero across
+$\Gamma_\pm$ through the homogeneous background strip gives an analytic
+solution that vanishes on an open set; conversely, a center solution with
+matching Cauchy data is glued to the unique half-guide solutions without a
+distributional source on $\Gamma_\pm$.
+
+\Cref{prop:reduction} holds for every $k>0$ and needs neither the gap nor
+unique solvability of the half-guide Dirichlet problem. When the Dirichlet
+problem is uniquely solvable, $\mathcal G_\pm(k)$ is the graph of the
+Dirichlet-to-Neumann (DtN) operator and the reduction is the transparent
+boundary condition of \cite[Thm.~4.5]{Fliss2013} (with the opposite normal).
+At the countably many exceptional values where it is not
+\cite[Thm.~4.1]{Fliss2013}, the DtN form fails while \cref{prop:reduction}
+remains valid; Robin-to-Robin conditions avoid these values in another way
+\cite{FlissKlindworthSchmidt2015}. In the gap, finite-energy half-guide
+solutions decay cell by cell; Joly, Li, and Fliss represent them by a
+propagation operator of spectral radius less than one \cite{JolyLiFliss2006},
+whose discrete counterpart is the propagation matrix $\mathsf P_\pm$ of
+\cref{sec:discretization}.

@@ -1,0 +1,88 @@
+% Shared preamble of the SIAM (SISC) version: packages, macros, theorem
+% environments, title and headers. Loaded by main.tex and supplement.tex.
+
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\usepackage{stmaryrd}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{groupplots}
+\usepackage{algorithmic}
+
+\newcommand{\creflastconjunction}{, and~}
+
+\newsiamremark{remark}{Remark}
+\newsiamremark{assumption}{Assumption}
+\crefname{assumption}{Assumption}{Assumptions}
+
+% Notation (same symbols as draft/bie-enclosure/preamble.tex).
+\renewcommand{\Im}{\mathrm{Im}}
+\renewcommand{\Re}{\mathrm{Re}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\jump}[1]{\llbracket #1\rrbracket}
+\newcommand{\QP}{\mathrm{QP}}
+\newcommand{\rin}{\rho_{\min}}
+\newcommand{\rax}{\rho_{\max}}
+
+% Drafting note, printed in red; remove before submission.
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+
+\headers{Guided-mode enclosures by layer potentials}{Author}
+
+\title{Reliable enclosures of guided-mode eigenvalues in periodic
+  waveguides with a line defect by boundary integral equations\thanks{Submitted
+  to the editors DATE.}}
+
+\author{Author\thanks{Department of Mathematics, Example University, Example City
+  (\email{author@example.com}).}}
+
+\usepackage{amsopn}
+\DeclareMathOperator{\diag}{diag}
+% Cross-document references cannot be hyphenated; allow looser lines.
+\setlength{\emergencystretch}{1.5em}
+
+% xr-hyper appends the external file name to every imported label, including
+% the two-field "@cref" labels of cleveref, which then prints it ("2.1main.pdf").
+% Import "@cref" labels unchanged; all other labels keep the xr-hyper behavior.
+\makeatletter
+\long\def\XR@test#1#2#3#4\XR@{%
+  \let\XR@tempa\@gobblefour
+  \ifx#1\newlabel
+    \let\XR@tempa\@firstoffour
+  \else\ifx#1\XR@bibcite
+    \let\XR@tempa\@secondoffour
+  \else\ifx#1\@input
+     \let\XR@tempa\@thirdoffour
+  \else\ifx#1\new@label@record
+     \let\XR@tempa\@fourthoffour
+  \fi\fi\fi\fi
+   \XR@tempa
+    {%
+     \in@{@cref}{#2}%
+     \ifin@
+       \expandafter\xdef\csname r@\XR@prefix#2\endcsname{\unexpanded{#3}}%
+     \else
+       \expandafter\protected@xdef\csname r@\XR@prefix#2\endcsname{\XR@addURL{#3}}%
+     \fi
+    }%
+    {\expandafter\bibcite\expandafter{\XR@prefix#2}{#3}}%
+    {\edef\XR@list{\XR@list\filename@area#2\relax}}%
+    {%
+      \edef\next{\noexpand\new@label@record{\XR@prefix#2}{\unexpanded{#3}{xr-url}{\XR@URL}}}%
+      \next
+    }
+  \ifeof\@inputcheck\expandafter\XR@aux
+  \else\expandafter\XR@read\fi}
+\makeatother

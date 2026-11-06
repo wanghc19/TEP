@@ -1,0 +1,196 @@
+% Supplement: additional numerical data.
+% Source: draft/bie-enclosure/s-results.tex (clean version); same runs as
+% \cref{sec:results}.
+\section{Additional numerical data}\label{sm:results}
+
+\subsection{Example 1}
+All groups use $\ell_g=1$, $N_g=1$ and $\lambda_0=1/68$; the supremum
+\eqref{eq:Cg} is attained at the stationary point for all groups.
+\Cref{sm:tab-trace} lists the trace inputs. The curvature bounds hold on parameter
+balls containing the binary64 and the decimal geometry; $\delta_g$ and $\eta_g$
+come from a floating-point scan. \Cref{sm:tab-tails} lists the lead parts of the
+defects. Without a center part, the lead rod groups equal their side values; the
+center parts of the wall and seam groups are $1.966\times10^{-13}$ and
+$2.35\times10^{-15}$. The mass bound uses disks of radius $0.165$ in the star, $0.168$
+and $0.152$ in the two neighboring lead rods, and $0.037$--$0.070$ in the five lobes;
+the center values are evaluated by $30$-point Gauss quadrature with error at most
+$7.8\times10^{-8}$, and the three large disks give $0.543$, $0.392$, $0.347$, so
+$\underline U^{\,2}\ge1.5273$. The tightest of the $472$ inertia tests has margin
+$1.4\times10^{-4}$.
+
+\begin{table}[tbhp]
+\caption{Example 1: inputs of \cref{prop:trace} (displayed values rounded).}
+\label{sm:tab-trace}
+\centering\small
+\begin{tabular}{lcccccc}
+\toprule
+Group & $\kappa_g$ & $\delta_g$ & $h_g$ & $\eta_g$ & $D_{0,g}$ & $D_{1,g}$\\
+\midrule
+center rod & $64.3$ & $0.015070$ & $0.969$ & $0.042232$ & $34.579$ & $0.20514$\\
+left rods & $8.81$ & $0.094357$ & $0.831$ & $0.38312$ & $7.3292$ & $0.075821$\\
+right rods & $10.53$ & $0.081458$ & $0.858$ & $0.31178$ & $8.0519$ & $0.080976$\\
+walls, seams & $0$ & $0.2$ & $0$ & $1.1658$ & $5.4144$ & $0.061927$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[tbhp]
+\caption{Example 1: lead parts. The last column bounds
+$(\sum_jb_{g,\pm}(\mathsf P_\pm^jc_\pm))^{1/2}$ including the tail.}
+\label{sm:tab-tails}
+\centering\small
+\begin{tabular}{llcccc}
+\toprule
+Side & Group & $N_{\mathrm{cell}}$ & $\overline B_\pm$ & tail/finite (squared) & bound\\
+\midrule
+left & rods & $52$ & $2.72\times10^{5}$ & $3.0\times10^{-7}$ & $5.0811\times10^{-14}$\\
+left & walls & $54$ & $1.32\times10^{6}$ & $1.7\times10^{-7}$ & $4.6633\times10^{-14}$\\
+left & seams & $56$ & $1.91\times10^{6}$ & $8.5\times10^{-7}$ & $4.2586\times10^{-15}$\\
+right & rods & $56$ & $5.78\times10^{6}$ & $3.9\times10^{-7}$ & $5.2316\times10^{-14}$\\
+right & walls & $56$ & $2.51\times10^{6}$ & $3.4\times10^{-7}$ & $2.4254\times10^{-14}$\\
+right & seams & $58$ & $3.62\times10^{6}$ & $9.3\times10^{-7}$ & $3.1306\times10^{-15}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\Cref{sm:tab-resolution} varies the field: each row is a complete cold-start run.
+\Cref{sm:tab-eval} varies only the evaluation of the field of the third row.
+Doubling all panels, $L=64$ or $192$ bits change every group bound by a relative
+$3\times10^{-6}$ at most; the reliable bounds exceed a plain floating-point
+quadrature of the residual polynomials by at most a relative $10^{-5}$. The five
+candidates of \cref{sm:tab-resolution} differ from $1.558437894182088$ by $-2$ to
+$+3$ ulps. The third row reproduces the main run bit for bit; its time differs
+($919$ versus $827$\,s) because of machine load.
+
+\begin{table}[tbhp]
+\caption{Example 1, field resolution: nodes on the center curve (half as many
+on each lead curve), $M$,
+group bounds, $Q$, full width and time (upward rounded).}
+\label{sm:tab-resolution}
+\centering\scriptsize\setlength{\tabcolsep}{1.5pt}
+\begin{tabular}{lccccccccc}
+\toprule
+Nodes & $M$ & center & left & right & walls & seams & $Q$ & width & s\\
+\midrule
+$256$ & $48$ & $2.2\times10^{-7}$ & $4.8\times10^{-14}$ & $9.7\times10^{-11}$ & $2.9\times10^{-13}$ & $1.1\times10^{-14}$ & $5.5\times10^{-7}$ & $4.28\times10^{-6}$ & $778$\\
+$384$ & $48$ & $5.1\times10^{-10}$ & $4.9\times10^{-14}$ & $5.2\times10^{-14}$ & $2.0\times10^{-13}$ & $6.8\times10^{-15}$ & $1.3\times10^{-9}$ & $9.87\times10^{-9}$ & $764$\\
+$512$ & $48$ & $1.3\times10^{-12}$ & $5.1\times10^{-14}$ & $5.3\times10^{-14}$ & $2.1\times10^{-13}$ & $5.8\times10^{-15}$ & $3.5\times10^{-12}$ & $2.738\times10^{-11}$ & $919$\\
+$512$ & $40$ & $1.3\times10^{-12}$ & $5.2\times10^{-14}$ & $5.3\times10^{-14}$ & $2.0\times10^{-13}$ & $5.3\times10^{-15}$ & $3.5\times10^{-12}$ & $2.735\times10^{-11}$ & $812$\\
+$512$ & $56$ & $1.3\times10^{-12}$ & $5.0\times10^{-14}$ & $5.2\times10^{-14}$ & $2.4\times10^{-13}$ & $1.0\times10^{-14}$ & $3.6\times10^{-12}$ & $2.766\times10^{-11}$ & $841$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[tbhp]
+\caption{Example 1, evaluation resolution for one field. Baseline: $192$ center
+panels, $64$ per lead curve, $16$ per wall, $8$ per seam, $L=48$, $128$ bits. Times
+cover the defect-to-assembly stages; the baseline time is the sum of these stages in
+the complete run.}
+\label{sm:tab-eval}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+Setting & center $\overline\varepsilon_g$ & $Q$ & width & s\\
+\midrule
+baseline & $1.2615836\times10^{-12}$ & $3.4829355\times10^{-12}$ & $2.7378625\times10^{-11}$ & $598$\\
+panels doubled & $1.2615800\times10^{-12}$ & $3.4829264\times10^{-12}$ & $2.7378554\times10^{-11}$ & $948$\\
+$L=64$ & $1.2615836\times10^{-12}$ & $3.4829355\times10^{-12}$ & $2.7378625\times10^{-11}$ & $584$\\
+$192$ bits & $1.2615836\times10^{-12}$ & $3.4829355\times10^{-12}$ & $2.7378625\times10^{-11}$ & $834$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[tbhp]
+\caption{Example 1: cost of one complete run ($512/256/256$) on an Apple M3 Pro
+(11 cores, 18\,GiB), macOS 14, MATLAB R2023b, python-flint 0.9.0 (FLINT 3.6.0).
+Wall-clock times include process start; peak memory is for the process tree.}
+\label{sm:tab-cost}
+\centering\small
+\begin{tabular}{lrrr}
+\toprule
+Stage & s & parallelism & peak GiB\\
+\midrule
+gap classification and search & $175.6$ & MATLAB, 11 threads & $0.99$\\
+density reconstruction and fit & $18.2$ & MATLAB, 11 threads & $1.17$\\
+reliable defects (five groups) & $528.2$ & 8 processes & $1.82$\\
+defect summary check & $1.1$ & 1 process & --\\
+mass bound & $20.9$ & 1 process & $0.16$\\
+trace constants and assembly & $1.1$ & 1 process & --\\
+gap test & $80.5$ & 1 process & $0.21$\\
+scheduling and output & $1.4$ & -- & --\\
+\midrule
+total & $827.1$ & & $1.84$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Example 2 and the gap-edge series}
+\Cref{sm:tab-ex2} lists the groups for $L_0=1$. The collar checks use the actual
+period $L_s$ of each side (smallest right margin $0.21$), and the seam integrals use
+length $L_s$. The mass bound uses three disks in the empty center (centers $(0,0)$,
+$(0,\pm0.33)$, radii $0.2$, $0.12$), where the field is a finite Rayleigh sum, so the
+disk masses are computed from Bessel functions in ball arithmetic without
+quadrature; $\underline U\ge0.645928$. In the gap test (window $k\in(1.46,2.37)$,
+$944$ tests) the smallest margins are $2.92$ and $0.437$ at the lower ends and
+$0.237$ and $1.20$ at the upper ends; the interval has margins $1.4469$ and $2.0383$.
+The run takes $1058$\,s (search $453$\,s, defects $434$\,s, gap test $145$\,s) with
+peak memory $2.24$\,GiB. With $384$ lead nodes the candidate has the same binary
+representation; the lowest Rayleigh channel has $|\gamma_m|\ge1.82$.
+
+\begin{table}[tbhp]
+\caption{Example 2 ($L_0=1$, $\widehat k=1.8916961400527375$): groups and depths
+$N_{\mathrm{cell}}$ (left, right).}
+\label{sm:tab-ex2}
+\centering\small
+\begin{tabular}{lccccc}
+\toprule
+Group & $\overline C_g$ & $\overline\varepsilon_g$ & $\overline C_g\overline\varepsilon_g$ & left & right\\
+\midrule
+center rod & -- & $0$ & $0$ & -- & --\\
+left rods & $1.135325$ & $2.0716\times10^{-14}$ & $2.3520\times10^{-14}$ & $42$ & --\\
+right rods & $1.173284$ & $2.3041\times10^{-14}$ & $2.7033\times10^{-14}$ & -- & $52$\\
+walls & $1.026040$ & $7.7580\times10^{-14}$ & $7.9600\times10^{-14}$ & $44$ & $51$\\
+seams & $1.026040$ & $8.9003\times10^{-15}$ & $9.1320\times10^{-15}$ & $45$ & $52$\\
+\midrule
+$Q$ & & & $1.3929\times10^{-13}$ & &\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\Cref{sm:tab-float} is the floating-point continuation in $L_0$ (local Newton from the
+previous point; smallest singular values below $2.2\times10^{-13}$, second smallest
+$1.35$--$1.38$). The full intervals of the reliable runs are
+\begin{align*}
+  L_0=1.6:&\quad\mu\in[2.5009675413141,\,2.5009675413205],\\
+  L_0=1.9:&\quad\mu\in[2.1912667743959,\,2.1912667744012],\\
+  L_0=2:&\quad\mu\in[2.1186466555847,\,2.1186466555930],
+\end{align*}
+with margins to the lower window end $0.3693$, $0.0596$, $0.0161$ and to the upper
+end $3.1159$, $3.4256$, $3.4982$. Increasing every $N_{\mathrm{cell}}$ by $10$ reduces
+the widths by $0.06\%$, $1.3\%$, $0.86\%$. The predicted right rod depths
+$\lceil\ln(\tau\underline V/(\overline B^2F_p\|c\|^2))/(2\ln r^{1/p})\rceil$ with
+$F_p=\sum_{l<p}\|\mathsf P^l\|_2^2/(1-r^2)$ are $74$, $134$, $223$ versus the actual
+$72$, $128$, $208$. For $L_0=2$, right side: $\|\mathsf P_+\|_2\le0.7953$,
+$\|\mathsf P_+^2\|_2\le0.6219$, $F_1=2.7211$, $F_2=2.6616$. For both $p=1$ and $p=2$
+the interval recomputed with $N_{\mathrm{cell}}+10$ meets the original one, and with
+$p=2$ the next ten actual states plus the new tail stay below the old tail. The run
+for $L_0=1.6$ stopped after the defects because of an input format error in the mass
+stage; the remaining stages ran in a second process on the same field.
+
+\begin{table}[tbhp]
+\caption{Floating-point continuation in $L_0$ ($\varrho$ = spectral radius, $\delta_{\mathrm e}$ = distance of $\widehat k$ to the band edge).}
+\label{sm:tab-float}
+\centering\small
+\begin{tabular}{cccccc}
+\toprule
+$L_0$ & $\widehat k$ & $\delta_{\mathrm e}$ & $\|\mathsf P_-\|_2$ & $\varrho(\mathsf P_+)$ & $\|\mathsf P_+\|_2$\\
+\midrule
+$1$ & $1.89170$ & $0.451$ & $0.2952$ & $0.3269$ & $0.3337$\\
+$1.4$ & $1.66820$ & $0.227$ & $0.3323$ & $0.4092$ & $0.4173$\\
+$1.6$ & $1.58144$ & $0.140$ & $0.3686$ & $0.4830$ & $0.4921$\\
+$1.8$ & $1.51003$ & $0.0690$ & $0.4143$ & $0.5923$ & $0.6028$\\
+$1.9$ & $1.48029$ & $0.0393$ & $0.4399$ & $0.6708$ & $0.6823$\\
+$2$ & $1.45556$ & $0.0146$ & $0.4653$ & $0.7823$ & $0.7952$\\
+\bottomrule
+\end{tabular}
+\end{table}

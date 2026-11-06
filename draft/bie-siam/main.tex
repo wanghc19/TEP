@@ -1,0 +1,51 @@
+% SIAM (SISC) version of the BIE spectral-distance paper; main article.
+% Supplement: supplement.tex. Build: latexmk main.tex supplement.tex
+% (latexmkrc adds the SIAM class directory). Page target: 20 pages
+% including references.
+\documentclass[review,hidelinks,onefignum,onetabnum]{siamart251216}
+\input{shared}
+\externaldocument[][nocite]{supplement}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Guided modes of a two-dimensional periodic waveguide with a line defect are
+eigenvalues in a gap of the essential spectrum of a self-adjoint operator on an
+unbounded strip. We compute candidates by boundary integral equations: lead
+cells are coupled through Rayleigh amplitudes, decaying half-guide solutions
+come from an ordered QZ decomposition of the cell scattering pencil, and the
+center cell is reduced to a nonlinear eigenvalue problem for Cauchy data. From
+a candidate we build a field on the whole strip that solves the Helmholtz
+equation exactly in every homogeneous piece and jumps across rod boundaries,
+artificial walls, and seams. We prove that the distance from the candidate to
+the spectrum is bounded by the grouped $L^2$ norms of these jumps, weighted by
+trace constants that are explicit in the geometry. All inputs, including the
+infinitely many lead cells and a finite-dimensional test of the common gap, are
+evaluated in ball arithmetic. For a star-shaped defect between two different
+leads, one run of 14 minutes encloses a guided-mode eigenvalue in an interval
+of width $2.7\times10^{-11}$; examples with an empty defect, different lead
+periods, and modes near a gap edge give widths below $10^{-11}$.
+\end{abstract}
+
+\begin{keywords}
+photonic crystal waveguide, guided mode, boundary integral equation,
+eigenvalue enclosure, a posteriori error bound, ball arithmetic
+\end{keywords}
+
+\begin{MSCcodes}
+65N25, 65N38, 65G20, 35P15, 78A50
+\end{MSCcodes}
+
+\input{sec-intro}
+\input{sec-model}
+\input{sec-reduction}
+\input{sec-discretization}
+\input{sec-bound}
+\input{sec-results}
+\input{sec-conclusion}
+\input{sec-acknowledgments}
+
+\bibliographystyle{siamplain-nonote}
+\bibliography{../../ref/reference}
+\end{document}

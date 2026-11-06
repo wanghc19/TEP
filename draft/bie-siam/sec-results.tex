@@ -1,0 +1,199 @@
+% Section 6. Budget 3.75 pages.
+% Source: draft/bie-enclosure/s-results.tex (clean version); data from
+% test/bie-bound/pipeline-v1 run-002, resolution-v1, example2-v1 run-015,
+% gapedge-v1 run-006/007/011/012, test/fem-goerisch/pipeline-v1.
+\section{Numerical results}\label{sec:results}
+Each interval below comes from one run that starts from an empty output
+directory and performs, in order, the gap classification, the determinant
+search, the density reconstruction and field fit, the reliable evaluation of
+all five groups, the mass bound, the trace constants, the assembly, and the
+gap test, without reading earlier results. Geometry parameters that are not
+binary64 numbers (such as $0.2$) are replaced by the nearest binary64 number,
+and the intervals refer to this geometry. Timings are wall-clock on an Apple M3
+Pro (11 cores, 18\,GiB), MATLAB R2023b and python-flint 0.9.0. The code, the
+saved candidate data and an independent checker are in the release package
+\todo{cite release}.
+
+\begin{figure}[tbhp]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=1 by 2, vertical sep=1.05cm},
+  width=\textwidth, height=0.23\textwidth, axis equal image,
+  ymin=-0.5, ymax=0.5, ytick={-0.5,0,0.5}, xtick={-3,...,3},
+  ylabel={$y$}, unbounded coords=jump, tick label style={font=\scriptsize},
+  label style={font=\scriptsize}, title style={font=\scriptsize}]
+\nextgroupplot[xmin=-3.5, xmax=3.5, title={Example 1}]
+  \foreach \w in {-2.5,-1.5,...,2.5} {
+    \edef\temp{\noexpand\draw[gray, dashed] (axis cs:\w,-0.5) -- (axis cs:\w,0.5);}
+    \temp}
+  \pgfplotsinvokeforeach{-3,-2,-1}{\addplot[blue, thick, fill=blue!15] table[col sep=comma,
+    x=x, y expr={\thisrow{cell}==#1 ? \thisrow{y} : nan}] {data/geometry.csv};}
+  \addplot[red, thick, fill=red!15] table[col sep=comma,
+    x=x, y expr={\thisrow{cell}==0 ? \thisrow{y} : nan}] {data/geometry.csv};
+  \pgfplotsinvokeforeach{1,2,3}{\addplot[teal, thick, fill=teal!15] table[col sep=comma,
+    x=x, y expr={\thisrow{cell}==#1 ? \thisrow{y} : nan}] {data/geometry.csv};}
+\nextgroupplot[xmin=-3.5, xmax=3.5, xlabel={$x$}, title={Example 2 ($L_0=1$)}]
+  \foreach \w in {-2.5,-1.5,-0.5,0.5,1.35,2.2,3.05} {
+    \edef\temp{\noexpand\draw[gray, dashed] (axis cs:\w,-0.5) -- (axis cs:\w,0.5);}
+    \temp}
+  \pgfplotsinvokeforeach{-3,-2,-1}{\addplot[blue, thick, fill=blue!15] table[col sep=comma,
+    x=x, y expr={\thisrow{cell}==#1 ? \thisrow{y} : nan}] {data/geometry2.csv};}
+  \pgfplotsinvokeforeach{1,2,3}{\addplot[teal, thick, fill=teal!15] table[col sep=comma,
+    x=x, y expr={\thisrow{cell}==#1 ? \thisrow{y} : nan}] {data/geometry2.csv};}
+  % Fourth right rod: the third one shifted by one period L_+ = 0.85 (clipped).
+  \addplot[teal, thick, fill=teal!15] table[col sep=comma,
+    x expr={\thisrow{x}+0.85}, y expr={\thisrow{cell}==3 ? \thisrow{y} : nan}] {data/geometry2.csv};
+\end{groupplot}
+\end{tikzpicture}
+\caption{Part of the strip in the two examples, on the same $x$ scale. Dashed
+lines are the artificial walls; $y=\pm1/2$ is the seam. The left leads are the
+same; in Example~2 the center cell is empty and the right lead has period
+$L_+=0.85$ and a rotated rod. Lead rods have $\rho=17$, the star rod $\rho=4$.}
+\label{fig:geometry}
+\end{figure}
+
+\subsection{Example 1: a star-shaped defect}\label{sec:ex1}
+Let $d=1$, $\beta=0.5$, $L_0=L_\pm=1$, $\rho_{\mathrm e}=1$. The center cell
+contains a star with $\rho=4$, and every lead cell a three-lobed rod with
+$\rho=17$, centered in the cell,
+\[
+  \boldsymbol r_0(t)=0.2\begin{pmatrix}(1.5+0.3\cos5t)\cos t\\(1+0.3\cos5t)\sin t\end{pmatrix},
+  \qquad
+  \boldsymbol r_a(t)=\frac{0.2(1+a\cos3t)}{(1+a^2/2)^{1/2}}\begin{pmatrix}\cos t\\\sin t\end{pmatrix},
+\]
+with $a=0.12$ on the left and $a=0.20$ on the right (\cref{fig:geometry}). Thus $\rin=1$, $\rax=17$ and
+$\lambda_0=1/68$.
+
+\emph{Discretization.} The center curve has $512$ nodes, each lead curve $256$;
+$M=48$ ($K=97$). The trial field uses $480$ proxies (\cref{sec:field}). The
+reliable evaluation splits the center curve into $192$ panels, each lead curve
+into $64$, each wall into $16$ and each seam into $8$, with $48$ Chebyshev nodes per
+panel and $128$-bit balls. Both leads use $p=1$, with
+$\|\mathsf P_\pm\|_F\le0.3815$, $0.3868$; $N_{\mathrm{cell}}$ is the smallest depth
+at which the squared tail is at most $10^{-6}$ times the squared finite part
+($52$--$58$). The mass bound uses $8$ disks inside the rods. The gap test uses
+$169$ plane waves and $118$ phase panels on $[0,\pi]$; both lead rods are
+symmetric under $y\mapsto-y$.
+
+\emph{Candidate.} The floating-point gap classification gives the search window
+$k\in[1.451,2.249]$. Chebyshev interpolation of $\det\mathsf A(k)$ on the whole
+window stops at degree $32$ (last three coefficients below $7\times10^{-11}$
+relative to the largest), with one near-real root in the Bernstein ellipse. Two
+Newton steps give $\widehat k=1.558437894182088=438661269969907/2^{48}$; $\mu$ is
+its exact square. The search takes $38$ matrix evaluations and $159$\,s.
+
+\emph{Interval.} \Cref{tab:ex1} lists the five groups. The center rod
+contributes $90\%$ of $Q$. There the collar is narrow ($h_g=0.969$) because the
+concave points of the star have curvature about $64$; this gives the largest
+$C_g$. The interpolation errors satisfy $e_I\le2.2\times10^{-17}$ on all panels, so
+the reliable $\overline\varepsilon_g$ exceed the floating-point values by
+only $0.04\%$. Increasing every $N_{\mathrm{cell}}$ by $10$ changes the group bounds by a
+relative $4.7\times10^{-7}$ at most. The disks give $\underline U=1.23587$, and
+\begin{align*}
+  R_{\mathrm{spec}}&\le1.3690\times10^{-11},\\
+  I_{\mathrm{spec}}&\subset[2.42872867000901,\,2.42872867003640],\\
+  I_k&\subset[1.55843789417769,\,1.55843789418648],
+\end{align*}
+with outward rounding. All $472$ inertia tests pass, so neither lead has spectrum
+for $k\in(1.318,2.375)$; the margins in \eqref{eq:gap-condition} are $0.6916$ and
+$3.2118$. Hence $I_k$ contains at least one guided-mode wavenumber. The complete
+run takes $827$\,s with a peak memory of $1.84$\,GiB; $528$\,s of this is the
+reliable evaluation on $8$ processes (\cref{sm:results}).
+
+\begin{table}[tbhp]
+\caption{Example 1: trace constants and defect bounds of the five groups (upward
+rounded). Lead and wall groups include all cells of both half guides.}
+\label{tab:ex1}
+\centering\small
+\begin{tabular}{lccc}
+\toprule
+Group $g$ & $\overline C_g$ & $\overline\varepsilon_g$ & $\overline C_g\overline\varepsilon_g$\\
+\midrule
+center rod & $2.490254$ & $1.2616\times10^{-12}$ & $3.1417\times10^{-12}$\\
+left rods & $1.181583$ & $5.0811\times10^{-14}$ & $6.0037\times10^{-14}$\\
+right rods & $1.233941$ & $5.2316\times10^{-14}$ & $6.4555\times10^{-14}$\\
+walls & $1.035553$ & $2.0346\times10^{-13}$ & $2.1070\times10^{-13}$\\
+seams & $1.035553$ & $5.7837\times10^{-15}$ & $5.9894\times10^{-15}$\\
+\midrule
+$Q$ & & & $3.4830\times10^{-12}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{Resolution.} We vary the field and the evaluation separately (complete
+reruns, \cref{sm:results}). With $256$, $384$, $512$ center nodes (half as many per
+lead curve) the full width $2R_{\mathrm{spec}}$ is $4.28\times10^{-6}$,
+$9.87\times10^{-9}$, $2.74\times10^{-11}$, almost entirely through the center group;
+$M=40$ or $56$ changes the width by about $1\%$. The five candidates differ from
+each other by at most five ulps. For the same field, doubling all panels,
+$64$ Chebyshev nodes or $192$-bit balls change each group bound by a relative
+$3\times10^{-6}$ at most. The width therefore measures how well the reconstructed
+field satisfies the interface conditions, not the accuracy of $\widehat k$ or of
+the evaluation.
+
+\emph{Comparison with a finite element enclosure.} The same problem was solved
+independently with $P_3$ finite elements on a mesh with $h=1/48$ (about
+$2.9\times10^4$ degrees of freedom per cell), a trial field built from a discrete
+DtN map and tapered to zero over $13$ lead cells, and Goerisch's method
+\todo{cite FEM route}. Under a spectral isolation condition, checked by separate
+finite-dimensional tests, it gives $\mu\in[2.4287286691977,2.4287286736602]$ (width
+$4.46\times10^{-9}$) together with uniqueness in this interval; truncation errors
+are bounded reliably but rounding is only estimated. $I_{\mathrm{spec}}$ lies
+inside. The two codes define the binary geometry slightly differently (by
+$2^{-56}$ in one Fourier coefficient), so this is a numerical cross-check rather
+than a statement about one operator. The FEM run takes $12.5$\,min plus
+$54.3$\,min for the isolation condition.
+\todo{FEM cost--width series over three mesh sizes (release R3).}
+
+\subsection{Example 2 and guided modes near a gap edge}\label{sec:ex2}
+The second example removes the center rod, uses different lead periods, and
+breaks the reflection symmetry. The center cell $|x|<L_0/2$ is empty; the left
+lead has $L_-=1$ and the rod $a=0.12$; the right lead has $L_+=0.85$ and the rod
+$a=0.20$ rotated by $0.13$ (\cref{fig:geometry}). The right bands at $\pm\theta$
+then differ by up to $3.7\times10^{-3}$, and the gap test covers the full range
+$[-\pi/L_s,\pi/L_s]$ with $236$ panels per lead. The discretization is the same
+as in Example~1. The center field is a finite Rayleigh sum (\cref{thm:center-rep}
+with $\Omega_0=\emptyset$), which is exactly quasi-periodic, so the center rod and
+center seam groups vanish identically, and the walls dominate $Q$ ($57\%$). The
+floating-point common gap is about $k\in(1.441,2.396)$.
+
+Increasing $L_0$ lowers the guided wavenumber toward the lower gap edge, and the
+decay in the right lead slows down. \Cref{tab:ex2} reports complete reliable
+runs for $L_0=1,1.6,1.9,2$; at each point the lowest confirmed root in the window
+is used, not continued from the previous one. Along a floating-point continuation,
+$\ln(1/\varrho(\mathsf P_+))\approx(1.94\text{--}2.04)\sqrt{\delta_{\mathrm e}}$, where $\varrho$ is the
+spectral radius and $\delta_{\mathrm e}$ the distance to the band edge $1.441$, in line with the square-root behavior of
+evanescent decay near a quadratic band edge. Correspondingly
+$N_{\mathrm{cell}}\ln(1/\overline r_+)\approx51,49,48$, so the depth grows like
+$\delta_{\mathrm e}^{-1/2}$. The width stays below $10^{-11}$
+because the tail enters only through its bound. From $L_0=1$ to $2$ the right
+depth grows fourfold but the total time only by $42\%$, since the search and the
+gap test do not depend on $L_0$. Throughout,
+$\|\mathsf P_\pm\|_2/\varrho(\mathsf P_\pm)\le1.021$ and $p=1$ suffices; the $p=2$
+bound \eqref{eq:tail}, evaluated on the same states, differs by about $2\%$. For
+$L_0=2$ the gap test window is $(1.45,2.37)$, the smallest inertia margin is
+$0.197$, and the interval has margin $0.0161$ to the lower end; a second
+candidate $\widehat k\approx2.2156$ appears in the window and is not treated.
+
+\begin{table}[tbhp]
+\caption{Example 2 for increasing center width $L_0$: interval $I_k$ (shared
+leading digits, then outward-rounded last digits), distance $\delta_{\mathrm e}$ of
+$\widehat k$ to the floating-point band edge, upper bound $\overline r_+$ of
+$\|\mathsf P_+\|_2$, right depths $N_{\mathrm{cell}}$ (rods/walls/seams), $Q$, full
+width of $I_{\mathrm{spec}}$ (bounds rounded upward), and time of one cold run of the release package. The depths are chosen so that the
+squared tail is at most $\tau$ times the squared finite part, with
+$\tau=10^{-6},10^{-2},0.1,0.1$; the tail always enters through its bound.}
+\label{tab:ex2}
+\centering\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{cccccccc}
+\toprule
+$L_0$ & $I_k$ & $\delta_{\mathrm e}$ & $\overline r_+$ & $N_{\mathrm{cell}}$ & $Q$ & width & s\\
+\midrule
+$1$   & $1.89169614005[23,32]$ & $0.451$  & $0.3344$ & $52/51/52$ & $1.40\times10^{-13}$ & $3.09\times10^{-12}$ & $1076$\\
+$1.6$ & $1.58144476391[49,70]$ & $0.140$  & $0.4924$ & $72/69/72$ & $4.13\times10^{-13}$ & $6.36\times10^{-12}$ & $1194$\\
+$1.9$ & $1.48029280022[43,61]$ & $0.0393$ & $0.6825$ & $128/121/126$ & $3.87\times10^{-13}$ & $5.22\times10^{-12}$ & $1353$\\
+$2$   & $1.45555716328[31,60]$ & $0.0146$ & $0.7953$ & $208/196/206$ & $6.24\times10^{-13}$ & $8.16\times10^{-12}$ & $1532$\\
+\bottomrule
+\end{tabular}
+
+\end{table}

@@ -1,0 +1,202 @@
+% Section 4. Budget 2.75 pages.
+% Source: draft/bie-enclosure/s-discretization.tex (clean version).
+\section{Discretization and candidate computation}\label{sec:discretization}
+
+We discretize the reduction of \cref{prop:reduction}: lead cells by boundary integral equations
+with port Rayleigh amplitudes, the decaying half-guide solutions by an ordered
+QZ decomposition, and the center cell by layer potentials plus background
+Rayleigh waves. The output is a candidate $\widehat k$ with coefficients. We
+make no claim on its accuracy here: \cref{sec:bound} bounds the
+spectral distance of whatever field these coefficients define. Fix $\beta$
+and a wavenumber $k>0$ with $k^2\in G_\beta$.
+
+\subsection{Port Fourier basis and Rayleigh waves}
+Let $\beta_m=\beta+2\pi m/d$, $\psi_m(y)=d^{-1/2}\ee^{\ii\beta_my}$, truncated to
+$|m|\le M$, $K=2M+1$. With $\kappa_{\mathrm e}=k\rho_{\mathrm e}^{1/2}$ let
+$\gamma_m=(\kappa_{\mathrm e}^2-\beta_m^2)^{1/2}$ with $\Im\gamma_m\ge0$, and
+$\boldsymbol\gamma=\diag(\gamma_m)$.
+
+\begin{assumption}[no Wood anomaly]\label{ass:wood}
+$\gamma_m(k)\ne0$ for all $m\in\ZZ$.
+\end{assumption}
+
+In a vertical background strip, a $\beta$-quasi-periodic Helmholtz solution is
+$u=\sum_m(a_mr_m^{x_p}+b_ml_m^{x_p})$ with
+$r_m^{x_p}=\ee^{\ii\gamma_m(x-x_p)}\psi_m$ and
+$l_m^{x_p}=\ee^{-\ii\gamma_m(x-x_p)}\psi_m$; $(a,b)$ are the right- and
+left-going amplitudes anchored at $x_p$. Moving the anchor by $\ell$ multiplies
+amplitudes by $\mathsf E(\ell)=\diag(\ee^{\ii\gamma_m\ell})$. For a port with
+normal $\pm e_x$, amplitudes map to the Fourier coefficients of (value, normal
+derivative) by $\mathsf C_\pm=\left[\begin{smallmatrix}I&I\\
+\pm\ii\boldsymbol\gamma&\mp\ii\boldsymbol\gamma\end{smallmatrix}\right]$,
+invertible under \cref{ass:wood}.
+
+\subsection{Layer potentials on a rod}\label{sec:layer}
+Let $G^{(\kappa)}$ be the free-space Green function $\frac{\ii}{4}H^{(1)}_0(\kappa|
+\mathbf z-\mathbf z'|)$ and $G^{(\kappa)}_\QP$ the $\ee^{\ii\beta d}$-quasi-periodic
+one. We use the near-image split
+\begin{equation}\label{eq:near-image}
+  G^{(\kappa)}_\QP(\mathbf z,\mathbf z')=\sum_{n=-1}^{1}\ee^{\ii\beta nd}G^{(\kappa)}(\mathbf z,
+  \mathbf z'+nd\,e_y)+G^{(\kappa)}_{\mathrm{far}}(\mathbf z-\mathbf z'),
+\end{equation}
+where $G^{(\kappa)}_{\mathrm{far}}$ is a smooth Helmholtz solution away from the
+images $|n|\ge2$ (\cref{sm:cor-near-image}). For a curve strictly inside a cell,
+a quasi-periodic layer potential is thus three free-space layer potentials plus
+a smooth correction near the closed cell, the structure used in
+\cite{BarnettGreengard2010,BarnettGreengard2011,ChoBarnett2015}; the smooth
+correction and the background are represented together by proxy point sources
+outside the cell, with coefficients fitted to the quasi-periodicity on the top
+and bottom seams. Since \cref{sec:bound} checks only the jumps of an explicit
+field, the densities may be computed with any adequate approximation of
+$G_\QP$; the field evaluated in \cref{sec:bound} uses the split
+\eqref{eq:near-image} and fixed proxies, and all its mismatch enters its own
+jumps.
+
+For a rod $\Omega$ with $C^2$ boundary, outward normal $\nu$, and interior
+wavenumber $\kappa_{\mathrm c}=k\rho_{\mathrm c}^{1/2}$, we represent the field in
+the cell by
+\begin{equation}\label{eq:cell-rep}
+  u=\mathcal S^{(\kappa_{\mathrm e})}_\QP[\omega]+\mathcal D^{(\kappa_{\mathrm e})}_\QP[\tau]
+  +u_{\mathrm b}\ \text{outside }\Omega,\qquad
+  u=\mathcal S^{(\kappa_{\mathrm c})}[\omega]+\mathcal D^{(\kappa_{\mathrm c})}[\tau]
+  \ \text{in }\Omega,
+\end{equation}
+with a finite background Rayleigh field $u_{\mathrm b}$. By the jump relations
+\cite{ColtonKress1983,Kress1991}, the outside-minus-inside jumps of value and
+normal derivative are, with $\eta=(\tau;-\omega)$,
+\begin{equation}\label{eq:jump-operator}
+  \mathscr J_k[\eta;u_{\mathrm b}]=
+  \begin{bmatrix}
+    I+D^{(\kappa_{\mathrm e})}_\QP-D^{(\kappa_{\mathrm c})}&-S^{(\kappa_{\mathrm e})}_\QP+S^{(\kappa_{\mathrm c})}\\
+    T^{(\kappa_{\mathrm e})}_\QP-T^{(\kappa_{\mathrm c})}&I-D'^{(\kappa_{\mathrm e})}_\QP+D'^{(\kappa_{\mathrm c})}
+  \end{bmatrix}\eta
+  +\begin{bmatrix}u_{\mathrm b}\\ \partial_\nu u_{\mathrm b}\end{bmatrix}_{\partial\Omega}.
+\end{equation}
+The transmission conditions are $\mathscr J_k=0$, a second-kind system in which
+the hypersingular parts cancel \cite{DominguezLyonTurc2016}. We discretize it by
+Nystr\"om quadrature with Kress's logarithmic splitting on a uniform parameter
+grid \cite{Kress1991,HaoBarnettMartinssonYoung2014}; $n$ is the number of density
+unknowns. By the spectral representation of $G_\QP$, the potentials of a curve
+lying left (right) of a line $x=x_p$ are purely right- (left-) going there;
+their amplitudes are integrals of $\omega$ and $\tau$ against explicit
+exponentials, and quadrature gives extraction matrices
+$\mathsf F^{\rightarrow}_{x_p},\mathsf F^{\leftarrow}_{x_p}\in\CC^{K\times n}$.
+
+\subsection{Lead cells: scattering matrix and decaying subspace}\label{sec:lead}
+In the right cell $\mathcal C_{0,+}$ with ports $x_{\mathrm L}=x_+$,
+$x_{\mathrm R}=x_++L_+$, the incident field
+$u_{\mathrm b}=\sum_m(a_{\mathrm L,m}r_m^{x_{\mathrm L}}+b_{\mathrm R,m}l_m^{x_{\mathrm R}})$
+determines $\eta$ through $\mathscr J_k[\eta;u_{\mathrm b}]=0$, and the outgoing
+amplitudes are $b_{\mathrm L}=\mathsf E(L_+)b_{\mathrm R}+\mathsf F^{\leftarrow}_{x_{\mathrm L}}\eta$,
+$a_{\mathrm R}=\mathsf E(L_+)a_{\mathrm L}+\mathsf F^{\rightarrow}_{x_{\mathrm R}}\eta$.
+This defines the cell scattering matrix
+$[b_{\mathrm L};a_{\mathrm R}]=[R_{\mathrm L},T_{\mathrm{RL}};T_{\mathrm{LR}},R_{\mathrm R}]
+[a_{\mathrm L};b_{\mathrm R}]$, or equivalently, for the port states
+$z_{\mathrm L}=(a_{\mathrm L};b_{\mathrm L})$ and $z_{\mathrm R}=(a_{\mathrm R};b_{\mathrm R})$,
+\begin{equation}\label{eq:pencil}
+  \mathsf E_{\mathrm L}z_{\mathrm L}=\mathsf E_{\mathrm R}z_{\mathrm R},\qquad
+  \mathsf E_{\mathrm L}=\begin{bmatrix}-R_{\mathrm L}&I\\T_{\mathrm{LR}}&0\end{bmatrix},\quad
+  \mathsf E_{\mathrm R}=\begin{bmatrix}0&T_{\mathrm{RL}}\\I&-R_{\mathrm R}\end{bmatrix}.
+\end{equation}
+The left cell, with its own rod, contrast and width $L_-$, is treated in the
+same way. Floquet solutions satisfy $\mathsf E_{\mathrm L}z=\zeta\mathsf E_{\mathrm R}z$
+with multiplier $\zeta=\ee^{\ii\theta L_+}$. In a gap the continuous
+multipliers pair as $\zeta\leftrightarrow1/\bar\zeta$; the pairing
+$\zeta\leftrightarrow1/\zeta$ of \cite{JolyLiFliss2006} corresponds to
+replacing $\beta$ by $-\beta$ and agrees with the fixed-$\beta$ problem only
+under $y\mapsto-y$ symmetry. Neither implies that the discrete pencil has
+exactly $K$ multipliers inside the unit circle, so this is checked.
+
+An ordered QZ decomposition $\mathsf Q\mathsf E_{\mathrm L}\mathsf Z=\mathsf U_{\mathrm L}$,
+$\mathsf Q\mathsf E_{\mathrm R}\mathsf Z=\mathsf U_{\mathrm R}$ with the $K$
+eigenvalues $|\zeta|<1$ first gives the leading columns $\mathsf Z_+$ and
+\begin{equation}\label{eq:propagation}
+  \mathsf P_+=\mathsf U_{\mathrm R,11}^{-1}\mathsf U_{\mathrm L,11},\qquad
+  \mathsf E_{\mathrm L}\mathsf Z_+=\mathsf E_{\mathrm R}\mathsf Z_+\mathsf P_+ .
+\end{equation}
+Hence the port states $z_j=\mathsf Z_+\mathsf P_+^jc$ of consecutive cells are
+compatible and decay geometrically: the discrete analogue of
+$\mathcal V_+(k)$. On the left, the $K$ eigenvalues $1/\zeta$ inside the unit circle of the pencil
+$(\mathsf E_{\mathrm R},\mathsf E_{\mathrm L})$ give $\mathsf Z_-$ and $\mathsf P_-$ with
+$\mathsf E_{\mathrm R}\mathsf Z_-=\mathsf E_{\mathrm L}\mathsf Z_-\mathsf P_-$.
+Using the whole Schur subspace keeps multiple and nonnormal multipliers; a
+change of basis $\mathsf Z_\pm\mapsto\mathsf Z_\pm W$ only conjugates
+$\mathsf P_\pm$. If the pencil is singular, the cluster dimension is not $K$,
+or the cluster is not separated from the unit circle, the discretization at
+that $k$ is rejected. The discrete Cauchy data spaces are
+$\mathcal G^h_\pm(k)=\operatorname{range}\mathsf C_\pm\mathsf Z_\pm$.
+
+\subsection{Center cell}\label{sec:center}
+\begin{theorem}[center-cell representation]\label{thm:center-rep}
+Let \cref{ass:wood} hold, let $\Omega_0$ be empty or a simply connected $C^2$
+domain strictly inside $\mathcal C_0$, and assume that the whole-plane outgoing
+transmission problem with exchanged interior and exterior wavenumbers is
+solvable for all jump data. If $u\in\mathcal U_0(k)$ is $H^2$ up to the boundary
+in each homogeneous part, then there are densities
+$\tau\in H^{1/2}(\partial\Omega_0)$, $\omega\in H^{-1/2}(\partial\Omega_0)$ and
+unique Rayleigh sequences $(a^-_{0,m})$, $(b^+_{0,m})$ such that $u$ has the form
+\eqref{eq:cell-rep} with
+\[
+  u_{\mathrm b}=u_{\mathrm{hom}}=\sum_{m\in\ZZ}\bigl(a^-_{0,m}r_m^{x_-}+b^+_{0,m}l_m^{x_+}\bigr),
+\]
+the series converging in $H^1(\mathcal C_0)$; the densities are unique as well.
+\end{theorem}
+
+The proof (\cref{sm:proof-center-rep}) follows the complementary-field
+argument of \cite[App.~A]{BarnettGreengard2010}, with the incident port terms
+added; for real positive wavenumbers the uniqueness half of the exchanged
+problem holds automatically. The field $u_{\mathrm{hom}}$ is the part entering
+through the two ports and may be nonzero even if $\Omega_0=\varnothing$, so
+quasi-periodic layer potentials alone do not represent the center field.
+
+After truncation, the center unknown is $\xi=(\eta;a^-_0;b^+_0)\in\CC^{n+2K}$
+($n=0$ for an empty center), and the discrete transmission equations read
+$J(k)\xi=0$. The center field has the port amplitudes
+\[
+  \mathsf Y_-\xi=\begin{bmatrix}a^-_0\\ \mathsf F^{\leftarrow}_{x_-}\eta+\mathsf E(L_0)b^+_0\end{bmatrix},
+  \qquad
+  \mathsf Y_+\xi=\begin{bmatrix}\mathsf F^{\rightarrow}_{x_+}\eta+\mathsf E(L_0)a^-_0\\ b^+_0\end{bmatrix}.
+\]
+
+\subsection{Discrete eigenvalue problem and candidates}\label{sec:nep}
+The discrete form of \cref{prop:reduction} asks for $\xi\ne0$ and $c_\pm\in\CC^K$
+with
+\begin{equation}\label{eq:nep}
+  J(k)\xi=0,\qquad \mathsf Y_\pm\xi=\mathsf Z_\pm c_\pm .
+\end{equation}
+For root finding we need a scalar function that is analytic in $k$ and
+independent of the basis of the stable subspaces; the determinant of the full
+system \eqref{eq:nep} is neither. We therefore eliminate the center densities,
+treat the center as a scattering cell with incident port amplitudes $\mathsf a\in\CC^{2K}$,
+and let $\mathsf T_0(k)$, $\mathsf N_0(k)$ map $\mathsf a$ to the value and
+normal-derivative coefficients of the total field at both ports. With the value
+and normal-derivative blocks $\mathsf C_\pm\mathsf Z_\pm=[\mathsf D_\pm;\mathsf N_\pm]$
+of the stable subspaces, the discrete DtN matrices are
+$\Lambda_\pm=\mathsf N_\pm\mathsf D_\pm^{-1}$, and
+\begin{equation}\label{eq:port-matrix}
+  \mathsf A(k)=\mathsf N_0(k)-\diag\bigl(\Lambda_-(k),\Lambda_+(k)\bigr)\mathsf T_0(k)
+  \in\CC^{2K\times2K}.
+\end{equation}
+On a complex neighborhood of a real interval free of Wood points, if both pencils
+are regular with the stable cluster separated from the rest, and the matrices
+used in the elimination are invertible, then $\det\mathsf A$ is analytic except
+for poles where $\mathsf D_\pm$ or those matrices are singular. A singular
+$\mathsf D_\pm$ is the discrete counterpart of a Dirichlet exceptional value, at
+which \eqref{eq:nep} remains valid. These conditions are monitored only at
+interpolation nodes; they are empirical checks of the search, on which the final
+interval does not depend.
+
+\emph{Root search.} On each piece of the gap we interpolate $f(k)=\det\mathsf A(k)$
+(computed by LU, as log-modulus and phase) at nested Chebyshev--Lobatto nodes of
+degree $4,8,\dots,64$ until the trailing coefficients fall below $10^{-10}$ and two
+off-grid checks agree to $10^{-9}$, bisecting otherwise; roots of the interpolant
+come from the colleague matrix and are polished by Newton steps on the
+interpolant \cite{Boyd2002,ZhaoBarnett2015}. A root is accepted if the scaled
+singular-value ratio $s(\widehat k)=\sigma_{\min}/\sigma_{\max}$ of
+$W_r\mathsf A(\widehat k)W_c$ is below $10^{-11}$; failures fall back to bisection
+on $s(k)$. The candidate output is the right singular vector of the smallest
+singular value, which determines $\mathsf a$, the center densities, and the lead
+coordinates $c_\pm$. Together with $\widehat k$, $\mathsf P_\pm$, $\mathsf Z_\pm$
+and the discretization parameters, these are the only inputs of
+\cref{sec:bound}. A small $s(\widehat k)$ says that a finite system is nearly
+singular, not how far $\widehat k^2$ is from $\sigma(A(\beta))$.
