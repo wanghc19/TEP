@@ -11,7 +11,22 @@
   模态的两个振幅由矩阵 $\bigl[\begin{smallmatrix}1&1\\ \ii\gamma_m&-\ii\gamma_m
   \end{smallmatrix}\bigr]$ 唯一确定（$\gamma_m\ne0$）。取左带中的右行振幅为
   $a^-_{0,m}$（锚定在 $x_-$）、右带中的左行振幅为 $b^+_{0,m}$（锚定在 $x_+$），由此得到
-  $u_{\mathrm{hom}}$，系数列唯一。若 $\Omega_0=\varnothing$，整个 $\mathcal C_0$ 是一条
+  $u_{\mathrm{hom}}$，系数列唯一。\pending{2026-11-06 审稿意见 I6：补级数收敛的论证}
+  记 $f^\pm_m,g^\pm_m$ 为 $u|_{\Gamma_\pm}$ 与 $\partial_xu|_{\Gamma_\pm}$ 关于 $\psi_m$ 的
+  系数，则
+  $a^-_{0,m}=\tfrac12\bigl(f^-_m+g^-_m/(\ii\gamma_m)\bigr)$，
+  $b^+_{0,m}=\tfrac12\bigl(f^+_m-g^+_m/(\ii\gamma_m)\bigr)$。记
+  $\langle\beta_m\rangle:=(1+\beta_m^2)^{1/2}$。$u$ 在端口附近属于 $H^1$，故
+  $\sum_m\langle\beta_m\rangle|f^\pm_m|^2<\infty$、
+  $\sum_m\langle\beta_m\rangle^{-1}|g^\pm_m|^2<\infty$；由假设~\ref{ass:no-wood} 及
+  $|\gamma_m|\sim|\beta_m|$（$|m|\to\infty$），存在 $c>0$ 使 $|\gamma_m|\geq c\langle\beta_m\rangle$，
+  于是 $\sum_m\langle\beta_m\rangle(|a^-_{0,m}|^2+|b^+_{0,m}|^2)<\infty$。另一方面，
+  $r_m^{x_-}$ 在 $x\geq x_-$、$l_m^{x_+}$ 在 $x\leq x_+$ 上不增长，且
+  $|\gamma_m|\leq\langle\beta_m\rangle+\kappa_{\mathrm e}$；对凋落模态
+  $\operatorname{Im}\gamma_m\geq c'\langle\beta_m\rangle$，故
+  $\lVert r_m^{x_-}\rVert_{H^1(\mathcal C_0)}^2,\lVert l_m^{x_+}\rVert_{H^1(\mathcal C_0)}^2
+  \leq C\langle\beta_m\rangle$。不同 $m$ 的项及其一阶导数在每条竖直线上关于 $y$ 正交，所以
+  式~\eqref{eq:center-homogeneous-field} 的两个级数在 $H^1(\mathcal C_0)$ 中收敛。若 $\Omega_0=\varnothing$，整个 $\mathcal C_0$ 是一条
   背景带，$u=u_{\mathrm{hom}}$，结论成立。以下设 $\Omega_0\ne\varnothing$。
 
   \emph{辅助问题。}在 $\partial\Omega_0$ 上，上标 $+$、$-$ 分别表示从柱外、柱内取迹，
@@ -55,13 +70,39 @@
   得 $\mathcal S^{(\kappa_{\mathrm e})}_\QP[\omega]+\mathcal D^{(\kappa_{\mathrm e})}_\QP[\tau]
   =w^+$。加回 $u_{\mathrm{hom}}$ 即得外部表示。
 
-  \emph{唯一性。}若两组表示给出同一个场，则其差表示零场。由第一段的端口系数提取，
-  Rayleigh 系数之差为零。余下的层势之差在柱内外分别为零；由跳跃关系，交换内外区域后
-  得到的互补层势场以 $-\tau$、$\omega$ 为共同的 Dirichlet 与 Neumann 迹，且满足齐次
-  互补系统。在定理末尾的零核条件下互补场为零，再由跳跃关系得 $\tau=\omega=0$。
+  \emph{唯一性。}\pending{2026-11-06 审稿意见 I6：改为由交换问题的唯一性推出}若两组表示
+  给出同一个场，则其差表示零场。由第一段的端口系数提取，Rayleigh 系数之差为零。记密度之差
+  仍为 $\tau,\omega$，$L_{\mathrm e}:=\mathcal S^{(\kappa_{\mathrm e})}_\QP[\omega]
+  +\mathcal D^{(\kappa_{\mathrm e})}_\QP[\tau]$，
+  $L_{\mathrm c}:=\mathcal S^{(\kappa_{\mathrm c})}[\omega]+\mathcal D^{(\kappa_{\mathrm c})}[\tau]$，
+  则 $L_{\mathrm e}$ 在柱外、$L_{\mathrm c}$ 在柱内为零。由跳跃关系（$G_\QP-G$ 在
+  $\partial\Omega_0$ 附近光滑，跳跃与自由空间层势相同），
+  $L_{\mathrm e}^-=-\tau$、$\partial_\nu L_{\mathrm e}^-=\omega$，
+  $L_{\mathrm c}^+=\tau$、$\partial_\nu L_{\mathrm c}^+=-\omega$。令 $v^-:=L_{\mathrm e}$
+  于 $\Omega_0$、$v^+:=-L_{\mathrm c}$ 于 $\RR^2\setminus\overline{\Omega_0}$，则 $v$ 是
+  交换问题的解，出射，且两种跳跃都为零。由交换问题的唯一性 $v=0$，故
+  $\tau=-v^-=0$、$\omega=\partial_\nu v^-=0$。这是 Barnett 与 Greengard 的互补场论证
+  \cite[附录 A]{BarnettGreengard2010}（源于 \cite{ColtonKress1983}）在中心胞元上的版本；
+  这里多出的是端口 Rayleigh 项，它已在上一步由系数提取消去。
+
+  \emph{交换问题的唯一性。}设 $v$ 满足交换问题且跳跃为零。在 $\Omega_0$ 上用 Green 第一
+  恒等式，
+  \begin{align*}
+    \int_{\partial\Omega_0}\overline{v^-}\,\partial_\nu v^-\dd s
+    =\int_{\Omega_0}(|\nabla v|^2-\kappa_{\mathrm e}^2|v|^2)\dd\mathbf z
+  \end{align*}
+  为实数。迹相等，故
+  $\int_{\partial\Omega_0}\overline{v^+}\,\partial_\nu v^+\dd s$ 也为实数。在
+  $B_R\setminus\overline{\Omega_0}$ 上用 Green 第一恒等式，得
+  \begin{align*}
+    \operatorname{Im}\int_{\partial B_R}\overline v\,\partial_rv\dd s=0 .
+  \end{align*}
+  由 Rellich 引理
+  \cite{ColtonKress1983}，$v^+=0$。于是 $v^-$ 的 Cauchy 数据为零，把它在柱外延拓为零得到
+  $\kappa_{\mathrm e}$ 的 Helmholtz 解，由唯一延拓 $v^-=0$。
 \end{proof}
 
-\pending{2026-11-06 新增：近像分解推论，正文第~\ref{subsec:layer-potentials}~小节引用}
+\pending{2026-11-06 审稿意见 M3：第 (2) 条的密度空间与区域写精确}\pending{2026-11-06 新增：近像分解推论，正文第~\ref{subsec:layer-potentials}~小节引用}
 下面的推论说明，定理中的准周期层势可以改写为近像层势加光滑修正，这正是实现中评价场的结构
 （式~\eqref{eq:mfs-field}）。记号同第~\ref{subsec:layer-potentials}~小节。
 
@@ -72,8 +113,10 @@
     \item 式~\eqref{eq:near-image-split} 定义的 $G_{\mathrm{far}}$ 在
       $E:=\RR^2\setminus\{nd\,e_y:|n|\geq2\}$ 上实解析，并满足
       $(\Delta+\kappa^2)G_{\mathrm{far}}=0$。
-    \item 设 $\overline{\Omega}\subset\RR\times I_d$，$\tau,\omega$ 为 $\partial\Omega$ 上的
-      可积密度。则在 $\Omega$ 外有
+    \item 设 $\overline{\Omega}\subset\RR\times I_d$，$\tau\in H^{1/2}(\partial\Omega)$，
+      $\omega\in H^{-1/2}(\partial\Omega)$，$\delta:=d/2-\max_{\partial\Omega}|y|>0$，
+      $S_\delta:=\RR\times(-d/2-\delta,d/2+\delta)$。则在
+      $S_\delta\setminus\bigl(\partial\Omega\cup(\partial\Omega\pm d\,e_y)\bigr)$ 上有
       \begin{align*}
         \mathcal S_\QP[\omega]+\mathcal D_\QP[\tau]
         &=\sum_{n=-1}^{1}q^n\bigl(\mathcal S[\omega]+\mathcal D[\tau]\bigr)(\cdot-nd\,e_y)
@@ -82,8 +125,7 @@
       其中 $u_{\mathrm{corr}}(\mathbf z):=\int_{\partial\Omega}\bigl(
       G_{\mathrm{far}}(\mathbf z-\mathbf z')\omega(\mathbf z')
       +\partial_{\nu'}[G_{\mathrm{far}}(\mathbf z-\mathbf z')]\tau(\mathbf z')\bigr)\dd s'$
-      在带 $\RR\times(-d/2-\delta,d/2+\delta)$ 上光滑并满足 Helmholtz 方程，
-      $\delta:=d/2-\max_{\partial\Omega}|y|>0$。
+      （积分理解为对偶配对）在整个 $S_\delta$ 上光滑并满足 Helmholtz 方程。
     \item 特别地，在定理~\ref{thm:center-cell-representation} 的条件下，$u$ 在
       $\mathcal C_0\setminus\overline{\Omega_0}$ 中等于近像层势、$u_{\mathrm{corr}}$ 与
       $u_{\mathrm{hom}}$ 三项之和，其中 $u_{\mathrm{corr}}$ 可延拓为闭胞元某邻域内的
@@ -102,8 +144,10 @@
   $\int_{\partial\Omega}G(\mathbf z,\mathbf z'+nd\,e_y)\omega(\mathbf z')\dd s'
   =\mathcal S[\omega](\mathbf z-nd\,e_y)$（双层势同理），即得分解式。若 $\mathbf z$ 在所给
   带内、$\mathbf z'\in\partial\Omega$，则 $|y-y'|<(d/2+\delta)+(d/2-\delta)=d$，故 $\mathbf z-\mathbf z'$ 与
-  $\{nd\,e_y:|n|\geq2\}$ 的距离大于 $d$。由 (1)，被积函数对 $\mathbf z$ 光滑并满足 Helmholtz 方程，
-  可以在积分号下求导，故 $u_{\mathrm{corr}}$ 亦然。
+  $\{nd\,e_y:|n|\geq2\}$ 的距离大于 $d$。由 (1)，核 $G_{\mathrm{far}}(\mathbf z-\mathbf z')$ 在
+  $S_\delta\times\partial\Omega$ 的邻域上联合光滑，且对 $\mathbf z$ 满足 Helmholtz 方程；
+  它与 $H^{\pm1/2}$ 中密度的对偶配对可以在配对下对 $\mathbf z$ 求导，故
+  $u_{\mathrm{corr}}$ 在 $S_\delta$ 上光滑并满足 Helmholtz 方程。
 
   (3) 由定理~\ref{thm:center-cell-representation}，在 $\mathcal C_0\setminus\overline{\Omega_0}$
   中 $u=\mathcal S_\QP[\omega]+\mathcal D_\QP[\tau]+u_{\mathrm{hom}}$，对层势部分用 (2)。

@@ -229,9 +229,9 @@ $\mathscr J_k[\eta;u_{\mathrm b}]=0$（$\partial\Omega=\partial\Omega_+$），�
 右行，故出射振幅为
 \begin{align}
   b_{\mathrm L}
-  &=\mathsf E(L)b_{\mathrm R}+\mathsf F^{\leftarrow}_{x_{\mathrm L}}\eta,
+  &=\mathsf E(L_+)b_{\mathrm R}+\mathsf F^{\leftarrow}_{x_{\mathrm L}}\eta,
   &a_{\mathrm R}
-  &=\mathsf E(L)a_{\mathrm L}+\mathsf F^{\rightarrow}_{x_{\mathrm R}}\eta.
+  &=\mathsf E(L_+)a_{\mathrm L}+\mathsf F^{\rightarrow}_{x_{\mathrm R}}\eta.
   \label{eq:cell-outgoing}
 \end{align}
 代入 $\eta=\mathsf B_+(a_{\mathrm L};b_{\mathrm R})$ 即得单胞散射矩阵
@@ -265,8 +265,12 @@ Floquet 解满足 $z_{\mathrm R}=\lambda z_{\mathrm L}$，于是
   \label{eq:one-cell-gep}
 \end{align}
 $\lambda=\ee^{\ii\theta L_\pm}$ 是平移一个周期的 Floquet 乘子，而不是特征值 $k^2$。在谱隙中
-没有 $|\lambda|=1$ 的乘子；连续问题中乘子按 $(\lambda,1/\lambda)$ 成对出现
-\cite[定理~6.1]{JolyLiFliss2006}，离散问题中应有 $K$ 个乘子在单位圆内、$K$ 个在外。
+没有 $|\lambda|=1$ 的乘子。\pending{2026-11-06 审稿意见 I5：原稿写 $(\lambda,1/\lambda)$ 成对}固定实 $\beta$ 与实 $k$ 时，由能流守恒，
+连续问题的乘子按 $(\lambda,1/\bar\lambda)$ 成对出现。\cite[定理~5.1, 6.1]{JolyLiFliss2006}
+中 $(\lambda,1/\lambda)$ 的成对关系针对横截面有界、没有横向 Bloch 相位的波导；在本文的
+设定下，它对应于同时把 $\beta$ 换成 $-\beta$，只在介质关于 $y\mapsto-y$ 对称时才与固定
+$\beta$ 的问题一致。离散问题不由连续的成对关系推出“恰有 $K$ 个乘子在单位圆内”：
+这几点需要对每个矩阵对单独检查（见下一段末尾）。
 
 \paragraph{衰减子空间与传播矩阵.}
 对右侧矩阵对作有序 QZ 分解
@@ -337,8 +341,13 @@ $\mathcal G^h_\pm(k)$ 是 $\mathcal G_\pm(k)$ 在 $|m|\leq M$ 的 Fourier 系数
     \label{eq:center-homogeneous-field}
   \end{align}
   级数在 $H^1(\mathcal C_0)$ 中收敛。$\Omega_0=\varnothing$ 时只保留 $u_{\mathrm{hom}}$。
-  若交换内外区域后的齐次互补层势系统只有零解，则密度也唯一。
+  密度 $\tau,\omega$ 也唯一。
 \end{theorem}
+
+\pending{2026-11-06 审稿意见 I6：删去原稿“若齐次互补层势系统只有零解，则密度也唯一”的附加条件（它由交换问题的唯一性推出），并补充交换问题唯一性的说明}
+对实正波数 $\kappa_{\mathrm e},\kappa_{\mathrm c}$，交换问题的唯一性部分自动成立
+（附录~\ref{app:center-cell}，由 Rellich 引理与唯一延拓）；定理中保留的只是它对任意跳跃
+数据的可解性。
 
 证明见附录~\ref{app:center-cell}。$u_{\mathrm{hom}}$ 是从两侧端口入射的部分：$a^-_0$
 是在 $\Gamma_-$ 处右行进入中心胞元的振幅，$b^+_0$ 是在 $\Gamma_+$ 处左行进入的振幅；
@@ -458,12 +467,17 @@ $\Lambda_\pm:=\mathsf N_\pm\mathsf D_\pm^{-1}$（模态坐标中的离散 DtN �
 \end{align}
 $\mathsf A(k)q=0$ 表示中心场的端口 Cauchy 数据落在两侧稳定子空间中，即
 式~\eqref{eq:discrete-nep} 的端口形式。$\Lambda_\pm$ 在 $\mathsf Z_\pm\mapsto\mathsf Z_\pm W$
-下不变，所以 QZ 基的任意性不影响它；在公共谱隙内，稳定子空间随 $k$ 解析变化，
-$\gamma_m$ 没有分支点，故 $\det\mathsf A(k)$ 除 $\mathsf D_\pm$ 奇异处的极点外是 $k$ 的解析
-函数。若中心胞元的散射问题唯一可解且 $\mathsf D_\pm$ 可逆，则 $\mathsf A(k)$ 与 $\mathsf M(k)$ 的核
-一一对应；$\mathsf D_\pm$
-奇异对应于连续问题中半波导 Dirichlet 问题的例外值（第~\ref{subsec:dtn-form}~小节），
-此时 $\mathsf M(k)$ 仍然适用。实现监测每个节点上 $\mathsf D_\pm$ 的倒条件数以排除极点。
+下不变，所以 QZ 基的任意性不影响它。\pending{2026-11-06 审稿意见 I9：原稿由“公共谱隙内稳定子空间解析”直接推出离散行列式解析，混用了连续与离散对象；改为有限维条件}
+在一个复区间邻域 $\mathcal N$ 上，若 (a) 各矩阵元关于 $k$ 解析（$\gamma_m$ 在 $\mathcal N$
+内没有分支点，即 $\mathcal N$ 不含 Wood 点）；(b) 两侧矩阵对正则，所选的 $K$ 维稳定簇与其余
+特征值在 $\mathcal N$ 上保持分离；(c) 消去密度与中心未知量所用的矩阵可逆，则稳定子空间
+（Riesz 投影的值域）随 $k$ 解析变化，$\Lambda_\pm$ 是亚纯的，$\det\mathsf A(k)$ 在
+$\mathcal N$ 上除 $\mathsf D_\pm$ 奇异处与 (c) 中矩阵奇异处的极点外解析。若中心胞元的离散
+散射问题唯一可解且 $\mathsf D_\pm$ 可逆，则 $\mathsf A(k)$ 与 $\mathsf M(k)$ 的核一一对应；
+$\mathsf D_\pm$ 奇异是连续问题中半波导 Dirichlet 例外值（第~\ref{subsec:dtn-form}~小节）的
+离散对应物，但二者不必在同一个 $k$ 出现，此时 $\mathsf M(k)$ 仍然适用。上述条件以及“节点
+之间没有极点”都没有被证明：实现只在插值节点上监测 $\mathsf D_\pm$ 的倒条件数与 QZ 簇的
+分离，这些是候选搜索的经验检查。最终区间不依赖它们。
 
 \paragraph{候选定位：行列式求根.}
 \pending{2026-11-06：主搜索由最小奇异值谷底搜索改为行列式求根；原方法保留为确认分数与回退}
@@ -474,7 +488,7 @@ $\gamma_m$ 没有分支点，故 $\det\mathsf A(k)$ 除 $\mathsf D_\pm$ 奇异�
   \label{eq:candidate-score}
 \end{align}
 （$W_r,W_c$ 为平衡各模态尺度的对角权重）在根附近呈 V 形，不可微，按区间逐层加密定位
-需要很多次矩阵组装。$f(k):=\det\mathsf A(k)$ 是解析的，可以用 Boyd 的 Chebyshev 求根
+需要很多次矩阵组装。在上述条件下 $f(k):=\det\mathsf A(k)$ 是解析的，可以用 Boyd 的 Chebyshev 求根
 方法~\cite{Boyd2002}，这也是文献~\cite{ZhaoBarnett2015} 对 Fredholm 行列式所用的方法：
 \begin{enumerate}
   \item 在公共谱隙的每一段上，于嵌套的 Chebyshev--Lobatto 节点处计算 $f$（LU 分解，取

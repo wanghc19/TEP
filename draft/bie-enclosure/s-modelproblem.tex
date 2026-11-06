@@ -176,8 +176,10 @@ Fourier 展开 $\lVert\nabla u\rVert^2\geq\lVert\partial_yu\rVert^2\geq b_\beta^
   定理~3.5\cite{Fliss2013}。一般情形只证右侧：设 $Au=\lambda u$，$\lambda\in G_\beta$，
   $g:=\operatorname{dist}(\lambda,\sigma(A_+))>0$。取只依赖 $x$ 的截断 $\eta$，在
   $\mathcal W_+$ 内由 $0$ 过渡到 $1$，则 $w=\eta u$ 满足 $(A_+-\lambda)w=f$，
-  $f=-\rho_+^{-1}(2\eta'\partial_xu+\eta''u)$ 的 $x$ 支撑有界。对有界、斜率
-  $\lvert h'\rvert\leq\alpha$、$\lvert h''\rvert\leq\alpha/\ell$ 的权 $h(x)$，
+  $f=-\rho_+^{-1}(2\eta'\partial_xu+\eta''u)$ 的 $x$ 支撑有界。\pending{2026-11-06 审稿意见 I7：原稿对一般有界权写 $\lVert f\rVert$，应为 $\lVert\ee^hf\rVert$；改为取在 $f$ 的支撑上为零的权}
+  对在 $f$ 的 $x$ 支撑上为零、有界、斜率
+  $\lvert h'\rvert\leq\alpha$、$\lvert h''\rvert\leq\alpha/\ell$ 的权 $h(x)$（于是
+  $\ee^hf=f$；例如在支撑右侧以斜率 $\alpha$ 增长、在远处截平并光滑化，$\ell$ 与截平位置无关），
   $\ee^{h}(A_+-\lambda)\ee^{-h}=A_+-\lambda+\rho_+^{-1}(2h'\partial_x+h''-h'^2)$。由谱定理
   $\lVert(A_+-\lambda)^{-1}\rVert\leq g^{-1}$、
   $\lVert A_+^{1/2}(A_+-\lambda)^{-1}\rVert^2\leq g^{-1}+\lambda g^{-2}$，扰动项相对于
@@ -188,8 +190,10 @@ Fourier 展开 $\lVert\nabla u\rVert^2\geq\lVert\partial_yu\rVert^2\geq b_\beta^
     \label{eq:decay-condition}
   \end{align}
   $q(\alpha)<1$ 时 Neumann 级数给出 $\lVert\ee^{h}w\rVert_{\mathcal H_+}\leq
-  \lVert f\rVert_{\mathcal H_+}/(g(1-q))$，且界与 $h$ 的远端截断无关；令截断趋于无穷，
-  得 $\ee^{\alpha x}u\in H^2$ 于右侧远处。左侧同理。
+  \lVert\ee^hf\rVert_{\mathcal H_+}/(g(1-q))=\lVert f\rVert_{\mathcal H_+}/(g(1-q))$，且界与
+  $h$ 的远端截断无关。由 $(A_+-\lambda)(\ee^hw)=f-\rho_+^{-1}(2h'\partial_x+h''-h'^2)\ee^hw$
+  与同一预解式界，$\ee^hw$ 的图范数也有与截断无关的界；令截断趋于无穷，得
+  $\ee^{\alpha x}u\in H^2$ 于右侧远处。左侧同理。
 \end{proof}
 
 命题~\ref{prop:discrete-spectrum-in-gap} 不保证 $\sigma(A(\beta))\cap G_\beta$ 非空。

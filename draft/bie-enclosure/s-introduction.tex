@@ -24,10 +24,42 @@ Green 函数自动满足纵向准周期条件，因而能以很少的未知量�
 非线性特征值问题中，离散矩阵近乎奇异只说明某个有限维方程近似可解
 \cite{GuettelTisseur2017}；它并不直接给出连续算子特征值的误差，更不能证明连续谱点的
 存在。有限元框架中已有针对光子晶体特征值的后验估计
+\cite{Giani2013,EngstromGianiGrubisic2016}。
+
+\paragraph{与已有谱包含方法的关系.}
+\pending{2026-11-06 审稿意见 I10：按已有文献重写定位。Moler--Payne 1968、Barnett--Greengard 2011 已按原文核对；Descloux--Tolley 1983 无法获取原文，其内容依据 Betcke 2007 第 2 节（含引理 2.1）的转述，故正文与 Betcke 2007 并引；Barnett--Hassell 2011、Zimmermann--Mertins 1995、Davies--Plum 2004 依据原文摘要}
+用精确满足方程的试验场的边界缺陷包含特征值，是特解法的经典思路\cite{MolerPayne1968}：Betcke 与 Trefethen
+用 Helmholtz 场在边界上的缺陷给出有界区域特征值的包含\cite{BetckeTrefethen2005}；
+Descloux 与 Tolley 把它推广到区域分解，各子域用局部精确解，特征值误差由子域间值与梯度的失配控制
+\cite{DesclouxTolley1983}（另见\cite[引理~2.1]{Betcke2007}），这与本文“分片精确、只剩界面跳跃”的结构最接近，
+Betcke 用广义奇异值分解改进了这一方法的数值稳定性\cite{Betcke2007}；Barnett、Hassell
+与 Tacy 对 Neumann 问题给出边界残量到最近谱点距离的界\cite{BarnettHassellTacy2018}，Dirichlet 问题的
+对应结果见\cite{BarnettHassell2011}。
+在可靠计算方面，Dahne 与 Salvy 先任意求出候选，再用区间算术和 Taylor 模型严格界住
+边界残量与内部范数，得到 Laplace 特征值的窄区间\cite{DahneSalvy2020}；本文把候选搜索与
+可靠评价分开的做法与之相同。Temple、Kato--Temple 与 Lehmann--Goerisch 等经典包含方法
+\cite{Temple1928,NakaoPlumWatanabe2019} 要求试验函数属于算子或二次型的定义域；本文的
+分片场在界面上不连续，不满足这一要求，所以需要估计界面跳跃经过预解式后的作用。这些方法
+与计算机辅助证明本身也能处理无界区域和本质谱：Lehmann--Goerisch 方法已推广到任意本质谱下的孤立特征值
+\cite{ZimmermannMertins1995}，并可避免谱隙中的谱污染\cite{DaviesPlum2004}；已有工作用区域分解包含无限波导的特征值
+\cite{BehnkeMertinsPlumWieners2000}，用计算机辅助证明给出光子晶体线缺陷的谱点包含和
+带隙\cite{BrownHoangPlumWood2009,HoangPlumWieners2009}；第~\ref{sec:results}~节的 FEM
+对照即属于这一类。
+
+上述特解法结果都针对有界区域；本文的问题横向无界，离散场在半波导中由传播关系逐胞元
+生成，界面除材料界面外还有无穷多条人工竖直界面与接缝。本文的贡献是在这一设定下给出
+完整的链条：全部实际界面跳跃的显式分组常数，传播矩阵的尾界，独立的公共谱隙检验，
+以及计入舍入、可复核的整个计算。近像加光滑修正、代理表示等离散部件
+\cite{BarnettGreengard2010,BarnettGreengard2011,ChoBarnett2015} 和绕过 Dirichlet 例外值的约化
+\cite{FlissKlindworthSchmidt2015} 都已有先例，本文不把它们作为新内容；也不声称继承
+\cite{BarnettHassell2011,BarnettHassellTacy2018} 一类结果在高频下的尖锐性。
+\begin{workonly}
+原稿：有限元框架中已有针对光子晶体特征值的后验估计
 \cite{Giani2013,EngstromGianiGrubisic2016}；Barnett、Hassell 与 Tacy 则表明，对有界
 光滑区域上的 Neumann 问题，试验函数的边界不相容量可以直接控制到最近谱点的距离
 \cite{BarnettHassellTacy2018}。本文的问题横向无界、含尖锐材料界面，且离散场在半波导中
 由传播关系逐胞元生成，这些结果都不能直接套用。
+\end{workonly}
 
 \paragraph{本文的工作.}
 本文研究两侧为周期介质（左右可以不同）、中心为局部缺陷的二维条带波导。介质采用分片
@@ -37,7 +69,8 @@ Green 函数自动满足纵向准周期条件，因而能以很少的未知量�
   \item \emph{以 Cauchy 数据为主线的中心约化}（第~\ref{sec:reduction}~节）。把半波导
     的全部有限能量解在人工界面上的 Cauchy 数据收集为一个子空间，证明导模等价于中心胞元
     中 Cauchy 数据落在两个子空间中的非零解。这一表述不要求半波导 Dirichlet 问题唯一
-    可解，DtN 形式只是其子空间为图像时的特例。
+    可解，DtN 形式只是其子空间为图像时的特例。Robin-to-Robin 透明边界条件
+    \cite{FlissKlindworthSchmidt2015} 从另一途径避开了这些例外值。
   \item \emph{边界积分与端口 Rayleigh 展开的离散}（第~\ref{sec:discretization}~节）。
     周期胞元用准周期层势和传输边界积分方程离散，并在端口用 Rayleigh 振幅表示，得到
     单胞散射矩阵；有序 QZ 分解给出衰减子空间与胞元传播矩阵。中心胞元的场由层势与均匀
@@ -45,7 +78,7 @@ Green 函数自动满足纵向准周期条件，因而能以很少的未知量�
     问题。消去中心未知量后得到端口约化矩阵 $\mathsf A(k)$；它除极点外解析，候选
     $\widehat k$ 由 $\det\mathsf A(k)$ 的 Chebyshev 插值求根得到\cite{Boyd2002,ZhaoBarnett2015}。
   \item \emph{谱距离定理}（第~\ref{sec:error}~节）。用候选系数和连续核在整个条带上构造
-    一个分片场，它逐片精确满足 Helmholtz 方程，只在材料界面和人工竖直界面上留有跳跃。
+    一个分片场，它逐片精确满足 Helmholtz 方程，只在材料界面、人工竖直界面和上下接缝上留有跳跃。
     把界面按几何分为若干组，对每组用领子上的迹估计和 Green 恒等式，证明
     $\operatorname{dist}(\widehat k^2,\sigma(A(\beta)))$ 受各组跳跃的加权 $L^2$ 范数
     $\varepsilon_g$ 与迹常数 $C_g$ 的乘积之和控制（附录~\ref{app:trace}）。这一结论关于整个谱
@@ -62,8 +95,9 @@ $\operatorname{dist}(\widehat k^2,\sigma(A(\beta)))$ 受这些跳跃的加权 $L
     矩阵的惯性测试和 Bloch 能带关于相位的 Lipschitz 界，证明两侧引线的公共谱隙。区间落在其中时，
     其中至少有一个导模特征值。
   \item \emph{数值例子}（第~\ref{sec:results}~节）。对中心为星形柱、两侧为不同三叶柱
-    引线的例子，一次完整运行在 $14$ 分钟内给出全宽 $2.74\times10^{-11}$ 的可靠波数区间，
-    其中至少有一个导模特征值；区间约为同一问题 FEM 区间宽度的 $1/163$。
+    引线的例子，一次完整运行在 $14$ 分钟内给出 $\mu=k^2$ 的可靠区间，全宽
+    $2.74\times10^{-11}$（对应波数区间全宽 $8.8\times10^{-12}$），其中至少有一个导模特征值；
+    $\mu$ 区间约为同一问题 FEM 区间宽度的 $1/163$。\pending{2026-11-06 审稿意见 M1：原稿把 $\mu$ 区间的宽度写成波数区间的宽度}
 \begin{workonly}
 原稿第 4 项：“\emph{可计算的界}。说明如何计算材料界面与人工界面上的跳跃积分，如何用传播
 矩阵的收缩性控制无穷多个周期胞元的贡献，以及如何把各输入替换为单侧可靠界。”

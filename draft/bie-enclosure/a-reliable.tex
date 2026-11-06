@@ -10,10 +10,14 @@ $\widehat k$ 成立；各小节的数值见第~\ref{sec:results}~节。
 \label{app:reliable-ball}
 
 \paragraph{固定数据是精确数.}
-候选 $\widehat k$、密度样本、代理系数、传播矩阵与几何参数都以 IEEE 754 双精度浮点数（binary64）保存；它们被
+\pending{2026-11-06 审稿意见 I4：几何参数决定目标算子，不能与试验场的系数同样处理；分开说明}
+候选 $\widehat k$、密度样本、代理系数与传播矩阵都以 IEEE 754 双精度浮点数（binary64）保存；它们被
 视为精确的二进制有理数，由它们按第~\ref{subsec:raw-field}~小节定义的场就是定理所针对的
-场。$\pi$、相位 $q=\ee^{\ii\beta d}$、波数 $\widehat k\sqrt{\rho}$、Rayleigh 指数 $\gamma_m$
-与特殊函数按精确公式计算，不使用它们的浮点近似。因此保存数据时的舍入不需要估计：它
+场。几何参数不同：它们决定材料分区和目标算子 $A(\beta)$。本文的目标几何由保存的
+binary64 参数精确定义（第~\ref{subsec:results-model}~小节），缺陷 $\overline\varepsilon_g$ 与
+质量下界 $\underline U$ 都在这一几何上计算，归一化因子等由参数在球算术中现算；谱隙判据与
+迹常数对同时包含 binary64 值与十进制值的参数球计算，因而对这一几何成立。$\pi$、相位 $q=\ee^{\ii\beta d}$、波数 $\widehat k\sqrt{\rho}$、Rayleigh 指数 $\gamma_m$
+与特殊函数按精确公式计算，不使用它们的浮点近似。因此保存场数据时的舍入不需要估计：它
 只改变“是哪一个场”，而定理对任意固定的场成立。
 
 \paragraph{浮点提出，球算术判定.}
@@ -57,6 +61,21 @@ $P_I$ 中各部分的符号再求 $V_I$，可保留材料跳跃中约十二位�
     截断误差另计；
   \item 局部项（连续密度值与背景波）：有限和，按 Taylor 余项计入。
 \end{itemize}
+\pending{2026-11-06 审稿意见 B1：补写中心面板误差的组成、权的延拓与 $V_I$ 的计算}
+中心面板的一致误差按这三部分分别计算再相加：
+$e_I=e_{\mathrm{self}}+e_{\mathrm{loc}}+e_{\mathrm{sm}}+e_{\mathrm{comb}}$。$e_{\mathrm{self}}$
+是自作用部分的误差（含式~\eqref{eq:kress-error} 与其插值误差）；$e_{\mathrm{loc}}$ 是局部项
+的 Taylor 余项；光滑部分在 $L=48$ 个节点上插值、取 $\varrho=4.5$，$e_{\mathrm{sm}}$ 即
+式~\eqref{eq:chebyshev-panel-error} 的三项，其中 $e_{\mathrm{node}}$ 含展开的截断尾项与节点球
+的半径；$e_{\mathrm{comb}}$ 是三部分系数相加后取球心所舍去的半径之和。取球心后 $P_I$ 的
+系数是精确的浮点数，$V_I=\int_I\lVert P_I\rVert^2$ 用单项式的精确积分
+$\int_{-1}^1u^{i+j}\dd u$ 在球算术中求出，再用 Gauss--Legendre 求积复核。
+
+式~\eqref{eq:panel-defect-bound} 中的权 $|\boldsymbol r'|^{1/2}$ 与法向导数中的
+$1/|\boldsymbol r'|$ 在复参数上按 $s(t):=x'(t)^2+y'(t)^2$ 的主支 $s^{1/4}$、$s^{-1/2}$ 延拓。
+在每个所用的复条带上用球算术验证 $\operatorname{Re}s\geq\underline s>0$，所以主支解析，且
+$|s^{1/4}|\leq\overline v^{1/2}$、$|s^{-1/2}(y'\partial_x-x'\partial_y)|\leq\overline v/\underline s^{1/2}$
+乘梯度的界，其中 $\overline v\geq(|x'|^2+|y'|^2)^{1/2}$ 是条带上的上界。
 全部运算用球算术并向外舍入，因此所得上界包含舍入误差。对半波导，式~\eqref{eq:panel-defect-bound}
 对每个实际状态逐一应用，再按式~\eqref{eq:boundary-propagation-tail}（以解析包络代替
 $\Theta_\pm$）加尾项。
@@ -75,20 +94,51 @@ $A,B$ 在源条带 $|\operatorname{Im}s|<a$ 上分别以 $H_A,H_B$ 为界，取 
 分支。这些检查与 $H_A,H_B$ 都在复球算术中完成。
 
 \paragraph{引线的有限部分与尾项.}
-引线面板上的跳跃线性依赖于状态：$f=F_I(t)v_j$，$v_j=\mathsf P^jc$。若多项式矩阵 $P_I$
-满足 $\sup_I\lVert F_I-P_I\rVert\leq e_I$，则对前 $N_{\mathrm{cell}}$ 个胞元，
+\pending{2026-11-06 审稿意见 I2：原式只用一个 $e_I$ 却漏了状态范数因子；改为实现所用的逐状态写法。尾项常数改为与实现一致的解析包络}
+引线面板 $I$ 上的跳跃线性依赖于状态：$f_{I,j}=F_I(t)v_j$，$v_j=\mathsf P^jc$。对每个实际
+状态 $j<N_{\mathrm{cell}}$，直接对 $f_{I,j}$ 构造多项式 $P_{I,j}$ 与一致误差
+$e_{I,j}\geq\sup_{t\in I}\lVert f_{I,j}-P_{I,j}\rVert$（式~\eqref{eq:chebyshev-panel-error}），
+记 $V_{I,j}:=\int_I\lVert P_{I,j}\rVert^2\dd t$。由三角不等式，
 \begin{align}
-  \Bigl(\sum_{j<N_{\mathrm{cell}}}\lVert F_Iv_j\rVert_{L^2(I)}^2\Bigr)^{1/2}
-  &\leq\sqrt{V_I}+\sqrt{|I|}\,e_I\Bigl(\sum_{j<N_{\mathrm{cell}}}\lVert v_j\rVert^2\Bigr)^{1/2},
-  &V_I&:=\sum_{j<N_{\mathrm{cell}}}\int_I\lVert P_I(t)v_j\rVert^2\,\dd t .
+  \sum_{j<N_{\mathrm{cell}}}\lVert f_{I,j}\rVert_{L^2(I)}^2
+  &\leq\sum_{j<N_{\mathrm{cell}}}\bigl(\sqrt{V_{I,j}}+\sqrt{|I|}\,e_{I,j}\bigr)^2 .
   \label{eq:lead-finite-bound}
 \end{align}
-证明只需把 $j<N_{\mathrm{cell}}$ 的面板函数放进 Hilbert 直和，用三角不等式。同一个多项式
-矩阵还给出尾项常数：
-$\Theta_\pm\leq\sum_I\bigl(\bigl(\int_I\lVert P_I\rVert_F^2\bigr)^{1/2}+\sqrt{|I|}\,e_I^F\bigr)^2$，
-$e_I^F$ 为 Frobenius 范数下的一致误差。代入式~\eqref{eq:boundary-propagation-tail}，
-$\lVert\mathsf P_\pm\rVert_2\leq\lVert\mathsf P_\pm\rVert_F<1$ 时取 $p=1$。每侧选最小的
-$N_{\mathrm{cell}}$，使尾项不超过有限部分的 $10^{-6}$ 倍。
+尾项常数取 $\Theta_\pm=B_\pm^2$，其中 $B_\pm\geq\lVert\mathcal L_\pm\rVert$ 由各组的解析
+包络给出：代理点源的行范数、近像层势与自作用对数核在面板上的上界，均在球算术中计算，
+不需要对 $K$ 个基向量逐列评价。代入式~\eqref{eq:boundary-propagation-tail}，
+$\lVert\mathsf P_\pm\rVert_2\leq\lVert\mathsf P_\pm\rVert_F<1$ 时取 $p=1$。每组每侧选最小的
+$N_{\mathrm{cell}}$，使尾项不超过有限部分下界的 $10^{-6}$ 倍，并用 $N_{\mathrm{cell}}+10$
+复核尾项的衰减。
+
+\pending{2026-11-06 审稿意见 B1：写出包络 $B_\pm$ 的构成}
+包络按组由逐点上界组成（每侧一套，对单位范数的状态）：
+\begin{align*}
+  B_{\mathrm{mat}}&=\sqrt{2\pi}\,\bigl[(S_{\mathrm{self}}+S_{\mathrm{loc}}+w\,S_{\mathrm{near}})\lVert\mathsf G\rVert+w\,S_{\mathrm{pt}}\bigr],
+  &B_{\mathrm{wall}}&=(1+r)\,S_{\mathrm{face}},
+  &B_{\mathrm{seam}}&=2\,S_{\mathrm{face}},
+\end{align*}
+$S_{\mathrm{face}}:=(S_{\mathrm{ord}}+S_{\mathrm{inc}})\lVert\mathsf G\rVert+S_{\mathrm{pt}}$。
+其中 $\mathsf G$ 把状态映到密度系数；$S_{\mathrm{near}}$、$S_{\mathrm{ord}}$、$S_{\mathrm{pt}}$ 分别
+是近像层势（材料目标）、普通层势（墙与接缝目标，含三个像）与 $480$ 个点源的上界，都由
+Helmholtz 基本解及其一、二阶导数在相应距离范围上的显式上界（由 $J_0$、$Y_0$ 的幂级数逐项
+估计）乘以密度系数或点源系数的范数得到；$S_{\mathrm{self}}$ 是自作用对数核在 $64$ 个面板上
+（源条带 $|\operatorname{Im}s|<0.16$）的上界的最大值；$S_{\mathrm{loc}}$ 是 $w$ 乘以局部项的界，局部项的界含密度
+Fourier 系数的界与入射 Rayleigh 项的界
+$\bigl(\sum_{|m|\leq48}2(1+|\gamma_m|^2+\beta_m^2)/d\bigr)^{1/2}$；
+$S_{\mathrm{inc}}$ 为同一入射项的界；$w=\overline v^{1/2}\max\{1,\overline v/\underline s^{1/2}\}$
+是本小节前面所述权的延拓给出的因子，验证 $w<1$。因子 $\sqrt{2\pi}$ 把参数区间 $[0,2\pi)$ 上的逐点界化为 $L^2$
+界（墙与接缝长度为 $1$）；墙的跳跃涉及相邻两个状态 $v_j$ 与 $\mathsf P v_j$，故乘
+$1+r$；接缝合并上下两条迹，故乘 $2$。这些界比实际状态的缺陷粗很多（第~\ref{subsec:results-interval}~小节表~\ref{tab:results-tails}），
+但只通过尾项进入，代价是 $N_{\mathrm{cell}}$ 多取几个胞元。
+
+\begin{workonly}
+原稿：若多项式矩阵 $P_I$ 满足 $\sup_I\lVert F_I-P_I\rVert\leq e_I$，则
+$\bigl(\sum_{j}\lVert F_Iv_j\rVert^2\bigr)^{1/2}\leq\sqrt{V_I}+\sqrt{|I|}\,e_I\bigl(\sum_j\lVert v_j\rVert^2\bigr)^{1/2}$；
+同一个多项式矩阵给出
+$\Theta_\pm\leq\sum_I\bigl(\bigl(\int_I\lVert P_I\rVert_F^2\bigr)^{1/2}+\sqrt{|I|}\,e_I^F\bigr)^2$。
+这一取法正确，但实现没有采用。
+\end{workonly}
 
 \paragraph{汇总.}
 人工界面与接缝同样按面板处理：中心与第一个引线胞元之间的两条接合墙直接组合两侧的
@@ -96,11 +146,11 @@ $N_{\mathrm{cell}}$，使尾项不超过有限部分的 $10^{-6}$ 倍。
 最后
 \begin{align}
   \overline\varepsilon_g^{\,2}
-  &:=\sum_{I\in\mathscr P_g}\bigl(\sqrt{V_I}+\sqrt{|I|}\,e_I\bigr)^2+\overline T_g,
+  &:=\sum_{(I,j)\in\mathscr P_g}\bigl(\sqrt{V_{I,j}}+\sqrt{|I|}\,e_{I,j}\bigr)^2+\overline T_g,
   \label{eq:group-defect-assembly}
 \end{align}
-$\mathscr P_g$ 为该组全部目标面板，$\overline T_g$ 为两侧尾项上界之和；开方后向上取
-binary64。
+$\mathscr P_g$ 为该组全部（目标面板，状态）对，中心胞元的面板只有一个状态；
+$\overline T_g$ 为两侧尾项上界之和；开方后向上取 binary64。
 
 \subsection{场范数下界 $\underline U$}
 \label{app:reliable-mass}
@@ -150,7 +200,9 @@ $L>2X+2\delta$、$d>2Y+2\delta$ 时互不相交，$N_g=1$。左右半波导是�
 令 $F(\lambda)=p_g(\lambda)/(\lambda+\mu)^2$。$F'$ 的分子是一次式，所以
 $\sup_{\lambda\geq\lambda_0}F$ 只需比较 $F(\lambda_0)$、$c_g$ 以及驻点
 $\lambda_*=(2a_g-b_g\mu)/(2c_g\mu-b_g)$（若 $\lambda_*\geq\lambda_0$）。球算术不能确定
-驻点是否在区间内时，三个候选全部保留。谱底取
+驻点是否在区间内时，三个候选全部保留。\pending{2026-11-06 审稿意见 M4：补退化分支}
+若 $2c_g\mu-b_g=0$（或球算术不能排除它），$F'$ 的分子是常数 $b_g\mu-2a_g$，$F$ 单调或恒定，
+上确界为 $\max\{F(\lambda_0),c_g\}$；这一情形不用驻点公式。谱底取
 $\lambda_0=\min_m\beta_m^2/\rho_{\max}$，来自 $y$ 方向的 Poincaré 不等式。
 $\mu=\widehat k^2$ 在球算术中由精确的 $\widehat k$ 平方得到；领子半宽 $\delta_g$ 与
 $\eta_g$ 可取任意正数，它们只影响常数大小，不需要是最优值。
@@ -180,14 +232,19 @@ $\eta_g$ 可取任意正数，它们只影响常数大小，不需要是最优�
 \end{proof}
 
 \paragraph{矩阵元的求积误差.}
-$B_{\mathcal I}$ 的元素是介质柱的 Fourier 系数 $b_\xi=\int_{\Omega_s}\ee^{\ii\xi\cdot\mathbf z}\dd\mathbf z$。
+\pending{2026-11-06 审稿意见 I8：补归一化因子 $1/(L_sd)$，并说明“整函数”只对本例的曲线成立}
+记 $\xi_i$ 为 $\psi_i$ 的波矢，则 $(B_{\mathcal I})_{ij}=b_{\xi_j-\xi_i}/(L_sd)$，其中
+$b_\xi=\int_{\Omega_s}\ee^{\ii\xi\cdot\mathbf z}\dd\mathbf z$ 是介质柱的（未归一化）Fourier 系数；
+本例 $L_s=d=1$。
 对 $\xi\neq0$，由散度定理
 \begin{align}
   b_\xi&=-\frac{\ii}{|\xi|^2}\int_0^{2\pi}\ee^{\ii\xi\cdot\boldsymbol c(t)}
   \bigl(\xi_xc_y'(t)-\xi_yc_x'(t)\bigr)\,\dd t ,
   \label{eq:inclusion-fourier}
 \end{align}
-$b_0=|\Omega_s|$。被积函数是 $2\pi$ 周期的整函数；若它在 $|\operatorname{Im}t|\leq\varsigma$ 上
+$b_0=|\Omega_s|$。本例的边界是三角多项式参数曲线，被积函数是 $2\pi$ 周期的整函数（一般
+$C^2$ 曲线没有这一性质，此时需另给解析延拓及其包络；第~\ref{sec:modelproblem}--\ref{sec:error}~节
+的理论只要求 $C^2$）；若它在 $|\operatorname{Im}t|\leq\varsigma$ 上
 以 $\mathcal M$ 为界，$J$ 点梯形公式的误差不超过 $4\pi\mathcal M/(\ee^{\varsigma J}-1)$。由
 $\lVert E\rVert_2\leq(\lVert E\rVert_1\lVert E\rVert_\infty)^{1/2}$，逐元误差 $\epsilon_b$ 给出
 $\lVert B-\widetilde B\rVert\leq e_B:=|\mathcal I|\epsilon_b$，进而

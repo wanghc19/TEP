@@ -114,7 +114,7 @@ $\partial_y$ 满足准周期关系；在辅助直线 $x=\pm1.1$ 上再各取 $24
 出射振幅只是拟合中的未知量，不进入场。所得 $1440\times610$ 系统按列缩放后用相对截断
 $10^{-14}$ 的奇异值分解求解。系统矩阵只依赖 $\kappa_{\mathrm e}$、$\beta$ 与几何，因此一次
 分解同时处理中心胞元的一个右端与两侧引线各 $97$ 个状态列：中心取 $\alpha=\alpha_0$，第
-$j$ 个引线胞元取 $\alpha=\mathsf C_\pm\mathsf P_\pm^jc_\pm$，$\mathsf C_\pm\in\CC^{480\times97}$
+$j$ 个引线胞元取 $\alpha=\mathsf X_\pm\mathsf P_\pm^jc_\pm$，$\mathsf X_\pm\in\CC^{480\times97}$
 固定，满足“系数线性依赖于端口状态”的要求。
 
 这种表示即文献~\cite{BarnettGreengard2010} 的“近像层势加辅助源”结构；由推论~\ref{cor:near-image}，精确场在背景区域中也具有这一结构。该文把辅助系数与
@@ -145,7 +145,8 @@ $v$ 是右端口状态的坐标、$\mathsf P_-v$ 是左端口状态的坐标。�
   \label{eq:half-guide-raw-field}
 \end{align}
 
-这一构造在 $|m|\leq M$ 的模态上自洽。以右侧为例，记
+\pending{2026-11-06 审稿意见 I1：下面的关系只在精确算术下成立，改写措辞}
+在精确算术下，这一构造在 $|m|\leq M$ 的模态上自洽。以右侧为例，记
 $z_j:=\mathsf Z_+\mathsf P_+^jc_+=(a_j;b_j)$。由式~\eqref{eq:propagation-plus}，
 $\mathsf E_{\mathrm L}z_j=\mathsf E_{\mathrm R}z_{j+1}$，即
 $b_j=R_{\mathrm L}a_j+T_{\mathrm{RL}}b_{j+1}$、
@@ -153,8 +154,9 @@ $a_{j+1}=T_{\mathrm{LR}}a_j+R_{\mathrm R}b_{j+1}$。与
 式~\eqref{eq:cell-outgoing}--\eqref{eq:one-cell-scattering} 比较可知，第 $j$ 个胞元以
 $(a_j,b_{j+1})$ 入射时，其出射振幅恰为 $b_j$ 与 $a_{j+1}$。因此共享端口两侧的场在
 $|m|\leq M$ 上都具有振幅 $(a_{j+1},b_{j+1})$；而 $\mathsf M(\widehat k)$ 的端口行块使
-中心场与 $z_0$ 在 $\Gamma_+$ 上近似匹配。剩余的不匹配来自 $|m|>M$ 的模态、连续密度与
-离散密度的差别，以及 $\sigma_{\min}\ne0$。由于 $\mathsf P_\pm$ 的谱半径小于一，
+中心场与 $z_0$ 在 $\Gamma_+$ 上近似匹配。实际保存的 $\mathsf Z_\pm$、$\mathsf P_\pm$ 是浮点 QZ 分解的结果，作为精确数
+只近似满足上述关系。剩余的不匹配来自这一近似、$|m|>M$ 的模态、连续密度与离散密度的
+差别，以及离散方程的残量；它们都不需要单独估计，全部表现为共享端口上的跳跃。由于 $\mathsf P_\pm$ 的谱半径小于一，
 $\widehat u$ 向两侧逐胞元几何衰减。
 
 \paragraph{原始场的性质.}
@@ -245,11 +247,31 @@ $q:=\ee^{\ii\beta d}$，式~\eqref{eq:raw-interface-jumps} 即
   &\jump{\partial_\nu\widehat u}_\Sigma(x)
   &=\partial_y\widehat u(x,d/2)-q\,\partial_y\widehat u(x,-d/2).
   \label{eq:seam-jumps}
-\end{align}在材料界面上，
-$\jump{\widehat u}_\Gamma$ 与 $-\jump{\partial_\nu\widehat u}_\Gamma$ 恰是
-式~\eqref{eq:interface-jump-operator} 的两个分量（$\partial\Omega_0$ 上取
-$u_{\mathrm b}=u_{\mathrm{hom}}$，周期胞元中取入射场），其中的算子是作用于连续密度的
-连续边界积分算子。因此 $J(\widehat k)\xi\approx0$ 只表示跳跃在 Nystr\"om 节点上近似为零。
+\end{align}
+\pending{2026-11-06 审稿意见 I1：原稿说材料跳跃“恰是”式 (4.9) 的两个分量，但式 (4.9) 用精确准周期算子，而实际场的背景部分是近像加代理；改为实际场的跳跃公式}
+在材料界面 $\Gamma=\partial\Omega$ 上（$\Omega$ 为某个胞元 $\mathcal C$ 中的介质柱），把
+$\mathcal C\setminus\overline\Omega$ 中的场写成本曲线的自由空间层势与其余部分之和：
+$\widehat u=\mathcal S^{(\kappa_{\mathrm e})}[\omega]+\mathcal D^{(\kappa_{\mathrm e})}[\tau]+h$，
+其中 $h$ 由式~\eqref{eq:mfs-field} 中上下两个近像、代理点源与 $u_{\mathrm b}$ 组成，在
+$\Gamma$ 的邻域内光滑。由跳跃关系，
+\begin{align}
+  \jump{\widehat u}_\Gamma
+  &=\bigl(I+D^{(\kappa_{\mathrm e})}-D^{(\kappa_{\mathrm c})}\bigr)\tau
+    +\bigl(S^{(\kappa_{\mathrm e})}-S^{(\kappa_{\mathrm c})}\bigr)\omega+h|_\Gamma,
+  \notag\\
+  -\jump{\partial_\nu\widehat u}_\Gamma
+  &=\bigl(T^{(\kappa_{\mathrm e})}-T^{(\kappa_{\mathrm c})}\bigr)\tau
+    +\bigl(-I+D'^{(\kappa_{\mathrm e})}-D'^{(\kappa_{\mathrm c})}\bigr)\omega
+    +\partial_\nu h|_\Gamma,
+  \label{eq:actual-material-jumps}
+\end{align}
+其中的算子都是本曲线上的自由空间算子，作用于连续密度；超奇异部分在
+$T^{(\kappa_{\mathrm e})}-T^{(\kappa_{\mathrm c})}$ 中相消。若 $h$ 中的代理部分恰好等于
+推论~\ref{cor:near-image} 的光滑修正 $u_{\mathrm{corr}}$，上式就是
+式~\eqref{eq:interface-jump-operator} 的两个分量；一般情形下二者之差就是拟合误差，
+它全部留在实际跳跃中。可靠评价（附录~\ref{app:reliable-eps}）按式~\eqref{eq:actual-material-jumps}
+逐项计算。$J(\widehat k)\xi\approx0$ 只表示式~\eqref{eq:interface-jump-operator} 的离散
+形式在 Nystr\"om 节点上近似为零。
 类似地，$\mathsf M(\widehat k)$ 的端口行块近似就是 $\Gamma_\pm$ 上 $|m|\leq M$ 模态的
 跳跃系数。
 
@@ -317,7 +339,8 @@ $\widehat u$，所以领子可以穿过其他界面；不同组的领子重叠�
     &\leq D_{0,g}\lVert\nabla v\rVert_{L^2(B)}^2+D_{1,g}\lVert D^2v\rVert_{L^2(B)}^2 .
     \label{eq:jacobian-trace-bound}
   \end{align}
-  令 $p_g(\lambda):=a_g+b_g\lambda+c_g\lambda^2$，$a_g:=D_{0,g}/\rin$，
+  其中 $\lVert D^2v\rVert^2:=\lVert v_{xx}\rVert^2+2\lVert v_{xy}\rVert^2+\lVert v_{yy}\rVert^2$
+  为 Hessian 的 Frobenius 范数。令 $p_g(\lambda):=a_g+b_g\lambda+c_g\lambda^2$，$a_g:=D_{0,g}/\rin$，
   $b_g:=D_{1,g}+\ell_g^2D_{0,g}$，$c_g:=\ell_g^2D_{1,g}\rax$，以及
   \begin{align}
     C_g^2&:=\sup_{\lambda\geq\lambda_0}\frac{p_g(\lambda)}{(\lambda+\mu)^2},
@@ -554,26 +577,30 @@ $\exp(-4\pi|m|\delta_\Gamma/d)$ 乘多项式因子衰减，可用几何级数写
 
 \subsubsection{半波导的无穷求和}
 
-由式~\eqref{eq:half-guide-raw-field} 的平移结构，$\partial\Omega_{j,\pm}$ 与
-$\Gamma_{j,\pm}$ 上的跳跃只依赖状态 $\mathsf P_\pm^jc_\pm$。对 $v\in\CC^K$，定义
-$b_\pm(v)$ 为两项之和：$u_\pm[v]$ 在 $\partial\Omega_\pm$ 上的跳跃积分，以及共享端口
-$\Gamma_{0,\pm}$ 上的跳跃积分（侧 $1$ 为 $u_\pm[v]$，侧 $2$ 为平移一个周期的
-$u_\pm[\mathsf P_\pm v]$），均按式~\eqref{eq:boundary-defect-norm} 中各界面所属组的权重计量。记 $b_0$
-为 $\partial\Omega_0$（若存在）及 $\Gamma_-$、$\Gamma_+$ 上的跳跃积分之和，后两者分别
-比较中心场与 $u_-[c_-]$、$u_+[c_+]$。于是
+\pending{2026-11-06 审稿意见 I3：原稿的 $b_\pm$ 只含材料界面与共享端口，漏了接缝；改为按组定义}
+由式~\eqref{eq:half-guide-raw-field} 的平移结构，$\partial\Omega_{j,\pm}$、
+$\Gamma_{j,\pm}$ 与 $\Sigma_{\mathcal C_{j,\pm}}$ 上的跳跃只依赖状态 $\mathsf P_\pm^jc_\pm$。
+对 $v\in\CC^K$ 与组 $g$，定义 $b_{g,\pm}(v)$ 为下列跳跃积分中属于 $\mathscr E_g$ 的部分，
+按式~\eqref{eq:boundary-defect-norm} 中该组的权重计量：$u_\pm[v]$ 在 $\partial\Omega_\pm$
+上的跳跃；共享端口 $\Gamma_{0,\pm}$ 上的跳跃（侧 $1$ 为 $u_\pm[v]$，侧 $2$ 为平移一个周期的
+$u_\pm[\mathsf P_\pm v]$）；$u_\pm[v]$ 在本胞元接缝 $\Sigma_{\mathcal C_\pm}$ 上的跳跃
+（式~\eqref{eq:seam-jumps}，上下两边只计一次）。类似地，$b_{g,0}$ 为
+$\partial\Omega_0$（若存在）、$\Gamma_-$、$\Gamma_+$ 与 $\Sigma_{\mathcal C_0}$ 上跳跃积分中
+属于 $\mathscr E_g$ 的部分，$\Gamma_\mp$ 上比较中心场与 $u_\mp[c_\mp]$。于是对每一组
 \begin{align}
-  \sum_g\varepsilon_g^2
-  &=b_0+\sum_{\pm}\sum_{j=0}^{\infty}b_\pm(\mathsf P_\pm^jc_\pm).
+  \varepsilon_g^2
+  &=b_{g,0}+\sum_{\pm}\sum_{j=0}^{\infty}b_{g,\pm}(\mathsf P_\pm^jc_\pm).
   \label{eq:full-propagation-boundary-sum}
 \end{align}
-每条共享端口归属于较靠近中心的胞元，没有重复计数。全部跳跃线性依赖于状态，故
-$b_\pm(v)=\lVert\mathcal L_\pm v\rVert^2$，$\mathcal L_\pm$ 是从 $\CC^K$ 到相应加权
-$L^2$ 空间的线性映射；计算中不需要组装 Gram 矩阵。
+每条共享端口归属于较靠近中心的胞元，每个接缝段只属于一个胞元，没有重复计数。全部跳跃
+线性依赖于状态，故 $b_{g,\pm}(v)=\lVert\mathcal L_{g,\pm}v\rVert^2$，$\mathcal L_{g,\pm}$
+是从 $\CC^K$ 到相应加权 $L^2$ 空间的线性映射；计算中不需要组装 Gram 矩阵。下面对每一组
+分别处理，记号中省略 $g$。
 
 
 \pending{2026-11-06：尾项常数 $\Theta_\pm$ 改为 $\lVert\mathcal L_\pm\rVert^2$ 的任意上界；原 Hilbert--Schmidt 取法只在工作版保留}
 有限部分从 $v=c_\pm$ 开始，重复计算 $b_\pm(v)$ 并更新 $v\leftarrow\mathsf P_\pm v$，共
-$N_{\mathrm{cell}}$ 次；只对实际出现的状态计算，不必建立全部端口列的映射。尾项不能仅以
+$N_{\mathrm{cell}}$ 次（每组每侧分别选取）；只对实际出现的状态计算，不必建立全部端口列的映射。尾项不能仅以
 末项很小为由丢弃。设常数 $\Theta_\pm$ 满足
 \begin{align}
   b_\pm(v)&\leq\Theta_\pm\lVert v\rVert_2^2\qquad(v\in\CC^K),
@@ -746,10 +773,10 @@ Chebyshev 插值，$e_I$ 由解析延拓上的包络与节点值误差给出；�
 残量范数。因此向外舍入的区间
 \begin{align}
   I_{\mathrm{spec}}&:=[\mu-R_{\mathrm{spec}},\mu+R_{\mathrm{spec}}],
-  &I_k&:=\bigl[\sqrt{\mu-R_{\mathrm{spec}}},\sqrt{\mu+R_{\mathrm{spec}}}\bigr]
+  &I_k&:=\bigl[\sqrt{\max\{0,\mu-R_{\mathrm{spec}}\}},\sqrt{\mu+R_{\mathrm{spec}}}\bigr]
   \label{eq:certified-spectral-interval}
 \end{align}
-必与 $\sigma(A(\beta))$ 相交（$I_k$ 为对应的波数区间）。这不识别最近谱点的编号或重数，
+必与 $\sigma(A(\beta))$ 相交（$I_k$ 为对应的波数区间）。\pending{2026-11-06 审稿意见 M1：$I_k$ 下端加 $\max\{0,\cdot\}$}这不识别最近谱点的编号或重数，
 也不保证区间内只有一个谱点。若另行证明 $I_{\mathrm{spec}}$ 含于某个与
 $\sigma_{\mathrm{ess}}(A(\beta))$ 不交的开区间（用第~\ref{subsec:gap-certificate}~小节的
 命题~\ref{prop:panel-gap} 验证条件~\eqref{eq:gap-condition}），则由命题~\ref{prop:discrete-spectrum-in-gap}，
