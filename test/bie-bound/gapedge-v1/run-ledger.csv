@@ -1,0 +1,13 @@
+run,role,wall_seconds,peak_RSS_GiB,monitor_reason,returncode,source
+run-001,floating continuation,128.66761333300002,0.869354248046875,completed,0,test/bie-bound/gapedge-v1/output/run-001/monitor.json
+run-002,floating continuation,111.356497125,0.8387451171875,completed,0,test/bie-bound/gapedge-v1/output/run-002/monitor.json
+run-003,regression interface failure,29.413239709,0.21014404296875,completed,1,test/bie-bound/gapedge-v1/output/run-003/monitor.json
+run-004,regression passed,103.20265820799999,0.368560791015625,completed,0,test/bie-bound/gapedge-v1/output/run-004/monitor.json
+run-005,stopped for local-radius correction,618.753315458,1.558135986328125,completed,1,test/bie-bound/gapedge-v1/output/run-005/monitor.json
+run-006,accepted cold search field residual audit; mass reader failure,1039.2550323330001,1.7029571533203125,completed,1,test/bie-bound/gapedge-v1/output/run-006/monitor.json
+run-007,accepted finishing stages and export equality,171.525978042,1.0574798583984375,completed,0,test/bie-bound/gapedge-v1/output/run-007/monitor.json
+run-008,confirmation stopped by old disk guard,1054.134088583,2.45989990234375,WORKTREE_DISK_LIMIT,-15,test/bie-bound/gapedge-v1/output/run-008/monitor.json
+run-009,manager stopped repeat; not numerical failure,531.229546333,0.9469757080078125,completed,1,test/bie-bound/gapedge-v1/output/run-009/monitor.json
+run-010,near-edge resource pilot,298.201470417,1.0560455322265625,completed,0,test/bie-bound/gapedge-v1/output/run-010/monitor.json
+run-011,cold L0=2.0,1500.970768833,1.827056884765625,completed,0,test/bie-bound/gapedge-v1/output/run-011/monitor.json
+run-012,cold L0=1.9,1333.182197917,1.381134033203125,completed,0,test/bie-bound/gapedge-v1/output/run-012/monitor.json

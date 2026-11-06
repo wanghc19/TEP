@@ -1,0 +1,67 @@
+{
+  "runs": [
+    {
+      "run": "run-011",
+      "complete": true,
+      "cold_inputs_all_local": true,
+      "preflight_clear": true,
+      "empty_start": {
+        "initial_empty": true,
+        "nonempty_refused": true
+      },
+      "same_R_both_precisions": true,
+      "rational_match": true,
+      "epsilon_readback": true,
+      "candidate_contained": true,
+      "gap_margins_positive": true,
+      "band_tests": 944,
+      "band_passed": true,
+      "independent_band": 8,
+      "failing_control_rejected": true,
+      "audit_passed": true,
+      "all_tail_p2": true,
+      "no_target_fallback": true,
+      "wall": 1500.970768833,
+      "peak_RSS_GiB": 1.827056884765625,
+      "timing_reconciliation_error": 0.0
+    },
+    {
+      "run": "run-012",
+      "complete": true,
+      "cold_inputs_all_local": true,
+      "preflight_clear": true,
+      "empty_start": {
+        "initial_empty": true,
+        "nonempty_refused": true
+      },
+      "same_R_both_precisions": true,
+      "rational_match": true,
+      "epsilon_readback": true,
+      "candidate_contained": true,
+      "gap_margins_positive": true,
+      "band_tests": 944,
+      "band_passed": true,
+      "independent_band": 8,
+      "failing_control_rejected": true,
+      "audit_passed": true,
+      "all_tail_p2": true,
+      "no_target_fallback": true,
+      "wall": 1333.182197917,
+      "peak_RSS_GiB": 1.381134033203125,
+      "timing_reconciliation_error": 0.0
+    }
+  ],
+  "accepted_continuation": {
+    "export_exact": true,
+    "confirmation_k": true,
+    "confirmation_epsilon": true,
+    "assembly_epsilon_readback": true,
+    "rational_R": true,
+    "audit": true,
+    "band": true
+  },
+  "manager_stop": "STOPPED_BY_MANAGER_REPEAT",
+  "worktree_disk": 1028862771,
+  "experiment_disk": 70179697,
+  "report_has_TODO": false
+}

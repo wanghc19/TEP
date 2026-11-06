@@ -26,3 +26,4 @@ FMM 是 fast multipole method（快速多极方法），MFS 是 method of fundam
 `resolution-v1` 是 resolution study version 1，分别改变场离散化与固定场的可靠评价精度。
 `example2-v1` 是 second example version 1，空中心、不同周期及旋转引线；B2 完整冷启动通过，可靠 μ 全宽上界3.086591e-12，1058.142秒，944项全相位带测试通过。
 
+`gapedge-v1` 是 guided mode near a gap edge version 1，近带边参数序列、一般传播幂尾界及可靠区间成本。

@@ -1,0 +1,1491 @@
+[
+  {
+    "source": "run-006 + run-007",
+    "boundary": "cold search/field/residuals in base; finishing stages in a separate process on identical same-experiment field; stage sum is not uninterrupted wall time",
+    "L0": 1.6,
+    "k": 1.581444763915987,
+    "epsilon": [
+      0.0,
+      5.247591379082931e-14,
+      6.495144365389374e-14,
+      2.5664257704793595e-13,
+      7.323273677718942e-15
+    ],
+    "assembly": {
+      "bits": 192,
+      "epsilon_decimal_readback": [
+        "0.0",
+        "5.247591379082931e-14",
+        "6.495144365389374e-14",
+        "2.5664257704793595e-13",
+        "7.323273677718942e-15"
+      ],
+      "U_certificate_readback": "[0.64888937929330232972686033875492052861 +/- 4.79e-39]",
+      "U_used": "0.648889",
+      "C_upper": [
+        "0",
+        "1.167159",
+        "1.217512",
+        "1.029217",
+        "1.029217"
+      ],
+      "terms_upper": [
+        "0.000000000000000000000000000000",
+        "0.000000000000061247735064190547",
+        "0.000000000000079079162065939476",
+        "0.000000000000264140903221545495",
+        "0.000000000000007537237764760857"
+      ],
+      "mu": "[2.50096754131729180767383022229179275950605829836568466600 +/- 2.41e-57]",
+      "Q_upper": "0.000000000000412005038116436373",
+      "U_minus_Q_lower": "0.6488889999995879949618835",
+      "R_upper": "0.0000000000031759244714861",
+      "exact_rational_R_upper": "0.0000000000031759244714861",
+      "mu_interval": [
+        "2.5009675413141158832023441",
+        "2.5009675413204677321453163"
+      ],
+      "k_interval": [
+        "1.5814447639149828628460134",
+        "1.5814447639169911052734138"
+      ],
+      "width_upper": "0.0000000000063518489429721",
+      "T15_margins_lower": [
+        "0.369367541314115883202344",
+        "3.115932458679532267854683"
+      ],
+      "seconds": 0.00023574999067932367,
+      "conditions": [
+        "same exact-input piecewise Helmholtz B field and all five residual certificates",
+        "same-field disks with positive geometric clearances",
+        "rounding-inclusive band certificate required from this same pipeline run"
+      ]
+    },
+    "time": 1180.720935083,
+    "peak": 1.7029571533203125,
+    "conditions": {
+      "model": {
+        "name": "empty-rotated",
+        "d": 1,
+        "beta": 0.5,
+        "L0": 1.6,
+        "L_negative": 1,
+        "L_positive": 0.85,
+        "R": 0.2,
+        "a_negative": 0.12,
+        "a_positive": 0.2,
+        "angle_negative": 0,
+        "angle_positive": 0.13,
+        "rho_center": 1,
+        "rho_lead": 17,
+        "empty_center": true,
+        "center_nodes": 0,
+        "lead_nodes": 256,
+        "M": 48
+      },
+      "pieces": [
+        {
+          "piece": 0,
+          "empty_material": true,
+          "L": "1.60000000000000008881784197001252323389053344726562500000",
+          "curve_wall_clearance_lower": null,
+          "near_image_clearance_lower": null,
+          "proxy_clearance_lower": "0.650000000000000133226762955018784850835800170898437500000"
+        },
+        {
+          "piece": 1,
+          "empty_material": false,
+          "L": "1.00000000000000000000000000000000000000000000000000000000",
+          "curve_wall_clearance_lower": "[0.276802071403817250816513157480000525701346562361910346406 +/- 3.32e-58]",
+          "near_image_clearance_lower": "[0.276802071403817250816513157480000525701346562361910346406 +/- 3.32e-58]",
+          "proxy_clearance_lower": "0.850000000000000088817841970012523233890533447265625000000"
+        },
+        {
+          "piece": 2,
+          "empty_material": false,
+          "L": "0.849999999999999977795539507496869191527366638183593750000",
+          "curve_wall_clearance_lower": "[0.187364589685598139569655002913682541993747448855372232879 +/- 1.47e-58]",
+          "near_image_clearance_lower": "[0.187364589685598139569655002913682541993747448855372232879 +/- 1.47e-58]",
+          "proxy_clearance_lower": "0.850000000000000088817841970012523233890533447265625000000"
+        }
+      ],
+      "wood_gamma_lower": "[1.50032247910817220004544402931295452457481295250228162202 +/- 3.17e-57]",
+      "empty_center_material_exact_zero": true,
+      "status": "PASS",
+      "representation": "continuous trigonometric layer densities; three near images; fixed point sources; finite Rayleigh incident field; no wrap"
+    },
+    "band": [
+      {
+        "side": 0,
+        "lower": 2.921868330851555,
+        "upper": 0.2374690346658532
+      },
+      {
+        "side": 1,
+        "lower": 0.4370127110390786,
+        "upper": 1.1990155902279804
+      }
+    ],
+    "tails": [
+      {
+        "L0": 1.6,
+        "source": "run-006 + run-007",
+        "side": 1,
+        "kind": "material",
+        "N": 46,
+        "N_prediction": 46,
+        "tau": "1e-2",
+        "finite_squared_upper": 2.7494464469332498e-27,
+        "tail_p1": 4.275081249299477e-30,
+        "tail_ratio": 0.0015548879866085401,
+        "epsilon_upper": 5.247591379082931e-14,
+        "N10_upper": 5.243516422154613e-14,
+        "N10_tail": 7.261194459367393e-39,
+        "r1": 0.36861277730148356,
+        "r2": 0.13423281475375337,
+        "short_norm1": 0.36861277730148356,
+        "factor1": 1.157240490990097,
+        "factor2": 1.1567176368236658,
+        "tail_p2": 4.2731497198892725e-30,
+        "p2_N10_tail": 7.257913770689539e-39,
+        "p2_epsilon": 5.2475895386864426e-14,
+        "p2_N10_epsilon": 5.2435164221546096e-14,
+        "actual_state_N10_norm_ratio": 4.1212773975051046e-05,
+        "norm_P10_upper": 4.1676042220598374e-05,
+        "p2_state_margin": "[1.64082821582508541363302187398652273656985831043234645074e-43 +/- 4.16e-100]",
+        "p2_checked": true,
+        "B": 287019.83804322826,
+        "initial_state_norm": 0.9997649265607051
+      },
+      {
+        "L0": 1.6,
+        "source": "run-006 + run-007",
+        "side": 1,
+        "kind": "interior",
+        "N": 47,
+        "N_prediction": 47,
+        "tau": "1e-2",
+        "finite_squared_upper": 5.799077914395757e-27,
+        "tail_p1": 1.385232605809093e-29,
+        "tail_ratio": 0.0023887118478225,
+        "epsilon_upper": 7.624257498572466e-14,
+        "N10_upper": 7.615167702959197e-14,
+        "N10_tail": 2.352807522403051e-38,
+        "r1": 0.36861277730148356,
+        "r2": 0.13423281475375337,
+        "short_norm1": 0.36861277730148356,
+        "factor1": 1.157240490990097,
+        "factor2": 1.1567176368236658,
+        "tail_p2": 1.3846067422612285e-29,
+        "p2_N10_tail": 2.3517444977115746e-38,
+        "p2_epsilon": 7.62425339414842e-14,
+        "p2_N10_epsilon": 7.61516770295919e-14,
+        "actual_state_N10_norm_ratio": 4.1212773975051046e-05,
+        "norm_P10_upper": 4.1676042220598374e-05,
+        "p2_state_margin": "[2.17805822339928265926665415634705373513806710701514654320e-44 +/- 4.42e-101]",
+        "p2_checked": true,
+        "B": 1418070.7416571088,
+        "initial_state_norm": 0.9997649265607051
+      },
+      {
+        "L0": 1.6,
+        "source": "run-006 + run-007",
+        "side": 1,
+        "kind": "seam",
+        "N": 50,
+        "N_prediction": 50,
+        "tau": "1e-2",
+        "finite_squared_upper": 2.87085436314995e-29,
+        "tail_p1": 6.918956891022892e-32,
+        "tail_ratio": 0.0024100694095976908,
+        "epsilon_upper": 5.364488158287772e-15,
+        "N10_upper": 5.358035426498879e-15,
+        "N10_tail": 1.175179803890971e-40,
+        "r1": 0.36861277730148356,
+        "r2": 0.13423281475375337,
+        "short_norm1": 0.36861277730148356,
+        "factor1": 1.157240490990097,
+        "factor2": 1.1567176368236658,
+        "tail_p2": 6.915830829097135e-32,
+        "p2_N10_tail": 1.1746488445428027e-40,
+        "p2_epsilon": 5.364485244624173e-15,
+        "p2_N10_epsilon": 5.358035426498874e-15,
+        "actual_state_N10_norm_ratio": 4.1212773975051046e-05,
+        "norm_P10_upper": 4.1676042220598374e-05,
+        "p2_state_margin": "[5.09434782025844946833008659675031840474442685245402542310e-47 +/- 7.38e-105]",
+        "p2_checked": true,
+        "B": 2072274.5909959169,
+        "initial_state_norm": 0.9997649265607051
+      },
+      {
+        "L0": 1.6,
+        "source": "run-006 + run-007",
+        "side": 2,
+        "kind": "material",
+        "N": 72,
+        "N_prediction": 74,
+        "tau": "1e-2",
+        "finite_squared_upper": 4.2033028559387504e-27,
+        "tail_p1": 1.5387176786182716e-29,
+        "tail_ratio": 0.0036607693879934194,
+        "epsilon_upper": 6.495144365389374e-14,
+        "N10_upper": 6.483288411982367e-14,
+        "N10_tail": 7.355732023304205e-36,
+        "r1": 0.492371380950474,
+        "r2": 0.23749205756900169,
+        "short_norm1": 0.492371380950474,
+        "factor1": 1.3200092946453104,
+        "factor2": 1.3166944031038534,
+        "tail_p2": 1.534853552632013e-29,
+        "p2_N10_tail": 7.337259839839902e-36,
+        "p2_epsilon": 6.495114619054134e-14,
+        "p2_N10_epsilon": 6.48328841196812e-14,
+        "actual_state_N10_norm_ratio": 0.000691406531362234,
+        "norm_P10_upper": 0.0007037956736713866,
+        "p2_state_margin": "[3.74260680944090728476663495124263564982720250618991865370e-48 +/- 1.39e-105]",
+        "p2_checked": true,
+        "B": 196318046.7200778,
+        "initial_state_norm": 0.9999299266630829
+      },
+      {
+        "L0": 1.6,
+        "source": "run-006 + run-007",
+        "side": 2,
+        "kind": "interior",
+        "N": 69,
+        "N_prediction": 71,
+        "tau": "1e-2",
+        "finite_squared_upper": 1.13533720636363e-27,
+        "tail_p1": 4.775794833812579e-30,
+        "tail_ratio": 0.004206499010458824,
+        "epsilon_upper": 3.376555939411404e-14,
+        "N10_upper": 3.3694765300364766e-14,
+        "N10_tail": 2.2830352496730472e-36,
+        "r1": 0.492371380950474,
+        "r2": 0.23749205756900169,
+        "short_norm1": 0.492371380950474,
+        "factor1": 1.3200092946453104,
+        "factor2": 1.3166944031038534,
+        "tail_p2": 4.763801553187542e-30,
+        "p2_N10_tail": 2.277301945923832e-36,
+        "p2_epsilon": 3.376538179729081e-14,
+        "p2_N10_epsilon": 3.369476530027969e-14,
+        "actual_state_N10_norm_ratio": 0.000691406531362234,
+        "norm_P10_upper": 0.0007037956736713866,
+        "p2_state_margin": "[2.94668774395173222014261576323380234793482718879408447004e-46 +/- 5.00e-103]",
+        "p2_checked": true,
+        "B": 12326041.52964083,
+        "initial_state_norm": 0.9999299266630829
+      },
+      {
+        "L0": 1.6,
+        "source": "run-006 + run-007",
+        "side": 2,
+        "kind": "seam",
+        "N": 72,
+        "N_prediction": 74,
+        "tau": "1e-2",
+        "finite_squared_upper": 2.4743663018418708e-29,
+        "tail_p1": 1.0894113994267825e-31,
+        "tail_ratio": 0.004402789525480489,
+        "epsilon_upper": 4.985238626019961e-15,
+        "N10_upper": 4.974300259382948e-15,
+        "N10_tail": 5.207854844764034e-38,
+        "r1": 0.492371380950474,
+        "r2": 0.23749205756900169,
+        "short_norm1": 0.492371380950474,
+        "factor1": 1.3200092946453104,
+        "factor2": 1.3166944031038534,
+        "tail_p2": 1.0866756000291753e-31,
+        "p2_N10_tail": 5.194776547479254e-38,
+        "p2_epsilon": 4.985211186942999e-15,
+        "p2_N10_epsilon": 4.9743002593698014e-15,
+        "actual_state_N10_norm_ratio": 0.000691406531362234,
+        "norm_P10_upper": 0.0007037956736713866,
+        "p2_state_margin": "[3.74260680944090728476663495124263564982720250618991865370e-48 +/- 1.39e-105]",
+        "p2_checked": true,
+        "B": 16518732.115849765,
+        "initial_state_norm": 0.9999299266630829
+      }
+    ],
+    "stages": [
+      {
+        "stage": "01-search",
+        "seconds": 430.186947542,
+        "peak_RSS_GiB": 0.8428497314453125,
+        "source": "test/bie-bound/gapedge-v1/output/run-006/01-search"
+      },
+      {
+        "stage": "02-field",
+        "seconds": 16.985524416999965,
+        "peak_RSS_GiB": 1.0080413818359375,
+        "source": "test/bie-bound/gapedge-v1/output/run-006/02-field"
+      },
+      {
+        "stage": "02-conditions",
+        "seconds": 1.2677971660000367,
+        "peak_RSS_GiB": 0.0004730224609375,
+        "source": "test/bie-bound/gapedge-v1/output/run-006/02-conditions"
+      },
+      {
+        "stage": "03-residuals",
+        "seconds": 583.456999,
+        "peak_RSS_GiB": 1.6838836669921875,
+        "source": "test/bie-bound/gapedge-v1/output/run-006/03-residuals"
+      },
+      {
+        "stage": "04-residual-audit",
+        "seconds": 1.2937862500000392,
+        "peak_RSS_GiB": 0.00286865234375,
+        "source": "test/bie-bound/gapedge-v1/output/run-006/04-residual-audit"
+      },
+      {
+        "stage": "mass",
+        "seconds": 1.2772435420000008,
+        "peak_RSS_GiB": 0.0003204345703125,
+        "source": "test/bie-bound/gapedge-v1/output/run-007/mass"
+      },
+      {
+        "stage": "enclosure",
+        "seconds": 1.304659375,
+        "peak_RSS_GiB": 0.0052642822265625,
+        "source": "test/bie-bound/gapedge-v1/output/run-007/enclosure"
+      },
+      {
+        "stage": "band",
+        "seconds": 144.947977791,
+        "peak_RSS_GiB": 0.2489013671875,
+        "source": "test/bie-bound/gapedge-v1/output/run-007/band"
+      }
+    ],
+    "checks": {
+      "export_exact": true,
+      "confirmation_k": true,
+      "confirmation_epsilon": true,
+      "assembly_epsilon_readback": true,
+      "rational_R": true,
+      "audit": true,
+      "band": true
+    },
+    "tail_accounting_diagnostic": {
+      "Q_with_N10": 4.1176324659979115e-13,
+      "width_with_N10": 6.348121262367891e-12,
+      "width_inflation_relative": 0.0005872100500516897,
+      "status": "ordinary scalar diagnostic from reliable ledgers; delivered interval unchanged"
+    }
+  },
+  {
+    "source": "run-012",
+    "boundary": "one monitored cold-start process tree",
+    "L0": 1.9,
+    "k": 1.480292800225202,
+    "epsilon": [
+      0.0,
+      3.6027409522273874e-14,
+      5.2159987984407013e-14,
+      2.391635112726322e-13,
+      1.2137036865875786e-14
+    ],
+    "assembly": {
+      "bits": 192,
+      "epsilon_decimal_readback": [
+        "0.0",
+        "3.6027409522273874e-14",
+        "5.2159987984407013e-14",
+        "2.391635112726322e-13",
+        "1.2137036865875786e-14"
+      ],
+      "U_certificate_readback": "[0.64868980564544372212654150675029945874 +/- 4.95e-40]",
+      "U_used": "0.648689",
+      "C_upper": [
+        "0",
+        "1.254455",
+        "1.313586",
+        "1.083642",
+        "1.083642"
+      ],
+      "terms_upper": [
+        "0.000000000000000000000000000000",
+        "0.000000000000045194764012264073",
+        "0.000000000000068516629976485271",
+        "0.000000000000259167625682497703",
+        "0.000000000000013152202903411369"
+      ],
+      "mu": "[2.19126677439856992685229210849124326477974703088829355768 +/- 3.02e-57]",
+      "Q_upper": "0.000000000000386031222574658415",
+      "U_minus_Q_lower": "0.6486889999996139687774253",
+      "R_upper": "0.0000000000026080213843886",
+      "exact_rational_R_upper": "0.0000000000026080213843886",
+      "mu_interval": [
+        "2.1912667743959619054679035",
+        "2.1912667744011779482366807"
+      ],
+      "k_interval": [
+        "1.4802928002243211293798036",
+        "1.4802928002260829574343560"
+      ],
+      "width_upper": "0.0000000000052160427687771",
+      "T15_margins_lower": [
+        "0.059666774395961905467903",
+        "3.425633225598822051763319"
+      ],
+      "seconds": 0.0002061250270344317,
+      "conditions": [
+        "same exact-input piecewise Helmholtz B field and all five residual certificates",
+        "same-field disks with positive geometric clearances",
+        "rounding-inclusive band certificate required from this same pipeline run"
+      ]
+    },
+    "time": 1333.2557872080001,
+    "peak": 1.381134033203125,
+    "conditions": {
+      "model": {
+        "name": "empty-rotated",
+        "d": 1,
+        "beta": 0.5,
+        "L0": 1.9,
+        "L_negative": 1,
+        "L_positive": 0.85,
+        "R": 0.2,
+        "a_negative": 0.12,
+        "a_positive": 0.2,
+        "angle_negative": 0,
+        "angle_positive": 0.13,
+        "rho_center": 1,
+        "rho_lead": 17,
+        "empty_center": true,
+        "center_nodes": 0,
+        "lead_nodes": 256,
+        "M": 48
+      },
+      "pieces": [
+        {
+          "piece": 0,
+          "empty_material": true,
+          "L": "1.89999999999999991118215802998747676610946655273437500000",
+          "curve_wall_clearance_lower": null,
+          "near_image_clearance_lower": null,
+          "proxy_clearance_lower": "0.500000000000000222044604925031308084726333618164062500000"
+        },
+        {
+          "piece": 1,
+          "empty_material": false,
+          "L": "1.00000000000000000000000000000000000000000000000000000000",
+          "curve_wall_clearance_lower": "[0.276802071403817250816513157480000525701346562361910346406 +/- 3.32e-58]",
+          "near_image_clearance_lower": "[0.276802071403817250816513157480000525701346562361910346406 +/- 3.32e-58]",
+          "proxy_clearance_lower": "0.850000000000000088817841970012523233890533447265625000000"
+        },
+        {
+          "piece": 2,
+          "empty_material": false,
+          "L": "0.849999999999999977795539507496869191527366638183593750000",
+          "curve_wall_clearance_lower": "[0.187364589685598139569655002913682541993747448855372232879 +/- 1.47e-58]",
+          "near_image_clearance_lower": "[0.187364589685598139569655002913682541993747448855372232879 +/- 1.47e-58]",
+          "proxy_clearance_lower": "0.850000000000000088817841970012523233890533447265625000000"
+        }
+      ],
+      "wood_gamma_lower": "[1.39329349901539766240309394441657536650736783258362395682 +/- 8.90e-58]",
+      "empty_center_material_exact_zero": true,
+      "status": "PASS",
+      "representation": "continuous trigonometric layer densities; three near images; fixed point sources; finite Rayleigh incident field; no wrap"
+    },
+    "band": [
+      {
+        "side": 0,
+        "lower": 2.921868330851555,
+        "upper": 0.2374690346658532
+      },
+      {
+        "side": 1,
+        "lower": 0.4370127110390786,
+        "upper": 1.1990155902279804
+      }
+    ],
+    "tails": [
+      {
+        "L0": 1.9,
+        "source": "run-012",
+        "side": 1,
+        "kind": "material",
+        "N": 54,
+        "N_prediction": 55,
+        "tau": "0.1",
+        "finite_squared_upper": 1.2331644072200843e-27,
+        "tail_p1": 6.480982966554615e-29,
+        "tail_ratio": 0.05255570895516921,
+        "epsilon_upper": 3.6027409522273874e-14,
+        "N10_upper": 3.51164407522322e-14,
+        "N10_tail": 3.884949876483607e-36,
+        "r1": 0.43989535920859846,
+        "r2": 0.1914689382993936,
+        "short_norm1": 0.43989535920859846,
+        "factor1": 1.2399377917581114,
+        "factor2": 1.2389274462253788,
+        "tail_p2": 6.475702030501615e-29,
+        "p2_N10_tail": 3.8817842807749476e-36,
+        "p2_epsilon": 3.602667660949453e-14,
+        "p2_N10_epsilon": 3.5116440752187125e-14,
+        "actual_state_N10_norm_ratio": 0.0002448343055414185,
+        "norm_P10_upper": 0.00024728474598325326,
+        "p2_state_margin": "[4.95367365128501022266994257413400429315261762273529060605e-42 +/- 4.29e-99]",
+        "p2_checked": true,
+        "B": 229950.75500160988,
+        "initial_state_norm": 0.9997223126845205
+      },
+      {
+        "L0": 1.9,
+        "source": "run-012",
+        "side": 1,
+        "kind": "interior",
+        "N": 55,
+        "N_prediction": 56,
+        "tau": "0.1",
+        "finite_squared_upper": 6.560650022258082e-27,
+        "tail_p1": 2.5926617112304385e-28,
+        "tail_ratio": 0.039518366434433995,
+        "epsilon_upper": 8.25827838800626e-14,
+        "N10_upper": 8.099783971069532e-14,
+        "N10_tail": 1.5541409145475787e-35,
+        "r1": 0.43989535920859846,
+        "r2": 0.1914689382993936,
+        "short_norm1": 0.43989535920859846,
+        "factor1": 1.2399377917581114,
+        "factor2": 1.2389274462253788,
+        "tail_p2": 2.590549118005811e-28,
+        "p2_N10_tail": 1.5528745451049445e-35,
+        "p2_epsilon": 8.258150479410425e-14,
+        "p2_N10_epsilon": 8.099783971061715e-14,
+        "actual_state_N10_norm_ratio": 0.0002448343055414185,
+        "norm_P10_upper": 0.00024728474598325326,
+        "p2_state_margin": "[9.39078388029220048870915193119991714152386306551592370403e-43 +/- 4.83e-100]",
+        "p2_checked": true,
+        "B": 1056331.1816374864,
+        "initial_state_norm": 0.9997223126845205
+      },
+      {
+        "L0": 1.9,
+        "source": "run-012",
+        "side": 1,
+        "kind": "seam",
+        "N": 58,
+        "N_prediction": 59,
+        "tau": "0.1",
+        "finite_squared_upper": 5.875420233698286e-29,
+        "tail_p1": 3.407746993803706e-30,
+        "tail_ratio": 0.05800005866628378,
+        "epsilon_upper": 7.884284960019302e-15,
+        "N10_upper": 7.665128997039535e-15,
+        "N10_tail": 2.042734309129514e-37,
+        "r1": 0.43989535920859846,
+        "r2": 0.1914689382993936,
+        "short_norm1": 0.43989535920859846,
+        "factor1": 1.2399377917581114,
+        "factor2": 1.2389274462253788,
+        "tail_p2": 3.404970240022381e-30,
+        "p2_N10_tail": 2.0410698163642265e-37,
+        "p2_epsilon": 7.884108863847914e-15,
+        "p2_N10_epsilon": 7.665128997028677e-15,
+        "actual_state_N10_norm_ratio": 0.0002448343055414185,
+        "norm_P10_upper": 0.00024728474598325326,
+        "p2_state_margin": "[6.39771968703950570230963602389451520223737029474486147967e-45 +/- 2.11e-102]",
+        "p2_checked": true,
+        "B": 1467233.2609198377,
+        "initial_state_norm": 0.9997223126845205
+      },
+      {
+        "L0": 1.9,
+        "source": "run-012",
+        "side": 2,
+        "kind": "material",
+        "N": 128,
+        "N_prediction": 134,
+        "tau": "0.1",
+        "finite_squared_upper": 2.5232546423110056e-27,
+        "tail_p1": 1.9740970422247846e-28,
+        "tail_ratio": 0.0782369779975404,
+        "epsilon_upper": 5.2159987984407013e-14,
+        "N10_upper": 5.023267648528566e-14,
+        "N10_tail": 6.714456436495635e-32,
+        "r1": 0.6824251426455769,
+        "r2": 0.4574050913980676,
+        "short_norm1": 0.6824251426455769,
+        "factor1": 1.871621986615851,
+        "factor2": 1.8534902196697927,
+        "tail_p2": 1.954972524691603e-28,
+        "p2_N10_tail": 6.649408600903506e-32,
+        "p2_epsilon": 5.214165220608344e-14,
+        "p2_N10_epsilon": 5.023267001063168e-14,
+        "actual_state_N10_norm_ratio": 0.018442558992867546,
+        "norm_P10_upper": 0.018748316183951026,
+        "p2_state_margin": "[1.40372090674027895446647441020340879494860393654832876919e-46 +/- 4.93e-103]",
+        "p2_checked": true,
+        "B": 163235433.85168573,
+        "initial_state_norm": 0.9999241670462128
+      },
+      {
+        "L0": 1.9,
+        "source": "run-012",
+        "side": 2,
+        "kind": "interior",
+        "N": 121,
+        "N_prediction": 127,
+        "tau": "0.1",
+        "finite_squared_upper": 2.3642165961980595e-27,
+        "tail_p1": 2.0135823349813266e-28,
+        "tail_ratio": 0.08516911430944832,
+        "epsilon_upper": 5.0651503725913135e-14,
+        "N10_upper": 4.862391473100166e-14,
+        "N10_tail": 6.848756966016356e-32,
+        "r1": 0.6824251426455769,
+        "r2": 0.4574050913980676,
+        "short_norm1": 0.6824251426455769,
+        "factor1": 1.871621986615851,
+        "factor2": 1.8534902196697927,
+        "tail_p2": 1.9940752946250652e-28,
+        "p2_N10_tail": 6.782408063264611e-32,
+        "p2_epsilon": 5.0632243932701286e-14,
+        "p2_N10_epsilon": 4.862390790833962e-14,
+        "actual_state_N10_norm_ratio": 0.018442558992867546,
+        "norm_P10_upper": 0.018748316183951026,
+        "p2_state_margin": "[3.75950887505332260455993579226620649136309773762768074516e-44 +/- 4.50e-101]",
+        "p2_checked": true,
+        "B": 10073716.212138876,
+        "initial_state_norm": 0.9999241670462128
+      },
+      {
+        "L0": 1.9,
+        "source": "run-012",
+        "side": 2,
+        "kind": "seam",
+        "N": 126,
+        "N_prediction": 132,
+        "tau": "0.1",
+        "finite_squared_upper": 7.989789292231963e-29,
+        "tail_p1": 5.2478216305217024e-30,
+        "tail_ratio": 0.06568160245346363,
+        "epsilon_upper": 9.22744355457357e-15,
+        "N10_upper": 8.938661972202652e-15,
+        "N10_tail": 1.7849309821631966e-33,
+        "r1": 0.6824251426455769,
+        "r2": 0.4574050913980676,
+        "short_norm1": 0.6824251426455769,
+        "factor1": 1.871621986615851,
+        "factor2": 1.8534902196697927,
+        "tail_p2": 5.196982155745521e-30,
+        "p2_N10_tail": 1.767639054191192e-33,
+        "p2_epsilon": 9.224688345850236e-15,
+        "p2_N10_epsilon": 8.938661004947766e-15,
+        "actual_state_N10_norm_ratio": 0.018442558992867546,
+        "norm_P10_upper": 0.018748316183951026,
+        "p2_state_margin": "[6.93349642123800051403314977980169046395036289111628105961e-46 +/- 2.03e-103]",
+        "p2_checked": true,
+        "B": 11975232.605354646,
+        "initial_state_norm": 0.9999241670462128
+      }
+    ],
+    "stages": [
+      {
+        "stage": "01-search",
+        "seconds": 432.76800862500005,
+        "peak_RSS_GiB": 0.793060302734375,
+        "source": "test/bie-bound/gapedge-v1/output/run-012/01-search"
+      },
+      {
+        "stage": "02-field",
+        "seconds": 19.993563999999992,
+        "peak_RSS_GiB": 1.041961669921875,
+        "source": "test/bie-bound/gapedge-v1/output/run-012/02-field"
+      },
+      {
+        "stage": "02-conditions",
+        "seconds": 1.2810731659999988,
+        "peak_RSS_GiB": 0.0003204345703125,
+        "source": "test/bie-bound/gapedge-v1/output/run-012/02-conditions"
+      },
+      {
+        "stage": "03-residuals",
+        "seconds": 720.8135405829998,
+        "peak_RSS_GiB": 1.3630218505859375,
+        "source": "test/bie-bound/gapedge-v1/output/run-012/03-residuals"
+      },
+      {
+        "stage": "04-residual-audit",
+        "seconds": 1.343375208999987,
+        "peak_RSS_GiB": 0.0005035400390625,
+        "source": "test/bie-bound/gapedge-v1/output/run-012/04-residual-audit"
+      },
+      {
+        "stage": "05-mass",
+        "seconds": 1.332666374999917,
+        "peak_RSS_GiB": 0.0031585693359375,
+        "source": "test/bie-bound/gapedge-v1/output/run-012/05-mass"
+      },
+      {
+        "stage": "06-enclosure",
+        "seconds": 1.333697834000077,
+        "peak_RSS_GiB": 0.0030364990234375,
+        "source": "test/bie-bound/gapedge-v1/output/run-012/06-enclosure"
+      },
+      {
+        "stage": "07-band",
+        "seconds": 152.48235150000005,
+        "peak_RSS_GiB": 0.2807769775390625,
+        "source": "test/bie-bound/gapedge-v1/output/run-012/07-band"
+      }
+    ],
+    "checks": {
+      "status": "COMPLETE",
+      "band_tests": 944,
+      "independent_band_checks": 8,
+      "failing_control_rejected": true,
+      "residual_audit": {
+        "epsilon_upper": [
+          0.0,
+          3.6027409522273874e-14,
+          5.2159987984407013e-14,
+          2.391635112726322e-13,
+          1.2137036865875786e-14
+        ],
+        "coverage_targets": 216,
+        "Gauss_checks": [
+          {
+            "kind": "junction",
+            "side": 1,
+            "index": 0,
+            "relative": 1.8691654539788666e-54
+          },
+          {
+            "kind": "junction",
+            "side": 2,
+            "index": 0,
+            "relative": 3.0389167338650314e-52
+          },
+          {
+            "kind": "material",
+            "side": 1,
+            "index": 0,
+            "relative": 4.645819760103474e-55
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 0,
+            "relative": 0.0
+          },
+          {
+            "kind": "material",
+            "side": 2,
+            "index": 0,
+            "relative": 5.034892529875436e-55
+          },
+          {
+            "kind": "interior",
+            "side": 1,
+            "index": 0,
+            "relative": 5.055666137604603e-52
+          },
+          {
+            "kind": "seam",
+            "side": 1,
+            "index": 0,
+            "relative": 4.134144907031841e-55
+          },
+          {
+            "kind": "interior",
+            "side": 2,
+            "index": 0,
+            "relative": 2.350120656994863e-51
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 1,
+            "relative": 0.0
+          },
+          {
+            "kind": "seam",
+            "side": 2,
+            "index": 0,
+            "relative": 4.181832101827988e-55
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 2,
+            "relative": 0.0
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 3,
+            "relative": 0.0
+          },
+          {
+            "kind": "junction",
+            "side": 1,
+            "index": 4,
+            "relative": 1.9187053682024414e-53
+          },
+          {
+            "kind": "junction",
+            "side": 2,
+            "index": 4,
+            "relative": 8.349895495913097e-52
+          },
+          {
+            "kind": "interior",
+            "side": 1,
+            "index": 4,
+            "relative": 3.7039355044717085e-52
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 4,
+            "relative": 0.0
+          },
+          {
+            "kind": "seam",
+            "side": 1,
+            "index": 4,
+            "relative": 4.618968030710382e-55
+          },
+          {
+            "kind": "interior",
+            "side": 2,
+            "index": 4,
+            "relative": 2.674840016761934e-51
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 5,
+            "relative": 0.0
+          },
+          {
+            "kind": "seam",
+            "side": 2,
+            "index": 4,
+            "relative": 5.173518051342889e-55
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 6,
+            "relative": 0.0
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 7,
+            "relative": 0.0
+          },
+          {
+            "kind": "junction",
+            "side": 1,
+            "index": 8,
+            "relative": 7.226772759221487e-54
+          },
+          {
+            "kind": "junction",
+            "side": 2,
+            "index": 8,
+            "relative": 2.3808437524376368e-51
+          },
+          {
+            "kind": "interior",
+            "side": 1,
+            "index": 8,
+            "relative": 4.217519497092474e-52
+          },
+          {
+            "kind": "interior",
+            "side": 2,
+            "index": 8,
+            "relative": 2.584979890519615e-51
+          }
+        ],
+        "max_Gauss_relative": 2.674840016761934e-51,
+        "all_passed": true,
+        "seconds": 0.110328542010393,
+        "cpu_seconds": 0.11021599999999998
+      }
+    },
+    "residual": {
+      "wall": 718.7809692500159,
+      "cpu": 3068.596118,
+      "setup": 84.12206149997655,
+      "queue": 634.5214416250237,
+      "workers": 5,
+      "columns": [
+        80,
+        160
+      ]
+    },
+    "orchestration_seconds": 0.9383997500001442,
+    "outer_seconds": 0.969110166000064,
+    "tail_accounting_diagnostic": {
+      "Q_with_N10": 3.8091910469538017e-13,
+      "width_with_N10": 5.146967979127919e-12,
+      "width_inflation_relative": 0.013420481714534693,
+      "status": "ordinary scalar diagnostic from reliable ledgers; delivered interval unchanged"
+    }
+  },
+  {
+    "source": "run-011",
+    "boundary": "one monitored cold-start process tree",
+    "L0": 2,
+    "k": 1.4555571632845181,
+    "epsilon": [
+      0.0,
+      3.60491324574771e-14,
+      6.282272044926229e-14,
+      4.358724028723057e-13,
+      8.2592121185879e-15
+    ],
+    "assembly": {
+      "bits": 192,
+      "epsilon_decimal_readback": [
+        "0.0",
+        "3.60491324574771e-14",
+        "6.282272044926229e-14",
+        "4.358724028723057e-13",
+        "8.2592121185879e-15"
+      ],
+      "U_certificate_readback": "[0.64786055990789197094261535123973929270 +/- 1.05e-39]",
+      "U_used": "0.647860",
+      "C_upper": [
+        "0",
+        "1.286774",
+        "1.348111",
+        "1.108617",
+        "1.108617"
+      ],
+      "terms_upper": [
+        "0.000000000000000000000000000000",
+        "0.000000000000046387086368837638",
+        "0.000000000000084692000487575436",
+        "0.000000000000483215555655086929",
+        "0.000000000000009156302961272562"
+      ],
+      "mu": "[2.11864665558887333977555538562204745313114463948442305069 +/- 8.81e-58]",
+      "Q_upper": "0.000000000000623450945472772564",
+      "U_minus_Q_lower": "0.6478599999993765490545272",
+      "R_upper": "0.0000000000040776472094307",
+      "exact_rational_R_upper": "0.0000000000040776472094307",
+      "mu_interval": [
+        "2.1186466555847956925661247",
+        "2.1186466555929509869849861"
+      ],
+      "k_interval": [
+        "1.4555571632831174015135430",
+        "1.4555571632859188354333414"
+      ],
+      "width_upper": "0.0000000000081552944188614",
+      "T15_margins_lower": [
+        "0.016146655584795692566124",
+        "3.498253344407049013015013"
+      ],
+      "seconds": 0.00022112502483651042,
+      "conditions": [
+        "same exact-input piecewise Helmholtz B field and all five residual certificates",
+        "same-field disks with positive geometric clearances",
+        "rounding-inclusive band certificate required from this same pipeline run"
+      ]
+    },
+    "time": 1501.089093667,
+    "peak": 1.827056884765625,
+    "conditions": {
+      "model": {
+        "name": "empty-rotated",
+        "d": 1,
+        "beta": 0.5,
+        "L0": 2,
+        "L_negative": 1,
+        "L_positive": 0.85,
+        "R": 0.2,
+        "a_negative": 0.12,
+        "a_positive": 0.2,
+        "angle_negative": 0,
+        "angle_positive": 0.13,
+        "rho_center": 1,
+        "rho_lead": 17,
+        "empty_center": true,
+        "center_nodes": 0,
+        "lead_nodes": 256,
+        "M": 48
+      },
+      "pieces": [
+        {
+          "piece": 0,
+          "empty_material": true,
+          "L": "2.00000000000000000000000000000000000000000000000000000000",
+          "curve_wall_clearance_lower": null,
+          "near_image_clearance_lower": null,
+          "proxy_clearance_lower": "0.450000000000000177635683940025046467781066894531250000000"
+        },
+        {
+          "piece": 1,
+          "empty_material": false,
+          "L": "1.00000000000000000000000000000000000000000000000000000000",
+          "curve_wall_clearance_lower": "[0.276802071403817250816513157480000525701346562361910346406 +/- 3.32e-58]",
+          "near_image_clearance_lower": "[0.276802071403817250816513157480000525701346562361910346406 +/- 3.32e-58]",
+          "proxy_clearance_lower": "0.850000000000000088817841970012523233890533447265625000000"
+        },
+        {
+          "piece": 2,
+          "empty_material": false,
+          "L": "0.849999999999999977795539507496869191527366638183593750000",
+          "curve_wall_clearance_lower": "[0.187364589685598139569655002913682541993747448855372232879 +/- 1.47e-58]",
+          "near_image_clearance_lower": "[0.187364589685598139569655002913682541993747448855372232879 +/- 1.47e-58]",
+          "proxy_clearance_lower": "0.850000000000000088817841970012523233890533447265625000000"
+        }
+      ],
+      "wood_gamma_lower": "[1.36698451183211045910788215561036339791922055493815316029 +/- 2.32e-57]",
+      "empty_center_material_exact_zero": true,
+      "status": "PASS",
+      "representation": "continuous trigonometric layer densities; three near images; fixed point sources; finite Rayleigh incident field; no wrap"
+    },
+    "band": [
+      {
+        "side": 0,
+        "lower": 2.752316576456724,
+        "upper": 0.2374690346658532
+      },
+      {
+        "side": 1,
+        "lower": 0.1969684500574937,
+        "upper": 1.1990155902279804
+      }
+    ],
+    "tails": [
+      {
+        "L0": 2,
+        "source": "run-011",
+        "side": 1,
+        "kind": "material",
+        "N": 58,
+        "N_prediction": 59,
+        "tau": "0.1",
+        "finite_squared_upper": 1.244916642014471e-27,
+        "tail_p1": 5.462330892225776e-29,
+        "tail_ratio": 0.043877081476707484,
+        "epsilon_upper": 3.60491324574771e-14,
+        "N10_upper": 3.528337642783513e-14,
+        "N10_tail": 1.0133840711317608e-35,
+        "r1": 0.4653020289899354,
+        "r2": 0.21430514821709734,
+        "short_norm1": 0.4653020289899354,
+        "factor1": 1.276333924896858,
+        "factor2": 1.2750655256636714,
+        "tail_p2": 5.456902519462222e-29,
+        "p2_N10_tail": 1.012376987050022e-35,
+        "p2_epsilon": 3.604837953652138e-14,
+        "p2_N10_epsilon": 3.528337642769242e-14,
+        "actual_state_N10_norm_ratio": 0.00043072297146708443,
+        "norm_P10_upper": 0.0004349026068903053,
+        "p2_state_margin": "[5.04664404581243020560216667021886680386380873882547711704e-42 +/- 1.03e-99]",
+        "p2_checked": true,
+        "B": 218574.47168843853,
+        "initial_state_norm": 0.9996870687164403
+      },
+      {
+        "L0": 2,
+        "source": "run-011",
+        "side": 1,
+        "kind": "interior",
+        "N": 59,
+        "N_prediction": 59,
+        "tau": "0.1",
+        "finite_squared_upper": 1.0662873077557611e-26,
+        "tail_p1": 2.3884877542655063e-28,
+        "tail_ratio": 0.022400039272568763,
+        "epsilon_upper": 1.0441131094371032e-13,
+        "N10_upper": 1.0326118884590367e-13,
+        "N10_tail": 4.431176895033642e-35,
+        "r1": 0.4653020289899354,
+        "r2": 0.21430514821709734,
+        "short_norm1": 0.4653020289899354,
+        "factor1": 1.276333924896858,
+        "factor2": 1.2750655256636714,
+        "tail_p2": 2.3861141152225496e-28,
+        "p2_N10_tail": 4.426773265806104e-35,
+        "p2_epsilon": 1.044101742603654e-13,
+        "p2_N10_epsilon": 1.0326118884569044e-13,
+        "actual_state_N10_norm_ratio": 0.00043072297146708443,
+        "norm_P10_upper": 0.0004349026068903053,
+        "p2_state_margin": "[1.07113024055758567537168686338426500471086848268669880007e-42 +/- 1.72e-99]",
+        "p2_checked": true,
+        "B": 992092.441702061,
+        "initial_state_norm": 0.9996870687164403
+      },
+      {
+        "L0": 2,
+        "source": "run-011",
+        "side": 1,
+        "kind": "seam",
+        "N": 63,
+        "N_prediction": 64,
+        "tau": "0.1",
+        "finite_squared_upper": 1.7500775385897376e-29,
+        "tail_p1": 9.029987223798472e-31,
+        "tail_ratio": 0.05159764602697411,
+        "epsilon_upper": 4.289962017113581e-15,
+        "N10_upper": 4.183392828007401e-15,
+        "N10_tail": 1.6752638014193827e-37,
+        "r1": 0.4653020289899354,
+        "r2": 0.21430514821709734,
+        "short_norm1": 0.4653020289899354,
+        "factor1": 1.276333924896858,
+        "factor2": 1.2750655256636714,
+        "tail_p2": 9.021013374050432e-31,
+        "p2_N10_tail": 1.6735989523703557e-37,
+        "p2_epsilon": 4.289857424589123e-15,
+        "p2_N10_epsilon": 4.183392827987503e-15,
+        "actual_state_N10_norm_ratio": 0.00043072297146708443,
+        "norm_P10_upper": 0.0004349026068903053,
+        "p2_state_margin": "[2.17370551934899880851676034410314693884128252286994704876e-45 +/- 8.88e-103]",
+        "p2_checked": true,
+        "B": 1354113.2436511156,
+        "initial_state_norm": 0.9996870687164403
+      },
+      {
+        "L0": 2,
+        "source": "run-011",
+        "side": 2,
+        "kind": "material",
+        "N": 208,
+        "N_prediction": 223,
+        "tau": "0.1",
+        "finite_squared_upper": 3.655063243016915e-27,
+        "tail_p1": 2.91630961629242e-28,
+        "tail_ratio": 0.07978904720629028,
+        "epsilon_upper": 6.282272044926229e-14,
+        "N10_upper": 6.047490552696583e-14,
+        "N10_tail": 2.150955478526668e-30,
+        "r1": 0.7952942875259816,
+        "r2": 0.6218077286084625,
+        "short_norm1": 0.7952942875259816,
+        "factor1": 2.721036634029493,
+        "factor2": 2.6615787075135735,
+        "tail_p2": 2.852584740010102e-28,
+        "p2_N10_tail": 2.103954511622425e-30,
+        "p2_epsilon": 6.277198194272605e-14,
+        "p2_N10_epsilon": 6.04745169267894e-14,
+        "actual_state_N10_norm_ratio": 0.08588135653060444,
+        "norm_P10_upper": 0.08725255998557592,
+        "p2_state_margin": "[3.67153298577215723773953809787419335270389395035516389196e-46 +/- 2.28e-103]",
+        "p2_checked": true,
+        "B": 156006103.7069944,
+        "initial_state_norm": 0.9999222711098734
+      },
+      {
+        "L0": 2,
+        "source": "run-011",
+        "side": 2,
+        "kind": "interior",
+        "N": 196,
+        "N_prediction": 210,
+        "tau": "0.1",
+        "finite_squared_upper": 6.2437902501063895e-27,
+        "tail_p1": 4.314844260088094e-28,
+        "tail_ratio": 0.06910616929440472,
+        "epsilon_upper": 8.170235416507409e-14,
+        "N10_upper": 7.903779292105547e-14,
+        "N10_tail": 3.1824597252554605e-30,
+        "r1": 0.7952942875259816,
+        "r2": 0.6218077286084625,
+        "short_norm1": 0.7952942875259816,
+        "factor1": 2.721036634029493,
+        "factor2": 2.6615787075135735,
+        "tail_p2": 4.2205597180369135e-28,
+        "p2_N10_tail": 3.112919148653998e-30,
+        "p2_epsilon": 8.16446337606464e-14,
+        "p2_N10_epsilon": 7.903735300005337e-14,
+        "actual_state_N10_norm_ratio": 0.08588135653060444,
+        "norm_P10_upper": 0.08725255998557592,
+        "p2_state_margin": "[1.32889321714495274593802471035366920775355378109311733775e-43 +/- 2.59e-100]",
+        "p2_checked": true,
+        "B": 9974382.363491714,
+        "initial_state_norm": 0.9999222711098734
+      },
+      {
+        "L0": 2,
+        "source": "run-011",
+        "side": 2,
+        "kind": "seam",
+        "N": 206,
+        "N_prediction": 221,
+        "tau": "0.1",
+        "finite_squared_upper": 4.586122439494724e-29,
+        "tail_p1": 3.949586316604757e-30,
+        "tail_ratio": 0.08612038555795282,
+        "epsilon_upper": 7.05767743039819e-15,
+        "N10_upper": 6.774242023504113e-15,
+        "N10_tail": 2.913059806185931e-32,
+        "r1": 0.7952942875259816,
+        "r2": 0.6218077286084625,
+        "short_norm1": 0.7952942875259816,
+        "factor1": 2.721036634029493,
+        "factor2": 2.6615787075135735,
+        "tail_p2": 3.863283100380428e-30,
+        "p2_N10_tail": 2.8494059421671324e-32,
+        "p2_epsilon": 7.051560642533514e-15,
+        "p2_N10_epsilon": 6.774195041063471e-15,
+        "actual_state_N10_norm_ratio": 0.08588135653060444,
+        "norm_P10_upper": 0.08725255998557592,
+        "p2_state_margin": "[9.80139464556856756280930161000744161469348252931624600637e-46 +/- 4.01e-103]",
+        "p2_checked": true,
+        "B": 11111696.208020564,
+        "initial_state_norm": 0.9999222711098734
+      }
+    ],
+    "stages": [
+      {
+        "stage": "01-search",
+        "seconds": 441.815999166,
+        "peak_RSS_GiB": 0.9232635498046875,
+        "source": "test/bie-bound/gapedge-v1/output/run-011/01-search"
+      },
+      {
+        "stage": "02-field",
+        "seconds": 24.580642082999987,
+        "peak_RSS_GiB": 0.931610107421875,
+        "source": "test/bie-bound/gapedge-v1/output/run-011/02-field"
+      },
+      {
+        "stage": "02-conditions",
+        "seconds": 1.3130337919999988,
+        "peak_RSS_GiB": 0.000518798828125,
+        "source": "test/bie-bound/gapedge-v1/output/run-011/02-conditions"
+      },
+      {
+        "stage": "03-residuals",
+        "seconds": 884.84554725,
+        "peak_RSS_GiB": 1.80755615234375,
+        "source": "test/bie-bound/gapedge-v1/output/run-011/03-residuals"
+      },
+      {
+        "stage": "04-residual-audit",
+        "seconds": 1.291879875000177,
+        "peak_RSS_GiB": 0.0001983642578125,
+        "source": "test/bie-bound/gapedge-v1/output/run-011/04-residual-audit"
+      },
+      {
+        "stage": "05-mass",
+        "seconds": 1.3231800829998974,
+        "peak_RSS_GiB": 0.0030364990234375,
+        "source": "test/bie-bound/gapedge-v1/output/run-011/05-mass"
+      },
+      {
+        "stage": "06-enclosure",
+        "seconds": 1.3216574169998694,
+        "peak_RSS_GiB": 0.0037994384765625,
+        "source": "test/bie-bound/gapedge-v1/output/run-011/06-enclosure"
+      },
+      {
+        "stage": "07-band",
+        "seconds": 142.64121616700004,
+        "peak_RSS_GiB": 0.3259735107421875,
+        "source": "test/bie-bound/gapedge-v1/output/run-011/07-band"
+      }
+    ],
+    "checks": {
+      "status": "COMPLETE",
+      "band_tests": 944,
+      "independent_band_checks": 8,
+      "failing_control_rejected": true,
+      "residual_audit": {
+        "epsilon_upper": [
+          0.0,
+          3.60491324574771e-14,
+          6.282272044926229e-14,
+          4.358724028723057e-13,
+          8.2592121185879e-15
+        ],
+        "coverage_targets": 216,
+        "Gauss_checks": [
+          {
+            "kind": "junction",
+            "side": 1,
+            "index": 0,
+            "relative": 5.36075201325224e-54
+          },
+          {
+            "kind": "junction",
+            "side": 2,
+            "index": 0,
+            "relative": 1.8162735535616272e-52
+          },
+          {
+            "kind": "material",
+            "side": 1,
+            "index": 0,
+            "relative": 4.368134305662451e-55
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 0,
+            "relative": 0.0
+          },
+          {
+            "kind": "material",
+            "side": 2,
+            "index": 0,
+            "relative": 5.885846005521326e-55
+          },
+          {
+            "kind": "interior",
+            "side": 1,
+            "index": 0,
+            "relative": 2.8227651270070144e-52
+          },
+          {
+            "kind": "seam",
+            "side": 1,
+            "index": 0,
+            "relative": 3.896118359100011e-55
+          },
+          {
+            "kind": "interior",
+            "side": 2,
+            "index": 0,
+            "relative": 2.2202632184768856e-51
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 1,
+            "relative": 0.0
+          },
+          {
+            "kind": "seam",
+            "side": 2,
+            "index": 0,
+            "relative": 5.295401756795006e-55
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 2,
+            "relative": 0.0
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 3,
+            "relative": 0.0
+          },
+          {
+            "kind": "junction",
+            "side": 1,
+            "index": 4,
+            "relative": 1.7766214043280776e-53
+          },
+          {
+            "kind": "junction",
+            "side": 2,
+            "index": 4,
+            "relative": 9.404838512511086e-52
+          },
+          {
+            "kind": "interior",
+            "side": 1,
+            "index": 4,
+            "relative": 2.2816973617344365e-52
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 4,
+            "relative": 0.0
+          },
+          {
+            "kind": "seam",
+            "side": 1,
+            "index": 4,
+            "relative": 4.039453627554127e-55
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 5,
+            "relative": 0.0
+          },
+          {
+            "kind": "interior",
+            "side": 2,
+            "index": 4,
+            "relative": 2.5682234052847738e-51
+          },
+          {
+            "kind": "seam",
+            "side": 2,
+            "index": 4,
+            "relative": 5.423149619800973e-55
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 6,
+            "relative": 0.0
+          },
+          {
+            "kind": "seam",
+            "side": 0,
+            "index": 7,
+            "relative": 0.0
+          },
+          {
+            "kind": "junction",
+            "side": 1,
+            "index": 8,
+            "relative": 3.6585668215096946e-53
+          },
+          {
+            "kind": "interior",
+            "side": 1,
+            "index": 8,
+            "relative": 1.471367081645621e-52
+          },
+          {
+            "kind": "junction",
+            "side": 2,
+            "index": 8,
+            "relative": 1.5153824803353132e-51
+          },
+          {
+            "kind": "interior",
+            "side": 2,
+            "index": 8,
+            "relative": 2.2589889920236728e-51
+          }
+        ],
+        "max_Gauss_relative": 2.5682234052847738e-51,
+        "all_passed": true,
+        "seconds": 0.14389133302029222,
+        "cpu_seconds": 0.143862
+      }
+    },
+    "residual": {
+      "wall": 882.6242181250127,
+      "cpu": 3784.544878,
+      "setup": 102.70931187499082,
+      "queue": 779.710828457959,
+      "workers": 5,
+      "columns": [
+        80,
+        230
+      ]
+    },
+    "orchestration_seconds": 0.9829964169998675,
+    "outer_seconds": 0.9729414170001291,
+    "tail_accounting_diagnostic": {
+      "Q_with_N10": 6.181216436007523e-13,
+      "width_with_N10": 8.08558239720363e-12,
+      "width_inflation_relative": 0.008621768752474779,
+      "status": "ordinary scalar diagnostic from reliable ledgers; delivered interval unchanged"
+    }
+  }
+]
