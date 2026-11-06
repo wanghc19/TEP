@@ -1,0 +1,117 @@
+{
+  "example": "ex2-L1.6",
+  "candidate": {
+    "k": 1.581444763915987,
+    "k_decimal": "1.581444763915987",
+    "k_hex": "3ff94d9906573195",
+    "aphys_ratio": 2.5484530403284666e-14,
+    "polish_history": [
+      1.581444763915987,
+      5.45179705069844e-15,
+      1.383543209105794e-14,
+      2.5484530403284666e-14
+    ],
+    "fallback_used": false,
+    "fallback_detail": [],
+    "k_hexfloat": "0x1.94d9906573195p+0"
+  },
+  "assembly": {
+    "bits": 192,
+    "epsilon_decimal_readback": [
+      "0.0",
+      "5.247591379082931e-14",
+      "6.495144365389374e-14",
+      "2.5664257704793595e-13",
+      "7.323273677718942e-15"
+    ],
+    "U_certificate_readback": "[0.64888937929330232972686033875492052861 +/- 4.79e-39]",
+    "U_used": "0.648889",
+    "C_upper": [
+      "0",
+      "1.167159",
+      "1.217512",
+      "1.029217",
+      "1.029217"
+    ],
+    "terms_upper": [
+      "0.000000000000000000000000000000",
+      "0.000000000000061247735064190547",
+      "0.000000000000079079162065939476",
+      "0.000000000000264140903221545495",
+      "0.000000000000007537237764760857"
+    ],
+    "mu": "[2.50096754131729180767383022229179275950605829836568466600 +/- 2.41e-57]",
+    "Q_upper": "0.000000000000412005038116436373",
+    "U_minus_Q_lower": "0.6488889999995879949618835",
+    "R_upper": "0.0000000000031759244714861",
+    "exact_rational_R_upper": "0.0000000000031759244714861",
+    "mu_interval": [
+      "2.5009675413141158832023441",
+      "2.5009675413204677321453163"
+    ],
+    "k_interval": [
+      "1.5814447639149828628460134",
+      "1.5814447639169911052734138"
+    ],
+    "width_upper": "0.0000000000063518489429721",
+    "T15_margins_lower": [
+      "0.369367541314115883202344",
+      "3.115932458679532267854683"
+    ],
+    "seconds": 0.0002578750136308372,
+    "conditions": [
+      "same exact-input piecewise Helmholtz B field and all five residual certificates",
+      "same-field disks with positive geometric clearances",
+      "rounding-inclusive band certificate required from this same pipeline run"
+    ]
+  },
+  "band_minima": [
+    {
+      "side": 0,
+      "lower": 2.921868330851555,
+      "upper": 0.2374690346658532
+    },
+    {
+      "side": 1,
+      "lower": 0.4370127110390786,
+      "upper": 1.1990155902279804
+    }
+  ],
+  "band_sign_tests": 944,
+  "settings": {
+    "example": "ex2-L1.6",
+    "model": {
+      "name": "empty-rotated",
+      "d": 1,
+      "beta": 0.5,
+      "L0": 1.6,
+      "L_negative": 1,
+      "L_positive": 0.85,
+      "R": 0.2,
+      "a_negative": 0.12,
+      "a_positive": 0.2,
+      "angle_negative": 0,
+      "angle_positive": 0.13,
+      "rho_center": 1,
+      "rho_lead": 17,
+      "empty_center": true,
+      "center_nodes": 0,
+      "lead_nodes": 256,
+      "M": 48
+    },
+    "evaluation": {
+      "workers": 6,
+      "states_left": 100,
+      "states_right": 100,
+      "tail_ratio": "1e-2",
+      "k_lower": "1.46",
+      "k_upper": "2.37"
+    },
+    "parameter_rule": "JSON decimal literals are rounded to binary64 by MATLAB for field generation; exported hexadecimal words define exact inputs.",
+    "floating_band_edge": "1.441"
+  },
+  "tolerances": {
+    "canonical_verify": "Identical printed scientific values on the tested environment, excluding timing and worker order.",
+    "new_reproduction": "Same candidate bits; interval width and nonzero epsilon/U/R within 1%; zero center group remains exactly zero."
+  }
+}

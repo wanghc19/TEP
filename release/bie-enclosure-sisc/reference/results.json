@@ -1,0 +1,85 @@
+{
+  "candidate": {
+    "k": 1.558437894182088,
+    "k_decimal": "1.558437894182088",
+    "k_hex": "3ff8ef5c92c5bf30",
+    "aphys_ratio": 2.8036052938003728e-14,
+    "polish_history": [
+      [
+        1.5584378941806103,
+        -1.4776737897429276e-12,
+        1.653267947720893e-14,
+        2.71658650857511e-12
+      ],
+      [
+        1.558437894182088,
+        -6.350498144393024e-16,
+        1.5262929945082898e-14,
+        2.8036052938003728e-14
+      ]
+    ],
+    "fallback_used": false,
+    "fallback_detail": [],
+    "k_hexfloat": "0x1.8ef5c92c5bf30p+0"
+  },
+  "assembly": {
+    "bits": 192,
+    "epsilon_decimal_readback": [
+      "1.261583568749579e-12",
+      "5.081050050368226e-14",
+      "5.231554719622704e-14",
+      "2.0345791259404752e-13",
+      "5.783689953127645e-15"
+    ],
+    "U_certificate_readback": "[1.2358712087405960704825068846483253639 +/- 5.54e-39]",
+    "U_used": "1.23587",
+    "terms_upper": [
+      "0.000000000003141663528412914104",
+      "0.000000000000060036823616642396",
+      "0.000000000000064554298622859590",
+      "0.000000000000210691451760503692",
+      "0.000000000000005989317482031193"
+    ],
+    "mu": "[2.42872867002270091941565319004680883916525613943684371813 +/- 1.80e-57]",
+    "Q_upper": "0.000000000003482935419894950973",
+    "U_minus_Q_lower": "1.2358699999965170645801050",
+    "R_upper": "0.0000000000136893121609235",
+    "exact_rational_R_upper": "0.0000000000136893121609235",
+    "mu_interval": [
+      "2.4287286700090116072547296",
+      "2.4287286700363902315765767"
+    ],
+    "k_interval": [
+      "1.5584378941776960035929265",
+      "1.5584378941864799995494084"
+    ],
+    "width_upper": "0.0000000000273786243218470",
+    "T15_margins_lower": [
+      "0.691604670009011607254729",
+      "3.211896329963609768423423"
+    ],
+    "seconds": 0.0005590420332737267,
+    "conditions": [
+      "same exact-input piecewise Helmholtz B field and all five residual certificates",
+      "eight interior disks with the unchanged interior representation",
+      "rounding-inclusive band certificate required from this same pipeline run"
+    ]
+  },
+  "band_minima": [
+    {
+      "side": 0,
+      "lower": 0.0926524974089423,
+      "upper": 0.17853919938633886
+    },
+    {
+      "side": 1,
+      "lower": 0.0001397223842868989,
+      "upper": 0.007520504497007234
+    }
+  ],
+  "band_sign_tests": 472,
+  "tolerances": {
+    "canonical_verify": "Exact printed scientific values; exclude timing and order of worker records.",
+    "new_reproduction": "Same candidate bits; width and each group within 1%, because SVD refits may change the represented field."
+  }
+}

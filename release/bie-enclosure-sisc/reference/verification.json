@@ -1,0 +1,107 @@
+{
+  "status": "PASS",
+  "checks": {
+    "four_LDL": true,
+    "deliberate_failure": true,
+    "band_472": true,
+    "two_precision_and_rational": true,
+    "two_sided_traces": true,
+    "reference_epsilon_decimal_readback": true,
+    "reference_U_certificate_readback": true,
+    "reference_Q_upper": true,
+    "reference_R_upper": true,
+    "reference_mu_interval": true,
+    "reference_k_interval": true,
+    "reference_width_upper": true,
+    "reference_band": true,
+    "no_forbidden_reads": true
+  },
+  "opened_files": 469,
+  "wall_seconds": 652.1213508750079,
+  "peak_rss_gib": 1.99505615234375,
+  "outer_monitor_peak_rss_gib": 1.9793548583984375,
+  "peak_definition": "Maximum sampled process-tree RSS across outer and stage monitors",
+  "stages": [
+    {
+      "stage": "03-residuals",
+      "seconds": 536.6540657500154,
+      "peak_rss_gib": 1.99505615234375
+    },
+    {
+      "stage": "04-residual-audit",
+      "seconds": 1.034685000020545,
+      "peak_rss_gib": 0.0001983642578125
+    },
+    {
+      "stage": "05-mass",
+      "seconds": 19.734197332989424,
+      "peak_rss_gib": 0.1049346923828125
+    },
+    {
+      "stage": "06-enclosure",
+      "seconds": 1.033931499987375,
+      "peak_rss_gib": 0.001373291015625
+    },
+    {
+      "stage": "07-band",
+      "seconds": 74.79453508398728,
+      "peak_rss_gib": 0.2578887939453125
+    },
+    {
+      "stage": "08-traces",
+      "seconds": 17.698779415979516,
+      "peak_rss_gib": 0.1793670654296875
+    }
+  ],
+  "smoke": {
+    "returncode": 0,
+    "stdout": "PASS exact finite binary64 arrays\nPASS candidate and field dimensions\nPASS exact rational outward interval\n",
+    "stderr": "",
+    "seconds": 0.20837979100178927
+  },
+  "standalone_control": {
+    "steps": [
+      {
+        "high": "10.000000000000000000000000000000000000",
+        "floating_second": -12.844505537253596
+      }
+    ],
+    "check": {
+      "passed": false,
+      "margin_lower": -12.844505537271779,
+      "compressed_lower": -12.844505537274799,
+      "Gram_lower": 0.9999999999997634,
+      "Gram_upper": 1.0000000000002354,
+      "float_second": -12.844505537253779,
+      "seconds": 0.2788550410186872
+    },
+    "two_negative_directions_upper": -12.844505537253545,
+    "Gram_lower": 0.9999999999999998,
+    "scalars": {
+      "theta": "[0.39269908169872415480783042290993786052 +/- 5.15e-39]",
+      "radius": "[0.39269908169872415480783042290993786052 +/- 5.15e-39]",
+      "low": "[0.8561817894091843563458479270824686611 +/- 5.67e-38]",
+      "high": "10.000000000000000000000000000000000000",
+      "tail_lower": "[1890.8643780320242051815025175316856469 +/- 4.48e-35]",
+      "denominator": "[1720.8643780320242051815025175316856469 +/- 4.48e-35]",
+      "coefficient_error": "[1.14495905796501295667897878783662766e-87 +/- 1.24e-123]",
+      "mass_error": "[3.09596929273739503485995864231024119e-84 +/- 5.98e-120]",
+      "G_error": "[1.48606526051394961673278014830891577e-82 +/- 4.08e-118]",
+      "upper_error": "[3.95952674647085529923902869913560890e-83 +/- 6.32e-119]"
+    }
+  },
+  "standalone_control_monitor": {
+    "returncode": 0,
+    "reason": "completed",
+    "wall_seconds": 2.103074042010121,
+    "peak_process_tree_rss_gib": 0.19854736328125,
+    "peak_experiment_disk_mb": 14.929504,
+    "output_disk_mb": 0.001847,
+    "peak_by_part_gib": {
+      "startup": 0.19854736328125
+    },
+    "peak_by_pid_gib": {
+      "34796": 0.19854736328125
+    }
+  }
+}

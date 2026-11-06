@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "recorded_unique_reads": 364,
+  "ledgers": [
+    "opened-files.jsonl",
+    "driver-opened-files.jsonl"
+  ],
+  "forbidden_project_reads": []
+}

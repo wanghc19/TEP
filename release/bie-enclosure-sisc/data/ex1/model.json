@@ -1,0 +1,128 @@
+{
+  "schema": "I92_ESTIMATE_CONFIG_V1",
+  "k0": {
+    "binary64": "3ff8ef5c92c5bf30"
+  },
+  "model": {
+    "beta": {
+      "binary64": "3fe0000000000000"
+    },
+    "d": 1,
+    "L": 1,
+    "R": {
+      "binary64": "3fc999999999999a"
+    },
+    "a_negative": {
+      "binary64": "3fbeb851eb851eb8"
+    },
+    "a_positive": {
+      "binary64": "3fc999999999999a"
+    },
+    "rho_center": 4,
+    "rho_lead": 17,
+    "rho_exterior": 1,
+    "star_scale": 1,
+    "X_L": {
+      "binary64": "bfe0000000000000"
+    },
+    "X_R": {
+      "binary64": "3fe0000000000000"
+    },
+    "H": {
+      "binary64": "3ff199999999999a"
+    },
+    "proxy_dist": {
+      "binary64": "3fc999999999999a"
+    },
+    "collar_h": {
+      "binary64": "3f70624dd2f1a9fc"
+    },
+    "arc_band": {
+      "binary64": "3f847ae147ae147b"
+    },
+    "disk_center": [
+      0,
+      {
+        "binary64": "3fd8000000000000"
+      }
+    ],
+    "disk_radius": {
+      "binary64": "3fb0000000000000"
+    },
+    "geometry_nodes": [
+      4096,
+      8192
+    ],
+    "area_tolerance": {
+      "binary64": "3d719799812dea11"
+    },
+    "scale_eps_factor": 100,
+    "overlap_count": 1
+  },
+  "discretization": {
+    "ntot_center": 512,
+    "ntot_negative": 256,
+    "ntot_positive": 256,
+    "M": 48,
+    "K": 97,
+    "nside": 160,
+    "ntop": 160,
+    "nproxy": 80,
+    "mpw": 32
+  },
+  "evaluation": {
+    "material_nodes": 768,
+    "wall_nodes": 768,
+    "disk_grid": [
+      32,
+      64
+    ],
+    "disk_shift": {
+      "binary64": "3fe0000000000000"
+    },
+    "lead_cells": 40,
+    "wall_batch": 64,
+    "mass_batch": 32,
+    "audit_tolerance": {
+      "binary64": "3ddb7cdfd9d7bdbb"
+    },
+    "propagation_rcond_min": {
+      "binary64": "3e45798ee2308c3a"
+    },
+    "propagation_residual_max": {
+      "binary64": "3ddb7cdfd9d7bdbb"
+    }
+  },
+  "qualification": {
+    "qz_eps_factor": 100,
+    "qz_residual_factor": 10,
+    "inner_floor": {
+      "binary64": "3e45798ee2308c3a"
+    },
+    "inner_residual_factor": 100,
+    "outer_floor": {
+      "binary64": "3eb0c6f7a0b5ed8d"
+    },
+    "outer_inner_factor": 10,
+    "residual_max": {
+      "binary64": "3ddb7cdfd9d7bdbb"
+    },
+    "bie_residual_max": {
+      "binary64": "3e45798ee2308c3a"
+    }
+  },
+  "backend": {
+    "fmm_eps": {
+      "binary64": "3d719799812dea11"
+    },
+    "threads": 11,
+    "omp_dynamic": "FALSE"
+  },
+  "resources": {
+    "rss_bytes": {
+      "binary64": "41e65a0bc0000000"
+    },
+    "hard_seconds": 2400,
+    "sample_seconds": 1
+  }
+}

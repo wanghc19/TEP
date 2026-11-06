@@ -1,0 +1,177 @@
+{
+  "package_bytes": 74870465,
+  "dataset_bytes": {
+    "ex1": 13540234,
+    "ex2-L1": 13495007,
+    "ex2-L1.6": 13495017,
+    "ex2-L1.9": 13495015,
+    "ex2-L2": 13495007
+  },
+  "validation_bytes": 271543552,
+  "worktree_bytes": 1425995006,
+  "all_runs": [
+    {
+      "run": "run-006",
+      "status": "COMPLETE",
+      "wall_seconds": 1076.1952597920317,
+      "peak_rss_gib": 1.7861480712890625,
+      "empty_output_gate": true,
+      "project_read_audit": true
+    },
+    {
+      "run": "run-007",
+      "status": "PASS",
+      "wall_seconds": 574.5067784580169,
+      "peak_rss_gib": 2.1137847900390625,
+      "empty_output_gate": true,
+      "project_read_audit": true
+    },
+    {
+      "run": "run-008",
+      "status": "COMPLETE",
+      "wall_seconds": 1531.6636180419591,
+      "peak_rss_gib": 2.4917449951171875,
+      "empty_output_gate": true,
+      "project_read_audit": true
+    },
+    {
+      "run": "run-009",
+      "status": "PASS",
+      "wall_seconds": 1063.3759350829641,
+      "peak_rss_gib": 2.1842193603515625,
+      "empty_output_gate": true,
+      "project_read_audit": true
+    },
+    {
+      "run": "run-010",
+      "status": "COMPLETE",
+      "wall_seconds": 1194.2188430419774,
+      "peak_rss_gib": 1.6894989013671875,
+      "empty_output_gate": true,
+      "project_read_audit": true
+    },
+    {
+      "run": "run-011",
+      "status": "PASS",
+      "wall_seconds": 718.5505011250498,
+      "peak_rss_gib": 1.958740234375,
+      "empty_output_gate": true,
+      "project_read_audit": true
+    },
+    {
+      "run": "run-012",
+      "status": "COMPLETE",
+      "wall_seconds": 1352.7661384580424,
+      "peak_rss_gib": 1.7490081787109375,
+      "empty_output_gate": true,
+      "project_read_audit": true
+    },
+    {
+      "run": "run-013",
+      "status": "PASS",
+      "wall_seconds": 854.3466074999887,
+      "peak_rss_gib": 1.9452667236328125,
+      "empty_output_gate": true,
+      "project_read_audit": true
+    },
+    {
+      "run": "run-014",
+      "status": "PASS",
+      "wall_seconds": 679.3852935000323,
+      "peak_rss_gib": 1.9165496826171875,
+      "empty_output_gate": true,
+      "project_read_audit": true
+    }
+  ],
+  "total_monitored_seconds": 9045.008975000062,
+  "peak_rss_gib": 2.4917449951171875,
+  "verify_checks": {
+    "ex1": {
+      "four_LDL": true,
+      "deliberate_failure": true,
+      "band_472": true,
+      "two_precision_and_rational": true,
+      "two_sided_traces": true,
+      "reference_epsilon_decimal_readback": true,
+      "reference_U_certificate_readback": true,
+      "reference_Q_upper": true,
+      "reference_R_upper": true,
+      "reference_mu_interval": true,
+      "reference_k_interval": true,
+      "reference_width_upper": true,
+      "reference_band": true
+    },
+    "ex2-L1": {
+      "canonical_band_partition": true,
+      "eight_LDL": true,
+      "deliberate_failure": true,
+      "band_944": true,
+      "two_precision_and_rational": true,
+      "general_p_and_N_plus_10": true,
+      "reference_epsilon_decimal_readback": true,
+      "reference_U_certificate_readback": true,
+      "reference_Q_upper": true,
+      "reference_R_upper": true,
+      "reference_mu_interval": true,
+      "reference_k_interval": true,
+      "reference_width_upper": true,
+      "reference_band": true
+    },
+    "ex2-L1.6": {
+      "canonical_band_partition": true,
+      "eight_LDL": true,
+      "deliberate_failure": true,
+      "band_944": true,
+      "two_precision_and_rational": true,
+      "general_p_and_N_plus_10": true,
+      "reference_epsilon_decimal_readback": true,
+      "reference_U_certificate_readback": true,
+      "reference_Q_upper": true,
+      "reference_R_upper": true,
+      "reference_mu_interval": true,
+      "reference_k_interval": true,
+      "reference_width_upper": true,
+      "reference_band": true
+    },
+    "ex2-L1.9": {
+      "canonical_band_partition": true,
+      "eight_LDL": true,
+      "deliberate_failure": true,
+      "band_944": true,
+      "two_precision_and_rational": true,
+      "general_p_and_N_plus_10": true,
+      "reference_epsilon_decimal_readback": true,
+      "reference_U_certificate_readback": true,
+      "reference_Q_upper": true,
+      "reference_R_upper": true,
+      "reference_mu_interval": true,
+      "reference_k_interval": true,
+      "reference_width_upper": true,
+      "reference_band": true
+    },
+    "ex2-L2": {
+      "canonical_band_partition": true,
+      "eight_LDL": true,
+      "deliberate_failure": true,
+      "band_944": true,
+      "two_precision_and_rational": true,
+      "general_p_and_N_plus_10": true,
+      "reference_epsilon_decimal_readback": true,
+      "reference_U_certificate_readback": true,
+      "reference_Q_upper": true,
+      "reference_R_upper": true,
+      "reference_mu_interval": true,
+      "reference_k_interval": true,
+      "reference_width_upper": true,
+      "reference_band": true
+    }
+  },
+  "smoke_passed": [
+    "ex1",
+    "ex2-L1",
+    "ex2-L1.6",
+    "ex2-L1.9",
+    "ex2-L2"
+  ],
+  "binary_files": []
+}

@@ -1,0 +1,40 @@
+{
+  "candidate_hex": "3ff8ef5c92c5bf30",
+  "exact_checks": {
+    "epsilon_decimal_readback": true,
+    "U_certificate_readback": true,
+    "R_upper": true,
+    "Q_upper": true,
+    "mu_interval": true,
+    "k_interval": true,
+    "width_upper": true
+  },
+  "MATLAB_dependencies": {
+    "01-search": {
+      "passed": true,
+      "unexpected": []
+    },
+    "02-field": {
+      "passed": true,
+      "unexpected": []
+    }
+  },
+  "epsilon_relative_changes": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "U_relative_change": 0.0,
+  "Q_relative_change": 0.0,
+  "R_relative_change": 0.0,
+  "width_relative_change": 0.0,
+  "width_relative_change_to_rounded_prompt": 1.3721397896238052e-05,
+  "source": "package cold reproduction run-004",
+  "comparison": "pipeline-v1 run-002, complete printed records",
+  "empty_start": {
+    "initial_empty": true,
+    "nonempty_refused": true
+  }
+}

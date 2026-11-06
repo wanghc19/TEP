@@ -1,0 +1,172 @@
+{
+  "epsilon_upper": [
+    0.0,
+    5.247591379082931e-14,
+    6.495144365389374e-14,
+    2.5664257704793595e-13,
+    7.323273677718942e-15
+  ],
+  "coverage_targets": 216,
+  "Gauss_checks": [
+    {
+      "kind": "junction",
+      "side": 2,
+      "index": 0,
+      "relative": 3.316862277897598e-52
+    },
+    {
+      "kind": "junction",
+      "side": 1,
+      "index": 0,
+      "relative": 5.117625324387047e-55
+    },
+    {
+      "kind": "seam",
+      "side": 0,
+      "index": 0,
+      "relative": 0.0
+    },
+    {
+      "kind": "material",
+      "side": 1,
+      "index": 0,
+      "relative": 4.850548091630148e-55
+    },
+    {
+      "kind": "material",
+      "side": 2,
+      "index": 0,
+      "relative": 3.597057847755114e-55
+    },
+    {
+      "kind": "interior",
+      "side": 1,
+      "index": 0,
+      "relative": 2.985302022684613e-51
+    },
+    {
+      "kind": "interior",
+      "side": 2,
+      "index": 0,
+      "relative": 2.515701513898738e-51
+    },
+    {
+      "kind": "seam",
+      "side": 1,
+      "index": 0,
+      "relative": 5.0196675875069805e-55
+    },
+    {
+      "kind": "seam",
+      "side": 2,
+      "index": 0,
+      "relative": 4.933458170264692e-55
+    },
+    {
+      "kind": "seam",
+      "side": 0,
+      "index": 1,
+      "relative": 0.0
+    },
+    {
+      "kind": "seam",
+      "side": 0,
+      "index": 2,
+      "relative": 0.0
+    },
+    {
+      "kind": "seam",
+      "side": 0,
+      "index": 3,
+      "relative": 0.0
+    },
+    {
+      "kind": "junction",
+      "side": 1,
+      "index": 4,
+      "relative": 1.583403751906278e-54
+    },
+    {
+      "kind": "junction",
+      "side": 2,
+      "index": 4,
+      "relative": 6.529610036138691e-52
+    },
+    {
+      "kind": "seam",
+      "side": 0,
+      "index": 4,
+      "relative": 0.0
+    },
+    {
+      "kind": "interior",
+      "side": 1,
+      "index": 4,
+      "relative": 2.772909761711079e-51
+    },
+    {
+      "kind": "interior",
+      "side": 2,
+      "index": 4,
+      "relative": 2.3002248619867826e-51
+    },
+    {
+      "kind": "seam",
+      "side": 0,
+      "index": 5,
+      "relative": 0.0
+    },
+    {
+      "kind": "seam",
+      "side": 1,
+      "index": 4,
+      "relative": 4.812201358293512e-55
+    },
+    {
+      "kind": "seam",
+      "side": 2,
+      "index": 4,
+      "relative": 5.215416137218091e-55
+    },
+    {
+      "kind": "seam",
+      "side": 0,
+      "index": 6,
+      "relative": 0.0
+    },
+    {
+      "kind": "seam",
+      "side": 0,
+      "index": 7,
+      "relative": 0.0
+    },
+    {
+      "kind": "junction",
+      "side": 1,
+      "index": 8,
+      "relative": 1.5886372800535925e-54
+    },
+    {
+      "kind": "junction",
+      "side": 2,
+      "index": 8,
+      "relative": 9.690250431401301e-52
+    },
+    {
+      "kind": "interior",
+      "side": 1,
+      "index": 8,
+      "relative": 3.114294015535997e-51
+    },
+    {
+      "kind": "interior",
+      "side": 2,
+      "index": 8,
+      "relative": 2.5342276746734772e-51
+    }
+  ],
+  "max_Gauss_relative": 3.114294015535997e-51,
+  "all_passed": true,
+  "seconds": 0.08890766702825204,
+  "cpu_seconds": 0.087078
+}

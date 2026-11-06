@@ -1,0 +1,32 @@
+{
+  "example": "ex2-L1",
+  "model": {
+    "name": "empty-rotated",
+    "d": 1,
+    "beta": 0.5,
+    "L0": 1,
+    "L_negative": 1,
+    "L_positive": 0.85,
+    "R": 0.2,
+    "a_negative": 0.12,
+    "a_positive": 0.2,
+    "angle_negative": 0,
+    "angle_positive": 0.13,
+    "rho_center": 1,
+    "rho_lead": 17,
+    "empty_center": true,
+    "center_nodes": 0,
+    "lead_nodes": 256,
+    "M": 48
+  },
+  "evaluation": {
+    "workers": 8,
+    "states_left": 80,
+    "states_right": 80,
+    "tail_ratio": "1e-6",
+    "k_lower": "1.46",
+    "k_upper": "2.37"
+  },
+  "parameter_rule": "JSON decimal literals are rounded to binary64 by MATLAB for field generation; exported hexadecimal words define exact inputs.",
+  "floating_band_edge": "1.441"
+}

@@ -1,0 +1,145 @@
+{
+  "epsilon_upper": [
+    1.261583568749579e-12,
+    5.081050050368226e-14,
+    5.231554719622704e-14,
+    2.0345791259404752e-13,
+    5.783689953127645e-15
+  ],
+  "ratios": [
+    1.0004091955672163,
+    0.8329895621844342,
+    0.8223561795878442,
+    0.9436378651806729,
+    0.8151367664398798
+  ],
+  "mixed_Q_upper": 3.482681972760318e-12,
+  "mixed_width_upper": 2.7376632027116248e-11,
+  "coverage_targets": 408,
+  "Gauss_checks": [
+    {
+      "kind": "junction",
+      "side": 2,
+      "index": 0,
+      "relative": 4.082709756791796e-52
+    },
+    {
+      "kind": "junction",
+      "side": 1,
+      "index": 0,
+      "relative": 3.6623732999988685e-54
+    },
+    {
+      "kind": "seam",
+      "side": 0,
+      "index": 0,
+      "relative": 4.106539668638808e-55
+    },
+    {
+      "kind": "material",
+      "side": 2,
+      "index": 0,
+      "relative": 4.710350126592218e-55
+    },
+    {
+      "kind": "material",
+      "side": 1,
+      "index": 0,
+      "relative": 5.1444559877353836e-55
+    },
+    {
+      "kind": "interior",
+      "side": 1,
+      "index": 0,
+      "relative": 2.5650565763410565e-51
+    },
+    {
+      "kind": "interior",
+      "side": 2,
+      "index": 0,
+      "relative": 2.6657969970472574e-51
+    },
+    {
+      "kind": "seam",
+      "side": 1,
+      "index": 0,
+      "relative": 3.774881597909996e-55
+    },
+    {
+      "kind": "seam",
+      "side": 2,
+      "index": 0,
+      "relative": 5.080960094097191e-55
+    },
+    {
+      "kind": "junction",
+      "side": 1,
+      "index": 4,
+      "relative": 1.7694766474423077e-53
+    },
+    {
+      "kind": "junction",
+      "side": 2,
+      "index": 4,
+      "relative": 4.4433138915695415e-52
+    },
+    {
+      "kind": "seam",
+      "side": 0,
+      "index": 4,
+      "relative": 3.6816928962677524e-55
+    },
+    {
+      "kind": "interior",
+      "side": 1,
+      "index": 4,
+      "relative": 2.5018328428367583e-51
+    },
+    {
+      "kind": "interior",
+      "side": 2,
+      "index": 4,
+      "relative": 2.753212197613622e-51
+    },
+    {
+      "kind": "seam",
+      "side": 1,
+      "index": 4,
+      "relative": 5.3807889893346695e-55
+    },
+    {
+      "kind": "seam",
+      "side": 2,
+      "index": 4,
+      "relative": 3.720681716565678e-55
+    },
+    {
+      "kind": "junction",
+      "side": 1,
+      "index": 8,
+      "relative": 5.914172922674541e-54
+    },
+    {
+      "kind": "junction",
+      "side": 2,
+      "index": 8,
+      "relative": 4.475515115975747e-52
+    },
+    {
+      "kind": "interior",
+      "side": 1,
+      "index": 8,
+      "relative": 2.3864253233378353e-51
+    },
+    {
+      "kind": "interior",
+      "side": 2,
+      "index": 8,
+      "relative": 2.8313328237631716e-51
+    }
+  ],
+  "max_Gauss_relative": 2.8313328237631716e-51,
+  "all_passed": true,
+  "seconds": 0.08285308303311467,
+  "cpu_seconds": 0.07501200000000001
+}

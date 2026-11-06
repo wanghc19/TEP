@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "checks": {
+    "candidate_bits": true,
+    "width_within_one_percent": true,
+    "zero_group_preserved": true
+  },
+  "k_hex": "3ffe44632bf7ef62",
+  "epsilon_relative_changes": [
+    0.0,
+    0.0,
+    0.0,
+    9.212915735870906e-09,
+    0.0
+  ],
+  "relative_changes": {
+    "Q_upper": 5.265103064710768e-09,
+    "U_used": 0.0,
+    "R_upper": 5.265096699998531e-09,
+    "width_upper": 5.265096699998701e-09
+  },
+  "U_certificate_identical": true,
+  "exact_scientific_values": false,
+  "current": {
+    "epsilon_decimal_readback": [
+      "0.0",
+      "2.071592951936118e-14",
+      "2.304042346921608e-14",
+      "7.757931298908954e-14",
+      "8.900234823729722e-15"
+    ],
+    "U_used": "0.645928",
+    "Q_upper": "0.000000000000139283748129089527",
+    "R_upper": "0.0000000000015432954834847",
+    "mu_interval": [
+      "3.5785142862888827713834501",
+      "3.5785142862919693623504195"
+    ],
+    "k_interval": [
+      "1.8916961400523295383424295",
+      "1.8916961400531453646534362"
+    ],
+    "width_upper": "0.0000000000030865909669693"
+  },
+  "old_field_and_B_fit_exactly_equal": true,
+  "wall_difference_cause": "Each field own local wall coordinate in the gap-edge proxy envelope, replacing the previous maximum over both fields."
+}

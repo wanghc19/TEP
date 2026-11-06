@@ -1,0 +1,309 @@
+[
+  {
+    "stage": "01-search",
+    "driver_seconds": 444.65163570904406,
+    "threads_or_workers": 11,
+    "monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 444.6509332919959,
+      "peak_process_tree_rss_gib": 0.93487548828125,
+      "peak_experiment_disk_mb": 16.224378,
+      "output_disk_mb": 7.831211,
+      "peak_by_part_gib": {
+        "startup": 0.631591796875,
+        "gap": 0.93487548828125,
+        "determinant-depth-0": 0.79302978515625,
+        "determinant-depth-1": 0.69244384765625,
+        "determinant-depth-2": 0.683074951171875,
+        "polish": 0.6551055908203125,
+        "confirmation": 0.6368408203125,
+        "complete": 0.7107086181640625
+      },
+      "peak_by_pid_gib": {
+        "37916": 0.8170013427734375,
+        "37983": 0.143768310546875,
+        "38004": 0.0012664794921875
+      }
+    },
+    "command": [
+      "<MATLAB>",
+      "-sd",
+      "<RUN>/01-search",
+      "-batch",
+      "restoredefaultpath;addpath('<PKG>/src/matlab');addpath('<FMM_ROOT>');addpath('<PKG>/src/matlab/ex2');addpath('<PKG>/src/matlab/ex2/search');e=example_parameters('<RUN>/example-settings.json');s=search_config(11,'production');s.example=e;detsearch('<RUN>/01-search',s);write_dependencies('<RUN>/01-search');"
+    ]
+  },
+  {
+    "stage": "02-field",
+    "driver_seconds": 20.48440054099774,
+    "threads_or_workers": 11,
+    "monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 20.483053041039966,
+      "peak_process_tree_rss_gib": 1.120880126953125,
+      "peak_experiment_disk_mb": 16.224378,
+      "output_disk_mb": 5.80484,
+      "peak_by_part_gib": {
+        "startup": 1.120880126953125
+      },
+      "peak_by_pid_gib": {
+        "39164": 1.0015869140625,
+        "39226": 0.1436614990234375,
+        "39239": 0.00140380859375
+      }
+    },
+    "command": [
+      "<MATLAB>",
+      "-sd",
+      "<RUN>/02-field",
+      "-batch",
+      "restoredefaultpath;addpath('<PKG>/src/matlab');addpath('<FMM_ROOT>');addpath('<PKG>/src/matlab/ex2');addpath('<PKG>/src/matlab/ex2/field');field_export('<RUN>/02-field',1.8916961400527375,'reference',example_parameters('<RUN>/example-settings.json'));write_dependencies('<RUN>/02-field');"
+    ]
+  },
+  {
+    "stage": "02-conditions",
+    "driver_seconds": 1.2481737079797313,
+    "threads_or_workers": 1,
+    "monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 1.247554957983084,
+      "peak_process_tree_rss_gib": 0.002227783203125,
+      "peak_experiment_disk_mb": 16.224378,
+      "output_disk_mb": 0.002939,
+      "peak_by_part_gib": {
+        "startup": 0.002227783203125
+      },
+      "peak_by_pid_gib": {
+        "39272": 0.002227783203125
+      }
+    },
+    "command": [
+      "<PYTHON>",
+      "-B",
+      "-I",
+      "<PKG>/scripts/audit_entry.py",
+      "--run-root",
+      "<RUN>",
+      "--entry",
+      "<PKG>/src/python/ex2/conditions.py",
+      "--",
+      "--output",
+      "<RUN>/02-conditions",
+      "--input",
+      "<RUN>/02-field/fixed-input.json.gz",
+      "--coefficients",
+      "<RUN>/02-field/coefficients.json.gz"
+    ]
+  },
+  {
+    "stage": "03-residuals",
+    "driver_seconds": 458.0332219999982,
+    "threads_or_workers": 8,
+    "monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 458.0301800830057,
+      "peak_process_tree_rss_gib": 1.7730560302734375,
+      "peak_experiment_disk_mb": 16.234722,
+      "output_disk_mb": 5.394154,
+      "peak_by_part_gib": {
+        "startup": 1.7730560302734375
+      },
+      "peak_by_pid_gib": {
+        "39275": 0.329620361328125,
+        "39456": 0.240478515625,
+        "39457": 0.3392333984375,
+        "39458": 0.259857177734375,
+        "39459": 0.2617034912109375,
+        "39460": 0.209808349609375,
+        "39461": 0.3372344970703125,
+        "39462": 0.3430328369140625,
+        "39463": 0.2273712158203125
+      }
+    },
+    "command": [
+      "<PYTHON>",
+      "-B",
+      "-I",
+      "<PKG>/scripts/audit_entry.py",
+      "--run-root",
+      "<RUN>",
+      "--entry",
+      "<PKG>/src/python/ex2/residual/groups.py",
+      "--",
+      "--output",
+      "<RUN>/03-residuals",
+      "--input",
+      "<RUN>/02-field/fixed-input.json.gz",
+      "--coefficients",
+      "<RUN>/02-field/coefficients.json.gz",
+      "--workers",
+      "8",
+      "--states",
+      "80",
+      "--states-left",
+      "80",
+      "--states-right",
+      "80",
+      "--tail-ratio",
+      "1e-6"
+    ]
+  },
+  {
+    "stage": "04-residual-audit",
+    "driver_seconds": 1.2789977089851163,
+    "threads_or_workers": 1,
+    "monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 1.2784649159875698,
+      "peak_process_tree_rss_gib": 0.0001983642578125,
+      "peak_experiment_disk_mb": 16.234722,
+      "output_disk_mb": 0.001524,
+      "peak_by_part_gib": {
+        "startup": 0.0001983642578125
+      },
+      "peak_by_pid_gib": {
+        "40470": 0.0001983642578125
+      }
+    },
+    "command": [
+      "<PYTHON>",
+      "-B",
+      "-I",
+      "<PKG>/scripts/audit_entry.py",
+      "--run-root",
+      "<RUN>",
+      "--entry",
+      "<PKG>/src/python/ex2/residual/audit_groups.py",
+      "--",
+      "--output",
+      "<RUN>/04-residual-audit",
+      "--run",
+      "<RUN>/03-residuals"
+    ]
+  },
+  {
+    "stage": "05-mass",
+    "driver_seconds": 1.366634916048497,
+    "threads_or_workers": 1,
+    "monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 1.3660817500203848,
+      "peak_process_tree_rss_gib": 0.003875732421875,
+      "peak_experiment_disk_mb": 16.234722,
+      "output_disk_mb": 0.003721,
+      "peak_by_part_gib": {
+        "startup": 0.003875732421875
+      },
+      "peak_by_pid_gib": {
+        "40472": 0.003875732421875
+      }
+    },
+    "command": [
+      "<PYTHON>",
+      "-B",
+      "-I",
+      "<PKG>/scripts/audit_entry.py",
+      "--run-root",
+      "<RUN>",
+      "--entry",
+      "<PKG>/src/python/ex2/mass/disks.py",
+      "--",
+      "--output",
+      "<RUN>/05-mass",
+      "--input",
+      "<RUN>/02-field/fixed-input.json.gz",
+      "--order",
+      "30"
+    ]
+  },
+  {
+    "stage": "06-enclosure",
+    "driver_seconds": 1.255585000035353,
+    "threads_or_workers": 1,
+    "monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 1.2550589999882504,
+      "peak_process_tree_rss_gib": 0.0037841796875,
+      "peak_experiment_disk_mb": 16.234722,
+      "output_disk_mb": 0.328748,
+      "peak_by_part_gib": {
+        "startup": 0.0037841796875
+      },
+      "peak_by_pid_gib": {
+        "40480": 0.0037841796875
+      }
+    },
+    "command": [
+      "<PYTHON>",
+      "-B",
+      "-I",
+      "<PKG>/scripts/audit_entry.py",
+      "--run-root",
+      "<RUN>",
+      "--entry",
+      "<PKG>/src/python/ex2/enclosure/assemble.py",
+      "--",
+      "--output",
+      "<RUN>/06-enclosure",
+      "--input",
+      "<RUN>/02-field/fixed-input.json.gz",
+      "--groups",
+      "<RUN>/03-residuals/groups.json",
+      "--disks",
+      "<RUN>/05-mass/disks.json",
+      "--k-lower",
+      "1.46",
+      "--k-upper",
+      "2.37"
+    ]
+  },
+  {
+    "stage": "07-band",
+    "driver_seconds": 146.01527249999344,
+    "threads_or_workers": 1,
+    "monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 146.01465329201892,
+      "peak_process_tree_rss_gib": 0.26300048828125,
+      "peak_experiment_disk_mb": 16.234722,
+      "output_disk_mb": 0.656924,
+      "peak_by_part_gib": {
+        "startup": 0.26300048828125
+      },
+      "peak_by_pid_gib": {
+        "40484": 0.26300048828125
+      }
+    },
+    "command": [
+      "<PYTHON>",
+      "-B",
+      "-I",
+      "<PKG>/scripts/audit_entry.py",
+      "--run-root",
+      "<RUN>",
+      "--entry",
+      "<PKG>/src/python/ex2/band/band_certificate.py",
+      "--",
+      "--output",
+      "<RUN>/07-band",
+      "--input",
+      "<RUN>/02-field/fixed-input.json.gz",
+      "--enclosure",
+      "<RUN>/06-enclosure/result.json",
+      "--mode",
+      "full",
+      "--k-lower",
+      "1.46",
+      "--k-upper",
+      "2.37"
+    ]
+  }
+]

@@ -1,0 +1,252 @@
+[
+  {
+    "stage": "01-search",
+    "driver_seconds": 190.56011795799714,
+    "threads_or_workers": 11,
+    "monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 190.55934558296576,
+      "peak_process_tree_rss_gib": 0.9327545166015625,
+      "peak_experiment_disk_mb": 15.362973,
+      "output_disk_mb": 7.640426,
+      "peak_by_part_gib": {
+        "startup": 0.7025299072265625,
+        "gap": 0.8896026611328125,
+        "determinant-depth-0": 0.9327545166015625,
+        "polish": 0.895355224609375,
+        "confirmation": 0.8518524169921875,
+        "complete": 0.8107757568359375
+      },
+      "peak_by_pid_gib": {
+        "29753": 0.82794189453125,
+        "29829": 0.1232757568359375,
+        "29852": 0.0013427734375
+      }
+    },
+    "command": [
+      "<MATLAB>",
+      "-sd",
+      "<RUN>/01-search",
+      "-batch",
+      "restoredefaultpath;addpath('<PKG>/src/matlab');addpath('<FMM_ROOT>');addpath('<PKG>/examples');addpath('<PKG>/src/matlab/search');addpath('<PKG>/src/matlab/search/generated');s=search_config(11,'production');s.resolution='reference';detsearch('<RUN>/01-search',s);write_dependencies('<RUN>/01-search');"
+    ]
+  },
+  {
+    "stage": "02-field",
+    "driver_seconds": 20.292934875003994,
+    "threads_or_workers": 11,
+    "monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 20.29212641599588,
+      "peak_process_tree_rss_gib": 1.1923828125,
+      "peak_experiment_disk_mb": 15.362973,
+      "output_disk_mb": 13.535557,
+      "peak_by_part_gib": {
+        "startup": 1.1923828125
+      },
+      "peak_by_pid_gib": {
+        "30426": 1.08074951171875,
+        "30488": 0.143524169921875,
+        "30517": 0.00115966796875
+      }
+    },
+    "command": [
+      "<MATLAB>",
+      "-sd",
+      "<RUN>/02-field",
+      "-batch",
+      "restoredefaultpath;addpath('<PKG>/src/matlab');addpath('<FMM_ROOT>');addpath('<PKG>/examples');addpath('<PKG>/src/matlab/field');field_export('<RUN>/02-field',1.558437894182088,'reference');write_dependencies('<RUN>/02-field');"
+    ]
+  },
+  {
+    "stage": "03-residuals",
+    "driver_seconds": 536.9301846669987,
+    "threads_or_workers": 8,
+    "monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 536.9221995419939,
+      "peak_process_tree_rss_gib": 1.73492431640625,
+      "peak_experiment_disk_mb": 15.362973,
+      "output_disk_mb": 24.548628,
+      "peak_by_part_gib": {
+        "startup": 1.73492431640625
+      },
+      "peak_by_pid_gib": {
+        "30551": 0.23651123046875,
+        "30823": 0.2977447509765625,
+        "30824": 0.2862548828125,
+        "30825": 0.246490478515625,
+        "30826": 0.2604522705078125,
+        "30827": 0.2735748291015625,
+        "30828": 0.2925262451171875,
+        "30829": 0.3209075927734375,
+        "30830": 0.295196533203125
+      }
+    },
+    "command": [
+      "<PYTHON>",
+      "-I",
+      "<PKG>/scripts/audit_entry.py",
+      "--run-root",
+      "<RUN>",
+      "--entry",
+      "<PKG>/src/python/residual/groups.py",
+      "--",
+      "--output",
+      "<RUN>/03-residuals",
+      "--input",
+      "<RUN>/02-field/fixed-input.json",
+      "--coefficients",
+      "<RUN>/02-field/coefficients.json",
+      "--workers",
+      "8",
+      "--states",
+      "80"
+    ]
+  },
+  {
+    "stage": "04-residual-audit",
+    "driver_seconds": 1.2955769169493578,
+    "threads_or_workers": 1,
+    "monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 1.2949799579801038,
+      "peak_process_tree_rss_gib": 0.0002593994140625,
+      "peak_experiment_disk_mb": 15.345832,
+      "output_disk_mb": 0.003698,
+      "peak_by_part_gib": {
+        "startup": 0.0002593994140625
+      },
+      "peak_by_pid_gib": {
+        "32008": 0.0002593994140625
+      }
+    },
+    "command": [
+      "<PYTHON>",
+      "-I",
+      "<PKG>/scripts/audit_entry.py",
+      "--run-root",
+      "<RUN>",
+      "--entry",
+      "<PKG>/src/python/residual/audit_groups.py",
+      "--",
+      "--output",
+      "<RUN>/04-residual-audit",
+      "--run",
+      "<RUN>/03-residuals"
+    ]
+  },
+  {
+    "stage": "05-mass",
+    "driver_seconds": 21.56887654203456,
+    "threads_or_workers": 1,
+    "monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 21.56814054196002,
+      "peak_process_tree_rss_gib": 0.1052703857421875,
+      "peak_experiment_disk_mb": 15.345832,
+      "output_disk_mb": 0.009204,
+      "peak_by_part_gib": {
+        "startup": 0.1052703857421875
+      },
+      "peak_by_pid_gib": {
+        "32011": 0.1052703857421875
+      }
+    },
+    "command": [
+      "<PYTHON>",
+      "-I",
+      "<PKG>/scripts/audit_entry.py",
+      "--run-root",
+      "<RUN>",
+      "--entry",
+      "<PKG>/src/python/mass/disks.py",
+      "--",
+      "--output",
+      "<RUN>/05-mass",
+      "--input",
+      "<RUN>/02-field/fixed-input.json",
+      "--order",
+      "30"
+    ]
+  },
+  {
+    "stage": "06-enclosure",
+    "driver_seconds": 1.2755720840068534,
+    "threads_or_workers": 1,
+    "monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 1.2748570840340108,
+      "peak_process_tree_rss_gib": 0.00213623046875,
+      "peak_experiment_disk_mb": 15.345832,
+      "output_disk_mb": 0.482674,
+      "peak_by_part_gib": {
+        "startup": 0.00213623046875
+      },
+      "peak_by_pid_gib": {
+        "32077": 0.00213623046875
+      }
+    },
+    "command": [
+      "<PYTHON>",
+      "-I",
+      "<PKG>/scripts/audit_entry.py",
+      "--run-root",
+      "<RUN>",
+      "--entry",
+      "<PKG>/src/python/enclosure/assemble.py",
+      "--",
+      "--output",
+      "<RUN>/06-enclosure",
+      "--input",
+      "<RUN>/02-field/fixed-input.json",
+      "--groups",
+      "<RUN>/03-residuals/groups.json",
+      "--disks",
+      "<RUN>/05-mass/disks.json"
+    ]
+  },
+  {
+    "stage": "07-band",
+    "driver_seconds": 77.49811162496917,
+    "threads_or_workers": 1,
+    "monitor": {
+      "returncode": 0,
+      "reason": "completed",
+      "wall_seconds": 77.49267304199748,
+      "peak_process_tree_rss_gib": 0.2574462890625,
+      "peak_experiment_disk_mb": 15.345832,
+      "output_disk_mb": 0.413919,
+      "peak_by_part_gib": {
+        "startup": 0.2574462890625
+      },
+      "peak_by_pid_gib": {
+        "32085": 0.2574462890625
+      }
+    },
+    "command": [
+      "<PYTHON>",
+      "-I",
+      "<PKG>/scripts/audit_entry.py",
+      "--run-root",
+      "<RUN>",
+      "--entry",
+      "<PKG>/src/python/band/band_certificate.py",
+      "--",
+      "--output",
+      "<RUN>/07-band",
+      "--input",
+      "<RUN>/02-field/fixed-input.json",
+      "--enclosure",
+      "<RUN>/06-enclosure/result.json",
+      "--mode",
+      "full"
+    ]
+  }
+]

@@ -1,0 +1,194 @@
+[
+  {
+    "destination": "src/matlab/ex2/example_field_config.m",
+    "source": "test/bie-bound/gapedge-v1/example_field_config.m"
+  },
+  {
+    "destination": "src/matlab/ex2/example_config.m",
+    "source": "test/bie-bound/gapedge-v1/example_config.m"
+  },
+  {
+    "destination": "src/matlab/ex2/write_dependencies.m",
+    "source": "test/bie-bound/gapedge-v1/write_dependencies.m"
+  },
+  {
+    "destination": "src/matlab/ex2/example_parameters.m",
+    "source": "function e=example_parameters(input)"
+  },
+  {
+    "destination": "src/matlab/ex2/field/field_export.m",
+    "source": "test/bie-bound/gapedge-v1/field/field_export.m"
+  },
+  {
+    "destination": "src/matlab/ex2/field/field_fit.m",
+    "source": "test/bie-bound/gapedge-v1/field/field_fit.m"
+  },
+  {
+    "destination": "src/matlab/ex2/field/pilot_config.m",
+    "source": "test/bie-bound/gapedge-v1/field/pilot_config.m"
+  },
+  {
+    "destination": "src/matlab/ex2/field/cell_green.m",
+    "source": "test/bie-bound/gapedge-v1/field/cell_green.m"
+  },
+  {
+    "destination": "src/matlab/ex2/field/pilot_geometry.m",
+    "source": "test/bie-bound/gapedge-v1/field/pilot_geometry.m"
+  },
+  {
+    "destination": "src/matlab/ex2/field/pilot_classify.m",
+    "source": "test/bie-bound/gapedge-v1/field/pilot_classify.m"
+  },
+  {
+    "destination": "src/matlab/ex2/search/search_i9_config.m",
+    "source": "test/bie-bound/gapedge-v1/search/search_i9_config.m"
+  },
+  {
+    "destination": "src/matlab/ex2/search/search_i9_physics.m",
+    "source": "test/bie-bound/gapedge-v1/search/search_i9_physics.m"
+  },
+  {
+    "destination": "src/matlab/ex2/search/i9_adapter.m",
+    "source": "test/bie-bound/gapedge-v1/search/i9_adapter.m"
+  },
+  {
+    "destination": "src/matlab/ex2/search/search_i9_classify.m",
+    "source": "test/bie-bound/gapedge-v1/search/search_i9_classify.m"
+  },
+  {
+    "destination": "src/matlab/ex2/search/search_i9_geometry.m",
+    "source": "test/bie-bound/gapedge-v1/search/search_i9_geometry.m"
+  },
+  {
+    "destination": "src/matlab/ex2/search/detsearch.m",
+    "source": "test/bie-bound/gapedge-v1/search/detsearch.m"
+  },
+  {
+    "destination": "src/matlab/ex2/search/search_config.m",
+    "source": "test/bie-bound/gapedge-v1/search/search_config.m"
+  },
+  {
+    "destination": "src/python/ex2/conditions.py",
+    "source": "test/bie-bound/gapedge-v1/conditions.py"
+  },
+  {
+    "destination": "src/python/ex2/mass/material.py",
+    "source": "test/bie-bound/gapedge-v1/mass/material.py"
+  },
+  {
+    "destination": "src/python/ex2/mass/self_interaction.py",
+    "source": "test/bie-bound/gapedge-v1/mass/self_interaction.py"
+  },
+  {
+    "destination": "src/python/ex2/mass/disks.py",
+    "source": "test/bie-bound/gapedge-v1/mass/disks.py"
+  },
+  {
+    "destination": "src/python/ex2/enclosure/trace_constants.py",
+    "source": "test/bie-bound/gapedge-v1/enclosure/trace_constants.py"
+  },
+  {
+    "destination": "src/python/ex2/enclosure/assemble.py",
+    "source": "test/bie-bound/gapedge-v1/enclosure/assemble.py"
+  },
+  {
+    "destination": "src/python/ex2/band/floating.py",
+    "source": "test/bie-bound/gapedge-v1/band/floating.py"
+  },
+  {
+    "destination": "src/python/ex2/band/band_certificate.py",
+    "source": "test/bie-bound/gapedge-v1/band/band_certificate.py"
+  },
+  {
+    "destination": "src/python/ex2/band/geometry_float.py",
+    "source": "test/bie-bound/gapedge-v1/band/geometry_float.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/group_setup.py",
+    "source": "test/bie-bound/gapedge-v1/residual/group_setup.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/material.py",
+    "source": "test/bie-bound/gapedge-v1/residual/material.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/self_interaction.py",
+    "source": "test/bie-bound/gapedge-v1/residual/self_interaction.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/tail_bound.py",
+    "source": "test/bie-bound/gapedge-v1/residual/tail_bound.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/central_pilot.py",
+    "source": "test/bie-bound/gapedge-v1/residual/central_pilot.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/envelope_gate.py",
+    "source": "test/bie-bound/gapedge-v1/residual/envelope_gate.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/extended.py",
+    "source": "test/bie-bound/gapedge-v1/residual/extended.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/material_group.py",
+    "source": "test/bie-bound/gapedge-v1/residual/material_group.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/group_norms.py",
+    "source": "test/bie-bound/gapedge-v1/residual/group_norms.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/column_models.py",
+    "source": "test/bie-bound/gapedge-v1/residual/column_models.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/groups.py",
+    "source": "test/bie-bound/gapedge-v1/residual/groups.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/wall_columns.py",
+    "source": "test/bie-bound/gapedge-v1/residual/wall_columns.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/map_models.py",
+    "source": "test/bie-bound/gapedge-v1/residual/map_models.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/audit_groups.py",
+    "source": "test/bie-bound/gapedge-v1/residual/audit_groups.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/propagation.py",
+    "source": "test/bie-bound/gapedge-v1/residual/propagation.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/chebyshev.py",
+    "source": "test/bie-bound/gapedge-v1/residual/chebyshev.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/expansion.py",
+    "source": "test/bie-bound/gapedge-v1/residual/expansion.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/curve_queue.py",
+    "source": "test/bie-bound/gapedge-v1/residual/curve_queue.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/lead_self.py",
+    "source": "test/bie-bound/gapedge-v1/residual/lead_self.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/boundary_group.py",
+    "source": "test/bie-bound/gapedge-v1/residual/boundary_group.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/panel.py",
+    "source": "test/bie-bound/gapedge-v1/residual/panel.py"
+  },
+  {
+    "destination": "src/python/ex2/residual/real_panels.py",
+    "source": "test/bie-bound/gapedge-v1/residual/real_panels.py"
+  }
+]

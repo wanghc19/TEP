@@ -27,3 +27,5 @@ FMM 是 fast multipole method（快速多极方法），MFS 是 method of fundam
 `example2-v1` 是 second example version 1，空中心、不同周期及旋转引线；B2 完整冷启动通过，可靠 μ 全宽上界3.086591e-12，1058.142秒，944项全相位带测试通过。
 
 `gapedge-v1` 是 guided mode near a gap edge version 1，近带边参数序列、一般传播幂尾界及可靠区间成本。
+
+`release-check-v1` 是 release checking version 1，复现包 `release/bie-enclosure-sisc/` 五个例子的冷启动、纯 Python 校验与例一双侧迹核查记录。

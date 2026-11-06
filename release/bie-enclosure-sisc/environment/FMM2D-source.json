@@ -1,0 +1,7 @@
+{
+  "project": "Flatiron Institute FMM2D",
+  "source": "https://github.com/flatironinstitute/FMM2D",
+  "revision": "550dae5b77b1e006c8ffae37fc832f8c2b536871",
+  "license": "Apache-2.0",
+  "interface": "matlab/hfmm2d.m and host-built fmm2d MEX"
+}

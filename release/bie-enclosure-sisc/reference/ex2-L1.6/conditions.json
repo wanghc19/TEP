@@ -1,0 +1,51 @@
+{
+  "model": {
+    "name": "empty-rotated",
+    "d": 1,
+    "beta": 0.5,
+    "L0": 1.6,
+    "L_negative": 1,
+    "L_positive": 0.85,
+    "R": 0.2,
+    "a_negative": 0.12,
+    "a_positive": 0.2,
+    "angle_negative": 0,
+    "angle_positive": 0.13,
+    "rho_center": 1,
+    "rho_lead": 17,
+    "empty_center": true,
+    "center_nodes": 0,
+    "lead_nodes": 256,
+    "M": 48
+  },
+  "pieces": [
+    {
+      "piece": 0,
+      "empty_material": true,
+      "L": "1.60000000000000008881784197001252323389053344726562500000",
+      "curve_wall_clearance_lower": null,
+      "near_image_clearance_lower": null,
+      "proxy_clearance_lower": "0.650000000000000133226762955018784850835800170898437500000"
+    },
+    {
+      "piece": 1,
+      "empty_material": false,
+      "L": "1.00000000000000000000000000000000000000000000000000000000",
+      "curve_wall_clearance_lower": "[0.276802071403817250816513157480000525701346562361910346406 +/- 3.32e-58]",
+      "near_image_clearance_lower": "[0.276802071403817250816513157480000525701346562361910346406 +/- 3.32e-58]",
+      "proxy_clearance_lower": "0.850000000000000088817841970012523233890533447265625000000"
+    },
+    {
+      "piece": 2,
+      "empty_material": false,
+      "L": "0.849999999999999977795539507496869191527366638183593750000",
+      "curve_wall_clearance_lower": "[0.187364589685598139569655002913682541993747448855372232879 +/- 1.47e-58]",
+      "near_image_clearance_lower": "[0.187364589685598139569655002913682541993747448855372232879 +/- 1.47e-58]",
+      "proxy_clearance_lower": "0.850000000000000088817841970012523233890533447265625000000"
+    }
+  ],
+  "wood_gamma_lower": "[1.50032247910817220004544402931295452457481295250228162202 +/- 3.17e-57]",
+  "empty_center_material_exact_zero": true,
+  "status": "PASS",
+  "representation": "continuous trigonometric layer densities; three near images; fixed point sources; finite Rayleigh incident field; no wrap"
+}

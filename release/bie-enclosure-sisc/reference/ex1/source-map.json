@@ -1,0 +1,242 @@
+[
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/group_setup.py",
+    "destination": "src/python/residual/group_setup.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/material.py",
+    "destination": "src/python/residual/material.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/self_interaction.py",
+    "destination": "src/python/residual/self_interaction.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/tail_bound.py",
+    "destination": "src/python/residual/tail_bound.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/central_pilot.py",
+    "destination": "src/python/residual/central_pilot.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/envelope_gate.py",
+    "destination": "src/python/residual/envelope_gate.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/extended.py",
+    "destination": "src/python/residual/extended.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/material_group.py",
+    "destination": "src/python/residual/material_group.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/group_norms.py",
+    "destination": "src/python/residual/group_norms.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/column_models.py",
+    "destination": "src/python/residual/column_models.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/groups.py",
+    "destination": "src/python/residual/groups.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/wall_columns.py",
+    "destination": "src/python/residual/wall_columns.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/map_models.py",
+    "destination": "src/python/residual/map_models.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/audit_groups.py",
+    "destination": "src/python/residual/audit_groups.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/chebyshev.py",
+    "destination": "src/python/residual/chebyshev.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/expansion.py",
+    "destination": "src/python/residual/expansion.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/curve_queue.py",
+    "destination": "src/python/residual/curve_queue.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/lead_self.py",
+    "destination": "src/python/residual/lead_self.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/boundary_group.py",
+    "destination": "src/python/residual/boundary_group.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/panel.py",
+    "destination": "src/python/residual/panel.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/lead_pilot.py",
+    "destination": "src/python/residual/lead_pilot.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/residual/real_panels.py",
+    "destination": "src/python/residual/real_panels.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/mass/material.py",
+    "destination": "src/python/mass/material.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/mass/self_interaction.py",
+    "destination": "src/python/mass/self_interaction.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/mass/disks.py",
+    "destination": "src/python/mass/disks.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/enclosure/trace_constants.py",
+    "destination": "src/python/enclosure/trace_constants.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/enclosure/assemble.py",
+    "destination": "src/python/enclosure/assemble.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/band/floating.py",
+    "destination": "src/python/band/floating.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/band/band_certificate.py",
+    "destination": "src/python/band/band_certificate.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/band/original_reference.py",
+    "destination": "src/python/band/original_reference.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/field/disk_geometry.m",
+    "destination": "src/matlab/field/disk_geometry.m"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/field/field_export.m",
+    "destination": "src/matlab/field/field_export.m"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/field/field_fit.m",
+    "destination": "src/matlab/field/field_fit.m"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/field/pilot_config.m",
+    "destination": "src/matlab/field/pilot_config.m"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/field/cell_green.m",
+    "destination": "src/matlab/field/cell_green.m"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/field/pilot_geometry.m",
+    "destination": "src/matlab/field/pilot_geometry.m"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/field/pilot_classify.m",
+    "destination": "src/matlab/field/pilot_classify.m"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/search/detsearch.m",
+    "destination": "src/matlab/search/detsearch.m"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/search/search_config.m",
+    "destination": "src/matlab/search/search_config.m"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/write_dependencies.m",
+    "destination": "src/matlab/write_dependencies.m"
+  },
+  {
+    "source": "+bloch/construct_S.m",
+    "destination": "src/matlab/+bloch/construct_S.m"
+  },
+  {
+    "source": "+bloch/farfield_extractors.m",
+    "destination": "src/matlab/+bloch/farfield_extractors.m"
+  },
+  {
+    "source": "+bloch/incident_rhs.m",
+    "destination": "src/matlab/+bloch/incident_rhs.m"
+  },
+  {
+    "source": "+bloch/rayleigh_channels.m",
+    "destination": "src/matlab/+bloch/rayleigh_channels.m"
+  },
+  {
+    "source": "+geom/construct_cont.m",
+    "destination": "src/matlab/+geom/construct_cont.m"
+  },
+  {
+    "source": "+kernel/h2d_directch.m",
+    "destination": "src/matlab/+kernel/h2d_directch.m"
+  },
+  {
+    "source": "+kernel/kress_l_splits.m",
+    "destination": "src/matlab/+kernel/kress_l_splits.m"
+  },
+  {
+    "source": "+kernel/kress_mn_splits.m",
+    "destination": "src/matlab/+kernel/kress_mn_splits.m"
+  },
+  {
+    "source": "+kernel/precomp_proxy.m",
+    "destination": "src/matlab/+kernel/precomp_proxy.m"
+  },
+  {
+    "source": "+kernel/qpgreen_mfs_pairmat.m",
+    "destination": "src/matlab/+kernel/qpgreen_mfs_pairmat.m"
+  },
+  {
+    "source": "+op/construct_A_QP.m",
+    "destination": "src/matlab/+op/construct_A_QP.m"
+  },
+  {
+    "source": "+quad/quad_kress_rvec.m",
+    "destination": "src/matlab/+quad/quad_kress_rvec.m"
+  },
+  {
+    "source": "+utils/triginterp.m",
+    "destination": "src/matlab/+utils/triginterp.m"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/monitor.py",
+    "destination": "scripts/monitor.py"
+  },
+  {
+    "source": "test/bie-bound/pipeline-v1/audit_entry.py",
+    "destination": "scripts/audit_entry.py"
+  },
+  {
+    "source": "test/i9/search-v1/search_i9_config.m",
+    "destination": "src/matlab/search/generated/search_i9_config.m"
+  },
+  {
+    "source": "test/i9/search-v1/search_i9_physics.m",
+    "destination": "src/matlab/search/generated/search_i9_physics.m"
+  },
+  {
+    "source": "test/i9/search-v1/search_i9_run.m",
+    "destination": "src/matlab/search/generated/i9_adapter.m"
+  },
+  {
+    "source": "test/i9/search-v1/search_i9_classify.m",
+    "destination": "src/matlab/search/generated/search_i9_classify.m"
+  },
+  {
+    "source": "test/i9/search-v1/search_i9_geometry.m",
+    "destination": "src/matlab/search/generated/search_i9_geometry.m"
+  }
+]

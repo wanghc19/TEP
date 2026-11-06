@@ -1,0 +1,40 @@
+{
+  "dictionary": "README.md",
+  "examples": [
+    {
+      "example": "ex1",
+      "data": "ex1/",
+      "manifest": "ex1/manifest.json",
+      "reference": "../reference/ex1/",
+      "bytes": 13540234
+    },
+    {
+      "example": "ex2-L1",
+      "data": "ex2-L1/",
+      "manifest": "ex2-L1/manifest.json",
+      "reference": "../reference/ex2-L1/",
+      "bytes": 13495007
+    },
+    {
+      "example": "ex2-L1.6",
+      "data": "ex2-L1.6/",
+      "manifest": "ex2-L1.6/manifest.json",
+      "reference": "../reference/ex2-L1.6/",
+      "bytes": 13495017
+    },
+    {
+      "example": "ex2-L1.9",
+      "data": "ex2-L1.9/",
+      "manifest": "ex2-L1.9/manifest.json",
+      "reference": "../reference/ex2-L1.9/",
+      "bytes": 13495015
+    },
+    {
+      "example": "ex2-L2",
+      "data": "ex2-L2/",
+      "manifest": "ex2-L2/manifest.json",
+      "reference": "../reference/ex2-L2/",
+      "bytes": 13495007
+    }
+  ]
+}
