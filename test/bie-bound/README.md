@@ -23,3 +23,5 @@ FMM 是 fast multipole method（快速多极方法），MFS 是 method of fundam
 
 `detsearch-v1` 是 determinant root search version 1，带隙分类、行列式定位、抛光与 sigma_min 确认的独立生产搜索。
 `pipeline-v1` 是 full BIE pipeline version 1，从带隙探索到包含舍入的最终区间的完整冷启动流程。
+`resolution-v1` 是 resolution study version 1，分别改变场离散化与固定场的可靠评价精度。
+

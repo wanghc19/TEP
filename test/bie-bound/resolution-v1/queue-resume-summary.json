@@ -1,0 +1,37 @@
+{
+  "runs": [
+    {
+      "run": "run-006",
+      "title": "field N=384/192/192 M48",
+      "forecast_seconds": 1000,
+      "forecast_peak_gib": 2.3,
+      "controller_seconds": 764.398649834,
+      "returncode": 0
+    },
+    {
+      "run": "run-007",
+      "title": "field N=512/256/256 M40",
+      "forecast_seconds": 1000,
+      "forecast_peak_gib": 2.3,
+      "controller_seconds": 812.108739458,
+      "returncode": 0
+    },
+    {
+      "run": "run-008",
+      "title": "field N=512/256/256 M56",
+      "forecast_seconds": 1200,
+      "forecast_peak_gib": 2.6,
+      "controller_seconds": 841.2624686670001,
+      "returncode": 0
+    },
+    {
+      "run": "run-009",
+      "title": "fixed field, twice all target panels",
+      "forecast_seconds": 1250,
+      "forecast_peak_gib": 2.6,
+      "controller_seconds": 331.74339333299986,
+      "returncode": 1
+    }
+  ],
+  "wall_seconds": 2753.052846958
+}

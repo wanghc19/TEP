@@ -1,0 +1,66 @@
+{
+  "runs": [
+    {
+      "run": "run-001",
+      "exact_rational_endpoints_and_width": true,
+      "resource_limits": true,
+      "max_Gauss_relative": 2.8313328237631716e-51,
+      "targets": 408
+    },
+    {
+      "run": "run-003",
+      "exact_rational_endpoints_and_width": true,
+      "resource_limits": true,
+      "max_Gauss_relative": 3.021581101577331e-51,
+      "targets": 408
+    },
+    {
+      "run": "run-006",
+      "exact_rational_endpoints_and_width": true,
+      "resource_limits": true,
+      "max_Gauss_relative": 2.4950244712256562e-51,
+      "targets": 408
+    },
+    {
+      "run": "run-007",
+      "exact_rational_endpoints_and_width": true,
+      "resource_limits": true,
+      "max_Gauss_relative": 1.3891178948887128e-52,
+      "targets": 408
+    },
+    {
+      "run": "run-008",
+      "exact_rational_endpoints_and_width": true,
+      "resource_limits": true,
+      "max_Gauss_relative": 3.849238721509789e-50,
+      "targets": 408
+    },
+    {
+      "run": "run-010",
+      "exact_rational_endpoints_and_width": true,
+      "resource_limits": true,
+      "max_Gauss_relative": 9.973769683331951e-55,
+      "targets": 816
+    },
+    {
+      "run": "run-011",
+      "exact_rational_endpoints_and_width": true,
+      "resource_limits": true,
+      "max_Gauss_relative": 2.851113669627969e-51,
+      "targets": 408
+    },
+    {
+      "run": "run-012",
+      "exact_rational_endpoints_and_width": true,
+      "resource_limits": true,
+      "max_Gauss_relative": 2.9539284193265217e-51,
+      "targets": 408
+    }
+  ],
+  "successful_wall_sum": 6478.875216624001,
+  "maximum_successful_rss_gib": 2.71844482421875,
+  "worktree_total": 869534851,
+  "experiment_total": 156918388,
+  "compact_tables_total": 155122,
+  "all_passed": true
+}

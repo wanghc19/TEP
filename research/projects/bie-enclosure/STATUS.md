@@ -4,6 +4,8 @@
 
 ## 已完成
 
+- 分辨率实验（resolution-v1，审稿意见 I11 第 3 点，astra，经理已核对原始输出，见 [[research/projects/bie-enclosure/implementation/resolution-v1|resolution-v1]]）：参考行与 pipeline-v1 run-002 逐位相同。密度节点 256/384/512（M=48）给全宽 $4.27\times10^{-6}$、$9.87\times10^{-9}$、$2.74\times10^{-11}$，粗场误差几乎全在中心材料组；M=40/56 只改变全宽约 1%；同一场上面板加倍、L=64、192 位精度对全宽的影响不超过 $3\times10^{-6}$（相对），可靠上界只比浮点值高约 $10^{-5}$（相对）。结论：区间宽度跟随场的分辨率，不跟随评价精度。各行 584–948 秒，峰值不超过 2.72 GiB。FEM 设置事实已带出处列出；FEM 与 BIE 的几何参数在 binary64 下有 $2^{-56}$ 级差别（FEM 存 0.25，BIE 用 binary64 的 0.2 乘 5/4），没有多网格 FEM 的代价—宽度序列。同场三行沿用参考行的谱隙证书（窗口余量 0.69/3.21，远大于区间宽度）。
+
 - 冷启动完整流程（pipeline-v1，astra，经理已核对，见 [[research/projects/bie-enclosure/implementation/pipeline-v1|pipeline-v1]] 末节）：从空目录一次跑完带隙分类、行列式求根、密度重建、B 拟合、五组可靠残差、八盘质量、$C_g$、装配与 472 项含舍入带隙检查。候选 $\widehat k=1.558437894182088$；可靠区间 $k\in[1.5584378941776960,\,1.5584378941864800]$，全宽 $2.738\times10^{-11}$，为 FEM 的 1/163；区间内至少有一个孤立有限重特征值（不声称唯一）。端到端 827 秒（13.8 分钟）、峰值 1.84 GiB；FEM 完整 66.8 分钟，去掉唯一性部分 12.5 分钟。粗节点 256/128/128 全宽 $4.27\times10^{-6}$。这是论文第 6 节的数值例子。
 - 固定场浮点评价先导与查新（见 README 链接）。
 - ChatGPT Pro 报告 [[research/projects/bie-enclosure/theory/reliable-bound|reliable-bound]]，经理核对了：Fliss 2013 Remark 2.1(2) 允许左右引线不同（读了本地 PDF）；T1.1 的参数逆与 Weyl 序列论证；T2.3 接缝 Green 公式的符号；T4.2 保留 Jacobian 的迹引理（$T_\kappa$ 公式数值复现）与 T4.3 联合乘子；$C=9.571/7.668/4.695$ 与墙上 $C=1.0356$ 数值复现；圆盘平均值恒等式。未细查：T3.2 Kress 界、T3.4a 源簇 Taylor 树、T1.3 衰减、T2.2 正则性。

@@ -1,0 +1,9 @@
+{
+  "FEM_center_amp_e1": "1/4",
+  "BIE_center_amp_e1": "18014398509481985/72057594037927936",
+  "difference_FEM_minus_BIE": "-1/72057594037927936",
+  "difference_float": -1.3877787807814457e-17,
+  "source_FEM": "test/fem-goerisch/pipeline-v1/examples/example_ref.m:17",
+  "source_BIE": "test/bie-bound/resolution-v1/residual/material.py:35-40",
+  "qualification": "Exact comparison of stored binary64 coefficients; physical_curve and Fourier curve_model intentionally describe the same analytic star, with rounding excluded in the FEM certificate."
+}

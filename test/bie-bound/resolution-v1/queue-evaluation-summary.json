@@ -1,0 +1,29 @@
+{
+  "runs": [
+    {
+      "run": "run-010",
+      "title": "fixed field, twice all target panels",
+      "forecast_seconds": 1250,
+      "forecast_peak_gib": 2.6,
+      "controller_seconds": 947.587764,
+      "returncode": 0
+    },
+    {
+      "run": "run-011",
+      "title": "fixed field, 64 smooth Chebyshev nodes",
+      "forecast_seconds": 1150,
+      "forecast_peak_gib": 2.6,
+      "controller_seconds": 583.765469958,
+      "returncode": 0
+    },
+    {
+      "run": "run-012",
+      "title": "fixed field, 192-bit main arithmetic",
+      "forecast_seconds": 1300,
+      "forecast_peak_gib": 2.7,
+      "controller_seconds": 833.7358798749999,
+      "returncode": 0
+    }
+  ],
+  "wall_seconds": 2368.7681498750003
+}

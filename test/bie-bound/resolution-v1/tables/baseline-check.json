@@ -1,0 +1,26 @@
+{
+  "same_k_bits": true,
+  "epsilon_relative": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Q_relative": 0.0,
+  "width_relative": 0.0,
+  "timing": {
+    "old_wall_seconds": 827.119697291,
+    "new_wall_seconds": 918.650322459,
+    "stage_differences_seconds": {
+      "01-search": 39.03714766600001,
+      "02-field": 4.644884791999999,
+      "03-residuals": 46.16111187499996,
+      "04-residual-audit": 0.10712633299999652,
+      "05-mass": 0.49077266599988434,
+      "06-enclosure": 0.041555916999868714,
+      "07-band": 0.9726486250000335
+    }
+  },
+  "passed": true
+}

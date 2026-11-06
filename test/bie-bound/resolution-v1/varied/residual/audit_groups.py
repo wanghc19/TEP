@@ -1,0 +1,28 @@
+# Copied from test/bie-bound/pipeline-v1/residual/audit_groups.py.
+# Copied from test/bie-bound/grouprel-v1/audit_groups.py; pipeline adaptations documented in README.
+"""Independent decimal-outward five-group sum and coverage audit.
+Input: explicit completed run directory. Output: final scalar bounds and checks.
+"""
+import eval_settings as cfg
+import argparse,json,sys,time
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+from flint import arb,ctx
+from material import up,dump
+p=argparse.ArgumentParser();p.add_argument('--run',required=True);p.add_argument('--output',required=True);a=p.parse_args();root=Path(a.run);out=Path(a.output);ctx.prec=192;start=time.perf_counter();cpu=time.process_time();r=json.loads((root/'summary.json').read_text());assert r['passed'] and not r['pilot'];rows=r['tasks'];g=r['groups'];ev=r['evaluation'];cfg.configure(ev['bits'],ev['nodes'],ev['panel_factor']);expected={('center',0,i) for i in range(cfg.center_panels)}|{('material',s,i) for s in [1,2] for i in range(cfg.material_panels)}|{(k,s,i) for k in ['junction','interior'] for s in [1,2] for i in range(cfg.wall_panels)}|{('seam',s,i) for s in [0,1,2] for i in range(cfg.seam_panels)}|{('references',0,0)}
+keys=[(x['kind'],x.get('side',0),x.get('index',0)) for x in rows];assert len(keys)==len(expected) and set(keys)==expected
+vals=[arb(0) for _ in range(5)];checks=[]
+for x in rows:
+  if x['kind']=='center':
+    cover=[]
+    for l in x['center']['leaves']:
+      h=arb.pi()/(cfg.center_panels*2**l['depth']);e=sum((arb(str(l[k])) for k in ['e_self','local_tail','e_smooth','combination_error']),arb(0));vals[0]+=(arb(l['V']).upper().sqrt()+(2*h).sqrt()*e)**2;cover.append((l['sub']/2**l['depth'],(l['sub']+1)/2**l['depth']))
+    cover.sort();assert cover[0][0]==0 and cover[-1][1]==1 and all(a[1]==b[0] for a,b in zip(cover,cover[1:]))
+  elif x['kind']=='junction':vals[3]+=arb(str(x['upper_squared'][0]))
+  elif x['kind']=='seam' and x['side']==0:vals[4]+=arb(str(x['upper_squared'][0]))
+  if 'gauss_relative' in x:checks.append(dict(kind=x['kind'],side=x['side'],index=x['index'],relative=x['gauss_relative']));assert x['gauss_relative']<1e-12
+for tr in g['tails']:
+  kind=tr['kind'];side=tr['side'];n=tr['N'];rr=[x for x in rows if x.get('kind')==kind and x.get('side')==side];f=sum((arb(str(x['upper_squared'][j])) for x in rr for j in range(n)),arb(0));slot=side if kind=='material' else 3 if kind=='interior' else 4;vals[slot]+=f+arb(str(tr['tail_squared']));assert tr['relative_tail']<=1e-6 and arb(tr['overlap_lower'])>0
+es=[v.sqrt() for v in vals];Q=sum((arb(c)*e for c,e in zip(g['scan_constants'],es)),arb(0));w=4*arb(g['mu'])*Q/(arb(g['mass_lower'])-Q);ratios=[e/arb(f) for e,f in zip(es,g['floating'])]
+rec=dict(epsilon_upper=list(map(up,es)),ratios=list(map(up,ratios)),mixed_Q_upper=up(Q),mixed_width_upper=up(w),coverage_targets=len(expected)-1,Gauss_checks=checks,max_Gauss_relative=max(x['relative'] for x in checks),all_passed=True,seconds=time.perf_counter()-start,cpu_seconds=time.process_time()-cpu)
+dump(out/'summary.json',rec)

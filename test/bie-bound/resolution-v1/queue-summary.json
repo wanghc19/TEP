@@ -1,0 +1,21 @@
+{
+  "runs": [
+    {
+      "run": "run-003",
+      "title": "field N=256/128/128 M48",
+      "forecast_seconds": 900,
+      "forecast_peak_gib": 2.3,
+      "controller_seconds": 777.625069667,
+      "returncode": 0
+    },
+    {
+      "run": "run-004",
+      "title": "field N=384/192/192 M48",
+      "forecast_seconds": 1000,
+      "forecast_peak_gib": 2.3,
+      "controller_seconds": 724.930138416,
+      "returncode": 1
+    }
+  ],
+  "wall_seconds": 1503.5080841660001
+}
