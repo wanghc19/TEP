@@ -1,0 +1,613 @@
+\section{基于预解式的谱距离估计}
+\label{sec:error}
+
+第~\ref{sec:numerics}~节的有限矩阵函数只能定位候选并生成一个分片重构场。小矩阵残量
+本身不是连续算子的残量，更不能直接证明物理谱点的存在。本节固定同一候选、同一分片场及其全部
+材料和几何输入，直接评价该场在真实界面上的连续迹跳跃；随后用正移位预解式的全界面迹
+估计，把这些跳跃转化为到 $\sigma(A(\beta))$ 的距离上界。这个论证不先把分片场提升到
+全局 $H^1$ 空间，也不要求数值求解任何预解式方程。
+
+\subsection{重构场与界面跳跃的计算}
+
+固定第~\ref{sec:numerics}~节得到的 $\widehat k>0$，并在本节始终使用
+\begin{align}
+  \mu&:=\widehat k^2.
+  \label{eq:resolvent-candidate-mu}
+\end{align}
+谱距离估计的输入不只是 $\widehat k$，还包括候选计算得到的中心系数 $\xi$、左右
+Cauchy 坐标 $c_-$、$c_+$、单胞边界密度及完整单胞传播关系。先对这组非零系数作一次
+共同的归一化并固定相位，随后保持系数、材料参数、几何和离散参数 $(h,M)$ 不变。
+例如，可将完整系数向量的 Euclidean 范数归一为一，再令其模最大的分量为正实数；
+若有并列，按预先固定的分量顺序选择。提高后续积分精度时不重新求解候选、密度或传播关系。
+
+这些数据通过第~\ref{sec:numerics}~节的场表示确定分片场 $u_{h,M}$，以下称为原始场。
+在中心胞元中，外部场由材料界面层势与锚定在 $\Gamma_\pm$ 的两组均匀背景 Rayleigh 场
+相加得到，介质柱内部则使用相应的自由空间层势。当 $\Omega_0=\varnothing$ 时仅省略
+中心层势与密度，不能省略均匀背景场。周期胞元中的场使用同一个单胞边界积分场映射恢复；
+左右各胞元输入该映射的状态由下文的传播矩阵逐次生成。
+
+为使原始场在离散节点以外也有确定的定义，必须指定密度样本的连续插值，而不是每次评价时
+重新拟合。以固定周期参数 $t\in[0,1)$ 下的均匀网格为例，设每条材料曲线交付偶数个
+密度样本 $\{\eta_r\}_{r=0}^{N_\eta-1}$。将存储的样本解释为精确输入，由数学离散
+Fourier 变换定义有限三角密度的系数：
+\begin{align}
+  \eta_m
+  &:=\frac1{N_\eta}\sum_{r=0}^{N_\eta-1}\eta_r
+    \exp\!\left(-\frac{2\pi\ii mr}{N_\eta}\right),
+  \qquad
+  -\frac{N_\eta}{2}\leq m\leq\frac{N_\eta}{2}-1.
+  \label{eq:exact-density-dft}
+\end{align}
+连续密度即为 $\sum_m\eta_m\exp(2\pi\ii mt)$，求和范围同上。此构造针对曲线的参数，
+不要求介质柱是圆形。它与相应的完整数学 Green 核及固定的有限 Rayleigh 和共同定义
+$u_{h,M}$；内、外材料波数均由同一个 $\mu$ 确定。数值 FFT、核展开截断和曲线求积
+是评价这一既定场的手段，其评价误差不重新定义原始场。若需要可靠上界，还须对这些误差
+作单侧控制。
+
+原始场在每个均匀材料子区域内由固定密度和指定的精确 Helmholtz 核定义，并满足
+\begin{align}
+  (-\Delta-\mu\rho)u_{h,M}&=0
+  \qquad\text{逐片成立}.
+  \label{eq:raw-piecewise-pde}
+\end{align}
+它也精确满足 $y$ 方向的 $\beta$-准周期条件。本文假定
+$u_{h,M}\in\mathcal H$，且它在每个分片直至相应界面局部属于 $H^2$。这些条件使
+逐片 Green 恒等式和普通法向迹有意义，但不假定
+$u_{h,M}\in H^1_\beta(B)$：有限边界积分匹配和端口截断仍可能在界面上留下小的
+值跳跃和法向导数跳跃。
+
+为避免重复计数，定义互不相交的界面族
+\begin{align}
+  \mathscr E&=\mathscr E_{\mathrm{mat}}\mathbin{\dot\cup}
+  \mathscr E_{\mathrm{art}}.
+  \label{eq:certification-interface-family}
+\end{align}
+$\mathscr E_{\mathrm{mat}}$ 包含 $\partial\Omega_0$（若
+$\Omega_0\ne\varnothing$）以及 $\partial\Omega_-$、$\partial\Omega_+$ 的全部半无限周期
+平移；$\mathscr E_{\mathrm{art}}$ 包含中心与首个周期胞元之间的 $\Gamma_-$、$\Gamma_+$，
+以及左右半波导中所有相邻胞元的共享竖直界面。每条物理界面只出现一次。由于原始场的
+准周期值与 $\partial_y$ 迹精确匹配，条带上下边界的 Green 项相消，不另计入
+$\mathscr E$。
+
+在每条 $\Gamma\in\mathscr E$ 上固定从侧 $1$ 指向侧 $2$ 的法向 $\nu_\Gamma$，并定义
+\begin{align}
+  a_\Gamma
+  &:=u_{h,M}^{(2)}|_\Gamma
+    -u_{h,M}^{(1)}|_\Gamma,
+  &j_\Gamma
+  &:=\partial_{\nu_\Gamma}u_{h,M}^{(1)}|_\Gamma
+    -\partial_{\nu_\Gamma}u_{h,M}^{(2)}|_\Gamma.
+  \label{eq:raw-interface-jumps}
+\end{align}
+在材料界面上，侧 $1$ 是介质柱内部、侧 $2$ 是外部，$\nu_\Gamma$ 由内指向外；因此
+$a_\Gamma=u^{\mathrm{out}}-u^{\mathrm{in}}$，而
+$j_\Gamma=\partial_{\nu_\Gamma}u^{\mathrm{in}}
+-\partial_{\nu_\Gamma}u^{\mathrm{out}}$。在人工界面上，侧 $1$ 是较靠近中心的胞元，侧
+$2$ 是较远的胞元，法向朝相应无穷远；在 $\Gamma_\pm$ 上这正是
+$\nu_-=-e_x$、$\nu_+=e_x$。若改用共享界面两侧各自的外法向，$j_\Gamma$ 等于两侧
+外法向导数之和。这个定向使后面的 Green 恒等式中值跳跃项和法向跳跃项都带正号。
+
+选定正的参考长度 $\ell_*>0$，将每条界面上的两个跳跃作平方积分，再对全部界面相加，定义
+\begin{align}
+  \varepsilon_{\partial,\ell_*}^2
+  &:={}
+  \sum_{\Gamma\in\mathscr E}
+  \left(
+    \lVert j_\Gamma\rVert_{L^2(\Gamma)}^2
+    +\ell_*^{-2}\lVert a_\Gamma\rVert_{L^2(\Gamma)}^2
+  \right),
+  \label{eq:boundary-defect-norm}\\
+  U&:=\lVert u_{h,M}\rVert_{\mathcal H}.
+  \label{eq:raw-field-mass}
+\end{align}
+$a_\Gamma$ 的量纲是场值，而 $j_\Gamma$ 的量纲
+是场值除以长度，因此用 $a_\Gamma/\ell_*$ 与 $j_\Gamma$ 一起计量界面缺陷。
+它不是网格步长，也不是后文法向邻域的半宽。理论允许任意固定的正 $\ell_*$，
+本文计算取 $\ell_*=d$。改变这一选择时，后文的迹常数
+$C_{\mathrm{tr},\ell_*}$ 也必须相应改变，不能只调整
+$\varepsilon_{\partial,\ell_*}$。$U$ 与界面缺陷均使用同一个原始场及同一归一化。
+
+先说明单条界面的积分如何评价。在材料界面上，将固定的连续密度代入内、外层势表示，
+使用各自的单侧迹公式计算 $u^{\mathrm{in}}$、$u^{\mathrm{out}}$ 及其沿同一外法向的
+导数。函数迹中的半密度跳跃项和法向迹中的相应跳跃项必须保留；含奇异核的边界作用使用
+相应的奇异求积或正则化公式，不能直接把目标点放到奇异核中。外侧的均匀背景 Rayleigh 场
+也参与这两个迹的计算。先按式~\eqref{eq:raw-interface-jumps} 作有符号的内外差，再取
+模平方。具体而言，式~\eqref{eq:center-interface-jump-matrix} 的连续边界作用给出了
+同一计算结构：按 $\eta=[\tau;-\sigma]$ 的密度约定，第一行对应 $a_\Gamma$，
+第二行对应 $-j_\Gamma$。应在目标节点重新评价这些边界作用，而不是直接读取原网格上的
+矩阵乘积。若 $z_q\in\Gamma$ 是独立于原离散网格的目标求积节点、$w_q>0$ 是包含弧长因子的
+权重，则一条材料界面的数值评价为
+\begin{align}
+  \int_\Gamma\left(|j_\Gamma|^2+\ell_*^{-2}|a_\Gamma|^2\right)\,\dd s
+  &\ \approx\
+  \sum_q w_q\left(
+    |j_\Gamma(z_q)|^2+\ell_*^{-2}|a_\Gamma(z_q)|^2
+  \right).
+  \label{eq:material-jump-quadrature}
+\end{align}
+这里的近似号区分了连续积分与求积值。评价时可以增加目标节点数和核评价精度，
+但密度仍是式~\eqref{eq:exact-density-dft} 所确定的同一个函数。
+在原配点上很小的 $J(\widehat k)\xi$ 并不保证这项连续积分很小。
+这种直接在真实材料曲线上计算跳跃的方法不需要把材料跳跃另作 Fourier 展开，
+但并未取消源密度和端口场已有的 Fourier/Rayleigh 表示。
+
+在人工竖直界面上，分别从相邻两个胞元提取完整场的 Rayleigh 系数，并按相同的法向
+求导、相减。以 $a_{\Gamma,m}$、$j_{\Gamma,m}$ 表示所得值跳跃和法向跳跃在既定正交归一基
+$\psi_m$ 下的系数，Parseval 等式给出
+\begin{align}
+  \int_\Gamma\left(|j_\Gamma|^2+\ell_*^{-2}|a_\Gamma|^2\right)\,\dd s
+  &=
+  \sum_{m\in\mathbb Z}
+  \left(|j_{\Gamma,m}|^2+\ell_*^{-2}|a_{\Gamma,m}|^2\right).
+  \label{eq:artificial-jump-parseval}
+\end{align}
+层势产生的 Rayleigh 展开一般不是有限和，即使原候选只使用 $|m|\leq M$ 的端口数据。
+因此这里另选评价截断 $M_{\mathrm{ev}}\geq M$，计算 $|m|\leq M_{\mathrm{ev}}$ 的系数，
+并估计其外的模态尾项；不能将缺失模态直接设为零。
+这些系数仍由 Green 核的谱展开提取，法向导数由逐模乘子得到，而不是把原离散 DtN
+匹配残量当作实际连续跳跃。
+
+接下来处理无穷多个周期胞元。令 $P_\pm\in\CC^{K\times K}$ 为第~\ref{sec:numerics}~节
+所选衰减基 $Z_\pm$ 内的单胞传播矩阵，方向均指向对应的无穷远。在精确算术中，它们满足
+\begin{align*}
+  A_{\mathrm{sc}}Z_+&=B_{\mathrm{sc}}Z_+P_+,
+  &B_{\mathrm{sc}}Z_-&=A_{\mathrm{sc}}Z_-P_-.
+\end{align*}
+实现中分别在正向和反向有序 QZ 分解所选的三角块上作线性求解，得到完整的 $P_\pm$，
+而不是只保留传播特征值。于是 $\mathcal C_++jLe_x$ 和
+$\mathcal C_--jLe_x$ 中的状态分别为 $P_+^jc_+$ 和 $P_-^jc_-$，$j=0,1,\ldots$。
+用这些状态输入同一个单胞场映射即可计算各胞元的连续迹。固定的浮点传播数据不必精确满足
+上面的代数关系；它所产生的场仍按实际迹计算跳跃，不略去相应的不匹配。
+
+为明确每条界面计入哪一项，对 $\varsigma\in\{-,+\}$ 和任意状态 $v\in\CC^K$，
+记 $b_\varsigma(v)$ 为以下两项之和：状态 $v$ 所确定的基本周期胞元材料界面上的
+跳跃平方积分，以及它与朝外的下一个胞元之间的共享人工界面上的跳跃平方积分。
+后一项必须同时使用状态 $v$ 和 $P_\varsigma v$ 恢复两侧场；不能只使用其中一个胞元。
+两项积分均按式~\eqref{eq:boundary-defect-norm} 的权重计量。
+再记 $b_0$ 为中心材料界面（若存在）及 $\Gamma_-$、$\Gamma_+$ 上的三项积分之和；
+后两项分别比较中心场与状态 $c_-$、$c_+$ 所确定的首胞场。这样得到完整等式
+\begin{align}
+  \varepsilon_{\partial,\ell_*}^2
+  &=b_0+\sum_{\varsigma\in\{-,+\}}\sum_{j=0}^{\infty}
+    b_\varsigma(P_\varsigma^jc_\varsigma).
+  \label{eq:full-propagation-boundary-sum}
+\end{align}
+每条半波导内部共享界面归属于较靠近中心的胞元，因此没有重复计数；$\Omega_0$ 非空时的
+中心材料贡献也没有遗漏。$b_\varsigma$ 是由上述具体积分定义的非负二次函数，
+不需要另行组装一个 Gram 矩阵。
+
+计算式~\eqref{eq:full-propagation-boundary-sum} 时，先取有限胞元数 $N_{\mathrm{cell}}$，
+从 $v=c_\varsigma$ 开始，重复计算 $b_\varsigma(v)$ 并更新
+$v\leftarrow P_\varsigma v$，累加 $j=0,\ldots,N_{\mathrm{cell}}-1$ 的贡献。
+余下无穷尾项不能仅以末项很小为由丢弃。下面给出一个可直接实施的控制方法。
+设已得到 $\|P_\varsigma\|_2\leq r_\varsigma<1$；
+例如可用其 Frobenius 范数的上界作为 $r_\varsigma$。
+令 $\boldsymbol e_s$，$s=1,\ldots,K$，为 $\CC^K$ 的标准正交基，分别输入同一跳跃
+评价过程，得到 $b_\varsigma(\boldsymbol e_s)$。由于各跳跃线性依赖于输入状态，
+Cauchy--Schwarz 不等式给出
+\begin{align*}
+  b_\varsigma(v)
+  &\leq\left(\sum_{s=1}^K b_\varsigma(\boldsymbol e_s)\right)\|v\|_2^2.
+\end{align*}
+再对传播步数使用几何级数，便有
+\begin{align}
+  \sum_{j=N_{\mathrm{cell}}}^{\infty}
+    b_\varsigma(P_\varsigma^jc_\varsigma)
+  &\leq
+  \frac{\displaystyle\sum_{s=1}^K b_\varsigma(\boldsymbol e_s)}
+       {1-r_\varsigma^2}
+  \bigl\|P_\varsigma^{N_{\mathrm{cell}}}c_\varsigma\bigr\|_2^2.
+  \label{eq:boundary-propagation-tail}
+\end{align}
+这里的基向量计算也包含完整界面积分及其模态尾项。若 $\|P_\varsigma\|_2$ 不小于一，
+不能使用这个分母：即使传播特征值的模都小于一，非正规矩阵仍可能先放大再衰减。
+此时可将连续若干胞元分为一组，验证某个正整数 $p$ 满足
+$\|P_\varsigma^p\|_2<1$，并把一组内的全部 $p$ 项贡献相加后使用同一估计。
+整个计算保留完整传播矩阵及其耦合，不假定不同传播方向正交或可逐模独立相加。
+
+由此，$\varepsilon_{\partial,\ell_*}$ 的计算顺序是：计算 $b_0$，累计左右各
+$N_{\mathrm{cell}}$ 个胞元的跳跃平方积分，加上两侧传播尾项的控制量，最后开平方。
+数值求积与截断评价给出的是这一流程的数值估计；若要得到
+式~\eqref{eq:certified-one-sided-inputs} 中的可靠上界
+$\overline\varepsilon_\partial$，则有限部分、基向量积分、传播收缩因子和尾项均须使用
+可靠上界，并计入核评价、求积、模态截断及舍入误差。仅有收缩分母为正并不足以完成这一点。
+求积节点数、$M_{\mathrm{ev}}$ 和 $N_{\mathrm{cell}}$ 是评价参数，不改变候选或原始场。
+作数值估计时，逐步增加这些参数，分别检查界面积分的变化、未保留模态的贡献和传播尾项，
+直到满足预先选定的评价容差；单纯的加密稳定性不能代替可靠误差界。
+
+场范数 $U$ 可按各材料子区域积分 $\rho|u_{h,M}|^2$，再按同一胞元传播结构相加。
+若只需要后文公式中的下界，也可只积分中心胞元或其他有限子区域：其非负质量积分的
+平方根不大于 $U$，但必须得到严格正的下界才有用。最后将同一原始场的界面缺陷与质量、
+下一小节给出的迹常数结合，代入式~\eqref{eq:resolvent-spectral-distance-bound}。
+该式中的 $Q=C\varepsilon_{\partial,\ell_*}$ 正是本小节算出的跳跃总量与迹常数的乘积；
+小矩阵残量不能替代这个输入。
+
+\subsection{正移位预解式的全界面迹估计}
+
+下面给出将式~\eqref{eq:boundary-defect-norm} 与全谱距离连接起来的几何常数。假定
+$\mathscr E$ 局部有限，每条材料界面是简单闭合 $C^2$ 曲线，人工界面是准周期圆柱上的
+竖直闭曲线。存在共同的法向邻域半宽 $\delta_{\mathrm{col}}>0$、曲率上界
+$\kappa_*$ 和有限覆盖重数 $N_{\mathrm{ov}}$，使对每条界面的弧长参数
+$\boldsymbol r_\Gamma(s)$，映射
+\begin{align}
+  \boldsymbol\Phi_\Gamma(s,t)
+  &:=\boldsymbol r_\Gamma(s)+t\nu_\Gamma(s),
+  &|t|&<\delta_{\mathrm{col}},
+  \label{eq:interface-normal-neighborhood}
+\end{align}
+在该邻域内单射，并且任一点至多被 $N_{\mathrm{ov}}$ 个此类邻域覆盖。再要求
+\begin{align}
+  \vartheta_{\mathrm{col}}
+  &:=1-\delta_{\mathrm{col}}\kappa_*>0,
+  &c_0&:=\frac{N_{\mathrm{ov}}}
+    {\vartheta_{\mathrm{col}}\delta_{\mathrm{col}}},
+  &c_1&:=\frac{N_{\mathrm{ov}}\delta_{\mathrm{col}}}
+    {2\vartheta_{\mathrm{col}}}.
+  \label{eq:trace-geometry-constants}
+\end{align}
+这里 $\delta_{\mathrm{col}}$ 是几何法向邻域的半宽，不是第~\ref{sec:numerics}~节的
+Nystr\"om 网格步长 $h$；$\vartheta_{\mathrm{col}}$ 是法向坐标 Jacobian 的下界，也不同于
+式~\eqref{eq:background-bloch-fiber} 的 $x$ 向 Bloch 参数 $\theta$。单连通性本身并不保证
+这些条件，计算可靠上界时还必须验证邻域单射性、不同界面及周期副本的分离性和覆盖重数界。
+
+\begin{proposition}[全界面正移位迹估计]
+  \label{prop:positive-shift-trace-bound}
+  在上述几何条件以及 $0<\rho_-\leq\rho\leq\rho_+$ 下，对每个
+  $v\in D(A(\beta))$，有
+  \begin{align}
+    T_{\ell_*}(v)^2
+    &:={}
+    \sum_{\Gamma\in\mathscr E}
+    \left(
+      \lVert v|_\Gamma\rVert_{L^2(\Gamma)}^2
+      +\ell_*^2
+       \lVert\partial_{\nu_\Gamma}v|_\Gamma\rVert_{L^2(\Gamma)}^2
+    \right)
+    \notag\\
+    &\leq C_{\mathrm{tr},\ell_*}^2
+      \lVert(A(\beta)+\mu I)v\rVert_{\mathcal H}^2,
+    \label{eq:positive-shift-trace-bound}\\
+    C_{\mathrm{tr},\ell_*}^2
+    &:={}
+    \frac{c_0}{\rho_-\mu^2}
+    +\frac{c_1+\ell_*^2c_0}{4\mu}
+    +\ell_*^2c_1\rho_+.
+    \label{eq:trace-constant}
+  \end{align}
+\end{proposition}
+
+\begin{proof}
+  先说明所需的全局二阶控制。把 $v\in D(A(\beta))$ 以相位
+  $\ee^{\ii\beta d}$ 沿 $y$ 延拓，并在 $y$ 方向用
+  $\psi_m$、在 $x$ 方向用 Fourier 变换。由于 $v\in H^1(B)$ 且其分布 Laplacian 属于
+  $L^2(B)$，Parseval 等式给出
+  \begin{align*}
+    \sum_m\int_{\RR}
+    (\xi^2+\beta_m^2)^2|\widehat v_m(\xi)|^2\,\dd\xi<\infty.
+  \end{align*}
+  因而 $v\in H^2(B)$，并且
+  $\lVert D^2v\rVert_{L^2(B)}=\lVert\Delta v\rVert_{L^2(B)}$。这一结论使用全局
+  分布 Laplacian，故材料界面上的传输条件已经包含在 $D(A(\beta))$ 中。
+
+  令 $f=(A(\beta)+\mu I)v$。由 $A(\beta)$ 的非负自伴性和谱定理，
+  \begin{align*}
+    \lVert v\rVert_{L^2(B)}^2
+    &\leq\frac{1}{\rho_-\mu^2}\lVert f\rVert_{\mathcal H}^2,
+    &\lVert\nabla v\rVert_{L^2(B)}^2
+    &\leq\frac{1}{4\mu}\lVert f\rVert_{\mathcal H}^2,\\
+    \lVert D^2v\rVert_{L^2(B)}^2
+    &\leq\rho_+\lVert f\rVert_{\mathcal H}^2.
+  \end{align*}
+  最后一式来自 $\Delta v=-\rho A(\beta)v$、
+  $\lVert A(\beta)v\rVert_{\mathcal H}\leq\lVert f\rVert_{\mathcal H}$ 及上述 Hessian
+  恒等式。
+
+  对 $g\in H^1(-\delta_{\mathrm{col}},\delta_{\mathrm{col}})$，一维基本定理和
+  Cauchy--Schwarz 不等式给出
+  \begin{align*}
+    |g(0)|^2
+    \leq\frac{1}{\delta_{\mathrm{col}}}
+      \int_{-\delta_{\mathrm{col}}}^{\delta_{\mathrm{col}}}|g(t)|^2\,\dd t
+    +\frac{\delta_{\mathrm{col}}}{2}
+      \int_{-\delta_{\mathrm{col}}}^{\delta_{\mathrm{col}}}|g'(t)|^2\,\dd t.
+  \end{align*}
+  沿式~\eqref{eq:interface-normal-neighborhood} 的法线使用此式，利用 Jacobian 下界
+  $\vartheta_{\mathrm{col}}$，再对任意有限界面子族求和并使用覆盖重数，得到
+  \begin{align*}
+    \sum_\Gamma\lVert v|_\Gamma\rVert_2^2
+    &\leq c_0\lVert v\rVert_2^2+c_1\lVert\nabla v\rVert_2^2,\\
+    \sum_\Gamma\lVert\partial_{\nu_\Gamma}v|_\Gamma\rVert_2^2
+    &\leq c_0\lVert\nabla v\rVert_2^2+c_1\lVert D^2v\rVert_2^2.
+  \end{align*}
+  对递增有限子族取极限并代入前三个体范数估计，恰得
+  式~\eqref{eq:positive-shift-trace-bound}--\eqref{eq:trace-constant}。
+\end{proof}
+
+后文简记
+\begin{align}
+  C&:=C_{\mathrm{tr},\ell_*},
+  &Q&:=C\varepsilon_{\partial,\ell_*}.
+  \label{eq:trace-defect-product}
+\end{align}
+$C$ 只依赖式~\eqref{eq:trace-constant} 中同一个 $\mu$、材料上下界、参考长度和经过验证的
+几何输入；它不是从候选矩阵残量拟合出来的量。
+
+\subsection{谱距离定理与可计算的可靠上界}
+
+\begin{theorem}[原始界面缺陷的谱距离界]
+  \label{thm:resolvent-spectral-distance}
+  设 $A(\beta)$ 是式~\eqref{eq:fixed-beta-operator} 的非负自伴算子，界面族满足
+  命题~\ref{prop:positive-shift-trace-bound} 的几何条件。设非零原始场
+  $u_{h,M}\in\mathcal H$ 逐片属于 $H^2$，满足
+  式~\eqref{eq:raw-piecewise-pde}、精确的 $\beta$-准周期条件，并且
+  式~\eqref{eq:boundary-defect-norm} 有限。若
+  \begin{align}
+    Q&<U,
+    \label{eq:positive-resolvent-denominator}
+  \end{align}
+  则
+  \begin{align}
+    \operatorname{dist}\!\left(\mu,\sigma(A(\beta))\right)
+    &\leq\frac{2\mu Q}{U-Q}.
+    \label{eq:resolvent-spectral-distance-bound}
+  \end{align}
+  这个结论是到整个算子谱的距离上界，不要求预先知道本质谱隙。
+\end{theorem}
+
+\begin{proof}
+  若 $\mu\in\sigma(A(\beta))$，左端为零，结论成立。以下设
+  $\mu\notin\sigma(A(\beta))$，并只为证明定义辅助场
+  \begin{align}
+    z&:=(A(\beta)-\mu I)^{-1}u_{h,M}
+    \in D(A(\beta)).
+    \label{eq:auxiliary-resolvent-field}
+  \end{align}
+  谱距离估计的计算不需求解 $z$。
+
+  下面逐步推导所需的 Green 恒等式。仅在这段推导中暂记 $u=u_{h,M}$，以免较长的
+  下标遮蔽计算；$u$ 始终是前面固定的同一个原始场，并非另选的试验函数。
+
+  \smallskip\noindent
+  \textbf{第一步：写出两个场的方程，说明质量积分从何而来。}
+  在任一均匀材料分片内，原始场满足精确的 Helmholtz 方程；辅助场的方程则来自
+  $(A(\beta)-\mu I)z=u$。利用 $A(\beta)=-\rho^{-1}\Delta$，两者分别为
+  \begin{align*}
+    -\Delta u-\mu\rho u&=0,\\
+    -\Delta z-\mu\rho z&=\rho u.
+  \end{align*}
+  由于 $\mu$ 和 $\rho$ 都是实数，将第二式取复共轭后乘以 $u$，得到
+  \begin{align*}
+    -u\Delta\overline z-\mu\rho u\overline z=\rho|u|^2.
+  \end{align*}
+  再将第一式改写为 $\Delta u=-\mu\rho u$，便有
+  \begin{align*}
+    \rho|u|^2
+    &= -u\Delta\overline z-\mu\rho u\overline z
+     =\overline z\,\Delta u-u\Delta\overline z.
+  \end{align*}
+  因而场范数中的权重 $\rho$ 正是由辅助方程的右端产生的。这里仅使用 $u$ 的逐片
+  方程，没有把有界面跳跃的 $u$ 当成 $D(A(\beta))$ 中的函数，也没有对它直接应用
+  全局算子 $A(\beta)$。
+
+  \smallskip\noindent
+  \textbf{第二步：在一个有界分片上分部积分。}
+  设 $D$ 是一个有界均匀材料分片，$\nu_D$ 是它的外单位法向。第二 Green 恒等式给出
+  \begin{align*}
+    \int_D\rho|u|^2\,\dd x\,\dd y
+    &=\int_D\bigl(\overline z\,\Delta u-u\Delta\overline z\bigr)
+      \,\dd x\,\dd y\\
+    &=\int_{\partial D}
+      \bigl(\overline z\,\partial_{\nu_D}u
+        -u\partial_{\nu_D}\overline z\bigr)\,\dd s.
+  \end{align*}
+  左端是这个分片对 $U^2$ 的贡献，右端是它的边界贡献。接下来先检查相邻分片的
+  共享边界怎样合并，再处理条带在 $x$ 方向无界的问题。
+
+  \smallskip\noindent
+  \textbf{第三步：合并共享界面两侧的边界项。}
+  在一条共享界面 $\Gamma$ 上，沿用式~\eqref{eq:raw-interface-jumps} 的约定：
+  $\nu_\Gamma$ 从侧 $1$ 指向侧 $2$。于是侧 $1$ 的外法向为 $\nu_\Gamma$，
+  侧 $2$ 的外法向为 $-\nu_\Gamma$。
+  与允许跳跃的 $u$ 不同，辅助场 $z\in D(A(\beta))$。由命题
+  ~\ref{prop:positive-shift-trace-bound} 证明开头的正则性论证，$z\in H^2(B)$，
+  因此它在界面两侧的值迹及沿同一固定法向的导数迹相同：
+  \begin{align*}
+    z^{(1)}|_\Gamma&=z^{(2)}|_\Gamma, &
+    \partial_{\nu_\Gamma}z^{(1)}|_\Gamma
+      &=\partial_{\nu_\Gamma}z^{(2)}|_\Gamma.
+  \end{align*}
+  以下直接用 $z$ 和 $\partial_{\nu_\Gamma}z$ 表示这些共同的迹；并不要求
+  $\nabla z$ 具有逐点连续的代表。两侧的边界被积函数分别为
+  \begin{align*}
+    &\overline z\,\partial_{\nu_\Gamma}u^{(1)}
+      -u^{(1)}\partial_{\nu_\Gamma}\overline z,
+      &&\text{侧 $1$},\\
+    &-\overline z\,\partial_{\nu_\Gamma}u^{(2)}
+      +u^{(2)}\partial_{\nu_\Gamma}\overline z,
+      &&\text{侧 $2$}.
+  \end{align*}
+  相加并按同一类迹整理，得到
+  \begin{align*}
+    &\bigl(\partial_{\nu_\Gamma}u^{(1)}
+        -\partial_{\nu_\Gamma}u^{(2)}\bigr)\overline z
+      +\bigl(u^{(2)}-u^{(1)}\bigr)
+        \partial_{\nu_\Gamma}\overline z\\
+    &\qquad=j_\Gamma\overline z
+      +a_\Gamma\partial_{\nu_\Gamma}\overline z.
+  \end{align*}
+  这说明两个跳跃项前面的正号来自共享边界的相反外法向，而不是额外规定。
+  材料界面与人工界面都使用同一计算；每条共享界面在合并后只计一次。
+
+  \smallskip\noindent
+  \textbf{第四步：引入光滑截断，先在有限范围内求和。}
+  由于 $B$ 无界，不能未经论证便把第二步对无穷多个分片直接相加。取实值
+  $\chi_R\in C_c^\infty(\RR)$，其中 $R>0$，满足
+  \begin{align*}
+    0\leq\chi_R\leq1,\qquad
+    \chi_R(x)&=1\quad(|x|\leq R), &
+    \chi_R(x)&=0\quad(|x|\geq2R),\\
+    \|\chi_R'\|_\infty&=O(R^{-1}), &
+    \|\chi_R''\|_\infty&=O(R^{-2}).
+  \end{align*}
+  不改变 $u$，而把 Green 恒等式中的第二个场暂时换为 $\chi_Rz$。
+  它在足够远处为零，所以只需对有限个胞元中的分片求和，最外侧竖直边界没有贡献。
+  条带上、下边界的贡献也相消：$u$ 和 $z$ 的准周期相位相同，乘上共轭后相位抵消，
+  而上下外法向相反；$\chi_R$ 只依赖 $x$，不改变这一性质。
+  这里的 $R$ 仅用于证明中的极限过程，不是前面计算跳跃总量时保留的胞元数
+  $N_{\mathrm{cell}}$。
+
+  截断会产生附加项，不能直接丢弃。由乘积求导法则，
+  \begin{align*}
+    \Delta(\chi_R\overline z)
+      &=\chi_R\Delta\overline z
+        +2\chi_R'\partial_x\overline z+\chi_R''\overline z,\\
+    \partial_{\nu_\Gamma}(\chi_R\overline z)
+      &=\chi_R\partial_{\nu_\Gamma}\overline z
+        +(\partial_{\nu_\Gamma}\chi_R)\overline z.
+  \end{align*}
+  因此每个分片内的体积分被积函数变成
+  \begin{align*}
+    \chi_R\overline z\,\Delta u-u\Delta(\chi_R\overline z)
+    =\chi_R\rho|u|^2
+      -u\bigl(2\chi_R'\partial_x\overline z+\chi_R''\overline z\bigr).
+  \end{align*}
+  在界面上则按第三步合并两侧贡献，再把上式最后一项移到右边，得到有限范围内的
+  精确恒等式
+  \begin{align*}
+    \int_B\chi_R\rho|u|^2\,\dd x\,\dd y
+    ={}&\sum_{\Gamma\in\mathscr E}\int_\Gamma
+      \chi_R\bigl(j_\Gamma\overline z
+        +a_\Gamma\partial_{\nu_\Gamma}\overline z\bigr)\,\dd s\\
+    &+\int_Bu\bigl(2\chi_R'\partial_x\overline z
+        +\chi_R''\overline z\bigr)\,\dd x\,\dd y\\
+    &+\sum_{\Gamma\in\mathscr E}\int_\Gamma
+      a_\Gamma(\partial_{\nu_\Gamma}\chi_R)\overline z\,\dd s.
+  \end{align*}
+  由于截断函数的支集有界且界面族局部有限，此处实际只有有限条界面作出贡献。
+
+  \smallskip\noindent
+  \textbf{第五步：分别控制附加项，再令 $R\to\infty$。}
+  首先，由 $\rho\geq\rho_->0$ 和 $u\in\mathcal H$ 可知 $u\in L^2(B)$；
+  又有 $z\in H^2(B)$。因此附加体积分满足
+  \begin{align*}
+    &\left|\int_Bu\bigl(2\chi_R'\partial_x\overline z
+      +\chi_R''\overline z\bigr)\,\dd x\,\dd y\right|\\
+    &\qquad\leq\|u\|_{L^2(B)}
+      \left(2\|\chi_R'\|_\infty\|\partial_xz\|_{L^2(B)}
+        +\|\chi_R''\|_\infty\|z\|_{L^2(B)}\right)
+      \longrightarrow0.
+  \end{align*}
+  其次，$|\partial_{\nu_\Gamma}\chi_R|\leq\|\chi_R'\|_\infty$，故附加界面项满足
+  \begin{align*}
+    &\left|\sum_{\Gamma\in\mathscr E}\int_\Gamma
+      a_\Gamma(\partial_{\nu_\Gamma}\chi_R)\overline z\,\dd s\right|\\
+    &\qquad\leq\|\chi_R'\|_\infty
+      \left(\sum_{\Gamma\in\mathscr E}\|a_\Gamma\|_{L^2(\Gamma)}^2\right)^{1/2}
+      \left(\sum_{\Gamma\in\mathscr E}\|z\|_{L^2(\Gamma)}^2\right)^{1/2}
+      \longrightarrow0.
+  \end{align*}
+  这里第一个平方和由 $\varepsilon_{\partial,\ell_*}<\infty$ 保证有限，第二个平方和
+  由命题~\ref{prop:positive-shift-trace-bound} 保证有限，因为
+  $T_{\ell_*}(z)\leq C\|(A(\beta)+\mu I)z\|_{\mathcal H}<\infty$。
+  这正是该命题在移除截断时的用途。
+
+  还需确认主界面项可以取极限。带 $\ell_*$ 权重的 Cauchy--Schwarz 不等式给出
+  \begin{align*}
+    \sum_{\Gamma\in\mathscr E}\int_\Gamma
+      \left(|j_\Gamma|\,|z|
+        +|a_\Gamma|\,|\partial_{\nu_\Gamma}z|\right)\,\dd s
+    \leq\varepsilon_{\partial,\ell_*}T_{\ell_*}(z)<\infty.
+  \end{align*}
+  所以主界面级数绝对可积；由 $0\leq\chi_R\leq1$ 及 $\chi_R\to1$，支配收敛定理
+  允许在其积分与求和中取极限。同理，左端以可积函数 $\rho|u|^2$ 为控制函数，满足
+  \begin{align*}
+    \int_B\chi_R\rho|u|^2\,\dd x\,\dd y
+    \longrightarrow\int_B\rho|u|^2\,\dd x\,\dd y=U^2.
+  \end{align*}
+  将上述极限代入第四步的恒等式，便得到整个无穷条带上的 Green 恒等式
+  \begin{align}
+    U^2
+    =\sum_{\Gamma\in\mathscr E}
+    \int_\Gamma
+    \left(
+      j_\Gamma\overline z
+      +a_\Gamma\partial_{\nu_\Gamma}\overline z
+    \right)\,\dd s.
+    \label{eq:raw-green-identity}
+  \end{align}
+
+  记
+  $\delta=\operatorname{dist}(\mu,\sigma(A(\beta)))>0$。由自伴算子的谱定理，
+  $\lVert(A(\beta)-\mu I)^{-1}\rVert=\delta^{-1}$。又由
+  $(A(\beta)+\mu I)z=u_{h,M}+2\mu z$，
+  \begin{align}
+    \lVert(A(\beta)+\mu I)z\rVert_{\mathcal H}
+    &\leq\left(1+\frac{2\mu}{\delta}\right)U.
+    \label{eq:positive-shift-of-resolvent}
+  \end{align}
+  对式~\eqref{eq:raw-green-identity} 使用带 $\ell_*$ 权重的 Cauchy--Schwarz 不等式和
+  命题~\ref{prop:positive-shift-trace-bound}，得到
+  \begin{align*}
+    U^2
+    &\leq\varepsilon_{\partial,\ell_*}T_{\ell_*}(z)
+    \leq Q\left(1+\frac{2\mu}{\delta}\right)U.
+  \end{align*}
+  除以 $U>0$，再利用 $U-Q>0$ 移项，即有
+  $\delta(U-Q)\leq2\mu Q$，这就是式
+  ~\eqref{eq:resolvent-spectral-distance-bound}。
+\end{proof}
+
+用数值近似评价上述理论公式可得到谱距离估计；若要得到可靠上界，则必须为定理输入建立
+可靠单侧界。具体地，设
+\begin{align}
+  C&\leq\overline C,
+  &\varepsilon_{\partial,\ell_*}&\leq\overline\varepsilon_\partial,
+  &0<\underline U&\leq U,
+  \label{eq:certified-one-sided-inputs}\\
+  \overline Q&:=\overline C\,\overline\varepsilon_\partial,
+  &\underline D&:=\underline U-\overline Q>0.
+  \label{eq:certified-positive-denominator}
+\end{align}
+$\overline C$ 来自材料、候选 $\mu$ 和法向邻域几何的向上包围；
+$\overline\varepsilon_\partial$ 来自同一原始场全部实际值跳跃和法向跳跃的向上包围；
+$\underline U$ 则是该场加权质量的向下包围。三者不得混用不同候选、不同归一化或重新求解
+后的密度。由定理~\ref{thm:resolvent-spectral-distance} 立即得到可计算的可靠上界
+\begin{align}
+  R_{\mathrm{spec}}
+  &:=\frac{2\mu\overline C\,\overline\varepsilon_\partial}
+    {\underline U-\overline C\,\overline\varepsilon_\partial},
+  &\operatorname{dist}\!\left(\mu,\sigma(A(\beta))\right)
+  &\leq R_{\mathrm{spec}}.
+  \label{eq:certified-spectral-distance}
+\end{align}
+正分母条件~\eqref{eq:certified-positive-denominator} 是有限界成立的必要检查；若它不成立，
+公式不提供有限谱距离界。$R_{\mathrm{spec}}$ 是到算子谱的距离上界，不是残量范数。
+因此向外舍入的区间
+\begin{align}
+  I_{\mathrm{spec}}
+  &:=[\mu-R_{\mathrm{spec}},\mu+R_{\mathrm{spec}}]
+  \label{eq:certified-spectral-interval}
+\end{align}
+必与 $\sigma(A(\beta))$ 相交。这个结论既不识别最近谱点的编号或重数，也不保证区间内只有
+一个谱点。
+
+若另行证明某个开区间 $G$ 与 $\sigma_{\mathrm{ess}}(A(\beta))$ 不交，并且
+$I_{\mathrm{spec}}\subset G$，则
+命题~\ref{prop:discrete-spectrum-in-gap} 才允许把其中至少一个谱点解释为孤立、有限重的
+导模特征值。本文的谱距离可靠上界本身不证明这样的 $G$ 存在，也不把猜想
+~\ref{conj:essential-spectrum} 当成数值带隙的证明。
+
+\paragraph{体缺陷的独立扩展。}
+当前连续核原始场逐片精确满足式~\eqref{eq:raw-piecewise-pde}，故体缺陷为零。若将来使用
+不精确满足 PDE 的分片场，令
+$r=(-\Delta-\mu\rho)u_{h,M}$ 且
+$\varepsilon_{\mathrm{vol}}:=\lVert\rho^{-1}r\rVert_{\mathcal H}$，则同一证明在
+式~\eqref{eq:raw-green-identity} 中增加体积分，并给出
+\begin{align*}
+  \operatorname{dist}\!\left(\mu,\sigma(A(\beta))\right)
+  \leq
+  \frac{2\mu\overline C\,\overline\varepsilon_\partial
+    +\overline\varepsilon_{\mathrm{vol}}}
+  {\underline U-\overline C\,\overline\varepsilon_\partial}.
+\end{align*}
+这一扩展不参与本文算例，也不改变精确 PDE 主线。
