@@ -88,6 +88,21 @@ eigenvalue problems. These rules apply throughout the repository.
 - Keep provenance and documentation out of numerical runtime prerequisites;
   see `test/AGENTS.md` for input and path requirements.
 
+## Temporary outputs
+
+- Put temporary outputs (trial builds, bug reproductions, scratch copies) in a
+  subfolder of the repository's untracked `tmp/` named after the task, for
+  example `tmp/xr-cleveref-repro/`. Do not create them in system temporary
+  directories (`mktemp -d`, `$TMPDIR`, `/var/folders/...`) or elsewhere in the
+  repository.
+- An agent may delete, without asking, a task-named folder under the root
+  `tmp/` that it created during the current task, by its exact path (no broad
+  globs). Whether to keep it for later use is the agent's call. This permission
+  covers nothing else: not files or folders from other tasks or other agents,
+  not existing contents of `tmp/` (such as logs and prompts), not `research/tmp/`,
+  and not outputs backing a reported result. List any other leftovers for the
+  user instead of deleting them.
+
 ## LaTeX cleanup
 
 - Use only `latexmk -c` in the identified project or with its main TeX file.
