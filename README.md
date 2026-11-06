@@ -1,65 +1,71 @@
 # Periodic waveguides and eigenvalue problems
 
-## 项目与阅读入口
+Code, research notes and manuscripts on guided modes in two-dimensional
+$y$-periodic dielectric waveguides with a line defect.
 
-本仓库保存二维周期波导及相关特征值、散射问题的 MATLAB 代码、研究材料和讲义。
-`eig-apost` 专题研究固定 Bloch 参数下线缺陷局域模态的计算与后验误差估计，
-包括 BIE 和 FEM＋DtN 两条数值路线。
+## 简介
 
-| 内容 | 阅读入口 |
-| --- | --- |
-| 仓库工作约定 | [AGENTS.md](AGENTS.md)；Claude 入口为 [CLAUDE.md](CLAUDE.md) |
-| 研究目录与进展 | [研究入口](research/README.md)、[研究状态](research/STATUS.md) |
-| 特征值后验误差专题 | [专题入口](research/projects/eig-apost/README.md)、[专题状态](research/projects/eig-apost/STATUS.md) |
-| 阶段设计与审查 | [implementation/](research/projects/eig-apost/implementation/) |
-| 数值实验 | [test/](test/)；具体参数、运行方式和结果见对应实验目录 |
-| FEM＋DtN 讲义与教程 | [draft/fem-dtn-epost/](draft/fem-dtn-epost/) |
-| 独立探索 | [research/explorations/](research/explorations/) |
-| 两条数值路线的对照检查 | [redteam/](redteam/README.md) |
+本仓库研究二维 $y$ 周期介质波导及其线缺陷，内容包括 Bloch 模、传输特征值问题、
+散射问题，以及固定 $\beta$ 下线缺陷导模的计算和误差界。数值方法有两条路线：
 
-具体进展与数值结果由各专题和实验记录维护，首页不重复汇总。
-作判断时核对相关文件与原始结果，并遵守所在目录的 `AGENTS.md`。
+- 边界积分方程（BIE）：在均匀区域用 Rayleigh 展开，在周期半引线中用 Bloch 模展开，
+  再通过迹匹配耦合起来；每个引线胞上的 BIE 是 Müller 方程组，准周期 Green 函数
+  用基本解方法（MFS）近似；
+- 有限元方法加 Dirichlet-to-Neumann 映射（FEM＋DtN）。
+
+## 当前工作
+
+| 专题 | 内容 | 入口 |
+| --- | --- | --- |
+| bie-enclosure | 用 BIE 候选和谱距离定理，给出导模特征值的可靠包含区间 | [研究](research/projects/bie-enclosure/README.md)、[状态](research/projects/bie-enclosure/STATUS.md)；[实验](test/bie-bound/README.md)；[英文稿件](draft/bie-siam/README.md)；[复现与校验包](release/bie-enclosure-sisc/README.md) |
+| fem-goerisch | 用 FEM＋DtN 试探场和 Lehmann–Goerisch 型证书，给出包含区间 | [研究](research/projects/fem-goerisch/README.md)、[状态](research/projects/fem-goerisch/STATUS.md)；[实验](test/fem-goerisch/) |
+| eig-apost | 固定 $\beta$ 线缺陷导模的计算与后验误差估计，BIE 与 FEM＋DtN 两条路线 | [研究](research/projects/eig-apost/README.md)、[状态](research/projects/eig-apost/STATUS.md)；实验 `test/i1/`–`test/i10/` |
+
+其他专题和独立探索见 [research/README.md](research/README.md)。两条数值路线的对照检查在
+[redteam/](redteam/README.md)，FEM＋DtN 讲义在 [draft/fem-dtn-epost/](draft/fem-dtn-epost/)。
+进展和数值结果以各专题的 `STATUS.md` 和实验目录的 `README.md` 为准，首页不汇总。
+
+## 目录结构
+
+```
++bloch/ +kernel/ +op/ +geom/ +scan/ +quad/ +utils/ +viz/   公共 MATLAB 包
+benchmark/   公共包的测试与基准（bloch/、qpgreen/）
+test/        数值实验，每个实验一个目录
+research/    理论与研究记录（中文，Obsidian 库）
+draft/       论文稿件与讲义
+release/     随论文发布的复现与校验包
+redteam/     两条数值路线的对照检查
+pre/         报告与幻灯片
+ref/         参考文献目录（PDF 不纳入 Git）
+vendor/      第三方依赖（除 README 外不纳入 Git）
+```
+
+公共包 `+bloch`、`+kernel`、`+geom`、`+scan`、`+viz` 各有 `README.md`，调用或修改前先读。
+
+## 运行环境
+
+- 不需要构建。MATLAB 代码在 MATLAB R2023b 中运行，Octave 不能代替。
+- 子目录中的脚本需要把仓库根目录加入 MATLAB 路径（`addpath`）。
+- 部分实验和可靠计算用 Python（如 python-flint）；版本见对应实验的 `README.md`，
+  以及复现包的 `environment/README.md`。
+- 第三方依赖 FMM2D 和 python-flint 的获取和编译方法见 [vendor/README.md](vendor/README.md)；
+  SIAM 模板 `vendor/siamart_251216/` 的用法见 [draft/bie-siam/README.md](draft/bie-siam/README.md)。
+- 每个实验的入口、参数和复现命令写在该实验目录的 `README.md` 中。
+
+## 工作约定
+
+写作术语、文件命名、代码文档、实验预算和运行规则见 [AGENTS.md](AGENTS.md) 及各子目录的
+`AGENTS.md`；Claude Code 另读 [CLAUDE.md](CLAUDE.md)。
 
 ## 历史目录
 
-以下目录保存旧版理论、实现与验证程序，仅供历史追溯：
+以下目录只保存旧版理论、实现和验证程序，供历史追溯：
 
 | 目录 | 内容 |
 | --- | --- |
 | [legacy/](legacy/) | 旧版理论笔记、文稿及相关材料 |
-| [crystal_2d/](crystal_2d/README.md) | 旧二维周期晶体、空缺陷胞及线缺陷的计算与验证入口 |
-| [waveguide_1d/](waveguide_1d/) | 旧一维周期波导与相关特征值计算程序 |
+| [crystal_2d/](crystal_2d/README.md) | 旧二维周期晶体、空缺陷胞及线缺陷的计算与验证 |
+| [waveguide_1d/](waveguide_1d/) | 旧一维周期波导与相关特征值计算 |
 
-默认不阅读或引用这些目录，不将其作为当前研究的理论依据、实现范例或结果基准。
-只有用户明确要求历史核查、复现或迁移时，才使用其中内容。
-原根目录的五个二维入口已移入 `crystal_2d/`，`tep_1d_scan_local.m` 已移入
-`waveguide_1d/`。当前工作应从上方专题与实验入口开始。
-
-根目录的 `+kernel/`、`+bloch/` 等公共 MATLAB 包仍供当前计算使用，不属于上述历史目录。
-
-## 数学语言与结果表述
-
-以下约定用于仓库文档、研究讨论、实验报告及交接 prompt。
-优先说明数学对象、计算操作和结果含义，使用直接、通行的数学语言，少用流程标签。
-简化措辞时保留必要假设，不改变数学结论的含义。
-
-### 术语
-
-| 情形 | 使用的表述 |
-| --- | --- |
-| 用数值方法计算误差或谱距离估计表达式 | “误差估计”或“谱距离估计”；英文用 error estimate 或 spectral-distance estimate |
-| 已有数学保证，所给数值不小于目标误差或谱距离 | “可靠上界”；英文用 guaranteed upper bound |
-| 上界依赖尚未核实的条件 | “在所列条件下成立的上界”，并说明条件 |
-| 计算过程中保持场、候选或参数不变 | “固定场”“固定候选”“固定参数”；英文用 fixed 或 held fixed |
-| 增加有限元近似空间中的自由度或多项式次数 | “扩充有限元空间” |
-
-在上述语境中，不使用“严格认证”“冻结”等流程化措辞，也不用 frozen 代替 fixed。
-原文引用、文献标题、代码标识和历史结果标签保留原样；解释其含义时使用本节术语。
-
-## 文件命名
-
-- 名称简短、含义明确，并沿用所在目录的命名习惯。
-- 仅在缩写已经通用或能明显帮助理解时使用，不为套模板增加前缀、缩写或限定词。
-- 采用缩写时，必须按 [AGENTS.md 的命名规则](AGENTS.md#naming) 说明完整名称与含义。
-- 不为统一外观重命名已有文件；确需改名时先核对调用与文档引用。
-- 子目录有更具体的命名约定时，遵循其适用范围内的规则。
+当前工作不以这些目录为理论依据、实现范例或结果基准；只有明确要求历史核查、复现或迁移时才使用。
+根目录的公共 MATLAB 包仍在使用，不属于历史目录。

@@ -51,8 +51,9 @@ status, notation, and task files; avoid unrelated repository-wide reading.
 
 ## Naming
 
-- Follow the root README: use short, meaningful names and existing conventions.
-  Prefer lowercase ASCII and hyphens for new directories and human-facing files.
+- Follow the root `AGENTS.md` naming rules: use short, meaningful names and
+  existing conventions. Prefer lowercase ASCII and hyphens for new directories
+  and human-facing files.
 - Avoid deep nesting, arbitrary abbreviations, mandatory prefixes, and cosmetic
   renaming. Preserve established paths and identifiers unless a change is needed;
   check references before renaming. Follow the root `AGENTS.md` requirements for

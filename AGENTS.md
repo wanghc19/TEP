@@ -6,7 +6,7 @@ eigenvalue problems. These rules apply throughout the repository.
 ## Scope and authority
 
 - Read the applicable nested `AGENTS.md` before working in `research/`, `test/`,
-  `redteam/`, or `ref/`. Use `README.md` for terminology and project entry points.
+  `redteam/`, or `ref/`. Use `README.md` for project entry points and layout.
 - `legacy/`, `crystal_2d/`, and `waveguide_1d/` are historical. Do not routinely
   search, read, or use them as current theory, implementation examples, or
   baselines; use them only for explicitly requested historical work. Root MATLAB
@@ -30,6 +30,13 @@ eigenvalue problems. These rules apply throughout the repository.
 
 ## Naming
 
+- Use short, meaningful names that follow the habits of the containing
+  directory. Use an abbreviation only when it is standard or clearly helps
+  understanding; do not add prefixes, abbreviations, or qualifiers to fit a
+  template.
+- Do not rename existing files for a uniform look. If a rename is needed, check
+  callers and documentation links first. A subdirectory's more specific naming
+  rules apply within its scope.
 - Every abbreviation in a file or directory name must have its full form and
   meaning stated explicitly. For files, put this at the beginning of the file;
   in function files, use the opening help text after the signature. For
@@ -37,6 +44,27 @@ eigenvalue problems. These rules apply throughout the repository.
 - For binary files or formats that cannot contain explanatory text, list each
   filename and its abbreviation expansions at the beginning of the containing
   directory's `README.md`; do not alter the file format to add explanations.
+
+## Terminology in results
+
+- In repository documents, research discussions, experiment reports, and handoff
+  prompts, state the mathematical objects, computations, and meaning of results
+  in direct, standard mathematical language; avoid process labels. When
+  simplifying wording, keep the necessary assumptions and do not change the
+  meaning of a mathematical conclusion.
+- Use these terms:
+
+  | Situation | Chinese | English |
+  | --- | --- | --- |
+  | Error or spectral-distance expression computed numerically | 误差估计、谱距离估计 | error estimate, spectral-distance estimate |
+  | Value with a mathematical guarantee that it is not below the target error or spectral distance | 可靠上界 | reliable upper bound (guaranteed upper bound) |
+  | Upper bound that depends on unverified conditions | 在所列条件下成立的上界 | upper bound valid under the listed conditions; list the conditions |
+  | Field, candidate, or parameter kept unchanged during a computation | 固定场、固定候选、固定参数 | fixed, held fixed |
+  | Adding degrees of freedom or polynomial degree to the FEM space | 扩充有限元空间 | enlarging the FEM space |
+
+- Do not use “严格认证”, “冻结”, or “frozen” for these meanings. Quotations,
+  titles of references, code identifiers, and historical result labels stay as
+  written; explain them with the terms above.
 
 ## Code and mathematical documentation
 

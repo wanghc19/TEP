@@ -4,8 +4,8 @@ Guidance for Claude Code in this repository. Claude Code does not load `AGENTS.m
 
 ## Read first
 
-- `AGENTS.md` (root): scope, naming, code and math documentation, execution, reproducibility, LaTeX cleanup.
-- `README.md` (root): entry points, terminology for math statements, file naming, historical directories.
+- `AGENTS.md` (root): scope, naming, terminology in results, code and math documentation, execution, reproducibility, temporary outputs, LaTeX cleanup.
+- `README.md` (root): entry points, layout, environment, historical directories.
 - `test/AGENTS.md`: before planning, creating, debugging, or running anything under `test/`.
 - `research/AGENTS.md`: before touching `research/`.
 - `ref/AGENTS.md`: before adding, renaming, or removing references.
