@@ -411,26 +411,73 @@ $\mathsf M(k)$。本文默认使用 $\mathsf M(k)$。\footnote{%
   Notes：是否需要在正文中保留离散 DtN 形式仍待定。保留它的理由是与 Fliss 的连续
   DtN 约化直接对应；去掉它则可以省掉安全性判别。}
 
-\paragraph{候选定位.}
-取可逆的行列权重 $W_r(k)$、$W_c(k)$，以平衡材料界面方程、值系数与法向导数系数以及
-各类未知量的尺度，令
+\paragraph{端口约化矩阵.}
+\pending{2026-11-06 新增：实现中的候选搜索使用端口约化矩阵的行列式}
+实现中把中心胞元也当作一个散射胞元，以入射振幅为未知量消去中心密度，只保留两个端口
+上的 $2K$ 个模态振幅。记 $\mathsf T_0(k)$、$\mathsf N_0(k)$ 为把中心入射振幅映到两个端口
+上总场值系数与法向导数系数的矩阵；对稳定子空间的基 $\mathsf Z_\pm$，记 $\mathsf D_\pm$、
+$\mathsf N_\pm$ 为其所表示状态在端口上的值系数与法向导数系数，并令
+$\Lambda_\pm:=\mathsf N_\pm\mathsf D_\pm^{-1}$（模态坐标中的离散 DtN 矩阵）。定义
 \begin{align}
-  s(k)&:=\frac{\sigma_{\min}\bigl(W_r(k)\mathsf M(k)W_c(k)\bigr)}
-             {\sigma_{\max}\bigl(W_r(k)\mathsf M(k)W_c(k)\bigr)}.
+  \mathsf A(k)&:=\mathsf N_0(k)-\operatorname{diag}\bigl(\Lambda_-(k),\Lambda_+(k)\bigr)\,\mathsf T_0(k)
+  \in\CC^{2K\times2K}.
+  \label{eq:port-reduced-matrix}
+\end{align}
+$\mathsf A(k)q=0$ 表示中心场的端口 Cauchy 数据落在两侧稳定子空间中，即
+式~\eqref{eq:discrete-nep} 的端口形式。$\Lambda_\pm$ 在 $\mathsf Z_\pm\mapsto\mathsf Z_\pm W$
+下不变，所以 QZ 基的任意性不影响它；在公共谱隙内，稳定子空间随 $k$ 解析变化，
+$\gamma_m$ 没有分支点，故 $\det\mathsf A(k)$ 除 $\mathsf D_\pm$ 奇异处的极点外是 $k$ 的解析
+函数。实现监测每个节点上 $\mathsf D_\pm$ 的倒条件数以排除极点。
+
+\paragraph{候选定位：行列式求根.}
+\pending{2026-11-06：主搜索由最小奇异值谷底搜索改为行列式求根；原方法保留为确认分数与回退}
+最小奇异值比
+\begin{align}
+  s(k)&:=\frac{\sigma_{\min}\bigl(W_r\mathsf A(k)W_c\bigr)}
+             {\sigma_{\max}\bigl(W_r\mathsf A(k)W_c\bigr)}
   \label{eq:candidate-score}
 \end{align}
+（$W_r,W_c$ 为平衡各模态尺度的对角权重）在根附近呈 V 形，不可微，按区间逐层加密定位
+需要很多次矩阵组装。$f(k):=\det\mathsf A(k)$ 是解析的，可以用 Boyd 的 Chebyshev 求根
+方法~\cite{Boyd2002}，这也是文献~\cite{ZhaoBarnett2015} 对 Fredholm 行列式所用的方法：
+\begin{enumerate}
+  \item 在公共谱隙的每一段上，于嵌套的 Chebyshev--Lobatto 节点处计算 $f$（LU 分解，取
+    对数模与相位，再除以一个固定常数），次数按 $4,8,16,32,64$ 加倍，直到最后三个
+    Chebyshev 系数相对最大系数都小于 $10^{-10}$，且两个离网格点上插值的相对误差小于
+    $10^{-9}$。达到 $64$ 次仍未满足，或对数模的变化范围过大，则二分该段。
+  \item 由 colleague 矩阵求插值多项式的根，保留 Bernstein 椭圆内、$|\operatorname{Im}k|$
+    很小的根。
+  \item 对每个近实根用插值多项式的导数作 Newton 迭代，直到步长小于 $2\times10^{-14}$。
+  \item 在抛光后的根处重新组装矩阵，要求 $s(\widehat k)\leq10^{-11}$。
+\end{enumerate}
+若某节点上 $\mathsf D_\pm$ 接近奇异、两个近实根过近、系数检查不通过，或确认失败，则
+在相应小区间内退回到 $s(k)$ 的逐层加密。插值误差不需要单独估计：候选只是第~\ref{sec:error}~节
+的输入，最终的区间由后验定理给出，与候选如何得到无关。这一搜索也不声称找到了谱隙中
+的全部特征值。关于非线性特征值问题的一般数值方法见\cite{GuettelTisseur2017}。
+
+\begin{workonly}
+原稿的候选定位（2026-11-06 前）：取可逆的行列权重 $W_r(k)$、$W_c(k)$，以平衡材料界面方程、
+值系数与法向导数系数以及各类未知量的尺度，令
+$s(k):=\sigma_{\min}(W_r(k)\mathsf M(k)W_c(k))/\sigma_{\max}(W_r(k)\mathsf M(k)W_c(k))$。
 先在 $(\sqrt{g_-},\sqrt{g_+})$ 上粗扫，再在孤立低谷附近按固定规则逐层加密，得到候选
 $\widehat k$。权重不改变精确核，但改变奇异值尺度；因此候选还应通过 QZ 簇分离、所选簇
 维数、未加权残量以及相邻离散层 $(h,M)$ 之间一致性等检查，以排除伪准共振等离散伪影。
-关于非线性特征值问题的一般数值方法见\cite{GuettelTisseur2017}。
+\end{workonly}
 
 \paragraph{候选输出.}
-在 $\widehat k$ 处，$\mathsf M(\widehat k)$ 一般并不奇异。取
-$W_r\mathsf M(\widehat k)W_c$ 最小奇异值对应的单位右奇异向量 $\widehat y$，令
+\pending{2026-11-06：候选向量改由端口约化矩阵给出，原 $\mathsf M$ 的写法只在工作版保留}
+在 $\widehat k$ 处，$\mathsf A(\widehat k)$ 一般并不奇异。取 $W_r\mathsf A(\widehat k)W_c$
+最小奇异值对应的单位右奇异向量 $\widehat y$，令 $q:=W_c\widehat y$ 为中心的入射振幅；中心
+密度由中心胞元的密度映射作用于 $q$ 得到，端口状态 $c_\pm$ 由 $q$ 与 $\mathsf T_0$ 在稳定
+子空间坐标中读出。记所得向量为
 \begin{align}
-  \begin{bmatrix}\xi\\ c_-\\ c_+\end{bmatrix}&:=W_c\widehat y.
+  \begin{bmatrix}\xi\\ c_-\\ c_+\end{bmatrix}.
   \label{eq:candidate-vector}
 \end{align}
+\begin{workonly}
+原稿：取 $W_r\mathsf M(\widehat k)W_c$ 最小奇异值对应的单位右奇异向量 $\widehat y$，令
+$(\xi;c_-;c_+):=W_c\widehat y$。
+\end{workonly}
 它只确定到一个非零复数倍。候选 $\widehat k$ 连同 $(\xi,c_-,c_+)$、离散参数 $(h,M)$、
 传播矩阵 $\mathsf P_\pm$ 与基 $\mathsf Z_\pm$，构成第~\ref{sec:error}~节的全部输入。
 小的 $s(\widehat k)$ 只说明离散方程近似可解，并不给出 $\widehat k^2$ 与

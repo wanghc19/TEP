@@ -1,0 +1,69 @@
+% Shared preamble of the BIE spectral-distance paper draft. Loaded by
+% main.tex (working version) and main-clean.tex (clean version), which set
+% the switch \ifclean before \input{preamble}.
+\documentclass[UTF8,11pt,fleqn,fontset=none]{ctexart}
+
+\setCJKmainfont{Songti SC}
+\setCJKsansfont{PingFang SC}
+\setCJKmonofont{PingFang SC}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{stmaryrd}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,decorations.pathreplacing,patterns}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{groupplots}
+\usepackage{hyperref}
+
+\renewcommand{\Im}{\mathrm{Im}}
+\renewcommand{\Re}{\mathrm{Re}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\jump}[1]{\llbracket #1\rrbracket}
+\newcommand{\QP}{\mathrm{QP}}
+\newcommand{\rin}{\rho_{\min}}
+\newcommand{\rax}{\rho_{\max}}
+% Two-version switches.
+%   \pending{...}: blue note on how the text evolved; working version only.
+%   workonly: superseded or overlapping material; working version only,
+%     printed in gray under the label [工作版保留].
+%   cleanonly: wording used only in the clean version.
+\usepackage{comment}
+\ifclean
+  \newcommand{\pending}[1]{\ignorespaces}
+  \excludecomment{workonly}
+  \includecomment{cleanonly}
+\else
+  \newcommand{\pending}[1]{\textcolor{blue}{\textbf{[新改]}~#1。}}
+  \specialcomment{workonly}{\begingroup\color{gray}\par\noindent
+    \textbf{[工作版保留]}~}{\par\endgroup}
+  \excludecomment{cleanonly}
+\fi
+
+\theoremstyle{plain}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{lemma}[theorem]{引理}
+\theoremstyle{definition}
+\newtheorem{assumption}[theorem]{假设}
+\newtheorem{definition}[theorem]{定义}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{注}
+
+\numberwithin{equation}{section}
+

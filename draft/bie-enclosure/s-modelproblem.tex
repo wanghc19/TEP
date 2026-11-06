@@ -199,9 +199,11 @@ Fourier 展开 $\lVert\nabla u\rVert^2\geq\lVert\partial_yu\rVert^2\geq b_\beta^
 \subsection{带隙证书}
 \label{subsec:gap-certificate}
 
-\pending{新增（2026-11-04）}
-要把谱距离区间 $[\mu-R,\mu+R]$ 解释为离散特征值，需要它落在公共谱隙内。只在有限个
-$\theta$ 上算能带不够；下面的 Lipschitz 界把有限网格上的包络推广到整个 Brillouin 区。
+\pending{新增（2026-11-04）；2026-11-06 改写：下方能带的下界改由 Fourier 补空间定理给出，网格改为相位面板，与实际使用的证书一致}
+要把谱距离区间 $[\mu-R,\mu+R]$ 解释为离散特征值，需要它落在公共谱隙内。对每条引线，
+需要证明：对所有 $\theta$，第 $n_s$ 条能带在区间之下、第 $n_s+1$ 条能带在区间之上。
+只在有限个 $\theta$ 上算能带不够；下面的 Lipschitz 界把有限个相位上的结论推广到整个
+Brillouin 区。
 
 \begin{lemma}[能带平方根的 Lipschitz 界]
   \label{lem:band-lipschitz}
@@ -222,19 +224,95 @@ $\theta$ 上算能带不够；下面的 Lipschitz 界把有限网格上的包络
   对 Rayleigh 商的平方根取最小最大即得结论。
 \end{proof}
 
+\begin{workonly}
 设网格 $\{\theta_i\}$ 以覆盖半径 $h_s$ 覆盖 Brillouin 区，且在每个网格点有可靠的包络
 $\ell_{n,i}\leq\lambda_{s,n}(\theta_i)\leq u_{n,i}$。对选定的带序号 $n_s$，令
-\begin{align}
+\begin{align*}
   \overline a_s:=\Bigl(\max_i\sqrt{u_{n_s,i}}+\frac{h_s}{\sqrt{\rho_{\min,s}}}\Bigr)^2,\qquad
   \underline b_s:=\Bigl(\max\Bigl\{0,\ \min_i\sqrt{\max\{0,\ell_{n_s+1,i}\}}-\frac{h_s}{\sqrt{\rho_{\min,s}}}\Bigr\}\Bigr)^2 .
-  \label{eq:gap-certificate}
-\end{align}
+\end{align*}
 纤维算子非负，所以把负的下界换成 $0$ 仍是下界。由引理~\ref{lem:band-lipschitz}，$\overline a_s\geq\sup_\theta\lambda_{s,n_s}$、
-$\underline b_s\leq\inf_\theta\lambda_{s,n_s+1}$。若
+$\underline b_s\leq\inf_\theta\lambda_{s,n_s+1}$。（原稿写法，未说明 $\ell_{n_s+1,i}$ 从何而来；
+2026-11-06 由下面的定理~\ref{thm:fourier-complement} 与命题~\ref{prop:panel-gap} 取代。）
+\end{workonly}
+
+\paragraph{有限维的上、下比较.}
+上方能带需要可靠的\emph{下}界，Ritz 方法只给上界，所以要另找工具。在规范变换后的
+周期胞元 $(0,L_s)\times I_d$ 上取 $L^2$ 正交的平面波
+\begin{align}
+  \psi_{p,q}(x,y)&:=\frac{\ee^{2\pi\ii px/L_s}\,\ee^{\ii\beta_qy}}{\sqrt{L_sd}},
+  &d_{p,q}(\theta)&:=\Bigl(\frac{2\pi p}{L_s}+\theta\Bigr)^2+\beta_q^2,
+  &\beta_q&:=\beta+\frac{2\pi q}{d},
+  \label{eq:plane-wave-basis}
+\end{align}
+则 $a_\theta[v]=\sum_{p,q}d_{p,q}(\theta)\lvert v_{p,q}\rvert^2$，质量型为
+$b[v]=\int\rho_s\lvert v\rvert^2$。取有限指标集 $\mathcal I$，记 $P$ 为到
+$\operatorname{span}\{\psi_{p,q}\}_{\mathcal I}$ 的 $L^2$ 正交投影，
+$\Lambda_{\mathcal I}(\theta):=\inf_{(p,q)\notin\mathcal I}d_{p,q}(\theta)$，以及
+\begin{align}
+  K_{\mathcal I}(\theta)&:=\operatorname{diag}_{\mathcal I}d_{p,q}(\theta),
+  &M_{\mathcal I}&:=\bigl(\langle\rho_s\psi_j,\psi_i\rangle\bigr)_{i,j\in\mathcal I},
+  &G_{\mathcal I}&:=\bigl(\langle\rho_s^2\psi_j,\psi_i\rangle\bigr)_{i,j\in\mathcal I}-M_{\mathcal I}^2 .
+  \label{eq:fourier-matrices}
+\end{align}
+$G_{\mathcal I}$ 是 $(I-P)(\rho_s\psi_j)$ 的 Gram 矩阵，故半正定。
+
+\begin{theorem}[Fourier 补空间惯性比较]
+  \label{thm:fourier-complement}
+  设 $\lambda\geq0$，$c_{\mathcal I}:=\Lambda_{\mathcal I}(\theta)-\lambda\rho_{\max,s}>0$，令
+  \begin{align}
+    T_{\mathcal I}&:=K_{\mathcal I}(\theta)-\lambda M_{\mathcal I},
+    &T_{\mathcal I}^-&:=T_{\mathcal I}-\frac{\lambda^2}{c_{\mathcal I}}G_{\mathcal I}.
+    \label{eq:fourier-comparison}
+  \end{align}
+  记 $n(\cdot)$ 为严格负特征值的个数（按重数计），则
+  $n(T_{\mathcal I})\leq\#\{j:\lambda_{s,j}(\theta)<\lambda\}\leq n(T_{\mathcal I}^-)$。
+\end{theorem}
+
+证明见附录~\ref{app:reliable-band}。左边是 Ritz 上界；右边来自补空间上的强制性：
+补空间上的二次型至少是 $c_{\mathcal I}$ 乘以 $L^2$ 范数，交叉项配方后只剩
+$-\lambda^2G_{\mathcal I}/c_{\mathcal I}$。保留矩阵 $G_{\mathcal I}$ 而不用标量对比界，是
+维数很小（本文为 $169$）也能给出下界的原因。分片常数情形下，若介质柱 $\Omega_s$ 内为
+$\rho_{s,\mathrm c}$、柱外为 $\rho_{\mathrm e}$，记 $\delta_s:=\rho_{s,\mathrm c}-\rho_{\mathrm e}$、
+$B_{\mathcal I}:=(\langle1_{\Omega_s}\psi_j,\psi_i\rangle)$，则
+\begin{align}
+  M_{\mathcal I}&=\rho_{\mathrm e}I+\delta_sB_{\mathcal I},
+  &G_{\mathcal I}&=\delta_s^2\bigl(B_{\mathcal I}-B_{\mathcal I}^2\bigr),
+  \label{eq:fourier-matrices-piecewise}
+\end{align}
+只需介质柱的 Fourier 系数，可由 Gauss 散度定理化为边界上的周期积分。
+
+\paragraph{相位面板.}
+把 $[-\pi/L_s,\pi/L_s]$ 分成以 $\theta_i$ 为中心、半径为 $r_i$ 的面板。
+
+\begin{proposition}[面板上的带隙判据]
+  \label{prop:panel-gap}
+  设 $0<k_L<k_U$，$\tilde r_i:=r_i/\sqrt{\rho_{\min,s}}<k_L$。若在每个面板中心，
+  \begin{align}
+    n\bigl(T_{\mathcal I}((k_L-\tilde r_i)^2,\theta_i)\bigr)&\geq n_s,
+    &n\bigl(T^-_{\mathcal I}((k_U+\tilde r_i)^2,\theta_i)\bigr)&\leq n_s,
+    \label{eq:panel-tests}
+  \end{align}
+  且后者中 $c_{\mathcal I}>0$，则对所有 $\theta$，$\lambda_{s,n_s}(\theta)<k_L^2$、
+  $\lambda_{s,n_s+1}(\theta)\geq k_U^2$。
+\end{proposition}
+
+\begin{proof}
+  由定理~\ref{thm:fourier-complement}，第一个条件给出
+  $\lambda_{s,n_s}(\theta_i)<(k_L-\tilde r_i)^2$，第二个给出
+  $\lambda_{s,n_s+1}(\theta_i)\geq(k_U+\tilde r_i)^2$。由引理~\ref{lem:band-lipschitz}，在
+  面板内 $\sqrt{\lambda_{s,n}}$ 的变化不超过 $\tilde r_i$。
+\end{proof}
+
+若介质柱关于 $y\mapsto-y$ 对称，反射再取复共轭把 $\theta$ 纤维映到 $-\theta$ 纤维，
+$\lambda_{s,n}(\theta)=\lambda_{s,n}(-\theta)$，面板只需覆盖 $[0,\pi/L_s]$。
+命题~\ref{prop:panel-gap} 同时确认了带序号 $n_s$，不需要事先知道区间下方有几条能带。
+式~\eqref{eq:panel-tests} 是有限矩阵的惯性检查；可靠的实现须计入 $B_{\mathcal I}$ 的求积
+误差和全部舍入（附录~\ref{app:reliable-band}）。记 $\overline a_s:=k_L^2$、
+$\underline b_s:=k_U^2$。若
 \begin{align}
   \max(\overline a_-,\overline a_+)<\mu-R\quad\text{且}\quad
   \mu+R<\min(\underline b_-,\underline b_+),
   \label{eq:gap-condition}
 \end{align}
-则 $[\mu-R,\mu+R]$ 包含在一个公共谱隙中。下方能带需要上界，上方能带需要下界；只有
-Ritz 上界不能给出 $\underline b_s$。
+则 $[\mu-R,\mu+R]$ 包含在一个公共谱隙中。

@@ -5,6 +5,8 @@ BIE = boundary integral equation（边界积分方程）；MFS = method of funda
 由 `draft/tmp/bie-theory-rewrite/`（未追踪，保留不动）于 2026-11-04 复制而来，2026-11-05 加入胞元核与按场拟合、可靠评价和第 6 节，按 [[research/projects/bie-enclosure/theory/reliable-bound|reliable-bound]] 修改。修改处在 PDF 中以蓝色"[新改]"标注。报告中对应的结果已通过审查（[[research/projects/bie-enclosure/theory/reliable-bound-review|reliable-bound-review]]，0 个 blocker；唯一的 important caveat R-1 已在带隙证书式中改正）；草稿本身的文字尚未送审，全文送审时再去掉标注。
 
 - `main.tex`：主文件，`s-*.tex` 为各节，`a-cellrep.tex` 为附录。
+- `data/`：第 6 节作图数据，复制自 `test/bie-bound/pipeline-v1/figures/`（run-002）：`geometry.csv`（一行胞元的界面曲线）、`determinant-nodes.csv` 与 `determinant-coefficients.csv`（行列式节点值与 Chebyshev 系数）、`center-contributions.csv`（中心材料各面板对 $\varepsilon_g$ 的贡献）、`resolution-comparison.csv`、`stage-times.csv`。
+- `unsrt-nonote.bst`：标准 unsrt 去掉 note 字段（nonote = no note）。
 - 编译：`latexmk -xelatex main.tex`，之后 `latexmk -c main.tex`。
 
 ## 进度
@@ -19,3 +21,18 @@ BIE = boundary integral equation（边界积分方程）；MFS = method of funda
 | 6 结果 | 参数；五组缺陷表（中心材料为可靠上界，其余为浮点）；谱距离估计全宽约 2.77e-11；与回卷核、FEM 对比；可靠评价与计算量 | 初稿；其余四组可靠缺陷、$C_g$ 可靠界、带隙证书、模型与几何描述待补 |
 
 蓝色"[新改]"标注共 26 处（2026-11-05 新增 7 处）。原稿的单族迹估计（命题 5.1）保留，作为分组命题的特例。
+
+## 两版重组（2026-11-06 起，进行中）
+
+同一套源文件编译两个版本：`main.tex` 为工作版（蓝字标注演变过程，保留被取代内容），`main-clean.tex` 为对外版（无蓝字、无重复命题）。开关与宏在 `preamble.tex`：
+- `\pending{...}`：蓝字说明，只在工作版显示；
+- 环境 `workonly`：被取代或重复的内容，只在工作版出现（灰字并标"[工作版保留]"）；
+- 环境 `cleanonly`：只在对外版出现的改写，尽量少用。
+正文在 `body.tex`；日期在 `body.tex` 中显式写出。重组前的 PDF 在 `archive/`。
+
+进度（done／next／open）：
+- done：归档 2026-11-05 与 2026-10-28（theory-rewrite）PDF；第 1 步开关；第 3 步第 2.4 节带隙证书（Fourier 补空间定理＋相位面板判据）；第 4 步第 5 节重组：分组缺陷 $\varepsilon_g$ 取代 $\varepsilon_{\partial,\ell_*}$，定理证明改为分组形式，新附录 B（`a-trace.tex`，迹估计几何与证明，原命题 5.2 只在工作版）与附录 C（`a-reliable.tex`，计入舍入的可靠计算 C.1–C.6），人工界面模态尾界与 $\Theta_\pm$ 逐列取法只在工作版；两版均编译通过、无未定义引用；第 5 步第 4 节：候选定位改为端口约化矩阵 $\mathsf A(k)$ 的行列式 Chebyshev 求根（Boyd），候选输出改为端口振幅 $q$，原 $\sigma_{\min}$ 扫描与 $\mathsf M$ 写法只在工作版；参考文献改用本目录的 `unsrt-nonote.bst`（标准 unsrt 去掉 note 字段，共享 bib 的 note 记录本地 PDF 路径等目录信息，不进论文）；第 7 步引言：贡献改为六项（加入行列式求根、分组迹估计、计入舍入的可靠计算、带隙证书、数值例子占位），“不声称”段按带隙证书改写，结构段加附录 B、C，记号表换为 $\varepsilon_g$、$C_g$、$\ell_g$、$Q$、$\mathsf A(k)$；
+- done（续）：第 6 步第 6 节按 pipeline-v1 run-002 重写（模型与离散、行列式求根、可靠区间、分辨率、计算量与 FEM 对照），图用 pgfplots 读 `data/` 中的 CSV；引言“数值例子”已填；
+- done（续）：第 8 步：两版编译无错误、无未定义引用（工作版 45 页，对外版 41 页），已 `latexmk -c`；
+- next：用户审阅并批准提交；之后对外版送审；
+- open：新参考文献 Johansson 2017（Arb）已入库；Boyd 2002 已入库（用户下载）；提交须用户批准；送审等实验结果。

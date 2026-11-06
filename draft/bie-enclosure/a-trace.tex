@@ -1,0 +1,360 @@
+% Appendix B: geometry of the trace estimate and proofs (moved from Section 5 on 2026-11-06).
+\section{迹估计的几何与证明}
+\label{app:trace}
+
+\pending{本附录由原第 5.3 小节的几何部分与证明移来（2026-11-06）}
+本附录给出命题~\ref{prop:grouped-trace-bound} 所需的几何量的含义（法向坐标、Jacobian、
+覆盖重数）、辅助场的全局正则性以及该命题的证明。几何条件的逐项可靠验证见
+附录~\ref{app:reliable-cg}。
+
+\subsection{法向坐标、Jacobian 与覆盖重数}
+\label{app:trace-geometry}
+
+\paragraph{法向坐标与邻域.}
+本附录固定一个界面组，把命题~\ref{prop:grouped-trace-bound} 中的领子半宽 $\delta_g$ 记为
+$\delta_{\mathrm{col}}$，覆盖重数 $N_g$ 记为 $N_{\mathrm{ov}}$。
+假定 $\mathscr E$ 局部有限，每条材料界面是简单闭合 $C^2$ 曲线，人工界面是准周期圆柱上
+的竖直闭曲线。对 $\Gamma\in\mathscr E$ 取弧长参数 $\boldsymbol r_\Gamma(s)$，
+$\nu_\Gamma(s)$ 为第~\ref{subsec:jumps}~小节规定的单位法向（由侧 $1$ 指向侧 $2$）。令
+\begin{align}
+  \boldsymbol\Phi_\Gamma(s,t)
+  &:=\boldsymbol r_\Gamma(s)+t\nu_\Gamma(s),
+  \qquad|t|<\delta_{\mathrm{col}},
+  &\mathcal N_\Gamma
+  &:=\boldsymbol\Phi_\Gamma\bigl(\Gamma\times(-\delta_{\mathrm{col}},\delta_{\mathrm{col}})\bigr).
+  \label{eq:interface-normal-neighborhood}
+\end{align}
+$(s,t)$ 是界面附近的\emph{法向坐标}：$s$ 是沿界面的位置，$t$ 是沿法向的带符号距离，
+$t>0$ 在侧 $2$。$\mathcal N_\Gamma$ 是界面两侧宽度各为 $\delta_{\mathrm{col}}$ 的领子
+（图~\ref{fig:collar}）。要求 $\boldsymbol\Phi_\Gamma$ 是单射，即 $\mathcal N_\Gamma$ 中
+每个点都有唯一的法向坐标；这样，对一个关于 $(s,t)$ 的积分就可以换成 $\mathcal N_\Gamma$
+上的面积分。人工界面是直线段，$\boldsymbol\Phi_\Gamma(s,t)=(x_\Gamma+t,s)$，领子就是
+竖直带 $(x_\Gamma-\delta_{\mathrm{col}},x_\Gamma+\delta_{\mathrm{col}})\times I_d$。
+\pending{接缝领子（2026-11-04 新增）}接缝段 $\Sigma_{\mathcal C}$ 的领子是准周期圆柱上的
+水平带 $\{|y-d/2|<\delta_\Sigma\}$，$0<\delta_\Sigma<d/2$。领子只用于辅助场 $z\in H^2_\beta(B)$
+（式~\eqref{eq:operator-domain-h2}），不用于不连续的 $\widehat u$，所以领子可以穿过材料
+界面；同理，任何领子都可以穿过其他界面，只是覆盖重数要相应计算。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.15, every node/.style={font=\small},
+      >={Latex[length=2mm]}]
+    \def\a{1.9}\def\b{1.1}\def\d{0.32}
+    \pgfmathdeclarefunction{NN}{1}{%
+      \pgfmathparse{sqrt((\b*cos(#1))^2+(\a*sin(#1))^2)}}
+    % collar and inclusion
+    \fill[gray!22] plot[domain=0:360, samples=144, smooth cycle]
+      ({(\a+\d*\b/NN(\x))*cos(\x)}, {(\b+\d*\a/NN(\x))*sin(\x)});
+    \fill[blue!7] plot[domain=0:360, samples=144, smooth cycle]
+      ({(\a-\d*\b/NN(\x))*cos(\x)}, {(\b-\d*\a/NN(\x))*sin(\x)});
+    \draw[dashed, black!55] plot[domain=0:360, samples=144, smooth cycle]
+      ({(\a+\d*\b/NN(\x))*cos(\x)}, {(\b+\d*\a/NN(\x))*sin(\x)});
+    \draw[dashed, black!55] plot[domain=0:360, samples=144, smooth cycle]
+      ({(\a-\d*\b/NN(\x))*cos(\x)}, {(\b-\d*\a/NN(\x))*sin(\x)});
+    \draw[thick, blue!60!black] (0,0) ellipse ({\a} and {\b});
+    \node at (-0.2,-0.05) {$\Omega$（侧 $1$）};
+    \node at (-2.75,-1.2) {侧 $2$};
+    \node[blue!60!black] at (-1.25,-1.15) {$\Gamma=\partial\Omega$};
+    \node at (1.95,-1.25) {$\mathcal N_\Gamma$};
+    \draw[->, black!60] (1.75,-1.12) -- (1.45,-0.82);
+    % normal coordinates at theta0
+    \pgfmathsetmacro{\th}{58}
+    \pgfmathsetmacro{\Nn}{NN(\th)}
+    \pgfmathsetmacro{\nx}{\b*cos(\th)/\Nn}
+    \pgfmathsetmacro{\ny}{\a*sin(\th)/\Nn}
+    \pgfmathsetmacro{\px}{\a*cos(\th)}
+    \pgfmathsetmacro{\py}{\b*sin(\th)}
+    \coordinate (P) at (\px,\py);
+    \draw[red!70!black, line width=1.3pt]
+      ($(P)-\d*(\nx,\ny)$) -- ($(P)+\d*(\nx,\ny)$);
+    \draw[->, thick] (P) -- ++({0.85*\nx},{0.85*\ny})
+      node[above right=-1pt] {$\nu_\Gamma(s)$};
+    \draw[->, thick] (P) -- ++({-0.8*\ny},{0.8*\nx})
+      node[left] {$\boldsymbol r_\Gamma'(s)$};
+    \fill (P) circle (1.3pt);
+    \node (rl) at (0.35,0.42) {$\boldsymbol r_\Gamma(s)$};
+    \draw[black!50] (rl.north east) -- (P);
+    \fill[red!70!black] ($(P)+0.6*\d*(\nx,\ny)$) circle (1.3pt);
+    \node[red!70!black, anchor=west] (pl) at (2.3,1.45) {$\boldsymbol\Phi_\Gamma(s,t)$};
+    \draw[red!50!black] (pl.west) -- ($(P)+0.6*\d*(\nx,\ny)$);
+    \draw[<->, black!70] ($(P)+\d*(\nx,\ny)+(0.4*\ny,-0.4*\nx)$)
+      -- ($(P)-\d*(\nx,\ny)+(0.4*\ny,-0.4*\nx)$)
+      node[midway, right] {$2\delta_{\mathrm{col}}$};
+    \node at (0,-1.95) {(a) 材料界面};
+    % artificial interface
+    \begin{scope}[xshift=5.3cm]
+      \fill[gray!22] (-\d,-1.4) rectangle (\d,1.4);
+      \draw[dashed, black!55] (-\d,-1.4) -- (-\d,1.4);
+      \draw[dashed, black!55] (\d,-1.4) -- (\d,1.4);
+      \draw[thick, red!70!black] (0,-1.4) -- (0,1.4);
+      \draw[thick] (-1.3,1.4) -- (1.3,1.4);
+      \draw[thick] (-1.3,-1.4) -- (1.3,-1.4);
+      \node[red!70!black, above] at (0,1.4) {$\Gamma=\{x_\Gamma\}\times I_d$};
+      \draw[red!70!black, line width=1.3pt] (-\d,0.35) -- (\d,0.35);
+      \fill (0,0.35) circle (1.3pt);
+      \draw[->, thick] (0,0.35) -- (0.85,0.35) node[right] {$\nu_\Gamma$};
+      \node at (-0.85,-0.45) {侧 $1$};
+      \node at (0.85,-0.45) {侧 $2$};
+      \node at (0.85,-0.95) {$\kappa_\Gamma\equiv0$};
+      \node at (0,-1.95) {(b) 人工界面};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{法向坐标与领子 $\mathcal N_\Gamma$（灰色）。界面上每点 $\boldsymbol r_\Gamma(s)$
+    沿法向伸出一条长 $2\delta_{\mathrm{col}}$ 的线段（红），参数 $t$ 是线段上的带符号
+    距离。全部线段铺满 $\mathcal N_\Gamma$；单射要求这些线段互不相交。一维迹不等式就作用在
+    每一条这样的线段上。}
+  \label{fig:collar}
+\end{figure}
+
+\paragraph{曲率与 Jacobian.}
+记 $\kappa_\Gamma(s)$ 为相对于 $\nu_\Gamma$ 的带符号曲率，即
+$\boldsymbol r_\Gamma''(s)=\kappa_\Gamma(s)\nu_\Gamma(s)$：界面向 $\nu_\Gamma$ 一侧弯曲时
+$\kappa_\Gamma>0$。对外法向的凸介质柱，$\kappa_\Gamma=-1/(\text{曲率半径})<0$；人工界面
+$\kappa_\Gamma\equiv0$。由 Frenet 公式 $\nu_\Gamma'=-\kappa_\Gamma\boldsymbol r_\Gamma'$，
+\begin{align}
+  \partial_s\boldsymbol\Phi_\Gamma
+  &=\bigl(1-t\kappa_\Gamma(s)\bigr)\boldsymbol r_\Gamma'(s),
+  &\partial_t\boldsymbol\Phi_\Gamma&=\nu_\Gamma(s),
+  &\dd A&=\bigl|1-t\kappa_\Gamma(s)\bigr|\,\dd s\,\dd t.
+  \label{eq:collar-jacobian}
+\end{align}
+因子 $1-t\kappa_\Gamma$ 就是 Jacobian：它是平行曲线 $\{t=\text{常数}\}$ 相对 $\Gamma$ 的
+长度伸缩比（图~\ref{fig:curvature}）。在凹的一侧平行曲线变短，到 $t=1/\kappa_\Gamma$，即
+曲率中心处，相邻法线交于一点，Jacobian 为零，法向坐标失效。因此领子半宽必须小于最小曲率
+半径。设 $\lvert\kappa_\Gamma\rvert\leq\kappa_*$，要求
+\begin{align}
+  \vartheta_{\mathrm{col}}&:=1-\delta_{\mathrm{col}}\kappa_*>0,
+  &1-t\kappa_\Gamma(s)&\geq\vartheta_{\mathrm{col}}
+  \quad(|t|<\delta_{\mathrm{col}}).
+  \label{eq:collar-jacobian-lower-bound}
+\end{align}
+$\vartheta_{\mathrm{col}}$ 是领子内 Jacobian 的下界，它给出
+$\dd s\,\dd t\leq\vartheta_{\mathrm{col}}^{-1}\dd A$：把法向坐标中的积分换回面积分时，
+最多放大 $\vartheta_{\mathrm{col}}^{-1}$ 倍。条件 $\delta_{\mathrm{col}}\kappa_*<1$ 只
+排除\emph{局部}的法线相交；同一曲线上弧长相距很远、空间上却很近的两段（细颈）仍可能使
+领子自交，这需另行检验。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.0, every node/.style={font=\small},
+      >={Latex[length=2mm]}]
+    \def\R{2.6}\def\d{0.7}
+    % collar sector
+    \fill[gray!22] (40:\R+\d) arc (40:140:\R+\d) -- (140:\R-\d) arc (140:40:\R-\d) -- cycle;
+    \fill[orange!35] (84:\R+\d) arc (84:96:\R+\d) -- (96:\R-\d) arc (96:84:\R-\d) -- cycle;
+    \draw[dashed, black!55] (40:\R+\d) arc (40:140:\R+\d);
+    \draw[dashed, black!55] (40:\R-\d) arc (40:140:\R-\d);
+    \draw[thick, blue!60!black] (35:\R) arc (35:145:\R);
+    % normals converging to the centre of curvature
+    \foreach \p in {50,65,80,100,115,130}
+      \draw[black!35, densely dotted] (\p:\R+\d) -- (0,0);
+    \fill (0,0) circle (1.5pt);
+    \node[below] at (0,0) {曲率中心：$t=1/\kappa_\Gamma$，Jacobian $=0$};
+    % labels
+    \node[blue!60!black, right] at (35:\R) {$\Gamma$（$t=0$）};
+    \node[right] at (40:\R+\d) {$t=-\delta_{\mathrm{col}}$};
+    \node[below right] at (40:\R-\d) {$t=\delta_{\mathrm{col}}$};
+    \draw[->, thick] (62:\R) -- (62:\R-0.6) node[right] {$\nu_\Gamma$};
+    \draw[decorate, decoration={brace, amplitude=3pt, mirror}, black!70]
+      (84:\R+\d+0.06) -- (96:\R+\d+0.06)
+      node[midway, above=3pt] {$(1+\delta_{\mathrm{col}}\kappa_\Gamma)\,\dd s$};
+    \draw[decorate, decoration={brace, amplitude=3pt}, black!70]
+      (84:\R-\d-0.06) -- (96:\R-\d-0.06)
+      node[midway, below=3pt, fill=white, inner sep=1pt] {$(1-\delta_{\mathrm{col}}\kappa_\Gamma)\,\dd s$};
+    \draw[orange!70!black, line width=1.2pt] (84:\R) arc (84:96:\R);
+    \node[orange!70!black] at (97.5:\R+0.25) {$\dd s$};
+    \draw[<->, black!60] (145:\R) -- (0,0) node[pos=0.5, above left=-1pt] {$1/\kappa_\Gamma$};
+  \end{tikzpicture}
+  \caption{曲率与 Jacobian。这里 $\nu_\Gamma$ 指向曲率中心，$\kappa_\Gamma>0$。
+    界面上长 $\dd s$ 的一段沿法线平移到 $t$ 处，长度变为 $(1-t\kappa_\Gamma)\dd s$；
+    阴影小块的面积为 $(1-t\kappa_\Gamma)\,\dd s\,\dd t$。法线在曲率中心汇聚，故必须
+    $\delta_{\mathrm{col}}<1/\kappa_*$，$\vartheta_{\mathrm{col}}=1-\delta_{\mathrm{col}}\kappa_*$
+    是领子内长度缩短的最坏比例。}
+  \label{fig:curvature}
+\end{figure}
+
+\paragraph{覆盖重数.}
+不同界面的领子可能重叠：介质柱靠近胞元边界时，它的领子会与人工界面的竖直带相交
+（图~\ref{fig:overlap}）。设任一点至多属于 $N_{\mathrm{ov}}$ 个领子。对各条界面分别作
+估计再求和时，每块面积至多被计入 $N_{\mathrm{ov}}$ 次。
+\pending{条件更正（2026-11-04）}两个领子不相交，要求两条界面之间的距离大于两个半宽
+之和；因此 $N_{\mathrm{ov}}=1$ 要求介质柱到胞元边界的距离大于 $2\delta_{\mathrm{col}}$，
+并对其他介质柱、全部周期副本作同样检查。领子沿 $y$ 方向跨过条带上、下边界时按
+准周期圆柱理解。竖直领子与接缝领子必然在墙端交叠，若把接缝与其他界面放在同一族中，
+一般须取 $N_{\mathrm{ov}}=2$；命题~\ref{prop:grouped-trace-bound} 把接缝单独成组，避免了这一损失：不同组的领子重叠不需要跨组的重数。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.15, every node/.style={font=\small}]
+    \foreach \panel/\d/\lab in {0/0.12/{(a) $\delta_{\mathrm{col}}$ 较小：$N_{\mathrm{ov}}=1$},
+                                1/0.30/{(b) $\delta_{\mathrm{col}}$ 较大：$N_{\mathrm{ov}}=2$}} {
+      \begin{scope}[xshift=\panel*6.2cm]
+        \fill[gray!6] (-0.6,-1) rectangle (3.6,1);
+        % collars of artificial interfaces
+        \foreach \x in {0,3} \fill[gray!25] (\x-\d,-1) rectangle (\x+\d,1);
+        % collar of the inclusion
+        \fill[gray!25] (2.25,0) circle ({0.45+\d});
+        \fill[blue!12] (2.25,0) circle ({max(0.45-\d,0.01)});
+        \begin{scope}
+          \clip (2.25,0) circle ({0.45+\d});
+          \fill[pattern=north east lines, pattern color=red!70!black] (3-\d,-1) rectangle (3+\d,1);
+        \end{scope}
+        \draw[thick, blue!60!black] (2.25,0) circle (0.45);
+        \draw[dashed, black!50] (2.25,0) circle ({0.45+\d});
+        \foreach \x in {0,3} {
+          \draw[thick, red!70!black] (\x,-1) -- (\x,1);
+          \draw[dashed, black!50] (\x-\d,-1) -- (\x-\d,1);
+          \draw[dashed, black!50] (\x+\d,-1) -- (\x+\d,1);
+        }
+        \draw[thick] (-0.6,1) -- (3.6,1);
+        \draw[thick] (-0.6,-1) -- (3.6,-1);
+        \node[blue!60!black] at (2.25,0) {$\Omega_{j,+}$};
+        \node[red!70!black, above] at (0,1) {$\Gamma_{j-1,+}$};
+        \node[red!70!black, above] at (3,1) {$\Gamma_{j,+}$};
+        \node at (1.1,0) {$\mathcal C_{j,+}$};
+        \node at (1.5,-1.4) {\lab};
+      \end{scope}
+    }
+  \end{tikzpicture}
+  \caption{覆盖重数。灰色为各界面的领子。(b) 中介质柱的领子与右侧人工界面的竖直带
+    重叠（红色斜线），该区域的点同时属于两个领子，$N_{\mathrm{ov}}=2$。上、下边界不在
+    $\mathscr E$ 中，没有领子。}
+  \label{fig:overlap}
+\end{figure}
+
+\subsection{辅助场的全局正则性}
+
+\begin{lemma}[全局 $H^2$ 正则性]
+  \label{lem:global-h2}
+  对 $v\in D(A(\beta))$，$v\in H^2(B)$，且
+  $\lVert D^2v\rVert_{L^2(B)}=\lVert\Delta v\rVert_{L^2(B)}\leq\rax^{1/2}\lVert A(\beta)v\rVert_{\mathcal H}$。
+  特别地，$v$ 在每条界面两侧的值迹与法向迹相同。
+\end{lemma}
+
+\begin{proof}
+  把 $v$ 以相位 $\ee^{\ii\beta d}$ 沿 $y$ 延拓，在 $y$ 方向按 $\psi_m$、在 $x$ 方向按
+  Fourier 变换展开。$v\in H^1(B)$ 且 $\Delta v\in L^2(B)$，由 Parseval 等式
+  $\sum_m\int_{\RR}(\xi^2+\beta_m^2)^2|\widehat v_m(\xi)|^2\,\dd\xi<\infty$，故 $v\in H^2(B)$
+  且 $\lVert D^2v\rVert_{L^2(B)}=\lVert\Delta v\rVert_{L^2(B)}$。由 $\Delta v=-\rho A(\beta)v$，
+  $\lVert\Delta v\rVert_{L^2}^2\leq\rax\lVert A(\beta)v\rVert_{\mathcal H}^2$。
+\end{proof}
+
+\subsection{分组迹估计的证明}
+\label{app:trace-proof}
+
+\begin{proof}[命题~\ref{prop:grouped-trace-bound} 的证明]
+  固定一条法线，令 $w(t)=1-\kappa t$、$\delta=\delta_g$。由
+  $g(t)-g(0)=\int_0^tg'$ 对 $w(t)\,\dd t$ 取平均（$\int_{-\delta}^{\delta}w=2\delta$），
+  交换积分次序得 $g(0)=\frac1{2\delta}\int w g+\int K_\kappa g'$，其中
+  \[
+    \lvert K_\kappa(t)\rvert=
+    \begin{cases}
+      \bigl(\delta-t-\kappa(\delta^2-t^2)/2\bigr)/(2\delta),&0<t<\delta,\\
+      \bigl(\delta+t-\kappa(t^2-\delta^2)/2\bigr)/(2\delta),&-\delta<t<0.
+    \end{cases}
+  \]
+  加权 Cauchy--Schwarz 给出
+  $\lvert g(0)\rvert\leq(2\delta)^{-1/2}(\int w\lvert g\rvert^2)^{1/2}
+  +T_\kappa^{1/2}(\int w\lvert g'\rvert^2)^{1/2}$，
+  $T_\kappa:=\int_{-\delta}^{\delta}\lvert K_\kappa\rvert^2/w$。令 $h=\kappa\delta$，直接计算得
+  $T_\kappa=\frac\delta6+\frac{\delta h^2}{8}\int_0^1\frac{(1-x)^4}{1-h^2x^2}\,\dd x\leq\tau_g$。
+  再用 $(a+b)^2\leq(1+\eta)a^2+(1+\eta^{-1})b^2$ 并对弧长积分；$w\,\dd s\,\dd t$ 正是
+  面积元，组内求和只乘 $N_g$。对 $g=v\circ\boldsymbol\Phi_\Gamma$ 与
+  $g=\nu_\Gamma\cdot\nabla v\circ\boldsymbol\Phi_\Gamma$（$\lvert g'\rvert\leq\lvert D^2v\rvert$）
+  分别使用，得式~\eqref{eq:jacobian-trace-bound}。最后，由谱定理、
+  $\lVert v\rVert_{L^2}^2\leq\rin^{-1}\lVert v\rVert_{\mathcal H}^2$、
+  $\lVert\nabla v\rVert^2=(A v,v)_{\mathcal H}$ 与
+  引理~\ref{lem:global-h2}，
+  $T_g(v)^2\leq\int p_g(\lambda)\,\dd\lVert E_\lambda v\rVert^2$，而
+  $\lVert(A+\mu)v\rVert^2=\int(\lambda+\mu)^2\,\dd\lVert E_\lambda v\rVert^2$，谱测度支撑于
+  $[\lambda_0,\infty)$。
+\end{proof}
+
+\begin{workonly}
+\pending{原命题 5.2（全界面迹估计）及其常数来源，2026-11-06 移入本附录，只在工作版保留。它可由命题~\ref{prop:grouped-trace-bound} 取一组、$\eta_g=1$ 推出：此时 $D_{0,g}\leq C_0$、$D_{1,g}\leq C_1$，且联合谱乘子不大于三项分别取上确界之和，所以常数不更大}
+
+\paragraph{常数 $C_0$、$C_1$ 的来源.}
+固定 $s$，把一维迹不等式（见下面的证明）用于 $g(t)=v(\boldsymbol\Phi_\Gamma(s,t))$，即
+图~\ref{fig:collar} 中的一条红色线段，再对 $s$ 积分，由
+式~\eqref{eq:collar-jacobian-lower-bound} 得
+\begin{align*}
+  \lVert v\rVert_{L^2(\Gamma)}^2
+  \leq\frac1{\delta_{\mathrm{col}}}\iint|g|^2\,\dd s\,\dd t
+    +\frac{\delta_{\mathrm{col}}}2\iint|\partial_tg|^2\,\dd s\,\dd t
+  \leq\frac{1}{\vartheta_{\mathrm{col}}\delta_{\mathrm{col}}}
+    \int_{\mathcal N_\Gamma}|v|^2
+    +\frac{\delta_{\mathrm{col}}}{2\vartheta_{\mathrm{col}}}
+    \int_{\mathcal N_\Gamma}|\nabla v|^2.
+\end{align*}
+对全部界面求和，再乘以覆盖重数，就得到
+\begin{align}
+  C_0&:=\frac{N_{\mathrm{ov}}}{\vartheta_{\mathrm{col}}\delta_{\mathrm{col}}},
+  &C_1&:=\frac{N_{\mathrm{ov}}\delta_{\mathrm{col}}}{2\vartheta_{\mathrm{col}}}.
+  \label{eq:trace-geometry-constants}
+\end{align}
+$C_0$ 衡量“线段上的平均值”，随领子变宽而减小；$C_1$ 衡量“沿线段的变化”，随领子变宽而
+增大。$\delta_{\mathrm{col}}$ 的选取受最小曲率半径（通过 $\vartheta_{\mathrm{col}}$）和
+界面间距（通过 $N_{\mathrm{ov}}$）限制。这些条件不由单连通性自动保证；计算可靠上界时须
+验证邻域单射、不同界面及其周期副本之间的分离，以及覆盖重数。
+
+\begin{proposition}[全界面正移位迹估计]
+  \label{prop:positive-shift-trace-bound}
+  在上述几何条件下，对每个 $v\in D(A(\beta))$ 与 $\mu>0$，
+  \begin{align}
+    T_{\ell_*}(v)^2
+    &:=\sum_{\Gamma\in\mathscr E}
+    \left(
+      \lVert v|_\Gamma\rVert_{L^2(\Gamma)}^2
+      +\ell_*^2\lVert\partial_{\nu_\Gamma}v|_\Gamma\rVert_{L^2(\Gamma)}^2
+    \right)
+    \leq C_{\mathrm{tr}}^2\lVert(A(\beta)+\mu)v\rVert_{\mathcal H}^2,
+    \label{eq:positive-shift-trace-bound}\\
+    C_{\mathrm{tr}}^2
+    &:=\frac{C_0}{\rin\mu^2}+\frac{C_1+\ell_*^2C_0}{4\mu}+\ell_*^2C_1\rax.
+    \label{eq:trace-constant}
+  \end{align}
+\end{proposition}
+
+\begin{proof}
+  \emph{全局 $H^2$ 正则性。}把 $v$ 以相位 $\ee^{\ii\beta d}$ 沿 $y$ 延拓，在 $y$ 方向按
+  $\psi_m$、在 $x$ 方向按 Fourier 变换展开。$v\in H^1(B)$ 且 $\Delta v\in L^2(B)$，
+  由 Parseval 等式
+  $\sum_m\int_{\RR}(\xi^2+\beta_m^2)^2|\widehat v_m(\xi)|^2\,\dd\xi<\infty$，故
+  $v\in H^2(B)$ 且 $\lVert D^2v\rVert_{L^2(B)}=\lVert\Delta v\rVert_{L^2(B)}$。
+
+  \emph{体范数估计。}令 $f=(A(\beta)+\mu)v$。由谱定理及
+  $\sup_{\lambda\geq0}(\lambda+\mu)^{-2}=\mu^{-2}$、
+  $\sup_{\lambda\geq0}\lambda(\lambda+\mu)^{-2}=(4\mu)^{-1}$、
+  $\sup_{\lambda\geq0}\lambda(\lambda+\mu)^{-1}\leq1$，
+  \begin{align*}
+    \lVert v\rVert_{L^2(B)}^2&\leq\frac{\lVert f\rVert_{\mathcal H}^2}{\rin\mu^2},
+    &\lVert\nabla v\rVert_{L^2(B)}^2&=(A(\beta)v,v)_{\mathcal H}
+      \leq\frac{\lVert f\rVert_{\mathcal H}^2}{4\mu},
+    &\lVert D^2v\rVert_{L^2(B)}^2&\leq\rax\lVert f\rVert_{\mathcal H}^2,
+  \end{align*}
+  最后一式用到 $\Delta v=-\rho A(\beta)v$，故
+  $\lVert\Delta v\rVert_{L^2}^2\leq\rax\lVert A(\beta)v\rVert_{\mathcal H}^2$。
+
+  \emph{一维迹不等式。}对 $g\in H^1(-\delta,\delta)$，$\delta=\delta_{\mathrm{col}}$，由
+  $g(0)=g(t)-\int_0^tg'$ 得 $|g(0)|^2\leq2|g(t)|^2+2|t|\,\bigl|\int_0^t|g'|^2\bigr|$，
+  对 $t$ 取平均即得
+  $|g(0)|^2\leq\delta^{-1}\int_{-\delta}^{\delta}|g|^2+\frac{\delta}{2}\int_{-\delta}^{\delta}|g'|^2$。
+
+  \emph{求和。}沿式~\eqref{eq:interface-normal-neighborhood} 的法线对 $g=v$ 与
+  $g=\partial_{\nu_\Gamma(s)}v$（$|g'|\leq|D^2v|$）使用上式，对 $s$ 积分，利用面积元
+  下界~\eqref{eq:collar-jacobian-lower-bound}，对任意有限界面子族求和并使用覆盖重数，得
+  \begin{align*}
+    \sum_\Gamma\lVert v|_\Gamma\rVert_{L^2(\Gamma)}^2
+    &\leq C_0\lVert v\rVert_{L^2(B)}^2+C_1\lVert\nabla v\rVert_{L^2(B)}^2,\\
+    \sum_\Gamma\lVert\partial_{\nu_\Gamma}v|_\Gamma\rVert_{L^2(\Gamma)}^2
+    &\leq C_0\lVert\nabla v\rVert_{L^2(B)}^2+C_1\lVert D^2v\rVert_{L^2(B)}^2.
+  \end{align*}
+  取极限并代入体范数估计即得结论。
+\end{proof}
+
+\pending{新增：保留 Jacobian 的迹界、联合谱乘子与分组（2026-11-04）}
+命题~\ref{prop:positive-shift-trace-bound} 有两处浪费：换元时用 Jacobian 的最坏下界
+$\vartheta_{\mathrm{col}}$，以及对三个体范数分别取上确界后相加。下面的命题去掉这两处，
+并允许不同界面组使用不同的领子。
+\end{workonly}
+

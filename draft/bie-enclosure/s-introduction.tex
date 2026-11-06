@@ -42,28 +42,55 @@ Green 函数自动满足纵向准周期条件，因而能以很少的未知量�
     周期胞元用准周期层势和传输边界积分方程离散，并在端口用 Rayleigh 振幅表示，得到
     单胞散射矩阵；有序 QZ 分解给出衰减子空间与胞元传播矩阵。中心胞元的场由层势与均匀
     背景 Rayleigh 波表示，最终得到一个以 Cauchy 数据匹配形式写出的离散非线性特征值
-    问题，用于定位候选 $\widehat k$。
+    问题。消去中心未知量后得到端口约化矩阵 $\mathsf A(k)$；它除极点外解析，候选
+    $\widehat k$ 由 $\det\mathsf A(k)$ 的 Chebyshev 插值求根得到\cite{Boyd2002,ZhaoBarnett2015}。
   \item \emph{谱距离定理}（第~\ref{sec:error}~节）。用候选系数和连续核在整个条带上构造
     一个分片场，它逐片精确满足 Helmholtz 方程，只在材料界面和人工竖直界面上留有跳跃。
-    利用正移位预解式的全界面迹估计和 Green 恒等式，证明
-    $\operatorname{dist}(\widehat k^2,\sigma(A(\beta)))$ 受这些跳跃的加权 $L^2$ 范数
-    控制。这一结论关于整个谱成立，不需要预先验证本质谱隙。
-  \item \emph{可计算的界}（第~\ref{sec:error}~节）。说明如何计算材料界面与人工界面上的
-    跳跃积分，如何用传播矩阵的收缩性控制无穷多个周期胞元的贡献，以及如何把各输入
-    替换为单侧可靠界。
+    把界面按几何分为若干组，对每组用领子上的迹估计和 Green 恒等式，证明
+    $\operatorname{dist}(\widehat k^2,\sigma(A(\beta)))$ 受各组跳跃的加权 $L^2$ 范数
+    $\varepsilon_g$ 与迹常数 $C_g$ 的乘积之和控制（附录~\ref{app:trace}）。这一结论关于整个谱
+    成立，不需要预先验证本质谱隙。
+\begin{workonly}
+原稿第 3 项：“利用正移位预解式的全界面迹估计和 Green 恒等式，证明
+$\operatorname{dist}(\widehat k^2,\sigma(A(\beta)))$ 受这些跳跃的加权 $L^2$ 范数控制。”
+\end{workonly}
+  \item \emph{计入舍入的可靠计算}（第~\ref{subsec:computation}~小节、附录~\ref{app:reliable}）。
+    跳跃积分按面板用 Chebyshev 插值误差界和球算术计算，无穷多个周期胞元的贡献由传播
+    矩阵的收缩性求和；场范数的下界取自若干圆盘上的质量，迹常数由领子几何条件的逐段
+    验证给出。全部输入都计入舍入，因此所得区间是可靠的谱距离上界。
+  \item \emph{带隙证书}（第~\ref{subsec:gap-certificate}~小节）。用有限个平面波矩阵的惯性
+    测试和 Bloch 能带关于相位的 Lipschitz 界，证明两侧引线的公共谱隙。区间落在其中时，
+    其中至少有一个导模特征值。
+  \item \emph{数值例子}（第~\ref{sec:results}~节）。对中心为星形柱、两侧为不同三叶柱
+    引线的例子，一次完整运行在 $14$ 分钟内给出全宽 $2.74\times10^{-11}$ 的可靠波数区间，
+    其中至少有一个导模特征值；区间约为同一问题 FEM 区间宽度的 $1/163$。
+\begin{workonly}
+原稿第 4 项：“\emph{可计算的界}。说明如何计算材料界面与人工界面上的跳跃积分，如何用传播
+矩阵的收缩性控制无穷多个周期胞元的贡献，以及如何把各输入替换为单侧可靠界。”
+\end{workonly}
 \end{enumerate}
 
 \paragraph{本文不声称的内容.}
+\pending{2026-11-06：带隙证书已加入，改写本段}
+谱距离界只说明以 $\widehat k^2$ 为中心、给定半径的区间与 $\sigma(A(\beta))$ 相交；加上
+带隙证书，可知区间中至少有一个孤立、有限重的特征值。本文不声称该特征值在区间中唯一，
+也不确定它的编号或重数。离散方法的先验收敛性也不在本文讨论范围之内：定理只作用于一个
+给定的候选和重构场，与候选是如何得到的无关。
+
+\begin{workonly}
+原稿：
 谱距离界只说明以 $\widehat k^2$ 为中心、给定半径的区间与 $\sigma(A(\beta))$ 相交。
 只有另行证明该区间落在本质谱隙内，才能把其中的谱点解释为离散导模特征值；本文不据此
 声称特征值唯一、编号已知或谱隙本身已被证明。离散方法的先验收敛性也不在本文讨论范围
 之内：定理只作用于一个给定的候选和重构场，与候选是如何得到的无关。
+\end{workonly}
 
 \paragraph{结构.}
 第~\ref{sec:modelproblem}~节给出模型和算子表述；第~\ref{sec:reduction}~节给出连续的
 中心约化；第~\ref{sec:discretization}~节给出离散与候选计算；第~\ref{sec:error}~节构造
 重构场并证明谱距离界；第~\ref{sec:results}~节给出数值结果；附录~\ref{app:center-cell}
-证明中心胞元表示定理。
+证明中心胞元表示定理，附录~\ref{app:trace} 给出分组迹估计的几何与证明，
+附录~\ref{app:reliable} 给出计入舍入的可靠计算。
 
 \paragraph{记号.}
 表~\ref{tab:notation} 列出全文的主要记号。复数内积对第二个变量取共轭；
@@ -101,8 +128,10 @@ $\lVert\cdot\rVert$ 无下标时指 $\mathcal H$ 范数或矩阵 $2$-范数，�
   $\mathsf V_\pm$ & 离散 Cauchy 数据基\\
   $\xi$, $c_\pm$ & 中心离散未知量，半波导衰减坐标\\
   $\mathsf M(k)$ & 中心离散非线性特征值问题的矩阵函数\\
+  $\mathsf A(k)$ & 端口约化矩阵，候选由 $\det\mathsf A(k)=0$ 定位\\
   $\widehat u$ & 由候选构造的原始场\\
   $\jump{\widehat u}_\Gamma$, $\jump{\partial_\nu\widehat u}_\Gamma$ &
     界面上的值跳跃与法向导数跳跃\\
-  $\varepsilon_{\partial,\ell_*}$, $U$, $C$ & 界面缺陷，场范数，迹常数\\
+  $\varepsilon_g$, $C_g$, $\ell_g$ & 第 $g$ 组界面的加权缺陷、迹常数与参考长度\\
+  $U$, $Q$ & 场范数，$Q=\sum_g C_g\varepsilon_g$\\
 \end{longtable}

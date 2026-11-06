@@ -1,49 +1,254 @@
 \section{数值结果}
 \label{sec:results}
 
-\pending{初稿（2026-11-05），只含当前已有结果；模型参数、几何与 FEM 对照的描述待补}
-本节给出一个候选的谱距离估计与目前已经可靠化的部分。取 $d=1$、$\beta=0.5$，候选
-$\widehat k=1.5584378941820909$，$\mu=\widehat k^2=2.42873$。中心曲线的密度有 $512$ 个
-样本，引线曲线各 $256$ 个，Rayleigh 截断 $M=48$。场按第~\ref{subsec:raw-field}~小节
-的胞元核与按场拟合定义，密度不重解。
+\pending{2026-11-06：全节按一次从空目录开始的完整运行（test/bie-bound/pipeline-v1，run-002）重写；原初稿只在工作版保留}
+本节给出一个完整的例子。下面所有数字都来自同一次运行：从空的输出目录开始，依次做
+带隙分类、行列式求根、密度重建与场拟合、五组可靠缺陷、质量下界、迹常数、标量装配和
+带隙证书，中间不读入任何先前的结果。
 
-\paragraph{分组缺陷与谱距离估计.}
-表~\ref{tab:group-defects} 列出五组界面的缺陷 $\varepsilon_g$。中心材料一组是可靠上界，
-其余四组是浮点估计（源点加倍后 $\sum_gC_g\varepsilon_g$ 的变化约 $10^{-16}$）；迹常数
-$C_g$ 目前是扫描值，尚无可靠上界。质量下界 $U\geq1.23587$ 由材料内八个圆盘按
-式~\eqref{eq:disk-mass-lower-bound} 可靠计算。
+\subsection{模型与离散}
+\label{subsec:results-model}
+
+取 $d=1$、$\beta=0.5$，中心胞元与两侧引线胞元的宽度都为 $1$（$L_0=L_\pm=1$），背景
+$\rho_{\mathrm e}=1$。中心胞元含一个五叶星形柱，$\rho=4$，边界为
+\begin{align*}
+  r_0(t)&=0.2\bigl((1.5+0.3\cos5t)\cos t,\ (1+0.3\cos5t)\sin t\bigr),
+\end{align*}
+两侧每个胞元含一个三叶柱，$\rho=17$，边界为
+\begin{align*}
+  r_a(t)&=\frac{0.2\,(1+a\cos3t)}{\sqrt{1+a^2/2}}\,(\cos t,\ \sin t),
+  &a&=0.12\ (\text{左}),\quad a=0.20\ (\text{右}),
+\end{align*}
+平移到各胞元中心（图~\ref{fig:results-geometry}）。于是 $\rin=1$，$\rax=17$。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.95\textwidth, height=0.22\textwidth,
+      axis equal image, xmin=-3.5, xmax=3.5, ymin=-0.5, ymax=0.5,
+      xlabel={$x$}, ylabel={$y$}, xtick={-3,...,3}, ytick={-0.5,0,0.5},
+      unbounded coords=jump]
+      \foreach \w in {-2.5,-1.5,...,2.5} {
+        \edef\temp{\noexpand\draw[gray, dashed] (axis cs:\w,-0.5) -- (axis cs:\w,0.5);}
+        \temp
+      }
+      \addplot[blue, thick, fill=blue!15] table[col sep=comma, x=x,
+        y expr={\thisrow{cell}==-3 ? \thisrow{y} : nan}] {data/geometry.csv};
+      \addplot[blue, thick, fill=blue!15] table[col sep=comma, x=x,
+        y expr={\thisrow{cell}==-2 ? \thisrow{y} : nan}] {data/geometry.csv};
+      \addplot[blue, thick, fill=blue!15] table[col sep=comma, x=x,
+        y expr={\thisrow{cell}==-1 ? \thisrow{y} : nan}] {data/geometry.csv};
+      \addplot[red, thick, fill=red!15] table[col sep=comma, x=x,
+        y expr={\thisrow{cell}==0 ? \thisrow{y} : nan}] {data/geometry.csv};
+      \addplot[teal, thick, fill=teal!15] table[col sep=comma, x=x,
+        y expr={\thisrow{cell}==1 ? \thisrow{y} : nan}] {data/geometry.csv};
+      \addplot[teal, thick, fill=teal!15] table[col sep=comma, x=x,
+        y expr={\thisrow{cell}==2 ? \thisrow{y} : nan}] {data/geometry.csv};
+      \addplot[teal, thick, fill=teal!15] table[col sep=comma, x=x,
+        y expr={\thisrow{cell}==3 ? \thisrow{y} : nan}] {data/geometry.csv};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{条带的一段：中心胞元（$x\in(-1/2,1/2)$）的星形柱 $\rho=4$，左右各三个引线胞元的
+  三叶柱 $\rho=17$（左 $a=0.12$，右 $a=0.20$）。虚线为胞元之间的人工竖直界面，$y=\pm1/2$
+  为接缝。}
+  \label{fig:results-geometry}
+\end{figure}
+
+\paragraph{离散参数.}
+中心曲线 $512$ 个节点，左右引线曲线各 $256$ 个；Rayleigh 截断 $M=48$（$K=97$）；
+求解用的准周期核取代理距离 $0.2$、侧边与上下各 $160$ 个配点、每边 $80$ 个代理源、
+$32$ 个平面波，FMM 容差 $10^{-12}$。评价用的场按第~\ref{subsec:raw-field}~小节定义：
+密度固定，背景由 $480$ 个固定点源（距离 $0.35$）按场拟合，截断 SVD 的相对阈值为
+$10^{-14}$。
+
+可靠评价把中心材料曲线分为 $192$ 个面板，左右材料曲线各 $64$ 个，两条接合墙与两类
+引线内部墙各 $16$ 段，接缝 $8\times3$ 对；每个面板取 $48$ 个 Chebyshev 节点，球算术主精度
+$128$ 位。引线尾的截断深度取使尾项平方不超过有限部分平方的 $10^{-6}$ 的最小 $N$，
+左右分别为 $52$--$54$ 与 $56$--$58$；两侧都取 $p=1$，$\lVert\mathsf P_\pm\rVert_F\le0.3815$、
+$0.3868$。质量下界用材料内的 $8$ 个圆盘。带隙证书用 $|m|,|n|\le6$ 的 $169$ 个平面波、
+$2048$ 点求积和 $[0,\pi]$ 上的 $118$ 个相位面板。
+
+\subsection{候选定位}
+\label{subsec:results-search}
+
+带隙分类给出两侧引线的公共搜索窗口 $k\in[1.451,\,2.249]$。这一步是浮点计算，只用于
+确定在哪里求根；可靠的带隙由下面第~\ref{subsec:results-interval}~小节的证书给出。在整个
+窗口上，$\det\mathsf A(k)$ 的 Chebyshev 插值从 $4$ 次加倍到 $32$ 次时，最后三个系数相对
+最大系数降到 $7\times10^{-11}$ 以下，满足停止条件，不需要再细分窗口
+（图~\ref{fig:results-determinant}）。Bernstein 椭圆内只有一个近实根；两步 Newton 修正后
+\begin{align*}
+  \widehat k=1.558437894182088\quad(\text{binary64 }\texttt{3ff8ef5c92c5bf30}),
+\end{align*}
+该点 $s(\widehat k)=2.8\times10^{-14}$（式~\eqref{eq:candidate-score}）。退回规则一条也没有
+触发。整个搜索共 $38$ 次矩阵求值（$35$ 次求行列式、$2$ 次修正、$1$ 次确认），用时
+$159$ 秒，其中带隙分类 $28$ 秒。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \begin{groupplot}[group style={group size=2 by 1, horizontal sep=2.2cm},
+      width=0.46\textwidth, height=0.34\textwidth, ymode=log]
+      \nextgroupplot[xlabel={$k$}, ylabel={$|\det\mathsf A(k)|$（归一化）}]
+        \addplot[only marks, mark=*, mark size=1.2pt] table[col sep=comma,
+          x=k, y=normalized_determinant_absolute] {data/determinant-nodes.csv};
+        \draw[red, dashed] (axis cs:1.558437894182088,0.03) -- (axis cs:1.558437894182088,1.5);
+      \nextgroupplot[xlabel={系数序号 $j$}, ylabel={$|a_j|/\max_i|a_i|$},
+        legend pos=south west, legend style={font=\footnotesize}]
+        \pgfplotsinvokeforeach{4,8,16,32}{
+          \addplot+[mark size=1.2pt] table[col sep=comma, x=index,
+            y expr={\thisrow{degree}==#1 ? \thisrow{relative} : nan},
+            unbounded coords=discard] {data/determinant-coefficients.csv};
+        }
+        \legend{$4$ 次,$8$ 次,$16$ 次,$32$ 次}
+    \end{groupplot}
+  \end{tikzpicture}
+  \caption{行列式求根。左：$32$ 次插值的 $33$ 个 Chebyshev--Lobatto 节点上的
+  $|\det\mathsf A(k)|$（除以窗口内的参考值），虚线为 $\widehat k$。右：各次插值的
+  Chebyshev 系数。}
+  \label{fig:results-determinant}
+\end{figure}
+
+\subsection{可靠区间}
+\label{subsec:results-interval}
+
+表~\ref{tab:results-groups} 列出五组的输入。表中小数都是向上取整后的值；装配用的是
+binary64 上界与 Arb 球，结果不受显示位数影响。
 \begin{table}[htbp]
   \centering
-  \caption{五组界面缺陷（胞元核、按场拟合）}
-  \label{tab:group-defects}
-  \begin{tabular}{lcccc}
-    \hline
-    组 & $\varepsilon_g$ & 性质 & $C_g$（扫描） & $C_g\varepsilon_g$\\
-    \hline
-    中心材料 & $1.2616\times10^{-12}$ & 可靠上界 & $2.490$ & $3.141\times10^{-12}$\\
-    左引线材料及尾 & $6.100\times10^{-14}$ & 浮点 & $1.181$ & $7.206\times10^{-14}$\\
-    右引线材料及尾 & $6.362\times10^{-14}$ & 浮点 & $1.234$ & $7.848\times10^{-14}$\\
-    人工竖直界面及尾 & $2.156\times10^{-13}$ & 浮点 & $1.036$ & $2.233\times10^{-13}$\\
-    接缝及尾 & $7.095\times10^{-15}$ & 浮点 & $1.036$ & $7.348\times10^{-15}$\\
-    \hline
+  \caption{五组界面的迹常数与缺陷上界（$\widehat k=1.558437894182088$）。}
+  \label{tab:results-groups}
+  \begin{tabular}{lccc}
+    \toprule
+    组 $g$ & $\overline C_g$ & $\overline\varepsilon_g$ & $\overline C_g\,\overline\varepsilon_g$\\
+    \midrule
+    中心材料 & $2.490254$ & $1.2616\times10^{-12}$ & $3.1417\times10^{-12}$\\
+    左引线材料及尾 & $1.181583$ & $5.0811\times10^{-14}$ & $6.0037\times10^{-14}$\\
+    右引线材料及尾 & $1.233941$ & $5.2316\times10^{-14}$ & $6.4555\times10^{-14}$\\
+    人工竖直界面及尾 & $1.035553$ & $2.0346\times10^{-13}$ & $2.1070\times10^{-13}$\\
+    接缝及尾 & $1.035553$ & $5.7837\times10^{-15}$ & $5.9894\times10^{-15}$\\
+    \midrule
+    合计 $Q$ & & & $3.4830\times10^{-12}$\\
+    \bottomrule
   \end{tabular}
 \end{table}
-合计 $Q=3.521\times10^{-12}$，中心材料占 $89\%$。代入式~\eqref{eq:spectral-distance-bound}
-得 $R_{\mathrm{spec}}\approx1.384\times10^{-11}$，区间全宽 $2R_{\mathrm{spec}}\approx2.77\times10^{-11}$。
-这是估计而非可靠上界，因为四组缺陷与 $C_g$ 仍是浮点值。作为比较，同一候选若用求解时的
-回卷核作为场，需另加切换线缺陷，全宽约 $4.1\times10^{-10}$；FEM 与 DtN 路线给出的区间
-全宽为 $4.46\times10^{-9}$。
+中心材料一组占 $Q$ 的 $90\%$。图~\ref{fig:results-center-panels} 给出它在 $192$ 个面板上的
+分布：每个面板的插值误差 $e_I$ 至多 $2.2\times10^{-17}$，比面板缺陷小两个
+量级以上，所以可靠上界与浮点估计只差 $0.04\%$。最大的面板贡献在 $t=\pi$ 附近，即星形柱曲率绝对值最大（约 $64$）的凹点。
+八个圆盘给出 $\underline U=1.23587$。由式~\eqref{eq:certified-spectral-distance}，
+\begin{align*}
+  R_{\mathrm{spec}}&\le1.3690\times10^{-11},\\
+  I_{\mathrm{spec}}&\subset[2.42872867000901160,\ 2.42872867003639024],\\
+  I_k&\subset[1.55843789417769600,\ 1.55843789418648000],
+\end{align*}
+端点均向外取整，区间全宽 $2R_{\mathrm{spec}}\le2.7379\times10^{-11}$。
 
-\paragraph{可靠评价.}
-中心材料曲线分为 $192$ 个目标面板，按第~\ref{subsec:reliable-evaluation}~小节计算。每个面板的
-模型误差 $e_I$ 中位数约 $4\times10^{-18}$、最大 $2.1\times10^{-17}$，主要来自自作用部分，远小于
-面板缺陷 $\sqrt{V_I}$，因此可靠上界只比浮点值大 $0.04\%$。对右引线的一个材料目标，只对实际
-出现的状态计算（$N_{\mathrm{cell}}=59$）与对全部端口列计算给出的段缺陷相对差为
-$4\times10^{-7}$，尾项以解析包络支付。
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[width=0.85\textwidth, height=0.32\textwidth, ymode=log,
+      xlabel={曲线参数 $t$}, xmin=0, xmax=6.2832,
+      xtick={0,1.2566,2.5133,3.7699,5.0265,6.2832},
+      xticklabels={$0$,$2\pi/5$,$4\pi/5$,$6\pi/5$,$8\pi/5$,$2\pi$},
+      legend style={font=\footnotesize, at={(0.5,1.03)}, anchor=south, legend columns=2}]
+      \addplot[const plot, blue, thick] table[col sep=comma, x=t_left, y=epsilon_upper]
+        {data/center-contributions.csv};
+      \addplot[const plot, gray] table[col sep=comma, x=t_left, y=model_error_upper]
+        {data/center-contributions.csv};
+      \legend{面板项 $\sqrt{V_I}+\sqrt{|I|}e_I$, 插值误差 $e_I$}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{中心材料曲线上 $192$ 个面板对 $\overline\varepsilon_g$ 的贡献
+  （式~\eqref{eq:group-defect-assembly}，平方和开方即表~\ref{tab:results-groups} 第一行）。}
+  \label{fig:results-center-panels}
+\end{figure}
 
-\paragraph{计算量.}
-中心材料整组在 $8$ 个进程上实测墙钟 $83$ 秒、峰值内存 $0.25$\,GiB。按实测单价外推，五组
-全部可靠评价单进程约 $34$ 分钟，$8$ 进程约 $7$--$18$ 分钟（取决于边界区域的准备是否并行），
-不含 $C_g$ 与带隙证书。FEM 与 DtN 路线在 $11$ 线程上约 $67$ 分钟。
+\paragraph{带隙与特征值.}
+第~\ref{subsec:gap-certificate}~小节的证书对两侧引线共做 $472$ 个符号测试，全部通过，
+证明两侧引线的本质谱都不与 $k\in(1.318,\,2.375)$ 相交，即 $\overline a_s=1.318^2$、$\underline b_s=2.375^2$；
+最紧的一个测试（右引线）余量为 $1.4\times10^{-4}$。条件~\eqref{eq:gap-condition} 的两端
+余量为
+\begin{align*}
+  (\mu-R_{\mathrm{spec}})-\overline a_s&\ge0.6916,
+  &\underline b_s-(\mu+R_{\mathrm{spec}})&\ge3.2118.
+\end{align*}
+由命题~\ref{prop:discrete-spectrum-in-gap}，$I_k$ 中至少有一个孤立、有限重的特征值。
+所有输入都计入了舍入，这一结论不依赖未验证的数值前提；它不说明区间内只有一个特征值。
 
-TODO：其余四组的可靠缺陷、$C_g$ 的可靠上界、带隙证书，以及据此给出的可靠区间。
+\paragraph{与 FEM 结果比较.}
+同一问题用 FEM 与 DtN 的 Goerisch 方法得到的区间为
+\begin{align*}
+  \mu\in[2.4287286691977,\ 2.4287286736602],
+\end{align*}
+全宽 $4.46\times10^{-9}$；该方法另外证明了
+区间内只有一个特征值，但舍入误差只作了估计，没有可靠界。上面的 $I_{\mathrm{spec}}$ 落在其中，
+宽度约为它的 $1/163$。
+
+\subsection{分辨率}
+\label{subsec:results-resolution}
+
+把节点数减半（中心 $256$，引线各 $128$），其余参数不变，重跑整个流程。
+\begin{table}[htbp]
+  \centering
+  \caption{两种分辨率的完整运行。}
+  \label{tab:results-resolution}
+  \begin{tabular}{lcccc}
+    \toprule
+    节点（中心/左/右） & $\widehat k$ & $Q$ & 区间全宽 & 用时 \\
+    \midrule
+    $512/256/256$ & $1.558437894182088$ & $3.483\times10^{-12}$ & $2.738\times10^{-11}$ & $13.8$ 分钟\\
+    $256/128/128$ & $1.5584378941820882$ & $5.436\times10^{-7}$ & $4.274\times10^{-6}$ & $12.4$ 分钟\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+两个候选只差一个 ulp，区间宽度却差五个量级：粗分辨率下中心材料一组的缺陷为
+$2.18\times10^{-7}$，占 $Q$ 的 $99.98\%$。区间宽度反映的是重构场满足界面条件的程度，
+而不是候选本身的精度。
+
+\subsection{计算量}
+\label{subsec:results-cost}
+
+运行环境为 Apple M3 Pro（$11$ 核：$5$ 性能核加 $6$ 能效核，$18$\,GiB 内存），macOS 14，
+MATLAB R2023b，python-flint 0.9.0（FLINT 3.6.0）。表~\ref{tab:results-cost} 为各阶段的
+墙钟时间，含进程启动；峰值内存为整个进程树。
+\begin{table}[htbp]
+  \centering
+  \caption{一次完整运行的计算量（$512/256/256$）。}
+  \label{tab:results-cost}
+  \begin{tabular}{lrrr}
+    \toprule
+    阶段 & 秒 & 并行 & 峰值 GiB\\
+    \midrule
+    带隙分类与行列式求根 & $175.6$ & MATLAB $11$ 线程 & $0.99$\\
+    密度重建与场拟合 & $18.2$ & MATLAB $11$ 线程 & $1.17$\\
+    五组可靠缺陷 & $528.2$ & $8$ 进程 & $1.82$\\
+    缺陷汇总核对 & $1.1$ & $1$ 进程 & --\\
+    质量下界 & $20.9$ & $1$ 进程 & $0.16$\\
+    迹常数与装配 & $1.1$ & $1$ 进程 & --\\
+    带隙证书 & $80.5$ & $1$ 进程 & $0.21$\\
+    调度与输出 & $1.4$ & -- & --\\
+    \midrule
+    合计 & $827.1$（$13.8$ 分钟） & & $1.84$\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+FEM 路线在同一台机器、$11$ 线程上的各阶段记录之和为 $66.8$ 分钟，其中 $54.3$ 分钟用于
+证明区间内特征值唯一；去掉这一部分为 $12.5$ 分钟。本文的方法不证明唯一性，用时
+与之相当，区间窄约 $163$ 倍，并且计入了舍入。
+
+\begin{workonly}
+原初稿（2026-11-05）：
+
+本节给出一个候选的谱距离估计与目前已经可靠化的部分。取 $d=1$、$\beta=0.5$，候选
+$\widehat k=1.5584378941820909$，$\mu=\widehat k^2=2.42873$。中心曲线的密度有 $512$ 个
+样本，引线曲线各 $256$ 个，Rayleigh 截断 $M=48$。场按胞元核与按场拟合定义，密度不重解。
+
+五组界面缺陷：中心材料 $1.2616\times10^{-12}$（可靠上界），左引线 $6.100\times10^{-14}$、
+右引线 $6.362\times10^{-14}$、人工竖直界面 $2.156\times10^{-13}$、接缝 $7.095\times10^{-15}$
+（浮点）；$C_g$ 为扫描值 $2.490/1.181/1.234/1.036/1.036$。合计 $Q=3.521\times10^{-12}$，
+$R_{\mathrm{spec}}\approx1.384\times10^{-11}$，全宽约 $2.77\times10^{-11}$（估计）。同一候选若用
+求解时的回卷核作为场，需另加切换线缺陷，全宽约 $4.1\times10^{-10}$。
+
+中心材料整组在 $8$ 个进程上实测 $83$ 秒、峰值 $0.25$\,GiB；按单价外推五组全部可靠评价
+$8$ 进程约 $7$--$18$ 分钟。
+\end{workonly}

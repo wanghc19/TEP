@@ -1,0 +1,226 @@
+% Appendix C: reliable computation including rounding (new on 2026-11-06).
+\section{计入舍入的可靠计算}
+\label{app:reliable}
+
+\pending{本附录新增（2026-11-06）；部分内容由原第 5.5 小节“可靠评价”移来}
+本附录说明表~\ref{tab:certified-inputs} 中各输入的可靠计算。所有界都对同一个场、同一个
+$\widehat k$ 成立；各小节的数值见第~\ref{sec:results}~节。
+
+\subsection{原则}
+\label{app:reliable-ball}
+
+\paragraph{固定数据是精确数.}
+候选 $\widehat k$、密度样本、代理系数、传播矩阵与几何参数都以 binary64 保存；它们被
+视为精确的二进制有理数，由它们按第~\ref{subsec:raw-field}~小节定义的场就是定理所针对的
+场。$\pi$、相位 $q=\ee^{\ii\beta d}$、波数 $\widehat k\sqrt{\rho}$、Rayleigh 指数 $\gamma_m$
+与特殊函数按精确公式计算，不使用它们的浮点近似。因此保存数据时的舍入不需要估计：它
+只改变“是哪一个场”，而定理对任意固定的场成立。
+
+\paragraph{浮点提出，球算术判定.}
+浮点计算只用于提出：候选、拟合系数、面板划分、试向量与子空间。每个判定（误差界、
+符号、正定性、不等式）都在实球或复球算术中完成：球 $[m\pm r]$ 保证包含精确值，每一步
+运算向外舍入。本文使用 Arb 库~\cite{Johansson2017}。浮点结果的精度只影响界的松紧，
+不是界成立的前提。
+
+\paragraph{先带符号求和，再取模.}
+界面跳跃是两侧约为 $1$ 的量之差。若对每一项分别取模再相加，误差界会比跳跃本身大十几个
+数量级。因此各分项的近似值先带符号相加，误差半径另行非负累加；对 Taylor 或 Chebyshev
+模型，也是先合并各分项的系数，再对合并后的多项式求积分。最后输出的十进制端点一律
+向外取整。
+
+\subsection{界面缺陷 $\overline\varepsilon_g$}
+\label{app:reliable-eps}
+
+\pending{2026-11-06：前半段由原第 5.5 小节“可靠评价”移来，后半段（自作用、引线有限部分与尾项、汇总）新增}
+每条界面分成目标面板，在每个面板上对式~\eqref{eq:panel-defect-bound} 中的加权跳跃向量
+$f$ 构造多项式 $P_I$ 及一致误差 $e_I$。$P_I$ 取在
+$L$ 个实 Chebyshev 节点上的插值；若 $f$ 在 Bernstein 椭圆 $E_\varrho$ 上的解析延拓满足
+$|f|\leq M_I$，则
+\begin{align}
+  e_I\leq\frac{4M_I\varrho^{1-L}}{\varrho-1}
+  +\sqrt{2L-1}\,e_{\mathrm{node}}+e_{\mathrm{conv}},
+  \label{eq:chebyshev-panel-error}
+\end{align}
+$e_{\mathrm{node}}$ 是节点值的误差上界，$e_{\mathrm{conv}}$ 是变换到多项式系数的误差。保留
+$P_I$ 中各部分的符号再求 $V_I$，可保留材料跳跃中约十二位的相消。节点值分三部分：
+\begin{itemize}
+  \item 本曲线自身的层势（$m=0$）：用 Kress 核分裂在实节点上求值，求积误差由解析延拓域上
+    的包络给出；
+  \item 光滑部分：上下两个像与代理点源。对固定中心 $\mathbf x_\nu$、半径 $R$ 内的
+    Helmholtz 解 $Y$，令 $z,w$ 为复化坐标，$\lambda=\kappa_{\mathrm e}^2/4$，
+    $\Phi_m(\xi)=\sum_{j\geq0}m!\,\xi^j/[j!\,(m+j)!]$，则
+    $Y=a_0\Phi_0(-\lambda zw)+\sum_{m\geq1}[a_m^+(z/R)^m+a_m^-(w/R)^m]\Phi_m(-\lambda zw)$。
+    截到 $M$ 阶，在 $|z|=|w|\leq a<R$ 处尾项不超过
+    $\ee^{\lambda a^2}\,2B\theta^{M+1}/(1-\theta)$，$\theta=a/R$，$B$ 为 $Y$ 在双圆盘上的界。
+    代理点源只需一个以原点为心、$R=1.1$ 的展开，不涉及源积分；两个近像对材料目标用原点、
+    $R=0.6$ 的展开，对人工界面与接缝用各段中点的展开。近像的源积分通过源面板矩计算，
+    截断误差另计；
+  \item 局部项（连续密度值与背景波）：有限和，按 Taylor 余项计入。
+\end{itemize}
+全部运算用球算术并向外舍入，因此所得上界包含舍入误差。对半波导，式~\eqref{eq:panel-defect-bound}
+对每个实际状态逐一应用，再按式~\eqref{eq:boundary-propagation-tail}（以解析包络代替
+$\Theta_\pm$）加尾项。
+
+\paragraph{自作用的 Kress 误差.}
+材料界面法向跳跃中两个超奇异主部先在解析层面相消（第~\ref{subsec:layer-potentials}~小节
+的 Müller 差核），剩下的核形如 $A(t,s)\log(4\sin^2\pi(t-s))+B(t,s)$。设密度加权后的
+$A,B$ 在源条带 $|\operatorname{Im}s|<a$ 上分别以 $H_A,H_B$ 为界，取 $N=2n$ 个源节点，
+则 Kress 求积的误差不超过
+\begin{align}
+  e_{\mathrm{Kress}}
+  &\leq\frac{4H_A\ee^{-2\pi an}}{1-\ee^{-2\pi a}}+\frac{2H_B}{\ee^{2\pi aN}-1}.
+  \label{eq:kress-error}
+\end{align}
+使用前须在条带上验证：速度平方的实部为正，去掉 $\sin^2$ 后的弦长商无零点，对数取解析
+分支。这些检查与 $H_A,H_B$ 都在复球算术中完成。
+
+\paragraph{引线的有限部分与尾项.}
+引线面板上的跳跃线性依赖于状态：$f=F_I(t)v_j$，$v_j=\mathsf P^jc$。若多项式矩阵 $P_I$
+满足 $\sup_I\lVert F_I-P_I\rVert\leq e_I$，则对前 $N_{\mathrm{cell}}$ 个胞元，
+\begin{align}
+  \Bigl(\sum_{j<N_{\mathrm{cell}}}\lVert F_Iv_j\rVert_{L^2(I)}^2\Bigr)^{1/2}
+  &\leq\sqrt{V_I}+\sqrt{|I|}\,e_I\Bigl(\sum_{j<N_{\mathrm{cell}}}\lVert v_j\rVert^2\Bigr)^{1/2},
+  &V_I&:=\sum_{j<N_{\mathrm{cell}}}\int_I\lVert P_I(t)v_j\rVert^2\,\dd t .
+  \label{eq:lead-finite-bound}
+\end{align}
+证明只需把 $j<N_{\mathrm{cell}}$ 的面板函数放进 Hilbert 直和，用三角不等式。同一个多项式
+矩阵还给出尾项常数：
+$\Theta_\pm\leq\sum_I\bigl(\bigl(\int_I\lVert P_I\rVert_F^2\bigr)^{1/2}+\sqrt{|I|}\,e_I^F\bigr)^2$，
+$e_I^F$ 为 Frobenius 范数下的一致误差。代入式~\eqref{eq:boundary-propagation-tail}，
+$\lVert\mathsf P_\pm\rVert_2\leq\lVert\mathsf P_\pm\rVert_F<1$ 时取 $p=1$。每侧选最小的
+$N_{\mathrm{cell}}$，使尾项不超过有限部分的 $10^{-6}$ 倍。
+
+\paragraph{汇总.}
+人工界面与接缝同样按面板处理：中心与第一个引线胞元之间的两条接合墙直接组合两侧的
+多项式；引线内部的墙用相邻两个状态；每对上下接缝合并顶、底两条迹与相位后只计一次。
+最后
+\begin{align}
+  \overline\varepsilon_g^{\,2}
+  &:=\sum_{I\in\mathscr P_g}\bigl(\sqrt{V_I}+\sqrt{|I|}\,e_I\bigr)^2+\overline T_g,
+  \label{eq:group-defect-assembly}
+\end{align}
+$\mathscr P_g$ 为该组全部目标面板，$\overline T_g$ 为两侧尾项上界之和；开方后向上取
+binary64。
+
+\subsection{场范数下界 $\underline U$}
+\label{app:reliable-mass}
+
+\pending{2026-11-06 新增}
+取若干互不相交的闭圆盘 $\overline{D_r(\mathbf c)}$，每个都位于一个均匀分片内部。对每个
+圆盘需要：(i) 圆盘到材料界面、人工界面与接缝的距离下界大于 $r$，并沿一条路径检查圆心与
+所在分片同侧；(ii) 圆盘两两的距离下界为正；(iii) 圆心场值的可靠近似 $\widetilde u(\mathbf c)$
+及误差 $|\widehat u(\mathbf c)-\widetilde u(\mathbf c)|\leq e_{\mathbf c}$。圆心远离源曲线，
+层势被积函数光滑，用 Gauss 求积加解析包络给出的误差界即可。由
+式~\eqref{eq:disk-mass-lower-bound}，
+\begin{align}
+  \underline U^{\,2}
+  &:=\sum_{\text{盘}}\rho_b\pi r^2\bigl[J_0(\kappa_br)^2+J_1(\kappa_br)^2\bigr]
+  \max\{0,|\widetilde u(\mathbf c)|-e_{\mathbf c}\}^2\leq U^2 ,
+  \label{eq:disk-mass-assembly}
+\end{align}
+Bessel 函数值也取球的下端。下界只需要两三位精度：它进入 $R_{\mathrm{spec}}$ 的分母
+$\underline U-\overline Q$，而 $\overline Q$ 比 $\underline U$ 小十一个数量级。
+
+\subsection{迹常数 $\overline C_g$}
+\label{app:reliable-cg}
+
+\pending{2026-11-06 新增}
+命题~\ref{prop:grouped-trace-bound} 的条件逐项用下面的充分判据检查；各判据的输入都是
+曲线的解析参数式，不是节点样本。
+
+\paragraph{领子单射.}
+设闭曲线 $\boldsymbol r$ 关于原点绕数为一，速度 $|\boldsymbol r'|>0$，
+$\boldsymbol r\times\boldsymbol r'>0$，且原点到每条切线的有符号距离
+$\boldsymbol r\times\boldsymbol r'/|\boldsymbol r'|\geq H>\delta$，$\delta\kappa_*<1$。则
+$\boldsymbol r+t\nu$ 在 $|t|\leq\delta$ 上单射。证明：沿每条偏移曲线极角严格单调，固定极角
+时到原点的距离关于 $t$ 严格单调，所以同一点只能有一组 $(s,t)$。对本文的星形曲线，
+$\boldsymbol r\times\boldsymbol r'$ 与 $|\boldsymbol r'|$ 有显式上下界，$H$ 由代数式给出。
+
+\paragraph{曲率.}
+把参数区间分成小区间 $I=[c-h,c+h]$，在球算术中包围 $\kappa(c)$ 与 $\kappa'(I)$，则
+$\sup_I|\kappa|\leq|\kappa(c)|+h\sup_I|\kappa'|$；未通过的区间二分，最多十六层。叶子
+覆盖整个周期，所以不是“只检查节点”。同时得到速度的下界。
+
+\paragraph{覆盖重数.}
+若曲线的坐标范围为 $|x|\leq X$、$|y|\leq Y$，则其全部格点平移 $(jL,kd)$ 的领子在
+$L>2X+2\delta$、$d>2Y+2\delta$ 时互不相交，$N_g=1$。左右半波导是完整格点族的子族，不必
+逐个检查无穷多个胞元。竖墙在 $2\delta<L$ 时、接缝在 $2\delta<d$ 时同组不交。
+
+\paragraph{上确界.}
+令 $F(\lambda)=p_g(\lambda)/(\lambda+\mu)^2$。$F'$ 的分子是一次式，所以
+$\sup_{\lambda\geq\lambda_0}F$ 只需比较 $F(\lambda_0)$、$c_g$ 以及驻点
+$\lambda_*=(2a_g-b_g\mu)/(2c_g\mu-b_g)$（若 $\lambda_*\geq\lambda_0$）。球算术不能确定
+驻点是否在区间内时，三个候选全部保留。谱底取
+$\lambda_0=\min_m\beta_m^2/\rho_{\max}$，来自 $y$ 方向的 Poincaré 不等式。
+$\mu=\widehat k^2$ 在球算术中由精确的 $\widehat k$ 平方得到；领子半宽 $\delta_g$ 与
+$\eta_g$ 可取任意正数，它们只影响常数大小，不需要是最优值。
+
+\subsection{带隙证书的矩阵测试}
+\label{app:reliable-band}
+
+\pending{2026-11-06 新增；来源为带隙证书的原证明（h-cert-proof）与包含舍入的复算（bandrel-v1）}
+
+\begin{proof}[定理~\ref{thm:fourier-complement} 的证明]
+  写 $u=v+w$，$v=Pu=\sum_{\mathcal I}x_i\psi_i$，$w=(I-P)u$。动能型 $a_\theta$ 与无权
+  $L^2$ 内积在 $v,w$ 之间没有交叉项。补空间上
+  $a_\theta[w]\geq\Lambda_{\mathcal I}\lVert w\rVert^2$，$b[w]\leq\rho_{\max,s}\lVert w\rVert^2$，
+  故 $(a_\theta-\lambda b)[w]\geq c_{\mathcal I}\lVert w\rVert^2$。交叉项为
+  $-2\lambda\operatorname{Re}\langle\rho_sv,w\rangle=-2\lambda\operatorname{Re}\langle(I-P)\rho_sv,w\rangle$，
+  而 $\lVert(I-P)\rho_sv\rVert^2=x^*G_{\mathcal I}x$。配方得
+  \begin{align*}
+    (a_\theta-\lambda b)[u]
+    \geq x^*T^-_{\mathcal I}x
+    +c_{\mathcal I}\Bigl\lVert w-\frac{\lambda}{c_{\mathcal I}}(I-P)\rho_sv\Bigr\rVert^2 .
+  \end{align*}
+  限制到 $w=0$ 得 $(a_\theta-\lambda b)[v]=x^*T_{\mathcal I}x$，由最小最大原理得左边的
+  不等式。对右边，设 $V$ 是 $a_\theta-\lambda b$ 的一个负子空间，维数等于
+  $\#\{j:\lambda_{s,j}(\theta)<\lambda\}$。若 $u\in V\setminus\{0\}$ 而 $Pu=0$，则
+  $(a_\theta-\lambda b)[u]\geq c_{\mathcal I}\lVert u\rVert^2>0$，矛盾；所以 $P$ 在 $V$ 上
+  单射，且由上式 $T^-_{\mathcal I}$ 在 $P V$ 上负定，$n(T^-_{\mathcal I})\geq\dim V$。
+\end{proof}
+
+\paragraph{矩阵元的求积误差.}
+$B_{\mathcal I}$ 的元素是介质柱的 Fourier 系数 $b_\xi=\int_{\Omega_s}\ee^{\ii\xi\cdot\mathbf z}\dd\mathbf z$。
+对 $\xi\neq0$，由散度定理
+\begin{align}
+  b_\xi&=-\frac{\ii}{|\xi|^2}\int_0^{2\pi}\ee^{\ii\xi\cdot\boldsymbol c(t)}
+  \bigl(\xi_xc_y'(t)-\xi_yc_x'(t)\bigr)\,\dd t ,
+  \label{eq:inclusion-fourier}
+\end{align}
+$b_0=|\Omega_s|$。被积函数是 $2\pi$ 周期的整函数；若它在 $|\operatorname{Im}t|\leq\varsigma$ 上
+以 $\mathcal M$ 为界，$J$ 点梯形公式的误差不超过 $4\pi\mathcal M/(\ee^{\varsigma J}-1)$。由
+$\lVert E\rVert_2\leq(\lVert E\rVert_1\lVert E\rVert_\infty)^{1/2}$，逐元误差 $\epsilon_b$ 给出
+$\lVert B-\widetilde B\rVert\leq e_B:=|\mathcal I|\epsilon_b$，进而
+$\lVert M-\widetilde M\rVert\leq|\delta_s|e_B$、
+$\lVert G-\widetilde G\rVert\leq\delta_s^2e_B(3+e_B)$。下端测试改用上方矩阵
+$\widetilde T+\lambda|\delta_s|e_BI$，上端测试改用下方矩阵
+$\widetilde T^--[\lambda|\delta_s|e_B+\lambda^2\delta_s^2e_B(3+e_B)/c_{\mathcal I}]I$。
+
+\paragraph{有限矩阵的符号.}
+式~\eqref{eq:panel-tests} 中 $n_s=1$ 时需要两类判定。下端：浮点特征向量取为精确的
+binary64 试向量 $x$，在球算术中验证 $x^*Hx<0$，于是 $n(H)\geq1$。上端：记修正后的矩阵为
+$H$（阶 $N=|\mathcal I|$），取浮点特征向量中除最低者外的 $N-1$ 个，作为精确矩阵 $W$。
+在球算术中计算 $C=W^*HW$、$D=W^*W$，用 Hermitian 行和界验证 $C\succeq gI$、
+$0\prec D\preceq dI$，$g>0$。由 Courant--Fischer，
+\begin{align*}
+  \lambda_2(H)
+  =\max_{\dim S=N-1}\ \min_{0\neq y\in S}\frac{y^*Hy}{y^*y}
+  \geq\min_{z\neq0}\frac{z^*Cz}{z^*Dz}\geq\frac gd>0,
+\end{align*}
+所以 $n(H)\leq1$。浮点特征向量只用来选子空间，其精度不是前提。作为独立核查，在若干
+面板上做球算术 LDL$^*$ 分解，主元球都不含零，由 Sylvester 惯性定律得到相同的负惯性。
+面板端点取为 $\pi$ 的整数分之一的整数倍，用整数比较检查它们首尾相接、覆盖 $[0,\pi]$。
+
+\subsection{装配}
+\label{app:reliable-assembly}
+
+\pending{2026-11-06 新增}
+$\mu$ 由 binary64 的 $\widehat k$ 在球算术中平方得到。$\overline C_g$ 取公布的十进制
+上界，$\overline\varepsilon_g$ 取向上取整的 binary64 值并按其精确值读入。依次计算
+$\overline Q=\sum_g\overline C_g\overline\varepsilon_g$、
+$\underline D=\underline U-\overline Q$（须为正）、
+$R_{\mathrm{spec}}=2\mu\overline Q/\underline D$，取球的上端，再把区间
+\eqref{eq:certified-spectral-interval} 的端点向外取整为十进制。带隙条件
+\eqref{eq:gap-condition} 以同样方式检查 $\mu-R_{\mathrm{spec}}-\overline a_s>0$ 与
+$\underline b_s-\mu-R_{\mathrm{spec}}>0$。全部装配另用精确有理数算术独立复算一次，打印的
+半径与端点须一致。
