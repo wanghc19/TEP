@@ -1,0 +1,1102 @@
+% pre-v1.tex
+%
+% Purpose:
+%   Beamer presentation of the theory part (sections 1--5 and appendix A)
+%   of the rewritten draft on guided modes in line-defect photonic-crystal
+%   waveguides: model, Cauchy-data center reduction, BIE / Rayleigh-port
+%   discretization, and the resolvent-based spectral distance bound.
+%
+% Main workflow:
+%   model and spectrum -> center reduction via half-guide Cauchy-data spaces
+%   -> Rayleigh ports, layer potentials, one-cell scattering, ordered QZ
+%   -> discrete NEP M(k) and candidate scan -> raw field, interface jumps,
+%   trace estimate, spectral distance theorem, computable / certified bounds.
+%
+% Based on:
+%   draft/tmp/theory-rewrite/{s-introduction,s-modelproblem,s-reduction,
+%   s-discretization,s-error,a-cellrep}.tex, and Fliss (2013),
+%   Joly--Li--Fliss (2006) for the continuous half-guide theory.
+%
+% Main differences:
+%   Unlike pre1--pre3, this deck follows the rewritten draft notation
+%   (M(k), E_L/E_R, U_L/U_R, omega for the single-layer density, L_0 for the
+%   center width) and uses the Cauchy-data formulation as the main line.
+%   Numerical results are intentionally not included.
+%
+% Numerical goal:
+%   None; this deck states the theory needed before presenting numerical
+%   spectral distance certificates.
+
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{CambridgeUS}
+\usecolortheme{dove}
+\usefonttheme{professionalfonts}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{stmaryrd}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,decorations.pathreplacing,positioning}
+
+\renewcommand{\Im}{\mathrm{Im}}
+\renewcommand{\Re}{\mathrm{Re}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\jump}[1]{\llbracket #1\rrbracket}
+\newcommand{\QP}{\mathrm{QP}}
+\newcommand{\rin}{\rho_{\min}}
+\newcommand{\rax}{\rho_{\max}}
+\newcommand{\eps}{\varepsilon_{\partial,\ell_*}}
+\newcommand{\dist}{\operatorname{dist}}
+
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{remark}[theorem]{Remark}
+
+\setbeamertemplate{navigation symbols}{}
+
+\title[Guided modes: BIE + spectral distance]{Guided Modes in Line-Defect Periodic Waveguides:\\
+  Cauchy-Data Reduction, BIE Discretization,\\and Spectral Distance Bounds}
+\subtitle{Theory part (pre-v1)}
+\author{}
+\date{}
+
+\AtBeginSection[]{
+  \begin{frame}{Outline}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+% ======================================================================
+\section{Problem and Goals}
+
+\begin{frame}{Motivation}
+  \small
+  A line defect in a 2D photonic crystal breaks periodicity across the defect
+  but keeps it along the defect. Inside a band gap it may support
+  \textbf{guided modes}: waves propagating along the defect and exponentially
+  localized across it \cite{JoannopoulosJohnsonWinnMeade2008}.
+
+  \medskip
+  For fixed Bloch number $\beta$, guided modes are eigenvalues of a
+  self-adjoint operator $A(\beta)$ on an unbounded strip, lying in a gap of
+  the essential spectrum \cite{Fliss2013}.
+
+  \begin{block}{Two difficulties}
+    \begin{itemize}
+      \item \textbf{Unbounded transverse direction.} Supercells introduce a model
+        error. Exact half-guide conditions
+        \cite{JolyLiFliss2006,Fliss2013} reduce the problem to a bounded region,
+        at the price of a nonlinear eigenproblem in $k$.
+      \item \textbf{Reliability.} BIE methods are very efficient for
+        piecewise-constant media
+        \cite{Linton1998,BarnettGreengard2010,HaoBarnettMartinssonYoung2014}, but a
+        nearly singular matrix only says a finite system is nearly solvable
+        \cite{GuettelTisseur2017}. It does not bound the distance to
+        $\sigma(A(\beta))$.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{This work}
+  \footnotesize
+  \begin{enumerate}
+    \item \textbf{Center reduction via Cauchy data.} Guided modes $\Longleftrightarrow$
+      nonzero center solutions whose Cauchy data lie in the half-guide Cauchy-data
+      spaces $\mathcal G_\pm(k)$. No Dirichlet well-posedness is needed. DtN is
+      the special case where $\mathcal G_\pm$ is a graph.
+    \item \textbf{BIE + Rayleigh-port discretization.} Layer potentials on
+      inclusions, Rayleigh amplitudes on ports, one-cell scattering, and
+      ordered QZ give the decaying subspace. The result is a discrete NEP
+      $\mathsf M(k)$ in Cauchy-matching form that produces candidates $\widehat k$.
+    \item \textbf{Spectral distance theorem.} A piecewise field $\widehat u$ built
+      from the candidate solves Helmholtz exactly in each piece. Its interface jumps
+      control $\dist(\widehat k^2,\sigma(A(\beta)))$, with no prior gap verification.
+    \item \textbf{Computable bounds.} Material-interface and port integrals, a
+      propagation-based tail for infinitely many cells, and one-sided
+      (certified) inputs.
+  \end{enumerate}
+
+  \begin{alertblock}{Not claimed}
+    The bound only says that an interval around $\widehat k^2$ meets
+    $\sigma(A(\beta))$. Calling the spectral point a guided-mode eigenvalue
+    needs a separate proof that the interval lies in a gap. No uniqueness,
+    no indexing, and no a priori convergence of the discretization are claimed.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Geometry}
+  \centering
+  \begin{tikzpicture}[x=0.95cm,y=0.95cm,
+      every node/.style={font=\scriptsize},
+      incl/.style={draw=blue!60!black, fill=blue!18, line width=0.5pt},
+      port/.style={draw=red!70!black, line width=1.1pt},
+      art/.style={draw=black!55, dashed, line width=0.5pt}]
+    \fill[gray!6] (-6.4,-1) rectangle (6.4,1);
+    \fill[orange!12] (-1,-1) rectangle (1,1);
+    \draw[thick] (-6.4,1) -- (6.4,1);
+    \draw[thick] (-6.4,-1) -- (6.4,-1);
+    \foreach \x in {-5.8,-4.2,-2.6,2.6,4.2,5.8} \draw[art] (\x,-1) -- (\x,1);
+    \draw[port] (-1,-1) -- (-1,1);
+    \draw[port] (1,-1) -- (1,1);
+    \foreach \c in {1.75,3.35,4.95} \draw[incl] (\c,0.05) circle (0.42);
+    \foreach \c in {-1.85,-3.45,-5.05} \draw[incl] (\c,-0.05) circle (0.42);
+    \draw[draw=green!45!black, fill=green!20, line width=0.5pt] (0,0) ellipse (0.55 and 0.3);
+    \node at (0,0) {$\Omega_0$};
+    \node at (1.75,0.05) {$\Omega_+$};
+    \node at (-1.85,-0.05) {$\Omega_-$};
+    \node at (0,0.7) {$\mathcal C_0$};
+    \node at (1.8,0.75) {$\mathcal C_{0,+}$};
+    \node at (3.4,0.75) {$\mathcal C_{1,+}$};
+    \node at (5.0,0.75) {$\mathcal C_{2,+}$};
+    \node at (-1.8,0.75) {$\mathcal C_{0,-}$};
+    \node at (-3.4,0.75) {$\mathcal C_{1,-}$};
+    \node at (-5.0,0.75) {$\mathcal C_{2,-}$};
+    \node at (6.7,0) {$\cdots$};
+    \node at (-6.7,0) {$\cdots$};
+    \node[below] at (-1,-1) {$\Gamma_-$};
+    \node[below] at (1,-1) {$\Gamma_+$};
+    \draw[<->, black!60] (-1,-1.55) -- (1,-1.55) node[midway, below] {$L_0$};
+    \draw[<->, black!60] (1,-1.55) -- (2.6,-1.55) node[midway, below] {$L$};
+    \node[below] at (2.6,-1) {$\Gamma_{0,+}$};
+    \node[below] at (4.2,-1) {$\Gamma_{1,+}$};
+    \node[below] at (-2.6,-1) {$\Gamma_{0,-}$};
+    \node[below] at (-4.2,-1) {$\Gamma_{1,-}$};
+    \draw[-{Latex[length=1.6mm]}, red!70!black] (1,-0.75) -- (1.4,-0.75)
+      node[right, inner sep=1pt] {$\nu_+$};
+    \draw[-{Latex[length=1.6mm]}, red!70!black] (-1,-0.75) -- (-1.4,-0.75)
+      node[left, inner sep=1pt] {$\nu_-$};
+    \draw[decorate, decoration={brace, amplitude=4pt}] (1,1.08) -- (6.4,1.08)
+      node[midway, above=3pt] {half-guide $B_+$ (periodic $\rho_{\mathrm p}$, period $L$)};
+    \draw[decorate, decoration={brace, amplitude=4pt}] (-6.4,1.08) -- (-1,1.08)
+      node[midway, above=3pt] {half-guide $B_-$};
+    \draw[decorate, decoration={brace, amplitude=4pt}] (-1,1.08) -- (1,1.08)
+      node[midway, above=3pt] {defect};
+    \draw[<->, black!60] (-7.0,-1) -- (-7.0,1) node[midway, left] {$d$};
+  \end{tikzpicture}
+
+  \vspace{0.4em}
+  \raggedright\footnotesize
+  Strip $B=\RR\times I_d$, $I_d=(-d/2,d/2)$, $\beta$-quasi-periodic in $y$;
+  ports at $x_\pm=\pm L_0/2$.
+  Background $\rho_{\mathrm e}$; one $C^2$ simply connected inclusion per cell
+  ($\rho_{\mathrm c}$; center: $\rho_{0,\mathrm c}$ or empty). Each inclusion's closure
+  lies inside its cell. $\Omega_\pm$ are translates of the same inclusion,
+  possibly at different relative positions.
+\end{frame}
+
+\begin{frame}{Guided modes as eigenvalues of $A(\beta)$}
+  \small
+  Guided mode: a nonzero solution of $-\Delta w=k^2\rho w$ in $\RR^2$ with
+  $w=v\,\ee^{\ii\beta y}$, $v$ $d$-periodic in $y$, and $v|_B\in H^1(B)$
+  (transverse localization).
+
+  \medskip
+  With $\mathcal H:=L^2(B,\rho\,\dd x\,\dd y)$ and $0<\rin\le\rho\le\rax$, define
+  \cite{Fliss2013}
+  \[
+    A(\beta)u:=-\rho^{-1}\Delta u,\qquad
+    D(A(\beta)):=\bigl\{u\in H^1_\beta(B):\ \Delta u\in L^2(B),\
+      \partial_yu|_{y=d/2}=\ee^{\ii\beta d}\partial_yu|_{y=-d/2}\bigr\}.
+  \]
+  \begin{itemize}
+    \item $\Delta u$ is distributional, so $\Delta u\in L^2$ already enforces
+      continuity of $u$ and $\partial_\nu u$ across material interfaces.
+    \item $A(\beta)$ is nonnegative self-adjoint, and
+      $(A(\beta)u,u)_{\mathcal H}=\lVert\nabla u\rVert_{L^2(B)}^2$.
+  \end{itemize}
+
+  \begin{block}{Eigenproblem}
+    Find $k^2>0$ and $u\in D(A(\beta))\setminus\{0\}$ such that $A(\beta)u=k^2u$.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Spectrum}
+  \small
+  \begin{proposition}[Essential spectrum {\cite[Prop.~3.1]{Fliss2013}}]
+    \[
+      \sigma_{\mathrm{ess}}(A(\beta))=\sigma(A_{\mathrm p}(\beta))
+      =\bigcup_{\theta\in[-\pi/L,\pi/L)}\sigma(A_{\mathrm p}(\beta,\theta))
+      =[0,\infty)\setminus\bigcup_{n=1}^{N(\beta)}(a_n(\beta),b_n(\beta)).
+    \]
+  \end{proposition}
+  \vspace{-0.3em}
+  {\footnotesize The defect is a compact resolvent perturbation; the rest is
+  Floquet--Bloch. Fliss only needs $\rho\in L^\infty$ with positive bounds, so
+  piecewise-constant $\rho$ is included.}
+
+  \begin{assumption}[Gap]
+    Fix $\beta$ and a gap $G_\beta=(g_-,g_+)$, $0<g_-<g_+<\infty$, with
+    $G_\beta\cap\sigma_{\mathrm{ess}}(A(\beta))=\varnothing$.
+  \end{assumption}
+
+  \begin{proposition}[Discrete spectrum in the gap {\cite[Prop.~3.3, Thm.~3.5]{Fliss2013}}]
+    $\sigma(A(\beta))\cap G_\beta$ consists of isolated eigenvalues of finite
+    multiplicity, accumulating at most at $g_\pm$. Their eigenfunctions decay
+    exponentially as $|x|\to\infty$.
+  \end{proposition}
+  {\footnotesize Non-emptiness is not guaranteed. Candidates are searched in
+  $G_\beta$; the distance theorem holds for all of $\sigma(A(\beta))$.}
+\end{frame}
+
+% ======================================================================
+\section{Center Reduction via Cauchy Data}
+
+\begin{frame}{Cauchy data spaces of the half-guides}
+  \small
+  Cells: $\mathcal C_0=(x_-,x_+)\times I_d$ and $\mathcal C_{j,\pm}=\mathcal C_\pm\pm jLe_x$.
+  Ports $\Gamma_\pm=\{x_\pm\}\times I_d$ with $\nu_\pm=\pm e_x$ pointing \emph{into}
+  $B_\pm$. All normal derivatives on $\Gamma_\pm$ are taken along $\nu_\pm$.
+
+  \medskip
+  Cauchy map
+  $\mathscr T_\pm u:=\bigl(\gamma_\pm u,\ \partial_{\nu_\pm}u|_{\Gamma_\pm}\bigr)\in
+  H^{1/2}_\beta(\Gamma_\pm)\times H^{-1/2}_\beta(\Gamma_\pm)$. Local solution spaces
+  (distributional equation, \emph{no} condition on $\Gamma_\pm$):
+  \begin{align*}
+    \mathcal U_0(k)&:=\{u\in H^1_\beta(\mathcal C_0):\ -\Delta u=k^2\rho u\ \text{in }\mathcal C_0,\
+      \partial_yu\ \beta\text{-q.p.}\},\\
+    \mathcal V_\pm(k)&:=\{v\in H^1_\beta(B_\pm):\ -\Delta v=k^2\rho_{\mathrm p}v\ \text{in }B_\pm,\
+      \partial_yv\ \beta\text{-q.p.}\}.
+  \end{align*}
+
+  \begin{block}{Half-guide Cauchy data space}
+    \[
+      \mathcal G_\pm(k):=\mathscr T_\pm\mathcal V_\pm(k)
+      \subset H^{1/2}_\beta(\Gamma_\pm)\times H^{-1/2}_\beta(\Gamma_\pm).
+    \]
+    It collects the Cauchy data of \emph{all} finite-energy solutions in $B_\pm$.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Unique continuation and the center reduction}
+  \small
+  \begin{lemma}[Unique continuation]
+    If $v\in\mathcal V_\pm(k)$ and $\mathscr T_\pm v=0$, then $v=0$.
+  \end{lemma}
+  {\footnotesize Proof idea: near $\Gamma_\pm$ the coefficient is $\rho_{\mathrm e}$.
+  Extend by zero, use analyticity in the connected background, then the transmission
+  conditions and the Green representation inside the inclusions.}
+
+  \begin{proposition}[Center reduction]
+    Fix $\beta$ and $k>0$, and let
+    \[
+      \mathcal U_0^{\mathcal G}(k):=\bigl\{u_0\in\mathcal U_0(k):\
+        \mathscr T_-u_0\in\mathcal G_-(k),\ \mathscr T_+u_0\in\mathcal G_+(k)\bigr\}.
+    \]
+    The restriction $u\mapsto u|_{\mathcal C_0}$ is a linear bijection
+    $\ker(A(\beta)-k^2)\to\mathcal U_0^{\mathcal G}(k)$. In particular, $k^2$ is an
+    eigenvalue if and only if $\mathcal U_0^{\mathcal G}(k)\ne\{0\}$, with equal
+    dimensions.
+  \end{proposition}
+\end{frame}
+
+\begin{frame}{Center reduction: proof}
+  \small
+  \textbf{Proof.}
+  \begin{itemize}
+    \item \emph{Well defined:} $u\in H^1$ with $\Delta u\in L^2$, so the value trace and
+      the $\nu_\pm$-normal trace agree on both sides of $\Gamma_\pm$.
+    \item \emph{Injective:} $u|_{\mathcal C_0}=0$ gives $\mathscr T_\pm(u|_{B_\pm})=0$,
+      so $u|_{B_\pm}=0$ by the lemma.
+    \item \emph{Surjective:} pick $v_\pm\in\mathcal V_\pm$ with
+      $\mathscr T_\pm v_\pm=\mathscr T_\pm u_0$ and glue $v_-,u_0,v_+$. Matching
+      value traces give $H^1_\beta(B)$. Matching normal traces mean $\Delta u$ has no
+      singular part on $\Gamma_\pm$.
+  \end{itemize}
+
+  \begin{alertblock}{}
+    This holds for \emph{every} $k>0$. It needs neither the gap assumption nor
+    unique solvability of a half-guide Dirichlet problem.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Relation to DtN and to the propagation operator}
+  \small
+  \textbf{DtN as a special case.} Suppose every $\varphi\in H^{1/2}_\beta(\Gamma_\pm)$ has a
+  unique $v\in\mathcal V_\pm(k)$ with $\gamma_\pm v=\varphi$. Then
+  \[
+    \mathcal G_\pm(k)=\operatorname{graph}\Lambda_\pm(k),\qquad
+    \Lambda_\pm(k)\varphi:=\partial_{\nu_\pm}v|_{\Gamma_\pm},
+  \]
+  and $\mathscr T_\pm u_0\in\mathcal G_\pm$ becomes the transparent condition
+  $\partial_{\nu_\pm}u_0=\Lambda_\pm\gamma_\pm u_0$. This is Fliss' reduction
+  \cite[Thm.~4.5]{Fliss2013}; her DtN, taken with the outward normal of $B_\pm$,
+  equals $-\Lambda_\pm$.
+
+  \begin{itemize}
+    \item In the gap, the half-guide Dirichlet problem is well posed except on a
+      countable set \cite[Thm.~4.1]{Fliss2013}: the eigenvalues of the half-guide
+      operator with Dirichlet data on $\Gamma_\pm$.
+    \item At those values $\mathcal G_\pm$ is not a graph and DtN fails, but the
+      Cauchy-data reduction still holds. (Robin-to-Robin is another workaround
+      \cite{FlissKlindworthSchmidt2015}.)
+  \end{itemize}
+
+  \textbf{Structure of $\mathcal V_\pm(k)$ in the gap.} There are no $x$-propagating
+  Bloch waves. Finite-energy solutions decay cell by cell through a propagation
+  operator $\mathcal R_\pm$ with spectral radius $<1$ \cite{JolyLiFliss2006}
+  (Jordan structure: \cite{HohageSoussi2013}).\\
+  $\Rightarrow$ discrete counterpart: the cell propagation matrix $\mathsf P_\pm$.
+\end{frame}
+
+% ======================================================================
+\section{Discretization and Candidates}
+
+\begin{frame}{Continuous objects and their discrete counterparts}
+  \small
+  \centering
+  \renewcommand{\arraystretch}{1.25}
+  \begin{tabular}{lll}
+    \toprule
+    continuous & discrete & built from\\
+    \midrule
+    $\mathcal V_\pm(k)$, operator $\mathcal R_\pm$ &
+      $\mathsf Z_\pm$, $\mathsf P_\pm$ & one-cell scattering + ordered QZ\\
+    $\mathcal G_\pm(k)=\mathscr T_\pm\mathcal V_\pm(k)$ &
+      $\operatorname{range}\mathsf V_\pm$, $\mathsf V_\pm=\mathsf C_\pm\mathsf Z_\pm$ &
+      amplitude $\to$ Cauchy data\\
+    $\mathcal U_0(k)$ &
+      $\xi=(\eta;a^-_0;b^+_0)$ & layer potentials + $u_{\mathrm{hom}}$\\
+    transmission on $\partial\Omega_0$ & $J(k)\xi=0$ & Nystr\"om jump operator\\
+    $\mathscr T_\pm u_0\in\mathcal G_\pm(k)$ &
+      $\Pi_\pm\xi=\mathsf V_\pm c_\pm$ & port Rayleigh coefficients\\
+    $\ker(A(\beta)-k^2)\ne\{0\}$ & $\mathsf M(k)$ singular & candidate scan\\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.8em}
+  \raggedright
+  Fix $\beta$ and take $k\in(\sqrt{g_-},\sqrt{g_+})$. The candidates $\widehat k$ are only
+  \emph{inputs} to the spectral distance estimate; this section makes no accuracy
+  claim.
+\end{frame}
+
+\begin{frame}{Port Fourier basis and Rayleigh waves}
+  \footnotesize
+  $\beta_m:=\beta+2\pi m/d$ and $\psi_m(y):=d^{-1/2}\ee^{\ii\beta_my}$, truncated to $|m|\le M$
+  ($K=2M+1$). With $\kappa_{\mathrm e}=k\sqrt{\rho_{\mathrm e}}$:
+  \[
+    \gamma_m:=\sqrt{\kappa_{\mathrm e}^2-\beta_m^2},\quad\Im\gamma_m\ge0\
+    (\gamma_m\ge0\text{ if real}),\qquad
+    \boldsymbol\gamma:=\operatorname{diag}(\gamma_m).
+  \]
+  \textbf{Assumption (no Wood anomaly):} $\gamma_m(k)\neq0$ for all $m$. (At
+  $\gamma_m=0$, $G_\QP$ blows up \cite{BarnettGreengard2010}.)
+
+  \medskip
+
+  In a background strip with anchor $x_p$:
+  \[
+    r_m^{x_p}:=\ee^{\ii\gamma_m(x-x_p)}\psi_m,\qquad
+    l_m^{x_p}:=\ee^{-\ii\gamma_m(x-x_p)}\psi_m,\qquad
+    u=\sum_m(a_mr_m^{x_p}+b_ml_m^{x_p}).
+  \]
+  \begin{itemize}
+    \item $(a,b)$ are the right-/left-going amplitudes. Moving the anchor by $\ell$
+      multiplies them by $\mathsf E(\ell):=\operatorname{diag}(\ee^{\ii\gamma_m\ell})$.
+    \item Amplitudes $\to$ Cauchy-data coefficients for port normal $\pm e_x$:
+      \[
+        \mathsf C_\pm:=\begin{bmatrix}I&I\\ \pm\ii\boldsymbol\gamma&\mp\ii\boldsymbol\gamma\end{bmatrix}
+        \in\CC^{2K\times2K},\qquad\text{invertible under no-Wood.}
+      \]
+    \item Natural weights: $(1+\beta_m^2)^{\pm1/4}$ for value ($H^{1/2}$) and normal
+      derivative ($H^{-1/2}$) coefficients.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Layer potentials and the transmission BIE}
+  \footnotesize
+  $G^{(\kappa)}=\tfrac{\ii}{4}H_0^{(1)}(\kappa|\mathbf z-\mathbf z'|)$, and for $x\neq x'$
+  \cite{Linton1998}
+  \[
+    G^{(\kappa)}_\QP(\mathbf z,\mathbf z')=\frac{\ii}{2d}\sum_{m\in\ZZ}\frac1{\gamma_m}
+    \ee^{\ii\gamma_m|x-x'|+\ii\beta_m(y-y')}.
+  \]
+  Cell representation, with $\nu$ pointing from inside to outside and
+  $\kappa_{\mathrm c}=k\sqrt{\rho_{\mathrm c}}$:
+  \[
+    u=\begin{cases}
+      \mathcal S^{(\kappa_{\mathrm e})}_\QP[\omega]+\mathcal D^{(\kappa_{\mathrm e})}_\QP[\tau]+u_{\mathrm b},
+        & \text{outside }\Omega,\\[0.2em]
+      \mathcal S^{(\kappa_{\mathrm c})}[\omega]+\mathcal D^{(\kappa_{\mathrm c})}[\tau], & \text{inside }\Omega,
+    \end{cases}
+    \qquad u_{\mathrm b}:\ \text{finite background Rayleigh field}.
+  \]
+  Jump operator (outside minus inside), with $\eta:=(\tau;-\omega)$:
+  \[
+    \mathscr J_k[\eta;u_{\mathrm b}]
+    =\begin{bmatrix}
+      I+D^{(\kappa_{\mathrm e})}_\QP-D^{(\kappa_{\mathrm c})} & -S^{(\kappa_{\mathrm e})}_\QP+S^{(\kappa_{\mathrm c})}\\
+      T^{(\kappa_{\mathrm e})}_\QP-T^{(\kappa_{\mathrm c})} & I-D'^{(\kappa_{\mathrm e})}_\QP+D'^{(\kappa_{\mathrm c})}
+    \end{bmatrix}\eta
+    +\begin{bmatrix}u_{\mathrm b}\\ \partial_\nu u_{\mathrm b}\end{bmatrix}_{\partial\Omega}.
+  \]
+  \begin{itemize}
+    \item Transmission $\Leftrightarrow\mathscr J_k=0$: a second-kind system
+      \cite{DominguezLyonTurc2016}. All kernel differences are at most log-singular,
+      and the hypersingular part cancels in $T^{(\kappa_{\mathrm e})}-T^{(\kappa_{\mathrm c})}$.
+    \item Pseudo-quasi-resonances \cite{HiptmairMoiolaSpence2022} are artifacts of the
+      equation, not physical, and must be screened out.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Nystr\"om discretization and far-field extractors}
+  \small
+  \textbf{Nystr\"om.} Parametrize $\partial\Omega$ on $t_r=r/N_\eta$ and use Kress
+  log-splitting \cite{Kress1991,HaoBarnettMartinssonYoung2014}; $n:=2N_\eta$ density
+  unknowns, mesh size $h$.
+
+  \medskip
+  \textbf{Rayleigh coefficients of layer potentials.} If $\partial\Omega$ lies to the
+  left of $x=x_p$, the layer potential is purely right-going for $x\ge x_p$, with
+  amplitudes
+  \[
+    \phi_m^{\rightarrow}=\int_{\partial\Omega}\bigl(g_m^{\rightarrow}\omega
+      +\partial_{\nu'}g_m^{\rightarrow}\tau\bigr)\dd s',\qquad
+    g_m^{\rightarrow}(\mathbf z'):=\frac{\ii}{2\sqrt d\,\gamma_m}
+      \ee^{-\ii\beta_my'+\ii\gamma_m(x_p-x')}.
+  \]
+  The left-going case (sources to the right) uses
+  $g_m^{\leftarrow}:=\frac{\ii}{2\sqrt d\,\gamma_m}\ee^{-\ii\beta_my'+\ii\gamma_m(x'-x_p)}$.
+
+  \medskip
+  Discretizing with nodes $\mathbf z_j$, normals $\nu_j$, and weights $w_j$:
+  \[
+    \mathsf F^{\rightarrow/\leftarrow}_{x_p}
+    :=\Bigl[\bigl(w_j\partial_{\nu_j}g_m^{\rightarrow/\leftarrow}(\mathbf z_j)\bigr)_{m,j}\ \
+      \bigl(-w_jg_m^{\rightarrow/\leftarrow}(\mathbf z_j)\bigr)_{m,j}\Bigr]\in\CC^{K\times n},
+    \qquad\text{acting on }\eta.
+  \]
+  The extractors are assembled directly from the spectral representation, not by
+  port sampling followed by an FFT.
+\end{frame}
+
+\begin{frame}{One-cell scattering matrix}
+  \small
+  \begin{columns}[T]
+    \begin{column}{0.42\textwidth}
+      \centering
+      \begin{tikzpicture}[x=0.9cm,y=0.9cm, every node/.style={font=\scriptsize},
+          arr/.style={-{Latex[length=1.8mm]}, line width=0.7pt}]
+        \fill[gray!6] (0,-1.2) rectangle (3,1.2);
+        \draw[thick] (0,1.2) -- (3,1.2);
+        \draw[thick] (0,-1.2) -- (3,-1.2);
+        \draw[red!70!black, line width=1.1pt] (0,-1.2) -- (0,1.2);
+        \draw[red!70!black, line width=1.1pt] (3,-1.2) -- (3,1.2);
+        \draw[draw=blue!60!black, fill=blue!18] (1.5,0) circle (0.6);
+        \node at (1.5,0) {$\Omega_+$};
+        \node at (1.5,0.85) {$\eta$ on $\partial\Omega_+$};
+        \draw[arr, green!45!black] (-1.3,0.5) -- (-0.1,0.5) node[midway, above] {$a_{\mathrm L}$ in};
+        \draw[arr, orange!80!black] (-0.1,-0.5) -- (-1.3,-0.5) node[midway, below] {$b_{\mathrm L}$ out};
+        \draw[arr, green!45!black] (4.3,-0.5) -- (3.1,-0.5) node[midway, below] {$b_{\mathrm R}$ in};
+        \draw[arr, orange!80!black] (3.1,0.5) -- (4.3,0.5) node[midway, above] {$a_{\mathrm R}$ out};
+        \node[below] at (0,-1.2) {$x_{\mathrm L}=x_+$};
+        \node[below] at (3,-1.2) {$x_{\mathrm R}=x_++L$};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.56\textwidth}
+      Incident field
+      $u_{\mathrm b}=\sum_m\bigl(a_{\mathrm L,m}r_m^{x_{\mathrm L}}+b_{\mathrm R,m}l_m^{x_{\mathrm R}}\bigr)$.
+      Solve $\mathscr J_k[\eta;u_{\mathrm b}]=0$ to get
+      $\eta=\mathsf B_+(a_{\mathrm L};b_{\mathrm R})$.
+
+      \medskip
+      Layer potentials are left-going at $x_{\mathrm L}$ and right-going at
+      $x_{\mathrm R}$:
+      \[
+        b_{\mathrm L}=\mathsf E(L)b_{\mathrm R}+\mathsf F^{\leftarrow}_{x_{\mathrm L}}\eta,\qquad
+        a_{\mathrm R}=\mathsf E(L)a_{\mathrm L}+\mathsf F^{\rightarrow}_{x_{\mathrm R}}\eta.
+      \]
+    \end{column}
+  \end{columns}
+
+  \medskip
+  \[
+    \begin{bmatrix}b_{\mathrm L}\\ a_{\mathrm R}\end{bmatrix}
+    =\begin{bmatrix}R_{\mathrm L}&T_{\mathrm{RL}}\\ T_{\mathrm{LR}}&R_{\mathrm R}\end{bmatrix}
+    \begin{bmatrix}a_{\mathrm L}\\ b_{\mathrm R}\end{bmatrix},
+    \qquad R_{\mathrm L},T_{\mathrm{RL}},T_{\mathrm{LR}},R_{\mathrm R}\in\CC^{K\times K}.
+  \]
+  The left cell $\mathcal C_-$ (ports $x_--L$, $x_-$) is treated the same way with its
+  own $\Omega_-$. For BIE-based cell port maps see \cite{YuanLuAntoine2008,HuangLuLi2007}.
+\end{frame}
+
+\begin{frame}{Pencil, Floquet multipliers, and the decaying subspace}
+  \small
+  Port states $z_{\mathrm L}=(a_{\mathrm L};b_{\mathrm L})$ and
+  $z_{\mathrm R}=(a_{\mathrm R};b_{\mathrm R})$:
+  \[
+    \mathsf E_{\mathrm L}z_{\mathrm L}=\mathsf E_{\mathrm R}z_{\mathrm R},\qquad
+    \mathsf E_{\mathrm L}:=\begin{bmatrix}-R_{\mathrm L}&I\\ T_{\mathrm{LR}}&0\end{bmatrix},\quad
+    \mathsf E_{\mathrm R}:=\begin{bmatrix}0&T_{\mathrm{RL}}\\ I&-R_{\mathrm R}\end{bmatrix}.
+  \]
+  Floquet solutions $z_{\mathrm R}=\lambda z_{\mathrm L}$ satisfy
+  $\mathsf E_{\mathrm L}z=\lambda\mathsf E_{\mathrm R}z$, with $\lambda=\ee^{\ii\theta L}$
+  a multiplier (not $k^2$). In the gap: no $|\lambda|=1$, and multipliers come in pairs
+  $(\lambda,1/\lambda)$ \cite[Thm.~6.1]{JolyLiFliss2006}. We expect $K$ multipliers
+  inside the unit circle and $K$ outside.
+
+  \begin{block}{Ordered QZ (right side)}
+    $\mathsf Q\mathsf E_{\mathrm L}\mathsf Z=\mathsf U_{\mathrm L}$ and
+    $\mathsf Q\mathsf E_{\mathrm R}\mathsf Z=\mathsf U_{\mathrm R}$, with the $|\lambda|<1$
+    cluster first. With $\mathsf Z_+:=$ the first $K$ columns,
+    \[
+      \mathsf P_+:=\mathsf U_{\mathrm R,11}^{-1}\mathsf U_{\mathrm L,11},\qquad
+      \mathsf E_{\mathrm L}\mathsf Z_+=\mathsf E_{\mathrm R}\mathsf Z_+\mathsf P_+,\qquad
+      \rho(\mathsf P_+)<1.
+    \]
+    $z_j:=\mathsf Z_+\mathsf P_+^jc$ gives consistent, geometrically decaying port states:
+    $\mathsf E_{\mathrm L}z_j=\mathsf E_{\mathrm R}z_{j+1}$.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Left side, discrete Cauchy data space, and remarks}
+  \footnotesize
+  Left side: QZ of $(\mathsf E_{\mathrm R},\mathsf E_{\mathrm L})$ for $\mathcal C_-$ with the
+  $|1/\lambda|<1$ cluster, giving
+  $\mathsf E_{\mathrm R}\mathsf Z_-=\mathsf E_{\mathrm L}\mathsf Z_-\mathsf P_-$; then
+  $\mathsf Z_-\mathsf P_-^jc$ are the right-port states of the cells going left.
+  \begin{block}{Discrete Cauchy data space}
+    \[
+      \mathsf V_\pm:=\mathsf C_\pm\mathsf Z_\pm=\begin{bmatrix}\mathsf V_{\mathrm D,\pm}\\ \mathsf V_{\mathrm N,\pm}\end{bmatrix}\in\CC^{2K\times K},
+      \qquad\mathcal G^h_\pm(k):=\operatorname{range}\mathsf V_\pm\approx\mathcal G_\pm(k)\
+      \text{(Fourier coefficients, $|m|\le M$)}.
+    \]
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Whole Schur subspace, not single eigenvectors.} This keeps multiple
+      roots and non-normal coupling.
+    \item \textbf{Basis invariance.} $\mathsf Z_\pm\mapsto\mathsf Z_\pm G$ gives
+      $\mathsf P_\pm\mapsto G^{-1}\mathsf P_\pm G$ and $c\mapsto G^{-1}c$; the represented
+      states are unchanged.
+    \item \textbf{Failure detection.} The half-guide discretization is unusable at a
+      parameter if the pencil is singular, if the selected cluster does not have
+      dimension $K$, or if it is poorly separated from $|\lambda|=1$. Do not hide this
+      by re-picking eigenvectors pointwise.
+    \item \textbf{Non-uniqueness is not an issue.}
+      $\mathsf E_{\mathrm L}z_{\mathrm L}=\mathsf E_{\mathrm R}z_{\mathrm R}$ does not
+      determine $z_{\mathrm R}$ from $z_{\mathrm L}$ in general. The relation
+      $\mathsf E_{\mathrm L}\mathsf Z_+=\mathsf E_{\mathrm R}\mathsf Z_+\mathsf P_+$ does
+      not claim uniqueness; it \emph{selects} the decaying family, which is exactly
+      what $\mathcal V_\pm(k)$ describes.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Center cell: representation theorem}
+  \footnotesize
+  \begin{theorem}[Center-cell representation]
+    Assume no Wood anomaly, $\Omega_0=\varnothing$ or a $C^2$ simply connected domain
+    compactly inside $\mathcal C_0$, and unique solvability of the full-plane outgoing
+    transmission problem with swapped wavenumbers. If $u\in\mathcal U_0(k)$ is piecewise
+    $H^2$ up to the boundary, then there exist $\tau,\omega$ and \emph{unique}
+    $(a^-_{0,m}),(b^+_{0,m})$ such that
+    \[
+      u=\text{layer potentials on }\partial\Omega_0+u_{\mathrm{hom}},\qquad
+      u_{\mathrm{hom}}=\sum_{m\in\ZZ}\bigl(a^-_{0,m}r_m^{x_-}+b^+_{0,m}l_m^{x_+}\bigr).
+    \]
+    The densities are also unique if the homogeneous complementary system has only
+    the trivial solution.
+  \end{theorem}
+  \begin{itemize}
+    \item $u_{\mathrm{hom}}$ is the part entering through the ports; the layer
+      potentials are outgoing at both ports. $u_{\mathrm{hom}}\neq0$ is possible even
+      when $\Omega_0=\varnothing$, so QP layer potentials alone are \emph{not}
+      sufficient.
+    \item \emph{Proof idea (appendix):} the Rayleigh coefficients come from the
+      background bands next to the ports. An auxiliary problem with swapped
+      wavenumbers defines $\tau,\omega$. Interior and exterior Green representations
+      follow; port terms cancel because $w^+$ and $G_\QP$ are outgoing in the same
+      direction, so their modal Wronskian vanishes.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Center cell: discrete unknowns and port data}
+  \small
+  Unknown $\xi:=(\eta;a^-_0;b^+_0)\in\CC^{n+2K}$ ($n=0$ if $\Omega_0=\varnothing$).
+  The transmission equation $\mathscr J_k[\eta;u_{\mathrm{hom}}]=0$ reads
+  \[
+    J(k)\xi=0,\qquad J(k):=\bigl[J_\eta(k)\ \ \mathsf H_-(k)\ \ \mathsf H_+(k)\bigr]\in\CC^{n\times(n+2K)},
+  \]
+  \[
+    (\mathsf H_-)_{jm}=\begin{bmatrix}1\\ \ii(\gamma_m\nu_{x,j}+\beta_m\nu_{y,j})\end{bmatrix}r_m^{x_-}(\mathbf z_j),\qquad
+    (\mathsf H_+)_{jm}=\begin{bmatrix}1\\ \ii(-\gamma_m\nu_{x,j}+\beta_m\nu_{y,j})\end{bmatrix}l_m^{x_+}(\mathbf z_j).
+  \]
+  Amplitudes of the center field anchored at $\Gamma_\pm$, and the corresponding
+  Cauchy-data coefficients:
+  \[
+    \mathsf Y_-\xi:=\begin{bmatrix}a^-_0\\ \mathsf F^{\leftarrow}_{x_-}\eta+\mathsf E(L_0)b^+_0\end{bmatrix},\quad
+    \mathsf Y_+\xi:=\begin{bmatrix}\mathsf F^{\rightarrow}_{x_+}\eta+\mathsf E(L_0)a^-_0\\ b^+_0\end{bmatrix},\quad
+    \Pi_\pm:=\mathsf C_\pm\mathsf Y_\pm=\begin{bmatrix}\Pi_{\mathrm D,\pm}\\ \Pi_{\mathrm N,\pm}\end{bmatrix}.
+  \]
+  \begin{alertblock}{}
+    $J(k)\xi=0$ only imposes zero jumps \emph{at the Nystr\"om nodes}. The continuous
+    jumps of the field built from finitely many coefficients and the exact kernels are
+    re-evaluated in the error analysis.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Discrete nonlinear eigenproblem}
+  \small
+  The discrete form of the center reduction: find $c_\pm\in\CC^K$ such that
+  $J(k)\xi=0$ and $\Pi_\pm\xi=\mathsf V_\pm c_\pm$.
+  \begin{block}{Cauchy-matching NEP}
+    \[
+      \mathsf M(k)\begin{bmatrix}\xi\\ c_-\\ c_+\end{bmatrix}
+      :=\begin{bmatrix}J(k)\xi\\ \Pi_-\xi-\mathsf V_-c_-\\ \Pi_+\xi-\mathsf V_+c_+\end{bmatrix},
+      \qquad\mathsf M(k)\in\CC^{(n+4K)\times(n+4K)},
+      \qquad\text{find $k$ with $\mathsf M(k)$ singular.}
+    \]
+  \end{block}
+  Since $\mathsf C_\pm$ is invertible, this is equivalent to amplitude matching
+  $\mathsf Y_\pm\xi=\mathsf Z_\pm c_\pm$; the two forms differ by a row scaling.
+
+  \medskip
+  \textbf{DtN-reduced form (optional).} If $\mathsf V_{\mathrm D,\pm}$ is safely
+  invertible in weighted coordinates, set
+  $\widetilde\Lambda_\pm:=\mathsf V_{\mathrm N,\pm}\mathsf V_{\mathrm D,\pm}^{-1}$ and eliminate $c_\pm$:
+  \[
+    \mathsf M_{\mathrm{DtN}}(k)\xi:=
+    \bigl(J(k)\xi;\ \Pi_{\mathrm N,-}\xi-\widetilde\Lambda_-\Pi_{\mathrm D,-}\xi;\
+      \Pi_{\mathrm N,+}\xi-\widetilde\Lambda_+\Pi_{\mathrm D,+}\xi\bigr),\qquad\text{order }n+2K.
+  \]
+  A moderate $\operatorname{cond}(\mathsf V_{\mathrm D,\pm})$ alone does not guarantee
+  safety. Failure of the Dirichlet coordinates is the discrete analogue of the
+  Dirichlet exceptional values. \textbf{Default: $\mathsf M(k)$.}
+\end{frame}
+
+\begin{frame}{Candidate localization and output}
+  \footnotesize
+  With invertible row/column weights $W_r(k),W_c(k)$ (balancing interface rows,
+  value/normal-derivative coefficients, and unknown scales):
+  \[
+    s(k):=\frac{\sigma_{\min}\bigl(W_r\mathsf M(k)W_c\bigr)}{\sigma_{\max}\bigl(W_r\mathsf M(k)W_c\bigr)}.
+  \]
+  \begin{itemize}
+    \item Coarse scan on $(\sqrt{g_-},\sqrt{g_+})$, then rule-based refinement around
+      isolated dips, giving $\widehat k$.
+    \item Checks: QZ cluster separation and dimension, unweighted residual, and
+      consistency across neighboring discretization levels $(h,M)$. These screen out
+      pseudo-quasi-resonances and other artifacts.
+  \end{itemize}
+
+  \begin{block}{Candidate output}
+    $\widehat y$ is the unit right singular vector for $\sigma_{\min}$ of
+    $W_r\mathsf M(\widehat k)W_c$, and
+    \[
+      (\xi;c_-;c_+):=W_c\widehat y\qquad(\text{defined up to a nonzero scalar}).
+    \]
+    Inputs to the error analysis: $\widehat k$, $(\xi,c_\pm)$, $(h,M)$,
+    $\mathsf P_\pm$, and $\mathsf Z_\pm$. A small $s(\widehat k)$ only says the discrete
+    system is nearly solvable; it gives \textbf{no} distance from $\widehat k^2$ to
+    $\sigma(A(\beta))$.
+  \end{block}
+\end{frame}
+
+% ======================================================================
+\section{Spectral Distance Estimate}
+
+\begin{frame}{Strategy}
+  \small
+  Let $\mu:=\widehat k^2$.
+  \begin{enumerate}
+    \item Build a \textbf{raw field} $\widehat u$ on the whole strip from the candidate
+      coefficients and the \emph{exact} kernels. It solves Helmholtz exactly in each
+      homogeneous piece and is exactly $\beta$-quasi-periodic. It leaves small jumps on
+      material and artificial interfaces, so $\widehat u\notin D(A(\beta))$.
+    \item Collect all jumps into the interface defect $\eps$, and set
+      $U:=\lVert\widehat u\rVert_{\mathcal H}$.
+    \item A trace estimate for the positive-shift resolvent and a Green identity give
+      \[
+        \dist(\mu,\sigma(A(\beta)))\le\frac{2\mu Q}{U-Q},\qquad Q=C\eps,
+      \]
+      where $C$ depends only on geometry, material bounds, and $\mu$.
+  \end{enumerate}
+
+  \begin{block}{What the theorem does not need}
+    No exact discrete null vector, no uniqueness of $\widehat u$, and no resolvent
+    solve. The details of the candidate algorithm enter only through $\eps$ and $U$.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Raw field: construction}
+  \footnotesize
+  \textbf{Definition vs.\ evaluation parameters.} $(h\sim N_\eta, M, \text{candidate vector})$
+  fix $\widehat u$. The parameters $(N_q, M_{\mathrm{ev}}\ge M, N_{\mathrm{cell}},
+  \text{kernel accuracy})$ only control how accurately $\eps,U$ are computed.
+  Both quantities are 1-homogeneous in the scalar multiple, so the bound is
+  normalization-free.
+
+  \medskip
+  \textbf{Continuous density.} Trigonometric interpolation of the $N_\eta$ samples:
+  \[
+    \eta_m:=\frac1{N_\eta}\sum_{r=0}^{N_\eta-1}\eta_r\ee^{-2\pi\ii mr/N_\eta},\qquad
+    \eta(t):=\sum_{m=-N_\eta/2}^{N_\eta/2-1}\eta_m\ee^{2\pi\ii mt}.
+  \]
+  Nystr\"om sums $\sum_rw_rG(\cdot,\mathbf z_r)\omega_r$ cannot serve as the field: they
+  carry point-source and dipole singularities and are neither piecewise $H^2$ nor $L^2$.
+
+  \medskip
+  \textbf{Pieces.}
+  \begin{itemize}
+    \item Center: layer potentials with the continuous density, plus $u_{\mathrm{hom}}$
+      ($|m|\le M$) at $k=\widehat k$.
+    \item Lead cell: $u^{\mathrm{cell}}_\pm[a_{\mathrm L},b_{\mathrm R}]$ from
+      $\mathsf B_\pm$ and the continuous density. With $\mathsf Z_\pm v=(a_\pm(v);b_\pm(v))$:
+      \[
+        u_+[v]:=u_+^{\mathrm{cell}}\bigl[a_+(v),b_+(\mathsf P_+v)\bigr],\quad
+        u_-[v]:=u_-^{\mathrm{cell}}\bigl[a_-(\mathsf P_-v),b_-(v)\bigr].
+      \]
+    \item Half-guides: $\widehat u(\mathbf z\pm jLe_x):=u_\pm[\mathsf P_\pm^jc_\pm](\mathbf z)$
+      for $\mathbf z\in\mathcal C_\pm$, $j\ge0$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Raw field: consistency and properties}
+  \footnotesize
+  \textbf{Self-consistency on $|m|\le M$.} With $z_j=\mathsf Z_+\mathsf P_+^jc_+=(a_j;b_j)$,
+  the relation $\mathsf E_{\mathrm L}z_j=\mathsf E_{\mathrm R}z_{j+1}$ gives
+  $b_j=R_{\mathrm L}a_j+T_{\mathrm{RL}}b_{j+1}$ and
+  $a_{j+1}=T_{\mathrm{LR}}a_j+R_{\mathrm R}b_{j+1}$. So cell $j$ with incident
+  $(a_j,b_{j+1})$ emits exactly $b_j$ and $a_{j+1}$, and both sides of each shared port
+  carry the amplitudes $(a_{j+1},b_{j+1})$.
+
+  The remaining mismatch comes from modes with $|m|>M$, from the gap between the
+  continuous and the discrete densities, and from $\sigma_{\min}\neq0$. The field
+  decays geometrically cell by cell since $\rho(\mathsf P_\pm)<1$.
+
+  \begin{block}{Properties used by the theorem}
+    \begin{itemize}
+      \item[(P1)] $(-\Delta-\mu\rho)\widehat u=0$ in each homogeneous piece (exact kernels
+        and Rayleigh waves);
+      \item[(P2)] value and $\partial_y$ traces are exactly $\beta$-quasi-periodic;
+      \item[(P3)] locally $H^2$ up to the boundary of each piece (assumed);
+      \item[(P4)] $\widehat u\in\mathcal H$ (from propagation decay; checked via the mass sum).
+    \end{itemize}
+    But $\widehat u\notin H^1_\beta(B)$: the value jumps are nonzero in general.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Interface jumps and the two input quantities}
+  \footnotesize
+  Interface family (each shared curve counted once; the top/bottom boundaries cancel
+  by quasi-periodicity):
+  \[
+    \mathscr E:=\mathscr E_{\mathrm{mat}}\dot\cup\mathscr E_{\mathrm{art}},\qquad
+    \mathscr E_{\mathrm{mat}}:=\{\partial\Omega_0\}\cup\{\partial\Omega_{j,\pm}\}_{j\ge0},\qquad
+    \mathscr E_{\mathrm{art}}:=\{\Gamma_\pm\}\cup\{\Gamma_{j,\pm}\}_{j\ge0}.
+  \]
+  Orientation: $\nu_\Gamma$ points from side 1 to side 2. Side 1 is the inclusion
+  interior on material interfaces and the cell nearer the center on artificial
+  interfaces.
+  \[
+    \jump{\widehat u}_\Gamma:=\widehat u^{(2)}-\widehat u^{(1)},\qquad
+    \jump{\partial_\nu\widehat u}_\Gamma:=\partial_{\nu_\Gamma}\widehat u^{(1)}-\partial_{\nu_\Gamma}\widehat u^{(2)}
+  \]
+  (signs chosen so that both terms enter the Green identity with $+$).
+  \begin{itemize}
+    \item On material interfaces, $(\jump{\widehat u},-\jump{\partial_\nu\widehat u})$ is
+      exactly $\mathscr J_k$ applied with \emph{continuous} operators and densities.
+      $J(\widehat k)\xi\approx0$ only controls it at the nodes.
+    \item The port rows of $\mathsf M(\widehat k)$ are approximately the $|m|\le M$ jump
+      coefficients on $\Gamma_\pm$.
+  \end{itemize}
+  \begin{block}{Inputs ($\ell_*>0$ an arbitrary reference length)}
+    \[
+      \eps^2:=\sum_{\Gamma\in\mathscr E}\Bigl(\lVert\jump{\partial_\nu\widehat u}_\Gamma\rVert_{L^2(\Gamma)}^2
+        +\ell_*^{-2}\lVert\jump{\widehat u}_\Gamma\rVert_{L^2(\Gamma)}^2\Bigr),\qquad
+      U:=\lVert\widehat u\rVert_{\mathcal H}.
+    \]
+  \end{block}
+\end{frame}
+
+\begin{frame}{Trace estimate for the positive-shift resolvent}
+  \footnotesize
+  Geometry: normal neighborhoods $\boldsymbol r_\Gamma(s)+t\nu_\Gamma(s)$, $|t|<\delta_{\mathrm{col}}$,
+  injective; curvature bound $\kappa_*$; overlap multiplicity $N_{\mathrm{ov}}$;
+  \[
+    \vartheta_{\mathrm{col}}:=1-\delta_{\mathrm{col}}\kappa_*>0,\qquad
+    C_0:=\frac{N_{\mathrm{ov}}}{\vartheta_{\mathrm{col}}\delta_{\mathrm{col}}},\qquad
+    C_1:=\frac{N_{\mathrm{ov}}\delta_{\mathrm{col}}}{2\vartheta_{\mathrm{col}}}.
+  \]
+  \begin{proposition}[All-interface trace bound]
+    For $v\in D(A(\beta))$ and $\mu>0$,
+    \begin{align*}
+      T_{\ell_*}(v)^2&:=\sum_{\Gamma\in\mathscr E}\Bigl(\lVert v\rVert_{L^2(\Gamma)}^2
+        +\ell_*^2\lVert\partial_{\nu_\Gamma}v\rVert_{L^2(\Gamma)}^2\Bigr)
+      \le C_{\mathrm{tr}}^2\lVert(A(\beta)+\mu)v\rVert_{\mathcal H}^2,\\
+      C_{\mathrm{tr}}^2&:=\frac{C_0}{\rin\mu^2}+\frac{C_1+\ell_*^2C_0}{4\mu}+\ell_*^2C_1\rax.
+    \end{align*}
+  \end{proposition}
+  These conditions do not follow from simple connectedness alone. For certified
+  bounds, neighborhood injectivity, separation of interfaces and their periodic
+  copies, and the overlap multiplicity must be verified.
+
+  \medskip
+  Notation: $C:=C_{\mathrm{tr}}$ and $Q:=C\eps$. $C$ is \emph{not} fitted from residuals.
+\end{frame}
+
+\begin{frame}{Trace estimate: proof ingredients}
+  \small
+  Let $v\in D(A(\beta))$ and $f:=(A(\beta)+\mu)v$.
+  \begin{itemize}
+    \item Global $H^2$ via Fourier: $\lVert D^2v\rVert_{L^2(B)}=\lVert\Delta v\rVert_{L^2(B)}$.
+    \item Spectral calculus: $\lVert v\rVert^2\le\lVert f\rVert^2/(\rin\mu^2)$,
+      $\lVert\nabla v\rVert^2\le\lVert f\rVert^2/(4\mu)$,
+      $\lVert D^2v\rVert^2\le\rax\lVert f\rVert^2$, where $f=(A+\mu)v$.
+    \item 1D trace inequality
+      $|g(0)|^2\le\delta^{-1}\!\int_{-\delta}^{\delta}|g|^2+\frac\delta2\int_{-\delta}^{\delta}|g'|^2$
+      along normals, applied to $v$ and $\partial_\nu v$ ($|g'|\le|D^2v|$), then
+      integrated using the area element $1-t\kappa\ge\vartheta_{\mathrm{col}}$ and summed
+      with $N_{\mathrm{ov}}$:
+      \begin{align*}
+        \textstyle\sum_\Gamma\lVert v\rVert_{L^2(\Gamma)}^2
+        &\le C_0\lVert v\rVert_{L^2(B)}^2+C_1\lVert\nabla v\rVert_{L^2(B)}^2,\\
+        \textstyle\sum_\Gamma\lVert\partial_{\nu_\Gamma}v\rVert_{L^2(\Gamma)}^2
+        &\le C_0\lVert\nabla v\rVert_{L^2(B)}^2+C_1\lVert D^2v\rVert_{L^2(B)}^2.
+      \end{align*}
+  \end{itemize}
+  The trace bound is what controls $z=(A(\beta)-\mu)^{-1}\widehat u$ on all interfaces
+  in the main proof.
+\end{frame}
+
+\begin{frame}{Main theorem}
+  \begin{theorem}[Spectral distance from raw interface defects]
+    Assume the geometric conditions above, $\mu>0$, a nonzero $\widehat u$ satisfying
+    (P1)--(P4), and $\eps<\infty$. If $Q<U$, then
+    \[
+      \boxed{\ \dist\bigl(\mu,\sigma(A(\beta))\bigr)\le\frac{2\mu Q}{U-Q},\qquad Q=C_{\mathrm{tr}}\,\eps.\ }
+    \]
+    This is a distance to the \emph{whole} spectrum; no knowledge of
+    $\sigma_{\mathrm{ess}}$ or the gap is needed.
+  \end{theorem}
+  \small
+  \begin{itemize}
+    \item The bound is invariant under scaling of $\widehat u$ and tends to zero linearly,
+      $\sim2\mu C\eps/U$.
+    \item It holds for every $\ell_*>0$, which can balance the two jump types.
+    \item \emph{Volume defect variant:} if (P1) fails with
+      $r=(-\Delta-\mu\rho)\widehat u$ and
+      $\varepsilon_{\mathrm{vol}}=\lVert\rho^{-1}r\rVert_{\mathcal H}$, the bound becomes
+      $(2\mu Q+\varepsilon_{\mathrm{vol}})/(U-Q)$. For the raw field,
+      $\varepsilon_{\mathrm{vol}}=0$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Proof sketch}
+  \footnotesize
+  Let $\delta:=\dist(\mu,\sigma(A(\beta)))>0$ and $z:=(A(\beta)-\mu)^{-1}\widehat u$
+  (used only in the proof, never computed). Write $u=\widehat u$.
+  \begin{enumerate}
+    \item \textbf{Piecewise identity.} $\Delta u=-\mu\rho u$ and
+      $-\Delta z-\mu\rho z=\rho u$ give $\rho|u|^2=\overline z\Delta u-u\Delta\overline z$.
+      Green's second identity applies on each piece.
+    \item \textbf{Merge shared interfaces.} $z\in H^2(B)$ has equal traces on both sides,
+      so
+      $(\overline z\partial_\nu u^{(1)}-u^{(1)}\partial_\nu\overline z)
+      -(\overline z\partial_\nu u^{(2)}-u^{(2)}\partial_\nu\overline z)
+      =\jump{\partial_\nu u}\overline z+\jump{u}\partial_\nu\overline z$.
+      The top and bottom boundaries cancel.
+    \item \textbf{Cutoff $\chi_R$.} The extra terms $I_R\to0$ (since $u\in L^2$, $z\in H^2$)
+      and $|J_R|\le\lVert\chi_R'\rVert_\infty\ell_*\eps T_{\ell_*}(z)\to0$. The latter uses
+      the trace bound, which is needed exactly to remove the cutoff.
+    \item \textbf{Identity.}
+      $\displaystyle U^2=\sum_{\Gamma\in\mathscr E}\int_\Gamma\bigl(\jump{\partial_\nu u}_\Gamma\overline z
+        +\jump{u}_\Gamma\partial_{\nu_\Gamma}\overline z\bigr)\dd s\le\eps\,T_{\ell_*}(z).$
+    \item \textbf{Resolvent bound.} $\lVert z\rVert\le U/\delta$ and
+      $(A+\mu)z=u+2\mu z$, so $T_{\ell_*}(z)\le C(1+2\mu/\delta)U$. Hence
+      \[
+        U^2\le Q\Bigl(1+\frac{2\mu}{\delta}\Bigr)U
+        \quad\Longrightarrow\quad\delta(U-Q)\le2\mu Q.
+      \]
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Computing $\eps$: material interfaces}
+  \small
+  \textbf{Material interface} $\Gamma=\partial\Omega$, targets $t_q=q/N_q$:
+  \begin{itemize}
+    \item local terms $\tau(t_q),\omega(t_q)$ come directly from the trigonometric
+      interpolant;
+    \item integral terms: zero-pad the density to $N_q\ge N_\eta$ points (exact, since
+      the degree is $<N_\eta/2$), then apply Kress splitting. The kernel differences
+      are at most log-singular, so no hypersingular quadrature is needed;
+    \item outer periodic trapezoid rule for the $L^2$ norm:
+      \[
+        \int_\Gamma\bigl(|\jump{\partial_\nu\widehat u}|^2+\ell_*^{-2}|\jump{\widehat u}|^2\bigr)\dd s
+        \approx\frac1{N_q}\sum_{q=0}^{N_q-1}\bigl(|\jump{\partial_\nu\widehat u}(\mathbf z_q)|^2
+          +\ell_*^{-2}|\jump{\widehat u}(\mathbf z_q)|^2\bigr)|\boldsymbol r'(t_q)|.
+      \]
+  \end{itemize}
+  Two quadrature levels: the inner one evaluates layer potentials at targets, the outer
+  one computes the $L^2$ norm. $N_q\gg N_\eta$ is allowed without changing the density.
+  The background field $u_{\mathrm b}$ and its normal derivative are evaluated directly.
+\end{frame}
+
+\begin{frame}{Computing $\eps$: artificial interfaces}
+  \small
+  \textbf{Artificial interface} $\Gamma=\{x_\Gamma\}\times I_d$, using Parseval in $\psi_m$:
+  \[
+    \int_\Gamma\bigl(|\jump{\partial_\nu\widehat u}|^2+\ell_*^{-2}|\jump{\widehat u}|^2\bigr)
+    =\sum_{m\in\ZZ}\bigl(|\jump{\partial_\nu\widehat u}_m|^2+\ell_*^{-2}|\jump{\widehat u}_m|^2\bigr).
+  \]
+  On each side the field near $\Gamma$ is Rayleigh waves plus QP layer potentials whose
+  sources lie on one side. Rayleigh waves give amplitudes directly; layer potentials
+  give $\phi_m$ (value) and $\pm\ii\gamma_m\phi_m$ ($\partial_x$).
+
+  \medskip
+  Compute $|m|\le M_{\mathrm{ev}}$ explicitly; the rest cannot be set to zero. Take
+  $M_{\mathrm{ev}}$ so that $|m|>M_{\mathrm{ev}}$ is evanescent (layer-potential part
+  only), and let $\delta_\Gamma$ be the horizontal distance to the source curves:
+  \begin{align*}
+    |\phi_m|\le\Phi_m&:=\frac{\ee^{-|\gamma_m|\delta_\Gamma}}{2\sqrt d|\gamma_m|}
+    \Bigl(\lVert\omega\rVert_{L^1}+(|\gamma_m|^2+\beta_m^2)^{1/2}\lVert\tau\rVert_{L^1}\Bigr),\\
+    \sum_{|m|>M_{\mathrm{ev}}}\bigl(|\jump{\partial_\nu\widehat u}_m|^2+\ell_*^{-2}|\jump{\widehat u}_m|^2\bigr)
+    &\le2\sum_{|m|>M_{\mathrm{ev}}}(|\gamma_m|^2+\ell_*^{-2})\bigl((\Phi_m^{(1)})^2+(\Phi_m^{(2)})^2\bigr).
+  \end{align*}
+  The tail decays like $\exp(-4\pi|m|\delta_\Gamma/d)$ times a polynomial, giving a
+  closed-form geometric bound.
+\end{frame}
+
+\begin{frame}{Computing $\eps$: infinitely many cells}
+  \small
+  By translation structure, the jumps on $\partial\Omega_{j,\pm}$ and $\Gamma_{j,\pm}$
+  depend only on the state $\mathsf P_\pm^jc_\pm$:
+  \[
+    \eps^2=b_0+\sum_\pm\sum_{j=0}^\infty b_\pm(\mathsf P_\pm^jc_\pm),\qquad
+    b_\pm(v)=\lVert\mathcal L_\pm v\rVert^2\ \ (\mathcal L_\pm\text{ linear}).
+  \]
+  Here $b_0$ collects $\partial\Omega_0$ and $\Gamma_\pm$, and $b_\pm(v)$ collects
+  $\partial\Omega_\pm$ and the shared port $\Gamma_{0,\pm}$.
+
+  \begin{block}{Propagation tail}
+    $b_\pm(v)\le\Theta_\pm\lVert v\rVert_2^2$ with $\Theta_\pm:=\sum_{s=1}^Kb_\pm(\boldsymbol e_s)=\lVert\mathcal L_\pm\rVert_{\mathrm{HS}}^2$. If
+    $\lVert\mathsf P_\pm^p\rVert_2\le r_\pm<1$ for some $p$:
+    \[
+      \sum_{j\ge N_{\mathrm{cell}}}b_\pm(\mathsf P_\pm^jc_\pm)\le
+      \frac{\Theta_\pm\sum_{l=0}^{p-1}\lVert\mathsf P_\pm^l\rVert_2^2}{1-r_\pm^2}
+      \bigl\lVert\mathsf P_\pm^{N_{\mathrm{cell}}}c_\pm\bigr\rVert_2^2.
+    \]
+    $\mathsf P_\pm$ is generally non-normal, so $\lVert\mathsf P_\pm\rVert_2>1$ is possible
+    even when $\rho(\mathsf P_\pm)<1$; then $p>1$ is needed. The tail cannot be dropped
+    just because the last term is small.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Field norm and procedure}
+  \small
+  \textbf{Mass.} $U^2=\int_{\mathcal C_0}\rho|\widehat u|^2+\sum_\pm\sum_jm_\pm(\mathsf P_\pm^jc_\pm)$,
+  and the same tail argument verifies (P4). The theorem only needs a lower bound
+  $\bigl(\int_D\rho|\widehat u|^2\bigr)^{1/2}\le U$ for a subregion $D$ away from
+  interfaces, where plain trapezoid sums suffice. $D$ must carry most of the mass, or
+  $Q<U$ fails.
+
+  \medskip
+  \textbf{Procedure}
+      \begin{enumerate}
+        \item get $(\xi,c_-,c_+)$ and fix the multiple;
+        \item compute $b_0$;
+        \item sum $b_\pm(\mathsf P_\pm^jc_\pm)$ for $j<N_{\mathrm{cell}}$, then add the
+          tail using $\Theta_\pm$ and $r_\pm$; this gives $\eps$;
+        \item compute a lower bound for $U$ on $D$;
+        \item compute $C$ and $Q=C\eps$, check $Q<U$, and apply the theorem.
+      \end{enumerate}
+      Increase $N_q$, $M_{\mathrm{ev}}$, and $N_{\mathrm{cell}}$ until all three
+      contributions (interface integrals, modal tails, propagation tails) are stable.
+      This is a numerical \emph{estimate}: refinement stability is not a certificate.
+\end{frame}
+
+\begin{frame}{Certified bounds and interpretation}
+  \small
+      \textbf{One-sided inputs}
+      \[
+        C\le\overline C,\quad\eps\le\overline\varepsilon_\partial,\quad
+        0<\underline U\le U,\quad
+        \underline D:=\underline U-\overline C\,\overline\varepsilon_\partial>0.
+      \]
+      All three bounds use the same candidate, the same multiple, and the same
+      densities. They must account for:
+      \begin{itemize}
+        \item geometric checks and outward rounding for $\overline C$;
+        \item kernel, inner/outer quadrature, and rounding errors, plus the modal and
+          propagation tails for $\overline\varepsilon_\partial$;
+        \item quadrature and rounding errors for $\underline U$.
+      \end{itemize}
+      \[
+        R_{\mathrm{spec}}:=\frac{2\mu\overline C\,\overline\varepsilon_\partial}{\underline D},
+        \qquad
+        I_{\mathrm{spec}}:=[\mu-R_{\mathrm{spec}},\mu+R_{\mathrm{spec}}],
+        \qquad
+        I_{\mathrm{spec}}\cap\sigma(A(\beta))\neq\varnothing.
+      \]
+
+  \textbf{Interpretation.} $I_{\mathrm{spec}}$ meets the spectrum, but gives no index,
+  multiplicity, or uniqueness. If $I_{\mathrm{spec}}$ is \emph{separately} shown to lie
+  in an open interval disjoint from $\sigma_{\mathrm{ess}}$, it contains at least one
+  isolated, finite-multiplicity eigenvalue: a guided mode.
+\end{frame}
+
+% ======================================================================
+\section{Summary}
+
+\begin{frame}{Summary}
+  \small
+  \centering
+  \begin{tikzpicture}[node distance=0.42cm,
+      box/.style={draw=black!60, rounded corners=2pt, fill=blue!5, align=center,
+        font=\scriptsize, minimum height=0.95cm, text width=3.2cm},
+      arr/.style={-{Latex[length=1.8mm]}, line width=0.6pt}]
+    \node[box] (a) {model $A(\beta)$\\ $\sigma_{\mathrm{ess}}$, gap $G_\beta$};
+    \node[box, right=of a] (b) {center reduction\\ $\mathscr T_\pm u_0\in\mathcal G_\pm(k)$};
+    \node[box, right=of b] (c) {BIE + Rayleigh ports\\ $\mathsf P_\pm$, $\mathsf V_\pm$ via QZ};
+    \node[box, below=0.7cm of c] (d) {NEP $\mathsf M(k)$\\ candidate $\widehat k$, $(\xi,c_\pm)$};
+    \node[box, left=of d] (e) {raw field $\widehat u$\\ jumps $\eps$, mass $U$};
+    \node[box, left=of e] (f) {$\dist(\mu,\sigma)\le\dfrac{2\mu Q}{U-Q}$\\ certified $I_{\mathrm{spec}}$};
+    \draw[arr] (a) -- (b);
+    \draw[arr] (b) -- (c);
+    \draw[arr] (c) -- (d);
+    \draw[arr] (d) -- (e);
+    \draw[arr] (e) -- (f);
+  \end{tikzpicture}
+
+  \vspace{0.6em}
+  \raggedright
+  \begin{itemize}
+    \item The Cauchy-data reduction is exact for every $k>0$; DtN is the graph special case.
+    \item The discretization mirrors the continuous reduction: $\mathcal G_\pm\to
+      \operatorname{range}\mathsf C_\pm\mathsf Z_\pm$.
+    \item The candidate algorithm enters the error bound only through $\eps$ and $U$. The
+      bound holds for the whole spectrum, and the gap is used only to interpret the
+      spectral point as a guided mode.
+  \end{itemize}
+
+  \textbf{Next:} numerical results (convergence of $\eps$, tail bounds, certified
+  intervals).
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+  \scriptsize
+  \bibliographystyle{plain}
+  \bibliography{../../../ref/reference}
+\end{frame}
+
+\end{document}
