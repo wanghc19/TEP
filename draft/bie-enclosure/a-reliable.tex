@@ -37,35 +37,163 @@ binary64 参数精确定义（第~\ref{subsec:results-model}~小节），缺陷 
 
 \pending{2026-11-06：前半段由原第 5.5 小节“可靠评价”移来，后半段（自作用、引线有限部分与尾项、汇总）新增}
 每条界面分成目标面板，在每个面板上对式~\eqref{eq:panel-defect-bound} 中的加权跳跃向量
-$f$ 构造多项式 $P_I$ 及一致误差 $e_I$。$P_I$ 取在
-$L$ 个实 Chebyshev 节点上的插值；若 $f$ 在 Bernstein 椭圆 $E_\varrho$ 上的解析延拓满足
-$|f|\leq M_I$，则
-\begin{align}
-  e_I\leq\frac{4M_I\varrho^{1-L}}{\varrho-1}
-  +\sqrt{2L-1}\,e_{\mathrm{node}}+e_{\mathrm{conv}},
-  \label{eq:chebyshev-panel-error}
-\end{align}
-$e_{\mathrm{node}}$ 是节点值的误差上界，$e_{\mathrm{conv}}$ 是变换到多项式系数的误差。保留
-$P_I$ 中各部分的符号再求 $V_I$，可保留材料跳跃中约十二位的相消。节点值分三部分：
+$f$ 构造多项式 $P_I$ 及一致误差 $e_I\geq\sup_{t\in I}\lVert f(t)-P_I(t)\rVert$。
+\pending{2026-11-06 审稿意见 B1 的数学部分：本小节的引理与证明由研究笔记 theory/selfint-accel、cellker-eval、proxy-accel 与 reliable-bound（T3.2）移入；其中 cellker-eval、proxy-accel 尚无独立审查记录}
+本附录的曲线参数 $t$ 以 $2\pi$ 为周期（即正文参数乘 $2\pi$），面板写成 $I=[c-h,c+h]$；
+向量与矩阵取 Euclid 范数与 Frobenius 范数，所以下列各界对标量跳跃、对把引线状态映到跳跃的
+矩阵都逐字成立。
+
+\begin{lemma}[带节点误差的 Chebyshev 插值]
+  \label{lem:chebyshev-interp}
+  设 $f$ 在以 $I$ 为焦点区间的闭 Bernstein 椭圆 $E_\varrho$（$\varrho>1$）的邻域全纯，
+  $\sup_{E_\varrho}\lVert f\rVert\leq M_I$。取 $L$ 个 Chebyshev 根节点
+  $t_l=c+h\cos\frac{(2l+1)\pi}{2L}$，$0\le l<L$，设确定的数 $v_l$ 满足
+  $\lVert v_l-f(t_l)\rVert\leq e_{\mathrm{node}}$。以 $v_l$ 的插值多项式（次数 $L-1$）在球算术中
+  算出 Chebyshev 或幂基系数，取各系数的球心为 $P_I$ 的系数，记各系数半径之和为
+  $e_{\mathrm{conv}}$。则
+  \begin{align}
+    \sup_{t\in I}\lVert f(t)-P_I(t)\rVert\leq\frac{4M_I\varrho^{1-L}}{\varrho-1}
+    +\sqrt{2L-1}\,e_{\mathrm{node}}+e_{\mathrm{conv}}.
+    \label{eq:chebyshev-panel-error}
+  \end{align}
+\end{lemma}
+
+\begin{proof}
+  令 $t=c+h(w+w^{-1})/2$，则 $f$ 成为 $\varrho^{-1}<|w|<\varrho$ 上关于 $w\mapsto w^{-1}$ 不变的
+  Laurent 级数，沿 $|w|=\varrho$ 的 Cauchy 公式给出 Chebyshev 系数 $\lVert a_k\rVert\leq2M_I\varrho^{-k}$
+  （$k\ge1$）。在 $L$ 个根节点上，每个 $T_k$（$k\ge L$）与某个带符号的 $T_j$（$0\le j<L$）或零重合，
+  其插值多项式在 $[-1,1]$ 上模不超过一；于是对精确节点值，插值误差不超过
+  $2\sum_{k\ge L}2M_I\varrho^{-k}=4M_I\varrho^{1-L}/(\varrho-1)$。
+  节点误差 $e_l=v_l-f(t_l)$ 的离散余弦系数 $d_0=L^{-1}\sum_le_l$、
+  $d_j=2L^{-1}\sum_le_l\cos(j(2l+1)\pi/(2L))$ 满足离散正交关系
+  $\lVert d_0\rVert^2+\frac12\sum_{j=1}^{L-1}\lVert d_j\rVert^2=L^{-1}\sum_l\lVert e_l\rVert^2\leq e_{\mathrm{node}}^2$；
+  在实区间上用 $|T_j|\leq1$ 与 Cauchy--Schwarz，误差插值多项式的模不超过
+  $e_{\mathrm{node}}(1+2(L-1))^{1/2}$。最后，球算术保证精确插值多项式的每个系数落在相应的球内；
+  基函数在 $I$ 上模不超过一（Chebyshev 基，或变量 $(t-c)/h$ 的幂基），所以取球心带来的一致误差
+  不超过半径之和 $e_{\mathrm{conv}}$。三项相加。
+\end{proof}
+
+先固定节点值的球心再插值，只把节点误差经因子 $\sqrt{2L-1}$ 传播一次；若把节点球直接
+变换成幂基系数，半径会被基变换放大。保留 $P_I$ 中各部分的符号再求 $V_I$，可保留材料跳跃中
+约十二位的相消。节点值分三部分：
 \begin{itemize}
-  \item 本曲线自身的层势（$m=0$）：用 Kress 核分裂在实节点上求值，求积误差由解析延拓域上
-    的包络给出；
-  \item 光滑部分：上下两个像与代理点源。对固定中心 $\mathbf x_\nu$、半径 $R$ 内的
-    Helmholtz 解 $Y$，令 $z,w$ 为复化坐标，$\lambda=\kappa_{\mathrm e}^2/4$，
-    $\Phi_m(\xi)=\sum_{j\geq0}m!\,\xi^j/[j!\,(m+j)!]$，则
-    $Y=a_0\Phi_0(-\lambda zw)+\sum_{m\geq1}[a_m^+(z/R)^m+a_m^-(w/R)^m]\Phi_m(-\lambda zw)$。
-    截到 $M$ 阶，在 $|z|=|w|\leq a<R$ 处尾项不超过
-    $\ee^{\lambda a^2}\,2B\theta^{M+1}/(1-\theta)$，$\theta=a/R$，$B$ 为 $Y$ 在双圆盘上的界。
+  \item 本曲线自身的层势（$m=0$）：用 Kress 核分裂在实节点上求值，其目标包络与求积误差见
+    引理~\ref{lem:self-envelope}、\ref{lem:kress-real}；
+  \item 光滑部分：上下两个像与代理点源，用引理~\ref{lem:regular-expansion} 的正则展开。
     代理点源只需一个以原点为心、$R=1.1$ 的展开，不涉及源积分；两个近像对材料目标用原点、
-    $R=0.6$ 的展开，对人工界面与接缝用各段中点的展开。近像的源积分通过源面板矩计算，
-    截断误差另计；
-  \item 局部项（连续密度值与背景波）：有限和，按 Taylor 余项计入。
+    $R=0.6$ 的展开，对人工界面与接缝用各段中点的展开。近像的源积分通过源面板矩计算；
+  \item 局部项（连续密度值与背景波）：有限和，按引理~\ref{lem:local-terms} 的 Taylor 余项计入。
 \end{itemize}
+
+\begin{lemma}[正则 Helmholtz 展开]
+  \label{lem:regular-expansion}
+  取实中心 $\mathbf x_\nu$，令 $z=(x-x_\nu)+\ii(y-y_\nu)$、$w=(x-x_\nu)-\ii(y-y_\nu)$，复化后
+  视为独立变量；$\lambda=\kappa^2/4$，
+  $\Phi_m(\xi)=\sum_{j\geq0}m!\,\xi^j/[j!\,(m+j)!]$。设 $Y$ 在双圆盘 $|z|,|w|\leq R$ 的邻域全纯，
+  每个分量满足 $4\partial_z\partial_wY+\kappa^2Y=0$，且 $\lVert Y\rVert\leq B$。则
+  \begin{align}
+    Y=a_0\Phi_0(-\lambda zw)+\sum_{m\geq1}\bigl[a_m^+(z/R)^m+a_m^-(w/R)^m\bigr]\Phi_m(-\lambda zw),
+    \label{eq:regular-expansion}
+  \end{align}
+  其中 $a_0=Y(0,0)$、$a_m^+=R^m\partial_z^mY(0)/m!$、$a_m^-=R^m\partial_w^mY(0)/m!$，
+  $\lVert a_m^\pm\rVert\leq B$。截到 $M$ 阶并以计算值代替系数（误差分别不超过
+  $\epsilon_0,\epsilon_m^\pm$）后，在实目标 $|z|=|w|\leq a<R$ 上，记 $\theta=a/R$，误差不超过
+  \begin{align}
+    \ee^{\lambda a^2}\Bigl[\frac{2B\theta^{M+1}}{1-\theta}+\epsilon_0
+    +\sum_{m=1}^M\theta^m(\epsilon_m^++\epsilon_m^-)\Bigr].
+    \label{eq:regular-tail}
+  \end{align}
+  取 $Y=(V,\partial_xV,\partial_yV)$ 即同时得到场值与梯度、从而法向导数的误差：$V$ 的两个偏导数
+  满足同一方程，$B$ 取该向量的界即可。
+\end{lemma}
+
+\begin{proof}
+  写 $Y=\sum_{a,b\ge0}C_{ab}z^aw^b$。方程逐幂给 $C_{a+1,b+1}=-\lambda C_{ab}/[(a+1)(b+1)]$，
+  每条系数对角线由纯导数轴上的一项决定，沿对角线求和即得式~\eqref{eq:regular-expansion}；
+  较小双圆盘上级数绝对一致收敛，重排合法。多变量 Cauchy 公式给 $\lVert a_m^\pm\rVert\leq B$。
+  因 $m!/(m+j)!\leq1$，$|\Phi_m(-\lambda zw)|\leq\ee^{\lambda|zw|}\leq\ee^{\lambda a^2}$。
+  对 $m>M$ 的正、负两条几何尾求和，再加有限个系数误差，得式~\eqref{eq:regular-tail}。
+\end{proof}
+
+近像的系数由源积分给出。把源曲线分成面板 $S_s=[c_s-h_s,c_s+h_s]$，设核（已含源 Jacobian 与
+Müller 符号，把密度映到 $(V,\partial_xV,\partial_yV)$）在双圆盘与 $|s-c_s|\leq R_s$ 上全纯、范数
+不超过 $M_{\nu s}$，$D_s\geq\int_{S_s}\lVert\eta\rVert$，$q_s=h_s/R_s<1$。源变量的 Cauchy 系数
+界给出第 $j$ 个归一化 Taylor 系数不超过 $M_{\nu s}q_s^j$；把核截到 $n_s$ 次、用归一化矩
+$\int_{S_s}((s-c_s)/h_s)^j\eta\dd s$（计算误差 $d_{s,j}$）代替，引起的误差在整个双圆盘上不超过
+\begin{align}
+  E_\nu=\sum_sM_{\nu s}\Bigl[D_s\frac{q_s^{n_s+1}}{1-q_s}+\sum_{j\le n_s}q_s^jd_{s,j}\Bigr],
+  \label{eq:source-moment-error}
+\end{align}
+并取 $B=\sum_sM_{\nu s}D_s$。截断后的源展开逐项仍满足 Helmholtz 方程，所以它对每个纯系数的
+影响不超过 $E_\nu$，在式~\eqref{eq:regular-tail} 中加 $E_\nu(1+2\sum_{m\le M}\theta^m)$ 即可。
+基函数 $\Phi_m$ 的级数截断按首个遗漏项与公比 $|\xi|/[(J+2)(m+J+2)]<1$ 的几何级数计入。
+
+\begin{lemma}[基本解的包络]
+  \label{lem:green-envelope}
+  记 $G(q)=\frac{\ii}{4}H_0^{(1)}(\kappa\sqrt q)$，$q$ 为距离平方的解析延拓，$b_0=\kappa^2/4$，
+  $C_0=\frac14+(|\log(\kappa/2)|+\gamma)/(2\pi)$（$\gamma$ 为 Euler 常数）。设在所用复域上
+  $q_-\leq|q|\leq Q$，所用的 $\log q$ 分支满足 $|\log q|\leq L_q$。令
+  $\mathcal G_j=b_0^j\ee^{b_0Q}\bigl(L_q/(4\pi)+C_0+(j+b_0Q)/(2\pi)\bigr)$，则
+  \begin{align*}
+    |G|&\leq\mathcal G_0,
+    &|G'|&\leq\mathcal G_1+\frac{\ee^{b_0Q}}{4\pi q_-},
+    &|G''|&\leq\mathcal G_2+\frac{\ee^{b_0Q}}{4\pi}\Bigl(\frac{2b_0}{q_-}+\frac1{q_-^2}\Bigr)
+  \end{align*}
+  （导数对 $q$），分别记为 $g_0,g_1,g_2$。若位移 $\boldsymbol d$ 满足 $\lVert\boldsymbol d\rVert\leq D$，
+  则 $\lVert\nabla G\rVert\leq2Dg_1$、$\lVert\nabla^2G\rVert\leq2g_1+4D^2g_2$。
+\end{lemma}
+
+\begin{proof}
+  由 $H_0^{(1)}=J_0+\ii Y_0$ 与 $Y_0$ 的级数，
+  \begin{align*}
+    G(q)=-\frac{\log q}{4\pi}J(q)+\Bigl[\frac{\ii}{4}-\frac{\log(\kappa/2)+\gamma}{2\pi}\Bigr]J(q)
+    +\frac1{2\pi}\sum_{m\geq1}\frac{(-1)^mH_m(b_0q)^m}{(m!)^2},
+  \end{align*}
+  其中 $J(q)=\sum_{m\ge0}(-b_0q)^m/(m!)^2$，$H_m=\sum_{l\le m}1/l$。逐项取模，
+  $|J^{(j)}(q)|\leq b_0^j\ee^{b_0Q}$；由 $H_{j+l}\leq j+l$ 与 $(j+l)!\geq1$，第三项的 $j$ 阶导数
+  不超过 $b_0^j(j+b_0Q)\ee^{b_0Q}/(2\pi)$。对数项求导一次、两次分别产生 $J/q$ 与
+  $2J'/q-J/q^2$，相加得 $g_0,g_1,g_2$。$\nabla G=2G'(q)\boldsymbol d$，
+  $\nabla^2G=2G'(q)\mathrm I+4G''(q)\boldsymbol d\boldsymbol d^{\top}$，取范数即得后两式。
+\end{proof}
+
+实际使用时，对源圆盘中心距目标中心 $d_-\leq d\leq d_+$、源位移 $\delta$ 与展开半径 $R$，取
+$q_-=(d_--R-\delta)^2$、$Q=(d_++R+\delta)^2$，
+$L_q=\max\{|\log d_-^2|,|\log d_+^2|\}-2\log(1-(R+\delta)/d_-)$；条件 $R+\delta<d_-$ 保证
+距离平方的两个复因子无零点，对数取实中心值加两个收敛的 $\log(1+u)$ 级数，与实核同支。
+Müller 核的值行与法向行由 $G$、$\nabla G$、$\nabla^2G$ 乘源速度和法向组成；若源圆盘上
+速度不超过 $V_s$、法向范数不超过 $N_s$，$D=d_++R+\delta$，则对点源组（系数 $c_j$）
+\begin{align}
+  M_{\nu s}\leq V_s\sum_j|c_j|\bigl[g_0+2(N_s+1)Dg_1+N_s(2g_1+4D^2g_2)\bigr].
+  \label{eq:kernel-envelope}
+\end{align}
+引线包络 $B_\pm$ 中的 $S_{\mathrm{near}}$、$S_{\mathrm{ord}}$、$S_{\mathrm{pt}}$ 都由这一引理在
+相应的距离范围上给出。
+
+\begin{lemma}[局部项]
+  \label{lem:local-terms}
+  背景波一项 $b\exp(\ii\phi(t))$，$\phi(t)=\epsilon\gamma(x(t)-x_a)+\beta y(t)$，$\epsilon=\pm1$，
+  其值与梯度在目标复域上的范数不超过
+  $|b|\exp(\sup\operatorname{Re}(\ii\phi))\sqrt{1+|\gamma|^2+\beta^2}$；Fourier 密度
+  $\sum_m\eta_m\ee^{\ii mt}$ 在半径 $R_t$ 的目标圆盘上不超过 $\sum_m\lVert\eta_m\rVert\ee^{|m|R_t}$。
+  把这些界乘权的界并求和得 $M_{\mathrm{loc}}$。若目标 Taylor 截到 $p_{\mathrm{loc}}$ 次、$h<R_t$，
+  则截断误差不超过
+  \begin{align}
+    e_{\mathrm{loc}}\leq M_{\mathrm{loc}}\frac{(h/R_t)^{p_{\mathrm{loc}}+1}}{1-h/R_t}
+    +e_{\mathrm{loc,fin}},
+    \label{eq:local-tail}
+  \end{align}
+  $e_{\mathrm{loc,fin}}$ 是有限系数的球半径。
+\end{lemma}
+
+\begin{proof}
+  第一式是指数的模与两个物理导数 $\partial_x,\partial_y$ 作用后乘出的因子；第二式逐项取模。
+  对解析的加权局部项用 Cauchy 系数界 $M_{\mathrm{loc}}R_t^{-k}$，在 $|t-c|\leq h$ 上求几何尾。
+\end{proof}
 \pending{2026-11-06 审稿意见 B1：补写中心面板误差的组成、权的延拓与 $V_I$ 的计算}
 中心面板的一致误差按这三部分分别计算再相加：
 $e_I=e_{\mathrm{self}}+e_{\mathrm{loc}}+e_{\mathrm{sm}}+e_{\mathrm{comb}}$。$e_{\mathrm{self}}$
-是自作用部分的误差（含式~\eqref{eq:kress-error} 与其插值误差）；$e_{\mathrm{loc}}$ 是局部项
-的 Taylor 余项；光滑部分在 $L=48$ 个节点上插值、取 $\varrho=4.5$，$e_{\mathrm{sm}}$ 即
+是自作用部分的误差（式~\eqref{eq:self-error}）；$e_{\mathrm{loc}}$ 是局部项
+的 Taylor 余项（式~\eqref{eq:local-tail}）；光滑部分在 $L=48$ 个节点上插值、取 $\varrho=4.5$，$e_{\mathrm{sm}}$ 即
 式~\eqref{eq:chebyshev-panel-error} 的三项，其中 $e_{\mathrm{node}}$ 含展开的截断尾项与节点球
 的半径；$e_{\mathrm{comb}}$ 是三部分系数相加后取球心所舍去的半径之和。取球心后 $P_I$ 的
 系数是精确的浮点数，$V_I=\int_I\lVert P_I\rVert^2$ 用单项式的精确积分
@@ -80,18 +208,72 @@ $|s^{1/4}|\leq\overline v^{1/2}$、$|s^{-1/2}(y'\partial_x-x'\partial_y)|\leq\ov
 对每个实际状态逐一应用，再按式~\eqref{eq:boundary-propagation-tail}（以解析包络代替
 $\Theta_\pm$）加尾项。
 
-\paragraph{自作用的 Kress 误差.}
+\paragraph{自作用.}
 材料界面法向跳跃中两个超奇异主部先在解析层面相消（第~\ref{subsec:layer-potentials}~小节
-的 Müller 差核），剩下的核形如 $A(t,s)\log(4\sin^2\pi(t-s))+B(t,s)$。设密度加权后的
-$A,B$ 在源条带 $|\operatorname{Im}s|<a$ 上分别以 $H_A,H_B$ 为界，取 $N=2n$ 个源节点，
-则 Kress 求积的误差不超过
+的 Müller 差核），剩下的自作用贡献写成
 \begin{align}
-  e_{\mathrm{Kress}}
-  &\leq\frac{4H_A\ee^{-2\pi an}}{1-\ee^{-2\pi a}}+\frac{2H_B}{\ee^{2\pi aN}-1}.
-  \label{eq:kress-error}
+  F(t)=\frac1{2\pi}\int_0^{2\pi}\bigl\{A(t,s)\log\bigl(4\sin^2\tfrac{t-s}2\bigr)+B(t,s)\bigr\}\dd s,
+  \label{eq:self-split}
 \end{align}
-使用前须在条带上验证：速度平方的实部为正，去掉 $\sin^2$ 后的弦长商无零点，对数取解析
-分支。这些检查与 $H_A,H_B$ 都在复球算术中完成。
+$A,B$ 已含密度、源 Jacobian、目标权与因子 $2\pi$。设 $A,B$ 在目标集 $T$ 与源条带
+$|\operatorname{Im}s|\leq a$ 上全纯，$\lVert A\rVert\leq H_A$、$\lVert B\rVert\leq H_B$。使用前在
+复球算术中验证：速度平方与去掉 $\sin^2$ 后的弦长商（式~\eqref{eq:self-split} 中对数的
+解析部分）实部为正，所以平方根、法向与对数都有与实核相容的解析分支。对复目标，
+式~\eqref{eq:self-split} 理解为它的 Fourier 解析延拓：记
+$\widehat A_m(t)=\frac1{2\pi}\int_0^{2\pi}A(t,s)\ee^{-\ii ms}\dd s$，
+$\log(4\sin^2\frac v2)=-\sum_{m\neq0}\ee^{\ii mv}/|m|$，则
+$F(t)=-\sum_{m\neq0}\widehat A_m(t)\ee^{\ii mt}/|m|+\widehat B_0(t)$。移动积分路径给
+$\lVert\widehat A_m(t)\rVert\leq H_A\ee^{-a|m|}$。
+
+\begin{lemma}[自作用的目标包络]
+  \label{lem:self-envelope}
+  若 $T$ 含圆盘 $|t-c|\leq R_t$，$R_t<a$，则在该圆盘上
+  $\lVert F(t)\rVert\leq 2H_A/(\ee^{a-R_t}-1)+H_B$。
+\end{lemma}
+
+\begin{proof}
+  $|\ee^{\ii mt}|\leq\ee^{|m|R_t}$，所以
+  $\lVert F(t)\rVert\leq\sum_{m\neq0}H_A\ee^{-(a-R_t)|m|}/|m|+H_B
+  \leq2H_A\sum_{m\geq1}\ee^{-(a-R_t)m}+H_B$。
+\end{proof}
+
+若 $h(\varrho+\varrho^{-1})/2<R_t$，Bernstein 椭圆 $E_\varrho$ 含于该圆盘，引理~\ref{lem:chebyshev-interp}
+中可取 $M_I$ 为这一包络。这回答了自作用迹对目标参数的延拓：延拓由 Fourier 级数定义，
+包络只用源条带上的核界。节点值用 Kress 求积：$N=2n$ 个等距源点，对 $A(t,\cdot)$ 的三角插值
+（Nyquist 模式两侧各半）与对数核的卷积精确积分，$B$ 用梯形公式。
+
+\begin{lemma}[实目标上的 Kress 误差]
+  \label{lem:kress-real}
+  对实目标 $t$，令 $k_N(m)$ 为 $m$ 模 $N$ 后在 $[-n,n]$ 中代表的绝对值，
+  $w_N(m)=1/k_N(m)$（$k_N(m)>0$），$w_N(m)=0$（$k_N(m)=0$）。则 Kress 求积的误差不超过
+  \begin{align}
+    e_{\mathrm{Kress}}\leq2H_A\Bigl[\frac{\ee^{-an}}{n(1-\ee^{-a})}
+    +\frac{\ee^{-an}}{1-\ee^{-aN}}\sum_{j=0}^{N-1}\ee^{-aj}w_N(n+j)\Bigr]
+    +\frac{2H_B}{\ee^{aN}-1}.
+    \label{eq:kress-error}
+  \end{align}
+\end{lemma}
+
+\begin{proof}
+  $|m|<n$ 的源模式被三角插值精确再现，卷积无误差。模式 $m$（$|m|\geq n$）在精确卷积中的
+  贡献不超过 $\lVert\widehat A_m\rVert/|m|$；它在插值中混叠为模式 $k_N(m)$，卷积后的贡献不超过
+  $w_N(m)\lVert\widehat A_m\rVert$（Nyquist 模式分到 $\pm n$ 各一半，系数绝对值之和仍为一）。
+  对正负两侧求和，误差不超过 $2H_A\sum_{m\geq n}\ee^{-am}(1/m+w_N(m))$。第一部分用
+  $1/m\leq1/n$ 求几何和；$w_N$ 以 $N$ 为周期，从 $m=n$ 起每 $N$ 项分组，得第二部分。
+  $B$ 的周期梯形公式误差为 $2H_B/(\ee^{aN}-1)$\cite[定理~3.2]{TrefethenWeideman2014}。
+\end{proof}
+
+这比只用 $1/|m|\le1$ 的粗界 $4H_A\ee^{-an}/(1-\ee^{-a})+2H_B/(\ee^{aN}-1)$ 约小 $n$ 倍。
+在 $L$ 个 Chebyshev 根节点上以 $128$ 位求 Kress 和，取球心为节点值，记节点球的最大半径为
+$e_{\mathrm{rad}}$，则由引理~\ref{lem:chebyshev-interp}，
+\begin{align}
+  e_{\mathrm{self}}\leq\frac{4M_{\mathrm{self}}\varrho^{1-L}}{\varrho-1}
+  +\sqrt{2L-1}\,\bigl(e_{\mathrm{Kress}}+e_{\mathrm{rad}}\bigr)+e_{\mathrm{conv}},
+  \label{eq:self-error}
+\end{align}
+$M_{\mathrm{self}}$ 为引理~\ref{lem:self-envelope} 的包络。中心材料取 $N=1152$，包络用
+$R_t=0.04$、$a=0.0625$，Kress 误差用实面板与 $a=0.08$；$L$ 从 $40$ 起增大到插值余项不超过
+$2\times10^{-17}$，系数变换用 $192$ 位。引线材料取 $R_t=0.12$、$a=0.16$。
 
 \paragraph{引线的有限部分与尾项.}
 \pending{2026-11-06 审稿意见 I2：原式只用一个 $e_I$ 却漏了状态范数因子；改为实现所用的逐状态写法。尾项常数改为与实现一致的解析包络}
@@ -121,9 +303,9 @@ $N_{\mathrm{cell}}$，使尾项不超过有限部分下界的 $10^{-6}$ 倍，�
 $S_{\mathrm{face}}:=(S_{\mathrm{ord}}+S_{\mathrm{inc}})\lVert\mathsf G\rVert+S_{\mathrm{pt}}$。
 其中 $\mathsf G$ 把状态映到密度系数；$S_{\mathrm{near}}$、$S_{\mathrm{ord}}$、$S_{\mathrm{pt}}$ 分别
 是近像层势（材料目标）、普通层势（墙与接缝目标，含三个像）与 $480$ 个点源的上界，都由
-Helmholtz 基本解及其一、二阶导数在相应距离范围上的显式上界（由 $J_0$、$Y_0$ 的幂级数逐项
-估计）乘以密度系数或点源系数的范数得到；$S_{\mathrm{self}}$ 是自作用对数核在 $64$ 个面板上
-（源条带 $|\operatorname{Im}s|<0.16$）的上界的最大值；$S_{\mathrm{loc}}$ 是 $w$ 乘以局部项的界，局部项的界含密度
+引理~\ref{lem:green-envelope} 的基本解包络（式~\eqref{eq:kernel-envelope}）乘以密度系数或
+点源系数的范数得到；$S_{\mathrm{self}}$ 是引理~\ref{lem:self-envelope} 的包络
+$2H_A/(\ee^{a-h}-1)+H_B$（$a=0.16$，$h=\pi/64$）在 $64$ 个面板上的最大值；$S_{\mathrm{loc}}$ 是 $w$ 乘以局部项的界，局部项的界含密度
 Fourier 系数的界与入射 Rayleigh 项的界
 $\bigl(\sum_{|m|\leq48}2(1+|\gamma_m|^2+\beta_m^2)/d\bigr)^{1/2}$；
 $S_{\mathrm{inc}}$ 为同一入射项的界；$w=\overline v^{1/2}\max\{1,\overline v/\underline s^{1/2}\}$
@@ -266,7 +448,7 @@ $0\prec D\preceq dI$，$g>0$。由 Courant--Fischer，
 \end{align*}
 所以 $n(H)\leq1$。浮点特征向量只用来选子空间，其精度不是前提。作为独立核查，在若干
 面板上做球算术 LDL$^*$ 分解，主元球都不含零，由 Sylvester 惯性定律得到相同的负惯性。
-面板端点取为 $\pi$ 的整数分之一的整数倍，用整数比较检查它们首尾相接、覆盖 $[0,\pi]$。
+面板端点取为 $\pi/L_s$ 的整数分之一的整数倍，用整数比较检查它们首尾相接、覆盖 $[0,\pi/L_s]$（有反射对称时）或 $[-\pi/L_s,\pi/L_s]$。
 
 \subsection{装配}
 \label{app:reliable-assembly}
