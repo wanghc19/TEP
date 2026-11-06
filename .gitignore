@@ -29,6 +29,7 @@
 *.bcf
 *.run.xml
 *.xdv
+*.thm
 *.glo
 *.gls
 *.glg
