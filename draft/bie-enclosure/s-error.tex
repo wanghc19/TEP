@@ -117,7 +117,7 @@ $10^{-14}$ 的奇异值分解求解。系统矩阵只依赖 $\kappa_{\mathrm e}$
 $j$ 个引线胞元取 $\alpha=\mathsf C_\pm\mathsf P_\pm^jc_\pm$，$\mathsf C_\pm\in\CC^{480\times97}$
 固定，满足“系数线性依赖于端口状态”的要求。
 
-这种表示即文献~\cite{BarnettGreengard2010} 的“近像层势加辅助源”结构。该文把辅助系数与
+这种表示即文献~\cite{BarnettGreengard2010} 的“近像层势加辅助源”结构；由推论~\ref{cor:near-image}，精确场在背景区域中也具有这一结构。该文把辅助系数与
 密度联立求解；本文的密度沿用第~\ref{sec:discretization}~节的候选，只在事后拟合
 $\alpha$。按命题~\ref{prop:piecewise-h2} 与第~\ref{subsec:spectral-distance}~小节的定理，
 场无须满足任何离散方程，拟合与密度之间的不一致全部反映在界面跳跃中。若改用求解时的
@@ -751,8 +751,8 @@ Chebyshev 插值，$e_I$ 由解析延拓上的包络与节点值误差给出；�
 \end{align}
 必与 $\sigma(A(\beta))$ 相交（$I_k$ 为对应的波数区间）。这不识别最近谱点的编号或重数，
 也不保证区间内只有一个谱点。若另行证明 $I_{\mathrm{spec}}$ 含于某个与
-$\sigma_{\mathrm{ess}}(A(\beta))$ 不交的开区间（第~\ref{subsec:gap-certificate}~小节的
-带隙证书~\eqref{eq:gap-condition}），则由命题~\ref{prop:discrete-spectrum-in-gap}，
+$\sigma_{\mathrm{ess}}(A(\beta))$ 不交的开区间（用第~\ref{subsec:gap-certificate}~小节的
+命题~\ref{prop:panel-gap} 验证条件~\eqref{eq:gap-condition}），则由命题~\ref{prop:discrete-spectrum-in-gap}，
 $I_{\mathrm{spec}}$ 中至少有一个孤立、有限重的特征值，即一个导模。
 
 \begin{workonly}

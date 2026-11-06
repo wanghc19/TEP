@@ -10,7 +10,7 @@ $\widehat k$ 成立；各小节的数值见第~\ref{sec:results}~节。
 \label{app:reliable-ball}
 
 \paragraph{固定数据是精确数.}
-候选 $\widehat k$、密度样本、代理系数、传播矩阵与几何参数都以 binary64 保存；它们被
+候选 $\widehat k$、密度样本、代理系数、传播矩阵与几何参数都以 IEEE 754 双精度浮点数（binary64）保存；它们被
 视为精确的二进制有理数，由它们按第~\ref{subsec:raw-field}~小节定义的场就是定理所针对的
 场。$\pi$、相位 $q=\ee^{\ii\beta d}$、波数 $\widehat k\sqrt{\rho}$、Rayleigh 指数 $\gamma_m$
 与特殊函数按精确公式计算，不使用它们的浮点近似。因此保存数据时的舍入不需要估计：它
@@ -155,10 +155,10 @@ $\lambda_0=\min_m\beta_m^2/\rho_{\max}$，来自 $y$ 方向的 Poincaré 不等�
 $\mu=\widehat k^2$ 在球算术中由精确的 $\widehat k$ 平方得到；领子半宽 $\delta_g$ 与
 $\eta_g$ 可取任意正数，它们只影响常数大小，不需要是最优值。
 
-\subsection{带隙证书的矩阵测试}
+\subsection{谱隙判据的矩阵测试}
 \label{app:reliable-band}
 
-\pending{2026-11-06 新增；来源为带隙证书的原证明（h-cert-proof）与包含舍入的复算（bandrel-v1）}
+\pending{2026-11-06 新增；来源为谱隙判据的原证明（h-cert-proof）与包含舍入的复算（bandrel-v1）}
 
 \begin{proof}[定理~\ref{thm:fourier-complement} 的证明]
   写 $u=v+w$，$v=Pu=\sum_{\mathcal I}x_i\psi_i$，$w=(I-P)u$。动能型 $a_\theta$ 与无权
@@ -220,7 +220,7 @@ $\mu$ 由 binary64 的 $\widehat k$ 在球算术中平方得到。$\overline C_g
 $\overline Q=\sum_g\overline C_g\overline\varepsilon_g$、
 $\underline D=\underline U-\overline Q$（须为正）、
 $R_{\mathrm{spec}}=2\mu\overline Q/\underline D$，取球的上端，再把区间
-\eqref{eq:certified-spectral-interval} 的端点向外取整为十进制。带隙条件
+\eqref{eq:certified-spectral-interval} 的端点向外取整为十进制。谱隙条件
 \eqref{eq:gap-condition} 以同样方式检查 $\mu-R_{\mathrm{spec}}-\overline a_s>0$ 与
 $\underline b_s-\mu-R_{\mathrm{spec}}>0$。全部装配另用精确有理数算术独立复算一次，打印的
 半径与端点须一致。

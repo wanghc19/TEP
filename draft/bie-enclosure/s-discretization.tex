@@ -82,9 +82,35 @@ $x\ne x'$ 时有谱表示\cite{Linton1998}
     \ee^{\ii\gamma_m|x-x'|+\ii\beta_m(y-y')},
   \label{eq:qp-green-spectral}
 \end{align}
-其中 $\gamma_m$ 用 $\kappa$ 计算；靠近源点时需用格点和或 Ewald 型方法求值
-\cite{Linton1998}。
+其中 $\gamma_m$ 用 $\kappa$ 计算。记 $q:=\ee^{\ii\beta d}$，$e_y:=(0,1)$。
+$G^{(\kappa)}_\QP$ 也可写成格点和 $\sum_{n\in\ZZ}q^nG^{(\kappa)}(\mathbf z,\mathbf z'+nd\,e_y)$，但该级数只条件收敛，
+靠近源点时需用 Ewald 型方法等求值\cite{Linton1998}。
 
+\paragraph{近像分解.}
+\pending{2026-11-06：本段取代原“实现中的准周期 Green 函数”与“求解用核与评价用场分开”两段}
+把源点及其上下两个周期像单独列出，令
+\begin{align}
+  G^{(\kappa)}_\QP(\mathbf z,\mathbf z')
+  &=\sum_{n=-1}^{1}q^nG^{(\kappa)}(\mathbf z,\mathbf z'+nd\,e_y)
+    +G^{(\kappa)}_{\mathrm{far}}(\mathbf z-\mathbf z').
+  \label{eq:near-image-split}
+\end{align}
+余项 $G^{(\kappa)}_{\mathrm{far}}$ 在 $\RR^2\setminus\{nd\,e_y:|n|\geq2\}$ 上光滑并满足
+Helmholtz 方程（附录~\ref{app:center-cell} 的推论~\ref{cor:near-image}）。因此，对严格含于胞元内部
+的曲线，准周期层势等于三个近像上的自由空间层势加上一个在闭胞元邻域内光滑的 Helmholtz 解。
+文献~\cite{BarnettGreengard2010,ChoBarnett2015} 正是按这一结构计算：近像层势直接求积，光滑
+修正与 Rayleigh 背景合在一起用胞元外的代理点源（必要时加平面波）表示，系数由上下接缝上的
+准周期条件拟合。
+
+本文的判据只检查一个显式给出的场的界面跳跃（第~\ref{sec:error}~节），不要求密度满足任何
+离散方程，所以密度可以用任何足够准确地近似 $G^{(\kappa)}_\QP$ 的方法计算。实现中，求解密度时
+对每一对源点与目标点按 $y$ 向周期差就近回卷，只保留一个显式像，其余由随源平移的代理点源
+近似；这个核在胞元内有一条随源点移动的切换线，只用于求密度。评价的场则按
+式~\eqref{eq:near-image-split} 取三个近像、固定在胞元外的代理点源和 Rayleigh 背景，系数对
+整个场拟合（式~\eqref{eq:mfs-field} 与 \eqref{eq:cell-kernel-near}）。两者共用同一组密度，
+评价场的全部失配都计入它自己的界面跳跃。
+
+\begin{workonly}
 \pending{实现中的准周期 Green 函数（2026-11-04 新增）}
 本文的实现不直接求和式~\eqref{eq:qp-green-spectral}，而是用增广基本解方法（augmented
 MFS）近似 $G^{(\kappa)}_\QP$：取自由空间 Green 函数的近邻周期像，加上胞元外的代理点源与
@@ -99,6 +125,7 @@ MFS）近似 $G^{(\kappa)}_\QP$：取自由空间 Green 函数的近邻周期像
 用于计算候选密度。第~\ref{sec:error}~节评价的场改用胞元核：胞元内直接求和三个近邻像，
 代理点源固定在胞元外，系数按整个场拟合（式~\eqref{eq:mfs-field} 之后的说明）。两者
 共用同一组密度，候选不重解；评价场的全部失配都由它自己的界面跳跃计入。
+\end{workonly}
 
 设 $\Omega$ 为某个胞元中的介质柱，边界 $\partial\Omega$ 为 $C^2$ 闭曲线，$\nu$ 为由内
 指向外的单位法向，柱内波数 $\kappa_{\mathrm c}=k\sqrt{\rho_{\mathrm c}}$，其中 $\rho_{\mathrm c}$
@@ -388,7 +415,11 @@ $J(k)\xi=0$ 且 $\Pi_\pm\xi=\mathsf V_\pm c_\pm$。记
 $\Pi_\pm\xi=\mathsf V_\pm c_\pm$ 等价于振幅匹配 $\mathsf Y_\pm\xi=\mathsf Z_\pm c_\pm$；
 两种写法只差一个行缩放。
 
-\paragraph{DtN 降维形式.}
+\pending{2026-11-06：离散 DtN 形式 $\mathsf M_{\mathrm{DtN}}$ 删去，由下面的端口约化矩阵取代}
+本文的理论以 $\mathsf M(k)$ 为准；计算候选时改用下面的端口约化形式。
+
+\begin{workonly}
+原稿“DtN 降维形式”一段：
 若 $\mathsf V_{\mathrm D,\pm}$ 在加权坐标中可安全求逆，且 Dirichlet 投影与
 $\mathcal G^h_\pm(k)$ 有足够的横截余量，则可定义离散 DtN 矩阵
 $\widetilde\Lambda_\pm:=\mathsf V_{\mathrm N,\pm}\mathsf V_{\mathrm D,\pm}^{-1}$，从
@@ -402,17 +433,19 @@ $\widetilde\Lambda_\pm:=\mathsf V_{\mathrm N,\pm}\mathsf V_{\mathrm D,\pm}^{-1}$
     \Pi_{\mathrm N,-}\xi-\widetilde\Lambda_-\Pi_{\mathrm D,-}\xi\\
     \Pi_{\mathrm N,+}\xi-\widetilde\Lambda_+\Pi_{\mathrm D,+}\xi
   \end{bmatrix}.
-  \label{eq:discrete-dtn-nep}
 \end{align}
 此时两者的核一一对应。仅凭 $\mathsf V_{\mathrm D,\pm}$ 的条件数不足以判断安全：条件数
 不大的 $\mathsf V_{\mathrm D,\pm}$ 仍可能对应近乎竖直的 Cauchy 数据空间。离散 Dirichlet
 坐标失效对应于连续情形的 Dirichlet 例外值（第~\ref{subsec:dtn-form}~小节）；此时只用
-$\mathsf M(k)$。本文默认使用 $\mathsf M(k)$。\footnote{%
-  Notes：是否需要在正文中保留离散 DtN 形式仍待定。保留它的理由是与 Fliss 的连续
-  DtN 约化直接对应；去掉它则可以省掉安全性判别。}
+$\mathsf M(k)$。本文默认使用 $\mathsf M(k)$。
+\end{workonly}
 
 \paragraph{端口约化矩阵.}
 \pending{2026-11-06 新增：实现中的候选搜索使用端口约化矩阵的行列式}
+用行列式求根定位候选，需要一个与基的选取无关、关于 $k$ 解析的标量函数。
+$\det\mathsf M(k)$ 不满足这一点：把 $\mathsf Z_\pm$ 换成 $\mathsf Z_\pm W$ 会使它乘上
+$\det W$，而有序 QZ 给出的酉基随 $k$ 一般不解析。把稳定子空间按端口值系数归一化，
+即用离散 DtN 矩阵描述它，可以消除这一自由度，代价是在值系数块奇异处出现极点。
 实现中把中心胞元也当作一个散射胞元，以入射振幅为未知量消去中心密度，只保留两个端口
 上的 $2K$ 个模态振幅。记 $\mathsf T_0(k)$、$\mathsf N_0(k)$ 为把中心入射振幅映到两个端口
 上总场值系数与法向导数系数的矩阵；对稳定子空间的基 $\mathsf Z_\pm$，记 $\mathsf D_\pm$、
@@ -427,7 +460,10 @@ $\mathsf A(k)q=0$ 表示中心场的端口 Cauchy 数据落在两侧稳定子空
 式~\eqref{eq:discrete-nep} 的端口形式。$\Lambda_\pm$ 在 $\mathsf Z_\pm\mapsto\mathsf Z_\pm W$
 下不变，所以 QZ 基的任意性不影响它；在公共谱隙内，稳定子空间随 $k$ 解析变化，
 $\gamma_m$ 没有分支点，故 $\det\mathsf A(k)$ 除 $\mathsf D_\pm$ 奇异处的极点外是 $k$ 的解析
-函数。实现监测每个节点上 $\mathsf D_\pm$ 的倒条件数以排除极点。
+函数。若中心胞元的散射问题唯一可解且 $\mathsf D_\pm$ 可逆，则 $\mathsf A(k)$ 与 $\mathsf M(k)$ 的核
+一一对应；$\mathsf D_\pm$
+奇异对应于连续问题中半波导 Dirichlet 问题的例外值（第~\ref{subsec:dtn-form}~小节），
+此时 $\mathsf M(k)$ 仍然适用。实现监测每个节点上 $\mathsf D_\pm$ 的倒条件数以排除极点。
 
 \paragraph{候选定位：行列式求根.}
 \pending{2026-11-06：主搜索由最小奇异值谷底搜索改为行列式求根；原方法保留为确认分数与回退}

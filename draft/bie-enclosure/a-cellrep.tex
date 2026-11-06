@@ -60,3 +60,56 @@
   得到的互补层势场以 $-\tau$、$\omega$ 为共同的 Dirichlet 与 Neumann 迹，且满足齐次
   互补系统。在定理末尾的零核条件下互补场为零，再由跳跃关系得 $\tau=\omega=0$。
 \end{proof}
+
+\pending{2026-11-06 新增：近像分解推论，正文第~\ref{subsec:layer-potentials}~小节引用}
+下面的推论说明，定理中的准周期层势可以改写为近像层势加光滑修正，这正是实现中评价场的结构
+（式~\eqref{eq:mfs-field}）。记号同第~\ref{subsec:layer-potentials}~小节。
+
+\begin{corollary}[近像分解]
+  \label{cor:near-image}
+  设假设~\ref{ass:no-wood} 成立，$\kappa=\kappa_{\mathrm e}$。
+  \begin{enumerate}
+    \item 式~\eqref{eq:near-image-split} 定义的 $G_{\mathrm{far}}$ 在
+      $E:=\RR^2\setminus\{nd\,e_y:|n|\geq2\}$ 上实解析，并满足
+      $(\Delta+\kappa^2)G_{\mathrm{far}}=0$。
+    \item 设 $\overline{\Omega}\subset\RR\times I_d$，$\tau,\omega$ 为 $\partial\Omega$ 上的
+      可积密度。则在 $\Omega$ 外有
+      \begin{align*}
+        \mathcal S_\QP[\omega]+\mathcal D_\QP[\tau]
+        &=\sum_{n=-1}^{1}q^n\bigl(\mathcal S[\omega]+\mathcal D[\tau]\bigr)(\cdot-nd\,e_y)
+          +u_{\mathrm{corr}},
+      \end{align*}
+      其中 $u_{\mathrm{corr}}(\mathbf z):=\int_{\partial\Omega}\bigl(
+      G_{\mathrm{far}}(\mathbf z-\mathbf z')\omega(\mathbf z')
+      +\partial_{\nu'}[G_{\mathrm{far}}(\mathbf z-\mathbf z')]\tau(\mathbf z')\bigr)\dd s'$
+      在带 $\RR\times(-d/2-\delta,d/2+\delta)$ 上光滑并满足 Helmholtz 方程，
+      $\delta:=d/2-\max_{\partial\Omega}|y|>0$。
+    \item 特别地，在定理~\ref{thm:center-cell-representation} 的条件下，$u$ 在
+      $\mathcal C_0\setminus\overline{\Omega_0}$ 中等于近像层势、$u_{\mathrm{corr}}$ 与
+      $u_{\mathrm{hom}}$ 三项之和，其中 $u_{\mathrm{corr}}$ 可延拓为闭胞元某邻域内的
+      Helmholtz 解。
+  \end{enumerate}
+\end{corollary}
+
+\begin{proof}
+  (1) $G_\QP(\mathbf z,\mathbf z')$ 只依赖于 $\mathbf z-\mathbf z'$，且在分布意义下
+  $(\Delta+\kappa^2)G_\QP(\cdot,\mathbf 0)=-\sum_{n\in\ZZ}q^n\delta_{nd\,e_y}$
+  \cite{Linton1998}；而 $(\Delta+\kappa^2)G(\cdot,nd\,e_y)=-\delta_{nd\,e_y}$。相减后
+  $G_{\mathrm{far}}$ 在 $E$ 上满足齐次 Helmholtz 方程，由常系数椭圆方程的内部正则性，它在
+  $E$ 上实解析。
+
+  (2) 把式~\eqref{eq:near-image-split} 代入层势的定义，并注意
+  $\int_{\partial\Omega}G(\mathbf z,\mathbf z'+nd\,e_y)\omega(\mathbf z')\dd s'
+  =\mathcal S[\omega](\mathbf z-nd\,e_y)$（双层势同理），即得分解式。若 $\mathbf z$ 在所给
+  带内、$\mathbf z'\in\partial\Omega$，则 $|y-y'|<(d/2+\delta)+(d/2-\delta)=d$，故 $\mathbf z-\mathbf z'$ 与
+  $\{nd\,e_y:|n|\geq2\}$ 的距离大于 $d$。由 (1)，被积函数对 $\mathbf z$ 光滑并满足 Helmholtz 方程，
+  可以在积分号下求导，故 $u_{\mathrm{corr}}$ 亦然。
+
+  (3) 由定理~\ref{thm:center-cell-representation}，在 $\mathcal C_0\setminus\overline{\Omega_0}$
+  中 $u=\mathcal S_\QP[\omega]+\mathcal D_\QP[\tau]+u_{\mathrm{hom}}$，对层势部分用 (2)。
+\end{proof}
+
+由推论，精确场在背景区域中与评价场~\eqref{eq:mfs-field} 具有相同的结构；Rayleigh 背景单独保留，
+代理点源只需逼近 $u_{\mathrm{corr}}$ 这类在闭胞元邻域内光滑的解。本文不依赖这种逼近的收敛
+理论：评价场的全部误差都由它的界面跳跃计量。
+

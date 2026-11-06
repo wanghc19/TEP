@@ -77,3 +77,6 @@ ref/**
 
 # Temporary experiment history
 /test/**/tmp/
+
+# LaTeX comment package scratch file
+/draft/**/comment.cut
