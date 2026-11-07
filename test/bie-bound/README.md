@@ -29,3 +29,7 @@ FMM 是 fast multipole method（快速多极方法），MFS 是 method of fundam
 `gapedge-v1` 是 guided mode near a gap edge version 1，近带边参数序列、一般传播幂尾界及可靠区间成本。
 
 `release-check-v1` 是 release checking version 1，复现包 `release/bie-enclosure-sisc/` 五个例子的冷启动、纯 Python 校验与例一双侧迹核查记录。
+
+`solver-cost-v1` 是 solver cost version 1，比较例一相同搜索窗口下边界积分与有限元 DtN 候选求解器的精度、时间和内存。
+
+`litbench-v1` 是 literature benchmark version 1，用边界积分候选求解器复现文献中的线缺陷导模频率。

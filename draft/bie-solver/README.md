@@ -18,6 +18,8 @@ BIE = boundary integral equation（边界积分方程）；DtN = Dirichlet-to-Ne
 
 - done（2026-11-07）：建骨架，方法节移入，可以编译（4 页，无 overfull，无未定义引用）。
 - done（2026-11-07）：查新 [[bie-solver-novelty]]，总评 B（直接推广）。最接近的是 Fliss–Klindworth–Schmidt 2015（同一固定 $\beta$ 模型，允许两侧不同包层，FEM + RtR）、Petropoulos–Turc 2025（BIE 胞 RtR 与稳定束闭合，但是声软同质阵列的受迫散射）、Botten 等 2006（线导模即 $\det Z(k,\alpha_0)=0$，多极展开，单一体材料）。单独成文的条件：等任务、等精度下与高阶 FEM–DtN/RtR 比误差和成本（E1），再加圆柱情形与 Botten/Dossou 边界方法对照（E2 的最简部分）。12 项审稿检查：4 项已有记录，5 项部分，3 项缺失。贡献陈述草案和应避免的说法见查新文件。
-- 待办（等用户决定）：是否做 E1、E2；18 项候选文献哪些入库。
+- done（2026-11-07）：E1 等任务比较 `test/bie-bound/solver-cost-v1/`（算例 1，冷启动，11 线程）。误差 $10^{-6}$–$10^{-10}$ 时 FEM P4 快 1.4–2.3 倍；要进入参考区间（宽约 $8.8\times10^{-12}$）时，BIE 128/64/64、$M=6$ 用 38.8 秒、0.81 GiB，FEM P4 g48 用 97.8 秒、1.21 GiB，BIE 快 2.5 倍。BIE 时间基本不随精度变（约 39 秒，主要是 35 次行列式求值）。
+- done（2026-11-07）：文献算例 `test/bie-bound/litbench-v1/`：Botten 等 2006 的 W3 波导（六角晶格，TM），$d/\lambda=0.32$ 时 $\alpha_0d=1.67540706$，与原文 1.67541 的 6 位全部一致；第二个模与图 3(b) 一致。
+- 待办（等用户决定）：伪根检查（E7）；18 项候选文献哪些入库。
 - 待办（已知缺陷）：提取矩阵 $\mathsf F^{\rightarrow}_{x_p},\mathsf F^{\leftarrow}_{x_p}$ 只有文字描述，需要写出公式；全节行内公式过密，需要改写。
 - 待办：模型节从 `draft/bie-siam/` 第 2.1 节取记号。
