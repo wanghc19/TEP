@@ -29,7 +29,7 @@ PDF 为公开 arXiv/机构稿或出版方公开全文；不绕过登录或付费
 当前方法以以下实际项目记录为依据，不能只从第一批旧简报推断：
 
 - [[research/projects/eig-apost/STATUS]] 及 [[research/projects/eig-apost/implementation/i10/README]]：FEM＋DtN 的富化半径依赖饱和性、评价误差及共同连续目标假设，仍是条件结果。
-- [[redteam/reports/error_certification]]：BIE 的谱距离数值估计尚未完成单侧输入包围；BIE/FEM 候选很接近不能证明连续模态身份或真误差。
+- [[redteam/archive/eig-apost-2026-10/reports/error_certification]]：BIE 的谱距离数值估计尚未完成单侧输入包围；BIE/FEM 候选很接近不能证明连续模态身份或真误差。
 - [[research/explorations/spectral-counting/STATUS]]、[[research/explorations/spectral-counting/continuous_vs_discrete_gap]]：已有普通离散端点惯性证据；projected gap、半端 Dirichlet pole 排除和连续补空间提升仍未认证。
 
 统一区分四类内容：**原文证明的结论**、**原文的普通数值观察**、**本项目满足条件后才可迁移的推断**、**未证明的研究建议**。不得把存在性常数、渐近收敛或三层一致性改称可计算连续证书。本目录不建立或提升统一 `mainline/`。

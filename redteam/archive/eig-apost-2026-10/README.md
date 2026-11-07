@@ -7,19 +7,19 @@
 
 ## 阅读入口
 
-1. [[redteam/reports/method_decision|研究路线决策]]：当前可作什么决定、不能作什么决定。
-2. [[redteam/reports/mode_identity|物理模态身份]]：实际保存场的共同区域比较。
-3. [[redteam/reports/error_certification|误差认证含义]]：两个小半径的不同证据身份。
-4. [[redteam/reports/shared_dtn_risks|共享DtN风险]]：共同假设和实际独立实现。
-5. [[redteam/reports/findings|统一发现与OPEN账目]]：分类、证据、最小下一步。
-6. [[redteam/theory/review|独立第二读者审查]]：红队自身推导的核对及修正。
-7. [[redteam/reports/verification|执行和文件边界]]：成功/失败日志、静态检查与并发改动。
+1. [[redteam/archive/eig-apost-2026-10/reports/method_decision|研究路线决策]]：当前可作什么决定、不能作什么决定。
+2. [[redteam/archive/eig-apost-2026-10/reports/mode_identity|物理模态身份]]：实际保存场的共同区域比较。
+3. [[redteam/archive/eig-apost-2026-10/reports/error_certification|误差认证含义]]：两个小半径的不同证据身份。
+4. [[redteam/archive/eig-apost-2026-10/reports/shared_dtn_risks|共享DtN风险]]：共同假设和实际独立实现。
+5. [[redteam/archive/eig-apost-2026-10/reports/findings|统一发现与OPEN账目]]：分类、证据、最小下一步。
+6. [[redteam/archive/eig-apost-2026-10/theory/review|独立第二读者审查]]：红队自身推导的核对及修正。
+7. [[redteam/archive/eig-apost-2026-10/reports/verification|执行和文件边界]]：成功/失败日志、静态检查与并发改动。
 
 ## 冻结范围与运行规则
 
 - 原物理模型是二维条带上的 $-\Delta u=\mu\rho u$、$\mu=k^2$，固定实Bloch
   参数、正材料权重、普通法向导数传输。基线分别从原实现和数据核实，不从旧报告
-  推定当前对象；见 [[redteam/baseline/bie]]、[[redteam/baseline/fem]]。
+  推定当前对象；见 [[redteam/archive/eig-apost-2026-10/baseline/bie]]、[[redteam/archive/eig-apost-2026-10/baseline/fem]]。
 - 所有新代码、分析、下载/提取、数据、日志和图均在 `redteam/`。
   `research/`、`test/`、公共包、论文、参考库及其他人的文件只读。
   用户明确指定本目录，覆盖根AGENTS对新实验默认放在test的规则。

@@ -1,6 +1,6 @@
 # BIE + DtN mathematical and implementation audit
 
-任务模式：`rigorous-proof` **Review only**。问题是当前 I9.1/I9.2 BIE 候选及其约 $10^{-10}$ 数值半径能支持什么，以及哪些最小失败机制可能推翻过强推论。读取实际实现、原始 JSON 和定理正文；未改原证明或生产代码。模型/版本/原始数据见 [[redteam/baseline/bie]]。
+任务模式：`rigorous-proof` **Review only**。问题是当前 I9.1/I9.2 BIE 候选及其约 $10^{-10}$ 数值半径能支持什么，以及哪些最小失败机制可能推翻过强推论。读取实际实现、原始 JSON 和定理正文；未改原证明或生产代码。模型/版本/原始数据见 [[redteam/archive/eig-apost-2026-10/baseline/bie]]。
 
 本记录为构造性证据审计，不代替独立Skeptic裁决。结论严格限定为当前被检查的源码和算例；没有因为尚未认证就判定数值候选错误。
 
@@ -83,7 +83,7 @@ $\|(A-\mu)^{-1}\|=1/\operatorname{dist}(\mu,\sigma(A))$，再移项得上式；�
 
 I9.2 `numeric.m:54–67` 将上下接缝只列为数值一致性诊断，不加进 $\varepsilon$。若连续trial明确使用**精确准周期核**，理论上为零是正确的；需要补的是数值核评价到那个精确trial的误差包围。若改将**字面周期化MFS核**定义为trial，必须控制折回线及proxy/plane-wave切换线的分片缺陷，不能沿用原U假设直接令其全为零。
 
-最小实验已预登记并由根代理在 MATLAB 执行，见 [[redteam/cases/qp-wrap/case]] 和 `redteam/results/qp-wrap/attempt-1/result.json`。79/157两组网格的raw梯度差max为 $1.33192\times10^{-10}$/$9.59085\times10^{-11}$，Hessian差max为 $1.08518\times10^{-8}$/$1.26446\times10^{-8}$；外部接缝三项差均为0。实际内部wrap梯度跳跃与预测在三个步距上相符到 $1.60\times10^{-15}$。Hessian两组超过预登记筛查阈值；梯度只一组超过，不能说两组梯度筛查均命中。此现象只在核近似层得到确认，不能直接换算成候选波数误差或证明 exact-kernel trial 不合法。
+最小实验已预登记并由根代理在 MATLAB 执行，见 [[redteam/archive/eig-apost-2026-10/cases/qp-wrap/case]] 和 `redteam/results/qp-wrap/attempt-1/result.json`。79/157两组网格的raw梯度差max为 $1.33192\times10^{-10}$/$9.59085\times10^{-11}$，Hessian差max为 $1.08518\times10^{-8}$/$1.26446\times10^{-8}$；外部接缝三项差均为0。实际内部wrap梯度跳跃与预测在三个步距上相符到 $1.60\times10^{-15}$。Hessian两组超过预登记筛查阈值；梯度只一组超过，不能说两组梯度筛查均命中。此现象只在核近似层得到确认，不能直接换算成候选波数误差或证明 exact-kernel trial 不合法。
 
 ### B06 — 连续层势、离散点源和离散矩阵必须区分
 

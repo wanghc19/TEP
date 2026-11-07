@@ -73,4 +73,4 @@ $$
 
 历史监控值只反映各自声明的计算：搜索 `status.json` 642.986955秒/1,422,639,104 B；固定估计96.0841365秒/1,389,166,592 B。搜索和估计的冷成本可相加为739.0710915秒，但这不是同一可信精度下的公平对照，也未包含所有审查/绘图/首次工具准备成本。该历史配置资源许可曾为3GB；本redteam的新实验必须遵守2 GiB，不能照抄旧许可。
 
-关联：[[redteam/theory/bie-audit]]、[[redteam/reports/error_certification]]、[[redteam/reports/shared_dtn_risks]]。
+关联：[[redteam/archive/eig-apost-2026-10/theory/bie-audit]]、[[redteam/archive/eig-apost-2026-10/reports/error_certification]]、[[redteam/archive/eig-apost-2026-10/reports/shared_dtn_risks]]。

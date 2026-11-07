@@ -1,8 +1,8 @@
 # 两条路线的后验误差究竟保证什么
 
 日期：2026-10-28。证据来自原始程序、理论证明和保存结果；审查详情见
-[[redteam/theory/bie-audit]]、[[redteam/theory/fem-audit]]，反例见
-[[redteam/cases/exact-mechanisms]]。**当前两项结果都不能称为已经取得的
+[[redteam/archive/eig-apost-2026-10/theory/bie-audit]]、[[redteam/archive/eig-apost-2026-10/theory/fem-audit]]，反例见
+[[redteam/archive/eig-apost-2026-10/cases/exact-mechanisms]]。**当前两项结果都不能称为已经取得的
 $10^{-10}$ 连续谱误差认证。它们也没有因缺少认证而被证实算错。**
 
 ## 1. 先对齐候选、场及尺度
@@ -104,5 +104,5 @@ $$
 | 条件误差公式本身成立 | 逐式核对原证明 | CONDITIONAL |
 | 以BIE为真值计算FEM effectivity | BIE未成为真值 | 不合法；本任务不使用 |
 
-已证明/数值支持/未证明/被反例否定这些层次按 [[redteam/reports/findings]] 逐项登记。
+已证明/数值支持/未证明/被反例否定这些层次按 [[redteam/archive/eig-apost-2026-10/reports/findings]] 逐项登记。
 补证据前不做“同可信误差”的性能排名，不通过增添防御性假设宣布所有问题已解决。

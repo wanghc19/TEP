@@ -1,6 +1,6 @@
 # FEM + DtN 数学与实现审计
 
-日期：2026-10-28。模式：`rigorous-proof / Review only`。范围是 I10.1/2 实际 FEM 路线，主要读 `s-enrich.md`、`enrich_i101.m`、`refine_i102.m`、配置及 g48 原始运行数据；不以既有审查的 PASS 作为证据。本文没有修改被审论文、代码或证明。基线见 [[redteam/baseline/fem]]；最终跨方法结论由 [[redteam/reports/mode_identity]] 和 [[redteam/reports/error_certification]] 综合。
+日期：2026-10-28。模式：`rigorous-proof / Review only`。范围是 I10.1/2 实际 FEM 路线，主要读 `s-enrich.md`、`enrich_i101.m`、`refine_i102.m`、配置及 g48 原始运行数据；不以既有审查的 PASS 作为证据。本文没有修改被审论文、代码或证明。基线见 [[redteam/archive/eig-apost-2026-10/baseline/fem]]；最终跨方法结论由 [[redteam/archive/eig-apost-2026-10/reports/mode_identity]] 和 [[redteam/archive/eig-apost-2026-10/reports/error_certification]] 综合。
 
 本次未发现一个已经证明会使当前 g48 候选错误的 FEM 基础公式或符号错误。已确认的重要限制是：**$10^{-10}$ 级半径是存在性/同目标/饱和性和数值评价预算成立时的条件结果，不能提升为当前已认证误差。** 这不是对条件定理的反例。
 

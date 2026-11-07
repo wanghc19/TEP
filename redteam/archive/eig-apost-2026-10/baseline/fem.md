@@ -1,6 +1,6 @@
 # FEM + DtN 基线
 
-日期：2026-10-28。位置：`/Users/whc/Documents/Work/epost`，分支 `codex/epost`，审计时版本 `e1866b7`。本记录直接读取实现、运行配置和原始结果；未重跑生产求解。理论审计见 [[redteam/theory/fem-audit]]。
+日期：2026-10-28。位置：`/Users/whc/Documents/Work/epost`，分支 `codex/epost`，审计时版本 `e1866b7`。本记录直接读取实现、运行配置和原始结果；未重跑生产求解。理论审计见 [[redteam/archive/eig-apost-2026-10/theory/fem-audit]]。
 
 ## 1. 实际对象及入口
 

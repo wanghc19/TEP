@@ -6,7 +6,7 @@
 
 这组文献最有价值的作用是**拆清哪些部件已有成熟先例，哪些连续认证步骤仍需为当前模型另外建立**。可计算谱下界、局部残差双范数、平衡通量、有限测试的 Fortin 相容、周期胞元 BIE 和模态 DtN 都已有直接或近邻方法。当前工作的潜在区别应落实在真实二维周期 lead、固定准周期参数、界面与全空间误差的可计算闭合，以及连续导模的识别/计数；这些目前仍是未完成的研究目标，不能写成已经取得的创新成果。
 
-当前实际状态以 [[redteam/reports/error_certification]]、[[research/projects/eig-apost/implementation/i10/README]]、[[research/explorations/spectral-counting/STATUS]] 为准：BIE 的 $R_{\rm num}$ 未认证；FEM 富化半径依赖饱和性、总评价误差及共同连续目标条件；完整离散端点惯性差仍不等于连续计数。13 篇中没有一篇可直接关闭这些全部条件。两个求解器的末位一致也不能填补文献迁移中缺少的证明。
+当前实际状态以 [[redteam/archive/eig-apost-2026-10/reports/error_certification]]、[[research/projects/eig-apost/implementation/i10/README]]、[[research/explorations/spectral-counting/STATUS]] 为准：BIE 的 $R_{\rm num}$ 未认证；FEM 富化半径依赖饱和性、总评价误差及共同连续目标条件；完整离散端点惯性差仍不等于连续计数。13 篇中没有一篇可直接关闭这些全部条件。两个求解器的末位一致也不能填补文献迁移中缺少的证明。
 
 ## 逐篇比较矩阵
 
