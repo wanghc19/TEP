@@ -1,24 +1,28 @@
-% Section 4. Budget 2.75 pages.
+% Section 3. Budget 2.75 pages.
 % Source: draft/bie-enclosure/s-discretization.tex (clean version).
 \section{Discretization and candidate computation}\label{sec:discretization}
 
-We discretize the reduction of \cref{prop:reduction}: lead cells by boundary integral equations
-with port Rayleigh amplitudes, the decaying half-guide solutions by an ordered
-QZ decomposition, and the center cell by layer potentials plus background
-Rayleigh waves. The output is a candidate $\widehat k$ with coefficients. We
-make no claim on its accuracy here: \cref{sec:bound} bounds the
-spectral distance of whatever field these coefficients define. Fix $\beta$
-and a wavenumber $k>0$ with $k^2\in G_\beta$.
+Candidates are computed on the center cell, as in the transparent boundary
+conditions of Fliss \cite[Thm.~4.5]{Fliss2013}: a guided mode restricted to
+$\mathcal C_0$ has port Cauchy data of finite-energy half-guide solutions. The
+Dirichlet-to-Neumann form of this condition fails at countably many Dirichlet
+eigenvalues in the gap \cite[Thm.~4.1]{Fliss2013}, which Robin-to-Robin
+conditions avoid \cite{FlissKlindworthSchmidt2015}; we impose instead that the
+port states lie in the decaying subspaces themselves. Lead cells are
+discretized by boundary integral equations with port Rayleigh amplitudes, the
+decaying half-guide solutions by an ordered QZ decomposition, and the center
+cell by layer potentials plus background Rayleigh waves. The output is a
+candidate $\widehat k$ with coefficients. We make no claim on its accuracy here:
+\cref{sec:bound} bounds the spectral distance of whatever field these
+coefficients define. Fix $\beta$ and a wavenumber $k>0$ with $k^2\in G_\beta$.
 
 \subsection{Port Fourier basis and Rayleigh waves}
 Let $\beta_m=\beta+2\pi m/d$, $\psi_m(y)=d^{-1/2}\ee^{\ii\beta_my}$, truncated to
 $|m|\le M$, $K=2M+1$. With $\kappa_{\mathrm e}=k\rho_{\mathrm e}^{1/2}$ let
 $\gamma_m=(\kappa_{\mathrm e}^2-\beta_m^2)^{1/2}$ with $\Im\gamma_m\ge0$, and
-$\boldsymbol\gamma=\diag(\gamma_m)$.
-
-\begin{assumption}[no Wood anomaly]\label{ass:wood}
-$\gamma_m(k)\ne0$ for all $m\in\ZZ$.
-\end{assumption}
+$\boldsymbol\gamma=\diag(\gamma_m)$. We assume that $k$ is not a Wood point,
+that is, $\gamma_m(k)\ne0$ for all $m\in\ZZ$. Only the candidate search uses
+this; the bound of \cref{sec:bound} does not.
 
 In a vertical background strip, a $\beta$-quasi-periodic Helmholtz solution is
 $u=\sum_m(a_mr_m^{x_p}+b_ml_m^{x_p})$ with
@@ -29,7 +33,7 @@ amplitudes by $\mathsf E(\ell)=\diag(\ee^{\ii\gamma_m\ell})$. For a port with
 normal $\pm e_x$, amplitudes map to the Fourier coefficients of (value, normal
 derivative) by $\mathsf C_\pm=\left[\begin{smallmatrix}I&I\\
 \pm\ii\boldsymbol\gamma&\mp\ii\boldsymbol\gamma\end{smallmatrix}\right]$,
-invertible under \cref{ass:wood}.
+invertible away from Wood points.
 
 \subsection{Layer potentials on a rod}\label{sec:layer}
 Let $G^{(\kappa)}$ be the free-space Green function $\frac{\ii}{4}H^{(1)}_0(\kappa|
@@ -40,7 +44,8 @@ one. We use the near-image split
   \mathbf z'+nd\,e_y)+G^{(\kappa)}_{\mathrm{far}}(\mathbf z-\mathbf z'),
 \end{equation}
 where $G^{(\kappa)}_{\mathrm{far}}$ is a smooth Helmholtz solution away from the
-images $|n|\ge2$ (\cref{sm:cor-near-image}). For a curve strictly inside a cell,
+images $|n|\ge2$, since $(\Delta+\kappa^2)G^{(\kappa)}_\QP(\cdot,\mathbf 0)=
+-\sum_n\ee^{\ii\beta nd}\delta_{nd\,e_y}$ \cite{Linton1998}. For a curve strictly inside a cell,
 a quasi-periodic layer potential is thus three free-space layer potentials plus
 a smooth correction near the closed cell, the structure used in
 \cite{BarnettGreengard2010,BarnettGreengard2011,ChoBarnett2015}; the smooth
@@ -115,8 +120,8 @@ eigenvalues $|\zeta|<1$ first gives the leading columns $\mathsf Z_+$ and
   \mathsf E_{\mathrm L}\mathsf Z_+=\mathsf E_{\mathrm R}\mathsf Z_+\mathsf P_+ .
 \end{equation}
 Hence the port states $z_j=\mathsf Z_+\mathsf P_+^jc$ of consecutive cells are
-compatible and decay geometrically: the discrete analogue of
-$\mathcal V_+(k)$. On the left, the $K$ eigenvalues $1/\zeta$ inside the unit circle of the pencil
+compatible and decay geometrically: the discrete analogue of the
+finite-energy solutions in the right half guide. On the left, the $K$ eigenvalues $1/\zeta$ inside the unit circle of the pencil
 $(\mathsf E_{\mathrm R},\mathsf E_{\mathrm L})$ give $\mathsf Z_-$ and $\mathsf P_-$ with
 $\mathsf E_{\mathrm R}\mathsf Z_-=\mathsf E_{\mathrm L}\mathsf Z_-\mathsf P_-$.
 Using the whole Schur subspace keeps multiple and nonnormal multipliers; a
@@ -127,27 +132,17 @@ that $k$ is rejected. The discrete Cauchy data spaces are
 $\mathcal G^h_\pm(k)=\operatorname{range}\mathsf C_\pm\mathsf Z_\pm$.
 
 \subsection{Center cell}\label{sec:center}
-\begin{theorem}[center-cell representation]\label{thm:center-rep}
-Let \cref{ass:wood} hold, let $\Omega_0$ be empty or a simply connected $C^2$
-domain strictly inside $\mathcal C_0$, and assume that the whole-plane outgoing
-transmission problem with exchanged interior and exterior wavenumbers is
-solvable for all jump data. If $u\in\mathcal U_0(k)$ is $H^2$ up to the boundary
-in each homogeneous part, then there are densities
-$\tau\in H^{1/2}(\partial\Omega_0)$, $\omega\in H^{-1/2}(\partial\Omega_0)$ and
-unique Rayleigh sequences $(a^-_{0,m})$, $(b^+_{0,m})$ such that $u$ has the form
-\eqref{eq:cell-rep} with
+In $\mathcal C_0$ we use \eqref{eq:cell-rep} with $\Omega=\Omega_0$ (no layer
+potentials if $\Omega_0=\varnothing$) and
 \[
-  u_{\mathrm b}=u_{\mathrm{hom}}=\sum_{m\in\ZZ}\bigl(a^-_{0,m}r_m^{x_-}+b^+_{0,m}l_m^{x_+}\bigr),
+  u_{\mathrm b}=u_{\mathrm{hom}}=\sum_m\bigl(a^-_{0,m}r_m^{x_-}+b^+_{0,m}l_m^{x_+}\bigr),
 \]
-the series converging in $H^1(\mathcal C_0)$; the densities are unique as well.
-\end{theorem}
-
-The proof (\cref{sm:proof-center-rep}) follows the complementary-field
-argument of \cite[App.~A]{BarnettGreengard2010}, with the incident port terms
-added; for real positive wavenumbers the uniqueness half of the exchanged
-problem holds automatically. The field $u_{\mathrm{hom}}$ is the part entering
-through the two ports and may be nonzero even if $\Omega_0=\varnothing$, so
-quasi-periodic layer potentials alone do not represent the center field.
+the part of the field entering through the two ports. It may be nonzero even
+if $\Omega_0=\varnothing$, so quasi-periodic layer potentials alone do not
+represent the center field. The ansatz follows the complementary-field
+representation of \cite[App.~A]{BarnettGreengard2010} with the incident port
+terms added. We use it only as an ansatz; neither completeness nor uniqueness of
+the representation enters \cref{sec:bound}.
 
 After truncation, the center unknown is $\xi=(\eta;a^-_0;b^+_0)\in\CC^{n+2K}$
 ($n=0$ for an empty center), and the discrete transmission equations read
@@ -159,8 +154,8 @@ $J(k)\xi=0$. The center field has the port amplitudes
 \]
 
 \subsection{Discrete eigenvalue problem and candidates}\label{sec:nep}
-The discrete form of \cref{prop:reduction} asks for $\xi\ne0$ and $c_\pm\in\CC^K$
-with
+A candidate is a center solution whose port states lie in the decaying
+subspaces: we ask for $\xi\ne0$ and $c_\pm\in\CC^K$ with
 \begin{equation}\label{eq:nep}
   J(k)\xi=0,\qquad \mathsf Y_\pm\xi=\mathsf Z_\pm c_\pm .
 \end{equation}
@@ -181,8 +176,8 @@ On a complex neighborhood of a real interval free of Wood points, if both pencil
 are regular with the stable cluster separated from the rest, and the matrices
 used in the elimination are invertible, then $\det\mathsf A$ is analytic except
 for poles where $\mathsf D_\pm$ or those matrices are singular. A singular
-$\mathsf D_\pm$ is the discrete counterpart of a Dirichlet exceptional value, at
-which \eqref{eq:nep} remains valid. These conditions are monitored only at
+$\mathsf D_\pm$ is the discrete counterpart of a Dirichlet exceptional value
+\cite[Thm.~4.1]{Fliss2013}, at which \eqref{eq:nep} remains valid. These conditions are monitored only at
 interpolation nodes; they are empirical checks of the search, on which the final
 interval does not depend.
 

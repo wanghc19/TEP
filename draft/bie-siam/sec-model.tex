@@ -1,6 +1,7 @@
-% Section 2. Budget 2.5 pages.
-% Source: draft/bie-enclosure/s-modelproblem.tex (clean version).
-\section{Model problem and the common gap}\label{sec:model}
+% Section 2. Budget 3 pages.
+% Source: draft/bie-enclosure/s-modelproblem.tex (clean version); the cell
+% notation was moved here from the former center-reduction section.
+\section{Model problem and spectral gap test}\label{sec:model}
 
 \subsection{Periodic media with a line defect}
 For $s\in\{-,+\}$ let $\rho_s$ be a coefficient with periods $L_s>0$ in $x$ and
@@ -13,7 +14,20 @@ $x>x_+$, and in the center cell $(x_-,x_+)\times I_d$, $x_\pm=\pm L_0/2$,
 contains one further rod $\Omega_0$ or none. Here $I_d:=(-d/2,d/2)$, and the
 cell windows are chosen so that every rod closure stays away from the cell
 boundary. We write $\Upsilon$ for the union of all rod boundaries,
-$0<\rin\le\rho\le\rax$, and $B:=\RR\times I_d$.
+$0<\rin\le\rho\le\rax$, and $B:=\RR\times I_d$. \Cref{fig:model-geometry}
+shows the strip within the two-dimensional medium.
+
+The center cell and the $j$th left and right periodic cells ($j\ge0$) are
+$\mathcal C_0=(x_-,x_+)\times I_d$, $\mathcal C_{j,+}=\mathcal C_{0,+}+jL_+e_x$ and
+$\mathcal C_{j,-}=\mathcal C_{0,-}-jL_-e_x$, with
+$\mathcal C_{0,+}=(x_+,x_++L_+)\times I_d$ and
+$\mathcal C_{0,-}=(x_--L_-,x_-)\times I_d$. The rods are $\Omega_0\subset\mathcal C_0$
+(possibly empty) and $\Omega_{j,\pm}=\Omega_\pm\pm jL_\pm e_x$. The artificial
+interfaces are the ports $\Gamma_\pm=\{x_\pm\}\times I_d$, with normal $\pm e_x$
+pointing into the leads, and the walls $\Gamma_{j,\pm}=\{x_\pm\pm(j+1)L_\pm\}\times
+I_d$ between consecutive cells.
+
+\input{fig-waveguide}
 
 Fix $\beta\in[-\pi/d,\pi/d)$. A guided mode at wavenumber $k>0$ is a nonzero
 solution of $-\Delta w=k^2\rho w$ in $\RR^2$ of the form
@@ -38,16 +52,22 @@ $\rho$ by $\rho_s$ in the whole strip gives the periodic operators $A_s(\beta)$
 on $\mathcal H_s:=L^2(B,\rho_s\,\dd x\,\dd y)$. Since $\rho$ enters only the
 mass term, Fourier analysis on the quasi-periodic cylinder gives
 \begin{equation}\label{eq:domain-h2}
-  D(A(\beta))=D(A_\pm(\beta))=H^2_\beta(B),
+  D(A(\beta))=D(A_\pm(\beta))=H^2_\beta(B),\qquad
+  \|D^2u\|_{L^2(B)}=\|\Delta u\|_{L^2(B)}\le\rax^{1/2}\|A(\beta)u\|_{\mathcal H},
 \end{equation}
-with equivalent graph and $H^2$ norms. In particular, functions in
+with equivalent graph and $H^2$ norms. Indeed, after the expansion in
+$\ee^{\ii\beta_my}$, $\beta_m=\beta+2\pi m/d$, and the Fourier transform in $x$,
+both $\|D^2u\|^2$ and $\|\Delta u\|^2$ equal
+$\sum_m\int(\xi^2+\beta_m^2)^2|\widehat u_m(\xi)|^2\,\dd\xi$ by Parseval, and
+$\Delta u=-\rho A(\beta)u$. In particular, functions in
 $D(A(\beta))$ have no jumps across $\Upsilon$; the trace estimate of
 \cref{sec:bound} rests on this fact.
 
-\subsection{Essential spectrum and the common gap}
-For $\theta\in[-\pi/L_s,\pi/L_s)$ let $A_s(\beta,\theta)$ be the Bloch operator
+\subsection{Essential spectrum and a finite-dimensional test}\label{sec:gap-test}
+For each lead $s$ and each $\theta\in[-\pi/L_s,\pi/L_s)$, let $A_s(\beta,\theta)$
+be the Bloch operator
 on the cell $(0,L_s)\times I_d$ with phases $\ee^{\ii\theta L_s}$ in $x$ and
-$\ee^{\ii\beta d}$ in $y$, and let $\lambda_{s,1}(\theta)\le\lambda_{s,2}(\theta)
+$\ee^{\ii\beta d}$ in $y$, and let $\lambda_{s,1}(\beta,\theta)\le\lambda_{s,2}(\beta,\theta)
 \le\cdots$ be its eigenvalues. Here $\theta$ is the Bloch wavenumber of the lead
 along $x$, not a second transverse phase: a band that crosses an energy at some
 $\theta$ carries a wave into that lead.
@@ -57,39 +77,44 @@ For every real $\beta$,
 \[
   \sigma_{\mathrm{ess}}(A(\beta))=\sigma(A_-(\beta))\cup\sigma(A_+(\beta)),
   \qquad
-  \sigma(A_s(\beta))=\bigcup_{n\ge1}\bigcup_{\theta}\{\lambda_{s,n}(\theta)\}.
+  \sigma(A_s(\beta))=\bigcup_{n\ge1}\bigcup_{\theta}\{\lambda_{s,n}(\beta,\theta)\}.
 \]
 \end{proposition}
 
-For identical leads this is \cite[Prop.~3.1]{Fliss2013}; \cite[Rem.~2.1(2)]{Fliss2013}
-notes the extension to different leads. A proof (a parametrix built from the two
-periodic resolvents, and Weyl sequences supported far out in either lead) is
-given in \cref{sm:proof-ess}. Since $\|\nabla u\|^2\ge\|\partial_y u\|^2\ge
-b_\beta^2\|u\|^2_{L^2(B)}$ with $b_\beta:=\min_m|\beta+2\pi m/d|$, all three
-operators are bounded below by $\lambda_0:=b_\beta^2/\rax$, which is positive
-for $\beta\notin2\pi\ZZ/d$.
+For identical leads this is \cite[Prop.~3.1]{Fliss2013}; for two different
+periodic half-planes the first identity is stated in
+\cite[Prop.~2.1]{KlindworthSchmidtFliss2014}, with a reference to the same
+argument. The second is the Floquet--Bloch decomposition
+\cite{Kuchment1993}, \cite[eq.~(3.3)]{Fliss2013} applied to each lead. Only the
+inclusion $\sigma_{\mathrm{ess}}(A(\beta))\subset\sigma(A_-(\beta))\cup
+\sigma(A_+(\beta))$ is used below, and we prove it.
 
-\begin{assumption}[common gap]\label{ass:gap}
-For fixed $\beta$, the open interval $G_\beta=(g_-,g_+)$, $0<g_-<g_+$, does not
-meet $\sigma(A_-(\beta))\cup\sigma(A_+(\beta))$.
-\end{assumption}
+\begin{proof}[Proof of the inclusion]
+Let $\lambda\notin\sigma(A_-)\cup\sigma(A_+)$ be real and set
+$R_\pm=(A_\pm-\lambda)^{-1}$, $R_0=(A+1)^{-1}$. Take real smooth functions
+$\chi_-,\chi_0,\chi_+$ of $x$ alone with $\chi_-^2+\chi_0^2+\chi_+^2=1$, $\chi_0$
+compactly supported, and $\chi_\pm$ supported where $\rho=\rho_\pm$. The weighted
+norms are equivalent, and by \eqref{eq:domain-h2}
+$Q=\chi_-R_-\chi_-+\chi_0R_0\chi_0+\chi_+R_+\chi_+$ maps $\mathcal H$ boundedly
+into $D(A)$. On the support of $\chi_\pm$ we have $A=A_\pm$, so
+$(A-\lambda)\chi_\pm R_\pm\chi_\pm=\chi_\pm^2+[A,\chi_\pm]R_\pm\chi_\pm$, and
+similarly for $\chi_0$. Hence $(A-\lambda)Q=I+K$, where $K$ is a finite sum of
+terms $[A,\chi]R\chi$, with $[A,\chi]v=-\rho^{-1}(2\chi'\partial_xv+\chi''v)$, and
+of $-(\lambda+1)\chi_0R_0\chi_0$. Since $\chi'$, $\chi''$ and $\chi_0$ have
+bounded support, each term factors through a compact embedding
+$H^2\hookrightarrow H^1$ or $H^1\hookrightarrow L^2$ on a bounded window, so $K$
+is compact. Thus the range of $A-\lambda$ contains the range of the Fredholm
+operator $I+K$; it is closed and of finite codimension, and by self-adjointness
+the kernel is finite dimensional. So $A-\lambda$ is Fredholm and
+$\lambda\notin\sigma_{\mathrm{ess}}(A)$.
+\end{proof}
 
-\begin{proposition}[discrete spectrum in the gap]\label{prop:discrete}
-Under \cref{ass:gap} the set $\sigma(A(\beta))\cap G_\beta$ consists of isolated
-eigenvalues of finite multiplicity, which can accumulate only at $g_\pm$; the
-eigenfunctions decay exponentially as $|x|\to\infty$.
-\end{proposition}
-
-The proof (\cref{sm:proof-discrete}) uses a conjugated resolvent of $A_\pm$
-with a weight that vanishes on the support of the source. The spectral-distance
-bound of \cref{sec:bound} holds for all of $\sigma(A(\beta))$; the gap is used
-only to interpret the spectral point it produces.
-
-\subsection{A finite-dimensional test for the common gap}\label{sec:gap-test}
-To conclude that an interval $[\mu-R,\mu+R]$ contains an eigenvalue, we must
-show for each lead that the $n_s$th band lies below the interval and the
-$(n_s+1)$st band above it, for all $\theta$. Two ingredients reduce this to
-finitely many matrix tests.
+For the remainder of this subsection, fix $\beta\in[-\pi/d,\pi/d)$ and write
+$\lambda_{s,n}(\theta)=\lambda_{s,n}(\beta,\theta)$.
+By \cref{prop:ess}, any open interval $G_\beta=(g_-,g_+)$ disjoint from both
+lead spectra is a gap in the essential spectrum of $A(\beta)$. To verify that
+a given interval lies in such a common gap, we bound the adjacent bands of
+each lead uniformly in the Bloch wavenumber $\theta$.
 
 \begin{lemma}[Lipschitz bound for band roots]\label{lem:lipschitz}
 If $\rho_s\ge\rho_{\min,s}>0$, then for all $n$, $\theta$, $\theta'$,
@@ -127,9 +152,32 @@ $n(\cdot)$ the number of negative eigenvalues,
 \]
 \end{theorem}
 
-The left inequality is the Ritz bound; the right one follows from coercivity on
-the complement after completing the square in the cross term
-(\cref{sm:proof-complement}). Keeping the matrix $G_{\mathcal I}$, rather than a
+\begin{proof}
+Let $b[u]=\int\rho_s|u|^2$ on the cell, so that the eigenvalues
+$\lambda_{s,j}(\theta)$ are those of the pencil $(a_\theta,b)$ on the gauged form
+domain. Let $P$ be the $L^2$-orthogonal projection onto
+$\operatorname{span}\{\psi_i:i\in\mathcal I\}$, and write $u=v+w$ with
+$v=Pu=\sum_{\mathcal I}x_i\psi_i$ and $w=(I-P)u$. The plane waves diagonalize
+$a_\theta$, so $a_\theta$ and the unweighted $L^2$ product have no cross terms
+between $v$ and $w$. On the complement $a_\theta[w]\ge\Lambda_{\mathcal I}\|w\|^2$
+and $b[w]\le\rho_{\max,s}\|w\|^2$, hence $(a_\theta-\lambda b)[w]\ge
+c_{\mathcal I}\|w\|^2$. The cross term is
+$-2\lambda\Re\langle\rho_sv,w\rangle=-2\lambda\Re\langle(I-P)\rho_sv,w\rangle$, and
+$\|(I-P)\rho_sv\|^2=x^*G_{\mathcal I}x$. Completing the square,
+\[
+  (a_\theta-\lambda b)[u]\ge x^*T^-_{\mathcal I}x
+  +c_{\mathcal I}\Bigl\|w-\frac{\lambda}{c_{\mathcal I}}(I-P)\rho_sv\Bigr\|^2 .
+\]
+For $w=0$ we get $(a_\theta-\lambda b)[v]=x^*T_{\mathcal I}x$, and the min--max
+principle gives the left inequality. For the right one, let $V$ be a subspace on
+which $a_\theta-\lambda b$ is negative definite, of dimension
+$\#\{j:\lambda_{s,j}(\theta)<\lambda\}$. If $u\in V\setminus\{0\}$ had $Pu=0$, then
+$(a_\theta-\lambda b)[u]\ge c_{\mathcal I}\|u\|^2>0$, a contradiction; so $P$ is
+injective on $V$, and by the display $T^-_{\mathcal I}$ is negative definite on
+the coefficient vectors of $PV$. Hence $n(T^-_{\mathcal I})\ge\dim V$.
+\end{proof}
+
+Keeping the matrix $G_{\mathcal I}$, rather than a
 scalar contrast bound, is what makes a lower bound possible with a small basis
 ($|\mathcal I|=169$ below). For a rod $\Omega_s$ with contrast
 $\delta_s=\rho_{s,\mathrm c}-\rho_{\mathrm e}$ and

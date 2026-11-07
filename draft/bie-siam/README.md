@@ -2,7 +2,7 @@
 
 BIE = boundary integral equation（边界积分方程）；SIAM = Society for Industrial and Applied Mathematics；SISC = SIAM Journal on Scientific Computing；sm = supplementary materials（补充材料）。
 
-内容来源是中文研究笔记 `draft/bie-enclosure/`（对外版 `main-clean.tex`），按页数预算重写成英文，不逐句翻译。正文不超过 20 页（含参考文献），证明、计入舍入的计算细节和补充表格放在补充材料里；可复核的数据与检查程序在 `release/bie-enclosure-sisc/`。
+内容来源是中文研究笔记 `draft/bie-enclosure/`（对外版 `main-clean.tex`），按页数预算重写成英文，不逐句翻译。正文不超过 20 页（含参考文献），正文结论的证明都在正文；计入舍入的计算细节和补充表格放在补充材料里；可复核的数据与检查程序在 `release/bie-enclosure-sisc/`。
 
 - `main.tex`：正文；`sec-*.tex` 为各节，`sec-acknowledgments.tex` 是致谢与 AI 使用声明（按 SIAM AI 政策）。
 - `supplement.tex`：补充材料；`sm-*.tex` 为各部分。
@@ -16,14 +16,13 @@ BIE = boundary integral equation（边界积分方程）；SIAM = Society for In
 | 节 | 内容 | 预算 | 实际 |
 |---|---|---:|---:|
 | 1 | 引言（含标题、摘要、贡献、与已有方法的关系） | 1.75 | 1.5 |
-| 2 | 模型、本质谱、公共谱隙及其有限维判据（只给陈述） | 2.5 | 2.5 |
-| 3 | 中心胞元约化、表示定理（证明进补充材料） | 1.5 | 1 |
-| 4 | 离散：Rayleigh、近像分解、引线 S 矩阵与衰减子空间、$\mathsf A(k)$、行列式求根 | 2.75 | 3 |
-| 5 | 实际场、跳跃、分组迹估计、谱距离定理及证明、引线尾、可靠计算依赖表 | 6 | 4 |
-| 6 | 例 1 与 FEM 对照；例 2 与谱隙端点例合表；分辨率一句 | 3.75 | 3 |
-| 7 | 结论 | 0.25 | 0.25 |
+| 2 | 模型与胞元记号、本质谱（证明所需的包含方向）、公共谱隙的有限维判据（含证明） | 3 | 3 |
+| 3 | 离散：Rayleigh、近像分解、引线 S 矩阵与衰减子空间、$\mathsf A(k)$、行列式求根 | 2.75 | 3 |
+| 4 | 实际场与正则性引理（含证明）、跳跃、分组迹估计（含证明）、谱距离定理及证明、引线尾、可靠计算依赖表 | 6 | 未重估 |
+| 5 | 例 1 与 FEM 对照；例 2 与谱隙端点例合表；分辨率一句 | 3.75 | 3 |
+| 6 | 结论 | 0.25 | 0.25 |
 | — | 参考文献 | 1.5 | 2（34 条） |
-| | 合计 | 20 | 17 |
+| | 合计 | 20 | 18（2026-11-07 编译；各节实际页数未重估） |
 
 取舍依据：2026-11-06 价值排序表（经理给出，用户同意按此开写）：谱距离定理、分组迹估计、引线尾、例 1 区间留在正文；公共谱隙判据、表示定理、本质谱命题只留陈述；附录 C 的包络引理、中间量表、分辨率表与计算量表进补充材料；§3.4 DtN 关系、投影能带图、行列式图、中心面板贡献图、代理拟合参数删除或进补充材料。
 
@@ -37,4 +36,7 @@ BIE = boundary integral equation（边界积分方程）；SIAM = Society for In
 - next：填 release 引用（R1、R2 已完成）；R3 返回后补 FEM 代价—宽度序列；再整体通读一遍（含补充材料）。
 - done：作者、邮箱、机构、投稿日期改为占位（Author、author@example.com、Example University、DATE）。
 - done：致谢节写入 AI 使用声明，依据 SIAM 政策 2.0 版（2026 年 5 月生效，原页 HTML 由用户存于 `tmp/`）：在 Acknowledgments 报告用途并附 “The authors assume responsibility for all content.”；政策不要求模型型号，只写 Claude 与 GPT；按政策列出的方面写定理证明、代码与实验（代码公开于 release 包）、图表、文献与文字。剩余 TODO：release 引用、作者亲自核查的内容。
+- done（2026-11-07）：结构调整，减少对补充材料的引用。用户把谱隙判据的证明移回第 2 节，删去公共谱隙假设和"谱隙中离散谱"命题。随后删去原第 3 节（中心胞元约化）：胞元与端口记号移到 2.1 节，约化本身改为第 3 节（原第 4 节）开头一段，引用 Fliss2013 Thm 4.1/4.5 和 FlissKlindworthSchmidt2015。中心胞元表示定理改为注记，只作为 ansatz，引用 BarnettGreengard2010 App. A。无 Wood 异常假设改为一句说明（只用于候选搜索）。近像分解改引 Linton1998。补充材料删去约化、表示定理和近像推论的证明。本质谱命题改引 KlindworthSchmidtFliss2014 Prop. 2.1（两侧引线不同的陈述），Fliss2013 Rem. 2.1(2) 只说可以推广，没有给出谱的结论；正文给出最终结论所需的包含方向 $\sigma_{\mathrm{ess}}(A)\subset\sigma(A_-)\cup\sigma(A_+)$ 的证明（参数逆）。正文 18 页、补充材料 10 页，无未定义引用、无 overfull。
+- done（2026-11-07）：引言把贡献与文章结构分开，不用列表。贡献段写三项：谱距离定理（机制是经典的，本文推广到跨无穷多胞元的分片场并给出可计算常数）、公共谱隙的有限维检验（用户决定列为贡献）、所有输入计入舍入的评估；例子只作为一句数字证据。候选计算（透明边界条件、Rayleigh 展开、近像分解、代理源）并入"已知部件、不声称为新"一段。末尾新增结构段。摘要删去候选算法的细节，补一句谱隙检验。正文仍 18 页，第 2 节仍从第 2 页开始。
+- done（2026-11-07）：第 2 节标题改为 Model problem and spectral gap test，2.2 节改为 Essential spectrum and a finite-dimensional test。正文定理的证明全部移回正文：全局 $H^2$ 引理并入式 eq:domain-h2（Parseval 恒等式与常数），试验场逐片 $H^2$ 正则性改为第 4 节的 lem:piecewise-h2 并附证明，prop:trace 的证明移到命题之后。`sm-proofs.tex` 删除，补充材料只剩可靠计算的误差界与数据表。正文 18 页，补充材料 9 页，无 overfull、无未定义引用。
 - open：真实作者信息；FEM 路线的引用方式；release 包的引用方式。保留未改的轻微重名：$\tau$（密度）与 $\tau_g$（迹估计常数），$n$（密度未知数个数）与 $n(\cdot)$、$n_s$。

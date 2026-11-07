@@ -53,36 +53,47 @@ concern bounded domains. Here the strip is unbounded, the discrete field is
 generated cell by cell in the half guides, and besides the material interfaces
 there are infinitely many artificial walls and seams.
 
-\emph{Contributions.} We consider a strip with periodic media on both sides
-(possibly different) and a local defect in a center cell, with piecewise
-constant coefficients and one rod per cell.
-\begin{itemize}
-\item A reduction to the center cell in terms of Cauchy data spaces of the half
-  guides (\cref{sec:reduction}), valid without unique solvability of the
-  half-guide Dirichlet problem.
-\item A boundary integral discretization with port Rayleigh amplitudes, cell
-  scattering matrices, decaying subspaces from an ordered QZ decomposition, and a
-  port-reduced matrix $\mathsf A(k)$ whose determinant is searched by Chebyshev
-  interpolation (\cref{sec:discretization}).
-\item A spectral-distance theorem for piecewise Helmholtz fields
-  (\cref{thm:distance}): $\operatorname{dist}(\widehat k^2,\sigma(A(\beta)))$ is
-  bounded by grouped interface jumps $\varepsilon_g$, weighted by trace constants
-  $C_g$ that are explicit in the geometry. It holds for the whole spectrum.
-\item A rounding-inclusive evaluation of all inputs: jump integrals on panels
-  with Chebyshev error bounds in ball arithmetic, sums over infinitely many cells
-  through the propagation matrix, mass lower bounds on disks, and a
-  finite-dimensional test for the common gap (\cref{sec:gap-test}).
-\item Examples (\cref{sec:results}): a star-shaped defect with a $\mu$-interval
-  of width $2.74\times10^{-11}$ in $14$ minutes, an empty defect with
-  $L_-\ne L_+$ and no reflection symmetry, and guided modes approaching a gap
-  edge, where the lead contraction rate rises to $0.80$ and the width stays below
-  $10^{-11}$.
-\end{itemize}
-Near-image splitting, proxy representations
-\cite{BarnettGreengard2010,BarnettGreengard2011,ChoBarnett2015}, and reductions
-that avoid Dirichlet exceptional values \cite{FlissKlindworthSchmidt2015} are
-known and not claimed as new. We do not claim that the eigenvalue in the
-interval is unique, nor its index or multiplicity, and we do not study a priori
-convergence: the theorem applies to a given candidate and field, however they
-were obtained. Proofs and the details of the reliable evaluation are in the
-supplementary materials.
+\emph{Contributions.} We consider a strip with periodic media on both sides,
+possibly different, and a local defect in a center cell, with piecewise
+constant coefficients and one rod per cell. The main result is a
+spectral-distance theorem for piecewise Helmholtz fields on this unbounded
+strip (\cref{thm:distance}): for a trial field that solves the Helmholtz
+equation exactly in every homogeneous piece,
+$\operatorname{dist}(\widehat k^2,\sigma(A(\beta)))$ is bounded by the grouped
+$L^2$ norms $\varepsilon_g$ of its jumps across rod boundaries and across the
+infinitely many artificial walls and seams, weighted by trace constants $C_g$
+that are explicit in the geometry. The resolvent mechanism behind such bounds
+is classical; the theorem adapts it to a field generated cell by cell in both
+half guides, with constants that can be evaluated. The second result is a
+finite-dimensional test for a common gap of the two leads
+(\cref{thm:complement,prop:panel}). A comparison with the Fourier complement
+gives guaranteed lower bounds for the band above the gap from a small
+plane-wave basis, and a Lipschitz bound in the Bloch wavenumber turns finitely
+many inertia tests into bounds for all wavenumbers. Third, every input is
+evaluated with rounding included: the jump integrals on curved interfaces, the
+sums over infinitely many lead cells through the propagation matrix, the mass
+lower bound, and the gap test. Together these give an interval that contains an
+eigenvalue by the common gap alone, without a local isolation condition or a
+mode count. For a star-shaped defect between two different leads, one run of
+$14$ minutes gives a $\mu$-interval of width $2.74\times10^{-11}$; for modes
+approaching a gap edge, where the lead contraction rate rises to $0.80$, the
+width stays below $10^{-11}$.
+
+Candidates are computed by boundary integral equations assembled from known
+components: transparent boundary conditions for the half guides
+\cite{JolyLiFliss2006,Fliss2013,FlissKlindworthSchmidt2015}, Rayleigh
+expansions at artificial interfaces, and near-image splitting and proxy
+representations of quasi-periodic fields
+\cite{BarnettGreengard2010,BarnettGreengard2011,ChoBarnett2015}. None of these
+is claimed as new, and the enclosure does not depend on the accuracy of the
+candidate. We do not claim that the eigenvalue in the interval is unique, nor
+its index or multiplicity, and we do not study a priori convergence: the
+theorem applies to a given candidate and field, however they were obtained.
+
+\Cref{sec:model} introduces the model and the gap test, \cref{sec:discretization}
+the computation of candidates, and \cref{sec:bound} the trial field, the
+spectral-distance theorem and the rounding-inclusive evaluation.
+\Cref{sec:results} reports the examples, including a comparison with a finite
+element enclosure, and \cref{sec:conclusion} concludes. The results stated here
+are proved in the main text; the supplementary materials contain the error
+bounds of the reliable evaluation and additional numerical data.

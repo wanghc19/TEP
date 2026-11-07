@@ -1,4 +1,4 @@
-% Section 5. Budget 6 pages.
+% Section 4. Budget 6 pages.
 % Source: draft/bie-enclosure/s-error.tex (clean version).
 \section{A spectral-distance bound for piecewise Helmholtz fields}\label{sec:bound}
 
@@ -75,10 +75,34 @@ The resulting \emph{trial field} satisfies:
 (P2) the seam mismatch is treated as an interface jump;
 (P3) for analytic rod boundaries, as in \cref{sec:results}, $\widehat u$ is $H^2$ up to
 the boundary of each piece and has ordinary one-sided traces on walls and seams
-(\cref{sm:proof-piecewise-h2});
+(\cref{lem:piecewise-h2});
 (P4) $\widehat u\in\mathcal H$, which follows from the decay of $\mathsf P_\pm^j$ and
 is checked in \cref{sec:computation}.
 It is not in $H^1_\beta(B)$.
+
+\begin{lemma}[piecewise regularity of the trial field]\label{lem:piecewise-h2}
+Assume that every material boundary has a regular embedded analytic periodic
+parametrization, that the image curves and proxies are at positive distance from
+the closed cells, that the densities are trigonometric polynomials in that
+parameter, and that \eqref{eq:mfs-field} uses one $\kappa_{\mathrm e}$ in the
+background. Then $\widehat u$ is $H^2$ up to the boundary in each homogeneous
+piece and has ordinary value and normal traces on both sides of every wall and
+seam.
+\end{lemma}
+
+\begin{proof}
+Far images, proxies and plane waves are smooth near the closed pieces, so it
+suffices to consider $v=\mathcal S^{(\kappa)}[\omega]+\mathcal D^{(\kappa)}[\tau]$ on
+one curve $\Gamma$. In the sense of distributions $(\Delta+\kappa^2)v=
+-\omega\delta_\Gamma+\operatorname{div}(\tau\nu\delta_\Gamma)$. In normal coordinates
+let $w=0$ inside and $w=(\tau(s)-t\omega(s))\chi(t)$ outside, with a smooth cutoff
+$\chi$. Then $w$ has value jump $\tau$ and normal jump $-\omega$, so
+$(\Delta+\kappa^2)w=F-\omega\delta_\Gamma+\operatorname{div}(\tau\nu\delta_\Gamma)$ with
+$F\in L^2_{\mathrm{loc}}$. Hence $(\Delta+\kappa^2)(v-w)=-F$ and $v-w\in
+H^2_{\mathrm{loc}}$, while $w$ is smooth up to $\Gamma$ from either side. Near walls
+and seams the one-sided cell formulas extend smoothly across, so there are no
+corner singularities.
+\end{proof}
 
 \subsection{Jumps and grouped defects}\label{sec:jumps}
 The interfaces are the rod boundaries $\mathscr E_{\mathrm{mat}}$, the walls
@@ -145,6 +169,11 @@ $\|D^2v\|^2=\|v_{xx}\|^2+2\|v_{xy}\|^2+\|v_{yy}\|^2$,
   \sum_{\Gamma\in\mathscr E_g}\|\partial_{\nu_\Gamma}v\|^2_{L^2(\Gamma)}\le D_{0,g}\|\nabla v\|^2
   +D_{1,g}\|D^2v\|^2 .
 \end{gather*}
+To compute the trace constant $C_g$, we bound its spectral multiplier on
+$[\lambda_0,\infty)$, where $\lambda_0:=\rax^{-1}\min_{m\in\ZZ}|\beta+2\pi m/d|^2$
+is a lower bound for $\sigma(A(\beta))$. Indeed, the transverse Fourier
+expansion gives $\|\nabla v\|^2\ge\|\partial_y v\|^2
+\ge\lambda_0\rax\|v\|^2\ge\lambda_0\|v\|_{\mathcal H}^2$.
 With $p_g(\lambda)=a_g+b_g\lambda+c_g\lambda^2$, $a_g=D_{0,g}/\rin$,
 $b_g=D_{1,g}+\ell_g^2D_{0,g}$, $c_g=\ell_g^2D_{1,g}\rax$, and
 \begin{equation}\label{eq:Cg}
@@ -158,11 +187,43 @@ the trace quantity
 \]
 \end{proposition}
 
-The proof (\cref{sm:proof-trace}) applies a weighted one-dimensional trace
-inequality on each normal segment, integrates with the Jacobian $1-t\kappa_\Gamma$,
-and uses $\|D^2v\|_{L^2(B)}=\|\Delta v\|_{L^2(B)}$ on the quasi-periodic strip
-(\cref{sm:global-h2}); the spectral theorem then turns
-$\|v\|$, $\|\nabla v\|$, $\|\Delta v\|$ into the multiplier $p_g$. The supremum in
+\begin{proof}
+Use arc length $s$ on $\Gamma$, the normal map
+$\boldsymbol\Phi_\Gamma(s,t)=\boldsymbol r_\Gamma(s)+t\nu_\Gamma(s)$, and the signed
+curvature $\kappa_\Gamma$ with $\boldsymbol r_\Gamma''=\kappa_\Gamma\nu_\Gamma$, so that
+$\nu_\Gamma'=-\kappa_\Gamma\boldsymbol r_\Gamma'$ and the area element is
+$(1-t\kappa_\Gamma(s))\,\dd s\,\dd t$. For a convex rod with outward normal,
+$\kappa_\Gamma<0$; walls have $\kappa_\Gamma=0$. The condition $h_g<1$ keeps the
+Jacobian positive; injectivity excludes nonlocal self-intersections and is checked
+separately (\cref{sm:reliable-cg}). Collars that cross the top or bottom edge are
+understood on the quasi-periodic cylinder.
+
+Fix one normal segment, let $\delta=\delta_g$, $\kappa=\kappa_\Gamma(s)$ and
+$w(t)=1-\kappa t$, so $\int_{-\delta}^{\delta}w=2\delta$. Averaging
+$g(0)=g(t)-\int_0^tg'$ against $w(t)\,\dd t$ and exchanging the integrals gives
+$g(0)=\frac1{2\delta}\int wg+\int K_\kappa g'$ with
+\[
+  |K_\kappa(t)|=\begin{cases}
+  \bigl(\delta-t-\kappa(\delta^2-t^2)/2\bigr)/(2\delta),&0<t<\delta,\\
+  \bigl(\delta+t-\kappa(t^2-\delta^2)/2\bigr)/(2\delta),&-\delta<t<0.
+  \end{cases}
+\]
+Weighted Cauchy--Schwarz gives $|g(0)|\le(2\delta)^{-1/2}(\int w|g|^2)^{1/2}
++T_\kappa^{1/2}(\int w|g'|^2)^{1/2}$ with $T_\kappa=\int|K_\kappa|^2/w$, and a direct
+computation with $h=|\kappa|\delta$ gives
+$T_\kappa=\frac\delta6+\frac{\delta h^2}8\int_0^1\frac{(1-x)^4}{1-h^2x^2}\,\dd x\le\tau_g$.
+Apply $(a+b)^2\le(1+\eta)a^2+(1+\eta^{-1})b^2$ and integrate in $s$; since
+$w\,\dd s\,\dd t$ is the area element, summing over the group costs a factor $N_g$.
+Using this for $g=v\circ\boldsymbol\Phi_\Gamma$ ($|g'|\le|\nabla v|$) and for
+$g=(\nu_\Gamma\cdot\nabla v)\circ\boldsymbol\Phi_\Gamma$ ($|g'|\le|D^2v|$) gives the
+two trace inequalities. Finally, with the spectral measure $E_\lambda$ of
+$A(\beta)$, supported in $[\lambda_0,\infty)$, $\|v\|^2_{L^2}\le\rin^{-1}\|v\|^2_{\mathcal H}$,
+$\|\nabla v\|^2=(A(\beta)v,v)_{\mathcal H}$, and \eqref{eq:domain-h2},
+$T_g(v)^2\le\int p_g(\lambda)\,\dd\|E_\lambda v\|^2\le C_g^2\int(\lambda+\mu)^2\,
+\dd\|E_\lambda v\|^2=C_g^2\|(A(\beta)+\mu)v\|^2_{\mathcal H}$.
+\end{proof}
+
+The supremum in
 \eqref{eq:Cg} is attained at $\lambda_0$, at infinity (value $c_g$), or at the
 stationary point $(2a_g-b_g\mu)/(2c_g\mu-b_g)$; if $2c_g\mu=b_g$ only the
 endpoints matter. Write
@@ -307,7 +368,7 @@ $\operatorname{dist}(\mu,\sigma(A(\beta)))\le R_{\mathrm{spec}}:=2\mu\sum_g
 \overline C_g\overline\varepsilon_g/\underline D$; thus
 $I_{\mathrm{spec}}=[\mu-R_{\mathrm{spec}},\mu+R_{\mathrm{spec}}]$ meets the
 spectrum, and $I_k=[(\max\{0,\mu-R_{\mathrm{spec}}\})^{1/2},(\mu+R_{\mathrm{spec}})^{1/2}]$
-contains the corresponding wavenumber. If in addition \eqref{eq:gap-condition}
-holds, \cref{prop:discrete} shows that $I_{\mathrm{spec}}$ contains at least
-one isolated eigenvalue of finite multiplicity, that is, a guided mode. We do not
-claim that it is the only one, nor its index or multiplicity.
+contains the corresponding wavenumber. Under \eqref{eq:gap-condition}, $I_{\mathrm{spec}}$ lies in a
+common gap, so \cref{prop:ess} excludes essential spectrum there. Thus
+$I_{\mathrm{spec}}$ contains at least one isolated eigenvalue of finite
+multiplicity and $I_k$ contains a guided-mode wavenumber.
