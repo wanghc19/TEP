@@ -1,0 +1,54 @@
+[
+  {
+    "model": "ex1",
+    "action": "amplitude-field",
+    "label": "projection-0.277187-128",
+    "start": 1.558437894182088,
+    "beta": 0.5,
+    "N": 128,
+    "M": 6,
+    "cuts": [
+      0,
+      0.277187374206313
+    ]
+  },
+  {
+    "model": "ex1",
+    "action": "amplitude-field",
+    "label": "projection-0.276187-128",
+    "start": 1.558437894182088,
+    "beta": 0.5,
+    "N": 128,
+    "M": 6,
+    "cuts": [
+      0,
+      0.276187374206313
+    ]
+  },
+  {
+    "model": "ex1",
+    "action": "amplitude-field",
+    "label": "projection-0.277187-192",
+    "start": 1.558437894182088,
+    "beta": 0.5,
+    "N": 192,
+    "M": 12,
+    "cuts": [
+      0,
+      0.277187374206313
+    ]
+  },
+  {
+    "model": "ex1",
+    "action": "amplitude-field",
+    "label": "projection-0.276187-192",
+    "start": 1.558437894182088,
+    "beta": 0.5,
+    "N": 192,
+    "M": 12,
+    "cuts": [
+      0,
+      0.276187374206313
+    ]
+  }
+]

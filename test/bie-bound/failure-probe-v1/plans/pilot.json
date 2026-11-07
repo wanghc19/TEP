@@ -1,0 +1,1 @@
+[{"action": "field", "model": "ex1", "L0": 2, "beta": 0.5, "N": 128, "M": 6, "label": "ex1-1.558-128", "start": 1.558437894182088, "eigen": true}, {"action": "field", "model": "ex1", "L0": 2, "beta": 0.5, "N": 128, "M": 6, "label": "area-check", "start": 1.558437894182088, "eigen": true, "energy_order": 6}]

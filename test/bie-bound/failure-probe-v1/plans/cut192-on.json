@@ -1,0 +1,120 @@
+[
+  {
+    "model": "ex1",
+    "beta": 0.5,
+    "N": 192,
+    "M": 12,
+    "cuts": [
+      0,
+      0.277187374206313
+    ],
+    "window": [
+      1.555437894182088,
+      1.561437894182088
+    ],
+    "label": "cut192-on-grid",
+    "action": "scan",
+    "count": 83
+  },
+  {
+    "model": "ex1",
+    "beta": 0.5,
+    "N": 192,
+    "M": 12,
+    "cuts": [
+      0,
+      0.277187374206313
+    ],
+    "window": [
+      1.555437894182088,
+      1.561437894182088
+    ],
+    "label": "cut192-on-det",
+    "action": "search",
+    "observe_seconds": 130
+  },
+  {
+    "model": "ex1",
+    "N": 128,
+    "M": 6,
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.276187374206313
+    ],
+    "label": "false-pole-128",
+    "action": "field-at",
+    "start": 1.5562502581483555,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "N": 128,
+    "M": 6,
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.277187374206313
+    ],
+    "label": "reference-0.277187-128",
+    "action": "field-at",
+    "start": 1.558437894182088,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "N": 128,
+    "M": 6,
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.276187374206313
+    ],
+    "label": "reference-0.276187-128",
+    "action": "field-at",
+    "start": 1.558437894182088,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "N": 192,
+    "M": 12,
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.276187374206313
+    ],
+    "label": "false-pole-192",
+    "action": "field-at",
+    "start": 1.556250258402672,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "N": 192,
+    "M": 12,
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.277187374206313
+    ],
+    "label": "reference-0.277187-192",
+    "action": "field-at",
+    "start": 1.558437894182088,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "N": 192,
+    "M": 12,
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.276187374206313
+    ],
+    "label": "reference-0.276187-192",
+    "action": "field-at",
+    "start": 1.558437894182088,
+    "amplitude": true
+  }
+]

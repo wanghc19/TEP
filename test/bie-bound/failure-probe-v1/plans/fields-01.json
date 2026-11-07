@@ -1,0 +1,193 @@
+[
+  {
+    "model": "edge",
+    "beta": 0.5,
+    "L0": 2.1009433780367504,
+    "label": "field-015-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 1.440915860263689,
+    "amplitude": true
+  },
+  {
+    "model": "edge",
+    "beta": 0.5,
+    "L0": 2.100943378036625,
+    "label": "field-016-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 1.440915860263689,
+    "amplitude": true
+  },
+  {
+    "model": "edge",
+    "beta": 0.5,
+    "L0": 2.100943378036625,
+    "label": "field-016-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 1.440915860263689,
+    "amplitude": true
+  },
+  {
+    "model": "edge",
+    "beta": 0.5,
+    "L0": 2.1014262707762414,
+    "label": "field-017-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 1.440914870263684,
+    "amplitude": true
+  },
+  {
+    "model": "edge",
+    "beta": 0.5,
+    "L0": 2.1014262707762414,
+    "label": "field-017-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 1.440914870263684,
+    "amplitude": true
+  },
+  {
+    "model": "edge",
+    "beta": 0.5,
+    "L0": 2.1014262707757494,
+    "label": "field-018-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 1.4409148702636836,
+    "amplitude": true
+  },
+  {
+    "model": "edge",
+    "beta": 0.5,
+    "L0": 2.1014262707757494,
+    "label": "field-018-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 1.4409148702636836,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.277187374206313
+    ],
+    "label": "field-019-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 1.5584378943219352,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.277187374206313
+    ],
+    "label": "field-019-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 1.5584378943219352,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.277187374206313
+    ],
+    "label": "field-020-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 1.5584378945125257,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.277187374206313
+    ],
+    "label": "field-020-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 1.5584378945125257,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.1
+    ],
+    "label": "field-021-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 1.5584378941820878,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.1
+    ],
+    "label": "field-021-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 1.5584378941820882,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 1.8117673817423212,
+    "label": "field-022-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 1.9117673817423213,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 1.8117673817423212,
+    "label": "field-022-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 1.9117673817423213,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 1.964354251117132,
+    "label": "field-023-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 1.974354251117132,
+    "amplitude": true
+  }
+]

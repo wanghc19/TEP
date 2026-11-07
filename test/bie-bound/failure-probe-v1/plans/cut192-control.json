@@ -1,0 +1,108 @@
+[
+  {
+    "model": "ex1",
+    "beta": 0.5,
+    "N": 192,
+    "M": 12,
+    "cuts": [
+      0,
+      0.1
+    ],
+    "window": [
+      1.555437894182088,
+      1.561437894182088
+    ],
+    "label": "cut192-control-grid",
+    "action": "scan",
+    "count": 83
+  },
+  {
+    "model": "ex1",
+    "beta": 0.5,
+    "N": 192,
+    "M": 12,
+    "cuts": [
+      0,
+      0.1
+    ],
+    "window": [
+      1.555437894182088,
+      1.561437894182088
+    ],
+    "label": "cut192-control-det",
+    "action": "search",
+    "observe_seconds": 130
+  },
+  {
+    "model": "ex1",
+    "N": 128,
+    "M": 6,
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.1
+    ],
+    "action": "search",
+    "count": 29,
+    "window": [
+      1.555807894182088,
+      1.561807894182088
+    ],
+    "label": "safe-skew-128-search",
+    "observe_seconds": 75
+  },
+  {
+    "model": "ex1",
+    "N": 128,
+    "M": 6,
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.1
+    ],
+    "action": "scan",
+    "count": 29,
+    "window": [
+      1.555807894182088,
+      1.561807894182088
+    ],
+    "label": "safe-skew-128-scan",
+    "observe_seconds": 75
+  },
+  {
+    "model": "ex1",
+    "N": 192,
+    "M": 12,
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.1
+    ],
+    "action": "search",
+    "count": 29,
+    "window": [
+      1.555807894182088,
+      1.561807894182088
+    ],
+    "label": "safe-skew-192-search",
+    "observe_seconds": 75
+  },
+  {
+    "model": "ex1",
+    "N": 192,
+    "M": 12,
+    "beta": 0.5,
+    "cuts": [
+      0,
+      0.1
+    ],
+    "action": "scan",
+    "count": 29,
+    "window": [
+      1.555807894182088,
+      1.561807894182088
+    ],
+    "label": "safe-skew-192-scan",
+    "observe_seconds": 75
+  }
+]

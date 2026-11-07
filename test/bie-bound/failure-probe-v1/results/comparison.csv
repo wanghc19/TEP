@@ -1,0 +1,32 @@
+det_run,scan_run,case,status,scan_count,det_count,det_k,scan_k,max_nearest_difference,outcome,physical_case_ids,other_branch_ids_in_window
+run-001,run-004,regression,COMPLETE,1,1,1.558437894182088,1.5584378941820889,8.881784197001252e-16,lists agree,0,
+run-014,run-005,base1,COMPLETE,1,1,1.8916961400527379,1.8916961400527366,1.3322676295501878e-15,lists agree,1,
+run-014,run-006,base2,COMPLETE,2,2,1.455557163284519 2.2156203475844976,1.4555571632845168 2.2156203475844896,7.993605777301127e-15,lists agree,2 3,
+run-014,run-007,base3,COMPLETE,1,1,2.0106210217581522,2.0106210217581522,0.0,lists agree,4,
+run-014,run-008,base4,COMPLETE,1,1,2.0893110383208939,2.0893110383208939,0.0,lists agree,5,
+run-016,run-015,small128,COMPLETE,1,1,1.8206100861078613,1.8206100861078605,8.881784197001252e-16,lists agree,6,
+run-016,run-039,small192,COMPLETE,1,1,1.8206100861078576,1.8206100861078542,3.3306690738754696e-15,lists agree,6,
+run-022,run-022,cut128-near-det,REFUSED,2,,,1.5562502581484094 1.5584378941820429,,refused,7 8,9
+run-023,run-023,cut192-near-det,STOPPED_AFTER_DUPLICATE_CONFIRMATION,2,,,1.5562502584027231 1.5584378941820431,,stopped_after_duplicate_confirmation,8 9,7
+run-029,run-029,cut128-on-det,REFUSED,1,,,1.5584378943219352,,refused,19,10 20
+run-030,run-030,cut192-on-det,REFUSED,1,,,1.5584378945125257,,refused,20,10 19
+run-031,run-031,cut128-control-det,OBSERVATION_LIMIT_REPORTER_ERROR,1,,,1.5584378941820889,,observation_limit_reporter_error,21,
+run-032,run-032,cut192-control-det,OBSERVATION_LIMIT_REPORTER_ERROR,1,,,1.5584378941820887,,observation_limit_reporter_error,21,
+run-032,run-032,safe-skew-128-search,COMPLETE,1,1,1.5584378941820878,1.5584378941820889,1.1102230246251565e-15,lists agree,21,
+run-032,run-032,safe-skew-192-search,COMPLETE,1,1,1.5584378941820882,1.5584378941820891,8.881784197001252e-16,lists agree,21,
+run-035,run-035,ex1+0.01-128-search,OBSERVATION_LIMIT,1,,,1.9743542511171139,,observation_limit,23,
+run-035,run-035,ex1+0.0001-128-search,OBSERVATION_LIMIT,0,,,,,observation_limit,,25 26
+run-035,run-035,ex1+0.0001-192-search,OBSERVATION_LIMIT,0,,,,,observation_limit,,25 26
+run-035,run-035,ex1-0.0001-128-search,OBSERVATION_LIMIT,1,,,1.9816161421561342,,observation_limit,27,
+run-035,run-035,ex1-0.0001-192-search,OBSERVATION_LIMIT,1,,,1.9816161421567906,,observation_limit,27,
+run-036,run-036,w3+0.01-128-search,COMPLETE,1,1,2.9715833878705062,2.9715833878704996,6.661338147750939e-15,lists agree,32,
+run-036,run-036,w3+0.0001-128-search,OBSERVATION_LIMIT,0,,,,,observation_limit,,34 35
+run-036,run-036,w3+0.0001-192-search,OBSERVATION_LIMIT,0,,,,,observation_limit,,34 35
+run-036,run-036,w3-0.0001-128-search,OBSERVATION_LIMIT,0,,,,,observation_limit,,36
+run-036,run-036,w3-0.0001-192-search,OBSERVATION_LIMIT,0,,,,,observation_limit,,36
+run-038,run-038,ex1+0.0001-128-cross0-search,REFUSED,0,,,,,refused,,25 26
+run-038,run-038,ex1+0.0001-192-cross0-search,REFUSED,0,,,,,refused,,25 26
+run-038,run-038,w3+0.0001-128-cross0-search,REFUSED,1,,,2.9749976157402442,,refused,35,34
+run-038,run-038,w3+0.0001-192-cross0-search,REFUSED,1,,,2.9749976157402909,,refused,35,34
+run-045,run-045,edge-1e-08-128-search,OBSERVATION_LIMIT,1,,,1.4409148702636838,,observation_limit,17,
+run-045,run-045,edge-1e-08-192-search,OBSERVATION_LIMIT,1,,,1.4409148702636829,,observation_limit,17,

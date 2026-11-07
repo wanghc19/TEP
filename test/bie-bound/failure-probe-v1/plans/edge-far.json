@@ -1,0 +1,194 @@
+[
+  {
+    "model": "edge",
+    "L0": 2.022709790307794,
+    "beta": 0.5,
+    "N": 128,
+    "M": 6,
+    "action": "scan",
+    "label": "edge-0.01-128-scan",
+    "count": 25,
+    "window": [
+      1.4506658602636855,
+      1.4512658602636854
+    ],
+    "observe_seconds": 65,
+    "local_scale": true
+  },
+  {
+    "model": "edge",
+    "L0": 2.022709790307794,
+    "beta": 0.5,
+    "N": 128,
+    "M": 6,
+    "action": "search",
+    "label": "edge-0.01-128-search",
+    "count": 25,
+    "window": [
+      1.4506658602636855,
+      1.4512658602636854
+    ],
+    "observe_seconds": 65,
+    "local_scale": true
+  },
+  {
+    "model": "edge",
+    "L0": 2.022709790307794,
+    "beta": 0.5,
+    "N": 192,
+    "M": 12,
+    "action": "scan",
+    "label": "edge-0.01-192-scan",
+    "count": 25,
+    "window": [
+      1.4506658602636855,
+      1.4512658602636854
+    ],
+    "observe_seconds": 65,
+    "local_scale": true
+  },
+  {
+    "model": "edge",
+    "L0": 2.022709790307794,
+    "beta": 0.5,
+    "N": 192,
+    "M": 12,
+    "action": "search",
+    "label": "edge-0.01-192-search",
+    "count": 25,
+    "window": [
+      1.4506658602636855,
+      1.4512658602636854
+    ],
+    "observe_seconds": 65,
+    "local_scale": true
+  },
+  {
+    "model": "edge",
+    "L0": 2.0958832855058036,
+    "beta": 0.5,
+    "N": 128,
+    "M": 6,
+    "action": "scan",
+    "label": "edge-0.0001-128-scan",
+    "count": 25,
+    "window": [
+      1.440985810263684,
+      1.4410558102636841
+    ],
+    "observe_seconds": 65,
+    "local_scale": true
+  },
+  {
+    "model": "edge",
+    "L0": 2.0958832855058036,
+    "beta": 0.5,
+    "N": 128,
+    "M": 6,
+    "action": "search",
+    "label": "edge-0.0001-128-search",
+    "count": 25,
+    "window": [
+      1.440985810263684,
+      1.4410558102636841
+    ],
+    "observe_seconds": 65,
+    "local_scale": true
+  },
+  {
+    "model": "edge",
+    "L0": 2.0958832855058036,
+    "beta": 0.5,
+    "N": 192,
+    "M": 12,
+    "action": "scan",
+    "label": "edge-0.0001-192-scan",
+    "count": 25,
+    "window": [
+      1.440985810263684,
+      1.4410558102636841
+    ],
+    "observe_seconds": 65,
+    "local_scale": true
+  },
+  {
+    "model": "edge",
+    "L0": 2.0958832855058036,
+    "beta": 0.5,
+    "N": 192,
+    "M": 12,
+    "action": "search",
+    "label": "edge-0.0001-192-search",
+    "count": 25,
+    "window": [
+      1.440985810263684,
+      1.4410558102636841
+    ],
+    "observe_seconds": 65,
+    "local_scale": true
+  },
+  {
+    "model": "edge",
+    "L0": 2.1009433780367504,
+    "beta": 0.5,
+    "N": 128,
+    "M": 6,
+    "action": "scan",
+    "label": "edge-1e-06-128-scan",
+    "count": 25,
+    "window": [
+      1.4409155697636888,
+      1.4409162697636888
+    ],
+    "observe_seconds": 65,
+    "local_scale": true
+  },
+  {
+    "model": "edge",
+    "L0": 2.1009433780367504,
+    "beta": 0.5,
+    "N": 128,
+    "M": 6,
+    "action": "search",
+    "label": "edge-1e-06-128-search",
+    "count": 25,
+    "window": [
+      1.4409155697636888,
+      1.4409162697636888
+    ],
+    "observe_seconds": 65,
+    "local_scale": true
+  },
+  {
+    "model": "edge",
+    "L0": 2.1009433780367504,
+    "beta": 0.5,
+    "N": 192,
+    "M": 12,
+    "action": "scan",
+    "label": "edge-1e-06-192-scan",
+    "count": 25,
+    "window": [
+      1.4409155697636888,
+      1.4409162697636888
+    ],
+    "observe_seconds": 65,
+    "local_scale": true
+  },
+  {
+    "model": "edge",
+    "L0": 2.1009433780367504,
+    "beta": 0.5,
+    "N": 192,
+    "M": 12,
+    "action": "search",
+    "label": "edge-1e-06-192-search",
+    "count": 25,
+    "window": [
+      1.4409155697636888,
+      1.4409162697636888
+    ],
+    "observe_seconds": 65,
+    "local_scale": true
+  }
+]

@@ -1,0 +1,162 @@
+[
+  {
+    "model": "ex1",
+    "N": 128,
+    "M": 6,
+    "beta": 1.8117673817423212,
+    "action": "local",
+    "start": 1.9117673817423213,
+    "step": 5e-07,
+    "label": "ex1+0.1-128-polish"
+  },
+  {
+    "model": "ex1",
+    "N": 192,
+    "M": 12,
+    "beta": 1.8117673817423212,
+    "action": "local",
+    "start": 1.9117673817423213,
+    "step": 5e-07,
+    "label": "ex1+0.1-192-polish"
+  },
+  {
+    "model": "ex1",
+    "N": 128,
+    "M": 6,
+    "beta": 1.964354251117132,
+    "action": "local",
+    "start": 1.974354251117132,
+    "step": 5e-07,
+    "label": "ex1+0.01-128-polish"
+  },
+  {
+    "model": "ex1",
+    "N": 192,
+    "M": 12,
+    "beta": 1.964354251117132,
+    "action": "local",
+    "start": 1.974354251117132,
+    "step": 5e-07,
+    "label": "ex1+0.01-192-polish"
+  },
+  {
+    "model": "ex1",
+    "N": 128,
+    "M": 6,
+    "beta": 1.979823322340659,
+    "action": "local",
+    "start": 1.9808233223406588,
+    "step": 5e-07,
+    "label": "ex1+0.001-128-polish"
+  },
+  {
+    "model": "ex1",
+    "N": 192,
+    "M": 12,
+    "beta": 1.979823322340659,
+    "action": "local",
+    "start": 1.9808233223406588,
+    "step": 5e-07,
+    "label": "ex1+0.001-192-polish"
+  },
+  {
+    "model": "ex1",
+    "N": 128,
+    "M": 6,
+    "beta": 1.9813719592640813,
+    "action": "local",
+    "start": 1.9814719592640813,
+    "step": 5e-07,
+    "label": "ex1+0.0001-128-polish"
+  },
+  {
+    "model": "ex1",
+    "N": 192,
+    "M": 12,
+    "beta": 1.9813719592640813,
+    "action": "local",
+    "start": 1.9814719592640813,
+    "step": 5e-07,
+    "label": "ex1+0.0001-192-polish"
+  },
+  {
+    "model": "ex1",
+    "N": 128,
+    "M": 6,
+    "beta": 1.9817161421563019,
+    "action": "local",
+    "start": 1.9816161421563019,
+    "step": 5e-07,
+    "label": "ex1-0.0001-128-polish"
+  },
+  {
+    "model": "ex1",
+    "N": 192,
+    "M": 12,
+    "beta": 1.9817161421563019,
+    "action": "local",
+    "start": 1.9816161421563019,
+    "step": 5e-07,
+    "label": "ex1-0.0001-192-polish"
+  },
+  {
+    "model": "ex1",
+    "N": 128,
+    "M": 6,
+    "beta": 1.9832651530045307,
+    "action": "local",
+    "start": 1.9822651530045308,
+    "step": 5e-07,
+    "label": "ex1-0.001-128-polish"
+  },
+  {
+    "model": "ex1",
+    "N": 192,
+    "M": 12,
+    "beta": 1.9832651530045307,
+    "action": "local",
+    "start": 1.9822651530045308,
+    "step": 5e-07,
+    "label": "ex1-0.001-192-polish"
+  },
+  {
+    "model": "ex1",
+    "N": 128,
+    "M": 6,
+    "beta": 1.9987716011465047,
+    "action": "local",
+    "start": 1.9887716011465046,
+    "step": 5e-07,
+    "label": "ex1-0.01-128-polish"
+  },
+  {
+    "model": "ex1",
+    "N": 192,
+    "M": 12,
+    "beta": 1.9987716011465047,
+    "action": "local",
+    "start": 1.9887716011465046,
+    "step": 5e-07,
+    "label": "ex1-0.01-192-polish"
+  },
+  {
+    "model": "ex1",
+    "N": 128,
+    "M": 6,
+    "beta": 2.1549852982808497,
+    "action": "local",
+    "start": 2.0549852982808496,
+    "step": 5e-07,
+    "label": "ex1-0.1-128-polish"
+  },
+  {
+    "model": "ex1",
+    "N": 192,
+    "M": 12,
+    "beta": 2.1549852982808497,
+    "action": "local",
+    "start": 2.0549852982808496,
+    "step": 5e-07,
+    "label": "ex1-0.1-192-polish"
+  }
+]

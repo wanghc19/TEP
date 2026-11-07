@@ -1,0 +1,36 @@
+[
+  {
+    "model": "ex1",
+    "beta": 0.5,
+    "N": 128,
+    "M": 6,
+    "cuts": [
+      0,
+      0.1
+    ],
+    "window": [
+      1.555437894182088,
+      1.561437894182088
+    ],
+    "label": "cut128-control-grid",
+    "action": "scan",
+    "count": 83
+  },
+  {
+    "model": "ex1",
+    "beta": 0.5,
+    "N": 128,
+    "M": 6,
+    "cuts": [
+      0,
+      0.1
+    ],
+    "window": [
+      1.555437894182088,
+      1.561437894182088
+    ],
+    "label": "cut128-control-det",
+    "action": "search",
+    "observe_seconds": 130
+  }
+]

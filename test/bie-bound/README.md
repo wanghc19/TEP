@@ -33,3 +33,5 @@ FMM 是 fast multipole method（快速多极方法），MFS 是 method of fundam
 `solver-cost-v1` 是 solver cost version 1，比较例一相同搜索窗口下边界积分与有限元 DtN 候选求解器的精度、时间和内存。
 
 `litbench-v1` 是 literature benchmark version 1，用边界积分候选求解器复现文献中的线缺陷导模频率。
+
+`failure-probe-v1` 是 failure probe version 1，检验 Wood 异常、端口极点、伪根和稳定子空间对边界积分候选搜索的影响。

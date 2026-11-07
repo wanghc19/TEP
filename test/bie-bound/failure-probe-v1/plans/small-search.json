@@ -1,0 +1,1 @@
+[{"label": "small128", "model": "ex1", "beta": 0.5, "N": 128, "M": 6, "window": [1.451, 2.249], "L0": 2, "action": "search", "small": true}, {"label": "small192", "model": "ex1", "beta": 0.5, "N": 192, "M": 12, "window": [1.451, 2.249], "L0": 2, "action": "search", "small": true}]

@@ -1,0 +1,66 @@
+[
+  {
+    "model": "edge",
+    "L0": 2.1014262707762414,
+    "beta": 0.5,
+    "N": 128,
+    "M": 6,
+    "action": "scan",
+    "label": "edge-1e-08-128-scan",
+    "count": 25,
+    "window": [
+      1.440914867358684,
+      1.440914874358684
+    ],
+    "observe_seconds": 45,
+    "local_scale": true
+  },
+  {
+    "model": "edge",
+    "L0": 2.1014262707762414,
+    "beta": 0.5,
+    "N": 128,
+    "M": 6,
+    "action": "search",
+    "label": "edge-1e-08-128-search",
+    "count": 25,
+    "window": [
+      1.440914867358684,
+      1.440914874358684
+    ],
+    "observe_seconds": 45,
+    "local_scale": true
+  },
+  {
+    "model": "edge",
+    "L0": 2.1014262707762414,
+    "beta": 0.5,
+    "N": 192,
+    "M": 12,
+    "action": "scan",
+    "label": "edge-1e-08-192-scan",
+    "count": 25,
+    "window": [
+      1.440914867358684,
+      1.440914874358684
+    ],
+    "observe_seconds": 45,
+    "local_scale": true
+  },
+  {
+    "model": "edge",
+    "L0": 2.1014262707762414,
+    "beta": 0.5,
+    "N": 192,
+    "M": 12,
+    "action": "search",
+    "label": "edge-1e-08-192-search",
+    "count": 25,
+    "window": [
+      1.440914867358684,
+      1.440914874358684
+    ],
+    "observe_seconds": 45,
+    "local_scale": true
+  }
+]

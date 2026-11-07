@@ -1,0 +1,162 @@
+[
+  {
+    "model": "ex1",
+    "beta": 1.964354251117132,
+    "label": "field-023-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 1.974354251117132,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 1.979823322340659,
+    "label": "field-024-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 1.9808233223414007,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 1.979823322340659,
+    "label": "field-024-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 1.9808233223406706,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 1.9813719592640813,
+    "label": "field-025-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 1.9814719592638483,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 1.9813719592640813,
+    "label": "field-025-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 1.9814719592638483,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 1.9813719592640813,
+    "label": "field-026-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 1.9814719592702568,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 1.9813719592640813,
+    "label": "field-026-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 1.9814719592702568,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 1.9817161421563019,
+    "label": "field-027-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 1.9816161421563019,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 1.9817161421563019,
+    "label": "field-027-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 1.9816161421563019,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 1.9832651530045307,
+    "label": "field-028-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 1.982265153004611,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 1.9832651530045307,
+    "label": "field-028-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 1.9822651530044586,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 1.9987716011465047,
+    "label": "field-029-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 1.9887716011465046,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 1.9987716011465047,
+    "label": "field-029-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 1.9887716011465046,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 2.1549852982808497,
+    "label": "field-030-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 2.0549852982808496,
+    "amplitude": true
+  },
+  {
+    "model": "ex1",
+    "beta": 2.1549852982808497,
+    "label": "field-030-192",
+    "action": "field-at",
+    "N": 192,
+    "M": 12,
+    "start": 2.0549852982808496,
+    "amplitude": true
+  },
+  {
+    "model": "w3",
+    "beta": 2.780322971328962,
+    "label": "field-031-128",
+    "action": "field-at",
+    "N": 128,
+    "M": 6,
+    "start": 2.880322971328962,
+    "amplitude": true
+  }
+]

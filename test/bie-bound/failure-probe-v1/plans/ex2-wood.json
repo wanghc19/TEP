@@ -1,0 +1,1 @@
+[{"action": "diagonal", "label": "ex2--0.012", "model": "ex2", "beta": 0.5, "N": 128, "M": 6, "window": [1.48, 2.42], "count": 97, "offset": -0.012}, {"action": "diagonal", "label": "ex2-0.0001", "model": "ex2", "beta": 0.5, "N": 128, "M": 6, "window": [1.48, 2.42], "count": 97, "offset": 0.0001}]

@@ -1,0 +1,40 @@
+[
+  {
+    "model": "w3",
+    "beta": 2.9748976157431044,
+    "window": [
+      2.9740476157431046,
+      2.9758476157431044
+    ],
+    "N": 128,
+    "M": 6,
+    "action": "search",
+    "label": "wood-skew-grid-128",
+    "observe_seconds": 55,
+    "subset_evidence": {
+      "run": "run-038",
+      "case": "w3+0.0001-128-cross0-scan",
+      "first": 3,
+      "last": 39
+    }
+  },
+  {
+    "model": "w3",
+    "beta": 2.9748976157431044,
+    "window": [
+      2.9740476157431046,
+      2.9758476157431044
+    ],
+    "N": 192,
+    "M": 12,
+    "action": "search",
+    "label": "wood-skew-grid-192",
+    "observe_seconds": 55,
+    "subset_evidence": {
+      "run": "run-038",
+      "case": "w3+0.0001-192-cross0-scan",
+      "first": 3,
+      "last": 39
+    }
+  }
+]
