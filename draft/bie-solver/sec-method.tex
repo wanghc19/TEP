@@ -1,5 +1,5 @@
-% Section 3. Budget 2.75 pages.
-% Source: draft/bie-enclosure/s-discretization.tex (clean version).
+% Method section of the solver paper. Moved verbatim from draft/bie-siam
+% (Section 3, commit cc23eea) on 2026-11-07; to be rewritten (see README.md).
 \section{Discretization and candidate computation}\label{sec:discretization}
 
 Candidates are computed on the center cell, as in the transparent boundary
@@ -13,7 +13,7 @@ discretized by boundary integral equations with port Rayleigh amplitudes, the
 decaying half-guide solutions by an ordered QZ decomposition, and the center
 cell by layer potentials plus background Rayleigh waves. The output is a
 candidate $\widehat k$ with coefficients. We make no claim on its accuracy here:
-\cref{sec:bound} bounds the spectral distance of whatever field these
+the enclosure paper~\companion bounds the spectral distance of whatever field these
 coefficients define. Fix $\beta$ and a wavenumber $k>0$ with $k^2\in G_\beta$.
 
 \subsection{Port Fourier basis and Rayleigh waves}
@@ -22,7 +22,7 @@ $|m|\le M$, $K=2M+1$. With $\kappa_{\mathrm e}=k\rho_{\mathrm e}^{1/2}$ let
 $\gamma_m=(\kappa_{\mathrm e}^2-\beta_m^2)^{1/2}$ with $\Im\gamma_m\ge0$, and
 $\boldsymbol\gamma=\diag(\gamma_m)$. We assume that $k$ is not a Wood point,
 that is, $\gamma_m(k)\ne0$ for all $m\in\ZZ$. Only the candidate search uses
-this; the bound of \cref{sec:bound} does not.
+this; the bound of the enclosure paper~\companion does not.
 
 In a vertical background strip, a $\beta$-quasi-periodic Helmholtz solution is
 $u=\sum_m(a_mr_m^{x_p}+b_ml_m^{x_p})$ with
@@ -51,9 +51,9 @@ a smooth correction near the closed cell, the structure used in
 \cite{BarnettGreengard2010,BarnettGreengard2011,ChoBarnett2015}; the smooth
 correction and the background are represented together by proxy point sources
 outside the cell, with coefficients fitted to the quasi-periodicity on the top
-and bottom seams. Since \cref{sec:bound} checks only the jumps of an explicit
+and bottom seams. Since the enclosure paper~\companion checks only the jumps of an explicit
 field, the densities may be computed with any adequate approximation of
-$G_\QP$; the field evaluated in \cref{sec:bound} uses the split
+$G_\QP$; the field evaluated in the enclosure paper~\companion uses the split
 \eqref{eq:near-image} and fixed proxies, and all its mismatch enters its own
 jumps.
 
@@ -142,7 +142,7 @@ if $\Omega_0=\varnothing$, so quasi-periodic layer potentials alone do not
 represent the center field. The ansatz follows the complementary-field
 representation of \cite[App.~A]{BarnettGreengard2010} with the incident port
 terms added. We use it only as an ansatz; neither completeness nor uniqueness of
-the representation enters \cref{sec:bound}.
+the representation enters the enclosure paper~\companion.
 
 After truncation, the center unknown is $\xi=(\eta;a^-_0;b^+_0)\in\CC^{n+2K}$
 ($n=0$ for an empty center), and the discrete transmission equations read
@@ -193,5 +193,5 @@ on $s(k)$. The candidate output is the right singular vector of the smallest
 singular value, which determines $\mathsf a$, the center densities, and the lead
 coordinates $c_\pm$. Together with $\widehat k$, $\mathsf P_\pm$, $\mathsf Z_\pm$
 and the discretization parameters, these are the only inputs of
-\cref{sec:bound}. A small $s(\widehat k)$ says that a finite system is nearly
+the enclosure paper~\companion. A small $s(\widehat k)$ says that a finite system is nearly
 singular, not how far $\widehat k^2$ is from $\sigma(A(\beta))$.

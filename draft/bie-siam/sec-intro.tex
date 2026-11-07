@@ -79,19 +79,20 @@ $14$ minutes gives a $\mu$-interval of width $2.74\times10^{-11}$; for modes
 approaching a gap edge, where the lead contraction rate rises to $0.80$, the
 width stays below $10^{-11}$.
 
-Candidates are computed by boundary integral equations assembled from known
-components: transparent boundary conditions for the half guides
+Candidates are computed by a boundary integral solver described in a
+companion paper \todo{cite companion solver paper}. It combines transparent
+conditions for the half guides
 \cite{JolyLiFliss2006,Fliss2013,FlissKlindworthSchmidt2015}, Rayleigh
 expansions at artificial interfaces, and near-image splitting and proxy
 representations of quasi-periodic fields
-\cite{BarnettGreengard2010,BarnettGreengard2011,ChoBarnett2015}. None of these
-is claimed as new, and the enclosure does not depend on the accuracy of the
+\cite{BarnettGreengard2010,BarnettGreengard2011,ChoBarnett2015}. Here we use
+only its output, and the enclosure does not depend on the accuracy of the
 candidate. We do not claim that the eigenvalue in the interval is unique, nor
 its index or multiplicity, and we do not study a priori convergence: the
 theorem applies to a given candidate and field, however they were obtained.
 
-\Cref{sec:model} introduces the model and the gap test, \cref{sec:discretization}
-the computation of candidates, and \cref{sec:bound} the trial field, the
+\Cref{sec:model} introduces the model and the gap test, \cref{sec:field}
+the trial field built from the candidate data, and \cref{sec:bound} the
 spectral-distance theorem and the rounding-inclusive evaluation.
 \Cref{sec:results} reports the examples, including a comparison with a finite
 element enclosure, and \cref{sec:conclusion} concludes. The results stated here

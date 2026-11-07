@@ -1,0 +1,182 @@
+% Section 3. The trial field built from candidate data.
+% Replaces the former discretization section (moved to draft/bie-solver on
+% 2026-11-07) and the former Section 4.1.
+\section{The trial field}\label{sec:field}
+
+The bound of \cref{sec:bound} applies to one explicit field $\widehat u$ on the
+strip, built from finitely many numbers: the \emph{candidate data}. This section
+defines $\widehat u$ from these data. The data are computed by the boundary
+integral solver of the companion paper \todo{cite companion solver paper}: a
+Nystr\"om discretization of the transmission equations in each cell, the
+decaying states of each lead from an ordered QZ decomposition, and a
+determinant search for $\widehat k$; \cref{sec:results} lists the parameters.
+None of the properties of that solver enter the bound. Whatever the data are,
+$\widehat u$ solves the Helmholtz equation in every homogeneous piece, and
+every inaccuracy of the data shows up as a jump of $\widehat u$ across an
+interface.
+
+We separate \emph{definition parameters} (the density grids, the Rayleigh
+truncation $M$, the proxies, the candidate data) from \emph{evaluation
+parameters} (target quadrature, number of explicitly summed cells, evaluation
+precision). Once the former are fixed, $\widehat u$ is a definite function; the
+latter only affect how accurately the quantities of \cref{sec:bound} are
+bounded. Throughout, $\widehat k>0$ is fixed and
+$\kappa_{\mathrm e}=\widehat k\rho_{\mathrm e}^{1/2}$.
+
+\subsection{Rayleigh waves}\label{sec:rayleigh}
+Let $\beta_m=\beta+2\pi m/d$ and $\psi_m(y)=d^{-1/2}\ee^{\ii\beta_my}$ for
+$|m|\le M$, $K=2M+1$, and let $\gamma_m=(\kappa_{\mathrm e}^2-\beta_m^2)^{1/2}$
+with $\Im\gamma_m\ge0$. For an anchor line $x=x_p$ the right- and left-going
+Rayleigh waves are
+\begin{equation}\label{eq:rayleigh}
+  r_m^{x_p}(x,y)=\ee^{\ii\gamma_m(x-x_p)}\psi_m(y),\qquad
+  l_m^{x_p}(x,y)=\ee^{-\ii\gamma_m(x-x_p)}\psi_m(y).
+\end{equation}
+Both are $\beta$-quasi-periodic solutions of $(\Delta+\kappa_{\mathrm e}^2)u=0$
+in the whole plane. A pair of amplitude vectors $(a;b)\in\CC^{2K}$ anchored at
+$x_p$ stands for $\sum_m(a_mr_m^{x_p}+b_ml_m^{x_p})$.
+
+\subsection{The field in one cell}\label{sec:layer}
+Let $G^{(\kappa)}(\mathbf z,\mathbf z')=\frac{\ii}{4}H^{(1)}_0(\kappa|\mathbf z-\mathbf z'|)$
+and let $\mathcal S^{(\kappa)}[\omega]$, $\mathcal D^{(\kappa)}[\tau]$ be the
+single- and double-layer potentials on a curve $\Gamma$. Consider a cell
+$\mathcal C$ that contains one rod $\Omega$ with boundary $\Gamma$, outward
+normal $\nu$ and interior wavenumber $\kappa_{\mathrm c}=\widehat k\rho_{\mathrm
+c}^{1/2}$. Given a density pair $\eta=(\tau;-\omega)$ on $\Gamma$, proxy points
+$\mathbf p_1,\dots,\mathbf p_{N_p}$ outside $\mathcal C$ with coefficients
+$\alpha\in\CC^{N_p}$, and a finite Rayleigh field $u_{\mathrm b}$, the
+\emph{cell field} is
+\begin{equation}\label{eq:mfs-field}
+  \widehat u=
+  \begin{cases}
+    \displaystyle\sum_{n=-1}^{1}\ee^{\ii\beta nd}\bigl(\mathcal S^{(\kappa_{\mathrm e})}[\omega]
+    +\mathcal D^{(\kappa_{\mathrm e})}[\tau]\bigr)(\cdot-nd\,e_y)
+    +\sum_{i=1}^{N_p}\alpha_iG^{(\kappa_{\mathrm e})}(\cdot,\mathbf p_i)+u_{\mathrm b}
+    & \text{in }\mathcal C\setminus\overline\Omega,\\[1ex]
+    \mathcal S^{(\kappa_{\mathrm c})}[\omega]+\mathcal D^{(\kappa_{\mathrm c})}[\tau]
+    & \text{in }\Omega .
+  \end{cases}
+\end{equation}
+The first line is the $\beta$-quasi-periodic layer potential with its three
+nearest images kept and the remainder replaced by point sources: since
+$(\Delta+\kappa^2)G^{(\kappa)}_\QP(\cdot,\mathbf 0)=-\sum_n\ee^{\ii\beta
+nd}\delta_{nd\,e_y}$ \cite{Linton1998}, the quasi-periodic Green function minus
+the three nearest images is a smooth Helmholtz solution near the closed cell,
+the structure used in \cite{BarnettGreengard2010,BarnettGreengard2011,ChoBarnett2015}.
+We require that the image curves and the proxies have positive distance from
+the closed cell. A cell without a rod has only the proxy and Rayleigh terms.
+
+\emph{Continuous densities.} The rod boundary is parametrized by $\boldsymbol
+r(t)$, $t\in[0,1)$, and the solver returns $N_\eta$ density samples on a
+uniform grid. The density used in \eqref{eq:mfs-field} is their trigonometric
+interpolant
+\begin{equation}\label{eq:density}
+  \eta(t)=\sum_{m=-N_\eta/2}^{N_\eta/2-1}\eta_m\ee^{2\pi\ii mt},
+\end{equation}
+and all layer potentials in $\widehat u$ are exact integrals of it. The
+Nystr\"om sums of the solver are not used as a field: they carry point and
+dipole singularities at the nodes and are not $H^2$ up to the interface.
+
+\emph{Proxy coefficients.} The coefficients $\alpha$ are fitted after the
+densities are known, by least squares on collocation points:
+quasi-periodicity of value and $\partial_y$ on the top and bottom edges of the
+cell, plus matching to outgoing Rayleigh waves on two auxiliary vertical lines
+to exclude homogeneous solutions. The fit depends only on $\kappa_{\mathrm e}$,
+$\beta$ and the geometry, so one factorization serves all cells of the same
+kind. This is the structure of \cite{BarnettGreengard2010}, except that the
+densities are not re-solved together with $\alpha$.
+
+\subsection{Center and lead cells}\label{sec:center}
+\emph{Center cell.} In $\mathcal C_0$, $\widehat u$ is \eqref{eq:mfs-field}
+with $\Omega=\Omega_0$ (no layer potentials if $\Omega_0=\varnothing$) and the
+port field
+\begin{equation}\label{eq:hom}
+  u_{\mathrm b}=u_{\mathrm{hom}}=\sum_{|m|\le M}\bigl(a^-_{0,m}r_m^{x_-}+b^+_{0,m}l_m^{x_+}\bigr),
+\end{equation}
+the part of the field entering through the two ports. It may be nonzero even if
+$\Omega_0=\varnothing$, so quasi-periodic layer potentials alone do not
+represent the center field. The ansatz follows the complementary-field
+representation of \cite[App.~A]{BarnettGreengard2010} with the incident port
+terms added; neither completeness nor uniqueness of this representation is
+used below. The center data are the density of $\Omega_0$, the amplitudes
+$a^-_0,b^+_0\in\CC^K$ and the proxy coefficients.
+
+\emph{Lead cells.} In the right reference cell $\mathcal C_{0,+}=(x_+,x_++L_+)\times
+I_d$, a field is determined by its \emph{incident amplitudes}: the right-going
+amplitude $a_{\mathrm L}$ anchored at the left wall $x_{\mathrm L}=x_+$ and the
+left-going amplitude $b_{\mathrm R}$ anchored at the right wall
+$x_{\mathrm R}=x_++L_+$. Their Rayleigh field $u_{\mathrm b}=\sum_m(a_{\mathrm
+L,m}r_m^{x_{\mathrm L}}+b_{\mathrm R,m}l_m^{x_{\mathrm R}})$, the density
+$\eta=\mathsf M_+(a_{\mathrm L};b_{\mathrm R})$ and the proxy coefficients
+$\alpha=\mathsf X_+(a_{\mathrm L};b_{\mathrm R})$ in \eqref{eq:mfs-field}, with
+fixed matrices $\mathsf M_+$ and $\mathsf X_+$ from the solver, define the cell
+field $u^{\mathrm{cell}}_+[a_{\mathrm L},b_{\mathrm R}]$, linear in the
+amplitudes. The left reference cell $\mathcal C_{0,-}$ is treated in the same way,
+with its own rod, contrast and width $L_-$.
+
+The state of a wall is the amplitude pair $(a;b)$ anchored there. The solver
+returns matrices $\mathsf Z_\pm\in\CC^{2K\times K}$, with row blocks
+$\mathsf Z_{\pm,a}$ and $\mathsf Z_{\pm,b}$, and $\mathsf P_\pm\in\CC^{K\times K}$:
+the columns of $\mathsf Z_\pm$ span the states of the decaying solutions of the
+discrete lead, and $\mathsf P_\pm$ moves such a state by one cell away from the
+center. With lead coordinates $v\in\CC^K$ we set
+\begin{equation}\label{eq:lead-cell}
+  u_+[v]=u^{\mathrm{cell}}_+\bigl[\mathsf Z_{+,a}v,\ \mathsf Z_{+,b}\mathsf P_+v\bigr],\qquad
+  u_-[v]=u^{\mathrm{cell}}_-\bigl[\mathsf Z_{-,a}\mathsf P_-v,\ \mathsf Z_{-,b}v\bigr],
+\end{equation}
+so that $v$ is the state of the wall nearer the center and $\mathsf P_\pm v$ the
+state of the far wall. With the lead coordinates $c_\pm\in\CC^K$ of the
+candidate, the field in the half guides is
+\begin{equation}\label{eq:lead-field}
+  \widehat u(\mathbf z\pm jL_\pm e_x)=u_\pm[\mathsf P_\pm^jc_\pm](\mathbf z),
+  \qquad\mathbf z\in\mathcal C_{0,\pm},\ j\ge0 .
+\end{equation}
+For the exact solution of the discrete lead problem, neighboring cells agree on
+the modes $|m|\le M$; the saved $\mathsf Z_\pm,\mathsf P_\pm$ satisfy this only
+approximately, and the remaining mismatch, together with the modes $|m|>M$ and
+the discrete residuals, appears as jumps on the shared walls. The only property
+of $\mathsf P_\pm$ used below is $\|\mathsf P_\pm^p\|_2<1$ for some $p\ge1$, which is
+checked (\cref{sec:computation}).
+
+In total, the candidate data are $\widehat k$, the center data, $\mathsf M_\pm$,
+$\mathsf X_\pm$, $\mathsf Z_\pm$, $\mathsf P_\pm$ and $c_\pm$. They are saved as
+binary64 numbers and treated as exact; the field is homogeneous of degree one in
+the center data and $c_\pm$, so the bound does not depend on their
+normalization.
+
+\subsection{Properties of the trial field}\label{sec:field-properties}
+The \emph{trial field} $\widehat u$ satisfies:
+(P1) $(-\Delta-\mu\rho)\widehat u=0$ exactly in every homogeneous piece, with
+$\mu=\widehat k^2$;
+(P2) the seam mismatch between the top and bottom edges of each cell is an
+interface jump;
+(P3) for analytic rod boundaries, as in \cref{sec:results}, $\widehat u$ is $H^2$
+up to the boundary of each piece and has ordinary one-sided traces on walls and
+seams (\cref{lem:piecewise-h2});
+(P4) $\widehat u\in\mathcal H$, which follows from the decay of $\mathsf P_\pm^j$
+and is checked in \cref{sec:computation}.
+It is not in $H^1_\beta(B)$.
+
+\begin{lemma}[piecewise regularity of the trial field]\label{lem:piecewise-h2}
+Assume that every material boundary has a regular embedded analytic periodic
+parametrization, that the image curves and proxies are at positive distance from
+the closed cells, that the densities are trigonometric polynomials in that
+parameter, and that \eqref{eq:mfs-field} uses one $\kappa_{\mathrm e}$ in the
+background. Then $\widehat u$ is $H^2$ up to the boundary in each homogeneous
+piece and has ordinary value and normal traces on both sides of every wall and
+seam.
+\end{lemma}
+
+\begin{proof}
+Far images, proxies and plane waves are smooth near the closed pieces, so it
+suffices to consider $v=\mathcal S^{(\kappa)}[\omega]+\mathcal D^{(\kappa)}[\tau]$ on
+one curve $\Gamma$. In the sense of distributions $(\Delta+\kappa^2)v=
+-\omega\delta_\Gamma+\operatorname{div}(\tau\nu\delta_\Gamma)$. In normal coordinates
+let $w=0$ inside and $w=(\tau(s)-t\omega(s))\chi(t)$ outside, with a smooth cutoff
+$\chi$. Then $w$ has value jump $\tau$ and normal jump $-\omega$, so
+$(\Delta+\kappa^2)w=F-\omega\delta_\Gamma+\operatorname{div}(\tau\nu\delta_\Gamma)$ with
+$F\in L^2_{\mathrm{loc}}$. Hence $(\Delta+\kappa^2)(v-w)=-F$ and $v-w\in
+H^2_{\mathrm{loc}}$, while $w$ is smooth up to $\Gamma$ from either side. Near walls
+and seams the one-sided cell formulas extend smoothly across, so there are no
+corner singularities.
+\end{proof}

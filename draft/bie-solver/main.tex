@@ -1,0 +1,60 @@
+% SIAM draft of the BIE guided-mode solver paper (split from draft/bie-siam on
+% 2026-11-07). Skeleton: the method section is the former Section 3 of the
+% enclosure paper; other sections are outlines. Build: latexmk main.tex
+% (latexmkrc adds the SIAM class directory).
+\documentclass[review,hidelinks,onefignum,onetabnum]{siamart251216}
+
+\usepackage{amsfonts,amssymb,mathtools,mathrsfs,stmaryrd,bm,booktabs,xcolor}
+\usepackage{amsopn}
+\DeclareMathOperator{\diag}{diag}
+\renewcommand{\Im}{\mathrm{Im}}
+\renewcommand{\Re}{\mathrm{Re}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QP}{\mathrm{QP}}
+% Drafting note, printed in red; remove before submission.
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+% Placeholder for the companion enclosure paper (draft/bie-siam).
+\newcommand{\companion}{\todo{cite enclosure paper}}
+
+\headers{BIE computation of guided modes between two periodic leads}{Author}
+\title{Boundary integral computation of guided modes in periodic waveguides
+  with two different leads\thanks{Submitted to the editors DATE.}}
+\author{Author\thanks{Department of Mathematics, Example University, Example City
+  (\email{author@example.com}).}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\todo{Write after the novelty survey (bie-solver-novelty.md)
+fixes the contribution statement.}
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+\todo{Closest prior work (Lu and coworkers, Bloch-mode scattering matrices,
+Fliss--Joly--Klindworth--Schmidt, Barnett--Greengard) and the contribution
+statement from the survey.}
+
+\section{Model problem}\label{sec:model}
+\todo{Strip $B$, leads $\rho_\pm$, cells $\mathcal C_0,\mathcal C_{j,\pm}$,
+ports $x_\pm$, common gap $G_\beta$; take from draft/bie-siam Section 2.1.}
+
+\input{sec-method}
+
+\section{Numerical experiments}\label{sec:experiments}
+\todo{Convergence in the density grid, $M$ and the proxies; comparison with
+FEM + DtN at equal accuracy and cost; two different leads; modes near a gap
+edge; Wood points and Dirichlet exceptional values. Required list: see the
+survey's referee checklist.}
+
+\section{Conclusions}\label{sec:conclusion}
+\todo{}
+
+\bibliographystyle{siamplain-nonote}
+\bibliography{../../ref/reference}
+\end{document}

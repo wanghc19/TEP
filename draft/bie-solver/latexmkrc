@@ -1,0 +1,5 @@
+# latexmk settings: find the SIAM class in vendor/ without copying it.
+ensure_path('TEXINPUTS', '../../vendor/siamart_251216//');
+$pdf_mode = 1;
+# ntheorem (loaded by siamart) writes a theorem list to *.thm; remove it with latexmk -c.
+$clean_ext = 'thm';

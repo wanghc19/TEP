@@ -76,8 +76,9 @@ $169$ plane waves and $118$ phase panels on $[0,\pi]$; both lead rods are
 symmetric under $y\mapsto-y$.
 
 \emph{Candidate.} The floating-point gap classification gives the search window
-$k\in[1.451,2.249]$. Chebyshev interpolation of $\det\mathsf A(k)$ on the whole
-window stops at degree $32$ (last three coefficients below $7\times10^{-11}$
+$k\in[1.451,2.249]$. The solver interpolates the determinant of its
+$2K\times2K$ port matrix \todo{cite companion solver paper} by Chebyshev
+polynomials on the whole window; the interpolation stops at degree $32$ (last three coefficients below $7\times10^{-11}$
 relative to the largest), with one near-real root in the Bernstein ellipse. Two
 Newton steps give $\widehat k=1.558437894182088=438661269969907/2^{48}$; $\mu$ is
 its exact square. The search takes $38$ matrix evaluations and $159$\,s.
@@ -152,8 +153,8 @@ lead has $L_-=1$ and the rod $a=0.12$; the right lead has $L_+=0.85$ and the rod
 $a=0.20$ rotated by $0.13$ (\cref{fig:geometry}). The right bands at $\pm\theta$
 then differ by up to $3.7\times10^{-3}$, and the gap test covers the full range
 $[-\pi/L_s,\pi/L_s]$ with $236$ panels per lead. The discretization is the same
-as in Example~1. The center field is a finite Rayleigh sum ($u_{\mathrm{hom}}$ of
-\cref{sec:center} with $\Omega_0=\emptyset$), which is exactly quasi-periodic, so the center rod and
+as in Example~1. The center field is a finite Rayleigh sum (\eqref{eq:hom} with
+$\Omega_0=\emptyset$), which is exactly quasi-periodic, so the center rod and
 center seam groups vanish identically, and the walls dominate $Q$ ($57\%$). The
 floating-point common gap is about $k\in(1.441,2.396)$.
 

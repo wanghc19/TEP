@@ -1,108 +1,14 @@
-% Section 4. Budget 6 pages.
+% Section 4. Budget 5 pages.
 % Source: draft/bie-enclosure/s-error.tex (clean version).
 \section{A spectral-distance bound for piecewise Helmholtz fields}\label{sec:bound}
 
-Let $\mu:=\widehat k^2$. From the candidate we build a field $\widehat u$ on the
-whole strip that solves the Helmholtz equation exactly in every homogeneous
-piece but jumps across rod boundaries, artificial walls and the top/bottom
-seam. We then prove $\operatorname{dist}(\mu,\sigma(A(\beta)))\le2\mu Q/(U-Q)$,
+Let $\mu:=\widehat k^2$. The trial field $\widehat u$ of \cref{sec:field}
+solves the Helmholtz equation exactly in every homogeneous piece but jumps
+across rod boundaries, artificial walls and the top/bottom seam. We prove $\operatorname{dist}(\mu,\sigma(A(\beta)))\le2\mu Q/(U-Q)$,
 where $U=\|\widehat u\|_{\mathcal H}$ and $Q=\sum_gC_g\varepsilon_g$ combines
 grouped jump norms $\varepsilon_g$ with trace constants $C_g$ that depend only on
 the geometry, the coefficients and $\mu$. Nothing about how the candidate was
 computed enters except through $\varepsilon_g$ and $U$.
-
-\subsection{The trial field}\label{sec:field}
-We separate \emph{definition parameters} (the density grid, the Rayleigh
-truncation $M$, the candidate coefficients) from \emph{evaluation parameters}
-(target quadrature, number of explicitly summed cells, evaluation precision).
-Once the former are fixed, $\widehat u$ is a definite function; the latter only
-affect how accurately $\varepsilon_g$ and $U$ are bounded. Both quantities are
-homogeneous of degree one in the scaling of the candidate vector, so the bound
-does not depend on its normalization.
-
-\emph{Continuous densities.} On each rod boundary, parametrized by
-$\boldsymbol r(t)$, $t\in[0,1)$, the $N_\eta$ density samples define the
-trigonometric interpolant $\eta(t)=\sum_{m=-N_\eta/2}^{N_\eta/2-1}\eta_m
-\ee^{2\pi\ii mt}$ through their discrete Fourier transform. All layer potentials
-in $\widehat u$ are exact integrals of these trigonometric densities. The
-Nystr\"om sums themselves are not used as a field: they carry point and dipole
-singularities at the nodes and are not $H^2$ up to the interface.
-
-\emph{Background representation.} In the background of each reference cell
-$\mathcal C$ the field is
-\begin{equation}\label{eq:mfs-field}
-  \widehat u=\sum_{n=-1}^{1}\ee^{\ii\beta nd}\bigl(\mathcal S^{(\kappa_{\mathrm e})}[\omega]
-  +\mathcal D^{(\kappa_{\mathrm e})}[\tau]\bigr)(\cdot-nd\,e_y)
-  +\sum_{i=1}^{N_p}\alpha_iG^{(\kappa_{\mathrm e})}(\cdot,\mathbf p_i)+u_{\mathrm b},
-\end{equation}
-that is, the near-image split \eqref{eq:near-image} with the smooth correction
-replaced by $N_p$ fixed proxy sources $\mathbf p_i$ outside the cell. Inside the
-rod it is the free-space potential with $\kappa_{\mathrm c}$ as in
-\eqref{eq:cell-rep}. We require that the image curves and the proxies have
-positive distance from the closed cell and that all background terms use the
-same $\kappa_{\mathrm e}$. The coefficients $\alpha$ are fitted to the whole field
-after the densities are known: quasi-periodicity of value and $\partial_y$ at
-collocation points on the seam lines, plus matching to outgoing Rayleigh waves
-on two auxiliary vertical lines to exclude homogeneous solutions. The system
-depends only on $\kappa_{\mathrm e}$, $\beta$ and the geometry, so one
-factorization serves the center field and all lead states; for lead cells
-$\alpha=\mathsf X_\pm v$ depends linearly on the state $v$. This is the
-structure of \cite{BarnettGreengard2010}, except that the densities are not
-re-solved together with $\alpha$. Saved floating-point coefficients are
-treated as exact numbers; the accuracy of the fit, of the QZ decomposition, and
-of the solver is not a hypothesis of the theorem, since every mismatch appears
-in the jumps of this field.
-
-\emph{Center and lead cells.} In $\mathcal C_0$, $\widehat u$ is
-\eqref{eq:mfs-field} with $u_{\mathrm b}=u_{\mathrm{hom}}$ truncated to
-$|m|\le M$ and $k=\widehat k$. In the right cell, incident amplitudes
-$(a_{\mathrm L},b_{\mathrm R})$ give a density and hence a cell field
-$u^{\mathrm{cell}}_+[a_{\mathrm L},b_{\mathrm R}]$, linear in the amplitudes.
-Writing $\mathsf Z_+v=(a_+(v);b_+(v))$, set
-$u_+[v]=u^{\mathrm{cell}}_+[a_+(v),b_+(\mathsf P_+v)]$ (left port state $v$,
-right port state $\mathsf P_+v$), similarly $u_-[v]$, and
-\begin{equation}\label{eq:lead-field}
-  \widehat u(\mathbf z\pm jL_\pm e_x)=u_\pm[\mathsf P_\pm^jc_\pm](\mathbf z),
-  \qquad\mathbf z\in\mathcal C_{0,\pm},\ j\ge0 .
-\end{equation}
-In exact arithmetic, \eqref{eq:propagation} makes neighboring cells agree on
-the modes $|m|\le M$; the saved $\mathsf Z_\pm,\mathsf P_\pm$ satisfy this only
-approximately, and the remaining mismatch, together with the modes $|m|>M$ and
-the discrete residuals, appears as jumps on the shared walls.
-
-The resulting \emph{trial field} satisfies:
-(P1) $(-\Delta-\mu\rho)\widehat u=0$ exactly in every homogeneous piece;
-(P2) the seam mismatch is treated as an interface jump;
-(P3) for analytic rod boundaries, as in \cref{sec:results}, $\widehat u$ is $H^2$ up to
-the boundary of each piece and has ordinary one-sided traces on walls and seams
-(\cref{lem:piecewise-h2});
-(P4) $\widehat u\in\mathcal H$, which follows from the decay of $\mathsf P_\pm^j$ and
-is checked in \cref{sec:computation}.
-It is not in $H^1_\beta(B)$.
-
-\begin{lemma}[piecewise regularity of the trial field]\label{lem:piecewise-h2}
-Assume that every material boundary has a regular embedded analytic periodic
-parametrization, that the image curves and proxies are at positive distance from
-the closed cells, that the densities are trigonometric polynomials in that
-parameter, and that \eqref{eq:mfs-field} uses one $\kappa_{\mathrm e}$ in the
-background. Then $\widehat u$ is $H^2$ up to the boundary in each homogeneous
-piece and has ordinary value and normal traces on both sides of every wall and
-seam.
-\end{lemma}
-
-\begin{proof}
-Far images, proxies and plane waves are smooth near the closed pieces, so it
-suffices to consider $v=\mathcal S^{(\kappa)}[\omega]+\mathcal D^{(\kappa)}[\tau]$ on
-one curve $\Gamma$. In the sense of distributions $(\Delta+\kappa^2)v=
--\omega\delta_\Gamma+\operatorname{div}(\tau\nu\delta_\Gamma)$. In normal coordinates
-let $w=0$ inside and $w=(\tau(s)-t\omega(s))\chi(t)$ outside, with a smooth cutoff
-$\chi$. Then $w$ has value jump $\tau$ and normal jump $-\omega$, so
-$(\Delta+\kappa^2)w=F-\omega\delta_\Gamma+\operatorname{div}(\tau\nu\delta_\Gamma)$ with
-$F\in L^2_{\mathrm{loc}}$. Hence $(\Delta+\kappa^2)(v-w)=-F$ and $v-w\in
-H^2_{\mathrm{loc}}$, while $w$ is smooth up to $\Gamma$ from either side. Near walls
-and seams the one-sided cell formulas extend smoothly across, so there are no
-corner singularities.
-\end{proof}
 
 \subsection{Jumps and grouped defects}\label{sec:jumps}
 The interfaces are the rod boundaries $\mathscr E_{\mathrm{mat}}$, the walls
@@ -132,9 +38,9 @@ relations give the \emph{actual} jumps
 \end{aligned}
 \end{equation}
 with free-space operators on $\Gamma$ acting on the continuous densities. They
-coincide with \eqref{eq:jump-operator} only if the proxy part of $h$ equals the
-exact smooth correction; the difference is the fitting error, which stays in the
-jumps. The reliable evaluation uses \eqref{eq:actual-jumps}.
+vanish only if the densities solve the transmission equations exactly and the
+proxy part of $h$ equals the exact smooth correction of the quasi-periodic
+potential; the discretization and fitting errors stay in the jumps. The reliable evaluation uses \eqref{eq:actual-jumps}.
 
 We split the interfaces into finitely many groups $\mathscr E_g$; below there are
 five: center rod, left rods, right rods, walls, seams. With a reference length
