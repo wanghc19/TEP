@@ -1,0 +1,50 @@
+[
+  {
+    "run": 19,
+    "plan": "old-reference-192",
+    "forecast_seconds": 90,
+    "old": true
+  },
+  {
+    "run": 20,
+    "plan": "old-example2-192",
+    "forecast_seconds": 190,
+    "old": true
+  },
+  {
+    "run": 21,
+    "plan": "old-width2-192",
+    "forecast_seconds": 190,
+    "old": true
+  },
+  {
+    "run": 22,
+    "plan": "old-w3-1.67541-192",
+    "forecast_seconds": 80,
+    "old": true
+  },
+  {
+    "run": 23,
+    "plan": "old-w3-0.2-192",
+    "forecast_seconds": 80,
+    "old": true
+  },
+  {
+    "run": 24,
+    "plan": "old-small-star-192",
+    "forecast_seconds": 90,
+    "old": true
+  },
+  {
+    "run": 25,
+    "plan": "reference",
+    "forecast_seconds": 370,
+    "old": false
+  },
+  {
+    "run": 26,
+    "plan": "old-aligned-192-long",
+    "forecast_seconds": 500,
+    "old": true
+  }
+]

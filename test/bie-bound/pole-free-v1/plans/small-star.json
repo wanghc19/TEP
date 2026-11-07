@@ -1,0 +1,12 @@
+{
+  "label": "small-star",
+  "model": "ex1",
+  "small": true,
+  "window": [
+    1.451,
+    2.249
+  ],
+  "beta": 0.5,
+  "action": "paired",
+  "samples": 101
+}

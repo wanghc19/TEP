@@ -1,0 +1,16 @@
+[
+  {
+    "label": "old-small-star-192",
+    "model": "ex1",
+    "small": true,
+    "window": [
+      1.451,
+      2.249
+    ],
+    "beta": 0.5,
+    "action": "search",
+    "samples": 101,
+    "N": 192,
+    "M": 12
+  }
+]

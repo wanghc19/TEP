@@ -1,0 +1,205 @@
+{
+  "required_checks": "PASS",
+  "regression_error": 1.1102230246251565e-15,
+  "root_jobs": 63,
+  "lead_cases": 94,
+  "independent_fits": [
+    {
+      "model": "ex1",
+      "N": 128,
+      "cut": 0,
+      "points": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "independent_width": 0.7376251410496467,
+      "width_difference": 0.0,
+      "independent_rms": 0.664985005576515
+    },
+    {
+      "model": "ex1",
+      "N": 192,
+      "cut": 0,
+      "points": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "independent_width": 0.7375280309225707,
+      "width_difference": 3.3306690738754696e-16,
+      "independent_rms": 0.665194010751157
+    },
+    {
+      "model": "ex2",
+      "N": 128,
+      "cut": 0,
+      "points": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "independent_width": 0.6982789095459487,
+      "width_difference": 0.0,
+      "independent_rms": 0.9420440638781499
+    },
+    {
+      "model": "w3",
+      "N": 128,
+      "cut": 0,
+      "points": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "independent_width": 0.9281401473654278,
+      "width_difference": 3.3306690738754696e-16,
+      "independent_rms": 0.071834610519477
+    },
+    {
+      "model": "ex1",
+      "N": 128,
+      "cut": -0.04,
+      "points": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "independent_width": 0.7375281072130321,
+      "width_difference": 2.220446049250313e-16,
+      "independent_rms": 0.6651936523979378
+    },
+    {
+      "model": "ex1",
+      "N": 128,
+      "cut": 0.06,
+      "points": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "independent_width": 0.7376250005302595,
+      "width_difference": 0.0,
+      "independent_rms": 0.6649854155444815
+    },
+    {
+      "model": "ex1",
+      "N": 128,
+      "cut": 0.16,
+      "points": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "independent_width": 0.7375474002158403,
+      "width_difference": 0.0,
+      "independent_rms": 0.6651522055463625
+    },
+    {
+      "model": "ex1",
+      "N": 128,
+      "cut": 0,
+      "points": [
+        2,
+        3,
+        4
+      ],
+      "independent_width": 0.6285566369022333,
+      "width_difference": 4.440892098500626e-16,
+      "independent_rms": 0.26036990234741714
+    },
+    {
+      "model": "ex1",
+      "N": 192,
+      "cut": 0,
+      "points": [
+        2,
+        3,
+        4
+      ],
+      "independent_width": 0.6283957954500153,
+      "width_difference": 3.3306690738754696e-16,
+      "independent_rms": 0.2599099394237156
+    },
+    {
+      "model": "ex2",
+      "N": 128,
+      "cut": 0,
+      "points": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "independent_width": 0.5978789085547583,
+      "width_difference": 5.551115123125783e-16,
+      "independent_rms": 0.33828514336228016
+    },
+    {
+      "model": "w3",
+      "N": 128,
+      "cut": 0,
+      "points": [
+        2,
+        3,
+        4
+      ],
+      "independent_width": 0.916116356786035,
+      "width_difference": 0.0,
+      "independent_rms": 0.023209143227508097
+    },
+    {
+      "model": "ex1",
+      "N": 128,
+      "cut": -0.04,
+      "points": [
+        2,
+        3,
+        4
+      ],
+      "independent_width": 0.628395819370579,
+      "width_difference": 2.220446049250313e-16,
+      "independent_rms": 0.2599077519984177
+    },
+    {
+      "model": "ex1",
+      "N": 128,
+      "cut": 0.06,
+      "points": [
+        2,
+        3,
+        4
+      ],
+      "independent_width": 0.6285566488625286,
+      "width_difference": 3.3306690738754696e-16,
+      "independent_rms": 0.26037410019441254
+    },
+    {
+      "model": "ex1",
+      "N": 128,
+      "cut": 0.16,
+      "points": [
+        2,
+        3,
+        4
+      ],
+      "independent_width": 0.6284279664212612,
+      "width_difference": 4.440892098500626e-16,
+      "independent_rms": 0.26000303990458046
+    }
+  ],
+  "total_monitored_seconds": 460.936423666,
+  "peak_rss_gib": 0.8677215576171875,
+  "experiment_bytes": 933808,
+  "field_mat_files": 0,
+  "pass_with_non_K": 4,
+  "fail_with_K": 1
+}

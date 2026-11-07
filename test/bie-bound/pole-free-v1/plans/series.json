@@ -1,0 +1,86 @@
+[
+  {
+    "run": 5,
+    "plan": "old-pole-192",
+    "forecast_seconds": 565,
+    "old": true
+  },
+  {
+    "run": 6,
+    "plan": "old-aligned-128",
+    "forecast_seconds": 220,
+    "old": true
+  },
+  {
+    "run": 7,
+    "plan": "old-aligned-192",
+    "forecast_seconds": 220,
+    "old": true
+  },
+  {
+    "run": 8,
+    "plan": "old-node-128",
+    "forecast_seconds": 175,
+    "old": true
+  },
+  {
+    "run": 9,
+    "plan": "old-node-192",
+    "forecast_seconds": 175,
+    "old": true
+  },
+  {
+    "run": 10,
+    "plan": "offset",
+    "forecast_seconds": 360,
+    "old": false
+  },
+  {
+    "run": 11,
+    "plan": "aligned",
+    "forecast_seconds": 360,
+    "old": false
+  },
+  {
+    "run": 12,
+    "plan": "node",
+    "forecast_seconds": 360,
+    "old": false
+  },
+  {
+    "run": 13,
+    "plan": "example2",
+    "forecast_seconds": 550,
+    "old": false
+  },
+  {
+    "run": 14,
+    "plan": "width2",
+    "forecast_seconds": 680,
+    "old": false
+  },
+  {
+    "run": 15,
+    "plan": "w3-1.67541",
+    "forecast_seconds": 390,
+    "old": false
+  },
+  {
+    "run": 16,
+    "plan": "w3-0.2",
+    "forecast_seconds": 390,
+    "old": false
+  },
+  {
+    "run": 17,
+    "plan": "small-star",
+    "forecast_seconds": 600,
+    "old": false
+  },
+  {
+    "run": 18,
+    "plan": "control",
+    "forecast_seconds": 115,
+    "old": false
+  }
+]

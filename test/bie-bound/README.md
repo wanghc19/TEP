@@ -35,3 +35,7 @@ FMM 是 fast multipole method（快速多极方法），MFS 是 method of fundam
 `litbench-v1` 是 literature benchmark version 1，用边界积分候选求解器复现文献中的线缺陷导模频率。
 
 `failure-probe-v1` 是 failure probe version 1，检验 Wood 异常、端口极点、伪根和稳定子空间对边界积分候选搜索的影响。
+
+`rayleigh-order-v1` 是 Rayleigh order version 1，测量候选根随 Rayleigh 截断阶数 $M$ 和端口切线位置的收敛速度，并检查引线胞能流守恒与衰减子空间维数。
+
+`pole-free-v1` 是 pole-free port matching version 1，用加边端口匹配和解析引线标架代替 DtN 闭合，检验移动切线时的极点、节点上的根和物理接受判据。

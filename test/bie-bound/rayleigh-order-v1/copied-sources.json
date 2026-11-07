@@ -1,0 +1,19 @@
+{
+  "source_directory": "test/bie-bound/failure-probe-v1",
+  "files": [
+    "search_i9_physics.m",
+    "search_i9_classify.m",
+    "search_i9_config.m",
+    "search_i9_geometry.m",
+    "example_config.m",
+    "example_parameters.m",
+    "probe_config.m",
+    "find_cut.m",
+    "monitor.py"
+  ],
+  "changes": {
+    "monitor.py": "2 GiB hard RSS; other monitor logic retained",
+    "search_i9_config.m": "threads set by entry point; no scientific changes",
+    "search_i9_physics.m": "unchanged numerical source; diagnostics use returned scattering blocks"
+  }
+}

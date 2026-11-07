@@ -1,0 +1,15 @@
+[
+  {
+    "label": "old-reference-192",
+    "model": "ex1",
+    "window": [
+      1.4509999999999998,
+      2.249
+    ],
+    "beta": 0.5,
+    "action": "search",
+    "samples": 101,
+    "N": 192,
+    "M": 12
+  }
+]

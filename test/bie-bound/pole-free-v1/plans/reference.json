@@ -1,0 +1,11 @@
+{
+  "label": "reference",
+  "model": "ex1",
+  "window": [
+    1.4509999999999998,
+    2.249
+  ],
+  "beta": 0.5,
+  "action": "paired",
+  "samples": 101
+}

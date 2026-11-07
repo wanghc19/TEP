@@ -1,0 +1,17 @@
+run,label,N,M,action,status,message,returned_candidate_count,provisional_count,k,ratio
+run-001,old-reference,128,6,search,COMPLETE,,1,0,1.558437894182088,3.01442085e-14
+run-001,pole-128,128,6,fallback-check,SEARCH_FINISHED_WITH_UNRESOLVED_INTERVALS,,1,0,1.5562502581483555,4.47172706e-16
+run-001,pole-192,192,12,fallback-check,SEARCH_FINISHED,,1,0,1.5562502584026721,4.66289433e-16
+run-002,old-pole-128,128,6,search,REFUSED,I9 fallback returned no complete candidate.,0,0,,
+run-005,old-pole-192,192,12,search,OBSERVATION_LIMIT,Timed fallback observation exhausted its remaining 120.2 s.,0,2,1.5562502584026721 1.5562502584026761,4.66289433e-16 4.58464244e-16
+run-006,old-aligned-128,128,6,search,REFUSED,I9 fallback returned no complete candidate.,0,0,,
+run-007,old-aligned-192,192,12,search,OBSERVATION_LIMIT,Timed fallback observation exhausted its remaining 95.1 s.,0,0,,
+run-008,old-node-128,128,6,search,OBSERVATION_LIMIT,Timed observation stopped after 130.4 s.,0,1,1.558437894182088,2.70807118e-14
+run-009,old-node-192,192,12,search,OBSERVATION_LIMIT,Timed fallback observation exhausted its remaining 9.4 s.,0,0,,
+run-019,old-reference-192,192,12,search,COMPLETE,,1,0,1.5584378941820884,3.07418757e-14
+run-020,old-example2-192,192,12,search,COMPLETE,,1,0,1.8916961400527388,9.28377405e-15
+run-021,old-width2-192,192,12,search,COMPLETE,,2,0,1.455557163284519 2.2156203475844984,1.53010708e-14 1.84899702e-14
+run-022,old-w3-1.67541-192,192,12,search,COMPLETE,,1,0,2.0106210217581526,5.83041693e-14
+run-023,old-w3-0.2-192,192,12,search,COMPLETE,,1,0,2.0893110383208939,1.95061229e-14
+run-024,old-small-star-192,192,12,search,COMPLETE,,1,0,1.8206100861078576,1.18513786e-14
+run-026,old-aligned-192,192,12,search,REFUSED,I9 fallback returned no complete candidate.,0,0,,

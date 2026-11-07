@@ -1,0 +1,10 @@
+case,source,run,label,k,ratio,status
+reference,../failure-probe-v1/results/counts.csv,run-001,regression,1.558437894182088,3.0144e-14,COMPLETE
+offset,../failure-probe-v1/results/counts.csv,run-001,regression,1.558437894182088,3.0144e-14,COMPLETE
+aligned,../failure-probe-v1/results/counts.csv,run-001,regression,1.558437894182088,3.0144e-14,COMPLETE
+node,../failure-probe-v1/results/counts.csv,run-001,regression,1.558437894182088,3.0144e-14,COMPLETE
+example2,../failure-probe-v1/results/counts.csv,run-014,base1,1.8916961400527379,8.0759e-15,COMPLETE
+width2,../failure-probe-v1/results/counts.csv,run-014,base2,1.455557163284519 2.2156203475844976,1.5493e-14 1.8881e-14,COMPLETE
+small-star,../failure-probe-v1/results/counts.csv,run-016,small128,1.8206100861078613,1.3576e-14,COMPLETE
+w3-1.67541,../failure-probe-v1/results/counts.csv,run-014,base3,2.0106210217581522,5.7447e-14,COMPLETE
+w3-0.2,../failure-probe-v1/results/counts.csv,run-014,base4,2.0893110383208939,1.9453e-14,COMPLETE

@@ -1,0 +1,16 @@
+[
+  {
+    "label": "old-width2-192",
+    "model": "edge",
+    "L0": 2,
+    "window": [
+      1.451,
+      2.249
+    ],
+    "beta": 0.5,
+    "action": "search",
+    "samples": 101,
+    "N": 192,
+    "M": 12
+  }
+]

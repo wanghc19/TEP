@@ -1,0 +1,12 @@
+{
+  "label": "width2",
+  "model": "edge",
+  "L0": 2,
+  "window": [
+    1.451,
+    2.249
+  ],
+  "beta": 0.5,
+  "action": "paired",
+  "samples": 101
+}

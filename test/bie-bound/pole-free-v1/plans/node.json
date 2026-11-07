@@ -1,0 +1,15 @@
+{
+  "label": "node",
+  "model": "ex1",
+  "cuts": [
+    0,
+    0.1
+  ],
+  "beta": 0.5,
+  "window": [
+    1.555437894182088,
+    1.561437894182088
+  ],
+  "action": "paired",
+  "samples": 83
+}
