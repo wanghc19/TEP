@@ -50,6 +50,7 @@ draft/examples/output/
 waveguide_1d/tmp.m
 tmp_*.m
 tmp/*
+/redteam/tmp/
 
 # Research task artifacts
 research/tmp/
@@ -59,6 +60,7 @@ research/**/checkpoints/
 
 # Local experiment outputs (already tracked files remain tracked)
 test/**/output/
+/redteam/**/output/
 test/i4/femref-a1/diagnostics/
 test/i4/femref-a1/watchdog/
 

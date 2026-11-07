@@ -45,7 +45,7 @@ Current status lives in `research/STATUS.md`, `research/projects/eig-apost/STATU
 benchmark/   bloch/ and qpgreen/ tests and benchmarks
 test/        agent experiments: test/i*/, test/archive/
 research/    Chinese-language theory workspace (Obsidian vault); explorations/ for independent studies
-redteam/     cross-check of the two numerical routes (see its README)
+redteam/     adversarial checks of any numerical route; archive/ holds the eig-apost BIE/FEM cross-check
 draft/       paper draft, draft/examples/, draft/fem-dtn-epost/ (FEM + DtN lecture notes)
 pre/         presentations and report
 ref/         reference catalog; PDFs via ref/ref_data/ (untracked symlink)

@@ -87,7 +87,8 @@ eigenvalue problems. These rules apply throughout the repository.
 
 - Run MATLAB code in MATLAB; do not use Octave as a substitute. Put new
   experimental code under `test/` unless another location is explicitly
-  authorized; follow its execution rules.
+  authorized; follow its execution rules. Adversarial checks of a numerical
+  route go under `redteam/` (see `redteam/AGENTS.md`).
 - Report the changes, checks actually run, results, and unresolved limitations.
   Never claim a run or validation that did not occur. Edit files in place and
   do not paste complete files into chat unless requested.
@@ -122,11 +123,12 @@ eigenvalue problems. These rules apply throughout the repository.
   subfolder of the repository's untracked `tmp/` named after the task, for
   example `tmp/xr-cleveref-repro/`. Do not create them in system temporary
   directories (`mktemp -d`, `$TMPDIR`, `/var/folders/...`) or elsewhere in the
-  repository.
+  repository. Work under `redteam/` uses `redteam/tmp/<task>/` instead; the
+  rules below apply to it in the same way.
 - An agent may delete, without asking, a task-named folder under the root
-  `tmp/` that it created during the current task, by its exact path (no broad
-  globs). Whether to keep it for later use is the agent's call. This permission
-  covers nothing else: not files or folders from other tasks or other agents,
+  `tmp/` (or `redteam/tmp/`) that it created during the current task, by its
+  exact path (no broad globs). Whether to keep it for later use is the agent's
+  call. This permission covers nothing else: not files or folders from other tasks or other agents,
   not existing contents of `tmp/` (such as logs and prompts), not `research/tmp/`,
   and not outputs backing a reported result. List any other leftovers for the
   user instead of deleting them.

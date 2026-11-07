@@ -21,8 +21,8 @@ $y$-periodic dielectric waveguides with a line defect.
 | fem-goerisch | 用 FEM＋DtN 试探场和 Lehmann–Goerisch 型证书，给出包含区间 | [研究](research/projects/fem-goerisch/README.md)、[状态](research/projects/fem-goerisch/STATUS.md)；[实验](test/fem-goerisch/) |
 | eig-apost | 固定 $\beta$ 线缺陷导模的计算与后验误差估计，BIE 与 FEM＋DtN 两条路线 | [研究](research/projects/eig-apost/README.md)、[状态](research/projects/eig-apost/STATUS.md)；实验 `test/i1/`–`test/i10/` |
 
-其他专题和独立探索见 [research/README.md](research/README.md)。两条数值路线的对照检查在
-[redteam/](redteam/README.md)，FEM＋DtN 讲义在 [draft/fem-dtn-epost/](draft/fem-dtn-epost/)。
+其他专题和独立探索见 [research/README.md](research/README.md)。各数值路线的红队检查在
+[redteam/](redteam/README.md)（含已归档的 eig-apost 两条路线对照检查），FEM＋DtN 讲义在 [draft/fem-dtn-epost/](draft/fem-dtn-epost/)。
 进展和数值结果以各专题的 `STATUS.md` 和实验目录的 `README.md` 为准，首页不汇总。
 
 ## 目录结构
@@ -34,7 +34,7 @@ test/        数值实验，每个实验一个目录
 research/    理论与研究记录（中文，Obsidian 库）
 draft/       论文稿件与讲义
 release/     随论文发布的复现与校验包
-redteam/     两条数值路线的对照检查
+redteam/     数值路线的红队检查（历史检查在 archive/）
 pre/         报告与幻灯片
 ref/         参考文献目录（PDF 不纳入 Git）
 vendor/      第三方依赖（除 README 外不纳入 Git）
