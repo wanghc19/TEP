@@ -61,6 +61,7 @@ research/**/checkpoints/
 # Local experiment outputs (already tracked files remain tracked)
 test/**/output/
 /redteam/**/output/
+/redteam/perturb-v1/data/
 test/i4/femref-a1/diagnostics/
 test/i4/femref-a1/watchdog/
 
