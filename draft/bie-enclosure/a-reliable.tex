@@ -141,6 +141,9 @@ $\int_{S_s}((s-c_s)/h_s)^j\eta\dd s$（计算误差 $d_{s,j}$）代替，引起�
   \end{align*}
   （导数对 $q$），分别记为 $g_0,g_1,g_2$。若位移 $\boldsymbol d$ 满足 $\lVert\boldsymbol d\rVert\leq D$，
   则 $\lVert\nabla G\rVert\leq2Dg_1$、$\lVert\nabla^2G\rVert\leq2g_1+4D^2g_2$。
+  \pending{2026-11-07 英文稿证明审查 R-7：Hessian 的范数}本引理中 $\lVert\nabla^2G\rVert$
+  取诱导的 Euclid 算子范数（Frobenius 范数下 $2g_1$ 应换成 $2\sqrt2\,g_1$）；它只通过
+  $\lVert(\nabla^2G)\boldsymbol n\rVert\leq\lVert\nabla^2G\rVert\,\lVert\boldsymbol n\rVert$ 进入核的界。
 \end{lemma}
 
 \begin{proof}
@@ -156,12 +159,17 @@ $\int_{S_s}((s-c_s)/h_s)^j\eta\dd s$（计算误差 $d_{s,j}$）代替，引起�
   $\nabla^2G=2G'(q)\mathrm I+4G''(q)\boldsymbol d\boldsymbol d^{\top}$，取范数即得后两式。
 \end{proof}
 
-实际使用时，对源圆盘中心距目标中心 $d_-\leq d\leq d_+$、源位移 $\delta$ 与展开半径 $R$，取
+实际使用时，对源圆盘中心距目标中心 $d_-\leq d\leq d_+$、目标在两个独立复坐标 $z,w$
+（引理~\ref{lem:regular-expansion}）上的展开半径 $R$ 与源位移 $\delta$，取
+\pending{2026-11-07 英文稿证明审查 R-5：源位移按两个特征坐标分别取界}
+$\delta\geq\sup\max\{|z_s-z_s(c_s)|,|w_s-w_s(c_s)|\}$，上确界取遍复源圆盘，
+$z_s=x_s+\ii y_s$、$w_s=x_s-\ii y_s$ 是源点的两个特征坐标；只有 Euclid 复位移界 $\delta_E$
+时，由 $|\Delta z_s|,|\Delta w_s|\leq|\Delta x_s|+|\Delta y_s|$ 取 $\delta=\sqrt2\,\delta_E$，直接用 $\delta_E$ 不成立。取
 $q_-=(d_--R-\delta)^2$、$Q=(d_++R+\delta)^2$，
 $L_q=\max\{|\log d_-^2|,|\log d_+^2|\}-2\log(1-(R+\delta)/d_-)$；条件 $R+\delta<d_-$ 保证
 距离平方的两个复因子无零点，对数取实中心值加两个收敛的 $\log(1+u)$ 级数，与实核同支。
 Müller 核的值行与法向行由 $G$、$\nabla G$、$\nabla^2G$ 乘源速度和法向组成；若源圆盘上
-速度不超过 $V_s$、法向范数不超过 $N_s$，$D=d_++R+\delta$，则对点源组（系数 $c_j$）
+$(|x_s'|^2+|y_s'|^2)^{1/2}$ 不超过 $V_s$、法向范数不超过 $N_s$，$D=d_++R+\delta$，则对点源组（系数 $c_j$）
 \begin{align}
   M_{\nu s}\leq V_s\sum_j|c_j|\bigl[g_0+2(N_s+1)Dg_1+N_s(2g_1+4D^2g_2)\bigr].
   \label{eq:kernel-envelope}
@@ -294,24 +302,34 @@ $N_{\mathrm{cell}}$，使尾项不超过有限部分下界的 $10^{-6}$ 倍，�
 复核尾项的衰减。
 
 \pending{2026-11-06 审稿意见 B1：写出包络 $B_\pm$ 的构成}
+\pending{2026-11-07 英文稿证明审查 R-2、R-3：墙因子用一步范数并补长度因子；$\mathsf G$ 是状态到入射振幅的映射，与实现一致}
 包络按组由逐点上界组成（每侧一套，对单位范数的状态）：
 \begin{align*}
   B_{\mathrm{mat}}&=\sqrt{2\pi}\,\bigl[(S_{\mathrm{self}}+S_{\mathrm{loc}}+w\,S_{\mathrm{near}})\lVert\mathsf G\rVert+w\,S_{\mathrm{pt}}\bigr],
-  &B_{\mathrm{wall}}&=(1+r)\,S_{\mathrm{face}},
-  &B_{\mathrm{seam}}&=2\,S_{\mathrm{face}},
+  &B_{\mathrm{wall}}&=\sqrt d\,(1+r_1)\,S_{\mathrm{face}},
+  &B_{\mathrm{seam}}&=2\sqrt{L_\pm}\,S_{\mathrm{face}},
 \end{align*}
 $S_{\mathrm{face}}:=(S_{\mathrm{ord}}+S_{\mathrm{inc}})\lVert\mathsf G\rVert+S_{\mathrm{pt}}$。
-其中 $\mathsf G$ 把状态映到密度系数；$S_{\mathrm{near}}$、$S_{\mathrm{ord}}$、$S_{\mathrm{pt}}$ 分别
+其中 $\mathsf G$ 把状态映到所在胞元的入射振幅：右侧
+$\mathsf G=[\mathsf Z_{+,a};\mathsf Z_{+,b}\mathsf P_+]$，左侧
+$\mathsf G=[\mathsf Z_{-,a}\mathsf P_-;\mathsf Z_{-,b}]$（$\mathsf Z_{\pm,a}$、$\mathsf Z_{\pm,b}$ 为
+$\mathsf Z_\pm$ 的两个行块）；$r_1\geq\lVert\mathsf P_\pm\rVert_2$ 是一步范数的界，与
+式~\eqref{eq:boundary-propagation-tail} 中收缩幂的界 $r_\pm$ 无关（$p>1$ 时
+$\lVert\mathsf P_\pm^p\rVert_2\leq r_\pm$ 不给出 $\lVert\mathsf P\rVert$ 的界）。除 $S_{\mathrm{pt}}$ 外，各 $S$
+都是对单位范数入射振幅向量的界，已含振幅到密度系数映射的范数；点源系数按状态拟合，
+故 $S_{\mathrm{pt}}$ 是对单位状态的界，不再乘 $\lVert\mathsf G\rVert$。$S_{\mathrm{near}}$、$S_{\mathrm{ord}}$、$S_{\mathrm{pt}}$ 分别
 是近像层势（材料目标）、普通层势（墙与接缝目标，含三个像）与 $480$ 个点源的上界，都由
-引理~\ref{lem:green-envelope} 的基本解包络（式~\eqref{eq:kernel-envelope}）乘以密度系数或
-点源系数的范数得到；$S_{\mathrm{self}}$ 是引理~\ref{lem:self-envelope} 的包络
+引理~\ref{lem:green-envelope} 的基本解包络（式~\eqref{eq:kernel-envelope}）乘以振幅到密度
+系数映射的范数或点源系数的范数得到；$S_{\mathrm{self}}$ 是引理~\ref{lem:self-envelope} 的包络
 $2H_A/(\ee^{a-h}-1)+H_B$（$a=0.16$，$h=\pi/64$）在 $64$ 个面板上的最大值；$S_{\mathrm{loc}}$ 是 $w$ 乘以局部项的界，局部项的界含密度
 Fourier 系数的界与入射 Rayleigh 项的界
 $\bigl(\sum_{|m|\leq48}2(1+|\gamma_m|^2+\beta_m^2)/d\bigr)^{1/2}$；
 $S_{\mathrm{inc}}$ 为同一入射项的界；$w=\overline v^{1/2}\max\{1,\overline v/\underline s^{1/2}\}$
-是本小节前面所述权的延拓给出的因子，验证 $w<1$。因子 $\sqrt{2\pi}$ 把参数区间 $[0,2\pi)$ 上的逐点界化为 $L^2$
-界（墙与接缝长度为 $1$）；墙的跳跃涉及相邻两个状态 $v_j$ 与 $\mathsf P v_j$，故乘
-$1+r$；接缝合并上下两条迹，故乘 $2$。这些界比实际状态的缺陷粗很多（第~\ref{subsec:results-interval}~小节表~\ref{tab:results-tails}），
+是本小节前面所述权的延拓给出的因子，验证 $w<1$。因子 $\sqrt{2\pi}$、$\sqrt d$、$\sqrt{L_\pm}$ 分别把介质柱参数区间 $[0,2\pi)$、长为 $d$ 的墙、
+长为 $L_\pm$ 的接缝段上的逐点界化为 $L^2$ 界；墙的跳跃涉及相邻两个状态 $v_j$ 与
+$\mathsf P_\pm v_j$，故乘 $1+r_1$；接缝合并上下两条迹，故乘 $2$。实际计算中 $d=1$、
+$L_\pm\leq1$，实现省去 $\sqrt d$、$\sqrt{L_\pm}$，只会使 $B$ 变大；$r_1$ 取
+$\lVert\mathsf P_\pm\rVert_F$，均小于一。这些界比实际状态的缺陷粗很多（第~\ref{subsec:results-interval}~小节表~\ref{tab:results-tails}），
 但只通过尾项进入，代价是 $N_{\mathrm{cell}}$ 多取几个胞元。
 
 \begin{workonly}
@@ -382,9 +400,20 @@ $L>2X+2\delta$、$d>2Y+2\delta$ 时互不相交，$N_g=1$。左右半波导是�
 令 $F(\lambda)=p_g(\lambda)/(\lambda+\mu)^2$。$F'$ 的分子是一次式，所以
 $\sup_{\lambda\geq\lambda_0}F$ 只需比较 $F(\lambda_0)$、$c_g$ 以及驻点
 $\lambda_*=(2a_g-b_g\mu)/(2c_g\mu-b_g)$（若 $\lambda_*\geq\lambda_0$）。球算术不能确定
-驻点是否在区间内时，三个候选全部保留。\pending{2026-11-06 审稿意见 M4：补退化分支}
-若 $2c_g\mu-b_g=0$（或球算术不能排除它），$F'$ 的分子是常数 $b_g\mu-2a_g$，$F$ 单调或恒定，
-上确界为 $\max\{F(\lambda_0),c_g\}$；这一情形不用驻点公式。谱底取
+驻点是否在区间内时，三个候选全部保留也是安全的（分母已与零分开时）；实现中这时计算停止。\pending{2026-11-06 审稿意见 M4：补退化分支}
+\pending{2026-11-07 英文稿证明审查 R-1：球不能排除零时不能当作单调}
+若 $2c_g\mu-b_g=0$ 已精确成立，$F'$ 的分子是常数 $b_g\mu-2a_g$，$F$ 单调或恒定，
+上确界为 $\max\{F(\lambda_0),c_g\}$。若球算术不能把 $2c_g\mu-b_g$ 与零分开，计算停止
+（实际计算中未出现）；此时也可用安全上界
+$\sup F\leq\overline a_g/\mu^2+\overline b_g/(4\mu)+\overline c_g$（上划线为非负系数的
+上界），它由 $\lambda_0\geq0$、$\lambda/(\lambda+\mu)^2\leq1/(4\mu)$ 与
+$\lambda^2/(\lambda+\mu)^2\leq1$ 得到。反例说明不能把不确定的分母当作零：$\mu=1$、
+$a_g=c_g=1$、$b_g=3$ 时 $F(0)=F(\infty)=1$ 而 $F(1)=5/4$。
+\begin{workonly}
+原稿：若 $2c_g\mu-b_g=0$（或球算术不能排除它），$F'$ 的分子是常数 $b_g\mu-2a_g$，$F$ 单调或恒定，
+上确界为 $\max\{F(\lambda_0),c_g\}$；这一情形不用驻点公式。
+\end{workonly}
+谱底取
 $\lambda_0=\min_m\beta_m^2/\rho_{\max}$，来自 $y$ 方向的 Poincaré 不等式。
 $\mu=\widehat k^2$ 在球算术中由精确的 $\widehat k$ 平方得到；领子半宽 $\delta_g$ 与
 $\eta_g$ 可取任意正数，它们只影响常数大小，不需要是最优值。

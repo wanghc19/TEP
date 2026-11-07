@@ -13,7 +13,7 @@ determine the target operator; the target geometry is defined by the saved
 binary64 parameters (\cref{sec:results}). The defects and the mass bound are
 computed for this geometry; the gap test and the trace constants are computed for
 parameter balls that contain both the binary64 and the decimal values. The
-number $\pi$, the phase $q$, the wavenumbers $\widehat k\rho^{1/2}$, the Rayleigh
+number $\pi$, the phase $\ee^{\ii\beta d}$, the wavenumbers $\widehat k\rho^{1/2}$, the Rayleigh
 exponents $\gamma_m$ and special functions are evaluated from exact formulas.
 Rounding in the stored field data therefore needs no estimate: it changes which
 field is tested, and the theorem holds for every fixed field.
@@ -127,7 +127,9 @@ $\mathcal G_j=b_0^j\ee^{b_0Q}(L_q/(4\pi)+C_0+(j+b_0Q)/(2\pi))$. Then
   |G''|\le\mathcal G_2+\frac{\ee^{b_0Q}}{4\pi}\Bigl(\frac{2b_0}{q_-}+\frac1{q_-^2}\Bigr)=:g_2 ,
 \]
 and for displacements $\|\boldsymbol d\|\le D$, $\|\nabla G\|\le2Dg_1$ and
-$\|\nabla^2G\|\le2g_1+4D^2g_2$.
+$\|\nabla^2G\|\le2g_1+4D^2g_2$. In this lemma only, $\|\nabla^2G\|$ is the induced
+Euclidean operator norm; it enters only through $\|(\nabla^2G)\boldsymbol n\|\le
+\|\nabla^2G\|\,\|\boldsymbol n\|$.
 \end{lemma}
 
 \begin{proof}
@@ -140,12 +142,17 @@ with $J(q)=\sum_{m\ge0}(-b_0q)^m/(m!)^2$ and harmonic numbers $H_m\le m$. Bound 
 $\nabla G=2G'\boldsymbol d$ and $\nabla^2G=2G'I+4G''\boldsymbol d\boldsymbol d^{\top}$.
 \end{proof}
 
-For source disks at distance $d_-\le d\le d_+$ from the target center, source
-displacement $\delta$ and radius $R$ with $R+\delta<d_-$, take
+For source disks at distance $d_-\le d\le d_+$ from the target center, target radius
+$R$ in each of the coordinates $z,w$ of \cref{sm:lem-regular}, and source displacement
+$\delta\ge\sup\max\{|z_s-z_s(c_s)|,|w_s-w_s(c_s)|\}$ over the complex source disk, where
+$z_s=x_s+\ii y_s$ and $w_s=x_s-\ii y_s$ are the two characteristic coordinates of the
+source point (a Euclidean complex displacement bound $\delta_E$ gives only
+$\delta=\sqrt2\,\delta_E$), with $R+\delta<d_-$, take
 $q_-=(d_--R-\delta)^2$, $Q=(d_++R+\delta)^2$ and
 $L_q=\max\{|\log d_-^2|,|\log d_+^2|\}-2\log(1-(R+\delta)/d_-)$; the logarithm is the
 real value at the center plus two convergent $\log(1+u)$ series, on the branch of
-the real kernel. If the source speed is at most $V_s$ and the normal at most $N_s$,
+the real kernel. If $(|x_s'|^2+|y_s'|^2)^{1/2}\le V_s$ and the normal is at most $N_s$
+on the complex source disk,
 then with $D=d_++R+\delta$ a group of point sources with coefficients $c_j$ gives
 \begin{equation}\label{sm:eq-kernel}
   M_{\nu s}\le V_s\sum_j|c_j|\bigl[g_0+2(N_s+1)Dg_1+N_s(2g_1+4D^2g_2)\bigr].
@@ -239,19 +246,31 @@ $\sum_j\|f_{I,j}\|^2_{L^2(I)}\le\sum_j(V_{I,j}^{1/2}+|I|^{1/2}e_{I,j})^2$. The t
 \begin{gather*}
   B_{\mathrm{mat}}=\sqrt{2\pi}\bigl[(S_{\mathrm{self}}+S_{\mathrm{loc}}+wS_{\mathrm{near}})
   \|\mathsf G\|+wS_{\mathrm{pt}}\bigr],\\
-  B_{\mathrm{wall}}=(1+r)S_{\mathrm{face}},\qquad B_{\mathrm{seam}}=2S_{\mathrm{face}},
+  B_{\mathrm{wall}}=\sqrt d\,(1+r_1)S_{\mathrm{face}},\qquad
+  B_{\mathrm{seam}}=2\sqrt{L_\pm}\,S_{\mathrm{face}},
 \end{gather*}
 $S_{\mathrm{face}}=(S_{\mathrm{ord}}+S_{\mathrm{inc}})\|\mathsf G\|+S_{\mathrm{pt}}$. Here
-$\mathsf G$ maps states to density coefficients; $S_{\mathrm{near}}$, $S_{\mathrm{ord}}$
+$\mathsf G$ maps a state to the incident amplitudes of its cell,
+$\mathsf G=[\mathsf Z_{+,a};\mathsf Z_{+,b}\mathsf P_+]$ on the right and
+$[\mathsf Z_{-,a}\mathsf P_-;\mathsf Z_{-,b}]$ on the left (row blocks of $\mathsf Z_\pm$,
+\cref{sec:field}), and $r_1\ge\|\mathsf P_\pm\|_2$ is a one-step bound, independent of the
+contracting power in \eqref{eq:tail}. All $S$ except $S_{\mathrm{pt}}$ are bounds per
+unit incident amplitude vector and include the norm of the map from amplitudes to
+density coefficients; $S_{\mathrm{pt}}$ is per unit state, since the point-source
+coefficients are fitted per state. $S_{\mathrm{near}}$, $S_{\mathrm{ord}}$
 and $S_{\mathrm{pt}}$ bound the near-image potentials at material targets, the
 ordinary potentials (three images) at walls and seams, and the $480$ point sources,
 all through \eqref{sm:eq-kernel}; $S_{\mathrm{self}}$ is the maximum of
 \cref{sm:lem-self} over the $64$ panels ($a=0.16$, $h=\pi/64$); $S_{\mathrm{loc}}$
 and $S_{\mathrm{inc}}$ bound the local and incident Rayleigh terms, the latter by
 $(\sum_{|m|\le48}2(1+|\gamma_m|^2+\beta_m^2)/d)^{1/2}$; and
-$w=\overline v^{1/2}\max\{1,\overline v/\underline s^{1/2}\}$ comes from the weight
-($w<1$ is verified). The factor $\sqrt{2\pi}$ turns pointwise bounds into $L^2$
-bounds; a wall involves $v_j$ and $\mathsf Pv_j$, a seam two traces. These envelopes
+$w=\overline v^{1/2}\max\{1,\overline v/\underline s^{1/2}\}$ comes from the weight,
+with $\overline v\ge(|x'|^2+|y'|^2)^{1/2}$ on the complex strips used
+($w<1$ is verified). The factors $\sqrt{2\pi}$, $\sqrt d$ and $\sqrt{L_\pm}$ turn
+pointwise bounds into $L^2$ bounds on a rod, a wall and a seam segment; a wall
+involves $v_j$ and $\mathsf P_\pm v_j$, a seam two traces. In our runs $d=1$ and
+$L_\pm\le1$, so the computation omits $\sqrt d$ and $\sqrt{L_\pm}$, which only enlarges
+$B$; $r_1$ is the Frobenius norm of $\mathsf P_\pm$, which is below one. These envelopes
 are much cruder than the actual defects (\cref{sm:tab-tails}) but enter only the
 tail. For each group and side we take the smallest $N_{\mathrm{cell}}$ with tail at
 most $10^{-6}$ times the lower bound of the finite part, and check the decay with
@@ -309,8 +328,11 @@ collars without increasing $N_g$.
 $F(\lambda)=p_g(\lambda)/(\lambda+\mu)^2$ is linear, so $\sup_{\lambda\ge\lambda_0}F$ is
 the maximum of $F(\lambda_0)$, $c_g$ and $F(\lambda_*)$ with
 $\lambda_*=(2a_g-b_g\mu)/(2c_g\mu-b_g)$ if $\lambda_*\ge\lambda_0$. If ball arithmetic
-cannot exclude $2c_g\mu=b_g$, $F$ is monotone and the supremum is
-$\max\{F(\lambda_0),c_g\}$. The parameters $\delta_g,\eta_g$ need not be optimal.
+cannot separate $2c_g\mu-b_g$ from zero, or cannot decide whether
+$\lambda_*\ge\lambda_0$, the computation stops; this did not occur. A safe value in
+that case would be $\sup F\le\overline a_g/\mu^2+\overline b_g/(4\mu)+\overline c_g$
+with upper bounds of the nonnegative coefficients, since $\lambda_0\ge0$, $\lambda/(\lambda+\mu)^2\le1/(4\mu)$ and
+$\lambda^2/(\lambda+\mu)^2\le1$. The parameters $\delta_g,\eta_g$ need not be optimal.
 
 \subsection{Matrix tests for the common gap}\label{sm:band-tests}
 \emph{Quadrature for the matrix entries.} With wave vectors $\xi_i$ of $\psi_i$,

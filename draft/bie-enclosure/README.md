@@ -45,4 +45,5 @@ BIE = boundary integral equation（边界积分方程）；MFS = method of funda
 - 第三轮（续三，未提交）：第 6.6 节第二个例子（example2-v1 run-015：几何、图 `data/geometry2.csv`、候选、区间、各组表、领子/质量/全相位谱隙判据、用时），引言贡献列表补一句；第 6.1 节注明第一个例子用反射对称只覆盖一半相位；附录 C.5 相位覆盖改为一般 $[-\pi/L_s,\pi/L_s]$。
 - 第三轮（续四，未提交）：第 6.7 节靠近谱隙端点的导模（gapedge-v1：沿空中心宽度 $L_0$ 的浮点序列表 `tab:results-gapedge-float`，$L_0=1.6,1.9,2$ 的可靠区间与汇总表 `tab:results-gapedge`，截断深度与 $r_+$ 的关系，$p=2$ 尾界的检验），引言补一句。两版编译通过、无未定义引用（工作版 60 页，对外版 55 页），已 `latexmk -c`。
 - 第三轮未做：可复现包与 M5 压缩留给投稿版。
+- 2026-11-07：英文稿证明审查（[[research/projects/bie-enclosure/theory/siam-draft-review|siam-draft-review]]）指出的问题中，附录 C 同样存在的四处已同步改正并以蓝字标注：R-1 上确界退化分支（球不能排除零时不能当作单调，原文移入工作版）；R-2 墙包络的一步范数 $r_1$ 与长度因子；R-3 $\mathsf G$ 是状态到入射振幅的映射；R-5 源位移按两个特征坐标取界；另 R-7 Hessian 取算子范数。R-4、R-6、R-8 中文稿本来写对。两版编译通过、无未定义引用（工作版 61 页，对外版 55 页），已 `latexmk -c`。
 - open：新参考文献 Johansson 2017（Arb）已入库；Boyd 2002 已入库（用户下载）；提交须用户批准；送审等实验结果。

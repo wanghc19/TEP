@@ -3,3 +3,12 @@ ensure_path('TEXINPUTS', '../../vendor/siamart_251216//');
 $pdf_mode = 1;
 # ntheorem (loaded by siamart) writes a theorem list to *.thm; remove it with latexmk -c.
 $clean_ext = 'thm';
+# main.tex and supplement.tex import each other's labels with xr. On a cold
+# build the other document's .aux does not exist yet; this rule creates it with
+# one pdflatex pass so that latexmk reruns the current document with it.
+add_cus_dep('tex', 'aux', 0, 'make_external_aux');
+sub make_external_aux {
+  my $base = $_[0];
+  return 0 if $base eq $root_filename;
+  return system("pdflatex -interaction=batchmode -halt-on-error \"$base.tex\"");
+}

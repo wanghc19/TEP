@@ -197,7 +197,7 @@ $\tau\in H^{1/2}(\partial\Omega)$, $\omega\in H^{-1/2}(\partial\Omega)$,
 $\delta=d/2-\max_{\partial\Omega}|y|>0$ and $S_\delta=\RR\times(-d/2-\delta,d/2+\delta)$.
 Then, away from $\partial\Omega$ and $\partial\Omega\pm de_y$ in $S_\delta$,
 \[
-  \mathcal S_\QP[\omega]+\mathcal D_\QP[\tau]=\sum_{n=-1}^{1}q^n
+  \mathcal S_\QP[\omega]+\mathcal D_\QP[\tau]=\sum_{n=-1}^{1}\ee^{\ii\beta nd}
   \bigl(\mathcal S[\omega]+\mathcal D[\tau]\bigr)(\cdot-nd\,e_y)+u_{\mathrm{corr}},
 \]
 where $u_{\mathrm{corr}}(\mathbf z)=\int_{\partial\Omega}(G_{\mathrm{far}}(\mathbf z-\mathbf z')
@@ -210,7 +210,7 @@ where $u_{\mathrm{corr}}$ extends to a Helmholtz solution near the closed cell.
 
 \begin{proof}
 (i) In the sense of distributions $(\Delta+\kappa^2)G_\QP(\cdot,\mathbf 0)=
--\sum_nq^n\delta_{nde_y}$ \cite{Linton1998}, and $(\Delta+\kappa^2)G(\cdot,nde_y)=
+-\sum_n\ee^{\ii\beta nd}\delta_{nde_y}$ \cite{Linton1998}, and $(\Delta+\kappa^2)G(\cdot,nde_y)=
 -\delta_{nde_y}$; the difference solves the homogeneous equation on $E$ and is real
 analytic by interior regularity. (ii) Insert \eqref{eq:near-image} into the layer
 potentials. For $\mathbf z\in S_\delta$ and $\mathbf z'\in\partial\Omega$,
@@ -226,8 +226,10 @@ error is measured by the jumps.
 
 \subsection{Piecewise regularity of the trial field}\label{sm:proof-piecewise-h2}
 \begin{proposition}\label{sm:prop-piecewise-h2}
-Assume that the image curves and proxies are at positive distance from the closed
-cells, that the densities are trigonometric polynomials, and that
+Assume that every material boundary has a regular embedded analytic periodic
+parametrization, that the image curves and proxies are at positive distance from the
+closed cells, that the densities are trigonometric polynomials in that parameter, and
+that
 \eqref{eq:mfs-field} uses one $\kappa_{\mathrm e}$ in the background. Then
 $\widehat u$ is $H^2$ up to the boundary in each homogeneous piece and has ordinary
 value and normal traces on both sides of every wall and seam.
