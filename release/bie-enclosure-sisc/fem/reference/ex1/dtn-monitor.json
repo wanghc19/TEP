@@ -1,0 +1,18 @@
+{
+  "returncode": 0,
+  "reason": "completed",
+  "soft_limit_exceeded": false,
+  "wall_seconds": 1500.7240243749693,
+  "peak_process_tree_rss_gib": 1.899322509765625,
+  "peak_experiment_disk_mb": 75.367026,
+  "output_disk_mb": 0.044592,
+  "peak_by_part_gib": {
+    "startup": 1.899322509765625
+  },
+  "peak_by_pid_gib": {
+    "88013": 1.7973175048828125,
+    "88108": 0.14398193359375,
+    "88110": 0.0221710205078125,
+    "88118": 0.0011749267578125
+  }
+}

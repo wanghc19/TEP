@@ -1,0 +1,277 @@
+[
+  {
+    "file": "examples/example_ref.m",
+    "source": "test/fem-goerisch/pipeline-v1/examples/example_ref.m. Reference parameters retained.",
+    "lines": 149
+  },
+  {
+    "file": "examples/example_mesh.m",
+    "source": "package entry point",
+    "lines": 10
+  },
+  {
+    "file": "src/dtn/dtn_flux.m",
+    "source": "test/numerical-directions/h-dtn-v1/dtn_flux.m. Numerical method retained.",
+    "lines": 75
+  },
+  {
+    "file": "src/dtn/dtn_native.m",
+    "source": "test/numerical-directions/h-dtn-v1/dtn_native.m. Numerical method retained.",
+    "lines": 1914
+  },
+  {
+    "file": "src/dtn/dtn_tools.m",
+    "source": "test/numerical-directions/h-dtn-v1/dtn_tools.m. Numerical method retained.",
+    "lines": 80
+  },
+  {
+    "file": "src/dtn/dtn_stage.m",
+    "source": "package entry point",
+    "lines": 23
+  },
+  {
+    "file": "src/dtn/verify_dtn.m",
+    "source": "package entry point",
+    "lines": 23
+  },
+  {
+    "file": "src/dtn/dtn_geometry.m",
+    "source": "test/numerical-directions/h-dtn-v1/dtn_geometry.m. Numerical method retained.",
+    "lines": 139
+  },
+  {
+    "file": "src/dtn/dtn_run.m",
+    "source": "test/numerical-directions/h-dtn-v1/dtn_run.m. Numerical method retained.",
+    "lines": 71
+  },
+  {
+    "file": "src/dtn/direct_native_config.m",
+    "source": "test/numerical-directions/h-dtn-v1/direct_native_config.m. Numerical method retained.",
+    "lines": 113
+  },
+  {
+    "file": "src/dtn/dtn_integrate.m",
+    "source": "test/numerical-directions/h-dtn-v1/dtn_integrate.m. Numerical method retained.",
+    "lines": 140
+  },
+  {
+    "file": "src/dtn/dtn_trace_check.m",
+    "source": "test/numerical-directions/h-dtn-v1/dtn_trace_check.m. Numerical method retained.",
+    "lines": 28
+  },
+  {
+    "file": "src/dtn/exact_rt3_basis.m",
+    "source": "test/numerical-directions/h-dtn-v1/exact_rt3_basis.m. Numerical method retained.",
+    "lines": 34
+  },
+  {
+    "file": "src/dtn/dtn_bounds.m",
+    "source": "test/numerical-directions/h-dtn-v1/dtn_bounds.m. Numerical method retained.",
+    "lines": 31
+  },
+  {
+    "file": "src/core/core_checks.m",
+    "source": "test/numerical-directions/h-core-v1/core_checks.m. Numerical method retained.",
+    "lines": 37
+  },
+  {
+    "file": "src/core/core_curve.m",
+    "source": "test/numerical-directions/h-core-v1/core_curve.m. Numerical method retained.",
+    "lines": 29
+  },
+  {
+    "file": "src/core/verify_isolation.m",
+    "source": "package entry point",
+    "lines": 16
+  },
+  {
+    "file": "src/core/core_stage.m",
+    "source": "package entry point",
+    "lines": 25
+  },
+  {
+    "file": "src/core/core_material.m",
+    "source": "test/numerical-directions/h-core-v1/core_material.m. Numerical method retained.",
+    "lines": 36
+  },
+  {
+    "file": "src/core/core_space.m",
+    "source": "test/numerical-directions/h-core-v1/core_space.m. Numerical method retained.",
+    "lines": 22
+  },
+  {
+    "file": "src/core/core_run.m",
+    "source": "test/numerical-directions/h-core-v1/core_run.m. Numerical method retained.",
+    "lines": 50
+  },
+  {
+    "file": "src/interval/interface_quadrature.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/interface_quadrature.m. Copied numerical algorithm.",
+    "lines": 66
+  },
+  {
+    "file": "src/interval/fem_i9_config.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/fem_i9_config.m. Copied numerical algorithm.",
+    "lines": 12
+  },
+  {
+    "file": "src/interval/geometry_certificate.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/geometry_certificate.m. Copied numerical algorithm.",
+    "lines": 52
+  },
+  {
+    "file": "src/interval/goerisch_fitted_geometry.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/goerisch_fitted_geometry.m. Copied numerical algorithm.",
+    "lines": 161
+  },
+  {
+    "file": "src/interval/qj_certificates.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/qj_certificates.m. Copied numerical algorithm.",
+    "lines": 325
+  },
+  {
+    "file": "src/interval/four_corners.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/four_corners.m. Copied numerical algorithm.",
+    "lines": 15
+  },
+  {
+    "file": "src/interval/pm_tests.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/pm_tests.m. Copied numerical algorithm.",
+    "lines": 23
+  },
+  {
+    "file": "src/interval/interface_fields.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/interface_fields.m. Copied numerical algorithm.",
+    "lines": 35
+  },
+  {
+    "file": "src/interval/verify_integrals.m",
+    "source": "package entry point",
+    "lines": 56
+  },
+  {
+    "file": "src/interval/interface_model.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/interface_model.m. Copied numerical algorithm.",
+    "lines": 108
+  },
+  {
+    "file": "src/interval/library_tests.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/library_tests.m. Copied numerical algorithm.",
+    "lines": 24
+  },
+  {
+    "file": "src/interval/interface_residual.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/interface_residual.m. Copied numerical algorithm.",
+    "lines": 28
+  },
+  {
+    "file": "src/interval/run_pipeline.m",
+    "source": "test/fem-goerisch/pipeline-v1/run_pipeline.m. Copied numerical algorithm.",
+    "lines": 113
+  },
+  {
+    "file": "src/interval/direct_native.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/direct_native.m. Copied numerical algorithm.",
+    "lines": 2190
+  },
+  {
+    "file": "src/interval/direct_pipeline.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/direct_pipeline.m. Copied numerical algorithm.",
+    "lines": 928
+  },
+  {
+    "file": "src/interval/validate_example.m",
+    "source": "test/fem-goerisch/pipeline-v1/validate_example.m. Copied numerical algorithm.",
+    "lines": 31
+  },
+  {
+    "file": "src/interval/probe_stats.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/probe_stats.m. Copied numerical algorithm.",
+    "lines": 14
+  },
+  {
+    "file": "src/interval/interface_certificate.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/interface_certificate.m. Copied numerical algorithm.",
+    "lines": 118
+  },
+  {
+    "file": "src/interval/taper_certificate.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/taper_certificate.m. Copied numerical algorithm.",
+    "lines": 72
+  },
+  {
+    "file": "src/interval/fem_i9_run.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/fem_i9_run.m. Copied numerical algorithm.",
+    "lines": 413
+  },
+  {
+    "file": "src/interval/pm.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/pm.m. Copied numerical algorithm.",
+    "lines": 128
+  },
+  {
+    "file": "src/interval/inverse_iteration_count.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/inverse_iteration_count.m. Copied numerical algorithm.",
+    "lines": 10
+  },
+  {
+    "file": "src/interval/direct_native_config.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/direct_native_config.m. Copied numerical algorithm.",
+    "lines": 10
+  },
+  {
+    "file": "src/interval/physical_curve.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/physical_curve.m. Copied numerical algorithm.",
+    "lines": 23
+  },
+  {
+    "file": "src/interval/curve_model.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/curve_model.m. Copied numerical algorithm.",
+    "lines": 23
+  },
+  {
+    "file": "src/interval/exact_rt3_basis.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/exact_rt3_basis.m. Copied numerical algorithm.",
+    "lines": 34
+  },
+  {
+    "file": "src/interval/test_poly2.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/test_poly2.m. Copied numerical algorithm.",
+    "lines": 29
+  },
+  {
+    "file": "src/interval/reference_regression.m",
+    "source": "test/fem-goerisch/pipeline-v1/reference_regression.m. Copied numerical algorithm.",
+    "lines": 25
+  },
+  {
+    "file": "src/interval/poly2.m",
+    "source": "test/fem-goerisch/pipeline-v1/internal/poly2.m. Copied numerical algorithm.",
+    "lines": 94
+  },
+  {
+    "file": "src/surface/surface_run.m",
+    "source": "package entry point",
+    "lines": 34
+  },
+  {
+    "file": "src/surface/verify_surface.m",
+    "source": "package entry point",
+    "lines": 33
+  },
+  {
+    "file": "src/surface/h_endpoint.m",
+    "source": "test/numerical-directions/h-cert-v1/h_endpoint.m. Numerical method retained.",
+    "lines": 42
+  },
+  {
+    "file": "src/surface/h_bloch.m",
+    "source": "test/numerical-directions/h-cert-v1/h_bloch.m. Numerical method retained.",
+    "lines": 199
+  },
+  {
+    "file": "src/common/fem_read.m",
+    "source": "package entry point",
+    "lines": 15
+  }
+]

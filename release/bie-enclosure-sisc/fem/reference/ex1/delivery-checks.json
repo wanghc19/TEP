@@ -1,0 +1,34 @@
+{
+  "E_contains_Q24": true,
+  "M_common_contains_Q24": true,
+  "mass_correction_contains_band16": true,
+  "interface_contains_Q16": true,
+  "interface_contains_Q24": true,
+  "four_corner_signs": [
+    [
+      3.0141137098344166,
+      0.9454051872720131,
+      4.3916476829188245
+    ],
+    [
+      3.014113709836591,
+      0.9454051872729461,
+      4.391647682916572
+    ],
+    [
+      3.014113709825003,
+      0.9454051872669553,
+      4.391647682950529
+    ],
+    [
+      3.014113709827177,
+      0.9454051872678884,
+      4.3916476829482765
+    ]
+  ],
+  "minimum_selfmap_margin": 0.031532102674791895,
+  "minimum_actual_branch_margin": 0.05157729495165317,
+  "outer_normal_moment": 0,
+  "shared_master_reconstruction_difference": 0,
+  "pass": true
+}

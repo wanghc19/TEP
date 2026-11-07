@@ -1,0 +1,49 @@
+{
+  "interval": {
+    "pass": true,
+    "scientific_and_python_reads": [
+      "<PKG>/fem/data/ex1/flux.json",
+      "<PKG>/fem/data/ex1/flux.npz",
+      "<PKG>/fem/data/ex1/integrals.json",
+      "<PKG>/fem/data/ex1/native.json",
+      "<PKG>/fem/data/ex1/native.npz",
+      "<PKG>/fem/reference/ex1/interval.json",
+      "<PYTHON_ENV>/lib/python3.14/encodings/__pycache__/cp437.cpython-314.pyc",
+      "<VERIFY_INTERVAL>/matlab-opened.json",
+      "<VERIFY_INTERVAL>/science/common-certificates.json",
+      "<VERIFY_INTERVAL>/science/exact-flux.json",
+      "<VERIFY_INTERVAL>/science/integrals.json",
+      "<VERIFY_INTERVAL>/science/interface-certificate.json",
+      "<VERIFY_INTERVAL>/science/interval.json",
+      "<VERIFY_INTERVAL>/transport/flux.mat",
+      "<VERIFY_INTERVAL>/transport/integrals.json",
+      "<VERIFY_INTERVAL>/transport/native.mat"
+    ],
+    "matlab_loaded_files_within_package_or_installation": true
+  },
+  "isolation": {
+    "pass": true,
+    "scientific_and_python_reads": [
+      "<PKG>/fem/data/ex1/band.json",
+      "<PKG>/fem/data/ex1/core-result.json",
+      "<PKG>/fem/data/ex1/left-1/result.json",
+      "<PKG>/fem/data/ex1/left-2/result.json",
+      "<PKG>/fem/data/ex1/left-certificate.json",
+      "<PKG>/fem/data/ex1/left/result.json",
+      "<PKG>/fem/data/ex1/right-1/result.json",
+      "<PKG>/fem/data/ex1/right-2/result.json",
+      "<PKG>/fem/data/ex1/right-certificate.json",
+      "<PKG>/fem/data/ex1/right/result.json",
+      "<PKG>/fem/data/ex1/surface.json",
+      "<VERIFY_INTERVAL>/science/interval.json",
+      "<VERIFY_ISOLATION>/matlab-opened.json",
+      "<VERIFY_ISOLATION>/science/band.json",
+      "<VERIFY_ISOLATION>/science/deliberately-invalid-band.json"
+    ],
+    "matlab_loaded_files_within_package_or_installation": true
+  },
+  "matlab_sources": {
+    "loaded": 55,
+    "unused": []
+  }
+}

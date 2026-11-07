@@ -1,0 +1,22 @@
+{
+  "model": "ex1",
+  "mesh_subdivisions": [
+    24,
+    36,
+    48
+  ],
+  "arithmetic": "binary64; analytic truncation bounds; rounding estimated only",
+  "same_environment": {
+    "interval_E_M_S_s": "bitwise",
+    "four_corner_decimal_endpoints": "exact",
+    "first_order_printed_endpoints": "exact",
+    "canonical_array_roundtrip": "dtype, shape and each numeric entry equal",
+    "isolation": "counts and decisions equal; raw numerical margins compared"
+  },
+  "other_environment": "Do not replace a failed check by a relaxed threshold. Record numerical differences and the finite-sign margins; the bundled verifier requires the reference arithmetic results.",
+  "reference_mesh_endpoint_relative_tolerance": 1e-13,
+  "phase_trace_tolerance": 1e-10,
+  "quadrature_fraction": 0.01,
+  "first_order_status": "spectral intersection without isolation; the band certificate excludes essential spectrum in that window",
+  "four_corner_status": "eigenvalue enclosure under H; finite rounding excluded"
+}

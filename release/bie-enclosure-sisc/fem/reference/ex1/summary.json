@@ -1,0 +1,82 @@
+{
+  "status": "COMPLETE",
+  "setting": "original",
+  "times": {
+    "validation": 0.23735633333333334,
+    "search": 2.08825125,
+    "trial_generation": 30.074643875,
+    "prepare": 12.046745333333334,
+    "flux": 9.4590498333333333,
+    "functional": 8.9978414166666667,
+    "quadrature_check": 35.230643958333332,
+    "exact_flux": 16.691151291666667,
+    "inventory": 70.58776795833333,
+    "common_certificates": 42.366833958333331,
+    "interface_quadrature": 7.3849942916666667,
+    "interface_certificate": 497.37767991666669,
+    "control_and_output": 1.2844655000000103
+  },
+  "pm_tests": {
+    "cosine_value": 3.9667676152419737,
+    "cosine_error": 2.1954063102241486E-18,
+    "cosine_known": 3.9667676152419742,
+    "reciprocal_value": 4.06921746596547,
+    "reciprocal_error": 9.1104171428571507E-7,
+    "reciprocal_Q32": 4.0692174678955926,
+    "truncation_value": 0,
+    "truncation_error": 4,
+    "truncation_known": 0.063492063492063489,
+    "pass": true,
+    "modulus_bound": 2.9284271247461904
+  },
+  "guard_tests": {
+    "changed_fields": [
+      "beta",
+      "rho_negative",
+      "d"
+    ],
+    "rejected": [
+      true,
+      true,
+      true
+    ],
+    "center_change_accepted": true,
+    "pass": true
+  },
+  "regression": {
+    "old_E": [
+      11.470912271614043,
+      11.470912271618044
+    ],
+    "old_M": [
+      4.7230110180143914,
+      4.7230110180281955
+    ],
+    "old_S_upper": 2.9475799376947328E-10,
+    "old_endpoints": [
+      2.4287286691977914,
+      2.4287286736601232
+    ],
+    "old_width": 4.4623318373737675E-9,
+    "E_difference": [
+      0,
+      0
+    ],
+    "M_difference": [
+      0,
+      0
+    ],
+    "S_difference": 0,
+    "endpoint_difference": [
+      0,
+      0
+    ],
+    "endpoint_relative": 0,
+    "width_relative": 0,
+    "root_relative": 2.1427304375265521E-14,
+    "q_relative": 0,
+    "contains_reference": true,
+    "pass": true
+  },
+  "seconds": 733.8274249166667
+}

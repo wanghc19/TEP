@@ -1,0 +1,28 @@
+{
+  "fem-smoke": {
+    "pass": true,
+    "stdout": "PASS unused initial search placeholder example.discretization.native.k0\nPASS unused initial search placeholder example.discretization.native.mu0\nPASS unused initial search placeholder example.discretization.native.window\nPASS native open canonical arrays\nPASS flux open canonical arrays\nPASS independent spectral intersection and isolation\n",
+    "stderr": ""
+  },
+  "bie-smoke": {
+    "pass": true,
+    "stdout": "PASS exact finite binary64 arrays\nPASS candidate and field dimensions\nPASS exact rational outward interval\n",
+    "stderr": ""
+  },
+  "paths": {
+    "pass": true,
+    "stdout": "{\"passed\": true, \"text_files\": 381, \"violations\": []}\n",
+    "stderr": ""
+  },
+  "bie-existing-files": {
+    "pass": true,
+    "changed": [
+      "README.md"
+    ],
+    "checked_files": 278
+  },
+  "python-syntax": {
+    "pass": true,
+    "files": 9
+  }
+}

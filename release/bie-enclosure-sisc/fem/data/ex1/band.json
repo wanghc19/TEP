@@ -1,0 +1,1684 @@
+{
+  "mode_dimension": 169,
+  "leads": 2,
+  "common_panels": 118,
+  "phase_coverage": "[-pi, pi], exact consecutive integer endpoints + symmetry",
+  "coefficient_error": 1.1449590579649998e-87,
+  "mass_matrix_error": 3.0959692927373593e-84,
+  "G_matrix_error": 1.4860652605139326e-82,
+  "max_upper_lambda": 7.660158206835961,
+  "min_tail_denominator": 1572.32287362188,
+  "max_upper_matrix_error": 2.8668318661033077e-83,
+  "min_lower_negative_margin": 0.0001397223838884971,
+  "min_upper_positive_margin": 0.007520504511856631,
+  "distance_to_original_window_at_least": "0.005276 (exact decimal)",
+  "rounding": "excluded by the problem; no interval arithmetic used",
+  "k_lower": 1.318,
+  "k_upper": 2.375,
+  "beta": 0.5,
+  "d": 1,
+  "L": 1,
+  "materials": [
+    0.12,
+    0.2
+  ],
+  "rho": [
+    1,
+    17
+  ],
+  "panels": [
+    {
+      "lead": 0,
+      "lo": 0,
+      "hi": 1024,
+      "negative_margin": 2.507363244861354,
+      "positive_margin": 2.188825829399407
+    },
+    {
+      "lead": 1,
+      "lo": 0,
+      "hi": 1024,
+      "negative_margin": 2.4992290659996206,
+      "positive_margin": 2.041833315453082
+    },
+    {
+      "lead": 0,
+      "lo": 1024,
+      "hi": 1536,
+      "negative_margin": 3.379605373280503,
+      "positive_margin": 3.4887599892704664
+    },
+    {
+      "lead": 1,
+      "lo": 1024,
+      "hi": 1536,
+      "negative_margin": 3.358658705772285,
+      "positive_margin": 3.4012958140375975
+    },
+    {
+      "lead": 0,
+      "lo": 1536,
+      "hi": 2048,
+      "negative_margin": 2.500580740793702,
+      "positive_margin": 1.8506406780055529
+    },
+    {
+      "lead": 1,
+      "lo": 1536,
+      "hi": 2048,
+      "negative_margin": 2.4782843855805035,
+      "positive_margin": 1.710102452822324
+    },
+    {
+      "lead": 0,
+      "lo": 2048,
+      "hi": 2560,
+      "negative_margin": 1.34540110036191,
+      "positive_margin": 0.2911818839375103
+    },
+    {
+      "lead": 1,
+      "lo": 2048,
+      "hi": 2560,
+      "negative_margin": 1.3208622474362186,
+      "positive_margin": 0.1125039428553678
+    },
+    {
+      "lead": 0,
+      "lo": 2560,
+      "hi": 2816,
+      "negative_margin": 1.4766575786352514,
+      "positive_margin": 0.7575134238307659
+    },
+    {
+      "lead": 1,
+      "lo": 2560,
+      "hi": 2816,
+      "negative_margin": 1.435765127906874,
+      "positive_margin": 0.5954253315757261
+    },
+    {
+      "lead": 0,
+      "lo": 2816,
+      "hi": 3072,
+      "negative_margin": 0.7678986814115107,
+      "positive_margin": 0.18671269329759155
+    },
+    {
+      "lead": 1,
+      "lo": 2816,
+      "hi": 3072,
+      "negative_margin": 0.7233150328114379,
+      "positive_margin": 0.012558368184606487
+    },
+    {
+      "lead": 0,
+      "lo": 3072,
+      "hi": 3200,
+      "negative_margin": 0.9330437461890402,
+      "positive_margin": 0.47732655884964703
+    },
+    {
+      "lead": 1,
+      "lo": 3072,
+      "hi": 3200,
+      "negative_margin": 0.8750724006064361,
+      "positive_margin": 0.31124548331437324
+    },
+    {
+      "lead": 0,
+      "lo": 3200,
+      "hi": 3328,
+      "negative_margin": 0.5916217389602203,
+      "positive_margin": 0.26527011341852624
+    },
+    {
+      "lead": 1,
+      "lo": 3200,
+      "hi": 3328,
+      "negative_margin": 0.5305052029681377,
+      "positive_margin": 0.0948007450497946
+    },
+    {
+      "lead": 0,
+      "lo": 3328,
+      "hi": 3392,
+      "negative_margin": 0.7384183210528081,
+      "positive_margin": 0.43275660757300827
+    },
+    {
+      "lead": 1,
+      "lo": 3328,
+      "hi": 3392,
+      "negative_margin": 0.668960917633181,
+      "positive_margin": 0.2665100653960405
+    },
+    {
+      "lead": 0,
+      "lo": 3392,
+      "hi": 3456,
+      "negative_margin": 0.583892082495506,
+      "positive_margin": 0.34722609502779533
+    },
+    {
+      "lead": 1,
+      "lo": 3392,
+      "hi": 3456,
+      "negative_margin": 0.5125410924090386,
+      "positive_margin": 0.17921253483173494
+    },
+    {
+      "lead": 0,
+      "lo": 3456,
+      "hi": 3520,
+      "negative_margin": 0.4355456292095172,
+      "positive_margin": 0.26915695137999385
+    },
+    {
+      "lead": 1,
+      "lo": 3456,
+      "hi": 3520,
+      "negative_margin": 0.36224565257501706,
+      "positive_margin": 0.09953685755336489
+    },
+    {
+      "lead": 0,
+      "lo": 3520,
+      "hi": 3584,
+      "negative_margin": 0.29479538210629497,
+      "positive_margin": 0.198636647124325
+    },
+    {
+      "lead": 1,
+      "lo": 3520,
+      "hi": 3584,
+      "negative_margin": 0.2195139988050095,
+      "positive_margin": 0.027570127931855006
+    },
+    {
+      "lead": 0,
+      "lo": 3584,
+      "hi": 3616,
+      "negative_margin": 0.4097371621262779,
+      "positive_margin": 0.29943380135207864
+    },
+    {
+      "lead": 1,
+      "lo": 3584,
+      "hi": 3616,
+      "negative_margin": 0.3298758930659498,
+      "positive_margin": 0.13075959565091033
+    },
+    {
+      "lead": 0,
+      "lo": 3616,
+      "hi": 3648,
+      "negative_margin": 0.34794825076074365,
+      "positive_margin": 0.2697139388507672
+    },
+    {
+      "lead": 1,
+      "lo": 3616,
+      "hi": 3648,
+      "negative_margin": 0.2670996527759447,
+      "positive_margin": 0.10042828290664557
+    },
+    {
+      "lead": 0,
+      "lo": 3648,
+      "hi": 3680,
+      "negative_margin": 0.2889553134373617,
+      "positive_margin": 0.2419344547210987
+    },
+    {
+      "lead": 1,
+      "lo": 3648,
+      "hi": 3680,
+      "negative_margin": 0.207134503000088,
+      "positive_margin": 0.07207776475265537
+    },
+    {
+      "lead": 0,
+      "lo": 3680,
+      "hi": 3712,
+      "negative_margin": 0.23297092377095957,
+      "positive_margin": 0.2161030284504606
+    },
+    {
+      "lead": 1,
+      "lo": 3680,
+      "hi": 3712,
+      "negative_margin": 0.1501994915271445,
+      "positive_margin": 0.04571571012549915
+    },
+    {
+      "lead": 0,
+      "lo": 3712,
+      "hi": 3744,
+      "negative_margin": 0.1802100114539615,
+      "positive_margin": 0.19222677701547108
+    },
+    {
+      "lead": 1,
+      "lo": 3712,
+      "hi": 3744,
+      "negative_margin": 0.09651658536625612,
+      "positive_margin": 0.02134922824779794
+    },
+    {
+      "lead": 0,
+      "lo": 3744,
+      "hi": 3760,
+      "negative_margin": 0.25498121638594523,
+      "positive_margin": 0.24867918094464775
+    },
+    {
+      "lead": 1,
+      "lo": 3744,
+      "hi": 3760,
+      "negative_margin": 0.16904342094110802,
+      "positive_margin": 0.07910574714000675
+    },
+    {
+      "lead": 0,
+      "lo": 3760,
+      "hi": 3776,
+      "negative_margin": 0.23152718118902152,
+      "positive_margin": 0.2381783766448804
+    },
+    {
+      "lead": 1,
+      "lo": 3760,
+      "hi": 3776,
+      "negative_margin": 0.14515815734071402,
+      "positive_margin": 0.06838870936806314
+    },
+    {
+      "lead": 0,
+      "lo": 3776,
+      "hi": 3792,
+      "negative_margin": 0.20899096361596764,
+      "positive_margin": 0.22817151361024435
+    },
+    {
+      "lead": 1,
+      "lo": 3776,
+      "hi": 3792,
+      "negative_margin": 0.12220239384869303,
+      "positive_margin": 0.058175777127678935
+    },
+    {
+      "lead": 0,
+      "lo": 3792,
+      "hi": 3808,
+      "negative_margin": 0.18739792327466537,
+      "positive_margin": 0.21865927987862377
+    },
+    {
+      "lead": 1,
+      "lo": 3792,
+      "hi": 3808,
+      "negative_margin": 0.10020250065565586,
+      "positive_margin": 0.04846763851625199
+    },
+    {
+      "lead": 0,
+      "lo": 3808,
+      "hi": 3824,
+      "negative_margin": 0.16677298205787627,
+      "positive_margin": 0.2096423286786981
+    },
+    {
+      "lead": 1,
+      "lo": 3808,
+      "hi": 3824,
+      "negative_margin": 0.07918441878821039,
+      "positive_margin": 0.03926494688902975
+    },
+    {
+      "lead": 0,
+      "lo": 3824,
+      "hi": 3840,
+      "negative_margin": 0.14714053194918747,
+      "positive_margin": 0.20112127850501352
+    },
+    {
+      "lead": 1,
+      "lo": 3824,
+      "hi": 3840,
+      "negative_margin": 0.059173562508763405,
+      "positive_margin": 0.030568320915414823
+    },
+    {
+      "lead": 0,
+      "lo": 3840,
+      "hi": 3856,
+      "negative_margin": 0.12852434014276165,
+      "positive_margin": 0.1930967131819421
+    },
+    {
+      "lead": 1,
+      "lo": 3840,
+      "hi": 3856,
+      "negative_margin": 0.04019471860760215,
+      "positive_margin": 0.022378344638473456
+    },
+    {
+      "lead": 0,
+      "lo": 3856,
+      "hi": 3872,
+      "negative_margin": 0.11094745212427308,
+      "positive_margin": 0.18556918192414962
+    },
+    {
+      "lead": 1,
+      "lo": 3856,
+      "hi": 3872,
+      "negative_margin": 0.02227194324100116,
+      "positive_margin": 0.014695567523961306
+    },
+    {
+      "lead": 0,
+      "lo": 3872,
+      "hi": 3888,
+      "negative_margin": 0.0944320934197631,
+      "positive_margin": 0.1785391993996978
+    },
+    {
+      "lead": 1,
+      "lo": 3872,
+      "hi": 3888,
+      "negative_margin": 0.005428457121056284,
+      "positive_margin": 0.007520504511856631
+    },
+    {
+      "lead": 0,
+      "lo": 3888,
+      "hi": 3896,
+      "negative_margin": 0.14036654065024487,
+      "positive_margin": 0.20978897677739342
+    },
+    {
+      "lead": 1,
+      "lo": 3888,
+      "hi": 3896,
+      "negative_margin": 0.05034051846326301,
+      "positive_margin": 0.03947983711083627
+    },
+    {
+      "lead": 0,
+      "lo": 3896,
+      "hi": 3904,
+      "negative_margin": 0.1329779529100124,
+      "positive_margin": 0.20664229750169283
+    },
+    {
+      "lead": 1,
+      "lo": 3896,
+      "hi": 3904,
+      "negative_margin": 0.042802559750922294,
+      "positive_margin": 0.03626803452672106
+    },
+    {
+      "lead": 0,
+      "lo": 3904,
+      "hi": 3912,
+      "negative_margin": 0.12586460841208316,
+      "positive_margin": 0.20362047852622006
+    },
+    {
+      "lead": 1,
+      "lo": 3904,
+      "hi": 3912,
+      "negative_margin": 0.03554481710382535,
+      "positive_margin": 0.03318364237275494
+    },
+    {
+      "lead": 0,
+      "lo": 3912,
+      "hi": 3920,
+      "negative_margin": 0.11902886530465255,
+      "positive_margin": 0.2007235715323776
+    },
+    {
+      "lead": 1,
+      "lo": 3912,
+      "hi": 3920,
+      "negative_margin": 0.028569760576854737,
+      "positive_margin": 0.03022671237899565
+    },
+    {
+      "lead": 0,
+      "lo": 3920,
+      "hi": 3928,
+      "negative_margin": 0.11247300853859046,
+      "positive_margin": 0.19795162604193572
+    },
+    {
+      "lead": 1,
+      "lo": 3920,
+      "hi": 3928,
+      "negative_margin": 0.021879784410071566,
+      "positive_margin": 0.02739729411516891
+    },
+    {
+      "lead": 0,
+      "lo": 3928,
+      "hi": 3936,
+      "negative_margin": 0.10619924701485281,
+      "positive_margin": 0.19530468942056944
+    },
+    {
+      "lead": 1,
+      "lo": 3928,
+      "hi": 3936,
+      "negative_margin": 0.015477203960753867,
+      "positive_margin": 0.024695434993942226
+    },
+    {
+      "lead": 0,
+      "lo": 3936,
+      "hi": 3944,
+      "negative_margin": 0.10020971079365382,
+      "positive_margin": 0.19278280687668203
+    },
+    {
+      "lead": 1,
+      "lo": 3936,
+      "hi": 3944,
+      "negative_margin": 0.009364252688482911,
+      "positive_margin": 0.022121180266379048
+    },
+    {
+      "lead": 0,
+      "lo": 3944,
+      "hi": 3952,
+      "negative_margin": 0.094506448358722,
+      "positive_margin": 0.19038602146250944
+    },
+    {
+      "lead": 1,
+      "lo": 3944,
+      "hi": 3952,
+      "negative_margin": 0.0035430792055117285,
+      "positive_margin": 0.01967457302958743
+    },
+    {
+      "lead": 0,
+      "lo": 3952,
+      "hi": 3956,
+      "negative_margin": 0.11949963197924991,
+      "positive_margin": 0.20669695913564062
+    },
+    {
+      "lead": 1,
+      "lo": 3952,
+      "hi": 3956,
+      "negative_margin": 0.02805700722996021,
+      "positive_margin": 0.036353504164263806
+    },
+    {
+      "lead": 0,
+      "lo": 3956,
+      "hi": 3960,
+      "negative_margin": 0.11687424025609128,
+      "positive_margin": 0.20559150182684338
+    },
+    {
+      "lead": 1,
+      "lo": 3956,
+      "hi": 3960,
+      "negative_margin": 0.025376978901398953,
+      "positive_margin": 0.03522501320484503
+    },
+    {
+      "lead": 0,
+      "lo": 3960,
+      "hi": 3964,
+      "negative_margin": 0.11432123803833422,
+      "positive_margin": 0.20451736830371775
+    },
+    {
+      "lead": 1,
+      "lo": 3960,
+      "hi": 3964,
+      "negative_margin": 0.022770767312156878,
+      "positive_margin": 0.034128484729603156
+    },
+    {
+      "lead": 0,
+      "lo": 3964,
+      "hi": 3968,
+      "negative_margin": 0.11184084691108367,
+      "positive_margin": 0.20347456315313442
+    },
+    {
+      "lead": 1,
+      "lo": 3964,
+      "hi": 3968,
+      "negative_margin": 0.02023860509544411,
+      "positive_margin": 0.033063923330754544
+    },
+    {
+      "lead": 0,
+      "lo": 3968,
+      "hi": 3972,
+      "negative_margin": 0.10943328280599264,
+      "positive_margin": 0.202463090825434
+    },
+    {
+      "lead": 1,
+      "lo": 3968,
+      "hi": 3972,
+      "negative_margin": 0.017780718984446463,
+      "positive_margin": 0.03203133346293021
+    },
+    {
+      "lead": 0,
+      "lo": 3972,
+      "hi": 3976,
+      "negative_margin": 0.10709875592824641,
+      "positive_margin": 0.20148295563761925
+    },
+    {
+      "lead": 1,
+      "lo": 3972,
+      "hi": 3976,
+      "negative_margin": 0.015397329725290915,
+      "positive_margin": 0.031030719449500768
+    },
+    {
+      "lead": 0,
+      "lo": 3976,
+      "hi": 3980,
+      "negative_margin": 0.10483747068497562,
+      "positive_margin": 0.20053416177116384
+    },
+    {
+      "lead": 1,
+      "lo": 3976,
+      "hi": 3980,
+      "negative_margin": 0.013088652005793473,
+      "positive_margin": 0.030062085474004303
+    },
+    {
+      "lead": 0,
+      "lo": 3980,
+      "hi": 3984,
+      "negative_margin": 0.10264962561830793,
+      "positive_margin": 0.19961671327226277
+    },
+    {
+      "lead": 1,
+      "lo": 3980,
+      "hi": 3984,
+      "negative_margin": 0.010854894377175113,
+      "positive_margin": 0.02912543559108487
+    },
+    {
+      "lead": 0,
+      "lo": 3984,
+      "hi": 3988,
+      "negative_margin": 0.10053541333570995,
+      "positive_margin": 0.19873061405436832
+    },
+    {
+      "lead": 1,
+      "lo": 3984,
+      "hi": 3988,
+      "negative_margin": 0.008696259179570082,
+      "positive_margin": 0.02822077371591437
+    },
+    {
+      "lead": 0,
+      "lo": 3988,
+      "hi": 3992,
+      "negative_margin": 0.09849502044139928,
+      "positive_margin": 0.1978758678945346
+    },
+    {
+      "lead": 1,
+      "lo": 3988,
+      "hi": 3992,
+      "negative_margin": 0.0066129424726303985,
+      "positive_margin": 0.027348103629621725
+    },
+    {
+      "lead": 0,
+      "lo": 3992,
+      "hi": 3996,
+      "negative_margin": 0.09652862747604284,
+      "positive_margin": 0.19705247843549528
+    },
+    {
+      "lead": 1,
+      "lo": 3992,
+      "hi": 3996,
+      "negative_margin": 0.00460513396408793,
+      "positive_margin": 0.02650742897961705
+    },
+    {
+      "lead": 0,
+      "lo": 3996,
+      "hi": 4000,
+      "negative_margin": 0.09463640884966588,
+      "positive_margin": 0.19626044918514685
+    },
+    {
+      "lead": 1,
+      "lo": 3996,
+      "hi": 4000,
+      "negative_margin": 0.0026730169410039612,
+      "positive_margin": 0.025698753277598317
+    },
+    {
+      "lead": 0,
+      "lo": 4000,
+      "hi": 4004,
+      "negative_margin": 0.09281853278487576,
+      "positive_margin": 0.19549978351728636
+    },
+    {
+      "lead": 1,
+      "lo": 4000,
+      "hi": 4004,
+      "negative_margin": 0.0008167682053318722,
+      "positive_margin": 0.024922079901833753
+    },
+    {
+      "lead": 0,
+      "lo": 4004,
+      "hi": 4006,
+      "negative_margin": 0.10612023557463268,
+      "positive_margin": 0.20394481813997847
+    },
+    {
+      "lead": 1,
+      "lo": 4004,
+      "hi": 4006,
+      "negative_margin": 0.013893522853915229,
+      "positive_margin": 0.03355681854565423
+    },
+    {
+      "lead": 0,
+      "lo": 4006,
+      "hi": 4008,
+      "negative_margin": 0.10526880429035265,
+      "positive_margin": 0.2035878644406312
+    },
+    {
+      "lead": 1,
+      "lo": 4006,
+      "hi": 4008,
+      "negative_margin": 0.013024075377111867,
+      "positive_margin": 0.03319233457049638
+    },
+    {
+      "lead": 0,
+      "lo": 4008,
+      "hi": 4010,
+      "negative_margin": 0.10443601332000382,
+      "positive_margin": 0.2032387568425701
+    },
+    {
+      "lead": 1,
+      "lo": 4008,
+      "hi": 4010,
+      "negative_margin": 0.01217365385174302,
+      "positive_margin": 0.03283585652181957
+    },
+    {
+      "lead": 0,
+      "lo": 4010,
+      "hi": 4012,
+      "negative_margin": 0.10362188124350233,
+      "positive_margin": 0.20289749571836968
+    },
+    {
+      "lead": 1,
+      "lo": 4010,
+      "hi": 4012,
+      "negative_margin": 0.011342277811766558,
+      "positive_margin": 0.032487384769402425
+    },
+    {
+      "lead": 0,
+      "lo": 4012,
+      "hi": 4014,
+      "negative_margin": 0.10282642624275348,
+      "positive_margin": 0.20256408143069918
+    },
+    {
+      "lead": 1,
+      "lo": 4012,
+      "hi": 4014,
+      "negative_margin": 0.010529966372230947,
+      "positive_margin": 0.032146919679792586
+    },
+    {
+      "lead": 0,
+      "lo": 4014,
+      "hi": 4016,
+      "negative_margin": 0.10204966610023228,
+      "positive_margin": 0.2022385143353449
+    },
+    {
+      "lead": 1,
+      "lo": 4014,
+      "hi": 4016,
+      "negative_margin": 0.009736738230357058,
+      "positive_margin": 0.03181446160607443
+    },
+    {
+      "lead": 0,
+      "lo": 4016,
+      "hi": 4018,
+      "negative_margin": 0.10129161819632954,
+      "positive_margin": 0.20192079477793812
+    },
+    {
+      "lead": 1,
+      "lo": 4016,
+      "hi": 4018,
+      "negative_margin": 0.008962611661391158,
+      "positive_margin": 0.031490010896568756
+    },
+    {
+      "lead": 0,
+      "lo": 4018,
+      "hi": 4020,
+      "negative_margin": 0.10055229950663241,
+      "positive_margin": 0.20161092309669745
+    },
+    {
+      "lead": 1,
+      "lo": 4018,
+      "hi": 4020,
+      "negative_margin": 0.00820760451672303,
+      "positive_margin": 0.031173567888425884
+    },
+    {
+      "lead": 0,
+      "lo": 4020,
+      "hi": 4022,
+      "negative_margin": 0.09983172660545253,
+      "positive_margin": 0.20130889962135
+    },
+    {
+      "lead": 1,
+      "lo": 4020,
+      "hi": 4022,
+      "negative_margin": 0.007471734224718191,
+      "positive_margin": 0.030865132913095186
+    },
+    {
+      "lead": 0,
+      "lo": 4022,
+      "hi": 4024,
+      "negative_margin": 0.09912991565959259,
+      "positive_margin": 0.20101472467295867
+    },
+    {
+      "lead": 1,
+      "lo": 4022,
+      "hi": 4024,
+      "negative_margin": 0.00675501778548976,
+      "positive_margin": 0.030564706290838857
+    },
+    {
+      "lead": 0,
+      "lo": 4024,
+      "hi": 4026,
+      "negative_margin": 0.09844688242808539,
+      "positive_margin": 0.20072839856439384
+    },
+    {
+      "lead": 1,
+      "lo": 4024,
+      "hi": 4026,
+      "negative_margin": 0.006057471773435512,
+      "positive_margin": 0.030272288335694755
+    },
+    {
+      "lead": 0,
+      "lo": 4026,
+      "hi": 4028,
+      "negative_margin": 0.09778264226163516,
+      "positive_margin": 0.2004499215998477
+    },
+    {
+      "lead": 1,
+      "lo": 4026,
+      "hi": 4028,
+      "negative_margin": 0.005379112331662779,
+      "positive_margin": 0.029987879350949855
+    },
+    {
+      "lead": 0,
+      "lo": 4028,
+      "hi": 4030,
+      "negative_margin": 0.09713721010030835,
+      "positive_margin": 0.20017929407557983
+    },
+    {
+      "lead": 1,
+      "lo": 4028,
+      "hi": 4030,
+      "negative_margin": 0.00471995517375727,
+      "positive_margin": 0.029711479633174477
+    },
+    {
+      "lead": 0,
+      "lo": 4030,
+      "hi": 4032,
+      "negative_margin": 0.09651060047320016,
+      "positive_margin": 0.1999165162784033
+    },
+    {
+      "lead": 1,
+      "lo": 4030,
+      "hi": 4032,
+      "negative_margin": 0.004080015579600468,
+      "positive_margin": 0.0294430894714758
+    },
+    {
+      "lead": 0,
+      "lo": 4032,
+      "hi": 4034,
+      "negative_margin": 0.09590282749477982,
+      "positive_margin": 0.1996615884881755
+    },
+    {
+      "lead": 1,
+      "lo": 4032,
+      "hi": 4034,
+      "negative_margin": 0.0034593083983309797,
+      "positive_margin": 0.029182709144325046
+    },
+    {
+      "lead": 0,
+      "lo": 4034,
+      "hi": 4036,
+      "negative_margin": 0.09531390486703618,
+      "positive_margin": 0.19941451097640828
+    },
+    {
+      "lead": 1,
+      "lo": 4034,
+      "hi": 4036,
+      "negative_margin": 0.0028578480387985764,
+      "positive_margin": 0.028930338922313788
+    },
+    {
+      "lead": 0,
+      "lo": 4036,
+      "hi": 4038,
+      "negative_margin": 0.09474384587775811,
+      "positive_margin": 0.19917528400321788
+    },
+    {
+      "lead": 1,
+      "lo": 4036,
+      "hi": 4038,
+      "negative_margin": 0.002275648478549719,
+      "positive_margin": 0.028685979068901604
+    },
+    {
+      "lead": 0,
+      "lo": 4038,
+      "hi": 4040,
+      "negative_margin": 0.0941926633942143,
+      "positive_margin": 0.19894390782436738
+    },
+    {
+      "lead": 1,
+      "lo": 4038,
+      "hi": 4040,
+      "negative_margin": 0.001712723254654349,
+      "positive_margin": 0.028449629837050426
+    },
+    {
+      "lead": 0,
+      "lo": 4040,
+      "hi": 4042,
+      "negative_margin": 0.09366036987029744,
+      "positive_margin": 0.19872038268426112
+    },
+    {
+      "lead": 1,
+      "lo": 4040,
+      "hi": 4042,
+      "negative_margin": 0.0011690854652152847,
+      "positive_margin": 0.028221291473051115
+    },
+    {
+      "lead": 0,
+      "lo": 4042,
+      "hi": 4044,
+      "negative_margin": 0.09314697733722428,
+      "positive_margin": 0.19850470882047774
+    },
+    {
+      "lead": 1,
+      "lo": 4042,
+      "hi": 4044,
+      "negative_margin": 0.0006447477701572189,
+      "positive_margin": 0.028000964214722607
+    },
+    {
+      "lead": 0,
+      "lo": 4044,
+      "hi": 4046,
+      "negative_margin": 0.09265249740885617,
+      "positive_margin": 0.19829688646157997
+    },
+    {
+      "lead": 1,
+      "lo": 4044,
+      "hi": 4046,
+      "negative_margin": 0.0001397223838884971,
+      "positive_margin": 0.027788648289537962
+    },
+    {
+      "lead": 0,
+      "lo": 4046,
+      "hi": 4047,
+      "negative_margin": 0.09962099415036584,
+      "positive_margin": 0.20263913790503896
+    },
+    {
+      "lead": 1,
+      "lo": 4046,
+      "hi": 4047,
+      "negative_margin": 0.007002011645498717,
+      "positive_margin": 0.03222814535856466
+    },
+    {
+      "lead": 0,
+      "lo": 4047,
+      "hi": 4048,
+      "negative_margin": 0.09938816939508334,
+      "positive_margin": 0.20254109648232627
+    },
+    {
+      "lead": 1,
+      "lo": 4047,
+      "hi": 4048,
+      "negative_margin": 0.006764217086667932,
+      "positive_margin": 0.03212797635405944
+    },
+    {
+      "lead": 0,
+      "lo": 4048,
+      "hi": 4049,
+      "negative_margin": 0.09916007449189412,
+      "positive_margin": 0.20244501848750063
+    },
+    {
+      "lead": 1,
+      "lo": 4048,
+      "hi": 4049,
+      "negative_margin": 0.006531252575420936,
+      "positive_margin": 0.03202981075258027
+    },
+    {
+      "lead": 0,
+      "lo": 4049,
+      "hi": 4050,
+      "negative_margin": 0.09893671073169194,
+      "positive_margin": 0.202350903945901
+    },
+    {
+      "lead": 1,
+      "lo": 4049,
+      "hi": 4050,
+      "negative_margin": 0.006303119470220296,
+      "positive_margin": 0.03193364857725937
+    },
+    {
+      "lead": 0,
+      "lo": 4050,
+      "hi": 4051,
+      "negative_margin": 0.0987180793782299,
+      "positive_margin": 0.20225875288198802
+    },
+    {
+      "lead": 1,
+      "lo": 4050,
+      "hi": 4051,
+      "negative_margin": 0.006079819100625692,
+      "positive_margin": 0.03183948985467286
+    },
+    {
+      "lead": 0,
+      "lo": 4051,
+      "hi": 4052,
+      "negative_margin": 0.09850418167004733,
+      "positive_margin": 0.2021685653205687
+    },
+    {
+      "lead": 1,
+      "lo": 4051,
+      "hi": 4052,
+      "negative_margin": 0.005861352767542797,
+      "positive_margin": 0.03174733460923156
+    },
+    {
+      "lead": 0,
+      "lo": 4052,
+      "hi": 4053,
+      "negative_margin": 0.0982950188158605,
+      "positive_margin": 0.2020803412849276
+    },
+    {
+      "lead": 1,
+      "lo": 4052,
+      "hi": 4053,
+      "negative_margin": 0.00564772174721948,
+      "positive_margin": 0.03165718286456842
+    },
+    {
+      "lead": 0,
+      "lo": 4053,
+      "hi": 4054,
+      "negative_margin": 0.09809059200312711,
+      "positive_margin": 0.2019940807999905
+    },
+    {
+      "lead": 1,
+      "lo": 4053,
+      "hi": 4054,
+      "negative_margin": 0.005438927285113179,
+      "positive_margin": 0.03156903464392688
+    },
+    {
+      "lead": 0,
+      "lo": 4054,
+      "hi": 4055,
+      "negative_margin": 0.0978909023873937,
+      "positive_margin": 0.2019097838869952
+    },
+    {
+      "lead": 1,
+      "lo": 4054,
+      "hi": 4055,
+      "negative_margin": 0.005234970599583576,
+      "positive_margin": 0.03148288996963136
+    },
+    {
+      "lead": 0,
+      "lo": 4055,
+      "hi": 4056,
+      "negative_margin": 0.09769595110215228,
+      "positive_margin": 0.20182745056836426
+    },
+    {
+      "lead": 1,
+      "lo": 4055,
+      "hi": 4056,
+      "negative_margin": 0.005035852881041518,
+      "positive_margin": 0.031398748865040293
+    },
+    {
+      "lead": 0,
+      "lo": 4056,
+      "hi": 4057,
+      "negative_margin": 0.09750573925022876,
+      "positive_margin": 0.20174708086569393
+    },
+    {
+      "lead": 1,
+      "lo": 4056,
+      "hi": 4057,
+      "negative_margin": 0.004841575291891853,
+      "positive_margin": 0.031316611351013685
+    },
+    {
+      "lead": 0,
+      "lo": 4057,
+      "hi": 4058,
+      "negative_margin": 0.0973202679121169,
+      "positive_margin": 0.20166867480085882
+    },
+    {
+      "lead": 1,
+      "lo": 4057,
+      "hi": 4058,
+      "negative_margin": 0.004652138967635361,
+      "positive_margin": 0.031236477449627785
+    },
+    {
+      "lead": 0,
+      "lo": 4058,
+      "hi": 4059,
+      "negative_margin": 0.09713953813780021,
+      "positive_margin": 0.20159223239554896
+    },
+    {
+      "lead": 1,
+      "lo": 4058,
+      "hi": 4059,
+      "negative_margin": 0.004467545013180252,
+      "positive_margin": 0.031158347180714252
+    },
+    {
+      "lead": 0,
+      "lo": 4059,
+      "hi": 4060,
+      "negative_margin": 0.09696355095223165,
+      "positive_margin": 0.20151775366765884
+    },
+    {
+      "lead": 1,
+      "lo": 4059,
+      "hi": 4060,
+      "negative_margin": 0.004287794508792395,
+      "positive_margin": 0.0310822205655133
+    },
+    {
+      "lead": 0,
+      "lo": 4060,
+      "hi": 4061,
+      "negative_margin": 0.09679230735520318,
+      "positive_margin": 0.2014452386381101
+    },
+    {
+      "lead": 1,
+      "lo": 4060,
+      "hi": 4061,
+      "negative_margin": 0.00411288850412805,
+      "positive_margin": 0.03100809762250488
+    },
+    {
+      "lead": 0,
+      "lo": 4061,
+      "hi": 4062,
+      "negative_margin": 0.09662580831740109,
+      "positive_margin": 0.20137468732630937
+    },
+    {
+      "lead": 1,
+      "lo": 4061,
+      "hi": 4062,
+      "negative_margin": 0.003942828020405141,
+      "positive_margin": 0.03093597837089268
+    },
+    {
+      "lead": 0,
+      "lo": 4062,
+      "hi": 4063,
+      "negative_margin": 0.09646405478318809,
+      "positive_margin": 0.2013060997500609
+    },
+    {
+      "lead": 1,
+      "lo": 4062,
+      "hi": 4063,
+      "negative_margin": 0.003777614054372022,
+      "positive_margin": 0.030865862830596596
+    },
+    {
+      "lead": 0,
+      "lo": 4063,
+      "hi": 4064,
+      "negative_margin": 0.0963070476714546,
+      "positive_margin": 0.20123947592784655
+    },
+    {
+      "lead": 1,
+      "lo": 4063,
+      "hi": 4064,
+      "negative_margin": 0.003617247570138574,
+      "positive_margin": 0.03079775101847023
+    },
+    {
+      "lead": 0,
+      "lo": 4064,
+      "hi": 4065,
+      "negative_margin": 0.09615478787195349,
+      "positive_margin": 0.2011748158770631
+    },
+    {
+      "lead": 1,
+      "lo": 4064,
+      "hi": 4065,
+      "negative_margin": 0.0034617295062240438,
+      "positive_margin": 0.030731642952173566
+    },
+    {
+      "lead": 0,
+      "lo": 4065,
+      "hi": 4066,
+      "negative_margin": 0.09600727625136188,
+      "positive_margin": 0.20111211961543918
+    },
+    {
+      "lead": 1,
+      "lo": 4065,
+      "hi": 4066,
+      "negative_margin": 0.0033110607717229956,
+      "positive_margin": 0.030667538649553502
+    },
+    {
+      "lead": 0,
+      "lo": 4066,
+      "hi": 4067,
+      "negative_margin": 0.09586451364648099,
+      "positive_margin": 0.20105138715792747
+    },
+    {
+      "lead": 1,
+      "lo": 4066,
+      "hi": 4067,
+      "negative_margin": 0.0031652422503067536,
+      "positive_margin": 0.030605438126810117
+    },
+    {
+      "lead": 0,
+      "lo": 4067,
+      "hi": 4068,
+      "negative_margin": 0.09572650086844975,
+      "positive_margin": 0.20099261852246297
+    },
+    {
+      "lead": 1,
+      "lo": 4067,
+      "hi": 4068,
+      "negative_margin": 0.0030242747925505816,
+      "positive_margin": 0.030545341398989373
+    },
+    {
+      "lead": 0,
+      "lo": 4068,
+      "hi": 4069,
+      "negative_margin": 0.0955932387008145,
+      "positive_margin": 0.20093581372306857
+    },
+    {
+      "lead": 1,
+      "lo": 4068,
+      "hi": 4069,
+      "negative_margin": 0.002888159225077864,
+      "positive_margin": 0.030487248482166912
+    },
+    {
+      "lead": 0,
+      "lo": 4069,
+      "hi": 4070,
+      "negative_margin": 0.09546472790039943,
+      "positive_margin": 0.20088097277517025
+    },
+    {
+      "lead": 1,
+      "lo": 4069,
+      "hi": 4070,
+      "negative_margin": 0.002756896344366529,
+      "positive_margin": 0.03043115939177026
+    },
+    {
+      "lead": 0,
+      "lo": 4070,
+      "hi": 4071,
+      "negative_margin": 0.095340969198563,
+      "positive_margin": 0.20082809569304308
+    },
+    {
+      "lead": 1,
+      "lo": 4070,
+      "hi": 4071,
+      "negative_margin": 0.0026304869185778366,
+      "positive_margin": 0.030377074141928223
+    },
+    {
+      "lead": 0,
+      "lo": 4071,
+      "hi": 4072,
+      "negative_margin": 0.09522196329881308,
+      "positive_margin": 0.200777182490217
+    },
+    {
+      "lead": 1,
+      "lo": 4071,
+      "hi": 4072,
+      "negative_margin": 0.002508931689342282,
+      "positive_margin": 0.030324992745958523
+    },
+    {
+      "lead": 0,
+      "lo": 4072,
+      "hi": 4073,
+      "negative_margin": 0.09510771087590417,
+      "positive_margin": 0.20072823318071625
+    },
+    {
+      "lead": 1,
+      "lo": 4072,
+      "hi": 4073,
+      "negative_margin": 0.0023922313664586693,
+      "positive_margin": 0.03027491521774526
+    },
+    {
+      "lead": 0,
+      "lo": 4073,
+      "hi": 4074,
+      "negative_margin": 0.09499821258152148,
+      "positive_margin": 0.20068124777804225
+    },
+    {
+      "lead": 1,
+      "lo": 4073,
+      "hi": 4074,
+      "negative_margin": 0.0022803866354629285,
+      "positive_margin": 0.030226841569045725
+    },
+    {
+      "lead": 0,
+      "lo": 4074,
+      "hi": 4075,
+      "negative_margin": 0.09489346903718471,
+      "positive_margin": 0.20063622629208017
+    },
+    {
+      "lead": 1,
+      "lo": 4074,
+      "hi": 4075,
+      "negative_margin": 0.0021733981500356553,
+      "positive_margin": 0.030180771813873915
+    },
+    {
+      "lead": 0,
+      "lo": 4075,
+      "hi": 4076,
+      "negative_margin": 0.09479348083811884,
+      "positive_margin": 0.20059316873689365
+    },
+    {
+      "lead": 1,
+      "lo": 4075,
+      "hi": 4076,
+      "negative_margin": 0.002071266537669581,
+      "positive_margin": 0.03013670596268662
+    },
+    {
+      "lead": 0,
+      "lo": 4076,
+      "hi": 4077,
+      "negative_margin": 0.09469824855413136,
+      "positive_margin": 0.20055207512219925
+    },
+    {
+      "lead": 1,
+      "lo": 4076,
+      "hi": 4077,
+      "negative_margin": 0.0019739923968602434,
+      "positive_margin": 0.030094644027838707
+    },
+    {
+      "lead": 0,
+      "lo": 4077,
+      "hi": 4078,
+      "negative_margin": 0.09460777272612055,
+      "positive_margin": 0.20051294546042076
+    },
+    {
+      "lead": 1,
+      "lo": 4077,
+      "hi": 4078,
+      "negative_margin": 0.0018815762978855568,
+      "positive_margin": 0.03005458601949259
+    },
+    {
+      "lead": 0,
+      "lo": 4078,
+      "hi": 4079,
+      "negative_margin": 0.09452205386870692,
+      "positive_margin": 0.20047577976006425
+    },
+    {
+      "lead": 1,
+      "lo": 4078,
+      "hi": 4079,
+      "negative_margin": 0.001794018781710884,
+      "positive_margin": 0.030016531946376254
+    },
+    {
+      "lead": 0,
+      "lo": 4079,
+      "hi": 4080,
+      "negative_margin": 0.09444109246953436,
+      "positive_margin": 0.200440578031181
+    },
+    {
+      "lead": 1,
+      "lo": 4079,
+      "hi": 4080,
+      "negative_margin": 0.0017113203620686796,
+      "positive_margin": 0.02998048182070565
+    },
+    {
+      "lead": 0,
+      "lo": 4080,
+      "hi": 4081,
+      "negative_margin": 0.09436488899034814,
+      "positive_margin": 0.2004073402837314
+    },
+    {
+      "lead": 1,
+      "lo": 4080,
+      "hi": 4081,
+      "negative_margin": 0.0016334815237990514,
+      "positive_margin": 0.02994643564915108
+    },
+    {
+      "lead": 0,
+      "lo": 4081,
+      "hi": 4082,
+      "negative_margin": 0.0942934438630775,
+      "positive_margin": 0.20037606652563783
+    },
+    {
+      "lead": 1,
+      "lo": 4081,
+      "hi": 4082,
+      "negative_margin": 0.0015605027230926388,
+      "positive_margin": 0.029914393442369923
+    },
+    {
+      "lead": 0,
+      "lo": 4082,
+      "hi": 4083,
+      "negative_margin": 0.09422675749564899,
+      "positive_margin": 0.20034675676478225
+    },
+    {
+      "lead": 1,
+      "lo": 4082,
+      "hi": 4083,
+      "negative_margin": 0.0014923843872448562,
+      "positive_margin": 0.029884355207395623
+    },
+    {
+      "lead": 0,
+      "lo": 4083,
+      "hi": 4084,
+      "negative_margin": 0.09416483026726945,
+      "positive_margin": 0.20031941100935546
+    },
+    {
+      "lead": 1,
+      "lo": 4083,
+      "hi": 4084,
+      "negative_margin": 0.0014291269174468504,
+      "positive_margin": 0.02985632095240654
+    },
+    {
+      "lead": 0,
+      "lo": 4084,
+      "hi": 4085,
+      "negative_margin": 0.09410766252927164,
+      "positive_margin": 0.20029402926553164
+    },
+    {
+      "lead": 1,
+      "lo": 4084,
+      "hi": 4085,
+      "negative_margin": 0.0013707306826644299,
+      "positive_margin": 0.029830290683485947
+    },
+    {
+      "lead": 0,
+      "lo": 4085,
+      "hi": 4086,
+      "negative_margin": 0.09405525460763994,
+      "positive_margin": 0.20027061154142994
+    },
+    {
+      "lead": 1,
+      "lo": 4085,
+      "hi": 4086,
+      "negative_margin": 0.0013171960262398073,
+      "positive_margin": 0.029806264407285343
+    },
+    {
+      "lead": 0,
+      "lo": 4086,
+      "hi": 4087,
+      "negative_margin": 0.09400760680250031,
+      "positive_margin": 0.20024915784150116
+    },
+    {
+      "lead": 1,
+      "lo": 4086,
+      "hi": 4087,
+      "negative_margin": 0.001268523261638277,
+      "positive_margin": 0.029784242130441244
+    },
+    {
+      "lead": 0,
+      "lo": 4087,
+      "hi": 4088,
+      "negative_margin": 0.09396471938254766,
+      "positive_margin": 0.2002296681711866
+    },
+    {
+      "lead": 1,
+      "lo": 4087,
+      "hi": 4088,
+      "negative_margin": 0.001224712674757066,
+      "positive_margin": 0.029764223858416268
+    },
+    {
+      "lead": 0,
+      "lo": 4088,
+      "hi": 4089,
+      "negative_margin": 0.09392659259261266,
+      "positive_margin": 0.20021214253621
+    },
+    {
+      "lead": 1,
+      "lo": 4088,
+      "hi": 4089,
+      "negative_margin": 0.0011857645228495748,
+      "positive_margin": 0.02974620959506024
+    },
+    {
+      "lead": 0,
+      "lo": 4089,
+      "hi": 4090,
+      "negative_margin": 0.09389322665042599,
+      "positive_margin": 0.20019658094079534
+    },
+    {
+      "lead": 1,
+      "lo": 4089,
+      "hi": 4090,
+      "negative_margin": 0.001151679034205408,
+      "positive_margin": 0.02973019934592558
+    },
+    {
+      "lead": 0,
+      "lo": 4090,
+      "hi": 4091,
+      "negative_margin": 0.09386462174564239,
+      "positive_margin": 0.2001829833887592
+    },
+    {
+      "lead": 1,
+      "lo": 4090,
+      "hi": 4091,
+      "negative_margin": 0.0011224564076387448,
+      "positive_margin": 0.029716193113663584
+    },
+    {
+      "lead": 0,
+      "lo": 4091,
+      "hi": 4092,
+      "negative_margin": 0.09384077804095081,
+      "positive_margin": 0.2001713498831823
+    },
+    {
+      "lead": 1,
+      "lo": 4091,
+      "hi": 4092,
+      "negative_margin": 0.0010980968161027776,
+      "positive_margin": 0.029704190903056656
+    },
+    {
+      "lead": 0,
+      "lo": 4092,
+      "hi": 4093,
+      "negative_margin": 0.09382169567227971,
+      "positive_margin": 0.20016168042754717
+    },
+    {
+      "lead": 1,
+      "lo": 4092,
+      "hi": 4093,
+      "negative_margin": 0.0010786004011461403,
+      "positive_margin": 0.0296941927159032
+    },
+    {
+      "lead": 0,
+      "lo": 4093,
+      "hi": 4094,
+      "negative_margin": 0.093807374747333,
+      "positive_margin": 0.20015397502358423
+    },
+    {
+      "lead": 1,
+      "lo": 4093,
+      "hi": 4094,
+      "negative_margin": 0.0010639672775198854,
+      "positive_margin": 0.029686198554468135
+    },
+    {
+      "lead": 0,
+      "lo": 4094,
+      "hi": 4095,
+      "negative_margin": 0.09379781534795628,
+      "positive_margin": 0.20014823367276302
+    },
+    {
+      "lead": 1,
+      "lo": 4094,
+      "hi": 4095,
+      "negative_margin": 0.0010541975315267829,
+      "positive_margin": 0.029680208421366684
+    },
+    {
+      "lead": 0,
+      "lo": 4095,
+      "hi": 4096,
+      "negative_margin": 0.09379301753015701,
+      "positive_margin": 0.20014445637776151
+    },
+    {
+      "lead": 1,
+      "lo": 4095,
+      "hi": 4096,
+      "negative_margin": 0.0010492912206036937,
+      "positive_margin": 0.029676222316107875
+    }
+  ],
+  "pass_all": true
+}

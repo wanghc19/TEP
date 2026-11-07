@@ -1,0 +1,69 @@
+{
+  "format": "numpy-struct-v1",
+  "matlab_class_preserved": true,
+  "variables": {
+    "canonical_flux": {
+      "kind": "struct",
+      "shape": [
+        1,
+        1
+      ],
+      "fields": [
+        "B",
+        "flux"
+      ],
+      "values": [
+        [
+          {
+            "kind": "array",
+            "key": "array_000000",
+            "shape": [
+              24,
+              24
+            ],
+            "dtype": "<f8"
+          },
+          {
+            "kind": "cell",
+            "shape": [
+              1,
+              3
+            ],
+            "values": [
+              {
+                "kind": "array",
+                "key": "array_000001",
+                "shape": [
+                  24,
+                  13,
+                  6410
+                ],
+                "dtype": "<c16"
+              },
+              {
+                "kind": "array",
+                "key": "array_000002",
+                "shape": [
+                  24,
+                  1,
+                  6330
+                ],
+                "dtype": "<c16"
+              },
+              {
+                "kind": "array",
+                "key": "array_000003",
+                "shape": [
+                  24,
+                  13,
+                  6392
+                ],
+                "dtype": "<c16"
+              }
+            ]
+          }
+        ]
+      ]
+    }
+  }
+}

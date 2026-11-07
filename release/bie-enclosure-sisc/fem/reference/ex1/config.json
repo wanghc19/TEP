@@ -1,0 +1,541 @@
+{
+  "example": {
+    "model": {
+      "beta": 0.5,
+      "d": 1,
+      "L": 1,
+      "star_scale": 1,
+      "rho_center": 4,
+      "rho_negative": 17,
+      "rho_positive": 17,
+      "rho_background": 1,
+      "a_negative": 0.12,
+      "a_positive": 0.2,
+      "radius": 0.2,
+      "gamma": 1,
+      "core": {
+        "cell_indices": 0,
+        "x_interval": [
+          -0.5,
+          0.5
+        ],
+        "y_interval": [
+          -0.5,
+          0.5
+        ]
+      },
+      "ports": [
+        -0.5,
+        0.5
+      ],
+      "leads": {
+        "left": {
+          "template": "left",
+          "inward_sign": -1
+        },
+        "right": {
+          "template": "right",
+          "inward_sign": 1
+        }
+      },
+      "curves": {
+        "center": {
+          "kind": "star",
+          "radius": 0.2,
+          "scale": 1,
+          "lobes": 5,
+          "amplitude": 0.3,
+          "axes": [
+            1.5,
+            1
+          ],
+          "center": [
+            0,
+            0
+          ],
+          "omega": [
+            1,
+            -1,
+            6,
+            -4
+          ],
+          "amp": [
+            0.25,
+            0.05,
+            0.03,
+            0.03
+          ],
+          "C3": 8.7,
+          "area": 0.19415042599184923
+        },
+        "left": {
+          "kind": "trilobe",
+          "radius": 0.2,
+          "a": 0.12,
+          "lobes": 3,
+          "center": [
+            0,
+            0
+          ],
+          "omega": [
+            1,
+            4,
+            -2
+          ],
+          "amp": [
+            0.1992838648180203,
+            0.011957031889081217,
+            0.011957031889081217
+          ],
+          "C3": 1.060190160831868,
+          "area": 0.12566370614359174
+        },
+        "right": {
+          "kind": "trilobe",
+          "radius": 0.2,
+          "a": 0.2,
+          "lobes": 3,
+          "center": [
+            0,
+            0
+          ],
+          "omega": [
+            1,
+            4,
+            -2
+          ],
+          "amp": [
+            0.19802950859533486,
+            0.019802950859533486,
+            0.019802950859533486
+          ],
+          "C3": 1.6238419704817457,
+          "area": 0.12566370614359174
+        }
+      },
+      "taper": {
+        "lead_cells": 13,
+        "first_cell": 12,
+        "start": 11.5,
+        "width": 2,
+        "end": 13.5
+      }
+    },
+    "windows": {
+      "search_k": [
+        1.4509999999999998,
+        2.249
+      ],
+      "alpha_minus": 1.7424000000000002,
+      "alpha_plus": 5.6169,
+      "local_halfwidth": 0.01
+    },
+    "discretization": {
+      "search": {
+        "schema": "I93_CURVED_P2_V1",
+        "window": [
+          1.4509999999999998,
+          2.249
+        ],
+        "mesh": {
+          "half_cells": 6,
+          "subdivisions": 12,
+          "interface_segments": 80,
+          "quadrature_order": 8,
+          "coordinate_tolerance": 1E-11,
+          "ring_scale": 0.15,
+          "grid_clearance_fraction": 0.3
+        },
+        "solver": {
+          "shift_count": 3,
+          "requested": 12,
+          "tolerance": 1E-10,
+          "max_iterations": 1000,
+          "subspace": 40,
+          "seed": 193,
+          "imaginary_tolerance": 1E-10,
+          "shifts_mu": [
+            2.597501,
+            3.5817010000000002,
+            4.565901
+          ]
+        },
+        "selection": {
+          "residual_max": 1E-8,
+          "center_mass_min": 0.15,
+          "core_mass_min": 0.6,
+          "end_mass_max": 0.02,
+          "end_cells": 2,
+          "dedup_k": 1E-6,
+          "dedup_overlap": 0.9
+        },
+        "resources": {
+          "hard_seconds": 2400,
+          "rss_bytes": 3.0E+9,
+          "sample_seconds": 1,
+          "threads": 11
+        },
+        "mode": "formal"
+      },
+      "native": {
+        "schema": "I102_REFINE_V1",
+        "mode": "formal",
+        "group": "g48",
+        "k0": null,
+        "mu0": null,
+        "k0_source": "in-memory wide-window P2 result",
+        "window": [
+          null,
+          null
+        ],
+        "mesh": {
+          "subdivisions": 48,
+          "interface_segments": 320
+        },
+        "mesh_rules": {
+          "ring_scale": 0.15,
+          "coordinate_tolerance": 1E-11,
+          "interface_clearance_fraction": 0.3,
+          "ring_clearance_fraction": 0.1,
+          "det_ratio_max": 20,
+          "repair_rounds": 3,
+          "curve_samples": 33,
+          "repair_seconds": 30,
+          "flip": {
+            "max_checks": 32,
+            "max_flips": 16,
+            "convex_factor": 1E-12,
+            "crossing_tolerance": 1E-9
+          }
+        },
+        "expected_mesh": {},
+        "orders": [
+          2,
+          3,
+          4
+        ],
+        "rules": [
+          {
+            "name": "primary",
+            "volume_order": 12,
+            "band_subsegments": 2,
+            "band_points": 8
+          },
+          {
+            "name": "check",
+            "volume_order": 16,
+            "band_subsegments": 4,
+            "band_points": 12
+          },
+          {
+            "name": "extra",
+            "volume_order": 20,
+            "band_subsegments": 8,
+            "band_points": 16
+          }
+        ],
+        "epsilon": [
+          1E-10,
+          1E-10,
+          1E-10
+        ],
+        "q": 0.5,
+        "extra_trigger_factor": 0.25,
+        "ratio_floor_factor": 10,
+        "nested_tol": 1E-10,
+        "edge_tol": 1E-10,
+        "location": {
+          "newton_steps": 30,
+          "halvings": 8,
+          "residual": 1E-12,
+          "barycentric_min": -1E-10,
+          "aabb_pad": 1E-12,
+          "batch": 20000
+        },
+        "gates": {
+          "cell_backward": 1E-10,
+          "cell_condest": 1.0E+12,
+          "qz_degenerate_factor": 100,
+          "unit_gap": 1E-6,
+          "z0_rcond": 1E-10,
+          "invariance": 1E-8,
+          "riccati": 1E-8,
+          "dtn_hermitian": 1E-8,
+          "dtn_consistency": 1E-8,
+          "consistency_rcond": 1E-12,
+          "pairing_band": 1.0E+6,
+          "matrix_hermitian": 1E-10,
+          "qp_defect": 1E-12,
+          "h_hermitian": 1E-8
+        },
+        "root": {
+          "half_widths": [
+            2E-6,
+            2E-5,
+            0.0002,
+            0.001,
+            0.01
+          ],
+          "overlap_min": 0.9,
+          "select_corr_min": 0.9,
+          "gap_factor": 1E-8,
+          "max_halvings": 8,
+          "max_frequencies": 40,
+          "k_width": 2E-12,
+          "mu_width_factor": 0.125,
+          "theta_abs": 1E-10,
+          "center_residual": 1E-9,
+          "nearest_count": 5
+        },
+        "same_mode": {
+          "trace_points": 201,
+          "corr_min": 0.99
+        },
+        "stein": {
+          "tail_rel": 1E-11,
+          "max_rounds": 30,
+          "prediction_factor": 0.125
+        },
+        "derivative": {
+          "dmu": 1E-5,
+          "rel_tol": 1E-6
+        },
+        "delivery": {
+          "display_cells": 4,
+          "recovery_residual": 1E-10,
+          "continuity": 1E-10,
+          "qp": 1E-12,
+          "load_balance": 1E-8
+        },
+        "solver": {
+          "rhs_block": 32,
+          "lu_fill_allowance": 4
+        },
+        "resources": {
+          "threads": 11,
+          "rss_bytes": 3.0E+9,
+          "warn_bytes": 2.7E+9,
+          "internal_gate_bytes": 2.9E+9,
+          "soft_seconds": 1800,
+          "grace_seconds": 600,
+          "hard_seconds": 2400,
+          "save_estimate_seconds": 60
+        }
+      },
+      "trial_degree": 3,
+      "flux_degree": 3,
+      "orders": [
+        16,
+        24
+      ],
+      "band_orders": [
+        10,
+        16
+      ],
+      "block": 48,
+      "curve_taylor_order": 18,
+      "polynomial_degree": 12,
+      "series_order": 16,
+      "original": {
+        "tol": 5.2083333333333337E-17,
+        "sliver_panels": 4,
+        "inverse_iterations": 18,
+        "measure": false
+      },
+      "fast": {
+        "tol": 5.2083333333333336E-14,
+        "sliver_panels": 1,
+        "inverse_iterations": 6,
+        "measure": false
+      }
+    },
+    "tolerances": {
+      "E_rational": 1E-12,
+      "S_common_rational": 1E-16,
+      "mass_halfwidth": 1E-13,
+      "taper_S": 1E-21,
+      "quadrature_fraction": 0.01,
+      "area": 1E-12,
+      "trace": 1E-10,
+      "quotient": 1E-12
+    },
+    "resources": {
+      "threads": 11,
+      "soft_seconds": 1800,
+      "hard_seconds": 2400,
+      "rss_gib": 3
+    }
+  },
+  "setting": "original",
+  "config": {
+    "input_dir": "in-memory",
+    "trial": "D",
+    "level": "native-P3",
+    "K": 13,
+    "gamma": 1,
+    "beta": 0.5,
+    "orders": [
+      16,
+      24
+    ],
+    "band_orders": [
+      10,
+      16
+    ],
+    "block": 48,
+    "alpha_minus": 1.7424000000000002,
+    "alpha_plus": 5.6169,
+    "quadrature_fraction": 0.01,
+    "geometry": "analytic_blend_r3_v1",
+    "threads": 11,
+    "basis": "stable",
+    "compact_condensation": true,
+    "fem_degree": 3,
+    "flux_degree": 3,
+    "model": {
+      "beta": 0.5,
+      "d": 1,
+      "L": 1,
+      "star_scale": 1,
+      "rho_center": 4,
+      "rho_negative": 17,
+      "rho_positive": 17,
+      "rho_background": 1,
+      "a_negative": 0.12,
+      "a_positive": 0.2,
+      "radius": 0.2,
+      "gamma": 1,
+      "core": {
+        "cell_indices": 0,
+        "x_interval": [
+          -0.5,
+          0.5
+        ],
+        "y_interval": [
+          -0.5,
+          0.5
+        ]
+      },
+      "ports": [
+        -0.5,
+        0.5
+      ],
+      "leads": {
+        "left": {
+          "template": "left",
+          "inward_sign": -1
+        },
+        "right": {
+          "template": "right",
+          "inward_sign": 1
+        }
+      },
+      "curves": {
+        "center": {
+          "kind": "star",
+          "radius": 0.2,
+          "scale": 1,
+          "lobes": 5,
+          "amplitude": 0.3,
+          "axes": [
+            1.5,
+            1
+          ],
+          "center": [
+            0,
+            0
+          ],
+          "omega": [
+            1,
+            -1,
+            6,
+            -4
+          ],
+          "amp": [
+            0.25,
+            0.05,
+            0.03,
+            0.03
+          ],
+          "C3": 8.7,
+          "area": 0.19415042599184923
+        },
+        "left": {
+          "kind": "trilobe",
+          "radius": 0.2,
+          "a": 0.12,
+          "lobes": 3,
+          "center": [
+            0,
+            0
+          ],
+          "omega": [
+            1,
+            4,
+            -2
+          ],
+          "amp": [
+            0.1992838648180203,
+            0.011957031889081217,
+            0.011957031889081217
+          ],
+          "C3": 1.060190160831868,
+          "area": 0.12566370614359174
+        },
+        "right": {
+          "kind": "trilobe",
+          "radius": 0.2,
+          "a": 0.2,
+          "lobes": 3,
+          "center": [
+            0,
+            0
+          ],
+          "omega": [
+            1,
+            4,
+            -2
+          ],
+          "amp": [
+            0.19802950859533486,
+            0.019802950859533486,
+            0.019802950859533486
+          ],
+          "C3": 1.6238419704817457,
+          "area": 0.12566370614359174
+        }
+      },
+      "taper": {
+        "lead_cells": 13,
+        "first_cell": 12,
+        "start": 11.5,
+        "width": 2,
+        "end": 13.5
+      }
+    },
+    "tolerances": {
+      "E_rational": 1E-12,
+      "S_common_rational": 1E-16,
+      "mass_halfwidth": 1E-13,
+      "taper_S": 1E-21,
+      "quadrature_fraction": 0.01,
+      "area": 1E-12,
+      "trace": 1E-10,
+      "quotient": 1E-12
+    },
+    "mu": 2.7424,
+    "nu": 6.6169
+  },
+  "accuracy": {
+    "tol": 5.2083333333333337E-17,
+    "sliver_panels": 4,
+    "inverse_iterations": 18,
+    "measure": false
+  },
+  "support": {
+    "supported": true,
+    "reference_regression": true,
+    "rho_center": 4,
+    "support": "reference geometry/leads/windows/discretization; positive center contrast only"
+  }
+}

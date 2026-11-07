@@ -1,0 +1,26 @@
+{
+  "format": "numpy-struct-v1",
+  "example": "ex1",
+  "mesh": 48,
+  "rounding_covered": false,
+  "array_roundtrip_exact": true,
+  "data_files": [
+    "left-certificate.json",
+    "surface.json",
+    "flux.json",
+    "native.npz",
+    "native.json",
+    "core-result.json",
+    "integrals.json",
+    "band.json",
+    "flux.npz",
+    "right-certificate.json",
+    "right/result.json",
+    "right-1/result.json",
+    "left-2/result.json",
+    "left/result.json",
+    "right-2/result.json",
+    "left-1/result.json"
+  ],
+  "matlab_class_preserved": true
+}

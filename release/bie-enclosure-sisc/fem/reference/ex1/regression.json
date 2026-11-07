@@ -1,0 +1,40 @@
+{
+  "old_E": [
+    11.470912271614043,
+    11.470912271618044
+  ],
+  "old_M": [
+    4.723011018014391,
+    4.7230110180281955
+  ],
+  "old_S_upper": 2.947579937694733e-10,
+  "old_endpoints": [
+    2.4287286691977914,
+    2.4287286736601232
+  ],
+  "old_width": 4.4623318373737675e-09,
+  "E_difference": [
+    0,
+    0
+  ],
+  "M_difference": [
+    0,
+    0
+  ],
+  "S_difference": 0,
+  "endpoint_difference": [
+    0,
+    0
+  ],
+  "endpoint_relative": 0,
+  "width_relative": 0,
+  "root_relative": 2.142730437526552e-14,
+  "q_relative": 0,
+  "contains_reference": true,
+  "pass": true,
+  "I1_paper_printed": [
+    "2.4286785150",
+    "2.4287788272"
+  ],
+  "I1_printed_match": true
+}

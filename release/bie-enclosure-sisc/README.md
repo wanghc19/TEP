@@ -108,3 +108,9 @@ The mathematics is in Section 5 of the paper (trial field, grouped trace estimat
 ## License
 
 The code and data of this package are released under the MIT License (`LICENSE`; the copyright holder is a placeholder until publication). Third-party components keep their own licenses and are not bundled: MATLAB, FMM2D (Apache-2.0, `environment/FMM2D-LICENSE`), and the Python packages listed in `environment/`.
+
+## Finite element comparison
+
+The [finite element comparison](fem/README.md) supplies separate reproduce and verify entry points for example 1, using a finite element method (FEM), a Dirichlet-to-Neumann (DtN) map and a Lehmann–Goerisch flux. It computes the independent first-order spectral-intersection interval and the four-corner interval, and packages the band, half-line surface, DtN and core-count computations that establish the isolation hypothesis (H). The mesh comparison uses P3 fields and RT3 fluxes at h=1/24,1/36,1/48. Truncation errors are bounded by the original certificates; finite arithmetic rounding is only estimated, unlike the ball-arithmetic BIE certificates.
+
+The two implementations differ by 2^-56 in one binary geometry Fourier coefficient. Containment of the BIE interval inside the FEM interval is therefore a numerical cross-check of these implementations. The FEM subtree needs MATLAB for both layers and does not need FMM2D. Its commands, canonical-data boundary, measured costs and verification results are in its own README. Its two large field/flux arrays (about 75 MB) are not tracked in Git; that README gives the regeneration command.
