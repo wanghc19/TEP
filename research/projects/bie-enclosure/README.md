@@ -4,6 +4,8 @@
 
 缩写：BIE = 边界积分方程；MFS = 基本解方法（augmented MFS 用来近似准周期 Green 函数）；QP = 准周期；FMM = 快速多极方法；FEM = 有限元方法。
 
+**2026-11-08 停止（用户决定）**：本项目及其英文稿 `draft/bie-siam/`、求解器稿 `draft/bie-solver/` 全部停止，不再研究；原因见 `draft/bie-siam/README.md`“停止”一节和 [[research/projects/bie-enclosure/DECISIONS|DECISIONS]]。以下内容为历史记录。
+
 ## 已有材料
 
 - 理论：[[research/projects/bie-enclosure/theory/reliable-bound|reliable-bound]]（ChatGPT Pro 报告：两引线本质谱、MFS 场与接缝、求积误差界、更小的迹常数、加速；待审查）。

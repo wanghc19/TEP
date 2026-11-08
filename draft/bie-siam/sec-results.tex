@@ -76,9 +76,10 @@ $169$ plane waves and $118$ phase panels on $[0,\pi]$; both lead rods are
 symmetric under $y\mapsto-y$.
 
 \emph{Candidate.} The floating-point gap classification gives the search window
-$k\in[1.451,2.249]$. The solver interpolates the determinant of its
-$2K\times2K$ port matrix \todo{cite companion solver paper} by Chebyshev
-polynomials on the whole window; the interpolation stops at degree $32$ (last three coefficients below $7\times10^{-11}$
+$k\in[1.451,2.249]$. We interpolate the determinant of the
+$2K\times2K$ matrix that matches the center cell to the decaying subspaces of the
+two leads (\cref{sec:center}) by Chebyshev polynomials \cite{Boyd2002} on the
+whole window; the interpolation stops at degree $32$ (last three coefficients below $7\times10^{-11}$
 relative to the largest), with one near-real root in the Bernstein ellipse. Two
 Newton steps give $\widehat k=1.558437894182088=438661269969907/2^{48}$; $\mu$ is
 its exact square. The search takes $38$ matrix evaluations and $159$\,s.

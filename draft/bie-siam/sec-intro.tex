@@ -10,25 +10,35 @@ along the defect they are eigenvalues of a self-adjoint operator $A(\beta)$ on
 an unbounded strip, located in a gap of its essential spectrum
 \cite{Fliss2013}.
 
-Two difficulties arise. The first is that the strip is unbounded across the
-defect. Supercell methods truncate it with periodic conditions and incur a
-model error that grows as the mode becomes less localized
-\cite{Fliss2013,KlindworthSchmidtFliss2014}. Joly, Li, and Fliss constructed
-exact boundary conditions for periodic half guides from cell problems
-\cite{JolyLiFliss2006}, and Fliss used them to reduce the guided-mode problem to
-a bounded neighborhood of the defect, at the price of a nonlinear eigenvalue
-problem \cite{Fliss2013}; high-order finite element versions, Robin-to-Robin
-variants, and dispersion-curve tracing followed
-\cite{KlindworthSchmidtFliss2014,FlissKlindworthSchmidt2015,Klindworth2015}, and
-related cell-DtN reductions are used in \cite{HuangLuLi2007,YuanLu2007}. The
-second difficulty is reliability. For piecewise constant media, boundary
-integral equations discretize only the interfaces and, with quasi-periodic Green
-functions, reach high order with few unknowns
-\cite{Linton1998,BarnettGreengard2010,HaoBarnettMartinssonYoung2014}. A nearly
-singular matrix in a nonlinear eigenvalue problem, however, only shows that a
-finite-dimensional equation is nearly solvable \cite{GuettelTisseur2017}; it
-neither bounds the distance to the spectrum of the continuous operator nor
-proves that a spectral point exists.
+Computing such modes is routine. Supercell methods truncate the strip with
+periodic conditions, with a model error that grows as the mode becomes less
+localized \cite{Fliss2013,KlindworthSchmidtFliss2014}. Exact boundary
+conditions for periodic half guides \cite{JolyLiFliss2006} reduce the problem to
+a neighborhood of the defect at the price of a nonlinear eigenvalue problem
+\cite{Fliss2013}, with high-order finite element, Robin-to-Robin and
+dispersion-curve versions
+\cite{KlindworthSchmidtFliss2014,FlissKlindworthSchmidt2015,Klindworth2015} and
+cell-DtN variants \cite{HuangLuLi2007,YuanLu2007}; for piecewise constant media,
+boundary integral equations with quasi-periodic Green functions reach high order
+with few unknowns
+\cite{Linton1998,BarnettGreengard2010,HaoBarnettMartinssonYoung2014}. What these
+methods do not provide is a guarantee: a small singular value of the
+discretized nonlinear eigenvalue problem shows only that $\widehat k$ has a small
+backward error for that finite-dimensional problem
+\cite[\S2.7]{GuettelTisseur2017}. A priori convergence theory relates discrete
+and exact eigenvalues only for sufficiently fine discretizations, with
+constants that are not computed \cite[\S4]{ZhaoBarnett2015}, and boundary
+integral formulations can be nearly singular away from any eigenvalue
+\cite{ZhaoBarnett2015,HiptmairMoiolaSpence2022}. For a given discretization
+there is thus no computable bound on
+$\operatorname{dist}(\widehat k^2,\sigma(A(\beta)))$, and such a bound alone would
+not show that the nearby spectral point is an eigenvalue rather than part of the
+essential spectrum. Turning a computed candidate into such a guarantee meets
+two obstacles here. The strip is unbounded, so a trial field must be defined on
+infinitely many cells and its residual controlled over all of them. And the
+eigenvalue lies in a gap of the essential spectrum, which must itself be
+verified; lower-bound methods in addition need its isolation from the rest of
+the spectrum.
 
 \emph{Related enclosure methods.} Bounding eigenvalues by the boundary defect of
 trial fields that solve the equation exactly is the classical method of
@@ -79,14 +89,14 @@ $14$ minutes gives a $\mu$-interval of width $2.74\times10^{-11}$; for modes
 approaching a gap edge, where the lead contraction rate rises to $0.80$, the
 width stays below $10^{-11}$.
 
-Candidates are computed by a boundary integral solver described in a
-companion paper \todo{cite companion solver paper}. It combines transparent
-conditions for the half guides
-\cite{JolyLiFliss2006,Fliss2013,FlissKlindworthSchmidt2015}, Rayleigh
-expansions at artificial interfaces, and near-image splitting and proxy
-representations of quasi-periodic fields
-\cite{BarnettGreengard2010,BarnettGreengard2011,ChoBarnett2015}. Here we use
-only its output, and the enclosure does not depend on the accuracy of the
+Candidates are computed with known components, none claimed as new: Rayleigh
+expansions at artificial interfaces and decaying Bloch modes of each half guide
+from the transfer-matrix eigenvalue problem \cite{BottenEtAl2004}, which plays
+the role of the transparent conditions of
+\cite{JolyLiFliss2006,Fliss2013,FlissKlindworthSchmidt2015}, and near-image
+splitting and proxy representations of quasi-periodic fields in each cell
+\cite{BarnettGreengard2010,BarnettGreengard2011,ChoBarnett2015}. We use only
+their output, and the enclosure does not depend on the accuracy of the
 candidate. We do not claim that the eigenvalue in the interval is unique, nor
 its index or multiplicity, and we do not study a priori convergence: the
 theorem applies to a given candidate and field, however they were obtained.

@@ -2,6 +2,10 @@
 
 BIE = boundary integral equation（边界积分方程）；SIAM = Society for Industrial and Applied Mathematics；SISC = SIAM Journal on Scientific Computing；sm = supplementary materials（补充材料）。
 
+## 停止（2026-11-08，用户决定）
+
+本稿不再投稿，整个 BIE 导模课题停止研究，文件原样保留作记录。原因：拿掉求解器后，剩下的贡献只是“保证更强”（把已有方法能算出的候选变成可靠区间），不再是数值方法；第 2 节和谱距离定理的机制属于经典分析；全文正确性依赖证明与补充材料中的界，这些证明由 AI 写作和审查，R-1…R-8 修改后未复审，代码也未对照引理逐条审计，作者要独立核对需要补学大量理论，成本不低于换题。最后一版：正文 17 页、补充材料 9 页，可编译。未完成：复审、代码审计、作者信息、第 2 节文献出处查新（已派发但回合中止，无产出）。
+
 内容来源是中文研究笔记 `draft/bie-enclosure/`（对外版 `main-clean.tex`），按页数预算重写成英文，不逐句翻译。正文不超过 20 页（含参考文献），正文结论的证明都在正文；计入舍入的计算细节和补充表格放在补充材料里；可复核的数据与检查程序在 `release/bie-enclosure-sisc/`。
 
 - `main.tex`：正文；`sec-*.tex` 为各节，`sec-acknowledgments.tex` 是致谢与 AI 使用声明（按 SIAM AI 政策）。
@@ -39,5 +43,6 @@ BIE = boundary integral equation（边界积分方程）；SIAM = Society for In
 - done（2026-11-07）：结构调整，减少对补充材料的引用。用户把谱隙判据的证明移回第 2 节，删去公共谱隙假设和"谱隙中离散谱"命题。随后删去原第 3 节（中心胞元约化）：胞元与端口记号移到 2.1 节，约化本身改为第 3 节（原第 4 节）开头一段，引用 Fliss2013 Thm 4.1/4.5 和 FlissKlindworthSchmidt2015。中心胞元表示定理改为注记，只作为 ansatz，引用 BarnettGreengard2010 App. A。无 Wood 异常假设改为一句说明（只用于候选搜索）。近像分解改引 Linton1998。补充材料删去约化、表示定理和近像推论的证明。本质谱命题改引 KlindworthSchmidtFliss2014 Prop. 2.1（两侧引线不同的陈述），Fliss2013 Rem. 2.1(2) 只说可以推广，没有给出谱的结论；正文给出最终结论所需的包含方向 $\sigma_{\mathrm{ess}}(A)\subset\sigma(A_-)\cup\sigma(A_+)$ 的证明（参数逆）。正文 18 页、补充材料 10 页，无未定义引用、无 overfull。
 - done（2026-11-07）：引言把贡献与文章结构分开，不用列表。贡献段写三项：谱距离定理（机制是经典的，本文推广到跨无穷多胞元的分片场并给出可计算常数）、公共谱隙的有限维检验（用户决定列为贡献）、所有输入计入舍入的评估；例子只作为一句数字证据。候选计算（透明边界条件、Rayleigh 展开、近像分解、代理源）并入"已知部件、不声称为新"一段。末尾新增结构段。摘要删去候选算法的细节，补一句谱隙检验。正文仍 18 页，第 2 节仍从第 2 页开始。
 - done（2026-11-07）：第 2 节标题改为 Model problem and spectral gap test，2.2 节改为 Essential spectrum and a finite-dimensional test。正文定理的证明全部移回正文：全局 $H^2$ 引理并入式 eq:domain-h2（Parseval 恒等式与常数），试验场逐片 $H^2$ 正则性改为第 4 节的 lem:piecewise-h2 并附证明，prop:trace 的证明移到命题之后。`sm-proofs.tex` 删除，补充材料只剩可靠计算的误差界与数据表。正文 18 页，补充材料 9 页，无 overfull、无未定义引用。
+- done（2026-11-08）：不再依赖求解器稿。第 3 节改为只用已发表部件定义试探场：单胞场引 Barnett–Greengard 2010、Cho–Barnett 2015，Rayleigh 展开和引线衰减 Bloch 模引 Botten 等 2004 式 (3)、(7)（代码中是同一特征问题的 pencil 形式加有序 QZ）。Rayleigh 项统一记为 $\mathcal R[a,b]$；删去 $x_p$、$r_m$、$l_m$、$\psi_m$、$u_{\mathrm b}$、$u_{\mathrm{hom}}$、$a_{\mathrm L}$、$b_{\mathrm R}$、$N_\eta$、$N_p$、$\mathsf M_\pm$、$\mathsf X_\pm$、$\mathsf Z_\pm$、$u^{\mathrm{cell}}$；引线数据改为 $\mathsf G_\pm,\mathsf P_\pm,c_\pm$（即代码导出的 `G`、`P`、`c`）。三项属于本文自己的取法（密度三角插值、代理源后拟合、引线胞线性映射）写成一段。引言、第 5 节的求解器稿 TODO 改为引用已知部件和 Boyd 2002；第 4 节、补充材料 C 中 $\mathsf G$ 的定义随之修改。数值不变，不需要新代码。正文 17 页、补充材料 9 页，无未定义引用、无 overfull。
 - open：真实作者信息；FEM 路线的引用方式；release 包的引用方式。保留未改的轻微重名：$\tau$（密度）与 $\tau_g$（迹估计常数），$n$（密度未知数个数）与 $n(\cdot)$、$n_s$。
 - done（2026-11-07）：拆分。原第 3 节（离散与候选计算）移到 `draft/bie-solver/sec-method.tex`；新第 3 节 `sec-field.tex` 只定义由候选数据构造的试探场（原 4.1 并入），不再出现行列式、端口矩阵、QZ 束和提取矩阵；对求解器论文的引用暂为 `\todo`。正文 17 页、补充材料 9 页，无 overfull、无未定义引用。
