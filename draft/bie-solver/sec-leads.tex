@@ -1,6 +1,4 @@
-% Section 4: Floquet eigenvalue problem of a periodicity cell, flux identity, dimension of the decaying subspaces
-% (Lemma A of research/projects/bie-enclosure/theory/port-subspace.md, reviewed
-% 12/12 in port-subspace-review.md), the fully discrete criterion, ordered QZ.
+% Floquet subspaces and ordered QZ (generalized Schur decomposition).
 \section{Decaying subspaces of the half-strips}\label{sec:leads}
 
 \subsection{The Floquet eigenvalue problem}\label{sec:pencil}
@@ -31,8 +29,8 @@ compatible sequences are square summable, and for $S_-$ the
 analogous subspace towards $-\infty$, obtained from the reversed problem
 $(\mathsf E_{\mathrm R}-\zeta\mathsf E_{\mathrm L})z_0=0$.
 
-The continuous half-strip has as many decaying as growing solutions in a
-gap. For the discrete problem this count is not automatic. A $2K\times2K$
+Truncation leaves a finite-dimensional problem on the wall states. Its
+decaying dimension has to be determined. A $2K\times2K$
 generalized eigenvalue problem may have any number of multipliers inside the unit circle, and if the number is
 not $K$, the closure of \cref{sec:closure} is not square. The next lemma
 shows that the count follows from energy conservation of the truncated cell.
@@ -95,7 +93,7 @@ $z_{\mathrm L}$ and the second block of $z_{\mathrm R}$.
 
 \emph{Neutrality.} Let $Z$ be a basis of the generalized eigenspace of the
 multipliers inside the unit circle. There is a matrix $P$ with spectral radius
-less than one and $\mathsf E_{\mathrm L}Z=\mathsf E_{\mathrm R}ZP$. For $c,e\in\CC^K$ the
+less than one and $\mathsf E_{\mathrm L}Z=\mathsf E_{\mathrm R}ZP$. For coefficient vectors $c,e$ of the column dimension of $Z$, the
 sequences $z_j=ZP^jc$ and $w_j=ZP^je$ are compatible, and
 \eqref{eq:flux-identity} gives $z_j^*\mathsf Jw_j=z_{j+1}^*\mathsf Jw_{j+1}$. Since
 $P^j\to0$, $z_0^*\mathsf Jw_0=0$. The subspace of multipliers outside the circle
@@ -114,80 +112,23 @@ $w_j=P_{\mathrm{rev}}^\ell w_{j+\ell}$ with $P_{\mathrm{rev}}^\ell\to0$, so it v
 for a bounded sequence.
 \end{proof}
 
-The lemma does not need the multipliers to be simple, and it allows zero and
-infinite multipliers. Three remarks delimit it.
-\begin{remark}[bands]\label{rem:bands}
-If $k^2$ lies in a band, unimodular multipliers occur. If they are all
-semisimple, the decaying subspace plus the positive-flux part of each
-unimodular eigenspace again has dimension $K$. Without semisimplicity this
-fails. The flux-preserving transfer matrix
-$\left[\begin{smallmatrix}1+\ii&1\\1&1-\ii\end{smallmatrix}\right]$ with
-$\mathsf J=\diag(1,-1)$ has a single eigenvector, of zero flux.
-\end{remark}
-\begin{remark}[omitted propagating orders]\label{rem:omitted}
-If a propagating order is deleted, the flux of the retained orders decreases
-along the half-strip by the outgoing power of that order. The count can still equal
-$K$, so the count does not detect the error, but the model now loses energy.
-For this reason \cref{ass:cell} requires all propagating orders to be retained;
-see also \cref{sec:truncation}.
-\end{remark}
-\begin{remark}[Wood points]\label{rem:wood-flux}
-At a retained Wood order the corresponding block of $\mathsf J$ vanishes, and
-the proof breaks at its first step. In value--derivative coordinates the
-threshold solution $q+p(x-x_p)$ has the nondegenerate flux $\Im(\bar qp)$.
-\Cref{sec:wood} explains why this change of coordinates alone does not make
-the solver regular at Wood points.
-\end{remark}
-
-\subsection{A criterion for the computed cell}\label{sec:criterion}
-The computed scattering matrices are not exact, and
-\eqref{eq:flux-identity} holds only approximately. The following criterion
-gives the count for the computed matrices themselves. Let
-$A=\mathsf E_{\mathrm L}$ and $B=\mathsf E_{\mathrm R}$ be the computed blocks and define
-\begin{equation}\label{eq:defect}
-\begin{gathered}
-  F=G_{\mathrm R}^*\mathsf JG_{\mathrm R}-G_{\mathrm L}^*\mathsf JG_{\mathrm L},\qquad
-  g=\min_{|\zeta|=1}\sigma_{\min}(A-\zeta B),\\
-  j=\min_{|m|\le M}|\gamma_m|,\qquad W=G_{\mathrm R}-G_{\mathrm L}.
-\end{gathered}
-\end{equation}
-
-\begin{proposition}[count for the computed cell]\label{prop:criterion}
-If $0<\underline g\le g$ and $\|F\|<j\,\sigma_{\min}(W)\,\underline g$, then the
-computed problem \eqref{eq:floquet} has exactly $K$ multipliers inside the unit circle and $K$
-outside, including $\infty$, counted with algebraic multiplicity.
-\end{proposition}
-
-\begin{proof}[Proof sketch]
-With $V_\zeta=\diag(I,\zeta I)$ and the block swap $\Pi$ one checks
-$(G_{\mathrm R}-\zeta G_{\mathrm L})V_\zeta=V_\zeta\Pi(A-\zeta B)$. On the unit circle the two
-matrix functions therefore have the same singular values, and in particular
-$\sigma_{\min}(W)\ge g$. Set $H=(G_{\mathrm R}+G_{\mathrm L})W^{-1}$. Then
-$H^*\mathsf J+\mathsf JH=2W^{-*}FW^{-1}$, so
-$\Delta=\mathsf J^{-1}W^{-*}FW^{-1}$ makes $H-\Delta$ exactly $\mathsf J$-skew. Along
-the homotopy $H-t\Delta$, $0\le t\le1$, the matrices move by at most
-$\|F\|/(j\,\sigma_{\min}(W))<\underline g$ on the circle. They stay invertible
-there, and the number of multipliers inside the circle is constant. At $t=1$
-the eigenvalues of $H-\Delta$ pair as $h\leftrightarrow-\bar h$ and avoid the
-imaginary axis. The Cayley map $\zeta=(h+1)/(h-1)$ sends the $K$ eigenvalues
-in each half-plane to the inside and the outside of the circle. The full
-proof is in \cref{app:criterion}.
-\end{proof}
-
-The separation $g$ is the distance of $A-\zeta B$ from singularity on the
-circle, not the radial distance of the multipliers from the circle. The two
-can differ arbitrarily for nonnormal problems, which is why the criterion uses
-$g$. A computable lower bound $\underline g$ follows from $\sigma_{\min}$ at
-finitely many points on the circle and a Lipschitz bound
-(\cref{rem:app-gbar}). In the experiments we report the observed counts and
-the flux defects, which are at rounding level; we do not evaluate the
-criterion with a verified $\underline g$.
+The argument includes multiple multipliers and the finite and infinite
+blocks of a regular pencil. Its energy balance uses every propagating
+order. Deleting one would discard outgoing flux even if the computed
+stable dimension happened to equal $K$.
 
 \subsection{Ordered QZ}\label{sec:qz}
-An ordered QZ decomposition $\mathsf Q\mathsf E_{\mathrm L}\mathsf V=\mathsf U_{\mathrm L}$,
-$\mathsf Q\mathsf E_{\mathrm R}\mathsf V=\mathsf U_{\mathrm R}$ with the $K$ multipliers
-$|\zeta|<1$ first gives an orthonormal basis $\mathsf Z_+$ (the first $K$
-columns of $\mathsf V$) of $\mathcal Z_+$, and
+For the right half-strip compute an ordered generalized Schur (QZ)
+decomposition
+\[
+ \mathsf Q\mathsf E_{\mathrm L}\mathsf V=\mathsf U_{\mathrm L},
+ \qquad
+ \mathsf Q\mathsf E_{\mathrm R}\mathsf V=\mathsf U_{\mathrm R},
+\]
+with unitary factors $\mathsf Q,\mathsf V$. Reorder the triangular factors
+so that the $K$ multipliers inside the unit circle come first. The first
+$K$ columns of $\mathsf V$ give the orthonormal basis $\mathsf Z_+$.
+The corresponding leading triangular blocks give
 \begin{equation}\label{eq:propagation}
   \mathsf E_{\mathrm L}\mathsf Z_+=\mathsf E_{\mathrm R}\mathsf Z_+\mathsf P_+,\qquad
   \mathsf P_+=\mathsf U_{\mathrm R,11}^{-1}\mathsf U_{\mathrm L,11}.
@@ -196,7 +137,8 @@ The states $z_j=\mathsf Z_+\mathsf P_+^jc$ on consecutive walls are the decaying
 solutions in $S_+$. For $S_-$, the reversed problem gives $\mathsf Z_-$
 and $\mathsf P_-$ with $\mathsf E_{\mathrm R}\mathsf Z_-=\mathsf E_{\mathrm L}\mathsf Z_-\mathsf P_-$. The
 whole Schur subspace keeps multiple and nonnormal multipliers. A change of
-basis $\mathsf Z_\pm\mapsto\mathsf Z_\pm U$ only conjugates $\mathsf P_\pm$. The solver
-rejects the frequency, and reports this, if $\mathsf E_{\mathrm L}-\zeta\mathsf E_{\mathrm R}$ is
+basis $\mathsf Z_\pm\mapsto\mathsf Z_\pm U$ only conjugates $\mathsf P_\pm$. In finite precision we check the QZ residual, the number of selected
+multipliers and their separation from the unit circle. The solver
+rejects a frequency if $\mathsf E_{\mathrm L}-\zeta\mathsf E_{\mathrm R}$ is
 numerically singular for all $\zeta$, if the cluster size is not $K$, or if a multiplier lies in a
 tolerance annulus around the circle.

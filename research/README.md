@@ -1,5 +1,7 @@
 # Research workspace
 
+2026-11-08，[[research/explorations/bie-dtn-2026-11-08/README|周期波导 BIE／DtN 查新归档]] 收录 Sol 的八项调查与原文复核。在已知文献调研范围内，BIE 特征值求解器这一块未找到尚未解决的有价值问题，未发现值得为固定 Bloch 参数导模计算单独立项的问题；[[draft/bie-solver/README|bie-solver]] 稿不再作为独立论文推进。
+
 2026-10-30，[[research/weekly-literature/README|每周文献调研]] 已归档 10 月五批共 13 篇；公开全文、版本与校验信息、逐篇方法/创新性评估均已整理，跨批结论见 [[research/weekly-literature/synthesis]]。这是限定文献范围的研究记录，不提升任何当前数值结果的认证等级，也不建立统一主线。
 
 2026-10-27，[[research/projects/eig-apost/implementation/i9/review-9-6a#9. R2：D2 run-03 实际结果审查|I9.6a D2实际审查R2]]：**REVISE，上界资格尚未闭合**。D1空成功出口已补；bulk近整矩形替代的复缺陷矩误差未受控，机器上界标签须收窄。主层报告 $R_k=1.42815\times10^{-4}$，源矩包围占半径91.76%，实用目标未达且不能归因为candidate变差。正式墙钟302.5766秒、MATLAB子树采样峰值2.713GB；目标流程总成本下降未建立。最小后续为冻结场的bulk资格及F/P评价收紧，未授权执行。本轮仅更新审查/入口，未修改理论、设计、实验或运行数值计算。问题见 [[research/projects/eig-apost/implementation/i9/README#I9.6 后验估计问题账目|I9.6账目]]；以下D2“未运行”等表述保留当时历史范围。

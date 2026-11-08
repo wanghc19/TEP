@@ -1,104 +1,84 @@
-% Section 1: problem, observed failures, contributions (positioning B, chosen
-% by the user on 2026-11-07: accuracy and cost; Wood points as a limitation).
+% BIE = boundary integral equation.
 \section{Introduction}\label{sec:intro}
-A line defect in a two-dimensional photonic crystal breaks the periodicity
-across the defect and keeps it along the defect. At frequencies in a band gap
-of the surrounding crystal the defect may carry waves that propagate along it
-and decay across it, the \emph{guided modes}
-\cite{JoannopoulosJohnsonWinnMeade2008}. For a fixed Bloch wavenumber $\beta$
-along the defect they are isolated eigenvalues of a self-adjoint operator on
-an unbounded strip, inside a gap of its essential spectrum \cite{Fliss2013}.
-This paper is about computing them when the two sides of the defect are
-periodic media with possibly different periods and rods, and the medium is
-piecewise constant.
+Moving an artificial vertical boundary inside a homogeneous strip of a
+photonic crystal leaves all rods in place. It can nevertheless move a pole
+of the half-strip Dirichlet-to-Neumann (DtN) map directly onto a guided
+wavenumber. A solver that locates zeros of a DtN determinant then faces two
+distinct problems. An isolated pole can give a small ratio of extreme
+singular values and pass a numerical acceptance test. If the pole and a
+mode coincide, division by the singular Dirichlet trace can cancel the
+zero itself. In the latter case even an exact evaluation of the reduced
+determinant need not reveal the mode.
 
-Supercell methods replace the strip by a periodic one and incur a model error
-that grows as the mode becomes less localized
-\cite{Fliss2013,KlindworthSchmidtFliss2014}. Exact boundary conditions for
-periodic half guides can be built from cell problems \cite{JolyLiFliss2006}.
-With them the guided-mode problem reduces to a bounded neighborhood of the
-defect, at the price of a nonlinear eigenvalue problem in $k$
-\cite{Fliss2013}. High-order finite elements, Robin-to-Robin variants, and
-dispersion-curve tracing followed
-\cite{KlindworthSchmidtFliss2014,FlissKlindworthSchmidt2015,Klindworth2015};
-related cell reductions are in \cite{HuangLuLi2007,YuanLu2007}. Boundary
-integral equations discretize only the interfaces and, with quasi-periodic
-Green functions, reach high order with few unknowns
-\cite{Linton1998,BarnettGreengard2010,ChoBarnett2015,HaoBarnettMartinssonYoung2014}.
-Multipole and fictitious-source methods compute line-defect modes of cylinder
-arrays as zeros of a determinant, with Bloch-mode scattering matrices for the
-periodic parts \cite{BottenEtAl2004,BottenEtAl2006}.
+We consider a line defect between periodic dielectric half-strips. They
+share the period along the defect and may differ in the transverse period,
+rod shape and material. At fixed tangential Bloch wavenumber, an eigenvalue
+in a common gap of the surrounding crystals has a field decaying into
+both half-strips \cite{Fliss2013,KlindworthSchmidtFliss2014}. Our aim is to
+compute such wavenumbers and fields by discretizing the material interfaces.
+The method uses a boundary integral equation (BIE) for the response of a
+cell, Rayleigh amplitudes to exchange fields between adjacent cells, and
+Floquet modes to represent decay at infinity.
 
-A boundary integral solver for this problem couples three pieces. In the
-homogeneous gaps between rows of rods the field is expanded in Rayleigh
-orders. Each cell, the defect cell or a periodicity cell, is solved by a boundary integral equation
-with a quasi-periodic Green function, which maps incoming to outgoing
-Rayleigh amplitudes. The periodic half-strips are closed by the decaying Floquet solutions of
-their periodicity cells. The guided-mode wavenumbers are then the zeros of
-a determinant in $k$. Each piece is standard. The difficulty is that the
-determinant can be singular, or vanish, at wavenumbers where the guided-mode
-problem is perfectly regular. In a failure study of such a solver, on the
-examples of \cref{sec:experiments}, we observed three effects.
-\begin{enumerate}
-\item \emph{Dirichlet poles.} The closure through a Dirichlet-to-Neumann matrix of
-  the half-strip divides by a Dirichlet block. Moving an artificial boundary of the
-  defect cell inside the homogeneous gap, which changes nothing physical, created a zero of this block
-  $0.0022$ below a guided mode. The search accepted the resulting pole as a
-  root.
-\item \emph{Rayleigh truncation.} The number of retained orders controls the
-  accuracy, but the usual argument, that evanescent orders are small at the
-  artificial boundary, explains only the outgoing half of the truncation. It
-  gives no rule for $M$ and suggests, wrongly, that the result depends on
-  where the artificial boundary lies.
-\item \emph{Wood points.} Guided branches cross the line $k=|\beta_m|$, where a
-  Rayleigh order changes from propagating to evanescent. At this point the
-  computation in the half-strips failed, and within $10^{-4}$ of it the determinant search
-  did not finish in its time budget, although the roots it did return were
-  still accurate.
-\end{enumerate}
+\paragraph{Transparent boundaries and existing solvers}
+Cell-based transparent conditions reduce the unbounded problem to the
+defect region \cite{JolyLiFliss2006,Fliss2013}.
+Klindworth, Schmidt and Fliss \cite{KlindworthSchmidtFliss2014} treated
+different periodic claddings by finite elements. Fliss, Klindworth and
+Schmidt \cite{FlissKlindworthSchmidt2015} distinguished global half-strip
+Dirichlet exceptional values from local cell exceptional values. Their
+Robin-to-Robin (RtR) formulation handles these values through Robin data.
+It provides a natural comparison for a method that already has access to
+both components of the trace. In the present formulation the full
+half-strip data are available directly from the decaying Floquet subspace.
+We retain its coefficients and impose membership in that subspace on each
+side of the defect.
 
-This paper builds a boundary integral solver for the task of
-\cref{sec:task} and makes it reliable against the first two effects. Its
-contributions are the following.
-\begin{itemize}
-\item \emph{A pole-free closure.} We close the defect cell by a bordered
-  system in its densities and the coefficients of the decaying subspaces of
-  the half-strips (\cref{thm:bordered}). Its kernel is exactly the space of
-  discrete guided modes, with no assumption on the Dirichlet blocks. A
-  determinant identity shows that the Dirichlet-to-Neumann closure is this
-  determinant divided by $\det\mathsf D_-\det\mathsf D_+$, which explains the observed
-  pole. With an analytic frame for these subspaces the bordered determinant
-  can be interpolated in $k$, and roots are accepted by a physical field test
-  rather than a singular-value ratio.
-\item \emph{The decaying subspaces.} The decaying subspace of a truncated
-  half-strip has dimension exactly $K$ in a gap, because the truncated cell conserves flux
-  (\cref{lem:dimension}). A computable criterion gives the same count for the
-  computed, slightly non-conservative cell (\cref{prop:criterion}).
-\item \emph{The Rayleigh order.} The error of the guided-mode wavenumber
-  caused by the truncation is at most $C\ee^{-q_Mw_{\min}}$, where $w_{\min}$ is
-  the smallest gap width and $C$ does not depend on the position of the
-  artificial boundaries (\cref{thm:root-error}). This gives the scaling
-  $M\approx d\log(1/\tau)/(2\pi w_{\min})$ and explains why moving an
-  artificial boundary changes no root.
-\item \emph{Accuracy and cost.} On three examples, including the W3 guide of
-  \cite{BottenEtAl2006}, the solver reproduces published values, its roots agree to
-  about $10^{-15}$ under refinement, and we compare its cost with high-order
-  finite elements and Dirichlet-to-Neumann closure on the same task.
-\end{itemize}
-We do not remove the third effect. \Cref{sec:wood} shows that at a Wood point
-the cell representation itself, not only the coordinates on the artificial
-boundaries, is singular,
-and describes how the search excludes a small band around each Wood point
-and reports it. Each ingredient of the solver is standard; the contribution
-is their combination for two different periodic half-strips, and the analysis that
-makes the closure and the choice of $M$ safe.
+\paragraph{Scattering matrices and boundary integral determinants}
+Gralak, Enoch and Tayeb \cite{GralakEnochTayeb2002} compute Bloch modes
+from a layer scattering matrix. Botten et al.\ \cite[eq.~(38)]{BottenEtAl2004}
+write continuity at an interface between two photonic crystals as equality
+of the complete plane-wave states expanded in the two Bloch bases. They
+subsequently derived a determinant equation for defect modes in cylinder
+arrays \cite{BottenEtAl2006}. Their W3 guide supplies an external benchmark
+below. In a BIE for forced scattering by periodic layers, Cho and Barnett
+\cite[eqs.~(47) and~(53)]{ChoBarnett2015} retain the outgoing Rayleigh
+amplitudes together with the layer densities and match the field and its
+normal derivative. Here the exterior states are the decaying Floquet
+subspaces of periodic half-strips.
+Barnett and Greengard \cite{BarnettGreengard2010} showed how a change of
+integral representation avoids empty-cell resonances in a doubly periodic
+band-structure calculation. Zhao and Barnett \cite{ZhaoBarnett2015} used an
+analytic Fredholm determinant and polynomial interpolation to compute
+Dirichlet eigenvalues of a bounded domain. Here the representation
+singularity arises when the decaying half-strip data are written as a graph
+over their Dirichlet traces. For a direct subspace determinant, orthonormal bases returned by independent
+generalized Schur decompositions need not vary continuously with frequency.
 
-We give no guaranteed error bounds for the computed wavenumbers; the
-accuracies reported in \cref{sec:experiments} are error estimates.
+\paragraph{The discrete guided-mode problem}
+We apply direct modal matching to the defect-cell BIE and the two decaying
+Floquet subspaces. We prove the dimension count for the flux-conserving
+truncated cell and identify the kernel of the resulting bordered matrix.
+For this discretization, block elimination gives the precise relation
+between the full matching determinant and the DtN determinant. The factors include the center density block, both Dirichlet
+trace blocks and the Rayleigh-to-Cauchy coordinate changes. Their orders
+explain when Dirichlet elimination can obscure a mode in this solver.
+A locally normalized basis then yields an analytic
+determinant wherever the cell assembly and the subspace separation are
+regular. The same trace data also give the discrete RtR formulation.
 
-\Cref{sec:model} states the model and the computational task,
-\cref{sec:discretization} the cell discretization, \cref{sec:leads} the
-decaying subspaces of the half-strips, \cref{sec:closure} the closure,
-\cref{sec:truncation} the choice of the Rayleigh order, \cref{sec:wood} Wood
-points, and \cref{sec:experiments} the experiments. The appendix contains the
-proofs of \cref{prop:criterion,thm:root-error}.
+To test the mechanism we compute the same waveguide with the artificial
+vertical boundary in three positions. One position puts a Dirichlet pole
+near the mode and another aligns them to numerical precision. We compare
+the returned frequencies, the status of the whole search window and jumps
+of the reconstructed fields. An empty defect between unequal-period
+half-strips, the W3 guide and a finite element refinement provide separate
+checks. The mathematical kernel statements concern the discrete matching
+equations. The experiments assess how their roots approximate physical
+wavenumbers.
+
+\Cref{sec:model} defines the waveguide and the frequency window.
+\Cref{sec:discretization,sec:leads} construct the cell data and the decaying
+spaces. \Cref{sec:closure} derives the bordered determinant and its relation
+to the DtN and RtR descriptions. \Cref{sec:algorithm,sec:experiments}
+describe the search, field reconstruction and numerical tests.

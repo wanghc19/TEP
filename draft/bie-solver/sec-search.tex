@@ -1,0 +1,140 @@
+% QZ = generalized Schur decomposition. Search and field reconstruction.
+\section{Determinant search and field reconstruction}\label{sec:algorithm}
+The zeros of the bordered determinant are independent of the bases used
+at a single frequency. Interpolating that determinant across a frequency
+interval also requires a consistent choice of basis throughout the interval.
+\subsection{An analytic frame}\label{sec:frame}
+The orthonormal QZ basis $\mathsf Z_\pm(k)$ is defined only up to a
+$k$-dependent unitary factor, so $\det\mathsf H$ with the raw basis need not be
+continuous in $k$. An analytic frame exists whenever $\mathsf E_{\mathrm L}-\zeta\mathsf E_{\mathrm R}$
+depends holomorphically on $k$ and is invertible on a fixed contour $\Gamma$, for
+example the unit circle in a gap. For the right half-strip the Riesz projector
+\begin{equation}\label{eq:riesz}
+  \mathscr P(k)=\frac1{2\pi\ii}\oint_\Gamma\bigl(\zeta\mathsf E_{\mathrm R}(k)-\mathsf E_{\mathrm L}(k)\bigr)^{-1}
+  \mathsf E_{\mathrm R}(k)\,\dd\zeta
+\end{equation}
+projects onto the decaying subspace and is holomorphic. For the left half-strip the two pencil blocks are interchanged. For a fixed
+reference matrix $\mathsf Z_0\in\CC^{2K\times K}$, for instance
+$\mathsf Z_0=\mathsf Z_\pm(k_0)$, the matrix
+\begin{equation}\label{eq:frame}
+  \widehat{\mathsf Z}_\pm(k)=\mathsf Z_\pm(k)\bigl(\mathsf Z_0^*\mathsf Z_\pm(k)\bigr)^{-1}
+\end{equation}
+is independent of the basis chosen at each $k$. Near any $k_1$, the columns
+of $F(k)=\mathscr P(k)\mathsf Z_\pm(k_1)$ form a holomorphic basis of the
+decaying subspace, and \eqref{eq:frame} equals $F(k)(\mathsf Z_0^*F(k))^{-1}$,
+since two bases differ by an invertible right factor that cancels. Hence
+$\widehat{\mathsf Z}_\pm$ is holomorphic wherever the overlap $\mathsf Z_0^*\mathsf Z_\pm(k)$
+is invertible. (The global choice $F=\mathscr P\mathsf Z_0$ does not suffice:
+$\mathscr P$ is an oblique projector, and $\mathscr P(k)\mathsf Z_0$ can lose rank
+while the overlap stays well conditioned.) We never evaluate \eqref{eq:riesz}:
+\eqref{eq:frame} is computed from the QZ basis. A different holomorphic frame
+multiplies $\det\mathsf H$ by a nonvanishing holomorphic factor, so the zeros and
+their orders are unchanged.
+
+The search works on panels of the window. On each panel, $\mathsf Z_0$ is the
+QZ basis at the midpoint. The overlap is accepted if
+$\sigma_{\min}(\mathsf Z_0^*\mathsf Z_\pm)\ge0.05$ and its condition number is at most
+$20$ at all nodes; otherwise the panel is split. Fixed row and column scales,
+computed at the midpoint, are applied to $\mathsf H$ on the whole panel.
+
+\begin{remark}[analytic dependence of the assembly]\label{rem:holomorphy}
+\Cref{thm:bordered}(3) and the frame need holomorphic matrix entries, but the
+code evaluates the cell matrices only at real $k$. It suffices that the exact
+discrete assembly is real-analytic on each panel: a real-analytic function on
+a closed interval extends holomorphically to a complex neighborhood, with the
+same zeros and orders on the interval. This holds on a closed panel, free of
+Wood points, under the following conditions.
+(i) The proxy matrix has constant exact rank near the panel; then the
+minimum-norm fit is real-analytic. Full column rank is not available: the
+proxy box of the code contains one corner point twice, so two columns
+coincide for all $k$.
+(ii) Every density solve in a periodicity cell and every row-joining solve used in the
+assembly is nonsingular on the panel.
+(iii) For each half-strip, $\mathsf E_{\mathrm L}-\zeta\mathsf E_{\mathrm R}$ is invertible on
+the unit circle on the whole panel,
+with $K$ multipliers inside.
+(iv) The overlaps of \eqref{eq:frame} are invertible on the panel, and the
+fixed scales are finite and nonzero.
+The search uses floating-point samples. These carry errors from the numerical
+rank decision of the least-squares solver, fast summation and rounding, and a
+fixed numerical-rank threshold can jump inside a panel even when the exact
+rank is constant. The tail and off-grid tests of \cref{sec:search} are
+therefore empirical acceptance tests, valid only when the sample errors are
+below their tolerances.
+\end{remark}
+
+
+\subsection{Locating candidates and checking their fields}\label{sec:search}
+On each panel use the scaled determinant
+\[
+ f(k)=\det\!\left(S_{\rm row}\,\mathsf H(k)\,S_{\rm col}\right),
+\]
+with the local frames from \eqref{eq:frame}. The row and column scales are
+diagonal and fixed at the panel midpoint. We compute the log modulus and
+phase by LU factorization. Subtracting a common log modulus from the node
+values rescales the entire interpolant by one positive factor.
+
+We interpolate $f$ on Chebyshev--Lobatto grids of degrees $8,16,32,64$.
+The three trailing coefficients must be smaller than $10^{-10}$ times
+the largest, and errors at two off-grid points must be below $10^{-9}$
+relative to the largest sampled modulus. An unresolved panel is bisected.
+Real or nearly real roots of the interpolating polynomial are obtained
+from its colleague matrix \cite{Boyd2002,ZhaoBarnett2015}. A near-zero
+sample at an interpolation node remains in the interpolant. Agreement
+of two nearby slopes allows that node to supply an additional seed.
+Each seed is polished by real Newton steps; a panel that reaches the
+subdivision or time limit is reported as unresolved.
+
+At a candidate $\widehat k$, take the right singular vector associated
+with the smallest singular value of the bordered matrix in the raw
+orthonormal frames, before the panel row and column scaling. Normalize
+the incident-amplitude block to unit norm. The center density and incident
+waves give the defect-cell field by \eqref{eq:cell-rep}; on half-strip
+$s$, propagate the wall states by $\mathsf Z_s\mathsf P_s^j c_s$,
+using the reversed pencil on the left. The determinant search and the
+field reconstruction therefore use equivalent coordinates for the
+decaying spaces.
+
+Measure the jumps independently of the assembly nodes. On the two
+artificial vertical boundaries and the two neighboring half-strip walls,
+let $[u]_{ij}$ and $[\partial_xu]_{ij}$ be the differences between the
+fields on the adjoining cells. Index the four walls by $i$ and the $J=40$
+shifted points on each wall by $j$. The reported wall error is
+\[
+ e_{\rm wall}^2=\frac{1}{4J}\sum_{i=1}^4\sum_{j=1}^J
+ \left(|[u]_{ij}|^2+|[\partial_xu]_{ij}|^2\right).
+\]
+For the material interfaces in the defect cell and the two adjacent
+periodicity cells, interpolate the densities to twice the original
+node count and evaluate at the interleaved nodes. With arclength weights
+for the interleaved grid, the discrete material norm approximates
+\[
+ e_{\rm mat}^2\simeq\sum_{\partial\Omega}
+ \int_{\partial\Omega}\!\left(|[u]|^2+|[\partial_\nu u]|^2\right)\dd s .
+\]
+These definitions use the length scale $d=1$ of the numerical examples.
+A frequency must recur on two discretizations within $10^{-8}$. For
+both $e=e_{\rm wall}$ and $e=e_{\rm mat}$, the acceptance rule is
+\[
+ e_{\rm coarse}<0.005,\qquad e_{\rm fine}<0.005,\qquad
+ e_{\rm fine}\le\max(0.8e_{\rm coarse},10^{-11}).
+\]
+The field checks test a reconstructed candidate; finite
+frequency sampling leaves open the possibility of unresolved close or
+multiple roots.
+
+\subsection{Windows near a Wood point}\label{sec:wood}
+When $\gamma_m=0$, the two traveling-wave amplitudes no longer give
+independent Cauchy data and both the Green function and the extraction
+kernels contain $1/\gamma_m$. This happens upstream of the closure.
+The guarded search splits the window at each known $k_W$ and excludes
+$|k-k_W|<\delta$. On adjacent panels it may interpolate in
+$\operatorname{sign}(k-k_W)\sqrt{|k-k_W|}$. The output lists every
+excluded or unresolved interval so that a missing branch there can be
+distinguished from a completed search on the retained interval.
+In the Example~1 and W3 tests, $\delta=10^{-3}$ allowed all tested searches
+to finish. In Example~1, about $1.2\times10^{-4}$ above a Wood point, the
+two density grids agreed to $3.8\times10^{-12}$ while improving the Green
+evaluation at fixed fine discretization moved the root by
+$6.3\times10^{-11}$. A shared proxy approximation can therefore limit two-grid
+agreement as an accuracy test near a Wood point.

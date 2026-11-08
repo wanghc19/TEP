@@ -1,12 +1,9 @@
-% Section 5: closure at the artificial boundaries. DtN closure and its poles; bordered closure
-% (Theorem B of research/projects/bie-enclosure/theory/port-subspace.md,
-% reviewed 12/12); analytic frame; real-frequency test; root search and
-% acceptance (implemented in test/bie-bound/pole-free-v1/).
+% Bordered BIE closure and alternative coordinates for the same port states.
 \section{Closure without Dirichlet poles}\label{sec:closure}
 
 \subsection{Discrete guided modes}\label{sec:discrete-modes}
 A guided mode restricted to the defect cell has data of decaying
-half-strip solutions on its artificial boundaries \cite[Thm.~4.5]{Fliss2013}. The discrete counterpart is
+half-strip solutions on its artificial vertical boundaries \cite[Thm.~4.5]{Fliss2013}. The discrete counterpart is
 the following.
 
 \begin{definition}\label{def:discrete-mode}
@@ -23,7 +20,7 @@ at which \eqref{eq:nep} has a solution.
 
 \subsection{The Dirichlet-to-Neumann closure and its poles}\label{sec:dtn}
 The usual closure eliminates the half-strip coordinates through
-Dirichlet-to-Neumann matrices. Take the normals of both artificial
+Dirichlet-to-Neumann matrices. Take the normals of both artificial vertical
 boundaries pointing into the half-strips, and write the Cauchy data of the decaying
 subspaces in value and derivative blocks:
 \begin{equation}\label{eq:dtn}
@@ -31,12 +28,17 @@ subspaces in value and derivative blocks:
   \qquad
   \Lambda_\pm=\mathsf N_\pm\mathsf D_\pm^{-1}.
 \end{equation}
-If the defect-cell density block $A_\eta$ is invertible, then
-$H_c=\left[\begin{smallmatrix}-A_\eta^{-1}B_0\\ I\end{smallmatrix}\right]$ parametrizes
-$\ker\mathsf A_0$ by the incident amplitudes $\mathsf a=(a^-_0;b^+_0)$. Let
-$\mathsf T_0$ and $\mathsf N_0$ be the values and derivatives of the defect-cell field
-on both artificial boundaries, $\mathsf T_0=[\,[I,I]\mathsf Y_-;[I,I]\mathsf Y_+\,]H_c$ and similarly
-for $\mathsf N_0$. The closure is
+Write $\mathsf a=(a^-_0;b^+_0)$ for the incident amplitudes.
+When the center density block $A_\eta$ is invertible,
+\[
+ H_c=\begin{bmatrix}-A_\eta^{-1}B_0\\ I\end{bmatrix},\qquad
+ \xi=H_c\mathsf a
+\]
+parametrizes $\ker\mathsf A_0$. Let $\mathsf T_0$ and $\mathsf N_0$ map
+$\mathsf a$ to the stacked values and outward normal derivatives at the
+two artificial vertical boundaries. Their $s$ blocks are the upper and
+lower block rows of $\mathsf C_s\mathsf Y_sH_c$, respectively. Eliminating
+the half-strip coefficients gives
 \begin{equation}\label{eq:port-matrix}
   \mathsf A(k)=\mathsf N_0(k)-\diag\bigl(\Lambda_-(k),\Lambda_+(k)\bigr)\mathsf T_0(k)
   \in\CC^{2K\times2K},\qquad \det\mathsf A(k)=0 .
@@ -44,19 +46,15 @@ for $\mathsf N_0$. The closure is
 This is the discrete analogue of the transparent condition of
 \cite{Fliss2013}. It needs $\mathsf D_\pm$ invertible. The matrix $\mathsf D_\pm$
 is singular exactly when a decaying half-strip solution has zero value, in the
-retained orders, on the artificial boundary. This is the discrete form of a
+retained orders, on the artificial vertical boundary. This is the discrete form of a
 Dirichlet exceptional value \cite[Thm.~4.1]{Fliss2013}. Its position depends
-on where the artificial boundary sits in its gap strip, while the guided modes do not.
+on where the artificial vertical boundary sits in its gap strip, while the guided modes do not.
 
-\Cref{thm:bordered} below shows that $\Lambda_\pm$ then has a genuine pole.
-The determinant $\det\mathsf A$ has the factor $1/\det\mathsf D_\pm$, and zeros and
-poles may cancel. Both failures of \cref{sec:task} occur in practice. In
-example 1 of \cref{sec:experiments}, moving the right artificial boundary by $0.276$ puts a
-pole $0.0022$ below the guided mode. There the scaled singular-value ratio
-of $\mathsf A$ is $4.5\times10^{-16}$, because $\sigma_{\max}$ grows to
-$2\times10^{13}$, and a ratio-based acceptance test accepts the pole as a
-root. Moving it by $0.277$ puts the pole on the mode, and the search
-fails.
+This loss of invertibility has two different signatures in a root search.
+Near an isolated pole one large singular value can make a normalized
+singular-value ratio small. At a coincident pole and mode, cancellation can
+remove the zero of the scalar determinant. We now factor the determinant
+to distinguish the two mechanisms.
 
 \subsection{Bordered closure}\label{sec:bordered}
 We keep the half-strip coordinates as unknowns. Let
@@ -75,7 +73,7 @@ subspace has dimension $K$ (\cref{lem:dimension}).
 Let $\mathsf Z_\pm$ have full column rank $K$.
 \begin{enumerate}
 \item The projection $(\xi;c_-;c_+)\mapsto\xi$ is a linear isomorphism from
-  $\ker\mathsf H(k)$ onto the discrete guided modes \eqref{eq:nep} at $k$. In
+  $\ker\mathsf H(k)$ onto the solution space of \eqref{eq:nep} at $k$. In
   particular their dimensions agree. No condition on $\mathsf D_\pm$ or on $A_\eta$
   is needed.
 \item If $k$ is not a Wood point and $A_\eta$, $\mathsf D_-$, $\mathsf D_+$ are
@@ -84,10 +82,11 @@ Let $\mathsf Z_\pm$ have full column rank $K$.
     (-1)^{K}\det\mathsf C_-\det\mathsf C_+\,\det\mathsf H
     =\det A_\eta\,\det\mathsf D_-\,\det\mathsf D_+\,\det\mathsf A .
   \end{equation}
-\item Let the entries of $\mathsf H$ be holomorphic near $k_*$ in a frame of the
+\item Suppose $k_*$ is away from Wood points, and the cell and trace blocks
+  are holomorphic near $k_*$ in a frame of the
   kind constructed in \cref{sec:frame}. If $\det\mathsf D_\pm$ has an isolated zero
-  at $k_*$, then $\Lambda_\pm$ has a pole there. If both sides of
-  \eqref{eq:det-identity} are not identically zero,
+  at $k_*$, then $\Lambda_\pm$ has a pole there. If $\det A_\eta$, $\det\mathsf D_-$,
+  $\det\mathsf D_+$ and $\det\mathsf H$ are not identically zero there, then
   \begin{equation}\label{eq:order}
     \ord_{k_*}\det\mathsf H=\ord_{k_*}\det A_\eta+\ord_{k_*}\det\mathsf D_-
      +\ord_{k_*}\det\mathsf D_++\ord_{k_*}\det\mathsf A ,
@@ -102,7 +101,7 @@ Given $\xi$ with \eqref{eq:nep}, full column rank gives unique $c_\pm$.
 Conversely, $\xi=0$ forces $\mathsf Z_\pm c_\pm=0$ and hence $c_\pm=0$.
 
 (2) Multiply the two boundary block rows by $\mathsf C_-$ and $\mathsf C_+$. Then swap the
-derivative rows of the left artificial boundary with the value rows of the
+derivative rows of the left artificial vertical boundary with the value rows of the
 right one, a
 permutation of sign $(-1)^{K^2}=(-1)^K$. The matrix becomes
 $\left[\begin{smallmatrix}\mathsf A_0&0\\ T^c&-D\\ N^c&-N\end{smallmatrix}\right]$ with
@@ -120,113 +119,125 @@ The order relation is \eqref{eq:det-identity} read as an identity of
 meromorphic functions. The factors $\det\mathsf C_\pm$ do not vanish.
 \end{proof}
 
-The theorem explains both failures. The DtN determinant is the bordered
-determinant divided by $\det\mathsf D_-\det\mathsf D_+$ (and by $\det A_\eta$). Its
-poles are artifacts of the coordinates, while the bordered determinant has
-none. At a Dirichlet exceptional value that coincides with a mode, $\det\mathsf A$
-can be finite and nonzero although $\det\mathsf H$ vanishes. The scalar example
-with half-strip column $(t,1)^T$ and defect-cell column $(0,1)^T$, $t=k-k_*$, has
-$\Lambda=1/t$ and $\mathsf A\equiv1$, while $\det\mathsf H=t$. The same
-factorization with a nonsingular Robin block in place of $\mathsf D_\pm$ gives
-the Robin-to-Robin closure of \cite{FlissKlindworthSchmidt2015}. We do not
-compare the two closures numerically in this paper.
+At a zero of $\det\mathsf D_s$ the matrix $\Lambda_s$ has a pole, but
+$\det\mathsf A$ need not have a pole of the same order. If a simple zero
+of $\det\mathsf H$ and a simple zero of one $\det\mathsf D_s$ coincide,
+with all other factors regular and nonzero, \eqref{eq:order} gives
+$\ord_{k_*}\det\mathsf A=0$. A scalar example in value--derivative
+coordinates makes the cancellation explicit. Take the half-strip column
+$(t,1)^T$ and defect column $(0,1)^T$, with $t=k-k_*$. Direct matching
+has determinant $t$. Dirichlet elimination gives $\Lambda=1/t$ and the
+reduced residual equals $1$ for every $t\ne0$.
+Changing a numerical acceptance threshold cannot recover a zero from this
+constant function.
 
-\subsection{An analytic frame}\label{sec:frame}
-The orthonormal QZ basis $\mathsf Z_\pm(k)$ is defined only up to a
-$k$-dependent unitary factor, so $\det\mathsf H$ with the raw basis need not be
-continuous in $k$. An analytic frame exists whenever $\mathsf E_{\mathrm L}-\zeta\mathsf E_{\mathrm R}$
-depends holomorphically on $k$ and is invertible on a fixed contour $\Gamma$, for
-example the unit circle in a gap. The Riesz projector
-\begin{equation}\label{eq:riesz}
-  \mathscr P(k)=\frac1{2\pi\ii}\oint_\Gamma\bigl(\zeta\mathsf E_{\mathrm R}(k)-\mathsf E_{\mathrm L}(k)\bigr)^{-1}
-  \mathsf E_{\mathrm R}(k)\,\dd\zeta
+\paragraph{Scope of the root correspondence.}
+For fixed cell matrices the theorem is a statement about all coefficient
+vectors, including when the center density block is singular. The discrete
+field reconstruction, the approximation of the cell responses and the
+localization of candidate frequencies are separate steps. A convergence
+theorem for numerical roots of the BIE would require control of these
+approximations as the density and proxy discretizations are refined.
+
+\todo{Proof of local root convergence if a fully discrete convergence
+claim is added. At fixed $M$, work near a simple isolated root of the
+exact-cell truncated problem. Establish locally uniform convergence of
+the cell response and separated Floquet subspaces, pass to a common
+finite-dimensional analytic matching matrix, and use a contour enclosing
+just that root. Identify any center-block invertibility and reality
+assumptions needed for the conclusion.}
+
+\subsection{Moving an artificial vertical boundary}\label{sec:boundary-shift}
+The experiment in \cref{sec:exp-pole} changes the position of a boundary
+while keeping the rods, material coefficients and Rayleigh orders fixed.
+For this comparison it is useful to identify exactly which part of the
+finite-order matching problem is invariant.
+
+\begin{lemma}[change of Rayleigh reference lines]\label{lem:shift}
+Fix $M$ and a non-Wood frequency. Move one or both artificial vertical
+boundaries by $\ell_-,\ell_+$ within their respective homogeneous strips, with each translated
+periodicity-cell wall also remaining in its homogeneous strip.
+Use exact propagation of the retained orders and express both adjacent
+cell fields at the new reference lines, with the same material-interface
+discretization and cell response. Then the two bordered kernels are
+linearly isomorphic. In particular the set of discrete root frequencies
+and the kernel dimension at each frequency are unchanged wherever these
+conditions hold.
+\end{lemma}
+
+\begin{proof}
+Define
+\[
+ T_s=\diag(\mathsf E(\ell_s),\mathsf E(-\ell_s)),\qquad
+ U=\diag(I_n,\mathsf E(\ell_-),\mathsf E(-\ell_+)).
+\]
+All diagonal factors are invertible. In the defect coordinates,
+$\xi'=U\xi$ describes the same incident field and the same density by
+\eqref{eq:rayleigh}. Hence $\mathsf A_0'U=\mathsf A_0$. At the two
+boundaries \eqref{eq:phase} gives $\mathsf Y'_sU=T_s\mathsf Y_s$.
+In the half-strip, translating the reference lines of successive periods
+transports each admissible wall sequence by the same $T_s$. The sequence
+is square summable exactly when its transported sequence is, since $T_s$
+and $T_s^{-1}$ are fixed finite matrices. Thus a basis of the new
+decaying space satisfies $\mathsf Z'_s=T_s\mathsf Z_sV_s$ for an invertible
+matrix $V_s$. The rows of \eqref{eq:bordered} now give the isomorphism
+\[
+ (\xi,c_-,c_+)\longmapsto(U\xi,V_-^{-1}c_-,V_+^{-1}c_+).
+\]
+\end{proof}
+
+The Dirichlet projection of the transported basis is $[I,I]T_s\mathsf Z_s$.
+Its rank can change as $\ell_s$ varies. Nor are the transported singular
+values invariant: an evanescent order contributes factors
+$\ee^{\mp\kappa_m\ell_s}$ to $T_s$. The lemma concerns exact re-expression
+of the retained data. Recomputing cell matrices and bases in floating
+point introduces further errors, measured in \cref{sec:exp-pole}.
+
+\subsection{Relation to Robin-to-Robin closure}\label{sec:robin}
+The RtR transparent condition of \cite[Thm.~4.1]{FlissKlindworthSchmidt2015}
+suggests using the value and derivative in a different pair of coordinates.
+Use the same normal for the center and half-strip traces at each
+artificial vertical boundary, pointing from the defect into that
+half-strip. For a pair $(u,v)$ consisting of the retained value and its
+normal derivative, use $v\pm\ii\alpha u$, with real $\alpha>0$ of dimension
+inverse length. The sign convention fixes which Robin datum is the input.
+
+\begin{corollary}[Robin coordinates]\label{cor:robin}
+At a real non-Wood frequency suppose $\mathsf Z_s$ has rank $K$ and its
+range is flux neutral, for $s=-,+$. The matrices
+\[
+ B_s^\pm=\mathsf N_s\pm\ii\alpha\mathsf D_s
+\]
+are invertible. The matching conditions on $\xi$ in \eqref{eq:nep} are
+equivalent to $\mathsf A_0\xi=0$ together with
+\begin{equation}\label{eq:robin-match}
+ v_s-\ii\alpha u_s=\mathcal R_s(v_s+\ii\alpha u_s),\qquad
+ \mathcal R_s=B_s^-(B_s^+)^{-1},\qquad
+ \binom{u_s}{v_s}=\mathsf C_s\mathsf Y_s\xi .
 \end{equation}
-projects onto the decaying subspace and is holomorphic. For a fixed
-reference matrix $\mathsf Z_0\in\CC^{2K\times K}$, for instance
-$\mathsf Z_0=\mathsf Z_\pm(k_0)$, the matrix
-\begin{equation}\label{eq:frame}
-  \widehat{\mathsf Z}_\pm(k)=\mathsf Z_\pm(k)\bigl(\mathsf Z_0^*\mathsf Z_\pm(k)\bigr)^{-1}
-\end{equation}
-is independent of the basis chosen at each $k$. Near any $k_1$, the columns
-of $F(k)=\mathscr P(k)\mathsf Z_\pm(k_1)$ form a holomorphic basis of the
-decaying subspace, and \eqref{eq:frame} equals $F(k)(\mathsf Z_0^*F(k))^{-1}$,
-since two bases differ by an invertible right factor that cancels. Hence
-$\widehat{\mathsf Z}_\pm$ is holomorphic wherever the overlap $\mathsf Z_0^*\mathsf Z_\pm(k)$
-is invertible. (The global choice $F=\mathscr P\mathsf Z_0$ does not suffice:
-$\mathscr P$ is an oblique projector, and $\mathscr P(k)\mathsf Z_0$ can lose rank
-while the overlap stays well conditioned.) We never evaluate \eqref{eq:riesz}:
-\eqref{eq:frame} is computed from the QZ basis. A different holomorphic frame
-multiplies $\det\mathsf H$ by a nonvanishing holomorphic factor, so the zeros and
-their orders are unchanged.
+\end{corollary}
 
-The search works on panels of the window. On each panel, $\mathsf Z_0$ is the
-QZ basis at the midpoint. The overlap is accepted if
-$\sigma_{\min}(\mathsf Z_0^*\mathsf Z_\pm)\ge0.05$ and its condition number is at most
-$20$ at all nodes; otherwise the panel is split. Fixed row and column scales,
-computed at the midpoint, are applied to $\mathsf H$ on the whole panel.
+\begin{proof}
+In the orthonormal Fourier basis the outward flux of the subspace data
+is $\Im((\mathsf D_sc)^*\mathsf N_sc)$. Its vanishing for every $c$
+makes $\mathsf D_s^*\mathsf N_s$ Hermitian by polarization. Consequently
+\[
+ \|B_s^\pm c\|^2=\|\mathsf N_sc\|^2+\alpha^2\|\mathsf D_sc\|^2.
+\]
+The stacked matrix $\mathsf C_s\mathsf Z_s$ has rank $K$, so the
+right-hand side is positive for $c\ne0$. If the port state equals
+$\mathsf Z_sc$, its two Robin data equal $B_s^\pm c$, giving
+\eqref{eq:robin-match}. Conversely set $c=(B_s^+)^{-1}(v_s+\ii\alpha u_s)$.
+The Robin equation gives the other datum. Taking the sum and difference
+recovers $v_s=\mathsf N_sc$ and $u_s=\mathsf D_sc$. Invertibility of
+$\mathsf C_s$ then yields $\mathsf Y_s\xi=\mathsf Z_sc$.
+\end{proof}
 
-\begin{remark}[analytic dependence of the assembly]\label{rem:holomorphy}
-\Cref{thm:bordered}(3) and the frame need holomorphic matrix entries, but the
-code evaluates the cell matrices only at real $k$. It suffices that the exact
-discrete assembly is real-analytic on each panel: a real-analytic function on
-a closed interval extends holomorphically to a complex neighborhood, with the
-same zeros and orders on the interval. This holds on a closed panel, free of
-Wood points, under the following conditions.
-(i) The proxy matrix has constant exact rank near the panel; then the
-minimum-norm fit is real-analytic. Full column rank is not available: the
-proxy box of the code contains one corner point twice, so two columns
-coincide for all $k$.
-(ii) Every density solve in a periodicity cell and every row-joining solve used in the
-assembly is nonsingular on the panel.
-(iii) For each half-strip, $\mathsf E_{\mathrm L}-\zeta\mathsf E_{\mathrm R}$ is invertible on
-the unit circle on the whole panel,
-with $K$ multipliers inside.
-(iv) The overlaps of \eqref{eq:frame} are invertible on the panel, and the
-fixed scales are finite and nonzero.
-The search uses floating-point samples. These carry errors from the numerical
-rank decision of the least-squares solver, fast summation and rounding, and a
-fixed numerical-rank threshold can jump inside a panel even when the exact
-rank is constant. The tail and off-grid tests of \cref{sec:search} are
-therefore empirical acceptance tests, valid only when the sample errors are
-below their tolerances.
-\end{remark}
-
-\subsection{A real-frequency test}\label{sec:projection-test}
-For an independent check at real $k$ we use orthogonal projections. If
-$\mathsf Z_\pm^*\mathsf Z_\pm=I$ and $A_\eta$ is invertible,
-\begin{equation}\label{eq:projection}
-  \sigma_{\min}\begin{bmatrix}(I-\mathsf Z_-\mathsf Z_-^*)\mathsf Y_-H_c\\
-                     (I-\mathsf Z_+\mathsf Z_+^*)\mathsf Y_+H_c\end{bmatrix}=0
-  \quad\Longleftrightarrow\quad \ker\mathsf H(k)\ne\{0\}.
-\end{equation}
-Without the elimination one stacks $\mathsf A_0$ on top of the projected rows.
-The left side is a nonnegative function with zeros exactly at the discrete
-modes and no poles. We sample $\sigma_{\min}$ of the bordered matrix on a
-dense grid to count roots independently of the determinant search.
-
-\subsection{Root search and acceptance}\label{sec:search}
-On each panel we interpolate $f(k)=\det(\text{scaled }\mathsf H(k))$, computed by
-LU as log modulus and phase. The interpolation uses Chebyshev--Lobatto nodes
-of degree $8,16,32,64$. A panel is resolved when the three trailing
-coefficients are below $10^{-10}$ relative to the largest, and two off-grid
-values agree to $10^{-9}$; otherwise it is bisected. Roots of the interpolant
-come from the colleague matrix \cite{Boyd2002,ZhaoBarnett2015} and are
-polished by real Newton steps.
-
-A root at an interpolation node makes one sample nearly zero and the log
-modulus very wide. Such a node is kept in the interpolant. It is proposed as
-a simple zero if the two one-sided slopes agree to two percent and the
-sampled value is small compared with step times slope.
-
-A proposed root $\widehat k$ is accepted by a physical test, not by a
-singular-value ratio. Take the null vector of $\mathsf H(\widehat k)$, normalize
-the incident amplitudes, and reconstruct the field in the defect cell and in the
-adjacent periodicity cells. Compute two jump norms at points off the quadrature
-nodes: the root-mean-square jump of the traces and $x$-derivatives across
-four walls, and the transmission residual on the rod boundaries. The root
-must be found on two discretizations (agreement $10^{-8}$). On both, the two
-jump norms must be below $0.005$, and on the finer one each must be at most
-$\max(0.8\times\text{coarse},10^{-11})$. These thresholds are empirical. Poles
-are excluded mainly by the structure of $\mathsf H$, not by this test: at the
-former pole of the offset case the smallest singular value of $\mathsf H$
-is $1.75\times10^{-3}$, against about $10^{-14}$ at roots.
+The bordered solver keeps the QZ coefficients as unknowns, so one null
+vector supplies the density and both decaying fields. The Robin formulation
+eliminates those coefficients, and its map is unchanged by a change of
+half-strip basis. Both avoid division by $\mathsf D_s$. For a numerically
+assembled cell the two linear systems still have corresponding kernels
+whenever $B_s^+$ is invertible; exact flux neutrality is a sufficient
+condition for that invertibility. Their conditioning and computational
+cost depend on the coordinates and the discretization.

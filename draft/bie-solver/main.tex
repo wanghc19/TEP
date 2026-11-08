@@ -1,11 +1,9 @@
-% SIAM draft of the BIE guided-mode solver paper (split from draft/bie-siam on
-% 2026-11-07). First draft, positioning B (accuracy and cost; Wood points as a
-% limitation with a fallback). Remaining TODOs: see README.md.
-% Build: latexmk main.tex (latexmkrc adds the SIAM class directory).
+% BIE = boundary integral equation. Build with latexmk main.tex.
 \documentclass[review,hidelinks,onefignum,onetabnum]{siamart251216}
 
-\usepackage{amsfonts,amssymb,mathtools,mathrsfs,stmaryrd,bm,booktabs,xcolor}
-\usepackage{tikz}
+\usepackage{amsfonts,amssymb,mathtools,mathrsfs,bm,booktabs,xcolor}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
 \usepackage{amsopn}
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\ran}{ran}
@@ -29,9 +27,9 @@
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
 \setlength{\emergencystretch}{1.5em}
 
-\headers{BIE computation of guided modes between two periodic half-strips}{Author}
-\title{Boundary integral computation of guided modes in periodic waveguides
-  with two different periodic half-strips\thanks{Submitted to the editors DATE.}}
+\headers{A bordered Floquet closure for guided modes}{Author}
+\title{Boundary integral computation of guided modes between periodic half-strips
+  with a bordered Floquet closure\thanks{Submitted to the editors DATE.}}
 \author{Author\thanks{Department of Mathematics, Example University, Example City
   (\email{author@example.com}).}}
 
@@ -39,27 +37,24 @@
 \maketitle
 
 \begin{abstract}
-We compute guided modes of a line defect in a two-dimensional photonic
-crystal at fixed Bloch wavenumber along the defect, when the crystals on the
-two sides have different periods and rods. The solver expands the field in
-Rayleigh orders in the homogeneous gaps, solves each cell by a boundary
-integral equation with a quasi-periodic Green function, closes the two
-periodic half-strips by the decaying solutions of their Floquet eigenvalue
-problems, and finds the guided
-wavenumbers as zeros of a determinant. The usual closure through
-Dirichlet-to-Neumann matrices of the half-strips has poles that move with the
-artificial boundaries of the defect cell, and a search can accept such a pole as a mode. We
-replace it by a bordered closure whose kernel is exactly the space of discrete
-guided modes and whose determinant has no poles, and we prove that the
-decaying subspaces have the right dimension. We also bound the effect of the
-Rayleigh truncation on the guided wavenumber by $C\ee^{-q_Mw_{\min}}$, where
-$w_{\min}$ is the smallest gap width, independently of where the artificial
-boundaries are placed. On three examples the solver reproduces a published
-benchmark, and its roots agree to about $10^{-15}$ under refinement. Against high-order finite elements with Dirichlet-to-Neumann
-closure it is slower for errors between $10^{-6}$ and $10^{-10}$, and faster
-at the highest accuracy. At Wood points of the background the cell
-representation itself is singular; we show where it fails and how the search
-excludes a small band around each such point.
+A line defect between two periodic half-strips may support a guided mode at a
+wavenumber where the Dirichlet-to-Neumann map of one half-strip has a pole.
+The pole moves with the artificial vertical boundary and can obscure a zero
+of the characteristic determinant. We construct a boundary integral solver
+at fixed tangential Bloch wavenumber for piecewise constant media with
+possibly different rods and periods on the two sides. A single-cell
+scattering matrix gives the decaying Floquet subspace of each half-strip.
+Matching these subspaces directly to the defect cell gives a bordered
+matrix whose kernel is isomorphic to the discrete guided-mode space,
+including at a singular Dirichlet trace. A determinant identity identifies
+the factors introduced by Dirichlet elimination. A local analytic basis
+permits interpolation of the bordered determinant on regular frequency
+intervals. In an example with the rods held fixed, the bordered search
+recovers the same mode as the artificial vertical boundary moves through
+a position of numerical coincidence between the pole and the mode.
+Unequal-period and published W3 waveguide examples test the solver on
+different geometries. We report field jumps under refinement and compare
+one guided wavenumber with independent finite element values.
 \end{abstract}
 
 \input{sec-intro}
@@ -67,36 +62,31 @@ excludes a small band around each such point.
 \input{sec-method}
 \input{sec-leads}
 \input{sec-closure}
-\input{sec-truncation}
-\input{sec-wood}
+\input{sec-search}
 
 \section{Numerical experiments}\label{sec:experiments}
 \input{sec-experiments}
 
 \section{Conclusions}\label{sec:conclusion}
-A boundary integral solver for guided modes between two different periodic
-half-strips can be made safe against two failures that are easy to miss. Dirichlet
-poles of the closure are removed by the bordered closure, without any
-condition on where the artificial boundaries lie. The Rayleigh order is
-controlled by the smallest gap width, not by the distance from rods to the
-artificial boundaries, and moving an artificial boundary changes no root. With
-these two pieces the solver reproduced the W3 benchmark, its roots on
-Example 1 agreed to about $10^{-15}$ under refinement, and it was cheaper than
-high-order finite elements only at errors below $10^{-11}$.
+The Floquet calculation supplies both components of the decaying port state.
+Keeping its coordinates in the interface equations yields a characteristic
+determinant that remains regular at half-strip Dirichlet exceptional values
+under the assembly and subspace hypotheses of \cref{sec:frame}. Its
+factorization explains both a false singular-value indication near a pole
+and the possible cancellation of a mode in a Dirichlet determinant.
+A Robin trace gives a second regular description of the same matching
+condition. The bordered system retains more unknowns and gives the defect
+density and the half-strip coefficients in a single null vector.
 
-Three questions remain open. First, Wood points: the solver excludes a band
-around each of them, and \cref{sec:wood} shows that removing this limitation
-requires a cell representation without the divergent grazing term, together
-with value--derivative coordinates on the artificial boundaries. Second, a numerical comparison with
-the Robin-to-Robin closure of \cite{FlissKlindworthSchmidt2015}, which avoids
-the same Dirichlet poles by a different change of coordinates. Third, the
-exact convergence rate in $M$: the measured effective widths exceed
-$w_{\min}$, and whether the continuation condition of \cref{sec:truncation}
-explains them is not known.
+The numerical tests distinguish these representation effects by moving one
+artificial vertical boundary while holding the waveguide fixed. Frequency
+agreement under refinement, wall and material jumps, and independent finite
+element results provide different checks on the reconstructed modes.
+The present cell solver excludes neighborhoods of Wood points. Close or
+multiple roots and the convergence of the fully discrete characteristic
+equation remain outside the numerical conclusions drawn here.
 
-\input{sec-appendix}
 \input{sec-acknowledgments}
-
 \bibliographystyle{siamplain-nonote}
 \bibliography{../../ref/reference}
 \end{document}

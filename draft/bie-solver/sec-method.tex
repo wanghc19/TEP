@@ -1,7 +1,5 @@
-% Section 3: discretization of one cell (port amplitudes, layer potentials, extraction
-% matrices, cell scattering matrix, defect cell). Rewritten 2026-11-07 from
-% the former Section 3 of draft/bie-siam (commit cc23eea).
-\section{Cell discretization}\label{sec:discretization}
+% Cell BIE (boundary integral equation), Rayleigh amplitudes and defect-cell traces.
+\section{Boundary integral equations and cell scattering data}\label{sec:discretization}
 
 Fix $\beta$ and a wavenumber $k>0$ with $k^2\in G_\beta$, not a Wood point.
 Every cell is discretized on its own: a periodicity cell becomes a scattering
@@ -37,10 +35,17 @@ with normal $\pm e_x$ are
 So $\mathsf C_\pm$ is invertible exactly away from Wood points.
 
 \subsection{Layer potentials and the cell equations}\label{sec:layer}
-Let $G^{(\kappa)}(\mathbf z,\mathbf z')=\frac{\ii}{4}H^{(1)}_0(\kappa|\mathbf z-\mathbf z'|)$ be the
-free-space Green function and $G^{(\kappa)}_\QP$ the $\ee^{\ii\beta d}$-quasi-periodic
-one, with $(\Delta+\kappa^2)G^{(\kappa)}_\QP(\cdot,\mathbf z')=-\sum_n\ee^{\ii\beta nd}
-\delta_{\mathbf z'+nd\,e_y}$. For $x\ne x'$ it has the spectral form
+Let $\mathbf z=(x,y)$ and $\mathbf z'=(x',y')$. The free-space kernel
+and the defining equation for its quasi-periodic counterpart are
+\[
+ \begin{aligned}
+ G^{(\kappa)}(\mathbf z,\mathbf z')&=\tfrac{\ii}{4}
+ H_0^{(1)}(\kappa|\mathbf z-\mathbf z'|),\\
+ (\Delta+\kappa^2)G^{(\kappa)}_\QP(\cdot,\mathbf z')
+ &=-\sum_{n\in\ZZ}\ee^{\ii\beta nd}\,\delta_{\mathbf z'+nd\,e_y}.
+ \end{aligned}
+\]
+For $x\ne x'$ it has the spectral form
 \cite{Linton1998}
 \begin{equation}\label{eq:gqp-spectral}
   G^{(\kappa)}_\QP(\mathbf z,\mathbf z')=\sum_{m\in\ZZ}
@@ -57,16 +62,33 @@ sources outside the cell, with coefficients fitted to the quasi-periodicity
 on the top and bottom edges, as in
 \cite{BarnettGreengard2010,BarnettGreengard2011,ChoBarnett2015}.
 
-For a rod $\Omega$ with outward normal $\nu$ and interior wavenumber
-$\kappa_{\mathrm c}=k\rho_{\mathrm c}^{1/2}$, the field of the cell is
+For a rod $\Omega$ let $\nu$ point out of the rod. For either kernel $G$
+the layer potentials at a point $\mathbf z$ off the material interface are
+\[
+ \begin{aligned}
+ \mathcal S[\omega](\mathbf z)&=\int_{\partial\Omega}
+       G(\mathbf z,\mathbf z')\,\omega(\mathbf z')\,\dd s',\\
+ \mathcal D[\tau](\mathbf z)&=\int_{\partial\Omega}
+       \partial_{\nu'}G(\mathbf z,\mathbf z')\,\tau(\mathbf z')\,\dd s'.
+ \end{aligned}
+\]
+Use the quasi-periodic kernel in the background and the free-space kernel
+at the interior wavenumber $\kappa_{\mathrm c}=k\sqrt{\rho_{\mathrm c}}$
+inside the rod. For a finite incident Rayleigh field $u_{\mathrm{inc}}$ the
+cell representation reads
 \begin{equation}\label{eq:cell-rep}
-  u=\mathcal S^{(\kappa_{\mathrm e})}_\QP[\omega]+\mathcal D^{(\kappa_{\mathrm e})}_\QP[\tau]
-  +u_{\mathrm{inc}}\ \ \text{outside }\Omega,\qquad
-  u=\mathcal S^{(\kappa_{\mathrm c})}[\omega]+\mathcal D^{(\kappa_{\mathrm c})}[\tau]
-  \ \ \text{in }\Omega,
+ u=\begin{cases}
+ \mathcal S_\QP^{(\kappa_{\mathrm e})}[\omega]
+ +\mathcal D_\QP^{(\kappa_{\mathrm e})}[\tau]+u_{\mathrm{inc}},
+    &\text{outside }\Omega,\\
+ \mathcal S^{(\kappa_{\mathrm c})}[\omega]
+ +\mathcal D^{(\kappa_{\mathrm c})}[\tau],
+    &\text{inside }\Omega .
+ \end{cases}
 \end{equation}
-where $\mathcal S$ and $\mathcal D$ are the single- and double-layer potentials
-and $u_{\mathrm{inc}}$ is a finite Rayleigh field. With the density vector
+The boundary operators $S,D,D'$ and $T$ denote the single layer, double
+layer, adjoint double layer and normal derivative of the double layer,
+respectively, in the usual trace conventions. With the density vector
 $\eta=(\tau;-\omega)$, the outside-minus-inside jumps of the value and the
 normal derivative are \cite{ColtonKress1983,Kress1991}
 \begin{equation}\label{eq:jump-operator}
@@ -77,7 +99,7 @@ normal derivative are \cite{ColtonKress1983,Kress1991}
   \end{bmatrix}\eta
   +\begin{bmatrix}u_{\mathrm{inc}}\\ \partial_\nu u_{\mathrm{inc}}\end{bmatrix}_{\partial\Omega}.
 \end{equation}
-The transmission conditions are $\mathscr J_k=0$. This is a second-kind
+The two rows impose the jumps of the value and normal derivative in \eqref{eq:guided}. The transmission conditions are $\mathscr J_k=0$. This is a second-kind
 system in which the hypersingular parts of $T$ cancel
 \cite{DominguezLyonTurc2016}. We discretize it by Nyström quadrature with
 Kress's logarithmic splitting on a uniform parameter grid of $N$ nodes
@@ -86,9 +108,13 @@ $n=2N$. The discrete system reads
 \begin{equation}\label{eq:cell-system}
   A_\eta(k)\,\eta+B_{\mathrm{inc}}(k)\,h=0,
 \end{equation}
-where $h$ collects the incident amplitudes and the columns of
-$B_{\mathrm{inc}}$ are the values and normal derivatives of the incident
-Rayleigh waves at the nodes.
+Here $h$ collects the incident amplitudes. Each column of $B_{\mathrm{inc}}$
+contains the values and normal derivatives of one incident Rayleigh wave
+at the nodes. If several rods occupy the cell, the exterior potential is
+summed over all their boundaries. Each interior representation uses its
+own rod and wavenumber. Taking the two traces on each rod produces the
+diagonal jump blocks in \eqref{eq:jump-operator} and the smooth exterior
+interaction blocks between distinct rods.
 
 \subsection{Extraction of outgoing amplitudes}\label{sec:extract}
 Let the rod lie strictly between the lines $x=x_{\mathrm L}$ and $x=x_{\mathrm R}$.
@@ -133,8 +159,9 @@ gives the extraction matrices $\mathsf F^{\leftarrow}_{x_{\mathrm L}},
 \end{aligned}
 \end{equation}
 Then $b^{\mathrm s}\approx\mathsf F^{\leftarrow}_{x_{\mathrm L}}\eta$ and
-$a^{\mathrm s}\approx\mathsf F^{\rightarrow}_{x_{\mathrm R}}\eta$. The
-integrands are smooth and periodic, so the rule converges exponentially. The
+$a^{\mathrm s}\approx\mathsf F^{\rightarrow}_{x_{\mathrm R}}\eta$. For analytic periodic parametrizations and densities the periodic trapezoidal
+rule has exponential convergence when the integrands extend analytically
+to a strip. We use refinement to assess accuracy for the chosen geometries. The
 factor $1/\gamma_m$ in \eqref{eq:extract-kernels} is one of the two places
 where the method meets Wood points.
 
@@ -148,26 +175,39 @@ the incident field is
 and $h=(a_{\mathrm L};b_{\mathrm R})$. Solving \eqref{eq:cell-system} for
 $\eta$ and adding the direct propagation gives the outgoing amplitudes
 \begin{equation}\label{eq:smatrix}
-  \begin{bmatrix}b_{\mathrm L}\\ a_{\mathrm R}\end{bmatrix}
-  =\underbrace{\left(
-   \begin{bmatrix}0&\mathsf E(L)\\ \mathsf E(L)&0\end{bmatrix}
-   -\begin{bmatrix}\mathsf F^{\leftarrow}_{x_{\mathrm L}}\\ \mathsf F^{\rightarrow}_{x_{\mathrm R}}\end{bmatrix}
-   A_\eta^{-1}B_{\mathrm{inc}}\right)}_{\displaystyle
-   \begin{bmatrix}R_{\mathrm L}&T_{\mathrm{RL}}\\ T_{\mathrm{LR}}&R_{\mathrm R}\end{bmatrix}}
-  \begin{bmatrix}a_{\mathrm L}\\ b_{\mathrm R}\end{bmatrix}.
+ \begin{bmatrix}b_{\mathrm L}\\a_{\mathrm R}\end{bmatrix}
+ =\mathsf S_{\rm cell}
+ \begin{bmatrix}a_{\mathrm L}\\b_{\mathrm R}\end{bmatrix},\qquad
+ \mathsf S_{\rm cell}=
+ \begin{bmatrix}R_{\mathrm L}&T_{\mathrm{RL}}\\
+ T_{\mathrm{LR}}&R_{\mathrm R}\end{bmatrix}.
 \end{equation}
-The direct phase enters only the two transmission blocks. If a period of a
-half-strip contains several rods that do not fit in one cell, as in the W3 guide of
-\cref{sec:experiments}, each rod gets its own sub-cell and the scattering
+In terms of the density solve and the extraction operators,
+\[
+ \mathsf S_{\rm cell}=
+ \begin{bmatrix}0&\mathsf E(L)\\ \mathsf E(L)&0\end{bmatrix}
+ -\begin{bmatrix}\mathsf F^{\leftarrow}_{x_{\mathrm L}}\\
+                  \mathsf F^{\rightarrow}_{x_{\mathrm R}}\end{bmatrix}
+ A_\eta^{-1}B_{\mathrm{inc}} .
+\]
+Each column of $-A_\eta^{-1}B_{\mathrm{inc}}$ is obtained by solving the
+same density system with a different incident wave. The extraction
+operators act on these columns to recover their scattered waves.
+The direct phase enters only the two transmission blocks. If the rods in a periodicity cell separate into rows with homogeneous
+strips between them, as in the W3 guide of
+\cref{sec:experiments}, each row can be treated as a sub-cell and the scattering
 matrices are composed across the common wall, eliminating the internal port
 state (a Redheffer product). In every case the cells exchange only the
-retained orders. Deleted orders have zero incident amplitude, and their
-outgoing part decays across the gap strip.
+retained orders. All propagating orders must be included. A deleted evanescent order
+emitted on one side of a homogeneous gap of width $w$ would reach the
+other side with a factor $\ee^{-\kappa_m w}$. The exchange of this order is
+omitted by the truncation. We choose $M$ by refinement in
+\cref{sec:exp-order}.
 
 \subsection{Defect cell}\label{sec:center}
 In $\mathcal C_0$ we use \eqref{eq:cell-rep} with $\Omega=\Omega_0$, and no layer
 potentials if $\Omega_0=\varnothing$. The incident field is the part of the
-field entering through the two artificial boundaries:
+field entering through the two artificial vertical boundaries:
 \[
   u_{\mathrm{inc}}=\sum_{|m|\le M}\Bigl(a^-_{0,m}\,\ee^{\ii\gamma_m(x-x_-)}
      +b^+_{0,m}\,\ee^{-\ii\gamma_m(x-x_+)}\Bigr)\psi_m(y).
@@ -175,8 +215,12 @@ field entering through the two artificial boundaries:
 It is nonzero even for an empty defect cell, so quasi-periodic layer
 potentials alone do not represent the field there. This is the complementary-field
 representation of \cite[App.~A]{BarnettGreengard2010} with the incident
-terms added. The defect-cell unknown is $\xi=(\eta;a^-_0;b^+_0)\in\CC^{n+2K}$, with $n=0$
-for an empty defect cell. The defect-cell equations \eqref{eq:cell-system} are
+terms added. The defect-cell unknown groups the density with the two incident amplitudes:
+\[
+  \xi=(\eta;a^-_0;b^+_0)\in\CC^{n+2K}.
+\]
+For an empty center $n=0$ and the incident amplitudes are the full set of
+unknowns. For a center containing a rod, \eqref{eq:cell-system} gives
 \begin{equation}\label{eq:center-rows}
   \mathsf A_0(k)\,\xi=0,\qquad \mathsf A_0=\bigl[A_\eta,\ B_0\bigr]\in\CC^{n\times(n+2K)} .
 \end{equation}
@@ -186,6 +230,9 @@ The total port states of the defect-cell field at $x_-$ and $x_+$ are
   \qquad
   \mathsf Y_+\xi=\begin{bmatrix}\mathsf F^{\rightarrow}_{x_+}\eta+\mathsf E(L_0)\,a^-_0\\ b^+_0\end{bmatrix}.
 \end{equation}
-We use \eqref{eq:cell-rep} as an ansatz. Its completeness is not needed:
-\cref{thm:bordered} characterizes the discrete modes in terms of $\xi$, and
-the field test of \cref{sec:search} checks the field it defines.
+In particular the first block at $x_-$ and the second block at $x_+$
+are the freely specified incident data. The opposite blocks combine direct
+transmission across the defect cell with radiation from the density.
+These maps define the discrete center representation used in
+\cref{thm:bordered}. The field check of \cref{sec:search} evaluates the
+field constructed from its coefficients.
