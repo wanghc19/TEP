@@ -1,0 +1,23 @@
+{
+  "action": "strips",
+  "handoff_root": "/Users/whc/Documents/Work/dot-research/test/bie-bound/wood-fallback-v1/output",
+  "jobs": [
+    {
+      "tag": "ex1+0.00010",
+      "model": "ex1",
+      "beta": 1.9813719592640813,
+      "window": [
+        1.9613719592640813,
+        2.0013719592640813
+      ],
+      "detuning": 0.0001,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.0001,
+      "N": 192,
+      "M": 12,
+      "parent_file": "run-010/strip-015.json"
+    }
+  ]
+}

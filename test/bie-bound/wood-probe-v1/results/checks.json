@@ -1,0 +1,111 @@
+{
+  "regression_error": 1.1102230246251565e-15,
+  "roundtrip_at_point_one": 5.333081252862495e-16,
+  "sample_count": 84,
+  "chebyshev_points": 132,
+  "all_samples_common_gap": true,
+  "every_exponent_has_range_and_grid_difference": true,
+  "pencil_tests": [
+    {
+      "beta": 1.95,
+      "t": -0.1,
+      "amplitude_count": 13,
+      "cauchy_count": 13,
+      "maximum_principal_sine": 4.505937632551088e-15,
+      "coordinate_condition": 64.2493000155371
+    },
+    {
+      "beta": 1.95,
+      "t": -0.0001,
+      "amplitude_count": 13,
+      "cauchy_count": 13,
+      "maximum_principal_sine": 3.953944838964871e-14,
+      "coordinate_condition": 2005.3071716256622
+    },
+    {
+      "beta": 1.95,
+      "t": -1e-07,
+      "amplitude_count": 13,
+      "cauchy_count": 13,
+      "maximum_principal_sine": 1.0304434550351857e-12,
+      "coordinate_condition": 63412.560638466835
+    },
+    {
+      "beta": 1.95,
+      "t": 0.1,
+      "amplitude_count": 13,
+      "cauchy_count": 13,
+      "maximum_principal_sine": 4.720179585846953e-15,
+      "coordinate_condition": 62.60689997805492
+    },
+    {
+      "beta": 1.95,
+      "t": 0.0001,
+      "amplitude_count": 13,
+      "cauchy_count": 13,
+      "maximum_principal_sine": 2.2349707381223312e-14,
+      "coordinate_condition": 2005.2552554757779
+    },
+    {
+      "beta": 1.95,
+      "t": 1e-07,
+      "amplitude_count": 13,
+      "cauchy_count": 13,
+      "maximum_principal_sine": 1.3466316348682779e-12,
+      "coordinate_condition": 63412.558998033586
+    },
+    {
+      "beta": 1.98154,
+      "t": -0.1,
+      "amplitude_count": 13,
+      "cauchy_count": 13,
+      "maximum_principal_sine": 3.735503811175347e-15,
+      "coordinate_condition": 63.77099130591387
+    },
+    {
+      "beta": 1.98154,
+      "t": -0.0001,
+      "amplitude_count": 13,
+      "cauchy_count": 13,
+      "maximum_principal_sine": 2.4298980195596037e-14,
+      "coordinate_condition": 1990.791285839311
+    },
+    {
+      "beta": 1.98154,
+      "t": -1e-07,
+      "amplitude_count": 13,
+      "cauchy_count": 13,
+      "maximum_principal_sine": 8.049247966902105e-13,
+      "coordinate_condition": 62953.54668887654
+    },
+    {
+      "beta": 1.98154,
+      "t": 0.1,
+      "amplitude_count": 13,
+      "cauchy_count": 13,
+      "maximum_principal_sine": 4.4697805643020866e-15,
+      "coordinate_condition": 62.16597485651555
+    },
+    {
+      "beta": 1.98154,
+      "t": 0.0001,
+      "amplitude_count": 13,
+      "cauchy_count": 13,
+      "maximum_principal_sine": 2.91622430488504e-14,
+      "coordinate_condition": 1990.7405507237086
+    },
+    {
+      "beta": 1.98154,
+      "t": 1e-07,
+      "amplitude_count": 13,
+      "cauchy_count": 13,
+      "maximum_principal_sine": 7.650857809625716e-13,
+      "coordinate_condition": 62953.54505048913
+    }
+  ],
+  "total_monitored_seconds": 325.862498625,
+  "peak_rss_gib": 1.5269927978515625,
+  "experiment_bytes": 24909875,
+  "field_mat_files": 0,
+  "required_checks": "PASS"
+}

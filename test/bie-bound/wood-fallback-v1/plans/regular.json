@@ -1,0 +1,141 @@
+{
+  "action": "batch",
+  "jobs": [
+    {
+      "tag": "ex1+0.10000",
+      "model": "ex1",
+      "beta": 1.8117673817423212,
+      "window": [
+        1.9097673817423213,
+        1.9137673817423213
+      ],
+      "detuning": 0.1,
+      "cap": 150,
+      "control": true,
+      "full_diagnostics": true,
+      "route": "plain",
+      "delta": 0.0001,
+      "N": 128,
+      "M": 6
+    },
+    {
+      "tag": "ex1+0.10000",
+      "model": "ex1",
+      "beta": 1.8117673817423212,
+      "window": [
+        1.9097673817423213,
+        1.9137673817423213
+      ],
+      "detuning": 0.1,
+      "cap": 150,
+      "control": true,
+      "full_diagnostics": true,
+      "route": "plain",
+      "delta": 0.0001,
+      "N": 192,
+      "M": 12
+    },
+    {
+      "tag": "ex1+0.10000",
+      "model": "ex1",
+      "beta": 1.8117673817423212,
+      "window": [
+        1.9097673817423213,
+        1.9137673817423213
+      ],
+      "detuning": 0.1,
+      "cap": 150,
+      "control": true,
+      "full_diagnostics": true,
+      "route": "sqrt",
+      "delta": 0.0001,
+      "N": 128,
+      "M": 6
+    },
+    {
+      "tag": "ex1+0.10000",
+      "model": "ex1",
+      "beta": 1.8117673817423212,
+      "window": [
+        1.9097673817423213,
+        1.9137673817423213
+      ],
+      "detuning": 0.1,
+      "cap": 150,
+      "control": true,
+      "full_diagnostics": true,
+      "route": "sqrt",
+      "delta": 0.0001,
+      "N": 192,
+      "M": 12
+    },
+    {
+      "tag": "ex1-0.10000",
+      "model": "ex1",
+      "beta": 2.1549852982808497,
+      "window": [
+        2.05298529828085,
+        2.0569852982808494
+      ],
+      "detuning": -0.1,
+      "cap": 150,
+      "control": true,
+      "full_diagnostics": true,
+      "route": "plain",
+      "delta": 0.0001,
+      "N": 128,
+      "M": 6
+    },
+    {
+      "tag": "ex1-0.10000",
+      "model": "ex1",
+      "beta": 2.1549852982808497,
+      "window": [
+        2.05298529828085,
+        2.0569852982808494
+      ],
+      "detuning": -0.1,
+      "cap": 150,
+      "control": true,
+      "full_diagnostics": true,
+      "route": "plain",
+      "delta": 0.0001,
+      "N": 192,
+      "M": 12
+    },
+    {
+      "tag": "ex1-0.10000",
+      "model": "ex1",
+      "beta": 2.1549852982808497,
+      "window": [
+        2.05298529828085,
+        2.0569852982808494
+      ],
+      "detuning": -0.1,
+      "cap": 150,
+      "control": true,
+      "full_diagnostics": true,
+      "route": "sqrt",
+      "delta": 0.0001,
+      "N": 128,
+      "M": 6
+    },
+    {
+      "tag": "ex1-0.10000",
+      "model": "ex1",
+      "beta": 2.1549852982808497,
+      "window": [
+        2.05298529828085,
+        2.0569852982808494
+      ],
+      "detuning": -0.1,
+      "cap": 150,
+      "control": true,
+      "full_diagnostics": true,
+      "route": "sqrt",
+      "delta": 0.0001,
+      "N": 192,
+      "M": 12
+    }
+  ]
+}

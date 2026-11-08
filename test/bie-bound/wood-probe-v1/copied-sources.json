@@ -1,0 +1,21 @@
+{
+  "pole-free-v1": [
+    "search_i9_physics.m",
+    "search_i9_classify.m",
+    "search_i9_config.m",
+    "search_i9_geometry.m",
+    "probe_config.m",
+    "example_config.m",
+    "example_parameters.m",
+    "border_data.m",
+    "border_matrix.m"
+  ],
+  "rayleigh-order-v1": [
+    "monitor.py",
+    "launch.py"
+  ],
+  "changes": {
+    "search_i9_physics.m": "Add center-cell dispatch and optional direct proxy evaluation callback; cell formulas unchanged",
+    "monitor.py": "50 MB experiment limit; five-thread entry point"
+  }
+}

@@ -1,0 +1,17 @@
+[
+  {
+    "plan": "accuracy",
+    "run": 5,
+    "forecast": 310
+  },
+  {
+    "plan": "pilot-fine",
+    "run": 6,
+    "forecast": 200
+  },
+  {
+    "plan": "w3-pilot",
+    "run": 7,
+    "forecast": 280
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "regular_regression_k": 1.5584378941820878,
+  "original_regression_k": 1.5584378941820876,
+  "reference_k": 1.558437894182088,
+  "away_route_differences": [
+    1.5765166949677223e-14,
+    1.6653345369377348e-14,
+    2.6645352591003757e-15,
+    1.3322676295501878e-15
+  ],
+  "determinant_cell_calls_checked": 12498,
+  "field_calls_checked": 64,
+  "minimum_clearance_beyond_declared_delta": 8.673617379884035e-18,
+  "maximum_cumulative_time_defect_seconds": 0,
+  "completed_window_unions_checked": 117,
+  "maximum_endpoint_defect": 4.440892098500626e-16,
+  "inherited_incomplete_rows": 5,
+  "total_monitored_seconds": 5357.918758582999,
+  "peak_gib": 1.123321533203125
+}

@@ -1,0 +1,108 @@
+{
+  "action": "strips",
+  "handoff_root": "/Users/whc/Documents/Work/dot-research/test/bie-bound/wood-fallback-v1/output",
+  "jobs": [
+    {
+      "tag": "w3+0.00010",
+      "model": "w3",
+      "beta": 2.9748976157431044,
+      "window": [
+        2.9548976157431044,
+        2.9948976157431044
+      ],
+      "detuning": 0.0001,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 0.0001,
+      "N": 128,
+      "M": 6,
+      "parent_file": "run-012/strip-015.json"
+    },
+    {
+      "tag": "w3+0.00010",
+      "model": "w3",
+      "beta": 2.9748976157431044,
+      "window": [
+        2.9548976157431044,
+        2.9948976157431044
+      ],
+      "detuning": 0.0001,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.0001,
+      "N": 128,
+      "M": 6,
+      "parent_file": "run-012/strip-014.json"
+    },
+    {
+      "tag": "w3+0.00010",
+      "model": "w3",
+      "beta": 2.9748976157431044,
+      "window": [
+        2.9548976157431044,
+        2.9948976157431044
+      ],
+      "detuning": 0.0001,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 1e-05,
+      "N": 128,
+      "M": 6,
+      "parent_file": "this/strip-001.json"
+    },
+    {
+      "tag": "w3+0.00010",
+      "model": "w3",
+      "beta": 2.9748976157431044,
+      "window": [
+        2.9548976157431044,
+        2.9948976157431044
+      ],
+      "detuning": 0.0001,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 0.0001,
+      "N": 192,
+      "M": 12,
+      "parent_file": "run-012/strip-018.json"
+    },
+    {
+      "tag": "w3+0.00010",
+      "model": "w3",
+      "beta": 2.9748976157431044,
+      "window": [
+        2.9548976157431044,
+        2.9948976157431044
+      ],
+      "detuning": 0.0001,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.0001,
+      "N": 192,
+      "M": 12,
+      "parent_file": "run-012/strip-017.json"
+    },
+    {
+      "tag": "w3+0.00010",
+      "model": "w3",
+      "beta": 2.9748976157431044,
+      "window": [
+        2.9548976157431044,
+        2.9948976157431044
+      ],
+      "detuning": 0.0001,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 1e-05,
+      "N": 192,
+      "M": 12,
+      "parent_file": "this/strip-004.json"
+    }
+  ]
+}

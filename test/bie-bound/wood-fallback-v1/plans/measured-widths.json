@@ -1,0 +1,57 @@
+[
+  {
+    "plan": "outer-a",
+    "run": 10,
+    "forecast": 780
+  },
+  {
+    "plan": "scan-1",
+    "run": 11,
+    "forecast": 440
+  },
+  {
+    "plan": "outer-b",
+    "run": 12,
+    "forecast": 500
+  },
+  {
+    "plan": "scan-2",
+    "run": 13,
+    "forecast": 440
+  },
+  {
+    "plan": "outer-c",
+    "run": 14,
+    "forecast": 290
+  },
+  {
+    "plan": "scan-3",
+    "run": 15,
+    "forecast": 440
+  },
+  {
+    "run": 16,
+    "plan": "finish-016",
+    "forecast": 245.115
+  },
+  {
+    "run": 17,
+    "plan": "finish-017",
+    "forecast": 69.901
+  },
+  {
+    "run": 18,
+    "plan": "finish-018",
+    "forecast": 113.563
+  },
+  {
+    "run": 19,
+    "plan": "finish-019",
+    "forecast": 114.017
+  },
+  {
+    "plan": "reference-control-4",
+    "run": 20,
+    "forecast": 72
+  }
+]

@@ -1,0 +1,329 @@
+{
+  "action": "strips",
+  "handoff_root": "/Users/whc/Documents/Work/dot-research/test/bie-bound/wood-fallback-v1/output",
+  "jobs": [
+    {
+      "tag": "ex1+0.01000",
+      "model": "ex1",
+      "beta": 1.964354251117132,
+      "window": [
+        1.944354251117132,
+        1.984354251117132
+      ],
+      "detuning": 0.01,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.01,
+      "N": 128,
+      "M": 6,
+      "parent_file": ""
+    },
+    {
+      "tag": "ex1+0.01000",
+      "model": "ex1",
+      "beta": 1.964354251117132,
+      "window": [
+        1.944354251117132,
+        1.984354251117132
+      ],
+      "detuning": 0.01,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.001,
+      "N": 128,
+      "M": 6,
+      "parent_file": "this/strip-001.json"
+    },
+    {
+      "tag": "ex1+0.01000",
+      "model": "ex1",
+      "beta": 1.964354251117132,
+      "window": [
+        1.944354251117132,
+        1.984354251117132
+      ],
+      "detuning": 0.01,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 0.001,
+      "N": 128,
+      "M": 6,
+      "parent_file": "this/strip-001.json"
+    },
+    {
+      "tag": "ex1+0.01000",
+      "model": "ex1",
+      "beta": 1.964354251117132,
+      "window": [
+        1.944354251117132,
+        1.984354251117132
+      ],
+      "detuning": 0.01,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.01,
+      "N": 192,
+      "M": 12,
+      "parent_file": ""
+    },
+    {
+      "tag": "ex1+0.01000",
+      "model": "ex1",
+      "beta": 1.964354251117132,
+      "window": [
+        1.944354251117132,
+        1.984354251117132
+      ],
+      "detuning": 0.01,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.001,
+      "N": 192,
+      "M": 12,
+      "parent_file": "this/strip-004.json"
+    },
+    {
+      "tag": "ex1+0.01000",
+      "model": "ex1",
+      "beta": 1.964354251117132,
+      "window": [
+        1.944354251117132,
+        1.984354251117132
+      ],
+      "detuning": 0.01,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 0.001,
+      "N": 192,
+      "M": 12,
+      "parent_file": "this/strip-004.json"
+    },
+    {
+      "tag": "ex1-0.01000",
+      "model": "ex1",
+      "beta": 1.9987716011465047,
+      "window": [
+        1.9787716011465046,
+        2.0187716011465047
+      ],
+      "detuning": -0.01,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.01,
+      "N": 128,
+      "M": 6,
+      "parent_file": ""
+    },
+    {
+      "tag": "ex1-0.01000",
+      "model": "ex1",
+      "beta": 1.9987716011465047,
+      "window": [
+        1.9787716011465046,
+        2.0187716011465047
+      ],
+      "detuning": -0.01,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.001,
+      "N": 128,
+      "M": 6,
+      "parent_file": "this/strip-007.json"
+    },
+    {
+      "tag": "ex1-0.01000",
+      "model": "ex1",
+      "beta": 1.9987716011465047,
+      "window": [
+        1.9787716011465046,
+        2.0187716011465047
+      ],
+      "detuning": -0.01,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 0.001,
+      "N": 128,
+      "M": 6,
+      "parent_file": "this/strip-007.json"
+    },
+    {
+      "tag": "ex1-0.01000",
+      "model": "ex1",
+      "beta": 1.9987716011465047,
+      "window": [
+        1.9787716011465046,
+        2.0187716011465047
+      ],
+      "detuning": -0.01,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.01,
+      "N": 192,
+      "M": 12,
+      "parent_file": ""
+    },
+    {
+      "tag": "ex1-0.01000",
+      "model": "ex1",
+      "beta": 1.9987716011465047,
+      "window": [
+        1.9787716011465046,
+        2.0187716011465047
+      ],
+      "detuning": -0.01,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.001,
+      "N": 192,
+      "M": 12,
+      "parent_file": "this/strip-010.json"
+    },
+    {
+      "tag": "ex1-0.01000",
+      "model": "ex1",
+      "beta": 1.9987716011465047,
+      "window": [
+        1.9787716011465046,
+        2.0187716011465047
+      ],
+      "detuning": -0.01,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 0.001,
+      "N": 192,
+      "M": 12,
+      "parent_file": "this/strip-010.json"
+    },
+    {
+      "tag": "ex1+0.00010",
+      "model": "ex1",
+      "beta": 1.9813719592640813,
+      "window": [
+        1.9613719592640813,
+        2.0013719592640813
+      ],
+      "detuning": 0.0001,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.001,
+      "N": 128,
+      "M": 6,
+      "parent_file": "run-002/search-001.json"
+    },
+    {
+      "tag": "ex1+0.00010",
+      "model": "ex1",
+      "beta": 1.9813719592640813,
+      "window": [
+        1.9613719592640813,
+        2.0013719592640813
+      ],
+      "detuning": 0.0001,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 0.001,
+      "N": 128,
+      "M": 6,
+      "parent_file": "run-002/search-001.json"
+    },
+    {
+      "tag": "ex1+0.00010",
+      "model": "ex1",
+      "beta": 1.9813719592640813,
+      "window": [
+        1.9613719592640813,
+        2.0013719592640813
+      ],
+      "detuning": 0.0001,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.001,
+      "N": 192,
+      "M": 12,
+      "parent_file": "run-006/search-001.json"
+    },
+    {
+      "tag": "ex1+0.00010",
+      "model": "ex1",
+      "beta": 1.9813719592640813,
+      "window": [
+        1.9613719592640813,
+        2.0013719592640813
+      ],
+      "detuning": 0.0001,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 0.001,
+      "N": 192,
+      "M": 12,
+      "parent_file": "run-006/search-001.json"
+    },
+    {
+      "tag": "ex1+0.00010",
+      "model": "ex1",
+      "beta": 1.9813719592640813,
+      "window": [
+        1.9613719592640813,
+        2.0013719592640813
+      ],
+      "detuning": 0.0001,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 1e-05,
+      "N": 192,
+      "M": 12,
+      "parent_file": "run-006/search-002.json"
+    },
+    {
+      "tag": "w3+0.01000",
+      "model": "w3",
+      "beta": 2.9615833878705065,
+      "window": [
+        2.9415833878705064,
+        2.9815833878705065
+      ],
+      "detuning": 0.01,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 1e-05,
+      "N": 128,
+      "M": 6,
+      "parent_file": "run-007/search-005.json"
+    },
+    {
+      "tag": "w3+0.01000",
+      "model": "w3",
+      "beta": 2.9615833878705065,
+      "window": [
+        2.9415833878705064,
+        2.9815833878705065
+      ],
+      "detuning": 0.01,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 1e-05,
+      "N": 192,
+      "M": 12,
+      "parent_file": "run-007/search-006.json"
+    }
+  ]
+}

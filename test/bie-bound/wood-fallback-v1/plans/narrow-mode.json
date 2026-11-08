@@ -1,0 +1,312 @@
+{
+  "action": "strips",
+  "handoff_root": "/Users/whc/Documents/Work/dot-research/test/bie-bound/wood-fallback-v1/output",
+  "jobs": [
+    {
+      "tag": "ex1+0.01000",
+      "model": "ex1",
+      "beta": 1.964354251117132,
+      "window": [
+        1.944354251117132,
+        1.984354251117132
+      ],
+      "detuning": 0.01,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 0.0001,
+      "N": 128,
+      "M": 6,
+      "parent_file": "run-010/strip-003.json"
+    },
+    {
+      "tag": "ex1+0.01000",
+      "model": "ex1",
+      "beta": 1.964354251117132,
+      "window": [
+        1.944354251117132,
+        1.984354251117132
+      ],
+      "detuning": 0.01,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.0001,
+      "N": 128,
+      "M": 6,
+      "parent_file": "run-010/strip-002.json"
+    },
+    {
+      "tag": "ex1+0.01000",
+      "model": "ex1",
+      "beta": 1.964354251117132,
+      "window": [
+        1.944354251117132,
+        1.984354251117132
+      ],
+      "detuning": 0.01,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 1e-05,
+      "N": 128,
+      "M": 6,
+      "parent_file": "this/strip-001.json"
+    },
+    {
+      "tag": "ex1+0.01000",
+      "model": "ex1",
+      "beta": 1.964354251117132,
+      "window": [
+        1.944354251117132,
+        1.984354251117132
+      ],
+      "detuning": 0.01,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 0.0001,
+      "N": 192,
+      "M": 12,
+      "parent_file": "run-010/strip-006.json"
+    },
+    {
+      "tag": "ex1+0.01000",
+      "model": "ex1",
+      "beta": 1.964354251117132,
+      "window": [
+        1.944354251117132,
+        1.984354251117132
+      ],
+      "detuning": 0.01,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.0001,
+      "N": 192,
+      "M": 12,
+      "parent_file": "run-010/strip-005.json"
+    },
+    {
+      "tag": "ex1+0.01000",
+      "model": "ex1",
+      "beta": 1.964354251117132,
+      "window": [
+        1.944354251117132,
+        1.984354251117132
+      ],
+      "detuning": 0.01,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 1e-05,
+      "N": 192,
+      "M": 12,
+      "parent_file": "this/strip-004.json"
+    },
+    {
+      "tag": "ex1-0.01000",
+      "model": "ex1",
+      "beta": 1.9987716011465047,
+      "window": [
+        1.9787716011465046,
+        2.0187716011465047
+      ],
+      "detuning": -0.01,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 0.0001,
+      "N": 128,
+      "M": 6,
+      "parent_file": "run-010/strip-009.json"
+    },
+    {
+      "tag": "ex1-0.01000",
+      "model": "ex1",
+      "beta": 1.9987716011465047,
+      "window": [
+        1.9787716011465046,
+        2.0187716011465047
+      ],
+      "detuning": -0.01,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.0001,
+      "N": 128,
+      "M": 6,
+      "parent_file": "run-010/strip-008.json"
+    },
+    {
+      "tag": "ex1-0.01000",
+      "model": "ex1",
+      "beta": 1.9987716011465047,
+      "window": [
+        1.9787716011465046,
+        2.0187716011465047
+      ],
+      "detuning": -0.01,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 1e-05,
+      "N": 128,
+      "M": 6,
+      "parent_file": "this/strip-007.json"
+    },
+    {
+      "tag": "ex1-0.01000",
+      "model": "ex1",
+      "beta": 1.9987716011465047,
+      "window": [
+        1.9787716011465046,
+        2.0187716011465047
+      ],
+      "detuning": -0.01,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 0.0001,
+      "N": 192,
+      "M": 12,
+      "parent_file": "run-010/strip-012.json"
+    },
+    {
+      "tag": "ex1-0.01000",
+      "model": "ex1",
+      "beta": 1.9987716011465047,
+      "window": [
+        1.9787716011465046,
+        2.0187716011465047
+      ],
+      "detuning": -0.01,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.0001,
+      "N": 192,
+      "M": 12,
+      "parent_file": "run-010/strip-011.json"
+    },
+    {
+      "tag": "ex1-0.01000",
+      "model": "ex1",
+      "beta": 1.9987716011465047,
+      "window": [
+        1.9787716011465046,
+        2.0187716011465047
+      ],
+      "detuning": -0.01,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 1e-05,
+      "N": 192,
+      "M": 12,
+      "parent_file": "this/strip-010.json"
+    },
+    {
+      "tag": "ex1-0.00100",
+      "model": "ex1",
+      "beta": 1.9832651530045307,
+      "window": [
+        1.9632651530045306,
+        2.0032651530045307
+      ],
+      "detuning": -0.001,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 0.0001,
+      "N": 128,
+      "M": 6,
+      "parent_file": "run-012/strip-009.json"
+    },
+    {
+      "tag": "ex1-0.00100",
+      "model": "ex1",
+      "beta": 1.9832651530045307,
+      "window": [
+        1.9632651530045306,
+        2.0032651530045307
+      ],
+      "detuning": -0.001,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.0001,
+      "N": 128,
+      "M": 6,
+      "parent_file": "run-012/strip-008.json"
+    },
+    {
+      "tag": "ex1-0.00100",
+      "model": "ex1",
+      "beta": 1.9832651530045307,
+      "window": [
+        1.9632651530045306,
+        2.0032651530045307
+      ],
+      "detuning": -0.001,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 1e-05,
+      "N": 128,
+      "M": 6,
+      "parent_file": "this/strip-013.json"
+    },
+    {
+      "tag": "ex1-0.00100",
+      "model": "ex1",
+      "beta": 1.9832651530045307,
+      "window": [
+        1.9632651530045306,
+        2.0032651530045307
+      ],
+      "detuning": -0.001,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 0.0001,
+      "N": 192,
+      "M": 12,
+      "parent_file": "run-012/strip-012.json"
+    },
+    {
+      "tag": "ex1-0.00100",
+      "model": "ex1",
+      "beta": 1.9832651530045307,
+      "window": [
+        1.9632651530045306,
+        2.0032651530045307
+      ],
+      "detuning": -0.001,
+      "cap": 150,
+      "control": false,
+      "route": "plain",
+      "delta": 0.0001,
+      "N": 192,
+      "M": 12,
+      "parent_file": "run-012/strip-011.json"
+    },
+    {
+      "tag": "ex1-0.00100",
+      "model": "ex1",
+      "beta": 1.9832651530045307,
+      "window": [
+        1.9632651530045306,
+        2.0032651530045307
+      ],
+      "detuning": -0.001,
+      "cap": 150,
+      "control": false,
+      "route": "sqrt",
+      "delta": 1e-05,
+      "N": 192,
+      "M": 12,
+      "parent_file": "this/strip-016.json"
+    }
+  ]
+}

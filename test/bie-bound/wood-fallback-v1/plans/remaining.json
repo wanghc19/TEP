@@ -1,0 +1,52 @@
+[
+  {
+    "plan": "outer-a",
+    "run": 10,
+    "forecast": 780
+  },
+  {
+    "plan": "scan-1",
+    "run": 11,
+    "forecast": 440
+  },
+  {
+    "plan": "outer-b",
+    "run": 12,
+    "forecast": 500
+  },
+  {
+    "plan": "scan-2",
+    "run": 13,
+    "forecast": 440
+  },
+  {
+    "plan": "outer-c",
+    "run": 14,
+    "forecast": 275
+  },
+  {
+    "plan": "scan-3",
+    "run": 15,
+    "forecast": 440
+  },
+  {
+    "plan": "narrow-w3",
+    "run": 16,
+    "forecast": 600
+  },
+  {
+    "plan": "narrow-edge",
+    "run": 17,
+    "forecast": 620
+  },
+  {
+    "plan": "narrow-mode",
+    "run": 18,
+    "forecast": 900
+  },
+  {
+    "plan": "narrow-outside",
+    "run": 19,
+    "forecast": 680
+  }
+]

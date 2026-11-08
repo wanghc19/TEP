@@ -39,3 +39,7 @@ FMM 是 fast multipole method（快速多极方法），MFS 是 method of fundam
 `rayleigh-order-v1` 是 Rayleigh order version 1，测量候选根随 Rayleigh 截断阶数 $M$ 和端口切线位置的收敛速度，并检查引线胞能流守恒与衰减子空间维数。
 
 `pole-free-v1` 是 pole-free port matching version 1，用加边端口匹配和解析引线标架代替 DtN 闭合，检验移动切线时的极点、节点上的根和物理接受判据。
+
+`wood-probe-v1` 是 Wood-point probe version 1，在例一的 Wood 线两侧测量单胞散射矩阵、Müller 矩阵、准周期 Green 项与加边行列式随失谐的标度，比较振幅坐标与 Cauchy 坐标。
+
+`wood-fallback-v1` 是 Wood fallback version 1，在已知 Wood 频率处切开搜索窗口、排除 $|k-k_W|<\delta$ 的带，比较 $k$ 与平方根变量两种插值，测量完成率、耗时、根误差随失谐 $t$ 的变化（对照更精确 Green 函数的参考根），并沿例一导模支检查漏根与多根。
