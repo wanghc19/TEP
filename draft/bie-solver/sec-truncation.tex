@@ -1,0 +1,181 @@
+% Section 6: choice of the Rayleigh order M. Source:
+% research/projects/bie-enclosure/theory/rayleigh-truncation.md (Proposition 1,
+% Theorem 2, eqs. (15), (19), (23)); reviewed in rayleigh-truncation-review.md
+% (11 hold, 1 citation scope note RT-1, 0 fail).
+\section{Choice of the Rayleigh order}\label{sec:truncation}
+
+The cells exchange only the orders $|m|\le M$. Distances from a rod to an
+artificial boundary or wall explain why the outgoing deleted orders are small
+on that line. They do not
+explain why the incoming ones are: in the computation, the incoming
+amplitudes of the deleted orders are simply set to zero. The point is that
+the incoming amplitude on such a line is the outgoing amplitude of the rods on the
+other side of the same gap strip. An evanescent order emitted on one side of a
+strip of width $w$ and received on the other is damped by
+$\ee^{-\kappa_m\delta_1}\ee^{-\kappa_m\delta_2}=\ee^{-\kappa_mw}$, where
+$\delta_1+\delta_2=w$, whatever the position of the line. This section turns
+that observation into a bound for the guided-mode wavenumber, for exact cell
+solves.
+
+\subsection{Setting}
+Let $V=H^1_\beta(B)$ with $(u,v)_V=a[u,v]+b[u,v]$, where
+$a[u,v]=\int_B\nabla u\cdot\overline{\nabla v}$ and $b[u,v]=\int_B\rho u\bar v$. Let
+$\mathcal T(\lambda)$ be the bounded operator on $V$ with
+$(\mathcal T(\lambda)u,v)_V=a[u,v]-\lambda b[u,v]$; it has a nontrivial kernel exactly
+at the eigenvalues $\lambda=k^2$ of $A(\beta)$. The gap strips of
+\cref{sec:geometry} are $G_j=(l_j,r_j)\times I_d$ with widths $w_j\ge w_{\min}>0$,
+one for every artificial boundary and wall, including those of both half-strips.
+
+\begin{assumption}\label{ass:truncation}
+$\lambda_*=k_*^2$ is a simple isolated eigenvalue of $A(\beta)$, and $g>0$ is a
+lower bound for its distance to the rest of the spectrum of $A(\beta)$,
+including the essential spectrum. Fix $0<r<\min(g,\lambda_*)$, the disk
+$U_r=\{|\lambda-\lambda_*|\le r\}$, and $M_0\ge0$ such that every order with
+$|m|>M_0$ is evanescent on $U_r\cap\RR$, with no Wood point there. The
+truncated model uses exact cell solves in the sense of \cref{ass:cell}.
+\end{assumption}
+
+For $M\ge M_0$ let $b_M=\min_{|m|>M}|\beta_m|$ and
+\[
+  q_M=\bigl(b_M^2-\rho_{\mathrm e}\lambda_*\bigr)^{1/2}=\min_{|m|>M}|\gamma_m(k_*)|,
+  \qquad
+  q_M(r)=\bigl(b_M^2-\rho_{\mathrm e}(\lambda_*+r)\bigr)^{1/2},
+\]
+the slowest decay rate among the deleted orders, at $k_*$ and on $U_r$. For
+$|\beta|\le\pi/d$, $b_M=2\pi(M+1)/d-|\beta|$.
+
+\subsection{The truncated model as a perturbation of the strip operator}
+In a gap strip of width $w$, a deleted order $m$ with
+$\kappa=\kappa_m(\lambda)=(\beta_m^2-\rho_{\mathrm e}\lambda)^{1/2}$ solves $f''=\kappa^2f$.
+In the full model its end values $(\alpha,\delta)$ determine the outward
+derivatives through the strip Dirichlet-to-Neumann matrix
+\[
+  D_m=\kappa\begin{bmatrix}\coth\kappa w&-\operatorname{csch}\kappa w\\
+                    -\operatorname{csch}\kappa w&\coth\kappa w\end{bmatrix}.
+\]
+In the truncated model each side sees only its own outgoing evanescent wave,
+so $D_m$ is replaced by $\kappa I_2$. With $p=\ee^{-\kappa w}$ and
+$S=\left[\begin{smallmatrix}0&1\\1&0\end{smallmatrix}\right]$, the difference is
+\begin{equation}\label{eq:strip-defect}
+  \Delta_m=\kappa I_2-D_m=\frac{2\kappa}{1-p^2}\bigl(pS-p^2I_2\bigr).
+\end{equation}
+The coupling across the strip enters at first order in $p$.
+
+\begin{proposition}[compression]\label{prop:compression}
+Under \cref{ass:truncation}, the truncated model is represented on $V$ by
+$\mathcal T_M(\lambda)=\mathcal T(\lambda)+\mathcal E_M(\lambda)$, with
+\[
+  (\mathcal E_M(\lambda)u,v)_V=\sum_j\sum_{|m|>M}(t_{jm}v)^*\,\Delta_m(w_j,\lambda)\,t_{jm}u,
+  \qquad t_{jm}u=\bigl(u_m(l_j),u_m(r_j)\bigr)^T,
+\]
+where $u_m(x)$ is the $m$th Fourier coefficient of $u(x,\cdot)$. At real
+$\lambda$ the kernel of $\mathcal T_M(\lambda)$ corresponds one-to-one to the guided
+modes of the truncated model. $\mathcal E_M$ is holomorphic on a neighborhood
+of $U_r$, satisfies $\mathcal E_M(\bar\lambda)=\mathcal E_M(\lambda)^*$, and
+\begin{equation}\label{eq:compression-bound}
+  \|\mathcal E_M(\lambda)\|_{V\to V}\le\varepsilon_M:=
+  \frac{2C_{\mathrm{tr}}^2C_\kappa}{\ee^{q_M(r)w_{\min}}-1},
+\end{equation}
+where
+\[
+  C_{\mathrm{tr}}^2=4\max(1,w_{\min}^{-1})\max(1,\rho_{\mathrm e}^{-1}),\quad
+  C_\kappa=\max\bigl(1,(\rho_{\mathrm e}(\lambda_*+r))^{1/2}\bigr).
+\]
+\end{proposition}
+
+The bound has no factor for the number of cells. A one-dimensional trace
+inequality, summed over the disjoint strips and over the Fourier orders,
+controls all end values at once by $\|u\|_V$.
+
+\begin{theorem}[root error]\label{thm:root-error}
+Let $G=1+(1+\lambda_*+r)/(g-r)$. If $M\ge M_0$ satisfies
+\begin{equation}\label{eq:M-condition}
+  G\varepsilon_M\le\tfrac12,\qquad 8(1+\lambda_*)\,\varepsilon_M<r,
+\end{equation}
+then the truncated model has exactly one eigenvalue $\lambda_M$ in $U_r$. It is
+simple and real, and $k_M=\lambda_M^{1/2}$ satisfies
+\begin{equation}\label{eq:root-error}
+  |k_M-k_*|\le\frac{2(1+\lambda_*)}{k_*+(\lambda_*-r)^{1/2}}\,
+  \frac{2C_{\mathrm{tr}}^2C_\kappa}{\ee^{q_M(r)w_{\min}}-1}.
+\end{equation}
+In particular $|k_M-k_*|\le C\ee^{-q_Mw_{\min}}$ for large $M$, with $C$
+independent of $M$ and of the positions of the artificial boundaries and walls.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+The map $u\mapsto(A+I)^{1/2}u$ is unitary from $V$ onto $L^2(B,\rho)$ and turns
+$\mathcal T(\lambda)$ into $(A-\lambda)(A+I)^{-1}$. Split $V$ along the normalized
+eigenfunction $\phi$. On the complement the inverse is bounded by $G$ on $U_r$,
+and by \eqref{eq:compression-bound} and a Neumann series it stays bounded by
+$2G$ after adding $\mathcal E_M$. The Schur complement on $\phi$ is a holomorphic
+scalar $s_M(\lambda)$ with $|s_M-s|\le2\varepsilon_M$, where
+$s(\lambda)=(\lambda_*-\lambda)/(1+\lambda_*)$. On $\partial U_r$, $|s|>2\varepsilon_M$. By Rouché,
+$s_M$ has one zero in $U_r$, and $|\lambda_M-\lambda_*|\le2(1+\lambda_*)\varepsilon_M$. The
+symmetry $\mathcal E_M(\bar\lambda)=\mathcal E_M(\lambda)^*$ gives
+$s_M(\bar\lambda)=\overline{s_M(\lambda)}$, so the zero is real.
+\Cref{prop:compression} turns it into a truncated mode. The full proofs of
+\cref{prop:compression} and of the theorem are in \cref{app:root-error}.
+\end{proof}
+
+\subsection{Consequences}
+
+\paragraph{A rule for $M$} For a tolerance $\tau$, let
+$\eta_\tau=\min\{1/(2G),\ r/(8(1+\lambda_*)),\ (k_*+(\lambda_*-r)^{1/2})\tau/(2(1+\lambda_*))\}$.
+Every $M\ge M_0$ with
+\begin{equation}\label{eq:M-rule}
+  b_M>\Bigl(\rho_{\mathrm e}(\lambda_*+r)+w_{\min}^{-2}
+     \log^2\bigl(1+2C_{\mathrm{tr}}^2C_\kappa/\eta_\tau\bigr)\Bigr)^{1/2}
+\end{equation}
+satisfies \eqref{eq:M-condition} and $|k_M-k_*|<\tau$. For small $\tau$ this
+asks for
+\[
+  M\approx\frac{d}{2\pi w_{\min}}\log\frac1\tau .
+\]
+The relevant length is the smallest gap width, not the distance from a rod
+to an artificial boundary. The rule uses an interval that contains $\lambda_*$ and the
+separation $g$ from the rest of the spectrum; with guaranteed values of both
+it gives a guaranteed $M$. Our experiments do not provide a guaranteed $g$.
+We therefore use the rule only for the scaling of $M$ with $\tau$ and
+$w_{\min}$, and choose $M$ from the measured convergence (\cref{tab:order}).
+
+\paragraph{Retained propagating orders} Every propagating order must be
+retained. A deleted propagating order has a damping factor of modulus one
+and leaks power (\cref{rem:omitted}). The smallest admissible $M$ is the
+largest $|m|$ with $|\beta_m|<\kappa_{\mathrm e}$. In all our examples only
+$m=0$ propagates.
+
+\paragraph{Positions of the artificial boundaries} For fixed $M$ the operator
+$\mathcal E_M$ depends only on the ends $l_j,r_j$ of the gap strips. Moving an
+artificial boundary or a wall inside its strip does
+not change the roots of the exact truncated model. Individual Dirichlet blocks
+$\mathsf D_\pm$ do change, which is why \cref{sec:closure} is needed.
+
+\paragraph{Half-strips} The same bound applied to each Bloch fiber of a
+periodic medium $\rho_\pm$, whose
+spectrum lies in the essential spectrum and hence at distance at least $g$,
+shows that $G\varepsilon_M<1$ excludes unimodular multipliers of the truncated
+Floquet eigenvalue problem \eqref{eq:floquet} and makes it regular. So the hypotheses of \cref{lem:dimension}
+hold automatically for $M$ large enough.
+
+\paragraph{First order, and the measured rate} Normalize the exact mode by
+$\|\phi\|_V=1$, write its deleted part in strip $j$ as
+$\phi_m(l_j+t)=A_{jm}\ee^{-\kappa_mt}+B_{jm}\ee^{-\kappa_m(w_j-t)}$, with $A_{jm}$
+anchored at the left end and $B_{jm}$ at the right end, and let
+$p_{jm}=\ee^{-\kappa_mw_j}$ with $\kappa_m=\kappa_m(\lambda_*)$. Under
+\eqref{eq:M-condition},
+\begin{equation}\label{eq:first-order}
+  k_M-k_*=\frac{1+\lambda_*}{2k_*}\bigl(4L_M+2R_M\bigr)+O(\varepsilon_M^2),
+  \qquad
+  L_M=\sum_{j,|m|>M}\kappa_mp_{jm}\Re\bigl(\overline{A_{jm}}B_{jm}\bigr),
+\end{equation}
+and $R_M=\sum_{j,|m|>M}\kappa_mp_{jm}^2(|A_{jm}|^2+|B_{jm}|^2)$. The error is first
+order in the coupling across the strips. Self-adjointness does not make it
+quadratic, since the signed products in $L_M$ need not cancel. The $H^2$
+regularity of the mode alone gives an extra factor: the right side of
+\eqref{eq:root-error} improves to $o(\ee^{-q_Mw_{\min}}/(1+b_M^2))$. If, in
+addition, the two one-sided fields of every strip continue a distance $s$
+beyond the strip ends, into the rods, with square-summable weighted traces, $\ee^{-q_Mw_{\min}}$ improves to
+$\ee^{-q_M(w_{\min}+2s)}$. This is consistent with the measured rates in
+\cref{sec:experiments}, which are faster than $\ee^{-q_Mw_{\min}}$. Whether the
+continuation condition holds in our examples, and hence the exact rate, is
+open.

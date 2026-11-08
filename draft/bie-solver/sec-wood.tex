@@ -1,0 +1,92 @@
+% Section 7: Wood points as a limitation, with the fallback used by the search.
+% Sources: test/bie-bound/wood-probe-v1 (mechanism), failure-probe-v1 P1
+% (observed failures), wood-fallback-v1 (fallback and delta rule).
+\section{Wood points}\label{sec:wood}
+At a Wood point $k_W$ some retained order has $\gamma_m(k_W)=0$. The
+guided-mode problem is regular there (\cref{sec:rayleigh}), but the solver of
+\cref{sec:discretization,sec:leads,sec:closure} is not. This section
+explains where it fails, and describes how the search avoids these points.
+We do not remove the singularity in this paper.
+
+\subsection{Where the solver fails}\label{sec:wood-mechanism}
+Let $t=|k-k_W|$ and take the order $m=0$ with $\rho_{\mathrm e}=1$, so that
+$|\gamma_0|\approx(2k_Wt)^{1/2}$. The measurements below are for the periodicity
+and defect cells of Example 1 at $\beta=1.98154$, for $10^{-7}\le t\le10^{-1}$ on
+both sides of $k_W$ and on two grids (\texttt{wood-probe-v1}).
+\begin{enumerate}
+\item \emph{The cell equation.} The $m=0$ term of the spectral series
+  \eqref{eq:gqp-spectral} carries the factor $1/\gamma_0$, so the
+  quasi-periodic Green function itself diverges at $k_W$. The fitted exponent
+  of this term against $t$ is between $-0.5025$ and $-0.5000$. The norm of
+  the Müller matrix \eqref{eq:cell-system} grows with exponent about $-0.50$,
+  while its smallest singular value stays constant (exponents in
+  $[-0.003,0.001]$).
+\item \emph{Extraction.} The extraction kernels \eqref{eq:extract-kernels}
+  divide by $\gamma_m$. At $t=0$ this is a division by zero, which is where
+  the code first fails.
+\item \emph{The cell scattering matrix.} $S_{\mathrm{cell}}(k)-S_{\mathrm{cell}}(k_W)$
+  behaves like $t^{1/2}$ on each side; the fitted exponents of the matrix
+  norm are $0.496$ to $0.500$. This is the square-root branch of the Wood
+  anomaly of an open grating \cite{HesselOliner1965,WojcikWangOrensteinFan2021}.
+  Interpolating the determinant in $k$ across $k_W$ therefore converges only
+  algebraically.
+\end{enumerate}
+The third item is a property of the amplitude coordinates. Convert the cell
+map to wall values and normal derivatives, the coordinates
+\eqref{eq:cauchy}, and form the two-wall Dirichlet-to-Neumann map of the cell.
+It is linear in $k$ across $k_W$ (fitted exponents $1.000$ to $1.003$), and
+the bordered determinant built from it has Chebyshev coefficients that
+decrease by a factor of about $0.011$ per degree. The conversion does not
+repair the first item, however. The Green function evaluated through the
+proxy fit differs from the spectral series by about $1.4\times10^{-14}/t$
+($1.36\times10^{-7}$ at $t=10^{-7}$, $1.2\times10^{-10}$ at $t=10^{-4}$), and the
+Chebyshev coefficients of the converted determinant level off at about
+$4\times10^{-10}$. This error is the same on both density grids, because they
+share the Green precomputation, so the two-grid comparison does not detect
+it.
+
+A solver that is regular at $k_W$ must therefore change the cell problem, not
+only its output coordinates: the cell representation must avoid the
+divergent $m=0$ term, and the closure must use coordinates such as
+\eqref{eq:cauchy} in which the threshold solutions $1$ and $x-x_p$ are both
+present. Integral equations of this kind exist for open gratings
+\cite{BarnettGreengard2011,ChoBarnett2015,BrunoDelourme2014,PerezArancibiaShipmanTurcVenakides2019}
+and for band structures of doubly periodic crystals
+\cite{BarnettGreengard2010,PerezArancibiaYin2026}. Combining one with the Floquet
+eigenvalue problem and the closure of this paper is left to future work.
+
+\subsection{Fallback in the search}\label{sec:wood-fallback}
+Wood points are known before any solve: $k_W=|\beta_m|/\rho_{\mathrm e}^{1/2}$ for
+the retained orders. The search treats them as follows.
+\begin{enumerate}
+\item Split the window $[k_1,k_2]$ at every $k_W$ inside it.
+\item Remove the band $|k-k_W|<\delta$ from each piece, and never evaluate the
+  cell matrices there.
+\item On the panels next to $k_W$, interpolate the determinant in
+  $u=\operatorname{sign}(k-k_W)\,|k-k_W|^{1/2}$ instead of $k$, which follows the
+  square-root branch found in \cref{sec:wood-mechanism}. Away from $k_W$ the two variables give
+  the same roots; near $k_W$ the variable $u$ needed fewer evaluations
+  (\cref{sec:exp-wood}).
+\item Report every removed band with the result. A guided mode in a removed
+  band is reported as \emph{not searched}, not as absent.
+\end{enumerate}
+This meets requirement 5 of \cref{sec:task}, and it gives up requirement 2
+inside the removed bands. Along a dispersion curve $k_*(\beta)$ a crossing of
+$k_W(\beta)$ is a single point. The fallback misses $k_*$ only for the
+$\beta$ in a small interval around the crossing; for these $\beta$ one can
+report $k_*$ by interpolation from neighboring $\beta$, labelled as such.
+
+Roots close to a Wood point are less accurate than others, because the
+proxy error above enters the determinant, and the two-grid comparison does
+not detect it. In the experiments of \cref{sec:exp-wood} a root at distance
+$t$ from $k_W$ had an error of at most about $4\times10^{-14}/t$. For a target
+error $\varepsilon$ we therefore choose
+\[
+  \delta=\max\bigl(10^{-3},\ 5\times10^{-14}/\varepsilon\bigr).
+\]
+The first term is the smallest width at which every tested search finished;
+the second rounds up the measured constant. Both are empirical, measured on
+two examples with $\rho_{\mathrm e}=1$ and $10^{-4}\le t\le10^{-1}$; the rule is not
+a bound. A smaller $\delta$ may be tried, but every strip it adds must pass
+the interpolation tests, and a strip that does not finish is reported as not
+searched.

@@ -1,12 +1,15 @@
 % SIAM draft of the BIE guided-mode solver paper (split from draft/bie-siam on
-% 2026-11-07). Skeleton: the method section is the former Section 3 of the
-% enclosure paper; other sections are outlines. Build: latexmk main.tex
-% (latexmkrc adds the SIAM class directory).
+% 2026-11-07). First draft, positioning B (accuracy and cost; Wood points as a
+% limitation with a fallback). Remaining TODOs: see README.md.
+% Build: latexmk main.tex (latexmkrc adds the SIAM class directory).
 \documentclass[review,hidelinks,onefignum,onetabnum]{siamart251216}
 
 \usepackage{amsfonts,amssymb,mathtools,mathrsfs,stmaryrd,bm,booktabs,xcolor}
+\usepackage{tikz}
 \usepackage{amsopn}
 \DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\ran}{ran}
+\DeclareMathOperator{\ord}{ord}
 \renewcommand{\Im}{\mathrm{Im}}
 \renewcommand{\Re}{\mathrm{Re}}
 \newcommand{\ii}{\mathrm{i}}
@@ -16,14 +19,19 @@
 \newcommand{\RR}{\mathbb{R}}
 \newcommand{\ZZ}{\mathbb{Z}}
 \newcommand{\QP}{\mathrm{QP}}
+\newcommand{\rin}{\rho_{\min}}
+\newcommand{\rax}{\rho_{\max}}
+\newcommand{\creflastconjunction}{, and~}
+\newsiamremark{remark}{Remark}
+\newsiamremark{assumption}{Assumption}
+\crefname{assumption}{Assumption}{Assumptions}
 % Drafting note, printed in red; remove before submission.
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
-% Placeholder for the companion enclosure paper (draft/bie-siam).
-\newcommand{\companion}{\todo{cite enclosure paper}}
+\setlength{\emergencystretch}{1.5em}
 
-\headers{BIE computation of guided modes between two periodic leads}{Author}
+\headers{BIE computation of guided modes between two periodic half-strips}{Author}
 \title{Boundary integral computation of guided modes in periodic waveguides
-  with two different leads\thanks{Submitted to the editors DATE.}}
+  with two different periodic half-strips\thanks{Submitted to the editors DATE.}}
 \author{Author\thanks{Department of Mathematics, Example University, Example City
   (\email{author@example.com}).}}
 
@@ -31,29 +39,63 @@
 \maketitle
 
 \begin{abstract}
-\todo{Write after the novelty survey (bie-solver-novelty.md)
-fixes the contribution statement.}
+We compute guided modes of a line defect in a two-dimensional photonic
+crystal at fixed Bloch wavenumber along the defect, when the crystals on the
+two sides have different periods and rods. The solver expands the field in
+Rayleigh orders in the homogeneous gaps, solves each cell by a boundary
+integral equation with a quasi-periodic Green function, closes the two
+periodic half-strips by the decaying solutions of their Floquet eigenvalue
+problems, and finds the guided
+wavenumbers as zeros of a determinant. The usual closure through
+Dirichlet-to-Neumann matrices of the half-strips has poles that move with the
+artificial boundaries of the defect cell, and a search can accept such a pole as a mode. We
+replace it by a bordered closure whose kernel is exactly the space of discrete
+guided modes and whose determinant has no poles, and we prove that the
+decaying subspaces have the right dimension. We also bound the effect of the
+Rayleigh truncation on the guided wavenumber by $C\ee^{-q_Mw_{\min}}$, where
+$w_{\min}$ is the smallest gap width, independently of where the artificial
+boundaries are placed. On three examples the solver reproduces a published
+benchmark, and its roots agree to about $10^{-15}$ under refinement. Against high-order finite elements with Dirichlet-to-Neumann
+closure it is slower for errors between $10^{-6}$ and $10^{-10}$, and faster
+at the highest accuracy. At Wood points of the background the cell
+representation itself is singular; we show where it fails and how the search
+excludes a small band around each such point.
 \end{abstract}
 
-\section{Introduction}\label{sec:intro}
-\todo{Closest prior work (Lu and coworkers, Bloch-mode scattering matrices,
-Fliss--Joly--Klindworth--Schmidt, Barnett--Greengard) and the contribution
-statement from the survey.}
-
-\section{Model problem}\label{sec:model}
-\todo{Strip $B$, leads $\rho_\pm$, cells $\mathcal C_0,\mathcal C_{j,\pm}$,
-ports $x_\pm$, common gap $G_\beta$; take from draft/bie-siam Section 2.1.}
-
+\input{sec-intro}
+\input{sec-model}
 \input{sec-method}
+\input{sec-leads}
+\input{sec-closure}
+\input{sec-truncation}
+\input{sec-wood}
 
 \section{Numerical experiments}\label{sec:experiments}
-\todo{Convergence in the density grid, $M$ and the proxies; comparison with
-FEM + DtN at equal accuracy and cost; two different leads; modes near a gap
-edge; Wood points and Dirichlet exceptional values. Required list: see the
-survey's referee checklist.}
+\input{sec-experiments}
 
 \section{Conclusions}\label{sec:conclusion}
-\todo{}
+A boundary integral solver for guided modes between two different periodic
+half-strips can be made safe against two failures that are easy to miss. Dirichlet
+poles of the closure are removed by the bordered closure, without any
+condition on where the artificial boundaries lie. The Rayleigh order is
+controlled by the smallest gap width, not by the distance from rods to the
+artificial boundaries, and moving an artificial boundary changes no root. With
+these two pieces the solver reproduced the W3 benchmark, its roots on
+Example 1 agreed to about $10^{-15}$ under refinement, and it was cheaper than
+high-order finite elements only at errors below $10^{-11}$.
+
+Three questions remain open. First, Wood points: the solver excludes a band
+around each of them, and \cref{sec:wood} shows that removing this limitation
+requires a cell representation without the divergent grazing term, together
+with value--derivative coordinates on the artificial boundaries. Second, a numerical comparison with
+the Robin-to-Robin closure of \cite{FlissKlindworthSchmidt2015}, which avoids
+the same Dirichlet poles by a different change of coordinates. Third, the
+exact convergence rate in $M$: the measured effective widths exceed
+$w_{\min}$, and whether the continuation condition of \cref{sec:truncation}
+explains them is not known.
+
+\input{sec-appendix}
+\input{sec-acknowledgments}
 
 \bibliographystyle{siamplain-nonote}
 \bibliography{../../ref/reference}

@@ -1,0 +1,195 @@
+% Appendix: full proofs of Proposition prop:criterion and of Proposition
+% prop:compression / Theorem thm:root-error. Sources:
+% research/projects/bie-enclosure/theory/port-subspace.md (eqs. (9)-(14),
+% review 12/12 hold) and rayleigh-truncation.md (Prop. 1, Thm. 2, review
+% 11 hold, 1 citation-scope note, 0 fail).
+\appendix
+
+\section{Proof of \texorpdfstring{\cref{prop:criterion}}{the count criterion}}\label{app:criterion}
+Write $A=\mathsf E_{\mathrm L}$, $B=\mathsf E_{\mathrm R}$, let $V_\zeta=\diag(I,\zeta I)$, and let
+$\Pi$ swap the two $K$-row blocks. Multiplying out the blocks of
+\eqref{eq:pencil} and of $G_{\mathrm L},G_{\mathrm R}$ gives
+\begin{equation}\label{eq:app-swap}
+  (G_{\mathrm R}-\zeta G_{\mathrm L})V_\zeta=V_\zeta\Pi(A-\zeta B).
+\end{equation}
+For $\zeta\ne0$ take determinants and cancel $\det V_\zeta$. As a polynomial
+identity this shows that the two generalized eigenvalue problems have the
+same multipliers with the
+same algebraic multiplicities, including $0$ and $\infty$. On the unit circle
+$V_\zeta$ and $\Pi$ are unitary, so $G_{\mathrm R}-\zeta G_{\mathrm L}$ and $A-\zeta B$
+have the same singular values there. In particular $\sigma_{\min}(W)\ge g>0$ for $W=G_{\mathrm R}-G_{\mathrm L}$
+($\zeta=1$), and $W$ is invertible.
+
+Let $H=(G_{\mathrm R}+G_{\mathrm L})W^{-1}$. Expanding the products gives
+\begin{equation}\label{eq:app-skew}
+  H^*\mathsf J+\mathsf JH=2W^{-*}FW^{-1},\qquad
+  \Delta=\mathsf J^{-1}W^{-*}FW^{-1},\qquad
+  (H-\Delta)^*\mathsf J+\mathsf J(H-\Delta)=0 .
+\end{equation}
+For $0\le t\le1$ let $H_t=H-t\Delta$, $R_t=\frac12(H_t+I)W$ and
+$L_t=\frac12(H_t-I)W$. At $t=0$ these are $G_{\mathrm R}$ and $G_{\mathrm L}$. For
+$|\zeta|=1$,
+\begin{equation}\label{eq:app-homotopy}
+  \bigl\|(R_t-\zeta L_t)-(G_{\mathrm R}-\zeta G_{\mathrm L})\bigr\|
+  \le\frac{|1-\zeta|}{2}\,\|\Delta W\|
+  \le\frac{\|F\|}{j\,\sigma_{\min}(W)}<\underline g\le g,
+\end{equation}
+using $\|\mathsf J^{-1}\|=1/j$. Hence $R_t-\zeta L_t$ is invertible on the
+unit circle for every $t$. The number of zeros of
+$f_t(\zeta)=\det(R_t-\zeta L_t)$ inside the circle is
+$\frac1{2\pi\ii}\oint f_t'/f_t\,\dd\zeta$. It depends continuously on $t$ and is
+an integer, so it is constant. A multiplier may pass through $\infty$ along
+the homotopy; this does not affect the count inside the circle.
+
+At $t=1$, \eqref{eq:app-skew} shows that $H_1$ is similar to $-H_1^*$, so its
+eigenvalues come in pairs $h\leftrightarrow-\bar h$ with equal algebraic
+multiplicities. Moreover
+\[
+  R_1-\zeta L_1=\tfrac12\bigl[(1-\zeta)H_1+(1+\zeta)I\bigr]W .
+\]
+An eigenvalue of $H_1$ on the imaginary axis would give a multiplier on the
+unit circle, which \eqref{eq:app-homotopy} excludes. So $H_1$ has $K$
+eigenvalues in each open half-plane. The map $\zeta=(h+1)/(h-1)$ sends the
+left half-plane into the unit disk and the right half-plane to its exterior,
+with $h=1$ going to $\infty$; by the factorization above it preserves
+multiplicities. With the homotopy and \eqref{eq:app-swap} the claim follows.
+\qquad$\square$
+
+\begin{remark}[a computable $\underline g$]\label{rem:app-gbar}
+Let $\zeta_1,\dots,\zeta_N$ be equispaced on the unit circle and
+$\ell_j\le\sigma_{\min}(A-\zeta_jB)$. Since $\sigma_{\min}$ is Lipschitz with
+constant $\|B\|$ in $\zeta$ and every point of the circle lies within the chord
+$2\sin(\pi/(2N))$ of a node,
+$\underline g=\min_j\ell_j-2\sin(\pi/(2N))\,\|B\|$ is a lower bound for $g$.
+The experiments of this paper report observed counts and flux defects and
+do not evaluate this bound.
+\end{remark}
+
+\section{Proofs for the Rayleigh truncation}\label{app:root-error}
+We use the setting of \cref{sec:truncation}. In addition to
+\cref{ass:truncation} we use that every cell problem of the truncated model is
+uniquely solvable (\cref{ass:cell}), and that the domain of $A(\beta)$ is
+$H^2_\beta(B)$; both hold for the piecewise-constant coefficients and $C^2$
+interfaces of \cref{sec:geometry}. \todo{Cite a published regularity statement
+for $D(A)=H^2_\beta(B)$.}
+
+\subsection{Proof of \texorpdfstring{\cref{prop:compression}}{the compression proposition}}
+\emph{One deleted order.} In a gap strip $G_j$ put $t=x-l_j$ and $w=w_j$, and
+let $\kappa=\kappa_m(\lambda)$, with the branch positive on the real axis and
+$\Re\kappa>0$ on $U_r$. If $(\alpha,\delta)$ are the values of the $m$th Fourier
+coefficient at $t=0$ and $t=w$, the full model gives
+\[
+  f(t)=\frac{\sinh(\kappa(w-t))}{\sinh(\kappa w)}\,\alpha
+       +\frac{\sinh(\kappa t)}{\sinh(\kappa w)}\,\delta,\qquad
+  \begin{bmatrix}-f'(0)\\ f'(w)\end{bmatrix}=D_m\begin{bmatrix}\alpha\\ \delta\end{bmatrix}.
+\]
+In the truncated model the rods on the left of the strip see only their own
+outgoing wave $\alpha\ee^{-\kappa t}$ in this order, and the rods on the right
+only $\delta\ee^{-\kappa(w-t)}$. The outward derivatives at the two ends are
+then $\kappa\alpha$ and $\kappa\delta$, wherever the artificial boundary or wall lies in the strip.
+Truncation therefore replaces $D_m$ by $\kappa I_2$, which gives
+\eqref{eq:strip-defect}. If a strip contains several such lines, the empty cells
+between them carry no incident field in a deleted order and radiate in both
+directions, so this order vanishes there, and the rods at the two ends see the
+same $\kappa$.
+
+\emph{Trace bound.} Let $h_m=(1+\beta_m^2)^{1/2}$ and $s=\min(w,h_m^{-1})$. For
+$f\in H^1(0,w)$, averaging $f(0)=f(x)-\int_0^xf'$ over $0<x<s$ gives
+\[
+  h_m|f(0)|^2\le2h_ms^{-1}\int_0^s|f|^2+2h_ms\int_0^s|f'|^2
+  \le2\max(1,w_{\min}^{-1})\int_0^w\bigl(h_m^2|f|^2+|f'|^2\bigr),
+\]
+since $h_ms\le1$ and $h_m/s\le\max(1,w_{\min}^{-1})h_m^2$. The same holds at
+$t=w$. Apply this to $f=u_m$, sum over $m$ (orthogonality of $\psi_m$), use
+$\rho=\rho_{\mathrm e}$ in the strip, and sum over the disjoint strips:
+\begin{equation}\label{eq:app-trace}
+  \sum_j\sum_mh_m\|t_{jm}u\|^2\le C_{\mathrm{tr}}^2\|u\|_V^2 .
+\end{equation}
+
+\emph{Size of $\Delta_m$.} On $U_r$, $\Re\kappa_m\ge q_M(r)$ for $|m|>M$, because
+$(\Re\sqrt z)^2=(|z|+\Re z)/2\ge\Re z$ for $\Re z>0$; and $|\kappa_m|\le C_\kappa h_m$.
+The symmetric matrix $S$ has the orthonormal eigenvectors $(1,\pm1)/\sqrt2$, so
+$\Delta_m$ is unitarily diagonalizable with eigenvalues $2\kappa p/(1+p)$ and
+$-2\kappa p/(1-p)$, $p=\ee^{-\kappa w}$. With $|p|\le\ee^{-q_M(r)w_{\min}}$,
+\begin{equation}\label{eq:app-delta}
+  \sup_{j,\,|m|>M}\frac{\|\Delta_m(w_j,\lambda)\|_2}{h_m}
+  \le\frac{2C_\kappa}{\ee^{q_M(r)w_{\min}}-1}.
+\end{equation}
+\eqref{eq:app-trace} and \eqref{eq:app-delta} applied to both traces in the
+definition of $\mathcal E_M$ give \eqref{eq:compression-bound}. Each
+$\Delta_m/h_m$ is holomorphic and uniformly bounded on a slightly larger disk.
+By Cauchy's estimates the block-diagonal multiplier is holomorphic in
+operator norm, and so is $\mathcal E_M$. For real $\lambda$ each $\Delta_m$ is real
+symmetric, and $\Delta_m(w,\bar\lambda)=\Delta_m(w,\lambda)^*$.
+
+\emph{Kernel and truncated modes.} Let $\lambda$ be real. Given a truncated mode,
+keep the field in every block containing rods and the retained orders in the
+strips, and fill the deleted orders of each strip by the full-model
+interpolant above from the two end values. The filled field has finite energy,
+since $\int_0^w(|f'|^2+\kappa^2|f|^2)=v^*D_mv\le\kappa\coth(\kappa w/2)\|v\|^2$ for
+$v=(\alpha,\delta)$ and $h_m^2/\kappa_m^2$ is bounded for the deleted orders. Its
+weak form differs from that of the truncated model exactly by
+$\sum(t_{jm}v)^*(\kappa I_2-D_m)t_{jm}u$, so the field lies in
+$\ker\mathcal T_M(\lambda)$. Conversely, for $u\in\ker\mathcal T_M(\lambda)$, test
+functions vanishing at the strip ends show that each order solves its
+ordinary differential equation in the strip. Replace the deleted orders by
+the two one-sided outgoing exponentials with the same end values. The weak
+form then gives the matching of normal derivatives at the strip ends, which is
+the outgoing condition of the truncated model for the deleted orders. By
+uniqueness of the cell problems this is a truncated mode. The two
+constructions are inverse to each other. \qquad$\square$
+
+\subsection{Proof of \texorpdfstring{\cref{thm:root-error}}{the root-error theorem}}
+\emph{Complement.} Let $\phi$ be the eigenfunction of $A(\beta)$ at $\lambda_*$
+with $\|\phi\|_V=1$, $P$ the $V$-orthogonal projection onto $\CC\phi$, and
+$Q=I-P$. The map $u\mapsto(A+I)^{1/2}u$ is unitary from $V$ onto
+$L^2(B,\rho)$ and turns $\mathcal T(\lambda)$ into $(A-\lambda)(A+I)^{-1}$. Hence
+$P$ and $Q$ reduce $\mathcal T(\lambda)$, the $P$ block is the scalar
+$s(\lambda)=(\lambda_*-\lambda)/(1+\lambda_*)$, and for $\lambda\in U_r$ and
+$t\in\sigma(A)\setminus\{\lambda_*\}$,
+\[
+  \frac{1+t}{|t-\lambda|}\le1+\frac{|1+\lambda|}{|t-\lambda|}\le1+\frac{1+\lambda_*+r}{g-r}=G .
+\]
+So $\|(Q\mathcal T(\lambda)|_{QV})^{-1}\|\le G$, and by a Neumann series and
+\eqref{eq:M-condition}
+\[
+  H_M(\lambda)=\bigl(Q\mathcal T_M(\lambda)|_{QV}\bigr)^{-1},\qquad
+  \|H_M(\lambda)\|\le\frac{G}{1-G\varepsilon_M}\le2G .
+\]
+
+\emph{Schur complement.} Write $u=c\phi+v$ with $v\in QV$. The $Q$ rows give
+$v=-cH_MQ\mathcal E_M\phi$, so $\mathcal T_M(\lambda)$ has a nontrivial kernel iff
+\[
+  s_M(\lambda)=s(\lambda)+(\mathcal E_M\phi,\phi)_V
+  -(\mathcal E_MH_MQ\mathcal E_M\phi,\phi)_V=0 .
+\]
+$s_M$ is holomorphic on $U_r$ and
+\[
+  \sup_{U_r}|s_M-s|\le\varepsilon_M+\frac{G\varepsilon_M^2}{1-G\varepsilon_M}
+  =\frac{\varepsilon_M}{1-G\varepsilon_M}\le2\varepsilon_M .
+\]
+On $\partial U_r$, $|s|=r/(1+\lambda_*)>8\varepsilon_M>2\varepsilon_M$ by
+\eqref{eq:M-condition}. By Rouché's theorem $s_M$ has exactly one zero
+$\lambda_M$ in $U_r$, counted with multiplicity. Since
+$\mathcal E_M(\bar\lambda)=\mathcal E_M(\lambda)^*$, also
+$s_M(\bar\lambda)=\overline{s_M(\lambda)}$, so the zero is real. Evaluating
+$|s(\lambda_M)|=|s(\lambda_M)-s_M(\lambda_M)|\le2\varepsilon_M$ gives
+$|\lambda_M-\lambda_*|\le2(1+\lambda_*)\varepsilon_M<r/4$. Then
+$k_M>(\lambda_*-r)^{1/2}$ and
+$|k_M-k_*|=|\lambda_M-\lambda_*|/(k_M+k_*)$ give \eqref{eq:root-error}.
+\Cref{prop:compression} turns $\lambda_M$ into a truncated mode.
+
+\emph{Rate at $k_*$.} By the definitions of $q_M$ and $q_M(r)$,
+\[
+  0\le q_M-q_M(r)=\frac{\rho_{\mathrm e}r}{q_M+q_M(r)}
+  \le\frac{\rho_{\mathrm e}r}{q_{M_0}+q_{M_0}(r)},
+\]
+so the exponent $-q_M(r)w_{\min}$ in \eqref{eq:root-error} may be replaced by
+$-q_Mw_{\min}$ at the cost of a constant independent of $M$. Nothing in the
+argument depends on the positions of the artificial boundaries and walls inside their strips.
+\qquad$\square$
+
+\todo{Proofs of the half-strip paragraph, the first-order formula
+\eqref{eq:first-order} and the $H^2$ refinement are in the theory note
+(sections 3 and 4.2); decide whether to include them here or in a
+supplement.}

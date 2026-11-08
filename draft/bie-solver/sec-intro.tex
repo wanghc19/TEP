@@ -1,0 +1,104 @@
+% Section 1: problem, observed failures, contributions (positioning B, chosen
+% by the user on 2026-11-07: accuracy and cost; Wood points as a limitation).
+\section{Introduction}\label{sec:intro}
+A line defect in a two-dimensional photonic crystal breaks the periodicity
+across the defect and keeps it along the defect. At frequencies in a band gap
+of the surrounding crystal the defect may carry waves that propagate along it
+and decay across it, the \emph{guided modes}
+\cite{JoannopoulosJohnsonWinnMeade2008}. For a fixed Bloch wavenumber $\beta$
+along the defect they are isolated eigenvalues of a self-adjoint operator on
+an unbounded strip, inside a gap of its essential spectrum \cite{Fliss2013}.
+This paper is about computing them when the two sides of the defect are
+periodic media with possibly different periods and rods, and the medium is
+piecewise constant.
+
+Supercell methods replace the strip by a periodic one and incur a model error
+that grows as the mode becomes less localized
+\cite{Fliss2013,KlindworthSchmidtFliss2014}. Exact boundary conditions for
+periodic half guides can be built from cell problems \cite{JolyLiFliss2006}.
+With them the guided-mode problem reduces to a bounded neighborhood of the
+defect, at the price of a nonlinear eigenvalue problem in $k$
+\cite{Fliss2013}. High-order finite elements, Robin-to-Robin variants, and
+dispersion-curve tracing followed
+\cite{KlindworthSchmidtFliss2014,FlissKlindworthSchmidt2015,Klindworth2015};
+related cell reductions are in \cite{HuangLuLi2007,YuanLu2007}. Boundary
+integral equations discretize only the interfaces and, with quasi-periodic
+Green functions, reach high order with few unknowns
+\cite{Linton1998,BarnettGreengard2010,ChoBarnett2015,HaoBarnettMartinssonYoung2014}.
+Multipole and fictitious-source methods compute line-defect modes of cylinder
+arrays as zeros of a determinant, with Bloch-mode scattering matrices for the
+periodic parts \cite{BottenEtAl2004,BottenEtAl2006}.
+
+A boundary integral solver for this problem couples three pieces. In the
+homogeneous gaps between rows of rods the field is expanded in Rayleigh
+orders. Each cell, the defect cell or a periodicity cell, is solved by a boundary integral equation
+with a quasi-periodic Green function, which maps incoming to outgoing
+Rayleigh amplitudes. The periodic half-strips are closed by the decaying Floquet solutions of
+their periodicity cells. The guided-mode wavenumbers are then the zeros of
+a determinant in $k$. Each piece is standard. The difficulty is that the
+determinant can be singular, or vanish, at wavenumbers where the guided-mode
+problem is perfectly regular. In a failure study of such a solver, on the
+examples of \cref{sec:experiments}, we observed three effects.
+\begin{enumerate}
+\item \emph{Dirichlet poles.} The closure through a Dirichlet-to-Neumann matrix of
+  the half-strip divides by a Dirichlet block. Moving an artificial boundary of the
+  defect cell inside the homogeneous gap, which changes nothing physical, created a zero of this block
+  $0.0022$ below a guided mode. The search accepted the resulting pole as a
+  root.
+\item \emph{Rayleigh truncation.} The number of retained orders controls the
+  accuracy, but the usual argument, that evanescent orders are small at the
+  artificial boundary, explains only the outgoing half of the truncation. It
+  gives no rule for $M$ and suggests, wrongly, that the result depends on
+  where the artificial boundary lies.
+\item \emph{Wood points.} Guided branches cross the line $k=|\beta_m|$, where a
+  Rayleigh order changes from propagating to evanescent. At this point the
+  computation in the half-strips failed, and within $10^{-4}$ of it the determinant search
+  did not finish in its time budget, although the roots it did return were
+  still accurate.
+\end{enumerate}
+
+This paper builds a boundary integral solver for the task of
+\cref{sec:task} and makes it reliable against the first two effects. Its
+contributions are the following.
+\begin{itemize}
+\item \emph{A pole-free closure.} We close the defect cell by a bordered
+  system in its densities and the coefficients of the decaying subspaces of
+  the half-strips (\cref{thm:bordered}). Its kernel is exactly the space of
+  discrete guided modes, with no assumption on the Dirichlet blocks. A
+  determinant identity shows that the Dirichlet-to-Neumann closure is this
+  determinant divided by $\det\mathsf D_-\det\mathsf D_+$, which explains the observed
+  pole. With an analytic frame for these subspaces the bordered determinant
+  can be interpolated in $k$, and roots are accepted by a physical field test
+  rather than a singular-value ratio.
+\item \emph{The decaying subspaces.} The decaying subspace of a truncated
+  half-strip has dimension exactly $K$ in a gap, because the truncated cell conserves flux
+  (\cref{lem:dimension}). A computable criterion gives the same count for the
+  computed, slightly non-conservative cell (\cref{prop:criterion}).
+\item \emph{The Rayleigh order.} The error of the guided-mode wavenumber
+  caused by the truncation is at most $C\ee^{-q_Mw_{\min}}$, where $w_{\min}$ is
+  the smallest gap width and $C$ does not depend on the position of the
+  artificial boundaries (\cref{thm:root-error}). This gives the scaling
+  $M\approx d\log(1/\tau)/(2\pi w_{\min})$ and explains why moving an
+  artificial boundary changes no root.
+\item \emph{Accuracy and cost.} On three examples, including the W3 guide of
+  \cite{BottenEtAl2006}, the solver reproduces published values, its roots agree to
+  about $10^{-15}$ under refinement, and we compare its cost with high-order
+  finite elements and Dirichlet-to-Neumann closure on the same task.
+\end{itemize}
+We do not remove the third effect. \Cref{sec:wood} shows that at a Wood point
+the cell representation itself, not only the coordinates on the artificial
+boundaries, is singular,
+and describes how the search excludes a small band around each Wood point
+and reports it. Each ingredient of the solver is standard; the contribution
+is their combination for two different periodic half-strips, and the analysis that
+makes the closure and the choice of $M$ safe.
+
+We give no guaranteed error bounds for the computed wavenumbers; the
+accuracies reported in \cref{sec:experiments} are error estimates.
+
+\Cref{sec:model} states the model and the computational task,
+\cref{sec:discretization} the cell discretization, \cref{sec:leads} the
+decaying subspaces of the half-strips, \cref{sec:closure} the closure,
+\cref{sec:truncation} the choice of the Rayleigh order, \cref{sec:wood} Wood
+points, and \cref{sec:experiments} the experiments. The appendix contains the
+proofs of \cref{prop:criterion,thm:root-error}.

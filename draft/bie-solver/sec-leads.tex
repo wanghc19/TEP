@@ -1,0 +1,202 @@
+% Section 4: Floquet eigenvalue problem of a periodicity cell, flux identity, dimension of the decaying subspaces
+% (Lemma A of research/projects/bie-enclosure/theory/port-subspace.md, reviewed
+% 12/12 in port-subspace-review.md), the fully discrete criterion, ordered QZ.
+\section{Decaying subspaces of the half-strips}\label{sec:leads}
+
+\subsection{The Floquet eigenvalue problem}\label{sec:pencil}
+Anchor the port states of one periodicity cell at its own walls,
+$z_{\mathrm L}=(a_{\mathrm L};b_{\mathrm L})$ and $z_{\mathrm R}=(a_{\mathrm R};b_{\mathrm R})$.
+The scattering relation \eqref{eq:smatrix} is equivalent to
+\begin{equation}\label{eq:pencil}
+  \mathsf E_{\mathrm L}z_{\mathrm L}=\mathsf E_{\mathrm R}z_{\mathrm R},\qquad
+  \mathsf E_{\mathrm L}=\begin{bmatrix}-R_{\mathrm L}&I\\ T_{\mathrm{LR}}&0\end{bmatrix},\qquad
+  \mathsf E_{\mathrm R}=\begin{bmatrix}0&T_{\mathrm{RL}}\\ I&-R_{\mathrm R}\end{bmatrix}.
+\end{equation}
+In a periodic half-strip the right wall of one cell is the left wall of the
+next.
+A sequence of states $(z_j)_{j\ge0}$ on consecutive walls is compatible if
+$\mathsf E_{\mathrm L}z_j=\mathsf E_{\mathrm R}z_{j+1}$ for all $j$. A Floquet
+solution $z_{j+1}=\zeta z_j$ solves the \emph{Floquet eigenvalue problem}
+\begin{equation}\label{eq:floquet}
+  (\mathsf E_{\mathrm L}-\zeta\mathsf E_{\mathrm R})\,z_0=0,
+\end{equation}
+a generalized eigenvalue problem whose eigenvalue $\zeta$ is the Floquet
+multiplier of the solution (in numerical linear algebra,
+$\mathsf E_{\mathrm L}-\zeta\mathsf E_{\mathrm R}$ is the matrix pencil
+$(\mathsf E_{\mathrm L},\mathsf E_{\mathrm R})$). We call the problem \emph{regular} if
+$\det(\mathsf E_{\mathrm L}-\zeta\mathsf E_{\mathrm R})$ does not vanish identically in
+$\zeta$. It then has $2K$ multipliers in $\CC\cup\{\infty\}$, counted with
+algebraic multiplicity; $\zeta=\infty$ occurs when $\mathsf E_{\mathrm R}$ is singular. For $S_+$ we need the subspace of initial states whose
+compatible sequences are square summable, and for $S_-$ the
+analogous subspace towards $-\infty$, obtained from the reversed problem
+$(\mathsf E_{\mathrm R}-\zeta\mathsf E_{\mathrm L})z_0=0$.
+
+The continuous half-strip has as many decaying as growing solutions in a
+gap. For the discrete problem this count is not automatic. A $2K\times2K$
+generalized eigenvalue problem may have any number of multipliers inside the unit circle, and if the number is
+not $K$, the closure of \cref{sec:closure} is not square. The next lemma
+shows that the count follows from energy conservation of the truncated cell.
+
+\subsection{Flux and the dimension of the decaying subspace}\label{sec:flux}
+Let $u_M$ be the retained part \eqref{eq:rayleigh} of a field on a wall. Its
+flux through the wall in the direction $+e_x$ is a Hermitian form in the
+port state:
+\begin{equation}\label{eq:flux}
+  \Phi(z)=\Im\int_{I_d}\overline{u_M}\,\partial_xu_M\,\dd y=z^*\mathsf J z,
+  \qquad
+  \mathsf J=\begin{bmatrix}\Re\boldsymbol\gamma&-\ii\Im\boldsymbol\gamma\\
+     \ii\Im\boldsymbol\gamma&-\Re\boldsymbol\gamma\end{bmatrix}.
+\end{equation}
+Indeed, the cross terms between different orders vanish by orthogonality. A
+propagating order contributes $\gamma_m(|a_m|^2-|b_m|^2)$, and an evanescent
+order contributes $2\kappa_m\Im(\bar a_mb_m)$. Each $2\times2$ block of
+$\mathsf J$ has eigenvalues $\pm|\gamma_m|$. Away from Wood points
+$\mathsf J$ is therefore nondegenerate with $K$ positive and $K$ negative
+eigenvalues.
+
+\begin{assumption}[truncated periodicity cell]\label{ass:cell}
+$k>0$ and $\beta$ are real, every propagating order is retained, and no
+retained order is at a Wood point. The scattering matrix in
+\eqref{eq:pencil} is that of the exact single-cell problem: retained incident
+orders, zero incident amplitude in the deleted orders, and outgoing fields in
+all orders. This problem has a unique solution for every incident vector.
+\end{assumption}
+
+\begin{lemma}[dimension of the decaying subspaces]\label{lem:dimension}
+Under \cref{ass:cell}, suppose the problem \eqref{eq:floquet} is regular and
+$\mathsf E_{\mathrm L}-\zeta\mathsf E_{\mathrm R}$ is invertible for all $|\zeta|=1$.
+Then the generalized eigenspaces of the multipliers with $|\zeta|<1$ span a
+subspace $\mathcal Z_+\subset\CC^{2K}$ of dimension exactly $K$, and so do
+those with $|\zeta|>1$, including $\zeta=\infty$. Both are $\mathsf J$-neutral:
+$v^*\mathsf Jw=0$ for all $v,w$ in the same subspace. The square-summable
+compatible sequences in $S_+$ are exactly those with $z_0\in\mathcal Z_+$.
+\end{lemma}
+
+\begin{proof}
+\emph{Cell identity.} Let $h=(a_{\mathrm L};b_{\mathrm R})$ be an incident vector
+and let $G_{\mathrm L}h$ and $G_{\mathrm R}h$ be the resulting states on the two
+walls, with
+\[
+  G_{\mathrm L}=\begin{bmatrix}I&0\\ R_{\mathrm L}&T_{\mathrm{RL}}\end{bmatrix},\qquad
+  G_{\mathrm R}=\begin{bmatrix}T_{\mathrm{LR}}&R_{\mathrm R}\\ 0&I\end{bmatrix}.
+\]
+Green's formula on the cell, with real $k^2\rho$, transmission conditions on
+the rods and quasi-periodic conditions on the top and bottom edges, shows that
+the flux $\Im\int\bar u\,\partial_xu\,\dd y$ of the exact field is the same on
+both walls. A deleted order has a single outgoing evanescent amplitude on each
+wall, so its flux is zero. Hence $\Phi(G_{\mathrm L}h)=\Phi(G_{\mathrm R}h)$ for all
+$h$, and by polarization
+\begin{equation}\label{eq:flux-identity}
+  G_{\mathrm R}^*\mathsf JG_{\mathrm R}=G_{\mathrm L}^*\mathsf JG_{\mathrm L}.
+\end{equation}
+Every compatible pair $(z_{\mathrm L},z_{\mathrm R})$ is of the form
+$(G_{\mathrm L}h,G_{\mathrm R}h)$, since $h$ can be read off from the first block of
+$z_{\mathrm L}$ and the second block of $z_{\mathrm R}$.
+
+\emph{Neutrality.} Let $Z$ be a basis of the generalized eigenspace of the
+multipliers inside the unit circle. There is a matrix $P$ with spectral radius
+less than one and $\mathsf E_{\mathrm L}Z=\mathsf E_{\mathrm R}ZP$. For $c,e\in\CC^K$ the
+sequences $z_j=ZP^jc$ and $w_j=ZP^je$ are compatible, and
+\eqref{eq:flux-identity} gives $z_j^*\mathsf Jw_j=z_{j+1}^*\mathsf Jw_{j+1}$. Since
+$P^j\to0$, $z_0^*\mathsf Jw_0=0$. The subspace of multipliers outside the circle
+is treated in the same way with the reversed recursion. Generalized
+eigenvectors are included because the argument uses only $P^j\to0$.
+
+\emph{Dimension.} In the eigenbasis of $\mathsf J$ the flux reads
+$\|p\|^2-\|q\|^2$ with $p,q\in\CC^K$. On a neutral subspace, $p=0$ forces
+$q=0$, so the map to $p$ is injective and the dimension is at most $K$.
+Regularity and invertibility on the unit circle make the two subspaces a
+direct sum equal to $\CC^{2K}$, so each has dimension $K$.
+
+\emph{Square-summable sequences.} Project the recursion onto the subspace of
+the multipliers outside the circle. Its component satisfies
+$w_j=P_{\mathrm{rev}}^\ell w_{j+\ell}$ with $P_{\mathrm{rev}}^\ell\to0$, so it vanishes
+for a bounded sequence.
+\end{proof}
+
+The lemma does not need the multipliers to be simple, and it allows zero and
+infinite multipliers. Three remarks delimit it.
+\begin{remark}[bands]\label{rem:bands}
+If $k^2$ lies in a band, unimodular multipliers occur. If they are all
+semisimple, the decaying subspace plus the positive-flux part of each
+unimodular eigenspace again has dimension $K$. Without semisimplicity this
+fails. The flux-preserving transfer matrix
+$\left[\begin{smallmatrix}1+\ii&1\\1&1-\ii\end{smallmatrix}\right]$ with
+$\mathsf J=\diag(1,-1)$ has a single eigenvector, of zero flux.
+\end{remark}
+\begin{remark}[omitted propagating orders]\label{rem:omitted}
+If a propagating order is deleted, the flux of the retained orders decreases
+along the half-strip by the outgoing power of that order. The count can still equal
+$K$, so the count does not detect the error, but the model now loses energy.
+For this reason \cref{ass:cell} requires all propagating orders to be retained;
+see also \cref{sec:truncation}.
+\end{remark}
+\begin{remark}[Wood points]\label{rem:wood-flux}
+At a retained Wood order the corresponding block of $\mathsf J$ vanishes, and
+the proof breaks at its first step. In value--derivative coordinates the
+threshold solution $q+p(x-x_p)$ has the nondegenerate flux $\Im(\bar qp)$.
+\Cref{sec:wood} explains why this change of coordinates alone does not make
+the solver regular at Wood points.
+\end{remark}
+
+\subsection{A criterion for the computed cell}\label{sec:criterion}
+The computed scattering matrices are not exact, and
+\eqref{eq:flux-identity} holds only approximately. The following criterion
+gives the count for the computed matrices themselves. Let
+$A=\mathsf E_{\mathrm L}$ and $B=\mathsf E_{\mathrm R}$ be the computed blocks and define
+\begin{equation}\label{eq:defect}
+\begin{gathered}
+  F=G_{\mathrm R}^*\mathsf JG_{\mathrm R}-G_{\mathrm L}^*\mathsf JG_{\mathrm L},\qquad
+  g=\min_{|\zeta|=1}\sigma_{\min}(A-\zeta B),\\
+  j=\min_{|m|\le M}|\gamma_m|,\qquad W=G_{\mathrm R}-G_{\mathrm L}.
+\end{gathered}
+\end{equation}
+
+\begin{proposition}[count for the computed cell]\label{prop:criterion}
+If $0<\underline g\le g$ and $\|F\|<j\,\sigma_{\min}(W)\,\underline g$, then the
+computed problem \eqref{eq:floquet} has exactly $K$ multipliers inside the unit circle and $K$
+outside, including $\infty$, counted with algebraic multiplicity.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+With $V_\zeta=\diag(I,\zeta I)$ and the block swap $\Pi$ one checks
+$(G_{\mathrm R}-\zeta G_{\mathrm L})V_\zeta=V_\zeta\Pi(A-\zeta B)$. On the unit circle the two
+matrix functions therefore have the same singular values, and in particular
+$\sigma_{\min}(W)\ge g$. Set $H=(G_{\mathrm R}+G_{\mathrm L})W^{-1}$. Then
+$H^*\mathsf J+\mathsf JH=2W^{-*}FW^{-1}$, so
+$\Delta=\mathsf J^{-1}W^{-*}FW^{-1}$ makes $H-\Delta$ exactly $\mathsf J$-skew. Along
+the homotopy $H-t\Delta$, $0\le t\le1$, the matrices move by at most
+$\|F\|/(j\,\sigma_{\min}(W))<\underline g$ on the circle. They stay invertible
+there, and the number of multipliers inside the circle is constant. At $t=1$
+the eigenvalues of $H-\Delta$ pair as $h\leftrightarrow-\bar h$ and avoid the
+imaginary axis. The Cayley map $\zeta=(h+1)/(h-1)$ sends the $K$ eigenvalues
+in each half-plane to the inside and the outside of the circle. The full
+proof is in \cref{app:criterion}.
+\end{proof}
+
+The separation $g$ is the distance of $A-\zeta B$ from singularity on the
+circle, not the radial distance of the multipliers from the circle. The two
+can differ arbitrarily for nonnormal problems, which is why the criterion uses
+$g$. A computable lower bound $\underline g$ follows from $\sigma_{\min}$ at
+finitely many points on the circle and a Lipschitz bound
+(\cref{rem:app-gbar}). In the experiments we report the observed counts and
+the flux defects, which are at rounding level; we do not evaluate the
+criterion with a verified $\underline g$.
+
+\subsection{Ordered QZ}\label{sec:qz}
+An ordered QZ decomposition $\mathsf Q\mathsf E_{\mathrm L}\mathsf V=\mathsf U_{\mathrm L}$,
+$\mathsf Q\mathsf E_{\mathrm R}\mathsf V=\mathsf U_{\mathrm R}$ with the $K$ multipliers
+$|\zeta|<1$ first gives an orthonormal basis $\mathsf Z_+$ (the first $K$
+columns of $\mathsf V$) of $\mathcal Z_+$, and
+\begin{equation}\label{eq:propagation}
+  \mathsf E_{\mathrm L}\mathsf Z_+=\mathsf E_{\mathrm R}\mathsf Z_+\mathsf P_+,\qquad
+  \mathsf P_+=\mathsf U_{\mathrm R,11}^{-1}\mathsf U_{\mathrm L,11}.
+\end{equation}
+The states $z_j=\mathsf Z_+\mathsf P_+^jc$ on consecutive walls are the decaying
+solutions in $S_+$. For $S_-$, the reversed problem gives $\mathsf Z_-$
+and $\mathsf P_-$ with $\mathsf E_{\mathrm R}\mathsf Z_-=\mathsf E_{\mathrm L}\mathsf Z_-\mathsf P_-$. The
+whole Schur subspace keeps multiple and nonnormal multipliers. A change of
+basis $\mathsf Z_\pm\mapsto\mathsf Z_\pm U$ only conjugates $\mathsf P_\pm$. The solver
+rejects the frequency, and reports this, if $\mathsf E_{\mathrm L}-\zeta\mathsf E_{\mathrm R}$ is
+numerically singular for all $\zeta$, if the cluster size is not $K$, or if a multiplier lies in a
+tolerance annulus around the circle.

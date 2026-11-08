@@ -1,0 +1,242 @@
+% Section 8: numerical experiments. Sources (all under test/bie-bound/):
+% litbench-v1, pole-free-v1, rayleigh-order-v1, solver-cost-v1,
+% failure-probe-v1 (P1), wood-fallback-v1. Numbers are copied from
+% the experiment READMEs; the section heading is in main.tex.
+
+\subsection{Examples and settings}\label{sec:examples}
+All examples have $d=1$ and $\rho_{\mathrm e}=1$, so that only the order $m=0$
+propagates in the windows used and its Wood line is $k=|\beta|$.
+\begin{itemize}
+\item \emph{Example 1}: $\beta=0.5$, $L_0=L_\pm=1$. The defect rod, with $\rho=4$,
+  is the star
+  $(x,y)=0.2\,(1.5\cos t+0.15\cos6t+0.15\cos4t,\ \sin t+0.15\sin6t-0.15\sin4t)$.
+  Each periodicity cell contains, at its center, the three-lobed rod
+  $r(t)=c\,(1+a\cos3t)$ with $c=0.2(1+a^2/2)^{-1/2}$ and $\rho=17$, with $a=0.12$ on
+  the left and $a=0.20$ on the right.
+\item \emph{Example 2}: as Example 1, but with an empty defect cell, $L_+=0.85$, and
+  the rod of $S_+$ rotated by $0.13$.
+\item \emph{W3}: the guide with three missing rows of \cite{BottenEtAl2006}, a
+  hexagonal array of circular rods of radius $0.2$ and refractive index $3$ in
+  air, TM polarization, row spacing $h=\sqrt3/2$, half-strip period $2h$.
+\end{itemize}
+The smallest gap widths are $w_{\min}=0.4685$, $0.4289$ and $h-0.4=0.4660$. A
+grid label $N/M$ gives the number of nodes on the defect rod and the
+Rayleigh half-width; the rods of the half-strips have $N/2$ nodes. Unless stated otherwise the
+two grids are $128/6$ and $192/12$, and a root is accepted only if it is found
+on both (\cref{sec:search}). Timings are wall-clock times on one machine,
+including the start and exit of MATLAB.
+
+\subsection{Literature benchmark}\label{sec:litbench}
+For W3 at $d/\lambda=0.32$ the solver gives $\alpha_0d=\beta d=1.6754070619$,
+which agrees with the printed value $1.67541$ of \cite{BottenEtAl2006} in all
+six digits. Conversely, at the printed $\beta d=1.67541$ it gives
+$d/\lambda=0.32000027$. The second mode at $\beta d=0.2$ gives
+$d/\lambda=0.33252418$, consistent with the published dispersion figure. For
+$N\in\{64,128,256\}$ and $M\in\{12,24\}$ the six computed values of each mode
+agree to at least $15$ significant digits (\texttt{litbench-v1}).
+
+\subsection{Pole-free closure}\label{sec:exp-pole}
+\Cref{tab:pole-free} compares the Dirichlet-to-Neumann closure
+\eqref{eq:port-matrix} with the bordered closure \eqref{eq:bordered} on
+regular and moved artificial boundaries of Example 1. Over nine cases at two resolutions,
+the bordered search returned every expected root, accepted no pole, and
+refused no window. The root counts of $18$ independent dense scans of the
+projection test \eqref{eq:projection} agreed with the search. In the regular
+cases the two closures agree to $8.4\times10^{-15}$.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Example 1 near $k_*=1.558437894182088$ with the right artificial
+boundary moved inside its gap strip. ``Offset'' places a Dirichlet pole $0.0022$ below
+the mode; ``aligned'' moves the pole onto the mode; ``node'' puts the root on
+a Chebyshev node. The last column is the wall jump of the accepted field.
+Source: \texttt{pole-free-v1}.}
+\label{tab:pole-free}
+\begin{tabular}{llll}
+\toprule
+case, grid & DtN closure & bordered closure & wall jump\\
+\midrule
+reference, 128/6 & $1.558437894182088$ & $1.5584378941820876$ & $4.3\times10^{-6}$\\
+offset, 128/6 & refused & $1.5584378941820884$ & $4.3\times10^{-5}$\\
+offset, 192/12 & $1.55625026$ (pole) & $1.5584378941820887$ & $1.5\times10^{-7}$\\
+aligned, 128/6 & refused & $1.5584378941820889$ & $4.5\times10^{-5}$\\
+aligned, 192/12 & refused & $1.5584378941820887$ & $1.6\times10^{-7}$\\
+node, 192/12 & no root & $1.5584378941820889$ & $5.3\times10^{-11}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The Dirichlet-to-Neumann closure accepted the pole at $1.55625026$ because
+its singular-value ratio there was $4.5\times10^{-16}$, the largest singular
+value having grown to about $2\times10^{13}$. The physical test of
+\cref{sec:search} also rejects this frequency: the field of the old null
+vector has wall jumps $0.052$ and $0.061$ on the two grids, which fails both
+the absolute and the refinement gate. The bordered matrix has no small
+singular value there ($\sigma_{\min}=1.75\times10^{-3}$, against about
+$10^{-14}$ at roots), so it never proposes this frequency. The field test is a
+second line of defense; it is the structure of \eqref{eq:bordered} that
+removes the pole.
+
+\subsection{Rayleigh order}\label{sec:exp-order}
+\Cref{tab:order} gives $|k_M-k_{24}|$ at fixed $N$. Fitting
+$\log|k_M-k_{24}|\approx c-2\pi Mw_{\mathrm{eff}}$ over the orders above the
+rounding floor gives $w_{\mathrm{eff}}=0.738$, $0.698$, $0.928$ for Example 1,
+Example 2 and W3. These are larger than $w_{\min}$ in every case, which
+\cref{thm:root-error} allows and the continuation remark of
+\cref{sec:truncation} explains in part. Moving the right artificial boundary of
+Example 1 by $-0.04$, $+0.06$ and $+0.16$ changes the roots by at most
+$1.6\times10^{-15}$ and $w_{\mathrm{eff}}$ by less than $10^{-4}$, as predicted by
+the paragraph on the positions of the artificial boundaries in \cref{sec:truncation}. In the common gaps of
+all three examples the computed Floquet eigenvalue problems had $K$ multipliers inside the
+unit circle, with flux defects $\|F\|$ of about $10^{-15}$
+(\texttt{rayleigh-order-v1}).
+
+\begin{table}[htbp]
+\centering\small
+\caption{$|k_M-k_{24}|$ at $N=128$. Source: \texttt{rayleigh-order-v1}.}
+\label{tab:order}
+\begin{tabular}{lccccc}
+\toprule
+ & $M=1$ & $2$ & $3$ & $4$ & $5$\\
+\midrule
+Example 1 & $9.1\times10^{-7}$ & $1.5\times10^{-9}$ & $4.9\times10^{-11}$ & $5.5\times10^{-13}$ & $2.2\times10^{-15}$\\
+Example 2 & $1.0\times10^{-6}$ & $1.4\times10^{-9}$ & $1.3\times10^{-11}$ & $6.3\times10^{-13}$ & $1.4\times10^{-14}$\\
+W3 & $5.2\times10^{-6}$ & $1.3\times10^{-8}$ & $3.9\times10^{-11}$ & $1.3\times10^{-13}$ & $2.2\times10^{-15}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Cost against high-order finite elements}\label{sec:exp-cost}
+The task is that of \cref{sec:task} for Example 1: return all guided modes in
+the window $[1.451,2.249]$ at $\beta=0.5$, starting from a fresh MATLAB process
+with no cached data, on $11$ threads. The comparison method is the finite
+element method with $P_4$ elements on a mesh with $g$ background subdivisions
+per cell side and the Dirichlet-to-Neumann closure of
+\cite{JolyLiFliss2006,Fliss2013}. Each solver's error is the distance of its
+root to the reference value $k_{\mathrm{ref}}=1.558437894182088$. All boundary
+integral roots with $N\in\{128,192,256,512\}$ and $6\le M\le48$ agree with
+$k_{\mathrm{ref}}$ to within $9\times10^{-16}$, and the $P_4$ roots approach it
+under mesh refinement, with distances $1.5\times10^{-9}$, $2.9\times10^{-11}$ and
+$1.8\times10^{-12}$ for $g=12,24,48$. For the boundary integral solver the error is
+therefore a self-convergence estimate, checked independently by the finite
+element roots to about $2\times10^{-12}$; it is not a bound, and errors below
+about $10^{-12}$ are not resolved.
+\Cref{tab:cost} gives the cheapest measured configuration of each method in
+each accuracy class.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Cheapest configuration reaching each error class, Example 1. Time
+includes MATLAB start and exit; each configuration was timed once.
+The error is $|k-k_{\mathrm{ref}}|$. Source:
+\texttt{solver-cost-v1}.}
+\label{tab:cost}
+\begin{tabular}{lllr}
+\toprule
+error & BIE: grid, s, GiB & FEM: grid, s, GiB & BIE/FEM time\\
+\midrule
+$10^{-6}$ & $128/2$, $38.6$, $0.84$ & $P_4$, $g=12$, $16.7$, $1.05$ & $2.31$\\
+$10^{-8}$ & $128/2$, $38.6$, $0.84$ & $P_4$, $g=12$, $16.7$, $1.05$ & $2.31$\\
+$10^{-10}$ & $128/6$, $38.8$, $0.81$ & $P_4$, $g=24$, $27.5$, $1.29$ & $1.41$\\
+$10^{-11}$ & $128/6$, $38.8$, $0.81$ & $P_4$, $g=48$, $97.8$, $1.21$ & $0.40$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For errors between $10^{-6}$ and $10^{-10}$ the finite element method is $1.4$
+to $2.3$ times faster. The time of the boundary integral solver hardly
+depends on the accuracy, about $39$\,s, most of it in $35$ determinant
+evaluations; with $M=2$ and $M=6$ it takes $38.6$ and $38.8$\,s. For an error
+below $10^{-11}$ it is $2.5$ times faster than the cheapest finite element
+configuration that reaches it. On this example the boundary integral
+solver is therefore the cheaper method only at the highest accuracy. The
+comparison covers one example, one machine and one timing per
+configuration.
+
+\subsection{Near Wood points}\label{sec:exp-wood}
+The guided branch of Example 1 crosses the Wood line $k=|\beta|$ near
+$\beta\approx1.98154$, and that of W3 near $\beta\approx2.97503$
+(\texttt{failure-probe-v1}). At $\beta$ values whose root lies at distance
+$10^{-4}$ to $10^{-1}$ from $k_W$, a Newton iteration started near the root
+converged on both grids. At distance $10^{-4}$ the two grids agree to
+$6.4\times10^{-12}$ (Example 1) and $2.7\times10^{-12}$ (W3). The global search behaved worse. A window
+containing $k_W$ failed at its first evaluation, at $k=k_W$. One-sided
+windows ending $10^{-4}$ from $k_W$ did not finish within $130$\,s (coarse
+grid) and $90$\,s (fine grid) in any of eight cases.
+
+The fallback of \cref{sec:wood-fallback} was tested on windows
+$[k_W-0.02,k_W+0.02]$ at the $\beta$ values above, eight for Example 1 and
+four for W3, on both grids, with a time cap of $150$\,s per search and grid
+(\texttt{wood-fallback-v1}). The two Example 1 roots at distance $0.1$ were
+searched in separate windows. No evaluation fell inside an excluded band;
+in $12{,}498$ cell evaluations the closest one was at distance $\delta$,
+up to rounding.
+
+\emph{Completion.} With $\delta=10^{-3}$ every search finished, in both
+interpolation variables: $24$ of $24$ cases, with median cumulative determinant times of
+$26$\,s for the variable $u=\operatorname{sign}(k-k_W)|k-k_W|^{1/2}$ and $37$\,s for
+$k$ itself. At $\delta=10^{-4}$ the outcome depended on the panels. When the
+retained side of $k_W$ was one $u$-panel from the start, all $30$ searches of
+the branch scan below finished, in $17$ to $38$\,s. In one Example 1 window the
+$k$-panels needed $308$ evaluations and $122$\,s, against $56$ evaluations and
+$21$\,s in $u$. When a search at $\delta=10^{-2}$ was extended by the two new
+strips down to $10^{-4}$, five of the six tested cases in each variable did
+not finish within the cap or reached the depth limit. At $\delta=10^{-5}$ no tested search finished. In
+these strips the coefficient and off-grid tests kept failing under
+subdivision (for example a relative off-grid discrepancy of $3\times10^{-9}$
+against the gate $10^{-9}$). This is consistent with the Green error of
+\cref{sec:wood-mechanism}, which subdivision cannot remove, but we have not
+isolated the cause.
+
+\emph{Accuracy.} \Cref{tab:wood-roots} compares each returned root with a
+reference computed with a more accurate Green function: the proxy fit of the
+quasi-periodic Green function is replaced by one that prescribes its
+exponentially convergent Rayleigh series on the top and bottom of the fitting
+box. This reduces the Green error at $t=10^{-4}$ from $1.2\times10^{-10}$ to
+$7.1\times10^{-15}$; the boundary integral discretization is unchanged, so the
+difference measures only the effect of the Green error. Refining the new fit
+further moved the reference roots by at most $1.7\times10^{-12}$. The
+difference grows roughly like $1/t$
+(fitted slopes $-0.94$ and $-1.11$ on the two sides of $k_W$), and
+$t\,|k-k_{\mathrm{ref}}|\le4.1\times10^{-14}$ for Example 1 and
+$5.7\times10^{-15}$ for W3 over the tested range. Near $k_W$ the two-grid
+difference underestimates this error by a factor of about $16$, as
+\cref{sec:wood-mechanism} predicts.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Roots returned by the fallback on the fine grid, Example 1.
+$t=k_*-k_W$; ``reference'' uses the more accurate Green function on the same
+discretization. The rows $\pm1.2\times10^{-4}$ are from the branch scan
+($\delta=10^{-4}$), the others from searches with $\delta=10^{-3}$ or $10^{-4}$.
+Source: \texttt{wood-fallback-v1}.}
+\label{tab:wood-roots}
+\begin{tabular}{rlll}
+\toprule
+$t$ & returned $k$ & two-grid difference & difference to reference\\
+\midrule
+$10^{-1}$ & $1.9117673817423038$ & $2.2\times10^{-16}$ & $1.8\times10^{-13}$\\
+$10^{-2}$ & $1.9743542511171162$ & $6.0\times10^{-15}$ & $1.8\times10^{-12}$\\
+$10^{-3}$ & $1.9808233223406590$ & $<10^{-16}$ & $7.6\times10^{-12}$\\
+$1.2\times10^{-4}$ & $1.9814575417863407$ & $3.8\times10^{-12}$ & $6.3\times10^{-11}$\\
+$-1.2\times10^{-4}$ & $1.9816305613218432$ & $4.0\times10^{-12}$ & $6.5\times10^{-11}$\\
+$-10^{-3}$ & $1.9822651530044606$ & $7.0\times10^{-14}$ & $8.3\times10^{-12}$\\
+$-10^{-2}$ & $1.9887716011465046$ & $<10^{-16}$ & $1.1\times10^{-12}$\\
+$-10^{-1}$ & $2.0549852982808585$ & $3.6\times10^{-15}$ & $3.8\times10^{-14}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{Branch check.} For $15$ values of $\beta$ along the Example 1 branch,
+with $k_*-k_W$ between $-5\times10^{-4}$ and $5\times10^{-4}$, the fallback with
+$\delta=10^{-4}$ returned the mode on both grids at the $10$ values where it lies
+outside the excluded band. At the other five, where interpolation from the
+neighboring $\beta$ puts it at $|k_*-k_W|\le8\times10^{-5}$, both grids
+finished their retained windows with no root, and the band was reported as
+not searched. No other root was returned near either edge of the band.
+
+The fallback thus does what \cref{sec:wood-fallback} claims, on two examples:
+it never evaluates the cell matrices near $k_W$, it returns the modes outside
+the band, and it reports the band. Its accuracy near $k_W$ is limited by the
+Green error, not by the interpolation, and the two-grid test does not see this
+limit.

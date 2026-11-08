@@ -1,4 +1,4 @@
-# bie-solver：两侧不同周期引线的线缺陷导模 BIE 求解器（SIAM 草稿，骨架）
+# bie-solver：两侧不同周期引线的线缺陷导模 BIE 求解器（SIAM 草稿，第一版）
 
 BIE = boundary integral equation（边界积分方程）；DtN = Dirichlet-to-Neumann；QZ = 广义 Schur 分解；SIAM = Society for Industrial and Applied Mathematics。
 
@@ -9,12 +9,41 @@ BIE = boundary integral equation（边界积分方程）；DtN = Dirichlet-to-Ne
 
 ## 文件
 
-- `main.tex`：骨架。除方法节外，其余各节只有 TODO 提纲。
-- `sec-method.tex`：原 `draft/bie-siam/sec-discretization.tex`（提交 cc23eea）原样移入，只把对保证区间论文的交叉引用换成占位宏 `\companion`。还没有按本稿重写。
+- `main.tex`：主文件，宏包、宏定义、摘要、各节 `\input`、结论。
+- `sec-intro.tex`：引言。问题、三种失效现象、贡献（定位 B）、路线图。
+- `sec-model.tex`：模型、间隙条带与 $w_{\min}$、导模、公共带隙、Rayleigh 阶与 Wood 点、计算任务与五项要求、两类表示奇异。
+- `sec-method.tex`：单胞离散。Rayleigh 端口与 Cauchy 坐标、准周期层势与 Müller 方程、提取矩阵 $\mathsf F$ 的显式公式、引线胞散射矩阵、中心胞。
+- `sec-leads.tex`：引线束、能流、引理 A（衰减子空间维数 $K$）、全离散判据、有序 QZ。
+- `sec-closure.tex`：DtN 闭合及其极点、加边闭合（定理 B）、解析标架、实频投影检验、求根与物理接受判据。注记 `rem:holomorphy` 已按证明审查（`research/projects/bie-enclosure/theory/holomorphy-remark-review.md`）改写。
+- `sec-truncation.tex`：Rayleigh 阶的选择。条带压缩（命题）、根误差定理、选阶规则、端口位置无关、引线、首阶公式。来源 `research/projects/bie-enclosure/theory/rayleigh-truncation.md`（审查 11/1/0）。
+- `sec-wood.tex`：Wood 点。失效位置（`wood-probe-v1`）、回退方案（切分窗口、排除 $|k-k_W|<\delta$ 的带并报告）。插值变量与 $\delta$ 规则来自 `wood-fallback-v1`。
+- `sec-experiments.tex`：数值实验。算例、文献算例、无极点闭合、Rayleigh 阶、与 FEM 的成本比较、Wood 点附近。
+- `sec-appendix.tex`：附录。判据（命题 4.6）的完整证明；条带压缩命题与根误差定理的完整证明。
+- `sec-acknowledgments.tex`：致谢与 AI 使用声明（按 SIAM AI 政策 2.0）。
+- `fig-waveguide.tex`：几何示意图，取自 `draft/bie-siam/`。
 - `latexmkrc`、`siamplain-nonote.bst`：与 `draft/bie-siam/` 相同。
 - 编译：在本目录运行 `latexmk main.tex`，之后运行 `latexmk -c main.tex`。
 
+## 起草计划（2026-11-07，用户批准起草已完成部分）
+
+按阶段写，每阶段写完即存盘：
+
+1. `main.tex` 重排节结构；`sec-model.tex`（模型、两条引线、单胞、导模、公共带隙、Wood 点、计算问题 P）；`fig-waveguide.tex` 从 `draft/bie-siam/` 复制。
+2. `sec-method.tex` 重写为“单胞离散”：Rayleigh 端口、层势与 Müller 方程、提取矩阵 $\mathsf F$ 的显式公式、引线胞散射矩阵、中心胞。
+3. `sec-leads.tex`：引线束、能流恒等式、引理 A（维数 $K$）、全离散判据、有序 QZ。
+4. `sec-closure.tex`：DtN 闭合及其极点、加边闭合（定理 B）、行列式分解、解析标架、实频投影检验、求根与物理接受判据。
+5. `sec-truncation.tex`：截断模型的条带压缩、根误差定理、选阶规则、截线不变性、首阶公式。
+6. 引言只写问题定义与失效现象；数值节只列已完成结果的提纲。贡献陈述、摘要、Wood 点（C2）、RtR 对照留待之后。
+
+状态：见下面“进度”。
+
 ## 进度
+
+- done（2026-11-08）：加入致谢节 `sec-acknowledgments.tex`（AI 使用声明，按 SIAM AI 政策 2.0，改写自 `draft/bie-siam/sec-acknowledgments.tex`），放在附录后、参考文献前。TODO 2 处：代码与数据发布的引用；作者本人核查的内容。暂不考虑页数（用户读后再删改）。
+- done（2026-11-08）：术语统一（用户定）：lead → periodic half-strip $S_\pm$（§2.1 定义），lead cell → periodicity cell，center cell → defect cell，lead pencil → Floquet eigenvalue problem \eqref{eq:floquet}（定义处括号注明即 matrix pencil，并定义 regular）；标题与页眉同步改。依据：Joly–Li–Fliss 2006（half-guide、artificial boundary）、Fliss 2013（half-band）、Klindworth–Schmidt–Fliss 2014 与 Fliss–Klindworth–Schmidt 2015（half-strips $S^\pm$、defect cell $C_0$、periodicity cells）、Fliss–Joly–Lescarret 2021（periodic half-waveguide、artificial boundary），均不用 lead。LaTeX 标签（sec:leads、sec:pencil、eq:pencil、sec:center 等）未改名。编译 25 页，无 overfull，无未定义引用。
+- done（2026-11-08）：按用户要求删去对可靠区间论文的全部引用（`\companion` 宏已删；本文将先于该文投稿）。成本表最后一档由“落入可靠区间”改为相对数值参考值 $k_{\rm ref}=1.558437894182088$ 误差低于 $10^{-11}$，表中配置与时间不变；摘要、引言、结论相应改写，不再出现“guaranteed interval”。中心胞两条竖直端口线改称 artificial (vertical) boundary（首次定义在 §2.1），“port state / port amplitudes”作为振幅数据的名称保留。核查 `wood-fallback-v1` 后填入 §7 的插值变量与 $\delta$ 规则、§8.6 的完成率、根误差表与导模支检查。编译 24 页，无 overfull，无未定义引用。剩余 TODO 2 处：附录 $D(A)=H^2_\beta(B)$ 的引用；首阶公式与 $H^2$ 改进证明的去向。
+- done（2026-11-07）：第一版草稿（定位 B）。用户决定先按定位 B 写：贡献为加边闭合、引线子空间维数与判据、Rayleigh 阶的根误差界、精度与成本；Wood 点写成局限并给回退方案；不含 RtR 比较和 Wood 稳健胞元（路线 A，见 `research/projects/bie-enclosure/route-a-plan.md`）。新写：摘要、贡献、`sec-wood.tex`、实验节各小节与成本表、附录证明、结论；`rem:holomorphy` 按审查改写，解析标架段改用局部标架。编译 23 页，无 overfull，无未定义引用。剩余 TODO 5 处，另有 `\companion` 占位：Wood 回退的插值变量、$\delta$ 规则与实验结果（等 `wood-fallback-v1`），附录中 $D(A)=H^2_\beta(B)$ 的引用，首阶公式与 $H^2$ 改进的证明放附录还是补充材料。
+- done（2026-11-07）：阶段 1–6 初稿写完，可以编译（17 页，无 overfull，无未定义引用）。各节剩余 TODO 17 处，另有 main.tex 中的摘要和结论：贡献陈述、摘要、结论、Wood 点（C2）、RtR 对照（E6）、判据的附录证明、根误差定理的完整证明、注记 `rem:holomorphy` 送证明审查、Botten 2006 等未入库文献、数值节图表与成本边界。
 
 - done（2026-11-07）：建骨架，方法节移入，可以编译（4 页，无 overfull，无未定义引用）。
 - done（2026-11-07）：查新 [[bie-solver-novelty]]，总评 B（直接推广）。最接近的是 Fliss–Klindworth–Schmidt 2015（同一固定 $\beta$ 模型，允许两侧不同包层，FEM + RtR）、Petropoulos–Turc 2025（BIE 胞 RtR 与稳定束闭合，但是声软同质阵列的受迫散射）、Botten 等 2006（线导模即 $\det Z(k,\alpha_0)=0$，多极展开，单一体材料）。单独成文的条件：等任务、等精度下与高阶 FEM–DtN/RtR 比误差和成本（E1），再加圆柱情形与 Botten/Dossou 边界方法对照（E2 的最简部分）。12 项审稿检查：4 项已有记录，5 项部分，3 项缺失。贡献陈述草案和应避免的说法见查新文件。
@@ -22,8 +51,8 @@ BIE = boundary integral equation（边界积分方程）；DtN = Dirichlet-to-Ne
 - done（2026-11-07）：文献算例 `test/bie-bound/litbench-v1/`：Botten 等 2006 的 W3 波导（六角晶格，TM），$d/\lambda=0.32$ 时 $\alpha_0d=1.67540706$，与原文 1.67541 的 6 位全部一致；第二个模与图 3(b) 一致。
 - done（2026-11-07）：失效探查 `test/bie-bound/failure-probe-v1/`。真实存在的问题：（1）Wood 点：算例 1 的导模支在 $\beta\approx1.9815$ 处、W3 在 $\beta\approx2.9750$ 处穿过 $k=|\beta|$；正好在 Wood 点上引线计算失败，离 Wood 点 $10^{-4}$ 以内时行列式搜索超时，根本身仍准到约 $6\times10^{-12}$。（2）端口极点：把端口切线移进引线胞后，$\mathsf D_\pm$ 奇异处出现极点；后备搜索把极点（距导模 0.0022）当作根接受，原因是极点处 $\sigma_{\max}$ 涨到 $2\times10^{13}$，使 $\sigma_{\min}/\sigma_{\max}$ 很小；改用不除以 $\mathsf D$ 的子空间投影匹配后只剩真根。（3）根恰好落在 Chebyshev 节点上时搜索停滞，平移窗口即可。未观察到：中心表示产生的伪根、QZ 与特征向量子空间的差别。
 - 待办（等用户决定）：18 项候选文献哪些入库。
-- 待办（已知缺陷）：提取矩阵 $\mathsf F^{\rightarrow}_{x_p},\mathsf F^{\leftarrow}_{x_p}$ 只有文字描述，需要写出公式；全节行内公式过密，需要改写。
-- 待办：模型节从 `draft/bie-siam/` 第 2.1 节取记号。
+- done（2026-11-07）：提取矩阵已写出显式公式（`eq:extract-kernels`、`eq:extract`），方法节已按显示公式重写。
+- done（2026-11-07）：模型节记号取自 `draft/bie-siam/` 第 2.1 节。
 
 ## TODO：潜在贡献项（2026-11-07 记录，均未开始，等用户排序）
 
